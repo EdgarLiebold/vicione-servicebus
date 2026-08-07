@@ -1,0 +1,27 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Contracts
+{
+    using System;
+
+
+    /// <summary>
+    /// Published when the concurrency limit of a filter is updated.
+    /// </summary>
+    public interface ConcurrencyLimitUpdated
+    {
+        /// <summary>
+        /// The actual time at which the adjustment was applied
+        /// </summary>
+        DateTime Timestamp { get; }
+
+        /// <summary>
+        /// The identifier that was adjusted
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The current concurrency limit value
+        /// </summary>
+        int ConcurrencyLimit { get; }
+    }
+}

@@ -1,0 +1,19 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    using System;
+
+
+    public interface IConsumerRegistration :
+        IRegistration
+    {
+        void AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
+            where T : class, IConsumer;
+
+        void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
+
+        IConsumerDefinition GetDefinition(IRegistrationContext context);
+
+        IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator);
+    }
+}

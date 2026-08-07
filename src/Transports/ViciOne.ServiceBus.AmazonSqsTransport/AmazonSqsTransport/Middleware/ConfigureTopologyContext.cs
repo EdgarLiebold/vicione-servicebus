@@ -1,0 +1,7 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
+
+public interface ConfigureTopologyContext<T>
+    where T : class
+{
+}

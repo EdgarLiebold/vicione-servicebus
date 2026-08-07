@@ -1,0 +1,29 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.SqlTransport.SqlServer</PackageId>
+    <Title>ViciOne.ServiceBus.SqlTransport.SQL Server</Title>
+    <PackageTags>ViciOne.ServiceBus;Database;Transport;SQL Server;Microsoft;Azure;SQL</PackageTags>
+    <Description>ViciOne.ServiceBus SQL Server Transport; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+</Project>

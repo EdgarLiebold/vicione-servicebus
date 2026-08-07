@@ -1,0 +1,215 @@
+{
+  "counts": {
+    "classifications": {
+      "PASS": 18
+    },
+    "discovered": 18,
+    "executed": 18,
+    "outcomes": {
+      "Passed": 18
+    },
+    "trxFiles": 1
+  },
+  "findings": [],
+  "results": [
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0000900",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_prefix",
+      "outcome": "Passed",
+      "testName": "Should_include_the_prefix",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0010830",
+      "messageFirstLine": null,
+      "methodName": "Should_convert_to_snake_case",
+      "outcome": "Passed",
+      "testName": "Should_convert_to_snake_case",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests.MultiBusEndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.6111000",
+      "messageFirstLine": null,
+      "methodName": "Should_allow_separate_endpoint_names_per_bus",
+      "outcome": "Passed",
+      "testName": "Should_allow_separate_endpoint_names_per_bus",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0004490",
+      "messageFirstLine": null,
+      "methodName": "Should_throw_exception_when_class_is_called_saga",
+      "outcome": "Passed",
+      "testName": "Should_throw_exception_when_class_is_called_saga",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0001240",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_prefix_snake_with_separator",
+      "outcome": "Passed",
+      "testName": "Should_include_the_prefix_snake_with_separator",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0046810",
+      "messageFirstLine": null,
+      "methodName": "Should_throw_exception_when_class_is_called_activity_for_compensate",
+      "outcome": "Passed",
+      "testName": "Should_throw_exception_when_class_is_called_activity_for_compensate",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0003280",
+      "messageFirstLine": null,
+      "methodName": "Should_throw_exception_when_class_is_called_consumer",
+      "outcome": "Passed",
+      "testName": "Should_throw_exception_when_class_is_called_consumer",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0001499",
+      "messageFirstLine": null,
+      "methodName": "Should_convert_to_snake_case_with_uppercase_ids",
+      "outcome": "Passed",
+      "testName": "Should_convert_to_snake_case_with_uppercase_ids",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0000770",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_prefix_default",
+      "outcome": "Passed",
+      "testName": "Should_include_the_prefix_default",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0012470",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_namespace",
+      "outcome": "Passed",
+      "testName": "Should_include_the_namespace",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0003790",
+      "messageFirstLine": null,
+      "methodName": "Should_format_instance_id_properly",
+      "outcome": "Passed",
+      "testName": "Should_format_instance_id_properly",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0000699",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_prefix_default_with_separator",
+      "outcome": "Passed",
+      "testName": "Should_include_the_prefix_default_with_separator",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0002760",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_namespace_and_prefix_with_message_name",
+      "outcome": "Passed",
+      "testName": "Should_include_the_namespace_and_prefix_with_message_name",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0003330",
+      "messageFirstLine": null,
+      "methodName": "Should_convert_to_snake_case_with_digits",
+      "outcome": "Passed",
+      "testName": "Should_convert_to_snake_case_with_digits",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0004780",
+      "messageFirstLine": null,
+      "methodName": "Should_throw_exception_when_class_is_called_activity_for_execute",
+      "outcome": "Passed",
+      "testName": "Should_throw_exception_when_class_is_called_activity_for_execute",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0001830",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_namespace_and_prefix",
+      "outcome": "Passed",
+      "testName": "Should_include_the_namespace_and_prefix",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0000790",
+      "messageFirstLine": null,
+      "methodName": "Should_only_include_the_message_name",
+      "outcome": "Passed",
+      "testName": "Should_only_include_the_message_name",
+      "trx": "correction08-endpoint.trx"
+    },
+    {
+      "assembly": "/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.tests/bin/release/net9.0/vicione.servicebus.tests.dll",
+      "className": "ViciOne.ServiceBus.Tests.EndpointName_Specs",
+      "classification": "PASS",
+      "duration": "00:00:00.0002760",
+      "messageFirstLine": null,
+      "methodName": "Should_include_the_namespace_and_prefix_with_generic_consumer",
+      "outcome": "Passed",
+      "testName": "Should_include_the_namespace_and_prefix_with_generic_consumer",
+      "trx": "correction08-endpoint.trx"
+    }
+  ],
+  "status": "PASS"
+}

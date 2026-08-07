@@ -1,0 +1,1508 @@
+{
+  "counts": {
+    "categories": {
+      "RUNTIME_PLATFORM_SKIP": 1,
+      "SOURCE_DECLARED_EXPLICIT": 82
+    },
+    "notExecuted": 83,
+    "projects": {
+      "vicione.servicebus.abstractions.tests": 5,
+      "vicione.servicebus.entityframeworkcoreintegration.tests": 4,
+      "vicione.servicebus.entityframeworkintegration.tests": 6,
+      "vicione.servicebus.hangfireintegration.tests": 4,
+      "vicione.servicebus.quartzintegration.tests": 6,
+      "vicione.servicebus.sqltransport.tests": 15,
+      "vicione.servicebus.tests": 43
+    }
+  },
+  "findings": [],
+  "results": [
+    {
+      "assemblyProject": "vicione.servicebus.abstractions.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": null,
+      "methodName": "Should_generate_unique_identifiers_with_each_invocation",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_newid_generator",
+          "kind": "method",
+          "line": 205,
+          "name": "Should_generate_unique_identifiers_with_each_invocation",
+          "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.abstractions.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_be_fast_and_friendly",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_newid_generator",
+          "kind": "method",
+          "line": 120,
+          "name": "Should_be_fast_and_friendly",
+          "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.abstractions.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator",
+      "duration": "00:00:00.0000349",
+      "messageFirstLine": null,
+      "methodName": "Should_be_able_to_extract_timestamp_with_process_id",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_newid_generator",
+          "kind": "method",
+          "line": 61,
+          "name": "Should_be_able_to_extract_timestamp_with_process_id",
+          "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.abstractions.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator",
+      "duration": "00:00:00.0002300",
+      "messageFirstLine": null,
+      "methodName": "Should_be_able_to_extract_timestamp",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_newid_generator",
+          "kind": "method",
+          "line": 43,
+          "name": "Should_be_able_to_extract_timestamp",
+          "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.abstractions.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_be_completely_thread_safe_to_avoid_duplicates",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_newid_generator",
+          "kind": "method",
+          "line": 80,
+          "name": "Should_be_completely_thread_safe_to_avoid_duplicates",
+          "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.When_using_EntityFramework",
+      "duration": "00:00:00.0000120",
+      "messageFirstLine": null,
+      "methodName": "Should_handle_the_big_load",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_using_EntityFramework",
+          "kind": "method",
+          "line": 24,
+          "name": "Should_handle_the_big_load",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/UsingEntityFramework_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.PreInsert.When_pre_inserting_the_state_machine_instance_using_ef",
+      "duration": "00:00:00.0010390",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_receive_the_published_message",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "EntityFrameworkInstanceMap",
+          "kind": "class",
+          "line": 109,
+          "name": "When_pre_inserting_the_state_machine_instance_using_ef",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/PreInsert_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.PreInsert.When_pre_inserting_in_an_invalid_state_using_ef",
+      "duration": "00:00:00.0000100",
+      "messageFirstLine": null,
+      "methodName": "Should_receive_the_published_message",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_pre_inserting_in_an_invalid_state_using_ef",
+          "kind": "method",
+          "line": 195,
+          "name": "Should_receive_the_published_message",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/PreInsert_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.ContainerTests.Using_optimistic_concurrency",
+      "duration": "00:00:00.0033940",
+      "messageFirstLine": null,
+      "methodName": "Should_work_as_expected",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_optimistic_concurrency",
+          "kind": "method",
+          "line": 100,
+          "name": "Should_work_as_expected",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/Container_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.ContainerTests.Using_pessimistic_concurrency",
+      "duration": "00:00:00.0001210",
+      "messageFirstLine": null,
+      "methodName": "Should_work_as_expected",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_pessimistic_concurrency",
+          "kind": "method",
+          "line": 35,
+          "name": "Should_work_as_expected",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/Container_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkIntegration.Tests.StateMachineTest",
+      "duration": "00:00:00.0000070",
+      "messageFirstLine": null,
+      "methodName": "Test_Event_Persists_Saga_By_Default",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "StateMachineTest",
+          "kind": "method",
+          "line": 47,
+          "name": "Test_Event_Persists_Saga_By_Default",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/DiscardEvent_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus",
+      "duration": "00:00:00.0000070",
+      "messageFirstLine": null,
+      "methodName": "Should_give_me_so_much_of_the_datas",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Configuring_the_postgresql_bus",
+          "kind": "method",
+          "line": 131,
+          "name": "Should_give_me_so_much_of_the_datas",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/PgSqlBus_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Provisioning_the_transport_database",
+      "duration": "00:00:00.0000090",
+      "messageFirstLine": null,
+      "methodName": "Should_drop_the_database_on_shutdown",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Provisioning_the_transport_database",
+          "kind": "method",
+          "line": 34,
+          "name": "Should_drop_the_database_on_shutdown",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Provision_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Purging_a_queue_on_startup<SqlServerDatabaseTestConfiguration>",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_purge_the_queue",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 13,
+          "name": "Purging_a_queue_on_startup",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Purge_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus",
+      "duration": "00:00:00.0000120",
+      "messageFirstLine": null,
+      "methodName": "Should_consume_a_lot_of_published_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Configuring_the_postgresql_bus",
+          "kind": "method",
+          "line": 76,
+          "name": "Should_consume_a_lot_of_published_messages",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/PgSqlBus_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<PostgresDatabaseTestConfiguration>",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_not_consume_the_message_after_the_limit",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "Using_message_delivery_count_limit",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Expiration_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.SqlServer.Provisioning_the_transport_database",
+      "duration": "00:00:00.0000090",
+      "messageFirstLine": null,
+      "methodName": "Should_drop_the_database_on_shutdown",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Provisioning_the_transport_database",
+          "kind": "method",
+          "line": 37,
+          "name": "Should_drop_the_database_on_shutdown",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/Provision_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus",
+      "duration": "00:00:00.0002060",
+      "messageFirstLine": null,
+      "methodName": "Should_consume_a_lot_of_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Configuring_the_postgresql_bus",
+          "kind": "method",
+          "line": 19,
+          "name": "Should_consume_a_lot_of_messages",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/PgSqlBus_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.When_a_consumer_throws_an_exception",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_publish_fault_and_move_to_the_error_queue",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_a_consumer_throws_an_exception",
+          "kind": "method",
+          "line": 45,
+          "name": "Should_publish_fault_and_move_to_the_error_queue",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Fault_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<SqlServerDatabaseTestConfiguration>",
+      "duration": "00:00:00.0000020",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_not_consume_the_message_after_the_limit",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "Using_message_delivery_count_limit",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Expiration_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.When_a_consumer_throws_an_exception",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_dead_letter_skipped_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_a_consumer_throws_an_exception",
+          "kind": "method",
+          "line": 16,
+          "name": "Should_dead_letter_skipped_messages",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Fault_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.When_a_consumer_throws_an_exception",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_use_built_in_redelivery_to_redeliver_faulted_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_a_consumer_throws_an_exception",
+          "kind": "method",
+          "line": 79,
+          "name": "Should_use_built_in_redelivery_to_redeliver_faulted_messages",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Fault_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Purging_a_queue_on_startup<PostgresDatabaseTestConfiguration>",
+      "duration": "00:00:00.0017130",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_purge_the_queue",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 13,
+          "name": "Purging_a_queue_on_startup",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/Purge_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.SqlServer.Using_publish",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "Should_consume_a_lot_of_published_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_publish",
+          "kind": "method",
+          "line": 18,
+          "name": "Should_consume_a_lot_of_published_messages",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/Publish_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Using_a_slow_consumer<SqlServerDatabaseTestConfiguration>",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_renew_the_lock",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "Using_a_slow_consumer",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/RenewLock_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.sqltransport.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.DbTransport.Tests.Using_a_slow_consumer<PostgresDatabaseTestConfiguration>",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_renew_the_lock",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "Using_a_slow_consumer",
+          "path": "tests/ViciOne.ServiceBus.SqlTransport.Tests/RenewLock_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.hangfireintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.HangfireIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000520",
+      "messageFirstLine": null,
+      "methodName": "Should_handle_now_properly",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 40,
+          "name": "Should_handle_now_properly",
+          "path": "tests/ViciOne.ServiceBus.HangfireIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.hangfireintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.HangfireIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0002990",
+      "messageFirstLine": null,
+      "methodName": "Should_cancel_recurring_schedule",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 16,
+          "name": "Should_cancel_recurring_schedule",
+          "path": "tests/ViciOne.ServiceBus.HangfireIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.hangfireintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.HangfireIntegration.Tests.Specifying_an_event_in_the_past",
+      "duration": "00:00:00.0007610",
+      "messageFirstLine": null,
+      "methodName": "Should_be_able_to_cancel_a_future_event",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_an_event_in_the_past",
+          "kind": "method",
+          "line": 15,
+          "name": "Should_be_able_to_cancel_a_future_event",
+          "path": "tests/ViciOne.ServiceBus.HangfireIntegration.Tests/PastEvent_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.hangfireintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.HangfireIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": null,
+      "methodName": "Should_pause_recurring_schedule",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 53,
+          "name": "Should_pause_recurring_schedule",
+          "path": "tests/ViciOne.ServiceBus.HangfireIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000020",
+      "messageFirstLine": null,
+      "methodName": "Should_handle_now_properly",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 88,
+          "name": "Should_handle_now_properly",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000100",
+      "messageFirstLine": null,
+      "methodName": "Should_contain_additional_headers_that_provide_time_domain_context",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 62,
+          "name": "Should_contain_additional_headers_that_provide_time_domain_context",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_an_event_in_the_past",
+      "duration": "00:00:00.0000160",
+      "messageFirstLine": null,
+      "methodName": "Should_be_able_to_cancel_a_future_event",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_an_event_in_the_past",
+          "kind": "method",
+          "line": 15,
+          "name": "Should_be_able_to_cancel_a_future_event",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/PastEvent_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0003110",
+      "messageFirstLine": null,
+      "methodName": "Should_cancel_recurring_schedule",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 16,
+          "name": "Should_cancel_recurring_schedule",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000330",
+      "messageFirstLine": null,
+      "methodName": "Should_contain_additional_headers_that_provide_schedule_key_context",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 40,
+          "name": "Should_contain_additional_headers_that_provide_schedule_key_context",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.quartzintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.QuartzIntegration.Tests.Specifying_a_recurring_event",
+      "duration": "00:00:00.0000020",
+      "messageFirstLine": null,
+      "methodName": "Should_pause_recurring_schedule",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_recurring_event",
+          "kind": "method",
+          "line": 101,
+          "name": "Should_pause_recurring_schedule",
+          "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkcoreintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox",
+      "duration": "00:00:00.0000120",
+      "messageFirstLine": null,
+      "methodName": "Should_work_without_starting_the_bus",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_bus_outbox",
+          "kind": "method",
+          "line": 535,
+          "name": "Should_work_without_starting_the_bus",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/BusOutbox_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkcoreintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox",
+      "duration": "00:00:00.0000590",
+      "messageFirstLine": null,
+      "methodName": "Fill_up_the_outbox",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_bus_outbox",
+          "kind": "method",
+          "line": 414,
+          "name": "Fill_up_the_outbox",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/BusOutbox_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkcoreintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox",
+      "duration": "00:00:00.0000090",
+      "messageFirstLine": null,
+      "methodName": "Should_support_delayed_message_scheduler",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_the_bus_outbox",
+          "kind": "method",
+          "line": 486,
+          "name": "Should_support_delayed_message_scheduler",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/BusOutbox_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.entityframeworkcoreintegration.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Responding_through_the_outbox",
+      "duration": "00:00:00.0002340",
+      "messageFirstLine": null,
+      "methodName": "Should_start_with_delay_successfully",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Responding_through_the_outbox",
+          "kind": "method",
+          "line": 118,
+          "name": "Should_start_with_delay_successfully",
+          "path": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/Outbox_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs",
+      "duration": "00:00:00.0000090",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_include_concurrent_limit_on_instance",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "SimpleConfiguration_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Pipeline.Connecting_a_consumer_to_the_inbound_pipe",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "Should_receive_a_message_pipeline_view",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Connecting_a_consumer_to_the_inbound_pipe",
+          "kind": "method",
+          "line": 33,
+          "name": "Should_receive_a_message_pipeline_view",
+          "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Transports.Using_a_wildcard_topic_pattern",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_wonderful_display",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_a_wildcard_topic_pattern",
+          "kind": "method",
+          "line": 86,
+          "name": "Should_wonderful_display",
+          "path": "tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_allow_dynamic_reconfiguration_up",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 50,
+          "name": "Should_allow_dynamic_reconfiguration_up",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer)",
+      "duration": "00:00:00.0000020",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.When_configuring_the_thread_pool_for_a_high_number_of_consumers",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "Should_scale_threads_to_meet_demand",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_configuring_the_thread_pool_for_a_high_number_of_consumers",
+          "kind": "method",
+          "line": 18,
+          "name": "Should_scale_threads_to_meet_demand",
+          "path": "tests/ViciOne.ServiceBus.Tests/Threading_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs",
+      "duration": "00:00:00.0000060",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "FirstTestName",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 12,
+          "name": "SimpleConfiguration_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_count_success_and_failure_as_same",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 82,
+          "name": "Should_count_success_and_failure_as_same",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_only_do_n_messages_per_interval",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 126,
+          "name": "Should_only_do_n_messages_per_interval",
+          "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.When_a_message_is_not_correlated",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_retry_the_status_message",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_a_message_is_not_correlated",
+          "kind": "method",
+          "line": 15,
+          "name": "Should_retry_the_status_message",
+          "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.NoLog.An_excessive_fault_storm",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_not_explode_the_task_library",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 16,
+          "name": "An_excessive_fault_storm",
+          "path": "tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Querying_the_send_endpoint_cache_concurrently",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Querying_for_two_endpoints_at_the_same_time",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 11,
+          "name": "Querying_the_send_endpoint_cache_concurrently",
+          "path": "tests/ViciOne.ServiceBus.Tests/SendEndpointCache_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.BsonMessageSerializer)",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs",
+      "duration": "00:00:00.0011199",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_be_able_to_add_custom_tag_to_consume_metrics",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 20,
+          "name": "ConsumeMetrics_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Using_a_batch_consumer",
+      "duration": "00:00:00.0083129",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_not_deliver_duplicate_messages",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Receiving_a_bunch_of_messages_in_a_batch_by_convention_using_mediator",
+          "kind": "class",
+          "line": 214,
+          "name": "Using_a_batch_consumer",
+          "path": "tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.NewtonsoftJsonMessageSerializer)",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_that_faults",
+      "duration": "00:00:00.0000060",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_observe_all_exceptions",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Sending_a_request_using_mediator_to_a_missing_service_that_times_out",
+          "kind": "class",
+          "line": 163,
+          "name": "Sending_a_request_using_mediator_that_faults",
+          "path": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": null,
+      "methodName": "Should_count_success_and_failure_as_same",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 86,
+          "name": "Should_count_success_and_failure_as_same",
+          "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.EncryptedMessageSerializerV2)",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Transports.Using_a_hash_topic_pattern",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_wonderful_display",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Using_a_hash_topic_pattern",
+          "kind": "method",
+          "line": 24,
+          "name": "Should_wonderful_display",
+          "path": "tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.MessagePackMessageSerializer)",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Diagnostics.StatsD_Specs",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "RunSomeDataIn",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "StatsD_Specs",
+          "kind": "method",
+          "line": 12,
+          "name": "RunSomeDataIn",
+          "path": "tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Probing_the_bus",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Probing_the_bus",
+          "kind": "method",
+          "line": 26,
+          "name": "Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+          "path": "tests/ViciOne.ServiceBus.Tests/Introspection_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.Layering_retry_components_into_a_set",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": null,
+      "methodName": "Should_support_interaction_between_filters",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Layering_retry_components_into_a_set",
+          "kind": "method",
+          "line": 17,
+          "name": "Should_support_interaction_between_filters",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/LayeredRetry_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000030",
+      "messageFirstLine": null,
+      "methodName": "Should_allow_dynamic_reconfiguration_down",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 18,
+          "name": "Should_allow_dynamic_reconfiguration_down",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.MessageFlow_Specs",
+      "duration": "00:00:00.0000080",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_generate_a_graph_of_the_message_flow",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 11,
+          "name": "MessageFlow_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/MessageFlow_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.NewtonsoftXmlMessageSerializer)",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs",
+      "duration": "00:00:00.0011379",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_be_able_to_produce_consume_exception_metrics",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 20,
+          "name": "ConsumeMetrics_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.When_serializing_messages_with_json_dot_net",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Show_me_the_message",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_serializing_messages_with_json_dot_net",
+          "kind": "method",
+          "line": 85,
+          "name": "Show_me_the_message",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.When_using_or_canceled_should_not_have_an_unhandled_task_exception",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "Should_fault_on_ready_faulted",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_using_or_canceled_should_not_have_an_unhandled_task_exception",
+          "kind": "method",
+          "line": 17,
+          "name": "Should_fault_on_ready_faulted",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/OrCanceled_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.CronExpressionTest",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "PerformanceTest",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "CronExpressionTest",
+          "kind": "method",
+          "line": 807,
+          "name": "PerformanceTest",
+          "path": "tests/ViciOne.ServiceBus.Tests/CronExpressionTests.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.When_serializing_messages_with_json_dot_net",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Serialization_speed",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_serializing_messages_with_json_dot_net",
+          "kind": "method",
+          "line": 200,
+          "name": "Serialization_speed",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Sending_a_request_to_a_missing_service_that_times_out",
+      "duration": "00:00:00.0000080",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_timeout_without_exceptions",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Sending_a_request_to_a_missing_service",
+          "kind": "class",
+          "line": 74,
+          "name": "Sending_a_request_to_a_missing_service_that_times_out",
+          "path": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Should_only_do_n_messages_per_interval",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Specifying_a_rate_limit",
+          "kind": "method",
+          "line": 122,
+          "name": "Should_only_do_n_messages_per_interval",
+          "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Configuring_a_recurring_job_consumer",
+      "duration": "00:00:00.0002270",
+      "messageFirstLine": null,
+      "methodName": "Should_support_multiple_jobs_of_the_same_type_with_different_names",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Configuring_a_recurring_job_consumer",
+          "kind": "method",
+          "line": 98,
+          "name": "Should_support_multiple_jobs_of_the_same_type_with_different_names",
+          "path": "tests/ViciOne.ServiceBus.Tests/RecurringJobConsumer_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.ContainerTests.When_an_activity_is_redelivered",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": null,
+      "methodName": "Should_not_copy_redelivery_header_to_next_activity",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_an_activity_is_redelivered",
+          "kind": "method",
+          "line": 17,
+          "name": "Should_not_copy_redelivery_header_to_next_activity",
+          "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/RedeliveryHeader_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "RUNTIME_PLATFORM_SKIP",
+      "className": "ViciOne.ServiceBus.Tests.CronExpressionTest",
+      "duration": "00:00:00.0001050",
+      "messageFirstLine": "Only supported on WIN",
+      "methodName": "TestDaylightSaving_QRTZNETZ186",
+      "reason": "exact NUnit skip reason: Only supported on WIN",
+      "sourceEvidence": []
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.When_a_message_has_an_unrecognized_body_format",
+      "duration": "00:00:00.0000050",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "It_should_publish_a_fault",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "When_a_message_fails_to_deserialize_properly",
+          "kind": "class",
+          "line": 50,
+          "name": "When_a_message_has_an_unrecognized_body_format",
+          "path": "tests/ViciOne.ServiceBus.Tests/SerializationFault_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Mediator_performance",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": null,
+      "methodName": "Send",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Mediator_performance",
+          "kind": "method",
+          "line": 175,
+          "name": "Send",
+          "path": "tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs",
+      "duration": "00:00:00.0011820",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_be_able_to_produce_consume_metrics",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 20,
+          "name": "ConsumeMetrics_Specs",
+          "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.EncryptedMessageSerializer)",
+      "duration": "00:00:00.0000020",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Just_how_fast_are_you",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": null,
+          "kind": "class",
+          "line": 21,
+          "name": "Serializer_performance",
+          "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_to_a_missing_service_that_times_out",
+      "duration": "00:00:00.0000010",
+      "messageFirstLine": "OneTimeSetUp: ",
+      "methodName": "Should_timeout_without_exceptions",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Sending_a_request_to_a_missing_service_that_times_out",
+          "kind": "class",
+          "line": 115,
+          "name": "Sending_a_request_using_mediator_to_a_missing_service_that_times_out",
+          "path": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs"
+        }
+      ]
+    },
+    {
+      "assemblyProject": "vicione.servicebus.tests",
+      "category": "SOURCE_DECLARED_EXPLICIT",
+      "className": "ViciOne.ServiceBus.Tests.Mediator_performance",
+      "duration": "00:00:00.0000040",
+      "messageFirstLine": null,
+      "methodName": "Request_client",
+      "reason": "matched NUnit Explicit declaration",
+      "sourceEvidence": [
+        {
+          "containingClass": "Mediator_performance",
+          "kind": "method",
+          "line": 200,
+          "name": "Request_client",
+          "path": "tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs"
+        }
+      ]
+    }
+  ],
+  "status": "PASS"
+}

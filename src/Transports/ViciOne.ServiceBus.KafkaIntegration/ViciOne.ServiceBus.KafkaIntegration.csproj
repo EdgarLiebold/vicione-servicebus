@@ -1,0 +1,33 @@
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <Authors>Denys Kozhevnikov, $(Authors)</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.Kafka</PackageId>
+    <Title>ViciOne.ServiceBus.Kafka</Title>
+    <PackageTags>ViciOne.ServiceBus;Kakfa</PackageTags>
+    <Description>ViciOne.ServiceBus Kafka Support; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

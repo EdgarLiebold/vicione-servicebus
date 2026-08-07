@@ -1,0 +1,15 @@
+{
+  "binlogSha256": "4cbcfc6f2d066877f6446af34cc722c9d77fb436137df6cf90d5dbd4b22f6fe5",
+  "command": "dotnet build ViciOne.ServiceBus.sln -c Release --no-restore --disable-build-servers --no-incremental /bl:.testagent/binlogs/correction07-release-build.binlog",
+  "configuration": "Release",
+  "elapsed": "00:02:15.95",
+  "errors": 0,
+  "evidenceKind": "DERIVED_BUILD_SUMMARY",
+  "executedByCorrection": "LEAD_CORRECTION_07",
+  "exitCode": 0,
+  "rawCaptureDisposition": "NON_DELIVERABLE_LOCAL_SCRATCH",
+  "rawCaptureIncludedInDeliverable": false,
+  "reexecutedByCorrection08": false,
+  "status": "PASS",
+  "warnings": 30
+}

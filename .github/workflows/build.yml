@@ -1,12 +1,13 @@
-name: MassTransit
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+name: ViciOne.ServiceBus
 env:
-  MASSTRANSIT_VERSION: 8.5.10
+  VICIONE_SERVICEBUS_VERSION: 8.5.10
 on:
   push:
     paths:
       - 'src/**'
       - 'tests/**'
-      - 'MassTransit.sln'
+      - 'ViciOne.ServiceBus.sln'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
       - '**/build.yml'
@@ -16,7 +17,7 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
-      - 'MassTransit.sln'
+      - 'ViciOne.ServiceBus.sln'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
       - '**/build.yml'
@@ -63,11 +64,11 @@ jobs:
 
       - name: Unit Tests
         run: dotnet test -c Release -f net9.0 --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.Tests
+        working-directory: tests/ViciOne.ServiceBus.Tests
 
       - name: Test Abstractions
         run: dotnet test -c Release -f net9.0 --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.Abstractions.Tests
+        working-directory: tests/ViciOne.ServiceBus.Abstractions.Tests
 
   test-activemq:
     name: "Transports: ActiveMQ"
@@ -75,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       activemq:
-        image: masstransit/activemq:latest
+        image: vicione-servicebus/activemq:latest
         ports:
           - "61616:61616"
           - "8161:8161"
@@ -91,7 +92,7 @@ jobs:
 
       - name: Test ActiveMQ
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.ActiveMqTransport.Tests
+        working-directory: tests/ViciOne.ServiceBus.ActiveMqTransport.Tests
 
   test-sql-transport:
     name: "Transport: SQL"
@@ -125,7 +126,7 @@ jobs:
 
       - name: Test Database Transport
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.SqlTransport.Tests
+        working-directory: tests/ViciOne.ServiceBus.SqlTransport.Tests
 
 
   test-azure-service-bus:
@@ -143,17 +144,17 @@ jobs:
 
       - name: Test Azure Service Bus
         env:
-          MT_ASB_KEYVALUE: ${{ secrets.AZURE_SERVICEBUS }}
-          MT_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
+          VICIONE_SERVICEBUS_ASB_KEYVALUE: ${{ secrets.AZURE_SERVICEBUS }}
+          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.Azure.ServiceBus.Core.Tests
+        working-directory: tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
   test-rabbitmq:
     name: "Transports: RabbitMQ"
     timeout-minutes: 10
     runs-on: ubuntu-latest
     services:
       rabbitmq:
-        image: masstransit/rabbitmq:latest
+        image: vicione-servicebus/rabbitmq:latest
         ports:
           - "5672:5672"
           - "15672:15672"
@@ -169,7 +170,7 @@ jobs:
 
       - name: Test RabbitMQ
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.RabbitMqTransport.Tests
+        working-directory: tests/ViciOne.ServiceBus.RabbitMqTransport.Tests
   test-sqs:
     name: "Transports: SQS (+S3)"
     timeout-minutes: 10
@@ -192,7 +193,7 @@ jobs:
 
       - name: Test SQS
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.AmazonSqsTransport.Tests
+        working-directory: tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests
   test-azure-table:
     name: "Storage: Azure Table"
     timeout-minutes: 10
@@ -209,23 +210,23 @@ jobs:
       - name: Spin up test environment
         run: |
           docker compose -f docker-compose.yml up -d
-        working-directory: tests/MassTransit.Azure.Table.Tests
+        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
 
       - name: Test Azure Table
         env:
-          MT_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
+          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.Azure.Table.Tests
+        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
 
       - name: Stop test environment
         run: |
           docker compose -f docker-compose.yml down
-        working-directory: tests/MassTransit.Azure.Table.Tests
+        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
   test-cosmosdb:
     name: "Storage: CosmosDB"
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'MassTransit/MassTransit'
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'ViciOne.ServiceBus/ViciOne.ServiceBus'
     steps:
       - name: Check out code
         uses: actions/checkout@v5
@@ -237,10 +238,10 @@ jobs:
 
       - name: Test CosmosDB
         env:
-          MT_COSMOS_ENDPOINT: ${{ secrets.AZURE_COSMOSENDPOINT }}
-          MT_COSMOS_KEY: ${{ secrets.AZURE_COSMOSKEY }}
+          VICIONE_SERVICEBUS_COSMOS_ENDPOINT: ${{ secrets.AZURE_COSMOSENDPOINT }}
+          VICIONE_SERVICEBUS_COSMOS_KEY: ${{ secrets.AZURE_COSMOSKEY }}
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.Azure.Cosmos.Tests
+        working-directory: tests/ViciOne.ServiceBus.Azure.Cosmos.Tests
   test-dapper:
     name: "Storage: Dapper"
     timeout-minutes: 10
@@ -267,7 +268,7 @@ jobs:
 
       - name: Test Dapper
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.DapperIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.DapperIntegration.Tests
   test-entity-framework:
     name: "Storage: EntityFramework"
     timeout-minutes: 10
@@ -301,11 +302,11 @@ jobs:
 
       - name: Test EntityFrameworkCore
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.EntityFrameworkCoreIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
 
       - name: Test EntityFramework
         run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/MassTransit.EntityFrameworkIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests
   test-marten:
     name: "Storage: Marten"
     timeout-minutes: 10
@@ -329,7 +330,7 @@ jobs:
 
       - name: Test Marten
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.MartenIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.MartenIntegration.Tests
   test-mongo:
     name: "Storage: MongoDB"
     timeout-minutes: 10
@@ -346,16 +347,16 @@ jobs:
       - name: Spin up test environment
         run: |
           docker compose -f docker-compose.yml up -d
-        working-directory: tests/MassTransit.MongoDbIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
 
       - name: Test MongoDB
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.MongoDbIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
 
       - name: Stop test environment
         run: |
           docker compose -f docker-compose.yml down
-        working-directory: tests/MassTransit.MongoDbIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
   test-nhibernate:
     name: "Storage: NHibernate"
     timeout-minutes: 10
@@ -371,7 +372,7 @@ jobs:
 
       - name: Test NHibernate
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.NHibernateIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.NHibernateIntegration.Tests
   test-redis:
     name: "Storage: Redis"
     timeout-minutes: 10
@@ -393,7 +394,7 @@ jobs:
 
       - name: Test Redis
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.RedisIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.RedisIntegration.Tests
   test-valkey:
     name: "Storage: Valkey"
     timeout-minutes: 10
@@ -415,7 +416,7 @@ jobs:
 
       - name: Test Valkey
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.RedisIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.RedisIntegration.Tests
   test-hangfire:
     name: "Scheduler: Hangfire"
     timeout-minutes: 10
@@ -431,7 +432,7 @@ jobs:
 
       - name: Test Hangfire
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.HangfireIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.HangfireIntegration.Tests
   test-quartz:
     name: "Scheduler: Quartz"
     timeout-minutes: 10
@@ -447,7 +448,7 @@ jobs:
 
       - name: Test Quartz
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.QuartzIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.QuartzIntegration.Tests
   test-eventhub:
     name: "Rider: EventHub"
     runs-on: ubuntu-latest
@@ -463,19 +464,19 @@ jobs:
       - name: Spin up test environment
         run: |
           docker compose -f docker-compose.yml up -d
-        working-directory: tests/MassTransit.EventHubIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
 
       - name: Test EventHub
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
         env:
-          MT_EH_NAMESPACE: ${{ secrets.AZURE_EVENTHUB }}
-          MT_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
-        working-directory: tests/MassTransit.EventHubIntegration.Tests
+          VICIONE_SERVICEBUS_EH_NAMESPACE: ${{ secrets.AZURE_EVENTHUB }}
+          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
+        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
 
       - name: Stop test environment
         run: |
           docker compose -f docker-compose.yml down
-        working-directory: tests/MassTransit.EventHubIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
   test-kafka:
     name: "Rider: Kafka"
     runs-on: ubuntu-latest
@@ -491,16 +492,16 @@ jobs:
       - name: Spin up test environment
         run: |
           docker compose -f docker-compose.yml up -d
-        working-directory: tests/MassTransit.KafkaIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
 
       - name: Test Kafka
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.KafkaIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
 
       - name: Stop test environment
         run: |
           docker compose -f docker-compose.yml down
-        working-directory: tests/MassTransit.KafkaIntegration.Tests
+        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
 
   test-signalr:
     name: SignalR
@@ -517,7 +518,7 @@ jobs:
 
       - name: Test SignalR
         run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.SignalR.Tests
+        working-directory: tests/ViciOne.ServiceBus.SignalR.Tests
 
   calc-version:
     name: Calculate Version
@@ -550,16 +551,16 @@ jobs:
       - id: v
         run: |
           if [ "${{ github.ref }}" = 'refs/heads/master' ]; then
-            echo "version=${MASSTRANSIT_VERSION}" >> $GITHUB_OUTPUT
+            echo "version=${VICIONE_SERVICEBUS_VERSION}" >> $GITHUB_OUTPUT
           else
-            echo "version=${MASSTRANSIT_VERSION}-develop.${{ github.run_number }}" >> $GITHUB_OUTPUT
+            echo "version=${VICIONE_SERVICEBUS_VERSION}-develop.${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
   publish:
     name: Build and Publish NuGets
     timeout-minutes: 60
     runs-on: windows-latest
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'MassTransit/MassTransit' && success()
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'ViciOne.ServiceBus/ViciOne.ServiceBus' && success()
     env:
       DOTNET_INSTALL_DIR: D:\dotnet
       NUGET_PACKAGES: D:\.nuget\packages

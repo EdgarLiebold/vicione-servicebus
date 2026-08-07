@@ -1,0 +1,27 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ionic.Zlib.Core" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
+    <PackageReference Include="SharpZipLib" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.ActiveMqTransport\ViciOne.ServiceBus.ActiveMqTransport.csproj" />
+    <ProjectReference Include="..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
+  </ItemGroup>
+
+</Project>

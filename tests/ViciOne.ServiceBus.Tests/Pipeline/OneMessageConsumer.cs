@@ -1,0 +1,31 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Tests.Pipeline
+{
+    using System.Threading.Tasks;
+    using TestFramework.Messages;
+    using Util;
+
+
+    public class OneMessageConsumer :
+        IConsumer<MessageA>
+    {
+        readonly TaskCompletionSource<MessageA> _completed;
+
+        public OneMessageConsumer()
+        {
+            _completed = TaskUtil.GetTask<MessageA>();
+        }
+
+        public OneMessageConsumer(TaskCompletionSource<MessageA> completed)
+        {
+            _completed = completed;
+        }
+
+        public Task<MessageA> Task => _completed.Task;
+
+        public async Task Consume(ConsumeContext<MessageA> context)
+        {
+            _completed.TrySetResult(context.Message);
+        }
+    }
+}

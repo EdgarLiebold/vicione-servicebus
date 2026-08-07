@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="ViciOne.ServiceBus.Tests"
+                   assembly="ViciOne.ServiceBus.Tests"
+                   default-lazy="false"
+                   default-cascade="none" >
+  <class name="ViciOne.ServiceBus.Tests.Saga.RegisterUserSaga, ViciOne.ServiceBus.Tests">
+    <id name="CorrelationId" column="Id" access="property">
+      <generator class="assigned" />
+    </id>
+
+    <property name="Username"/>
+    <property name="Password"/>
+    <property name="DisplayName"/>
+    <property name="Email"/>
+    
+  </class>
+</hibernate-mapping>

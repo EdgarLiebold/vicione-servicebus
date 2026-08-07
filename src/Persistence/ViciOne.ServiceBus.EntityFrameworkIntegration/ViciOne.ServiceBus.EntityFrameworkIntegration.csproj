@@ -1,0 +1,29 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.EntityFramework</PackageId>
+    <Title>ViciOne.ServiceBus.EntityFramework</Title>
+    <PackageTags>ViciOne.ServiceBus;EF;EntityFramework</PackageTags>
+    <Description>ViciOne.ServiceBus Entity Framework persistence support; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

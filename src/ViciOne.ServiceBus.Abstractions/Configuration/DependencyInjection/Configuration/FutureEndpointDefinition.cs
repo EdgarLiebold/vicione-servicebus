@@ -1,0 +1,18 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class FutureEndpointDefinition<TFuture> :
+        SettingsEndpointDefinition<TFuture>
+        where TFuture : class
+    {
+        public FutureEndpointDefinition(IEndpointSettings<IEndpointDefinition<TFuture>> settings)
+            : base(settings)
+        {
+        }
+
+        protected override string FormatEndpointName(IEndpointNameFormatter formatter)
+        {
+            return formatter.Message<TFuture>();
+        }
+    }
+}

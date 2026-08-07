@@ -1,0 +1,36 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.MessageData.Conventions
+{
+    using Configuration;
+    using ViciOne.ServiceBus.Configuration;
+
+
+    public class MessageDataMessageSendTopologyConvention<TMessage> :
+        IMessageDataMessageSendTopologyConvention<TMessage>
+        where TMessage : class
+    {
+        readonly IMessageDataRepository _repository;
+
+        public MessageDataMessageSendTopologyConvention(IMessageDataRepository repository)
+        {
+            _repository = repository;
+        }
+
+        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        {
+            convention = this as IMessageSendTopologyConvention<T>;
+
+            return convention != null;
+        }
+
+        bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+        {
+            var specification = new PutMessageDataTransformSpecification<TMessage>(_repository);
+            if (specification.TryGetSendTopology(out messageSendTopology))
+                return true;
+
+            messageSendTopology = null;
+            return false;
+        }
+    }
+}

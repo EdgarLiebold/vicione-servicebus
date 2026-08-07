@@ -1,0 +1,21 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOneServiceBusBenchmark.Latency
+{
+    using System;
+    using System.Threading.Tasks;
+    using ViciOne.ServiceBus;
+
+
+    public interface IMessageLatencyTransport :
+        IAsyncDisposable
+    {
+        Task Send(LatencyTestMessage message);
+
+        /// <summary>
+        /// The bus control
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="reportConsumerMetric"></param>
+        Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric);
+    }
+}

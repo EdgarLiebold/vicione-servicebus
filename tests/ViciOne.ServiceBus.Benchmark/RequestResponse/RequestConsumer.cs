@@ -1,0 +1,40 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOneServiceBusBenchmark.RequestResponse
+{
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ViciOne.ServiceBus;
+
+
+    public class RequestConsumer :
+        IConsumer<RequestMessage>
+    {
+        public static int CurrentConsumerCount;
+        public static int MaxConsumerCount;
+        readonly IReportConsumerMetric _report;
+
+        public RequestConsumer(IReportConsumerMetric report)
+        {
+            _report = report;
+        }
+
+        public async Task Consume(ConsumeContext<RequestMessage> context)
+        {
+            var current = Interlocked.Increment(ref CurrentConsumerCount);
+            var maxConsumerCount = MaxConsumerCount;
+            if (current > maxConsumerCount)
+                Interlocked.CompareExchange(ref MaxConsumerCount, current, maxConsumerCount);
+
+            try
+            {
+                context.Respond(new ResponseMessage(context.Message.CorrelationId));
+
+                await _report.Consumed<RequestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
+            }
+            finally
+            {
+                Interlocked.Decrement(ref CurrentConsumerCount);
+            }
+        }
+    }
+}

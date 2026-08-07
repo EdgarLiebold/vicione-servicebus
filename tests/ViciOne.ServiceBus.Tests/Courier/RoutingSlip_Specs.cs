@@ -1,0 +1,35 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Tests.Courier
+{
+    using System;
+    using System.Threading.Tasks;
+    using ViciOne.ServiceBus.Courier.Contracts;
+    using NUnit.Framework;
+    using TestFramework;
+
+
+    [TestFixture]
+    public class Sending_a_routing_slip :
+        InMemoryTestFixture
+    {
+        [Test]
+        public async Task Should_be_properly_serialized_as_a_message()
+        {
+            var builder = new RoutingSlipBuilder(NewId.NextGuid());
+            builder.AddActivity("test", new Uri("loopback://localhost/execute_testactivity"), new { });
+
+            await InputQueueSendEndpoint.Send(builder.Build());
+
+            await _received;
+        }
+
+        #pragma warning disable NUnit1032
+        Task<ConsumeContext<RoutingSlip>> _received;
+        #pragma warning restore NUnit1032
+
+        protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
+        {
+            _received = Handled<RoutingSlip>(configurator);
+        }
+    }
+}

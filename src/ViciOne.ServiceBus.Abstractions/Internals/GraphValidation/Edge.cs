@@ -1,0 +1,27 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Internals.GraphValidation
+{
+    using System;
+
+
+    public struct Edge<T, TNode> :
+        IComparable<Edge<T, TNode>>
+        where TNode : Node<T>
+    {
+        public readonly TNode Source;
+        public readonly TNode Target;
+        public readonly int Weight;
+
+        public Edge(TNode source, TNode target, int weight)
+        {
+            Source = source;
+            Target = target;
+            Weight = weight;
+        }
+
+        public int CompareTo(Edge<T, TNode> other)
+        {
+            return Weight - other.Weight;
+        }
+    }
+}

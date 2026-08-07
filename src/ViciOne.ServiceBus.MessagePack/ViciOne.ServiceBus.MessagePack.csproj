@@ -1,0 +1,31 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props"/>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.MessagePack</PackageId>
+    <Title>ViciOne.ServiceBus.MessagePack</Title>
+    <PackageTags>ViciOne.ServiceBus;MessagePack;MsgPack</PackageTags>
+    <Description>ViciOne.ServiceBus MessagePack support; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViciOne.ServiceBus.Abstractions\ViciOne.ServiceBus.Abstractions.csproj"/>
+    <ProjectReference Include="..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj"/>
+  </ItemGroup>
+
+</Project>

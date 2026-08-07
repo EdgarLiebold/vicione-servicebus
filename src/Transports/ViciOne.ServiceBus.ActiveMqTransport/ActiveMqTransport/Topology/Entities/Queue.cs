@@ -1,0 +1,24 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+{
+    /// <summary>
+    /// The queue details used to declare the queue to ActiveMQ
+    /// </summary>
+    public interface Queue
+    {
+        /// <summary>
+        /// The queue name
+        /// </summary>
+        string EntityName { get; }
+
+        /// <summary>
+        /// True if the queue should be deleted when the connection is closed
+        /// </summary>
+        bool AutoDelete { get; }
+
+        /// <summary>
+        /// True if queue is not persisted on disk
+        /// </summary>
+        bool Durable { get; }
+    }
+}

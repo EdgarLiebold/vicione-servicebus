@@ -1,0 +1,25 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+{
+    using Configuration;
+
+
+    public class ActiveMqDeadLetterSettings :
+        ActiveMqQueueBindingConfigurator,
+        DeadLetterSettings
+    {
+        public ActiveMqDeadLetterSettings(EntitySettings source, string queueName)
+            : base(queueName, source.Durable, source.AutoDelete)
+        {
+        }
+
+        public BrokerTopology GetBrokerTopology()
+        {
+            var builder = new PublishEndpointBrokerTopologyBuilder();
+
+            builder.CreateQueue(EntityName, Durable, AutoDelete);
+
+            return builder.BuildBrokerTopology();
+        }
+    }
+}

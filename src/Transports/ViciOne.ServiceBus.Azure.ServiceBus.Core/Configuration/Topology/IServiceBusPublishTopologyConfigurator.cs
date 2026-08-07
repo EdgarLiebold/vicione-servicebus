@@ -1,0 +1,16 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System;
+
+
+    public interface IServiceBusPublishTopologyConfigurator :
+        IPublishTopologyConfigurator,
+        IServiceBusPublishTopology
+    {
+        new IServiceBusMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
+            where T : class;
+
+        new IServiceBusMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
+    }
+}

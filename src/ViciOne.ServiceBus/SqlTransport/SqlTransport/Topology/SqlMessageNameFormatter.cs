@@ -1,0 +1,31 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus.SqlTransport.Topology
+{
+    using System;
+    using Transports;
+
+
+    public class SqlMessageNameFormatter :
+        IMessageNameFormatter
+    {
+        readonly IMessageNameFormatter _formatter;
+
+        public SqlMessageNameFormatter(string? namespaceSeparator = null)
+            : this(true, namespaceSeparator)
+        {
+        }
+
+        public SqlMessageNameFormatter(bool includeNamespace, string? namespaceSeparator = null)
+        {
+            _formatter = string.IsNullOrWhiteSpace(namespaceSeparator)
+                ? new DefaultMessageNameFormatter("::", "--", ":", "-", includeNamespace)
+                : new DefaultMessageNameFormatter("::", "--", namespaceSeparator, "-", includeNamespace);
+        }
+
+        public string GetMessageName(Type type)
+        {
+            return _formatter.GetMessageName(type);
+        }
+    }
+}

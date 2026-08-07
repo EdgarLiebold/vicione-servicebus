@@ -1,0 +1,37 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.EventHubIntegration
+{
+    using System.Threading;
+    using Azure.Messaging.EventHubs;
+    using Logging;
+    using ViciOne.ServiceBus.Middleware;
+
+
+    public class SharedProcessorContext :
+        ProxyPipeContext,
+        ProcessorContext
+    {
+        readonly ProcessorContext _context;
+
+        public SharedProcessorContext(ProcessorContext context, CancellationToken cancellationToken)
+            : base(context)
+        {
+            _context = context;
+            CancellationToken = cancellationToken;
+        }
+
+        public override CancellationToken CancellationToken { get; }
+
+        public ILogContext LogContext => _context.LogContext;
+
+        public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
+        {
+            return _context.GetClient(context);
+        }
+
+        public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
+        {
+            _context.ReleaseClient(processorLockContext);
+        }
+    }
+}

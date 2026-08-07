@@ -1,0 +1,31 @@
+{
+  "artifactGateAfterSha256": "9954d8d76108a2e77eb8486b9008b28f060438df7693eaf78fdecd67438b217f",
+  "artifactGateBeforeSha256": "ef22a5e98a8d0af2d6e549477dd17e0cae54e0edaa2bce2117b2286711d06923",
+  "artifactInventory": {
+    "after": {
+      "artifactCount": 178,
+      "bindingSha256": "ff2edf995e89d7bf61ac60784cb7e1704d680917058c5b43159b94de2618522b",
+      "totalBytes": 58353600
+    },
+    "before": {
+      "artifactCount": 178,
+      "bindingSha256": "ff2edf995e89d7bf61ac60784cb7e1704d680917058c5b43159b94de2618522b",
+      "totalBytes": 58353600
+    },
+    "changedArtifacts": [],
+    "serialization": "JSON array of path, sha256, and size records in artifact-path order; compact separators; sorted object keys"
+  },
+  "buildReexecuted": false,
+  "correctionOrder": "LEAD_CORRECTION_08",
+  "findings": [],
+  "mainRegressionPackage": {
+    "afterSha256": "91427c55ff06b29199422505eda1f1576f2af6f865bc501c174ab6934bac9e10",
+    "beforeSha256": "91427c55ff06b29199422505eda1f1576f2af6f865bc501c174ab6934bac9e10",
+    "path": "src/ViciOne.ServiceBus/bin/Release/ViciOne.ServiceBus.1.0.0.nupkg",
+    "unchanged": true
+  },
+  "packReexecuted": false,
+  "schemaVersion": 1,
+  "status": "PASS",
+  "workPackageId": "WP-F2-SERVICEBUS-IDENTITY"
+}

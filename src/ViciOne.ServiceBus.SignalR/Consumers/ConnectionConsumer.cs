@@ -1,0 +1,46 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.SignalR.Consumers
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Contracts;
+    using Microsoft.AspNetCore.SignalR;
+    using Utils;
+
+
+    public class ConnectionConsumer<THub> :
+        IConsumer<Connection<THub>>
+        where THub : Hub
+    {
+        readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
+
+        public ConnectionConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
+        {
+            _hubLifetimeManager = hubLifetimeManager;
+        }
+
+        public Task Consume(ConsumeContext<Connection<THub>> context)
+        {
+            return Handle(context.Message.ConnectionId, context.Message.Messages);
+        }
+
+        async Task Handle(string connectionId, IReadOnlyDictionary<string, byte[]> messages)
+        {
+            var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
+
+            var connection = _hubLifetimeManager.Connections[connectionId];
+            if (connection == null)
+                return; // Connection doesn't exist on server, skipping
+
+            try
+            {
+                await connection.WriteAsync(message.Value).AsTask();
+            }
+            catch (Exception e)
+            {
+                LogContext.Warning?.Log(e, "Failed to write message");
+            }
+        }
+    }
+}

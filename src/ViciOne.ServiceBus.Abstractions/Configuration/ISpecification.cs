@@ -1,0 +1,22 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System.Collections.Generic;
+    using System.ComponentModel;
+
+
+    /// <summary>
+    /// A specification, that can be validated as part of a configurator, is used
+    /// to allow nesting and chaining of specifications while ensuring that all aspects
+    /// of the configuration are verified correct.
+    /// </summary>
+    public interface ISpecification
+    {
+        /// <summary>
+        /// Validate the specification, ensuring that a successful build will occur.
+        /// </summary>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        IEnumerable<ValidationResult> Validate();
+    }
+}

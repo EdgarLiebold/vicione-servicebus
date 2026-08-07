@@ -1,0 +1,29 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Iesi.Collections" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Data.SqlClient"/>
+    <PackageReference Include="System.Data.SQLite" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.NHibernateIntegration\ViciOne.ServiceBus.NHibernateIntegration.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Tests\ViciOne.ServiceBus.Tests.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+</Project>

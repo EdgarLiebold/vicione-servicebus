@@ -1,3 +1,4 @@
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 *.suo
 *.user
 *.dotCover
@@ -33,6 +34,8 @@ appsettings.Development.json
 node_modules
 *.iml
 *.log*
+!src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml
+.testagent/
 .nuxt
 coverage
 dist

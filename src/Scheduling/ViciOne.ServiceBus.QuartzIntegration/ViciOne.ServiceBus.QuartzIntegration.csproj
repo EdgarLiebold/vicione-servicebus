@@ -1,0 +1,30 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.Quartz</PackageId>
+    <Title>ViciOne.ServiceBus.Quartz</Title>
+    <PackageTags>ViciOne.ServiceBus;Quartz;Scheduler;Scheduling</PackageTags>
+    <Description>ViciOne.ServiceBus Quartz.NET scheduler support; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz" />
+    <PackageReference Include="Quartz.Extensions.Hosting" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,56 @@
+{
+  "architectApprovalCommit": "b35e330b927b321bfd0d0995c78262ee09af213e",
+  "authorizationBinding": {
+    "eolGatePath": "evidence/WP-F2-SERVICEBUS-IDENTITY/EOL_CANONICALIZATION_GATE.json",
+    "eolGateSha256": "0f6e3cc1a837713f0a07ef492e7271096ae9002cbfcc05d3171bbf36492c2c1e",
+    "gitattributesOnlyAuthorizedInsertion": true,
+    "licenseFourWayByteIdentity": true,
+    "normalizedPathCount": 211,
+    "normalizedPathListDigestSha256": "b080d0f974835490177f29db1eb8064ed3928db0997dce5b1ae011b6a7be30cc"
+  },
+  "authorizedCanonicalizationOrder": "LEAD_CORRECTION_07",
+  "correctionOrder": "LEAD_CORRECTION_08",
+  "findings": [],
+  "rawSourceIdentity": {
+    "baselinePaths": 5654,
+    "changedBaselineFiles": 5646,
+    "findings": 212,
+    "path": "evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json",
+    "publicDeclarationRecords": 35055,
+    "sha256": "cf87c942c60fd2a33e18f67ac2fce94b2f22361cb80337bd970393b30d95112e",
+    "status": "FAIL"
+  },
+  "reconciliation": {
+    "authorizedFindingCount": 212,
+    "eolPathsWithoutRawFinding": [
+      "NOTICE"
+    ],
+    "eolPathsWithoutRawFindingReason": {
+      "NOTICE": "LEGAL_PROVENANCE_PATH_ALREADY_CANONICAL_IN_CLOSED_MAPPING"
+    },
+    "findingClasses": [
+      {
+        "count": 1,
+        "gate": "change-notice",
+        "pathClass": ".gitattributes"
+      },
+      {
+        "count": 1,
+        "gate": "deterministic-refactor",
+        "pathClass": ".gitattributes"
+      },
+      {
+        "count": 210,
+        "gate": "deterministic-refactor",
+        "pathClass": "EOL_PATH"
+      }
+    ],
+    "findingPathsOutsideEolOrGitattributes": [],
+    "scopeWidened": false,
+    "semanticOrProductExceptionGranted": false,
+    "unauthorizedFindings": []
+  },
+  "schemaVersion": 1,
+  "status": "PASS",
+  "workPackageId": "WP-F2-SERVICEBUS-IDENTITY"
+}

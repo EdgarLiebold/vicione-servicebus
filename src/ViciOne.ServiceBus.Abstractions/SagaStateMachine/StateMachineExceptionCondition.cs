@@ -1,0 +1,31 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System;
+
+
+    /// <summary>
+    /// Filters activities based on the conditional statement
+    /// </summary>
+    /// <typeparam name="TSaga"></typeparam>
+    /// <typeparam name="TException"></typeparam>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public delegate bool StateMachineExceptionCondition<TSaga, in TException>(BehaviorExceptionContext<TSaga, TException> context)
+        where TException : Exception
+        where TSaga : class, SagaStateMachineInstance;
+
+
+    /// <summary>
+    /// Filters activities based on the conditional statement
+    /// </summary>
+    /// <typeparam name="TSaga"></typeparam>
+    /// <typeparam name="TMessage"></typeparam>
+    /// <typeparam name="TException"></typeparam>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public delegate bool StateMachineExceptionCondition<TSaga, in TMessage, in TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        where TException : Exception
+        where TSaga : class, SagaStateMachineInstance
+        where TMessage : class;
+}

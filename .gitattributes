@@ -1,5 +1,7 @@
 # Set default behavior to automatically normalize line endings.
 * text=auto
+# Keep the upstream Apache License 2.0 text byte-identical to the upstream baseline.
+LICENSE -text
 
 *.jpg  	binary
 *.png 	binary

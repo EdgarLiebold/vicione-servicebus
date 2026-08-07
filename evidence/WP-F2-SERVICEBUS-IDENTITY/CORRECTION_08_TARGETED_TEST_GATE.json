@@ -1,0 +1,102 @@
+{
+  "aggregate": {
+    "counts": {
+      "classifications": {
+        "PASS": 55,
+        "PRE_EXISTING_BASELINE_TEST_HARNESS_DEFECT": 72
+      },
+      "discovered": 127,
+      "executed": 127,
+      "outcomes": {
+        "Failed": 72,
+        "Passed": 55
+      },
+      "trxFiles": 3
+    },
+    "freshTrxFiles": 3,
+    "rawStatus": "FAIL"
+  },
+  "analyzer": {
+    "classification": "PRE_EXISTING_BASELINE_TEST_HARNESS_DEFECT",
+    "counts": {
+      "classifications": {
+        "PASS": 36,
+        "PRE_EXISTING_BASELINE_TEST_HARNESS_DEFECT": 72
+      },
+      "discovered": 108,
+      "executed": 108,
+      "outcomes": {
+        "Failed": 72,
+        "Passed": 36
+      },
+      "trxFiles": 1
+    },
+    "historicalSignatureChecks": {
+      "allFailuresExactHistoricalClassification": true,
+      "failureMessagesEqual": true,
+      "findingsEmpty": true,
+      "outcomesEqual": true,
+      "perTestOutcomesEqual": true
+    },
+    "newRegression": false,
+    "rawStatus": "FAIL"
+  },
+  "assertionsOrSkipsWeakened": false,
+  "commands": {
+    "analyzer": "dotnet test tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj -c Release --no-build --no-restore",
+    "endpoint": "dotnet test tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~EndpointName_Specs",
+    "killSwitch": "dotnet test tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName=ViciOne.ServiceBus.Tests.ContainerTests.KillSwitch_Specs.Should_be_degraded_after_too_many_exceptions"
+  },
+  "correctionOrder": "LEAD_CORRECTION_08",
+  "endpoint": {
+    "counts": {
+      "classifications": {
+        "PASS": 18
+      },
+      "discovered": 18,
+      "executed": 18,
+      "outcomes": {
+        "Passed": 18
+      },
+      "trxFiles": 1
+    },
+    "status": "PASS"
+  },
+  "findings": [],
+  "killSwitch": {
+    "counts": {
+      "classifications": {
+        "PASS": 1
+      },
+      "discovered": 1,
+      "executed": 1,
+      "outcomes": {
+        "Passed": 1
+      },
+      "trxFiles": 1
+    },
+    "exactTest": "ViciOne.ServiceBus.Tests.ContainerTests.KillSwitch_Specs.Should_be_degraded_after_too_many_exceptions",
+    "status": "PASS"
+  },
+  "newFunctionalGateFailure": false,
+  "schemaVersion": 1,
+  "status": "PASS",
+  "trxBindings": [
+    {
+      "gate": "ANALYZER",
+      "path": ".testagent/correction08-targeted-results/correction08-analyzer.trx",
+      "sha256": "15000c34220f829fc12999cd3386a1fc3efd3afcf3eddc94ddc8dce01156c020"
+    },
+    {
+      "gate": "ENDPOINT",
+      "path": ".testagent/correction08-targeted-results/correction08-endpoint.trx",
+      "sha256": "999d3334e23d0d804a502bfc6070a6118e192bff53b557d512b1e31b9169d73c"
+    },
+    {
+      "gate": "KILLSWITCH",
+      "path": ".testagent/correction08-targeted-results/correction08-killswitch.trx",
+      "sha256": "5af28c80f83f4903645917c4160d3b743dc7d97010421e334aecfbecc97c107b"
+    }
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-IDENTITY"
+}

@@ -1,0 +1,16 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+
+public interface IInMemoryDelayProvider
+{
+    Task Delay(int milliseconds, CancellationToken cancellationToken = default);
+    Task Delay(TimeSpan delay, CancellationToken cancellationToken = default);
+    Task Delay(DateTime delayUntil, CancellationToken cancellationToken = default);
+
+    ValueTask Advance(TimeSpan duration);
+}

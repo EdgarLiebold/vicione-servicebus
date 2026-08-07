@@ -1,0 +1,18 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Tests
+{
+    using System;
+
+
+    [Serializable]
+    public class ClientMessage
+    {
+        string _name;
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
+    }
+}

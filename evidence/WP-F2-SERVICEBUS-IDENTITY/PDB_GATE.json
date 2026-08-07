@@ -1,0 +1,8 @@
+{
+  "assembliesWithEmbeddedPdb": 145,
+  "debugType": "embedded",
+  "externalPdbFiles": 0,
+  "findings": [],
+  "scanCarrier": "DLL_BYTES",
+  "status": "PASS"
+}

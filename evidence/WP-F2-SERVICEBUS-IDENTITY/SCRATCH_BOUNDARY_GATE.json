@@ -1,0 +1,10 @@
+{
+  "physicalReviewBytesRetained": 141259564,
+  "physicalReviewFilesRetained": 116,
+  "postCorrectionGitUntrackedNonIgnoredFiles": 0,
+  "preCorrectionGitUntrackedFiles": 74,
+  "rawCaptureIncludedInDeliverable": false,
+  "retention": "LOCAL_READ_ONLY_REVIEW_SCRATCH_NOT_FOR_COMMIT",
+  "scratchPrefix": ".testagent/",
+  "status": "PASS"
+}

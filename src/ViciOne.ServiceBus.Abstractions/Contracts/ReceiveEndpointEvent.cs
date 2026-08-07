@@ -1,0 +1,19 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System;
+
+
+    public interface ReceiveEndpointEvent
+    {
+        /// <summary>
+        /// The input address of the receive endpoint
+        /// </summary>
+        Uri InputAddress { get; }
+
+        /// <summary>
+        /// The receive endpoint upon which the event occurred
+        /// </summary>
+        IReceiveEndpoint ReceiveEndpoint { get; }
+    }
+}

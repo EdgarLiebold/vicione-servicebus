@@ -1,0 +1,18 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.MessageData.Converters
+{
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Metadata;
+
+
+    public class StreamMessageDataConverter :
+        IMessageDataConverter<Stream>
+    {
+        public Task<Stream> Convert(Stream stream, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(stream);
+        }
+    }
+}

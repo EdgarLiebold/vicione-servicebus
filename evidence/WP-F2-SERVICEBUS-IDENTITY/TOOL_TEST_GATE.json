@@ -1,0 +1,83 @@
+{
+  "adversarialReplay": {
+    "f2Rt04Counterexamples": 9,
+    "killed": 29,
+    "previousRedTeamMutants": 20,
+    "registryMatrix": "canonical-lower-upper-deterministic-mixed-through-path-utf8-binary-utf16",
+    "survived": 0
+  },
+  "artifactScannerMutationGate": {
+    "killed": 5,
+    "nullOrSkippedIsRed": true,
+    "path": "evidence/WP-F2-SERVICEBUS-IDENTITY/ARTIFACT_SCANNER_MUTATION_GATE.json",
+    "requiredMutants": 5,
+    "sha256": "f9860b7222d82579fc5ac6b9587e7b96362c042a5a9edeb8127752f4d57870e0",
+    "survived": 0
+  },
+  "command": "env PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/identity -p 'test_*.py' -v",
+  "failed": 0,
+  "mandatoryProofContractMutants": {
+    "canonicalFindings": 0,
+    "killed": 24,
+    "mandatoryMutants": 24,
+    "subjects": 6,
+    "survived": 0
+  },
+  "registrySemantics": {
+    "contractReference": {
+      "contractPath": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-IDENTITY/ARCHITECT_REGISTRY_SEMANTICS_CONTRACT.json",
+      "contractSha256": "7f1ddc060e60821cd4609e07ea3aca25653dce375a4ff165e4d0a502e5a0bd5a",
+      "decisionCommit": "aada559bf524705097bbd740b304945016be95b1",
+      "registrySha256": "ef347e144161891b217ca08b9bf9d9d42214a57eaeea0f15075222d6d883d7b6",
+      "registryTestSha256": "999a1ef7a22ed6ab1ccabaed6b2ce5f7f79bb38619bf593375dd49dced3b7ef3"
+    },
+    "externalArchitectGateStatus": "PENDING_ARCHITECT_GATE",
+    "localDeveloperQuickcheck": {
+      "authority": "NON_AUTHORITATIVE_LOCAL_DEVELOPER_CHECK",
+      "canonicalization": "schemaVersion-1-json-utf8-ensure_ascii_false-sorted_object_keys-compact_separators-registry_order",
+      "counts": {
+        "families": 18,
+        "mappingRules": 40
+      },
+      "digestMutations": {
+        "eachMappingRuleRemovalKilled": 40,
+        "exactF2Rt05Killed": true,
+        "familyAddRemoveChangeKilled": true,
+        "mappingRuleAddChangeKilled": true,
+        "requiredRemovalSamples": {
+          "contextSpecific": "KILLED",
+          "literal": "KILLED",
+          "lowerContext": "KILLED",
+          "pascalContext": "KILLED",
+          "path": "KILLED",
+          "pathContext": "KILLED",
+          "regex": "KILLED"
+        }
+      },
+      "isolatedRuleEffectMutations": {
+        "generatedFromOriginalRegistryEntries": 40,
+        "killed": 40,
+        "redundantOrEquivalent": 0,
+        "survived": 0
+      },
+      "schemaVersion": 1,
+      "sha256": "992c1fea0b89c5cc4a4e7d9202d479f8522e436031e06da350822575862e6cf3",
+      "status": "PASS",
+      "tests": [
+        "IdentityRulesTests.test_developer_registry_quickcheck_matches_non_authoritative_local_snapshot",
+        "IdentityRulesTests.test_each_of_40_original_mapping_rules_has_non_equivalent_isolated_effect_mutant",
+        "IdentityRulesTests.test_developer_quickcheck_rejects_each_of_40_mapping_rule_removals",
+        "IdentityRulesTests.test_developer_quickcheck_rejects_family_and_mapping_rule_drift",
+        "IdentityRulesTests.test_developer_quickcheck_rejects_exact_f2_rt_05_and_required_strategy_removals"
+      ],
+      "toolBindings": {
+        "identityRulesSha256": "ef347e144161891b217ca08b9bf9d9d42214a57eaeea0f15075222d6d883d7b6",
+        "identityRulesTestsSha256": "999a1ef7a22ed6ab1ccabaed6b2ce5f7f79bb38619bf593375dd49dced3b7ef3"
+      }
+    }
+  },
+  "scope": "LOCAL_DEVELOPER_TOOL_TESTS",
+  "skipped": 0,
+  "status": "PASS",
+  "tests": 83
+}

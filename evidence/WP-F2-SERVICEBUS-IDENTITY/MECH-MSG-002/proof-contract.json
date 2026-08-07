@@ -1,0 +1,123 @@
+{
+  "architectureSubjectProof": "NOT_CLAIMED_BY_IDENTITY_SLICE",
+  "binding": {
+    "anchor": "\u00a72.5",
+    "disposition": "ARCHITECTURE_CONCERN",
+    "id": "MECH-MSG-002",
+    "owner": "A05",
+    "proofProfileId": "DATA"
+  },
+  "identityRefactorProof": "PASS",
+  "mandatoryMutants": [
+    {
+      "family": "DROP",
+      "killFindings": [
+        {
+          "gate": "proof-contract",
+          "reason": "contract missing or duplicated",
+          "subject": "MECH-MSG-002"
+        }
+      ],
+      "mutantId": "DROP:MECHANISM:MECH-MSG-002",
+      "scope": "FROZEN_PROOF_CONTRACT_INTEGRITY",
+      "status": "KILLED",
+      "subjectId": "MECH-MSG-002"
+    },
+    {
+      "family": "OWNER",
+      "killFindings": [
+        {
+          "gate": "proof-binding",
+          "reason": "owner drift",
+          "subject": "MECH-MSG-002"
+        }
+      ],
+      "mutantId": "OWNER:MECHANISM:MECH-MSG-002",
+      "scope": "FROZEN_PROOF_CONTRACT_INTEGRITY",
+      "status": "KILLED",
+      "subjectId": "MECH-MSG-002"
+    },
+    {
+      "family": "BEHAVIOR",
+      "killFindings": [
+        {
+          "gate": "proof-contract",
+          "reason": "requiredScenarios drift",
+          "subject": "MECH-MSG-002"
+        }
+      ],
+      "mutantId": "BEHAVIOR:MECHANISM:MECH-MSG-002",
+      "scope": "FROZEN_PROOF_CONTRACT_INTEGRITY",
+      "status": "KILLED",
+      "subjectId": "MECH-MSG-002"
+    },
+    {
+      "family": "TEST-SABOTAGE",
+      "killFindings": [
+        {
+          "gate": "proof-contract",
+          "reason": "requiredMutants drift",
+          "subject": "MECH-MSG-002"
+        }
+      ],
+      "mutantId": "TEST-SABOTAGE:MECHANISM:MECH-MSG-002",
+      "scope": "FROZEN_PROOF_CONTRACT_INTEGRITY",
+      "status": "KILLED",
+      "subjectId": "MECH-MSG-002"
+    }
+  ],
+  "proofContract": {
+    "acceptanceProfileId": null,
+    "evidenceTarget": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-IDENTITY/MECH-MSG-002/",
+    "id": "PROOF-MECHANISM-MECH-MSG-002",
+    "proofProfileId": "DATA",
+    "requiredEvidence": [
+      "unit",
+      "provider-integration",
+      "power-loss",
+      "mutation"
+    ],
+    "requiredMutants": [
+      "DROP:MECHANISM:MECH-MSG-002",
+      "OWNER:MECHANISM:MECH-MSG-002",
+      "BEHAVIOR:MECHANISM:MECH-MSG-002",
+      "TEST-SABOTAGE:MECHANISM:MECH-MSG-002"
+    ],
+    "requiredScenarios": [
+      "boundary",
+      "failure",
+      "negative",
+      "positive",
+      "recovery"
+    ],
+    "subjectId": "MECH-MSG-002",
+    "subjectKind": "mechanism"
+  },
+  "requiredScenarios": [
+    {
+      "reason": "The frozen binding disposition is ARCHITECTURE_CONCERN; this slice preserves the fork and changes identity only.",
+      "scenario": "boundary",
+      "status": "NOT_PROVEN_BY_IDENTITY_SLICE"
+    },
+    {
+      "reason": "The frozen binding disposition is ARCHITECTURE_CONCERN; this slice preserves the fork and changes identity only.",
+      "scenario": "failure",
+      "status": "NOT_PROVEN_BY_IDENTITY_SLICE"
+    },
+    {
+      "reason": "The frozen binding disposition is ARCHITECTURE_CONCERN; this slice preserves the fork and changes identity only.",
+      "scenario": "negative",
+      "status": "NOT_PROVEN_BY_IDENTITY_SLICE"
+    },
+    {
+      "reason": "The frozen binding disposition is ARCHITECTURE_CONCERN; this slice preserves the fork and changes identity only.",
+      "scenario": "positive",
+      "status": "NOT_PROVEN_BY_IDENTITY_SLICE"
+    },
+    {
+      "reason": "The frozen binding disposition is ARCHITECTURE_CONCERN; this slice preserves the fork and changes identity only.",
+      "scenario": "recovery",
+      "status": "NOT_PROVEN_BY_IDENTITY_SLICE"
+    }
+  ]
+}

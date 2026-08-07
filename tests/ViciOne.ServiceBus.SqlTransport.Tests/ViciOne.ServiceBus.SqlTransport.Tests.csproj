@@ -1,0 +1,34 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <RootNamespace>ViciOne.ServiceBus.DbTransport.Tests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NUnit" />
+      <PackageReference Include="NUnit.Analyzers">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" />
+        <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+        <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+        <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
+        <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
+        <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.SqlServer\ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
+        <ProjectReference Include="..\ViciOne.ServiceBus.Tests\ViciOne.ServiceBus.Tests.csproj" />
+    </ItemGroup>
+</Project>

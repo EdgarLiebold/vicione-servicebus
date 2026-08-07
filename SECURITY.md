@@ -1,8 +1,9 @@
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
 # Security Policy
 
 ## Supported Versions
 
-MassTransit supports the current major version only. If issues or vulnerabilities are encountered with previous versions for which there is no workaround, upgrading to the latest version if recommended.
+ViciOne.ServiceBus supports the current major version only. If issues or vulnerabilities are encountered with previous versions for which there is no workaround, upgrading to the latest version if recommended.
 
 | Version | Supported          |
 | ------- | ------------------ |

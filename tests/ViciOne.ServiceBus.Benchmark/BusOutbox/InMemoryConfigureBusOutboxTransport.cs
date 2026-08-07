@@ -1,0 +1,31 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOneServiceBusBenchmark.BusOutbox;
+
+using System;
+using ViciOne.ServiceBus;
+
+
+public class InMemoryConfigureBusOutboxTransport :
+    IConfigureBusOutboxTransport
+{
+    readonly BusOutboxBenchmarkOptions _options;
+    readonly InMemoryOptionSet _optionSet;
+
+    public InMemoryConfigureBusOutboxTransport(InMemoryOptionSet optionSet, BusOutboxBenchmarkOptions options)
+    {
+        _optionSet = optionSet;
+        _options = options;
+    }
+
+    public void Using(IBusRegistrationConfigurator configurator, Action<IBusRegistrationContext, IBusFactoryConfigurator> callback)
+    {
+        configurator.UsingInMemory((context, cfg) =>
+        {
+            cfg.ConcurrentMessageLimit = _optionSet.TransportConcurrencyLimit;
+
+            callback(context, cfg);
+
+            cfg.ConfigureEndpoints(context);
+        });
+    }
+}

@@ -1,0 +1,19 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.AzureServiceBusTransport
+{
+    using Topology;
+
+
+    /// <summary>
+    /// The settings for sending to an endpoint
+    /// </summary>
+    public interface SendSettings
+    {
+        /// <summary>
+        /// The path of the messaging entity
+        /// </summary>
+        string EntityPath { get; }
+
+        BrokerTopology GetBrokerTopology();
+    }
+}

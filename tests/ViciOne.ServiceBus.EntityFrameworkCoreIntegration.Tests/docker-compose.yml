@@ -1,0 +1,15 @@
+﻿# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+services:
+  mssql:
+    image: "mcr.microsoft.com/azure-sql-edge"
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "SA_PASSWORD=Password12!"
+    ports:
+      - "1433:1433"
+  postgres:
+    image: "postgres"
+    environment:
+      - "POSTGRES_PASSWORD=Password12!"
+    ports:
+      - "5432:5432"

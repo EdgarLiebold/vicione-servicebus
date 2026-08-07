@@ -1,3 +1,0 @@
-namespace MassTransit;
-
-public delegate void ServiceBusConfigureEndpointsCallback(IRegistrationContext context, string queueName, IServiceBusReceiveEndpointConfigurator configurator);

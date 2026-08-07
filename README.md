@@ -1,146 +1,36 @@
-MassTransit
-===========
+# ViciOne.ServiceBus
 
-MassTransit is a _free, open-source_ distributed application framework for .NET. MassTransit makes it easy to create applications and services that leverage message-based, loosely-coupled asynchronous communication for higher availability, reliability, and scalability.
+ViciOne.ServiceBus ist der Messaging- und Saga-Baustein der ViciOne Suite. Der vollständige Fork stellt Projekte, Assemblies, Pakete, Namespaces, öffentliche Typen, Konfiguration, Wire-Identitäten, Diagnose und Tests unter einer einzigen technischen Produktidentität bereit.
 
-![Mass Transit](https://avatars2.githubusercontent.com/u/317796?s=200&v=4 "Mass Transit")
+Der Arbeitsstand ist ein privater Entwicklungsstand. Er ist erst nach bestandenen Funktions-, Sicherheits-, Provenienz- und Publikationsgates zur Veröffentlichung vorgesehen.
 
-MassTransit is Apache 2.0 licensed.
+## Herkunft und Lizenz — Deutsch
 
-## Documentation
+Dieses Repository ist ein vollständiger Fork von **MassTransit 8.5.10**, Upstream-Commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, aus dem Projekt [MassTransit](https://github.com/MassTransit/MassTransit). Der übernommene und geänderte Bestand steht unter der **Apache License 2.0**; siehe [LICENSE](LICENSE), [NOTICE](NOTICE), [COPYRIGHT](COPYRIGHT) und [MODIFICATIONS.md](MODIFICATIONS.md).
 
-Get started by [reading through the documentation](https://masstransit-project.com/).
+ViciOne hat die technische Produktidentität repositoryweit auf `ViciOne.ServiceBus` umgestellt. Dazu gehören insbesondere Pfade, Projekte, Assemblies, Paket-IDs, Namespaces und Typen sowie Konfigurationsschlüssel, Wireheader, MIME-Typen, Topologien, Telemetrie, Logs, Generatoren, Analyzer, Tests, Fixtures, Samples und Buildautomation. Die Umbenennung ändert weder die Herkunft noch die Apache-2.0-Pflichten.
 
-Build Status
-------------
+## Origin and license — English
 
-| Branch        |                                                                                                Status                                                                                                |
-|---------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| master        |    [![master](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml/badge.svg?branch=master&event=push)](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml)    |
-| develop       |   [![develop](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml)   |
+This repository is a complete fork of **MassTransit 8.5.10**, upstream commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, from the [MassTransit](https://github.com/MassTransit/MassTransit) project. The retained and modified code is licensed under the **Apache License 2.0**; see [LICENSE](LICENSE), [NOTICE](NOTICE), [COPYRIGHT](COPYRIGHT), and [MODIFICATIONS.md](MODIFICATIONS.md).
 
-MassTransit NuGet Packages
----------------------------
+ViciOne changed the technical product identity throughout the repository to `ViciOne.ServiceBus`. This includes paths, projects, assemblies, package IDs, namespaces and types, configuration keys, wire headers, MIME types, topology names, telemetry, logs, generators, analyzers, tests, fixtures, samples, and build automation. The rename does not change the origin or any Apache-2.0 obligation.
 
-| Package Name                                                    |   .NET   | .NET Standard | .NET Framework |
-|-----------------------------------------------------------------|:--------:|:-------------:|:--------------:|
-| **Main**                                                        |          |               |                |
-| [MassTransit][MassTransit.nuget]                                | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Abstractions][MassTransitAbstractions.nuget]       | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Newtonsoft][MassTransitNewtonsoft.nuget]           | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.MessagePack][MassTransitMessagePack.nuget]         | 8.0, 9.0 |      2.0      |     4.7.2      |
-| **Other**                                                       |          |               |                |
-| [MassTransit.Analyzers][Analyzers.nuget]                        |          |      2.0      |                |
-| [MassTransit.Templates][Templates.nuget]                        |          |               |                |
-| [MassTransit.SignalR][SignalR.nuget]                            | 8.0, 9.0 |               |     4.7.2      |
-| [MassTransit.Interop.NServiceBus][MassTransitNServiceBus.nuget] | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.TestFramework][TestFramework.nuget]                | 8.0, 9.0 |      2.0      |     4.7.2      |
-| **Persistence**                                                 |          |               |                |
-| [MassTransit.AmazonS3][AmazonS3.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Azure.Cosmos][Cosmos.nuget]                        | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Azure.Storage][AzureStorage.nuget]                 | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Azure.Table][AzureTable.nuget]                     | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Dapper][Dapper.nuget]                              | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.DynamoDb][DynamoDb.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.EntityFrameworkCore][EFCore.nuget]                 | 8.0, 9.0 |               |                |
-| [MassTransit.EntityFramework][EF.nuget]                         |          |      2.1      |     4.7.2      |     
-| [MassTransit.Marten][Marten.nuget]                              | 8.0, 9.0 |               |                |
-| [MassTransit.MongoDb][MongoDb.nuget]                            | 8.0, 9.0 |      2.1      |     4.7.2      |
-| [MassTransit.NHibernate][NHibernate.nuget]                      | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Redis][Redis.nuget]                                | 8.0, 9.0 |      2.0      |     4.7.2      |
-| **Scheduling**                                                  |          |               |                |
-| [MassTransit.Hangfire][Hangfire.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Quartz][Quartz.nuget]                              | 8.0, 9.0 |      2.0      |     4.7.2      |
-| **Transports**                                                  |          |               |                |
-| [MassTransit.ActiveMQ][ActiveMQ.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.AmazonSQS][AmazonSQS.nuget]                        | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.Azure.ServiceBus.Core][AzureSbCore.nuget]          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.RabbitMQ][RabbitMQ.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.SqlTransport.PostgreSQL][PostgreSQL.nuget]         | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.SqlTransport.SqlServer][SqlServer.nuget]           | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.WebJobs.EventHubs][EventHubs.nuget]                | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.WebJobs.ServiceBus][AzureFunc.nuget]               | 8.0, 9.0 |      2.0      |     4.7.2      |
-| **Riders**                                                      |          |               |                |
-| [MassTransit.Kafka][Kafka.nuget]                                | 8.0, 9.0 |      2.0      |     4.7.2      |
-| [MassTransit.EventHub][EventHub.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
+## Build
 
-## Discord 
+Requirements:
 
-Get help live at the MassTransit Discord server.
+- .NET SDK 10.0.302 or the compatible repository-approved SDK baseline
+- access to the package sources configured for the development environment
 
-[![alt Join the conversation](https://img.shields.io/discord/682238261753675864.svg "Discord")](https://discord.gg/rNpQgYn)
+```bash
+dotnet restore ViciOne.ServiceBus.sln
+dotnet build ViciOne.ServiceBus.sln --configuration Release --no-restore
+dotnet test ViciOne.ServiceBus.sln --configuration Release --no-build --no-restore
+```
 
-## GitHub Issues
+The repository contains transport and persistence integration tests that require their unchanged external infrastructure. Missing infrastructure is reported as an explicit incomplete proof; tests are not silently skipped or weakened for the identity refactor.
 
-**Pay attention**
+## Scope
 
-Please do not open an issue on GitHub, unless you have spotted an actual bug in MassTransit. 
-
-Use [GitHub Discussions](https://github.com/MassTransit/MassTransit/discussions) to ask questions, bring up ideas, or other general items. Issues are not the place for questions, and will either be converted to a discussion or closed.
-
-This policy is in place to avoid bugs being drowned out in a pile of sensible suggestions for future 
-enhancements and calls for help from people who forget to check back if they get it and so on.
-
-## Building from Source
-
- 1. Install the latest [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
- 2. Clone the source down to your machine<br/>
-    ```bash
-    git clone https://github.com/MassTransit/MassTransit.git
-    ```
- 3. Run `dotnet build`
-
-## Contributing
-
- 1. Turn off `autocrlf`
-    ```bash
-    git config core.autocrlf false
-    ```
- 2. Hack!
- 3. Make a pull request
- 
-# REQUIREMENTS
-* .NET 9 SDK
-
-# CREDITS
-Logo Design by _The Agile Badger_
-
-[MassTransit.nuget]: https://www.nuget.org/packages/MassTransit
-[MassTransitAbstractions.nuget]: https://www.nuget.org/packages/MassTransit.Abstractions
-[MassTransitNewtonsoft.nuget]: https://www.nuget.org/packages/MassTransit.Newtonsoft
-[MassTransitMessagePack.nuget]: https://www.nuget.org/packages/MassTransit.MessagePack
-[MassTransitNServiceBus.nuget]: https://www.nuget.org/packages/MassTransit.Interop.NServiceBus
-[Analyzers.nuget]: https://www.nuget.org/packages/MassTransit.Analyzers
-[Templates.nuget]: https://www.nuget.org/packages/MassTransit.Templates
-[SignalR.nuget]: https://www.nuget.org/packages/MassTransit.SignalR
-[TestFramework.nuget]: https://www.nuget.org/packages/MassTransit.TestFramework
-
-[Prometheus.nuget]: https://www.nuget.org/packages/MassTransit.Prometheus
-
-[Cosmos.nuget]: https://www.nuget.org/packages/MassTransit.Azure.Cosmos
-[AzureStorage.nuget]: https://www.nuget.org/packages/MassTransit.Azure.Storage
-[AzureTable.nuget]: https://www.nuget.org/packages/MassTransit.Azure.Table
-[Dapper.nuget]: https://www.nuget.org/packages/MassTransit.DapperIntegration
-[DynamoDb.nuget]: https://www.nuget.org/packages/MassTransit.DynamoDb
-[EFCore.nuget]: https://www.nuget.org/packages/MassTransit.EntityFrameworkCore
-[EF.nuget]: https://www.nuget.org/packages/MassTransit.EntityFramework
-[Marten.nuget]: https://www.nuget.org/packages/MassTransit.Marten
-[MongoDb.nuget]: https://www.nuget.org/packages/MassTransit.MongoDb
-[NHibernate.nuget]: https://www.nuget.org/packages/MassTransit.NHibernate
-[Redis.nuget]: https://www.nuget.org/packages/MassTransit.Redis
-
-[Hangfire.nuget]: https://www.nuget.org/packages/MassTransit.Hangfire
-[Quartz.nuget]: https://www.nuget.org/packages/MassTransit.Quartz
-
-[ActiveMQ.nuget]: https://www.nuget.org/packages/MassTransit.ActiveMQ
-[AmazonS3.nuget]: https://www.nuget.org/packages/MassTransit.AmazonS3
-[AmazonSQS.nuget]: https://www.nuget.org/packages/MassTransit.AmazonSQS
-[AzureSbCore.nuget]: https://www.nuget.org/packages/MassTransit.Azure.ServiceBus.Core
-[RabbitMQ.nuget]: https://www.nuget.org/packages/MassTransit.RabbitMQ
-[PostgreSQL.nuget]: https://nuget.org/packages/MassTransit.SqlTransport.PostgreSQL/
-[SqlServer.nuget]: https://nuget.org/packages/MassTransit.SqlTransport.SqlServer/
-[EventHubs.nuget]: https://www.nuget.org/packages/MassTransit.WebJobs.EventHubs
-[AzureFunc.nuget]: https://www.nuget.org/packages/MassTransit.WebJobs.ServiceBus
-
-[Kafka.nuget]: https://www.nuget.org/packages/MassTransit.Kafka
-[EventHub.nuget]: https://www.nuget.org/packages/MassTransit.EventHub
+The fork retains the complete upstream source scope, including in-memory messaging, broker transports, riders, saga persistence, scheduling, analyzers, generators, test infrastructure, benchmarks, and samples. ViciOne Suite integration is deliberately outside this identity-only work package.

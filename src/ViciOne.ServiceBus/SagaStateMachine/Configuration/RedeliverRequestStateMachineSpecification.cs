@@ -1,0 +1,29 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    using System;
+
+
+    public class RedeliverRequestStateMachineSpecification :
+        IRequestStateMachineMissingInstanceConfigurator
+    {
+        readonly Action<IMissingInstanceRedeliveryConfigurator> _configure;
+
+        public RedeliverRequestStateMachineSpecification(Action<IMissingInstanceRedeliveryConfigurator> configure)
+        {
+            _configure = configure;
+        }
+
+        public IPipe<ConsumeContext<TMessage>> Apply<TInstance, TMessage>(IMissingInstanceConfigurator<TInstance, TMessage> configurator)
+            where TInstance : SagaStateMachineInstance
+            where TMessage : class
+        {
+            return configurator.Redeliver(r =>
+            {
+                r.OnRedeliveryLimitReached(x => x.Fault());
+
+                _configure?.Invoke(r);
+            });
+        }
+    }
+}

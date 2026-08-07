@@ -1,0 +1,22 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
+{
+    using Context;
+
+
+    public class InMemoryOutboxReceiveContext :
+        ReceiveContextProxy
+    {
+        public InMemoryOutboxReceiveContext(OutboxContext outboxContext, ReceiveContext context)
+            : base(context)
+        {
+            SendEndpointProvider = new InMemoryOutboxSendEndpointProvider(outboxContext, context.SendEndpointProvider);
+
+            PublishEndpointProvider = new InMemoryOutboxPublishEndpointProvider(outboxContext, context.PublishEndpointProvider);
+        }
+
+        public override IPublishEndpointProvider PublishEndpointProvider { get; }
+
+        public override ISendEndpointProvider SendEndpointProvider { get; }
+    }
+}

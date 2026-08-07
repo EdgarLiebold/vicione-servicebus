@@ -1,0 +1,12 @@
+{
+  "evidenceCategory": "provider-integration",
+  "reason": "Identity preservation evidence is available, but this slice does not implement or prove the future Suite architecture subject.",
+  "references": [
+    "../SOURCE_IDENTITY_GATE.json",
+    "../ARTIFACT_GATE.json",
+    "../TEST_GATE.json"
+  ],
+  "scope": "ARCHITECTURE_CONCERN",
+  "status": "NOT_PROVEN_BY_IDENTITY_SLICE",
+  "subjectId": "GUA-MSG-006"
+}

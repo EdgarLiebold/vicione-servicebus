@@ -1,0 +1,1073 @@
+{
+  "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
+  "counts": {
+    "baselinePaths": 5654,
+    "changedBaselineFiles": 5646,
+    "findings": 212,
+    "publicDeclarationRecords": 35055
+  },
+  "findings": [
+    {
+      "gate": "change-notice",
+      "path": ".gitattributes",
+      "reason": "changed baseline file lacks effective notice"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": ".gitattributes",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "ViciOne.ServiceBus.sln",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/ActivityTestContextConfigurator.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/BusTestFixture.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/AddressArguments.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/AddressLog.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/FaultyArguments.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/FaultyLog.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/ObjectGraphActivityArguments.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/OuterObject.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/OuterObjectImpl.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/SetVariablesFaultyArguments.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/TestArguments.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Courier/TestLog.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/IntentionalTestException.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/DeleteMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/IMessageA.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/MessageA.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/MessageB.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/PingMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/PingNotSupported.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/Messages/PongMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/TestSymmetricKeyProvider.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus.TestFramework/ThreadSafeRandom.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Audit/IConsumeMetadataFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Audit/ISendMetadataFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Audit/MetadataFactories/DefaultConsumeMetadataFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Audit/MetadataFactories/DefaultSendMetadataFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Configuration/IBusFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Configuration/PerformanceCounterExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/MessageData/FileSystemMessageDataRepository.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/MessageData/InMemoryMessageDataId.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/BuiltInCounters.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/ConsumerPerformanceCounterCache.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/CreateCounterDelegate.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/IConsumerPerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/ICounterFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/IMessagePerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/IPerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/IPerformanceCounterInstaller.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/ISendPerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/MessagePerformanceCounterCache.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/Null/NullCounterFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/Null/NullPerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDConfiguration.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDCounterFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDPerformanceCounter.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Testing/ConsumerTestHarnessExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Testing/HandlerTestHarnessExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Testing/IConsumedMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Testing/InMemoryTestHarness.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/TransactionContextExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Transports/AddressEqualityComparer.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Transports/ISendEndpointCache.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Transports/SendEndpointFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Transports/StartHostHandle.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/ObservableObserver.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/Scanning/AssemblyScanRecord.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/Scanning/AssemblyTypeList.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/Scanning/IAssemblyScanner.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/TypeClassification.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/readme.md",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/IRabbitMqClusterConfigurator.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/IRabbitMqSslConfigurator.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageNotAcknowledgedException.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageReturnedException.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqBusFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Topology/IRabbitMqConsumeTopology.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Topology/IRabbitMqMessageConsumeTopology.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Topology/IRabbitMqMessageSendTopology.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Topology/IRabbitMqSendTopology.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ErrorQueue_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/App.config",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/DbQuery.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests/StorageSpec_Types.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MartenIntegration.Tests/Messages.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Courier/MongoDbTestFixture.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/MongoMessageDataRepositoryTestsForGettingMessageData.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/MongoMessageDataRepositoryTestsForPuttingMessageDataWithExpiration.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/MongoUriResolverTestsForResolvingMalformedUris.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/MongoUriResolverTestsForResolvingObjectId.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/MongoUriResolverTestsForResolvingUri.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Saga/Data/SagaRepository.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Saga/Messages/CompleteSimpleSaga.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Saga/Messages/InitiateSimpleSaga.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Saga/Messages/ObservableSagaMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests/Saga/Messages/SimpleSagaMessageBase.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/DbQuery.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/NHibernateSessionFactoryProvider.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/SimpleSagaMap.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/SingleConnectionSessionFactory.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/SqlLiteSessionFactoryProvider.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests/StorageSpec_Types.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzPublish_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Utils.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Bytes_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ConcurrencyFilter_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ConsumeReceiveTask_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Encrypted_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/EventPublishRQ_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/FailedConnection_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Failure_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/HammerTime_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Insufficient_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/LocalBusName_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/MessageName_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Observer_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/PublishFaultChannel_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/PublishFaultObserver_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/PublishStop_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/PublisherConfirm_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ReceiveEndpoint_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/RoutingKeyDirect_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/RoutingKeyTopic_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Security_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/SendObserver_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/SendToPublishExchange_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Shutdown_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/SimpleConnect_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Skip_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/TestRegularExpression_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/TopologyRoutingKey_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/UsingCluster_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/When_a_message_consumer_throws_an_exception.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/InstanceSubscription_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainedMessage_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerConvention.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerInterfaceType.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Conventional/IHandler.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/ConversationId_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/CorrelationId_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/Configuration_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RequestRoutingSlip_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Diagnostics/Trace_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/EventPublish_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/FastProperty_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Groups/Group_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/HostInfo_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/InterceptingConsumer_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/InterfaceProxy_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/InterfaceSubscription_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/JsonToken_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageContext_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/ClientMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/DeleteMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/PartialSerializationTestMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/RequestMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/ResponseMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/SerializationTestMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/UpdateAcceptedMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Messages/UpdateMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/CircuitBreaker_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectHandler_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/ContentFilter_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/OneMessageConsumer.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/PartitionByKey_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Pipeline/TwoMessageConsumer.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/PublishHeader_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/PublishSubscribe_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/ReceiveEndpoint_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Injecting_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/CompleteSimpleSaga.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/CorrelatedMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/InitiateSimpleSaga.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/ObservableSagaMessage.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/RegisterUser.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/SendUserVerificationEmail.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/SendValidationEmail.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/SimpleSagaMessageBase.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserRegistrationComplete.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserRegistrationPending.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserValidated.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserVerificationEmailSent.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/RegisterUserSaga.hbm.xml",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/SagaTestContext.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/saga.nhibernate.cfg.xml",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/SendByConvention_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/SendEndpointCache_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/SendProxy_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/SendReceive_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Array_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TypeHandling_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/SerializationFault_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ConsumerMultiple_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ConsumerTest_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/HandlerRespond_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/NewTest_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/StandaloneConsumer_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Threading_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Timeout_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Transforms/SendTransform_Specs.cs",
+      "reason": "content differs from closed mapping"
+    },
+    {
+      "gate": "deterministic-refactor",
+      "path": "tests/ViciOne.ServiceBus.Tests/Transforms/SetProperty_Specs.cs",
+      "reason": "content differs from closed mapping"
+    }
+  ],
+  "licenseByteIdentical": true,
+  "status": "FAIL"
+}

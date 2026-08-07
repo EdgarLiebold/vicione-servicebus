@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<restrict>
+    <cors>
+        <allow-origin>*://*</allow-origin>
+        <strict-checking/>
+    </cors>
+</restrict>

@@ -1,0 +1,16 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.AzureServiceBusTransport
+{
+    using System;
+    using System.Threading.Tasks;
+
+
+    public interface MessageLockContext
+    {
+        Task Complete();
+
+        Task Abandon(Exception exception);
+        Task DeadLetter();
+        Task DeadLetter(Exception exception);
+    }
+}

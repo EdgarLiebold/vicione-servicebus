@@ -1,0 +1,35 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+{
+    using ViciOne.ServiceBus.Configuration;
+
+
+    public class InMemoryEndpointConfiguration :
+        EndpointConfiguration,
+        IInMemoryEndpointConfiguration
+    {
+        readonly IInMemoryTopologyConfiguration _topologyConfiguration;
+
+        protected InMemoryEndpointConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
+            : base(topologyConfiguration)
+        {
+            _topologyConfiguration = topologyConfiguration;
+        }
+
+        InMemoryEndpointConfiguration(IInMemoryEndpointConfiguration parentConfiguration, IInMemoryTopologyConfiguration topologyConfiguration,
+            bool isBusEndpoint)
+            : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+        {
+            _topologyConfiguration = topologyConfiguration;
+        }
+
+        IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _topologyConfiguration;
+
+        public IInMemoryEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+        {
+            var topologyConfiguration = new InMemoryTopologyConfiguration(_topologyConfiguration);
+
+            return new InMemoryEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
+        }
+    }
+}

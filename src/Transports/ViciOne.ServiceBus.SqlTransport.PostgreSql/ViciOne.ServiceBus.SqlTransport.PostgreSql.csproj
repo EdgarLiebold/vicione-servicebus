@@ -1,0 +1,30 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ViciOne.ServiceBus.SqlTransport.PostgreSQL</PackageId>
+    <Title>ViciOne.ServiceBus.SqlTransport.PostgreSQL</Title>
+    <PackageTags>ViciOne.ServiceBus;Database;Transport;PostgreSQL;npgsql</PackageTags>
+    <Description>ViciOne.ServiceBus PostgreSQL Database Transport; $(Description)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Npgsql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

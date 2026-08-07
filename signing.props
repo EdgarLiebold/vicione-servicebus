@@ -1,8 +1,9 @@
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
 <Project>
   <!-- These properties will be used only by projects that sign the assemblies -->
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)MassTransit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ViciOne.ServiceBus.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 </Project>

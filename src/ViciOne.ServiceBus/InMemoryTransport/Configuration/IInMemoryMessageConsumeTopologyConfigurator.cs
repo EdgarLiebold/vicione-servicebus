@@ -1,0 +1,30 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus
+{
+    using Configuration;
+    using Transports.Fabric;
+
+
+    public interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
+        IMessageConsumeTopologyConfigurator<TMessage>,
+        IInMemoryMessageConsumeTopology<TMessage>
+        where TMessage : class
+    {
+        /// <summary>
+        /// Adds the exchange bindings for this message type
+        /// </summary>
+        void Bind(ExchangeType? exchangeType = default, string? routingKey = null);
+    }
+
+
+    public interface IInMemoryMessageConsumeTopologyConfigurator :
+        IMessageConsumeTopologyConfigurator
+    {
+        /// <summary>
+        /// Apply the message topology to the builder
+        /// </summary>
+        /// <param name="builder"></param>
+        void Apply(IMessageFabricConsumeTopologyBuilder builder);
+    }
+}

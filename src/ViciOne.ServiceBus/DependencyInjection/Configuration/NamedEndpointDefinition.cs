@@ -1,0 +1,19 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class NamedEndpointDefinition :
+        DefaultEndpointDefinition
+    {
+        readonly string _endpointName;
+
+        public NamedEndpointDefinition(string endpointName)
+        {
+            _endpointName = endpointName;
+        }
+
+        public override string GetEndpointName(IEndpointNameFormatter formatter)
+        {
+            return _endpointName;
+        }
+    }
+}

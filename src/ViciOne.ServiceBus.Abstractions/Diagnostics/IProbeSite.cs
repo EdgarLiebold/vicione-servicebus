@@ -1,0 +1,12 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    /// <summary>
+    /// To support the introspection of code, this interface is used to gain
+    /// information about the bus.
+    /// </summary>
+    public interface IProbeSite
+    {
+        void Probe(ProbeContext context);
+    }
+}

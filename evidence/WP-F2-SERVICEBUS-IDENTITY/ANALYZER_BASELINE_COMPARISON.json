@@ -1,0 +1,351 @@
+{
+  "baseline": {
+    "helper": {
+      "activeElseUsesCoreLibAssembly": true,
+      "net6RuntimeFacadeBranch": true,
+      "targetFrameworkNet9": true
+    },
+    "probe": {
+      "compilerDiagnostics": [
+        {
+          "code": "CS5001",
+          "missingType": null
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Action<>"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Uri"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ValueType"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ValueType"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Guid"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ArraySegment<>"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Task"
+        }
+      ],
+      "metadataTypeResolved": true,
+      "producerMethodSymbolsResolved": 0,
+      "requiredAssembly": "System.Runtime, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    },
+    "trx": {
+      "missingDiagnosticMessages": {
+        "Mismatch between number of diagnostics returned, expected \"1\" actual \"0\"": 71,
+        "Mismatch between number of diagnostics returned, expected \"2\" actual \"0\"": 1
+      },
+      "outcomes": {
+        "Failed": 72,
+        "Passed": 36
+      },
+      "resultMap": {
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Create": "Passed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_GetResponse": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Publish": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_RespondAsync": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Send": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_context_publish_does_not_suggest": "Passed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_after_token": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_in_activity": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_with_token": "Passed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyCompatible_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyIncompatible_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndNoMissingProperties_WithVariables_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveTheNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveTheRightDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndNoMissingProperty_WithVariable_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenGetResponseTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingNullableProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenPublishTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenRecordsWithVariablesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenRecursiveTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSendExtensionMethodUsedInConsumer_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSendTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypeNotValidStructure_WithVariable_ShouldHaveDiagnostic_ButItLooksGoodToMe": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingMultiplePropertiesAtDifferentNodes_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedArrayTypeProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedTypeProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedArrayType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleWithAsyncAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleWithDunderProperty_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtDifferentNodesAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtNestedArrayTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtNestedTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedArrayTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreEnumerableCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatibleAndInherited_ShouldNotHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatible_ShouldNotHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyIncompatible_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix_1": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix_2": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveTheNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveTheRightDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndNoMissingProperty_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenGetResponseTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingCaseNullableProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingNullableProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageDataTypesAreStructurallyCompatible_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenNotUsingViciOneServiceBusSymbols_ShouldNotInterfere": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenPublishTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenRecordsWithVariablesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenRecursiveTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSendExtensionMethodUsedInConsumer_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSendTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypeNotValidStructure_ShouldHaveDiagnostic_ButItLooksGoodToMe": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingMultiplePropertiesAtDifferentNodes_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedArrayTypeProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedTypeProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedArrayType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleWithAsyncAndNoMissingProperties_ShouldHaveNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleWithDunderProperty_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtDifferentNodesAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtNestedArrayTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtNestedTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedArrayTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreEnumerableCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed"
+      },
+      "total": 108
+    }
+  },
+  "cause": "The net9 analyzer test harness selects typeof(ISet<>).Assembly.Location instead of the System.Runtime facade; both baseline and target snippets produce the same CS0012 set and therefore no producer method symbols.",
+  "checks": {
+    "compilerDiagnosticsEqual": true,
+    "harnessDefectPresentBoth": true,
+    "helperBranchEqual": true,
+    "metadataResolutionEqual": true,
+    "missingDiagnosticMessagesEqual": true,
+    "perTestOutcomesEqual": true,
+    "requiredRuntimeEqual": true,
+    "resultCountsEqual": true
+  },
+  "classification": "PRE_EXISTING_BASELINE_TEST_HARNESS_DEFECT",
+  "expectationsWeakened": false,
+  "status": "PASS",
+  "target": {
+    "helper": {
+      "activeElseUsesCoreLibAssembly": true,
+      "net6RuntimeFacadeBranch": true,
+      "targetFrameworkNet9": true
+    },
+    "probe": {
+      "compilerDiagnostics": [
+        {
+          "code": "CS5001",
+          "missingType": null
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Action<>"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Uri"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ValueType"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ValueType"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Guid"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "ArraySegment<>"
+        },
+        {
+          "code": "CS0012",
+          "missingType": "Task"
+        }
+      ],
+      "metadataTypeResolved": true,
+      "producerMethodSymbolsResolved": 0,
+      "requiredAssembly": "System.Runtime, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    },
+    "trx": {
+      "missingDiagnosticMessages": {
+        "Mismatch between number of diagnostics returned, expected \"1\" actual \"0\"": 71,
+        "Mismatch between number of diagnostics returned, expected \"2\" actual \"0\"": 1
+      },
+      "outcomes": {
+        "Failed": 72,
+        "Passed": 36
+      },
+      "resultMap": {
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Create": "Passed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_GetResponse": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Publish": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_RespondAsync": "Failed",
+        "<PRODUCT>.Analyzers.Tests.Await_Specs.Calling_Send": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_context_publish_does_not_suggest": "Passed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_after_token": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_in_activity": "Failed",
+        "<PRODUCT>.Analyzers.Tests.CancellationToken_Specs.Calling_task_delay_with_token": "Passed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyCompatible_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.DictionaryInitializer_Specs.WhenTypesAreStructurallyIncompatible_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndNoMissingProperties_WithVariables_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenActivatingGenericContractAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveTheNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveTheRightDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndNoMissingProperty_WithVariable_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenGetResponseTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNamespaceAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingNullableProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenPublishTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenRecordsWithVariablesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenRecursiveTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSendExtensionMethodUsedInConsumer_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSendTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenSimpleArrayTypesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypeNotValidStructure_WithVariable_ShouldHaveDiagnostic_ButItLooksGoodToMe": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingMultiplePropertiesAtDifferentNodes_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedArrayTypeProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedTypeProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedArrayType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndMissingProperty_WithVariable_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleWithAsyncAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyCompatibleWithDunderProperty_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtDifferentNodesAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtNestedArrayTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleAtNestedTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedArrayTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedTypePropertyAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreEnumerableCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreStructurallyCompatibleAndNoMissingProperties_WithVariable_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageContractAnalyzerWithVariableUnitTest.WhenTypesWithVariablesAreStructurallyIncompatibleAndNoMissingProperties_WithVariable_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatibleAndInherited_ShouldNotHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyCompatible_ShouldNotHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.MessageDataInitializer_Specs.WhenTypesAreStructurallyIncompatible_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix_1": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix_2": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenActivatingGenericContractAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenAnonymousTypeUsingInferredMemberNamesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveTheNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveTheRightDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenCreateRequestTypesAreStructurallyCompatibleAndNoMissingProperty_ShouldHaveDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenGetResponseTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNamespaceAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingCaseNullableProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageContractHasNullableAreStructurallyCompatibleAndMissingNullableProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenMessageDataTypesAreStructurallyCompatible_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenNotUsingViciOneServiceBusSymbols_ShouldNotInterfere": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenPublishTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenRecordsWithVariablesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenRecursiveTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSendExtensionMethodUsedInConsumer_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSendTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenSimpleArrayTypesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypeNotValidStructure_ShouldHaveDiagnostic_ButItLooksGoodToMe": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingMultiplePropertiesAtDifferentNodes_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedArrayTypeProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingNestedTypeProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedArrayType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingPropertyInNestedType_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndMissingProperty_ShouldHaveDiagnosticAndCodeFix": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleWithAsyncAndNoMissingProperties_ShouldHaveNoDiagnostic": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyCompatibleWithDunderProperty_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtDifferentNodesAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtNestedArrayTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleAtNestedTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedArrayTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesAreStructurallyIncompatibleWithUnknownPropertyAtNestedTypePropertyAndNoMissingProperties_ShouldHaveDiagnostic": "Failed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreEnumerableCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreStructurallyCompatibleAndNoMissingProperties_ShouldHaveNoDiagnostics": "Passed",
+        "<PRODUCT>.Analyzers.Tests.UnitTest.WhenTypesWithVariablesAreStructurallyIncompatibleAndNoMissingProperties_ShouldHaveDiagnostic": "Failed"
+      },
+      "total": 108
+    }
+  },
+  "targetIdentityRegression": false
+}

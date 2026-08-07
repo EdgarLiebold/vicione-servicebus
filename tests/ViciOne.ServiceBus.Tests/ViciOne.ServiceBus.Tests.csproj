@@ -1,0 +1,45 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
+    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="NewConfigurationModel.cs" />
+    <Compile Remove="Saga\SagaTestContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="MathNet.Numerics" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics"/>
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console"/>
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Interop.NServiceBus\ViciOne.ServiceBus.Interop.NServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.MessagePack\ViciOne.ServiceBus.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Newtonsoft\ViciOne.ServiceBus.Newtonsoft.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.StateMachineVisualizer\ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

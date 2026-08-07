@@ -1,14 +1,15 @@
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 blank_issues_enabled: false
 contact_links:
   - name: Commercial Support
-    url: https://masstransit.io/support
-    about: Commercial support, the official support services for MassTransit customers
+    url: https://github.com/EdgarLiebold/vicione-servicebus/support
+    about: Commercial support, the official support services for ViciOne.ServiceBus customers
   - name: GitHub Discussions
-    url: https://github.com/MassTransit/MassTransit/discussions
-    about: Questions on the use of MassTransit, use search to find existing discussions
+    url: https://github.com/EdgarLiebold/vicione-servicebus/discussions
+    about: Questions on the use of ViciOne.ServiceBus, use search to find existing discussions
   - name: Discord
     url: https://discord.gg/rNpQgYn
-    about: Active chat room for MassTransit-related conversations. Should not be used for posting code snippets (use GitHub Discusssions)
+    about: Active chat room for ViciOne.ServiceBus-related conversations. Should not be used for posting code snippets (use GitHub Discusssions)
   - name: Stack Overflow
-    url: https://stackoverflow.com/questions/tagged/masstransit
+    url: https://stackoverflow.com/questions/tagged/vicione-servicebus
     about: Search for existing questions and answers, should not be used for asking support-related questions.

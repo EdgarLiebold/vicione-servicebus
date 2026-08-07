@@ -1,0 +1,191 @@
+{
+  "directoryIdentityExceptions": [],
+  "formerIdentityFamilyRegistry": [
+    {
+      "family": "compact-product-name",
+      "mappingRuleCount": 11,
+      "scanExampleSha256": [
+        "d7eec4c8cbf9d1184cc5e5899a7ea80dd30e0e8d534be9c8bbf30a6498feb545",
+        "6bc27f0df0e6a52059cc73c991714c9380a0bb45d727bf45bfee9ad0b48d78b1",
+        "7056c9b82dd14dc665f826217ee67c355e732cae2bdc45dd7fec0b788ad63f33",
+        "6da3b96206c9a40e2c8248d0e493c69f3e488c73ed69a6dabc4b1150f3768b65"
+      ],
+      "scanPatternSha256": "c6885e32a03574d4d082131ed9e4a6ea0a73b7ae444e0feb4cfe215089777023"
+    },
+    {
+      "family": "spaced-product-name",
+      "mappingRuleCount": 3,
+      "scanExampleSha256": [
+        "dd3b03424607edd97f57fe76dabd70bb6e1d8a166ff025e0962371acce5971b6"
+      ],
+      "scanPatternSha256": "64b41f9590ee39130271893ede17e0573c917cd01fb4ced8cf1673b0061058a0"
+    },
+    {
+      "family": "hyphenated-product-name",
+      "mappingRuleCount": 2,
+      "scanExampleSha256": [
+        "157301be9ff5844bcfd84f8f0e06b3659eacdc8bad64b3871911cc2542559a71"
+      ],
+      "scanPatternSha256": "31c86247749892e49facc48d30c282caac85982c785b898fde6fd50494a0cfc1"
+    },
+    {
+      "family": "vendor-mime-name",
+      "mappingRuleCount": 2,
+      "scanExampleSha256": [
+        "97bb4f72ec99218a828769a66d4f2dfca0d09fdb937421dc5d0b93d69eb4b1ba"
+      ],
+      "scanPatternSha256": "5b8a6edbdd79cfaa3af83572190968a6d04ecb4ea5d2e4dfe9445017ab9c9bd7"
+    },
+    {
+      "family": "repository-and-site-urls",
+      "mappingRuleCount": 4,
+      "scanExampleSha256": [
+        "9f4b41959f37edc762c5dcbcf38c008e784706c17d6be4e6ffc6f8fa71e5f15b",
+        "3e456915c2d9db0214254e5348f754981c1fba51fd9aeef71bcb22f133ef3f60",
+        "d9b1c3b032e5f589c4e59aa6cdc6e3fe7b728cd7d7d9f0d6aa0b7d8de5a4cde6"
+      ],
+      "scanPatternSha256": "cd2f733b3f1974417fa9d88055e721e454a970856ca73944cccf19d073f33148"
+    },
+    {
+      "family": "endpoint-formatter-forms",
+      "mappingRuleCount": 2,
+      "scanExampleSha256": [
+        "5bc974ed664e8845e868c2f8971291df7c373cc1bfe78d4fb1e2169fdc3159a9"
+      ],
+      "scanPatternSha256": "31c86247749892e49facc48d30c282caac85982c785b898fde6fd50494a0cfc1"
+    },
+    {
+      "family": "analyzer-id",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "735fb3a0281ab68ff130c6929c7dd5578b98a49190fd97a1d5c838b10527fb42"
+      ],
+      "scanPatternSha256": "14ae459bf380ef0e397e586b7d383c7471cb450457d4f4c0b045e54868700f1b"
+    },
+    {
+      "family": "benchmark-token",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "fa3c844fc85471623265435e902e9deb7d48840a01ee5af4e453ed3219392556"
+      ],
+      "scanPatternSha256": "f79e55c62967ffd497f4fda96b33ce92a5bf77d56bae7789d4a5ec6191dc7e95"
+    },
+    {
+      "family": "queue-token",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "8b487e198367e6950a7b77aa9f745680b0928e85930f5b9c6d8a685e853caf6a"
+      ],
+      "scanPatternSha256": "60ac072ffb2ab609056a8ae51c3770c9cb8cdcfb5fec9435ed7b1d9543d4cee0"
+    },
+    {
+      "family": "logo-token",
+      "mappingRuleCount": 2,
+      "scanExampleSha256": [
+        "c2e928e51d6386989a7565d60d784a4ad74d0553eb2e00bb77a0449b71b0cac6"
+      ],
+      "scanPatternSha256": "cda4ccaee01da482a800218a36d168dfb5e77d4aae79839cb93fc1f1caf9b82b"
+    },
+    {
+      "family": "header-prefix",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "003121cb756754ab40eb0cd55f644261ad84caf038d8c2e0cbcb7803c4b9d811"
+      ],
+      "scanPatternSha256": "318fb51f2dfb52016eb5c2afd0c8464af44b1d14746cfc4e08f09e301f46d84f"
+    },
+    {
+      "family": "environment-prefix",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "ad52bd6fe2e4d79f86ac4b91140a25c6407cfe388d4fa4493da9e3df13c4c88b"
+      ],
+      "scanPatternSha256": "7477e67341a4b8beb70e6fa448d476418eea8448d790ba3c637bfde62d3859ab"
+    },
+    {
+      "family": "local-assembly-token",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "10c5f8dbb97fe2f3582894c209b2bdee1617d1fa3dc8b1b6c34c899c77b9ce6c"
+      ],
+      "scanPatternSha256": "83ae6d9937c7d9071b9d50bf4ff33cec3245d50f4240049e136b2bc7392aa57f"
+    },
+    {
+      "family": "local-admin-token",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "47c8d06d356c450801d5165d833a48961517a891057cb81aa55b02ceb764f3ac"
+      ],
+      "scanPatternSha256": "040bf76f01ab24ef7538d7369d569446aae8a9c977a157475b34a4c209c284ae"
+    },
+    {
+      "family": "test-address-token",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "d027495b515300c82ba8c531a7f30f61184c472aa33930bae7989a2a625f15b7"
+      ],
+      "scanPatternSha256": "11429d50c914f36920a22c7e070d20c35a258332c2beae9ffb357c64c5e12306"
+    },
+    {
+      "family": "test-url",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "7a0fbb701abf34718e453f91a9c746e99aef6ee60f14f10a9b401990a189b795"
+      ],
+      "scanPatternSha256": "08c370f3f33b13ddd60564730e14f10403e9e0769bfe348551c947822f5e3431"
+    },
+    {
+      "family": "trade-protobuf-types",
+      "mappingRuleCount": 4,
+      "scanExampleSha256": [
+        "a2f2e6f7310a34127a4d70ac3e65a712dc3c6d1d04a0bcf41a8e1aa417278a52",
+        "c98b504b918c307f156c614e37722fb84e219939beb73f78aac0e89e82823ffb"
+      ],
+      "scanPatternSha256": "6dd4253d1e2128534e189364e6bb0373a19d7f99fb2457257ef5044fb476f60b"
+    },
+    {
+      "family": "product-short-label",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "07cd88df016d0e329686fc3cbc321f7201d4708e51fb6cda0b226c79f7c331cc"
+      ],
+      "scanPatternSha256": "ab25050e537ed021183939c31e725253f58518bd822cceea7e56bcdfb37527a0"
+    }
+  ],
+  "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
+  "retainedLegalProvenanceContexts": [
+    {
+      "authorizedContextSha256": [],
+      "path": "COPYRIGHT",
+      "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
+    },
+    {
+      "authorizedContextSha256": [],
+      "path": "LICENSE",
+      "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
+    },
+    {
+      "authorizedContextSha256": [
+        "d37accad623817762bc5bd10ff85f8d43e76af8c4a7ba95db8cb6c6c7d3c61f4"
+      ],
+      "path": "MODIFICATIONS.md",
+      "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
+    },
+    {
+      "authorizedContextSha256": [
+        "61420f1a6ccb9fc9b375c8389d21d1e430bd08143b548f6f549768d22beda684",
+        "c44abe9529450103d83387ea987bd47ad2cf61253e943374424f180a63db57f4"
+      ],
+      "path": "NOTICE",
+      "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
+    },
+    {
+      "authorizedContextSha256": [
+        "0b2eb5ea869d1b25b114673537dc4fb7847c41a2deb6e9841c66bd9509d3d244",
+        "0103777a21663fca6d2f5de092d67f3b267e8d4796b7d0a4566794cf31ba1c4b"
+      ],
+      "path": "README.md",
+      "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
+    }
+  ]
+}

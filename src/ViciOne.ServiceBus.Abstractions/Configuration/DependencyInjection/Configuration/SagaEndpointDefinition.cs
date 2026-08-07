@@ -1,0 +1,18 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class SagaEndpointDefinition<TSaga> :
+        SettingsEndpointDefinition<TSaga>
+        where TSaga : class, ISaga
+    {
+        public SagaEndpointDefinition(IEndpointSettings<IEndpointDefinition<TSaga>> settings)
+            : base(settings)
+        {
+        }
+
+        protected override string FormatEndpointName(IEndpointNameFormatter formatter)
+        {
+            return formatter.Saga<TSaga>();
+        }
+    }
+}

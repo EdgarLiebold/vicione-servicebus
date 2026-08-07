@@ -1,0 +1,19 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
+{
+    using global::Azure;
+    using global::Azure.Core;
+
+
+    public class TestAzureServiceBusAccountSettings :
+        ServiceBusTokenProviderSettings
+    {
+        public TestAzureServiceBusAccountSettings()
+        {
+        }
+
+        public AzureNamedKeyCredential NamedKeyCredential => new AzureNamedKeyCredential(Configuration.KeyName, Configuration.SharedAccessKey);
+        public AzureSasCredential SasCredential { get; }
+        public TokenCredential TokenCredential { get; }
+    }
+}

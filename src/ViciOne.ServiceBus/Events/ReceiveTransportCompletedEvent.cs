@@ -1,0 +1,22 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Events
+{
+    using System;
+    using Transports;
+
+
+    public class ReceiveTransportCompletedEvent :
+        ReceiveTransportCompleted
+    {
+        public ReceiveTransportCompletedEvent(Uri inputAddress, DeliveryMetrics metrics)
+        {
+            InputAddress = inputAddress;
+            DeliveryCount = metrics.DeliveryCount;
+            ConcurrentDeliveryCount = metrics.ConcurrentDeliveryCount;
+        }
+
+        public Uri InputAddress { get; }
+        public long DeliveryCount { get; }
+        public long ConcurrentDeliveryCount { get; }
+    }
+}

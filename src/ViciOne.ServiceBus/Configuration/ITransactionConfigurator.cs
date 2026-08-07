@@ -1,0 +1,20 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System;
+    using System.Transactions;
+
+
+    public interface ITransactionConfigurator
+    {
+        /// <summary>
+        /// Sets the transaction timeout
+        /// </summary>
+        TimeSpan Timeout { set; }
+
+        /// <summary>
+        /// Sets the isolation level of the transaction
+        /// </summary>
+        IsolationLevel IsolationLevel { set; }
+    }
+}

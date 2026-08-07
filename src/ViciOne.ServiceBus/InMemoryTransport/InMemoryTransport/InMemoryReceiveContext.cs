@@ -1,0 +1,27 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus.InMemoryTransport
+{
+    using Transports;
+
+
+    public sealed class InMemoryReceiveContext :
+        BaseReceiveContext,
+        RoutingKeyConsumeContext
+    {
+        readonly InMemoryTransportMessage _message;
+
+        public InMemoryReceiveContext(InMemoryTransportMessage message, InMemoryReceiveEndpointContext receiveEndpointContext)
+            : base(message.DeliveryCount > 0, receiveEndpointContext)
+        {
+            _message = message;
+
+            Body = new BytesMessageBody(message.Body);
+        }
+
+        protected override IHeaderProvider HeaderProvider => new DictionarySendHeaderProvider(_message.Headers);
+
+        public override MessageBody Body { get; }
+        public string? RoutingKey => _message.RoutingKey;
+    }
+}

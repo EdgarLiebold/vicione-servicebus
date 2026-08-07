@@ -1,0 +1,36 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+{
+    using ViciOne.ServiceBus.Configuration;
+
+
+    public class SessionIdSendTopologyConvention :
+        ISessionIdSendTopologyConvention
+    {
+        readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
+
+        public SessionIdSendTopologyConvention()
+        {
+            DefaultFormatter = new EmptySessionIdFormatter();
+
+            _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(ISessionIdMessageSendTopologyConvention<>), new Factory());
+        }
+
+        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        {
+            return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
+        }
+
+        public ISessionIdFormatter DefaultFormatter { get; set; }
+
+
+        class Factory :
+            IConventionTypeFactory<IMessageSendTopologyConvention>
+        {
+            IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
+            {
+                return new SessionIdMessageSendTopologyConvention<T>(null);
+            }
+        }
+    }
+}

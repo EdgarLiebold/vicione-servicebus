@@ -1,0 +1,22 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    /// <summary>
+    /// Supports connection of a message observer to the pipeline
+    /// </summary>
+    public interface IConsumeMessageObserverConnector
+    {
+        ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
+            where T : class;
+    }
+
+
+    /// <summary>
+    /// Supports connection of a message observer to the pipeline
+    /// </summary>
+    public interface IConsumeMessageObserverConnector<out T>
+        where T : class
+    {
+        ConnectHandle ConnectConsumeMessageObserver(IConsumeMessageObserver<T> observer);
+    }
+}

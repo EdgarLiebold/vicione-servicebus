@@ -1,0 +1,21 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class ExecuteActivityArgumentsConfigurator<TActivity, TArguments> :
+        IExecuteActivityArgumentsConfigurator<TArguments>
+        where TActivity : class, IExecuteActivity<TArguments>
+        where TArguments : class
+    {
+        readonly IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> _configurator;
+
+        public ExecuteActivityArgumentsConfigurator(IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator)
+        {
+            _configurator = configurator;
+        }
+
+        public void AddPipeSpecification(IPipeSpecification<ExecuteActivityContext<TArguments>> specification)
+        {
+            _configurator.AddPipeSpecification(specification);
+        }
+    }
+}

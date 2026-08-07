@@ -1,0 +1,7 @@
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+services:
+  localstack:
+    image: localstack/localstack:3.0.2
+    ports:
+      - "4566:4566"
+      - "4571:4571"

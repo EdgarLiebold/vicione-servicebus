@@ -1,0 +1,16 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    using System;
+
+
+    public interface IMediatorRegistrationConfigurator :
+        IRegistrationConfigurator
+    {
+        /// <summary>
+        /// Optionally configure the pipeline used by the mediator
+        /// </summary>
+        /// <param name="configure"></param>
+        void ConfigureMediator(Action<IMediatorRegistrationContext, IMediatorConfigurator> configure);
+    }
+}

@@ -1,0 +1,16 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.UsageTelemetry;
+
+using System;
+using System.Collections.Generic;
+
+
+public class ViciOneServiceBusUsageTelemetry
+{
+    public Guid? Id { get; set; }
+    public string? CustomerId { get; set; }
+    public string? Created { get; set; }
+    public HostUsageTelemetry? Host { get; set; }
+    public List<BusUsageTelemetry>? Bus { get; set; }
+    public List<RiderUsageTelemetry>? Rider { get; set; }
+}

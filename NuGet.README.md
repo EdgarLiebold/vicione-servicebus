@@ -1,6 +1,7 @@
-# MassTransit
+<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+# ViciOne.ServiceBus
 
-MassTransit provides a developer-focused, modern platform for creating distributed applications without complexity.
+ViciOne.ServiceBus provides a developer-focused, modern platform for creating distributed applications without complexity.
 
 - First class testing support
 - Write once, then deploy using RabbitMQ, Azure Service Bus, and Amazon SQS
@@ -9,118 +10,118 @@ MassTransit provides a developer-focused, modern platform for creating distribut
 
 ## Documentation
 
-Get started by [reading through the documentation](https://masstransit-project.com/).
+Get started by [reading through the documentation](https://github.com/EdgarLiebold/vicione-servicebus/).
 
 ## Build Status
 
 | Branch  |                                                                                              Status                                                                                              |
 |---------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| master  |  [![master](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml/badge.svg?branch=master&event=push)](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml)  |
-| develop | [![develop](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/MassTransit/MassTransit/actions/workflows/build.yml) |
+| master  |  [![master](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml/badge.svg?branch=master&event=push)](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml)  |
+| develop | [![develop](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml) |
 
-## MassTransit NuGet Packages
+## ViciOne.ServiceBus NuGet Packages
 
 The following NuGet packages are the currently supported.
 
-[![alt MassTransit](https://img.shields.io/nuget/v/MassTransit.svg "MassTransit")](https://nuget.org/packages/MassTransit/)
+[![alt ViciOne.ServiceBus](https://img.shields.io/nuget/v/ViciOne.ServiceBus.svg "ViciOne.ServiceBus")](https://nuget.org/packages/ViciOne.ServiceBus/)
 
-* [MassTransit](https://nuget.org/packages/MassTransit/)
-* [MassTransit.Abstractions](https://www.nuget.org/packages/MassTransit.Abstractions/)
+* [ViciOne.ServiceBus](https://nuget.org/packages/ViciOne.ServiceBus/)
+* [ViciOne.ServiceBus.Abstractions](https://www.nuget.org/packages/ViciOne.ServiceBus.Abstractions/)
 
 ### Transports
 
-* [MassTransit.ActiveMQ](https://nuget.org/packages/MassTransit.ActiveMQ/)
-* [MassTransit.AmazonSQS](https://nuget.org/packages/MassTransit.AmazonSQS/)
-* [MassTransit.Azure.ServiceBus.Core](https://nuget.org/packages/MassTransit.Azure.ServiceBus.Core/)
-    * [MassTransit.WebJobs.ServiceBus](https://nuget.org/packages/MassTransit.WebJobs.ServiceBus/)
-    * [MassTransit.WebJobs.EventHubs](https://nuget.org/packages/MassTransit.WebJobs.EventHubs/)
-* [MassTransit.RabbitMQ](https://nuget.org/packages/MassTransit.RabbitMQ/)
+* [ViciOne.ServiceBus.ActiveMQ](https://nuget.org/packages/ViciOne.ServiceBus.ActiveMQ/)
+* [ViciOne.ServiceBus.AmazonSQS](https://nuget.org/packages/ViciOne.ServiceBus.AmazonSQS/)
+* [ViciOne.ServiceBus.Azure.ServiceBus.Core](https://nuget.org/packages/ViciOne.ServiceBus.Azure.ServiceBus.Core/)
+    * [ViciOne.ServiceBus.WebJobs.ServiceBus](https://nuget.org/packages/ViciOne.ServiceBus.WebJobs.ServiceBus/)
+    * [ViciOne.ServiceBus.WebJobs.EventHubs](https://nuget.org/packages/ViciOne.ServiceBus.WebJobs.EventHubs/)
+* [ViciOne.ServiceBus.RabbitMQ](https://nuget.org/packages/ViciOne.ServiceBus.RabbitMQ/)
 * **Riders**
-    * [MassTransit.EventHub](https://nuget.org/packages/MassTransit.EventHub/)
-    * [MassTransit.Kafka](https://nuget.org/packages/MassTransit.Kafka/)
+    * [ViciOne.ServiceBus.EventHub](https://nuget.org/packages/ViciOne.ServiceBus.EventHub/)
+    * [ViciOne.ServiceBus.Kafka](https://nuget.org/packages/ViciOne.ServiceBus.Kafka/)
 
 ### Saga Persistence
 
-* [MassTransit.AmazonS3](https://nuget.org/packages/MassTransit.AmazonS3/)
-* [MassTransit.Azure.Cosmos](https://nuget.org/packages/MassTransit.Azure.Cosmos/)
-* [MassTransit.Azure.Cosmos.Table](https://nuget.org/packages/MassTransit.Azure.Cosmos.Table/)
-* [MassTransit.DapperIntegration](https://nuget.org/packages/MassTransit.DapperIntegration/)
-* [MassTransit.DynamoDb](https://nuget.org/packages/MassTransit.DynamoDb/)
-* [MassTransit.EntityFramework](https://nuget.org/packages/MassTransit.EntityFramework/)
-* [MassTransit.EntityFrameworkCore](https://nuget.org/packages/MassTransit.EntityFrameworkCore/)
-* [MassTransit.Marten](https://nuget.org/packages/MassTransit.Marten/)
-* [MassTransit.MongoDb](https://nuget.org/packages/MassTransit.MongoDb/)
-* [MassTransit.NHibernate](https://nuget.org/packages/MassTransit.NHibernate/)
-* [MassTransit.Redis](https://nuget.org/packages/MassTransit.Redis/)
+* [ViciOne.ServiceBus.AmazonS3](https://nuget.org/packages/ViciOne.ServiceBus.AmazonS3/)
+* [ViciOne.ServiceBus.Azure.Cosmos](https://nuget.org/packages/ViciOne.ServiceBus.Azure.Cosmos/)
+* [ViciOne.ServiceBus.Azure.Cosmos.Table](https://nuget.org/packages/ViciOne.ServiceBus.Azure.Cosmos.Table/)
+* [ViciOne.ServiceBus.DapperIntegration](https://nuget.org/packages/ViciOne.ServiceBus.DapperIntegration/)
+* [ViciOne.ServiceBus.DynamoDb](https://nuget.org/packages/ViciOne.ServiceBus.DynamoDb/)
+* [ViciOne.ServiceBus.EntityFramework](https://nuget.org/packages/ViciOne.ServiceBus.EntityFramework/)
+* [ViciOne.ServiceBus.EntityFrameworkCore](https://nuget.org/packages/ViciOne.ServiceBus.EntityFrameworkCore/)
+* [ViciOne.ServiceBus.Marten](https://nuget.org/packages/ViciOne.ServiceBus.Marten/)
+* [ViciOne.ServiceBus.MongoDb](https://nuget.org/packages/ViciOne.ServiceBus.MongoDb/)
+* [ViciOne.ServiceBus.NHibernate](https://nuget.org/packages/ViciOne.ServiceBus.NHibernate/)
+* [ViciOne.ServiceBus.Redis](https://nuget.org/packages/ViciOne.ServiceBus.Redis/)
 
 ### Message Data
 
-* [MassTransit.Azure.Storage](https://nuget.org/packages/MassTransit.Azure.Storage/)
+* [ViciOne.ServiceBus.Azure.Storage](https://nuget.org/packages/ViciOne.ServiceBus.Azure.Storage/)
 
 ### Scheduling
 
-* [MassTransit.Hangfire](https://nuget.org/packages/MassTransit.Hangfire/)
-* [MassTransit.Quartz](https://nuget.org/packages/MassTransit.Quartz/)
+* [ViciOne.ServiceBus.Hangfire](https://nuget.org/packages/ViciOne.ServiceBus.Hangfire/)
+* [ViciOne.ServiceBus.Quartz](https://nuget.org/packages/ViciOne.ServiceBus.Quartz/)
 
 ### Interoperability
 
-* [MassTransit.Interop.NServiceBus](https://nuget.org/packages/MassTransit.Interop.NServiceBus/)
-* [MassTransit.Newtonsoft](https://nuget.org/packages/MassTransit.Newtonsoft/)
+* [ViciOne.ServiceBus.Interop.NServiceBus](https://nuget.org/packages/ViciOne.ServiceBus.Interop.NServiceBus/)
+* [ViciOne.ServiceBus.Newtonsoft](https://nuget.org/packages/ViciOne.ServiceBus.Newtonsoft/)
 
 ### Other
 
-* [MassTransit.Analyzers](https://nuget.org/packages/MassTransit.Analyzers/)
-* [MassTransit.SignalR](https://nuget.org/packages/MassTransit.SignalR/)
-* [MassTransit.Prometheus](https://nuget.org/packages/MassTransit.Prometheus/)
-* [MassTransit.StateMachineVisualizer](https://nuget.org/packages/MassTransit.StateMachineVisualizer/)
-* [MassTransit.TestFramework](https://nuget.org/packages/MassTransit.TestFramework/)
+* [ViciOne.ServiceBus.Analyzers](https://nuget.org/packages/ViciOne.ServiceBus.Analyzers/)
+* [ViciOne.ServiceBus.SignalR](https://nuget.org/packages/ViciOne.ServiceBus.SignalR/)
+* [ViciOne.ServiceBus.Prometheus](https://nuget.org/packages/ViciOne.ServiceBus.Prometheus/)
+* [ViciOne.ServiceBus.StateMachineVisualizer](https://nuget.org/packages/ViciOne.ServiceBus.StateMachineVisualizer/)
+* [ViciOne.ServiceBus.TestFramework](https://nuget.org/packages/ViciOne.ServiceBus.TestFramework/)
 
 ## Deprecated Packages
 
-The following packages from earlier versions of MassTransit are no longer supported.
+The following packages from earlier versions of ViciOne.ServiceBus are no longer supported.
 
 * Automatonymous
 * Automatonymous.NHibernate
 * Automatonymous.Visualizer
 * GreenPipes
-* MassTransit.ApplicationInsights
-* MassTransit.AspNetCore
-* MassTransit.Autofac
-* MassTransit.Automatonymous
-* MassTransit.Automatonymous.Autofac
-* MassTransit.Automatonymous.Extensions.DependencyInjection
-* MassTransit.Automatonymous.Lamar
-* MassTransit.Automatonymous.SimpleInjector
-* MassTransit.Automatonymous.StructureMap
-* MassTransit.Automatonymous.Windsor
-* MassTransit.AzureServiceBus
-* MassTransit.CastleWindsor
-* MassTransit.Extensions.DependencyInjection
-* MassTransit.Extensions.Logging
-* MassTransit.Host
-* MassTransit.Http
-* MassTransit.Lamar
-* MassTransit.Log4Net
-* MassTransit.MSMQ
-* MassTransit.Ninject
-* MassTransit.NLog
-* MassTransit.Platform.Abstractions
-* MassTransit.Reactive
-* MassTransit.SerilogIntegration
-* MassTransit.SimpleInjector
-* MassTransit.StructureMap
-* MassTransit.StructureMapSigned
-* MassTransit.Unity
+* ViciOne.ServiceBus.ApplicationInsights
+* ViciOne.ServiceBus.AspNetCore
+* ViciOne.ServiceBus.Autofac
+* ViciOne.ServiceBus.Automatonymous
+* ViciOne.ServiceBus.Automatonymous.Autofac
+* ViciOne.ServiceBus.Automatonymous.Extensions.DependencyInjection
+* ViciOne.ServiceBus.Automatonymous.Lamar
+* ViciOne.ServiceBus.Automatonymous.SimpleInjector
+* ViciOne.ServiceBus.Automatonymous.StructureMap
+* ViciOne.ServiceBus.Automatonymous.Windsor
+* ViciOne.ServiceBus.AzureServiceBus
+* ViciOne.ServiceBus.CastleWindsor
+* ViciOne.ServiceBus.Extensions.DependencyInjection
+* ViciOne.ServiceBus.Extensions.Logging
+* ViciOne.ServiceBus.Host
+* ViciOne.ServiceBus.Http
+* ViciOne.ServiceBus.Lamar
+* ViciOne.ServiceBus.Log4Net
+* ViciOne.ServiceBus.MSMQ
+* ViciOne.ServiceBus.Ninject
+* ViciOne.ServiceBus.NLog
+* ViciOne.ServiceBus.Platform.Abstractions
+* ViciOne.ServiceBus.Reactive
+* ViciOne.ServiceBus.SerilogIntegration
+* ViciOne.ServiceBus.SimpleInjector
+* ViciOne.ServiceBus.StructureMap
+* ViciOne.ServiceBus.StructureMapSigned
+* ViciOne.ServiceBus.Unity
 
 ## Discord
 
-Get help live at the MassTransit Discord server.
+Get help live at the ViciOne.ServiceBus Discord server.
 
 [![alt Join the conversation](https://img.shields.io/discord/682238261753675864.svg "Discord")](https://discord.gg/rNpQgYn)
 
 ## GitHub Issues
 
-> Please do not open an issue on GitHub, unless you have spotted an actual bug in MassTransit.
+> Please do not open an issue on GitHub, unless you have spotted an actual bug in ViciOne.ServiceBus.
 
-Use [GitHub Discussions](https://github.com/MassTransit/MassTransit/discussions) to ask questions, bring up ideas, or other general items. Issues are not the
+Use [GitHub Discussions](https://github.com/EdgarLiebold/vicione-servicebus/discussions) to ask questions, bring up ideas, or other general items. Issues are not the
 place for questions, and will either be converted to a discussion or closed.

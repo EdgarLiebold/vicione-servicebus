@@ -1,0 +1,18 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Transports
+{
+    using System.Threading;
+    using System.Threading.Tasks;
+
+
+    public interface HostRiderHandle
+    {
+        IRider Rider { get; }
+
+        Task<RiderReady> Ready { get; }
+
+        Task StopAsync(CancellationToken cancellationToken = default);
+
+        Task StopAsync(bool remove, CancellationToken cancellationToken = default);
+    }
+}

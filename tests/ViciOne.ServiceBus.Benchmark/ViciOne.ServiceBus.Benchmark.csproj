@@ -1,0 +1,26 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <AssemblyName>vicione-servicebus-benchmark</AssemblyName>
+    <RootNamespace>ViciOneServiceBusBenchmark</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.ActiveMqTransport\ViciOne.ServiceBus.ActiveMqTransport.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.AmazonSqsTransport\ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.Azure.ServiceBus.Core\ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.KafkaIntegration\ViciOne.ServiceBus.KafkaIntegration.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+  </ItemGroup>
+</Project>

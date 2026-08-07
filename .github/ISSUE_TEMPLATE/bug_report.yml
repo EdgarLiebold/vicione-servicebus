@@ -1,10 +1,11 @@
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 name: Bug Report
-description: Create a bug report for an issue found in MassTransit. Should not be used for questions on the use of MassTransit.
+description: Create a bug report for an issue found in ViciOne.ServiceBus. Should not be used for questions on the use of ViciOne.ServiceBus.
 body:
   - type: markdown
     attributes:
       value: |
-        This bug report form is for submitting an issue found in MassTransit that can be reproduced using the most recent version.
+        This bug report form is for submitting an issue found in ViciOne.ServiceBus that can be reproduced using the most recent version.
   - type: input
     id: contact
     attributes:
@@ -17,7 +18,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: In what version of MassTransit did you discover this issue?
+      description: In what version of ViciOne.ServiceBus did you discover this issue?
       multiple: true
       options:
         - 8.x (develop, pre-release)
@@ -81,7 +82,7 @@ body:
     id: logs
     attributes:
       label: Related log output, including any exceptions
-      description: Please paste any log output related to the issue (automatically formatted into code, so no need for backticks). Logs are usually required, if you don't have them, [turn them on](https://masstransit-project.com/usage/logging.html) and capture them before creating an issue.
+      description: Please paste any log output related to the issue (automatically formatted into code, so no need for backticks). Logs are usually required, if you don't have them, [turn them on](https://github.com/EdgarLiebold/vicione-servicebus/usage/logging.html) and capture them before creating an issue.
       render: shell
   - type: input
     id: repositorty

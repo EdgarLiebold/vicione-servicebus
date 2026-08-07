@@ -1,0 +1,16 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus.Internals
+{
+    using System.Diagnostics.CodeAnalysis;
+    using System.Reflection;
+
+
+    public interface IReadPropertyCache<T>
+        where T : class
+    {
+        IReadProperty<T, TProperty> GetProperty<TProperty>(string? name);
+        IReadProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo);
+        bool TryGetProperty<TProperty>(string name, [NotNullWhen(true)] out IReadProperty<T, TProperty>? property);
+    }
+}

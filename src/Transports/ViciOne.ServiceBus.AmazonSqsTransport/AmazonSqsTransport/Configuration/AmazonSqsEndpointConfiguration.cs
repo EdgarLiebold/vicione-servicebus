@@ -1,0 +1,31 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+
+using ViciOne.ServiceBus.Configuration;
+
+
+public class AmazonSqsEndpointConfiguration :
+    EndpointConfiguration,
+    IAmazonSqsEndpointConfiguration
+{
+    public AmazonSqsEndpointConfiguration(IAmazonSqsTopologyConfiguration topologyConfiguration)
+        : base(topologyConfiguration)
+    {
+        Topology = topologyConfiguration;
+    }
+
+    AmazonSqsEndpointConfiguration(IEndpointConfiguration parentConfiguration, IAmazonSqsTopologyConfiguration topologyConfiguration, bool isBusEndpoint)
+        : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+    {
+        Topology = topologyConfiguration;
+    }
+
+    public new IAmazonSqsTopologyConfiguration Topology { get; }
+
+    public IAmazonSqsEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+    {
+        var topologyConfiguration = new AmazonSqsTopologyConfiguration(Topology);
+
+        return new AmazonSqsEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
+    }
+}

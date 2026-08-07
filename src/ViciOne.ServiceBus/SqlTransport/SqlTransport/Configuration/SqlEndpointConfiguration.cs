@@ -1,0 +1,32 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.SqlTransport.Configuration
+{
+    using ViciOne.ServiceBus.Configuration;
+
+
+    public class SqlEndpointConfiguration :
+        EndpointConfiguration,
+        ISqlEndpointConfiguration
+    {
+        public SqlEndpointConfiguration(ISqlTopologyConfiguration topologyConfiguration)
+            : base(topologyConfiguration)
+        {
+            Topology = topologyConfiguration;
+        }
+
+        SqlEndpointConfiguration(IEndpointConfiguration parentConfiguration, ISqlTopologyConfiguration topologyConfiguration, bool isBusEndpoint)
+            : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+        {
+            Topology = topologyConfiguration;
+        }
+
+        public new ISqlTopologyConfiguration Topology { get; }
+
+        public ISqlEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+        {
+            var topologyConfiguration = new SqlTopologyConfiguration(Topology);
+
+            return new SqlEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
+        }
+    }
+}

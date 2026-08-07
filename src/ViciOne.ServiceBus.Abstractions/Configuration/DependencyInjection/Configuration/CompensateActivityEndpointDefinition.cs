@@ -1,0 +1,19 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class CompensateActivityEndpointDefinition<TActivity, TLog> :
+        SettingsEndpointDefinition<ICompensateActivity<TLog>>
+        where TActivity : class, ICompensateActivity<TLog>
+        where TLog : class
+    {
+        public CompensateActivityEndpointDefinition(IEndpointSettings<IEndpointDefinition<ICompensateActivity<TLog>>> settings)
+            : base(settings)
+        {
+        }
+
+        protected override string FormatEndpointName(IEndpointNameFormatter formatter)
+        {
+            return formatter.CompensateActivity<TActivity, TLog>();
+        }
+    }
+}

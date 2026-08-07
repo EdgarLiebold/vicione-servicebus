@@ -1,0 +1,7 @@
+{
+  "assemblies": 145,
+  "expectedStrongNames": 91,
+  "metadataAndBinaryFindings": [],
+  "status": "PASS",
+  "strongNameFailures": []
+}

@@ -1,0 +1,17 @@
+{
+  "containerAwareScanning": {
+    "archiveComment": true,
+    "decompressedEntryContent": true,
+    "entryComment": true,
+    "entryPath": true,
+    "legalException": "EXACT_ROOT_LOGICAL_LEGAL_ENTRIES_ONLY",
+    "outerPackagePath": true,
+    "rawCompressedContainerScanned": false,
+    "zipValidityAndReadability": true
+  },
+  "entries": 443,
+  "failedPackages": [],
+  "findings": [],
+  "packages": 33,
+  "status": "PASS"
+}

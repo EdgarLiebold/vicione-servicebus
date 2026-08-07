@@ -1,0 +1,20 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Transformation
+{
+    using System;
+    using Initializers;
+
+
+    public class ReplaceMessageFactory<TMessage> :
+        IMessageFactory<TMessage>
+        where TMessage : class
+    {
+        public InitializeContext<TMessage> Create(InitializeContext context)
+        {
+            if (context.TryGetPayload(out TransformContext<TMessage> transformContext) && transformContext.HasInput)
+                return context.CreateMessageContext(transformContext.Input);
+
+            throw new InvalidOperationException("The original message context was not available.");
+        }
+    }
+}

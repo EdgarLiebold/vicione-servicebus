@@ -1,0 +1,24 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware
+{
+    using System;
+    using System.Collections.Generic;
+
+
+    public interface OutboxMessageContext :
+        MessageContext
+    {
+        long SequenceNumber { get; }
+
+        new Guid MessageId { get; }
+
+        string ContentType { get; }
+
+        string MessageType { get; }
+
+        string Body { get; }
+
+        IReadOnlyDictionary<string, object> Properties { get; }
+    }
+}

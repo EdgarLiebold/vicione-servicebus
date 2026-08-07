@@ -1,0 +1,22 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus
+{
+    /// <summary>
+    /// Used to configure the binding of an exchange (to either a queue or another exchange)
+    /// </summary>
+    public interface IRabbitMqExchangeBindingConfigurator :
+        IRabbitMqExchangeConfigurator
+    {
+        /// <summary>
+        /// A routing key for the exchange binding
+        /// </summary>
+        string RoutingKey { set; }
+
+        /// <summary>
+        /// Sets the binding argument, or removes it if value is null
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        void SetBindingArgument(string key, object value);
+    }
+}

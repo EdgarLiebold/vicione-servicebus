@@ -1,0 +1,22 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Configuration
+{
+    public class ParentPublishPipeSpecificationObserver :
+        IPublishPipeSpecificationObserver
+    {
+        readonly IPublishPipeSpecification _specification;
+
+        public ParentPublishPipeSpecificationObserver(IPublishPipeSpecification specification)
+        {
+            _specification = specification;
+        }
+
+        public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
+            where T : class
+        {
+            IMessagePublishPipeSpecification<T> messageSpecification = _specification.GetMessageSpecification<T>();
+
+            specification.AddParentMessageSpecification(messageSpecification);
+        }
+    }
+}

@@ -1,0 +1,37 @@
+﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>ViciOne.ServiceBus.BenchmarkConsole</PackageId>
+    <OutputType>Exe</OutputType>
+    <IsPackable>False</IsPackable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.MessagePack\ViciOne.ServiceBus.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Newtonsoft\ViciOne.ServiceBus.Newtonsoft.csproj" />
+    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+</Project>

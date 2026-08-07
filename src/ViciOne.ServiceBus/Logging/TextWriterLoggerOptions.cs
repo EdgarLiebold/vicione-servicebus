@@ -1,0 +1,33 @@
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+namespace ViciOne.ServiceBus.Logging
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.Extensions.Logging;
+
+
+    public class TextWriterLoggerOptions
+    {
+        readonly List<string> _disabled;
+
+        public TextWriterLoggerOptions()
+        {
+            _disabled = new List<string>();
+        }
+
+        public LogLevel LogLevel { get; set; }
+
+        public TextWriterLoggerOptions Disable(string name)
+        {
+            _disabled.Add(name);
+
+            return this;
+        }
+
+        public bool IsEnabled(string name)
+        {
+            return !_disabled.Any(x => name.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+}

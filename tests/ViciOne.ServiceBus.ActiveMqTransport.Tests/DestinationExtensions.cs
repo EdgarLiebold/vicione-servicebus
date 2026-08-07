@@ -1,0 +1,22 @@
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+#nullable enable
+namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
+{
+    using System;
+    using Apache.NMS;
+
+
+    public static class DestinationExtensions
+    {
+        public static Uri? ToEndpointAddress(this IDestination destination)
+        {
+            return destination switch
+            {
+                null => null,
+                IQueue queue => new Uri($"queue:{queue.QueueName}"),
+                ITopic topic => new Uri($"topic:{topic.TopicName}"),
+                _ => null
+            };
+        }
+    }
+}

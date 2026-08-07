@@ -1,0 +1,27 @@
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+
+exporters:
+  logging:
+    loglevel: debug
+
+processors:
+  batch:
+
+service:
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ logging ]
+    metrics:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ logging ]
+    logs:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ logging ]
