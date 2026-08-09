@@ -1,0 +1,18 @@
+{
+  "checkpoint": "GATE_GREEN",
+  "completedRequirementIds": [
+    "REQ-CI-007"
+  ],
+  "activeRequirementIds": [
+    "REQ-CI-001"
+  ],
+  "evidence": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0006/REQ-CI-001_007_HOST_BINDING_AND_POLICY.json",
+      "sha256": "ec1f7939135ccbb34905e1ba81af62e583e9e7c75e7aa195193b9fab6a646139"
+    }
+  ],
+  "summary": "Every published fixture port is bound to 127.0.0.1 and proven reachable over loopback with authentication intact; the standard-library policy validator passes the real repository and kills 22 sabotage mutations across 25 self-tests.",
+  "nextAction": "Run the undistorted EF Core repetitions for REQ-CI-005 and inventory the NU1902/NU1903 findings for REQ-CI-006.",
+  "blocker": "The RabbitMQ required category cannot run on this machine: ports 5672 and 15672 are held by an unrelated development container that is not mine to stop."
+}

@@ -1,63 +1,28 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
-name: Transport Validation
-env:
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# Scheduled entry point for the extended profile.
+#
+# This file previously defined its own broker services and referenced the images
+# vicione-servicebus/rabbitmq:latest and vicione-servicebus/activemq:latest, which do not exist:
+# a global identity rename had rewritten two external Docker Hub names. Both references are gone.
+#
+# It now calls extended-transports.yml instead of restating its jobs. There is exactly one
+# definition of the extended profile; this file only adds a schedule to it. Nothing here is part of
+# the required profile, and nothing here publishes to a registry.
+name: Nightly Extended Transports
+
 on:
+  schedule:
+    # Nightly, well outside working hours in CET.
+    - cron: '17 2 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  test-transports:
-    name: "Transport Validation"
-    runs-on: ubuntu-latest
-    services:
-      rabbitmq:
-        image: vicione-servicebus/rabbitmq:latest
-        ports:
-          - 5672:5672
-          - 15672:15672
-      activemq:
-        image: vicione-servicebus/activemq:latest
-        env:
-          ACTIVEMQ_ADMIN_LOGIN: admin
-          ACTIVEMQ_ADMIN_PASSWORD: admin
-          ACTIVEMQ_LOGGER_LOGLEVEL: TRACE
-          ACTIVEMQ_OPTS: "-Xms512m -Xms512m"
-          ACTIVEMQ_CONFIG_SCHEDULERENABLED: true
-        ports:
-          - 8161:8161
-          - 61616:61616
-          - 61613:61613
-      artemis:
-        image: hugoham/artemis:2.16.0
-        ports:
-          - 61618:61616
-          - 8163:8161
-      localstack:
-        image: localstack/localstack
-        ports:
-          - 4566:4566
-          - 4571:4571
-          - 8080:8080
-        env:
-          DOCKER_HOST: "unix:///var/run/docker.sock"
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Install .NET 3.1
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '3.1.x'
-
-      - name: Install .NET 5
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '5.0.x'
-
-      - name: Test Transports
-        env:
-          VICIONE_SERVICEBUS_ASB_KEYVALUE: ${{ secrets.AZURE_SERVICEBUS }}
-          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
-        run: dotnet test -c Release
-        working-directory: tests/ViciOne.ServiceBus.Transports.Tests
+  activemq:
+    name: "Nightly: ActiveMQ"
+    uses: ./.github/workflows/extended-transports.yml
+    with:
+      target: activemq

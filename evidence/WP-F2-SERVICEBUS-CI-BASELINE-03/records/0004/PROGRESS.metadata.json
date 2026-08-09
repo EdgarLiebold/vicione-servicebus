@@ -1,0 +1,16 @@
+{
+  "checkpoint": "GATE_GREEN",
+  "completedRequirementIds": [],
+  "activeRequirementIds": [
+    "REQ-CI-001"
+  ],
+  "evidence": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0004/REQ-CI-001_FIXTURES.json",
+      "sha256": "ee6b138f08af13e28b192976157db4741009724e19ccf437b91a6b28538c0e0d"
+    }
+  ],
+  "summary": "Broker fixtures built from digest-pinned official bases with a checksum-bound plugin; RabbitMQ proves management API, delayed exchange and guest rejection, ActiveMQ proves Jolokia, protocols and an active job scheduler, all with a run-scoped non-guest account.",
+  "nextAction": "Build the tools/ci policy validator with positive, negative and sabotage cases for the fixture invariants (REQ-CI-007).",
+  "blocker": null
+}

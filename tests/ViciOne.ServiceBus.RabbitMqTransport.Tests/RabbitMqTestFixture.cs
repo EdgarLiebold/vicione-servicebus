@@ -28,7 +28,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             if (logicalHostAddress != null)
             {
-                RabbitMqTestHarness.NodeHostName = RabbitMqTestHarness.HostAddress.Host;
+                // The fixture publishes an ephemeral port, so the cluster node has to carry it.
+                // A bare host name would resolve to the default 5672, which on a developer machine
+                // is very likely a different broker.
+                var node = RabbitMqTestHarness.HostAddress;
+                RabbitMqTestHarness.NodeHostName = node.IsDefaultPort ? node.Host : $"{node.Host}:{node.Port}";
                 RabbitMqTestHarness.HostAddress = logicalHostAddress;
             }
 
@@ -101,22 +105,23 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
         }
 
+        /// <summary>
+        /// Resets the broker before the fixture starts.
+        /// <para>
+        /// This used to delete exchanges and queues individually, and to skip the reset entirely when
+        /// the CI environment variable was set. Both were wrong. Deleting entities leaves the
+        /// scheduled message store of the delayed message exchange in place, which lets one fixture
+        /// affect a later one; and branching on the target environment means the build server ran a
+        /// different, weaker isolation than a developer machine.
+        /// </para>
+        /// <para>
+        /// A failure here is no longer written to the error stream and swallowed. A fixture that
+        /// starts on a dirty broker produces misleading failures somewhere else entirely.
+        /// </para>
+        /// </summary>
         async Task CleanupVirtualHost()
         {
-            try
-            {
-                var cleanVirtualHostEntirely = !bool.TryParse(Environment.GetEnvironmentVariable("CI"), out var isBuildServer) || !isBuildServer;
-                if (cleanVirtualHostEntirely)
-                {
-                    await RabbitMqTestHarness.Clean().ConfigureAwait(false);
-
-                    RabbitMqTestHarness.CleanVirtualHost = false;
-                }
-            }
-            catch (Exception exception)
-            {
-                await TestContext.Error.WriteLineAsync(exception.Message);
-            }
+            await RabbitMqTestHarness.RecreateVirtualHost().ConfigureAwait(false);
         }
 
         protected virtual Task OnCleanupVirtualHost(IChannel channel)

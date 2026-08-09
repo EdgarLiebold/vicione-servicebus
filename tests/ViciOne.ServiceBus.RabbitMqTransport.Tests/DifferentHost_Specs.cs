@@ -15,8 +15,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test", h =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    // The fixture provisions a run-scoped account; the empty callback left the
+                    // connection on the guest defaults and it could not authenticate.
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
 
                 x.ReceiveEndpoint("input_queue", e =>
@@ -32,8 +36,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             var clientBus = Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("127.0.0.1", "test", h =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    // The fixture provisions a run-scoped account; the empty callback left the
+                    // connection on the guest defaults and it could not authenticate.
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
 
                 x.AutoStart = true;

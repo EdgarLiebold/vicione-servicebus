@@ -47,6 +47,7 @@ namespace ConsoleApplication1
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ViciOne.ServiceBus;
 ";
 
@@ -76,7 +77,7 @@ namespace ConsoleApplication1
                     "Anonymous type is missing properties that are in the message contract 'OrderSubmitted'. The following properties are missing: Id, CustomerId, OrderItems.",
                 Severity = DiagnosticSeverity.Info,
                 Locations =
-                    new[] {new DiagnosticResultLocation("Test0.cs", 46, 47)}
+                    new[] {new DiagnosticResultLocation("Test0.cs", 47, 47)}
             };
 
             VerifyCSharpDiagnostic(test, expected);
@@ -124,7 +125,7 @@ namespace ConsoleApplication1
                     "Anonymous type does not map to message contract 'OrderSubmitted'. The following properties of the anonymous type are incompatible: OrderItems.",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
-                    new[] {new DiagnosticResultLocation("Test0.cs", 46, 47)}
+                    new[] {new DiagnosticResultLocation("Test0.cs", 47, 47)}
             };
 
             VerifyCSharpDiagnostic(test, expected);

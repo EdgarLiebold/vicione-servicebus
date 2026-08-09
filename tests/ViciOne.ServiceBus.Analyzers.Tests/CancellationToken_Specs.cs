@@ -103,7 +103,7 @@ namespace ConsoleApplication1
             return Task.Delay(10);
         }
 
-        async Task IStateMachineActivity<TestInstance, SubmitOrder>.Faulted<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.Faulted<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
             IBehavior<TestInstance, SubmitOrder> next)
         {
             return Task.Run(() => next.Faulted(ctx));
@@ -160,7 +160,7 @@ namespace ConsoleApplication1
             return Task.Delay(10, context.CancellationToken);
         }
 
-        async Task IStateMachineActivity<TestInstance, SubmitOrder>.Faulted<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.Faulted<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
             IBehavior<TestInstance, SubmitOrder> next)
         {
             return Task.Run(() => next.Faulted(ctx), ctx.CancellationToken);
@@ -259,7 +259,7 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public async Task Consume(ConsumeContext<SubmitOrder> context)
+        public Task Consume(ConsumeContext<SubmitOrder> context)
         {
             return context.Publish<OrderSubmitted>(new {});
         }

@@ -24,7 +24,11 @@ public class When_the_consumer_timeout_is_reached_waiting_for_a_batch
             .AddViciOneServiceBusTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(options =>
+                    {
+                        options.VHost = "test";
+                        options.ApplyRunScopedCredentials();
+                    });
 
                 x.AddOptions<ViciOneServiceBusHostOptions>().Configure(options =>
                 {

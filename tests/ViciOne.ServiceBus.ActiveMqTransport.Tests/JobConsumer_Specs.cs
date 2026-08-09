@@ -338,6 +338,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
                     x.UsingActiveMq((context, cfg) =>
                     {
+                        // Without an explicit host the configurator keeps its default endpoint,
+                        // localhost:61616, instead of the fixture the runner started.
+                        cfg.Host(RunScopedBroker.AddressFor(ActiveMqHostAddress.ActiveMqScheme), h =>
+                        {
+                            h.Username(RunScopedBroker.User);
+                            h.Password(RunScopedBroker.Pass);
+                        });
+
                         cfg.UseDelayedMessageScheduler();
 
                         cfg.ConfigureEndpoints(context);

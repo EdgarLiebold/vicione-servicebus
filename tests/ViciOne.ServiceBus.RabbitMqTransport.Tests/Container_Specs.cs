@@ -52,6 +52,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 {
                     x.AddConsumer<TestingHarnessSubmitOrderConsumer>();
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
+
                     x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
                 })
                 .BuildServiceProvider(true);
@@ -99,17 +104,26 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 {
                     x.AddConsumer<TestingHarnessSubmitOrderConsumer>();
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
+
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        cfg.Host("localhost", h =>
+                        // The spec deliberately starts with an account that cannot work and proves
+                        // that OnRefreshConnectionFactory supplies working credentials before the
+                        // connection is opened. 'Working' is the run-scoped account on the
+                        // ephemeral fixture port, not a well known default on a fixed port.
+                        cfg.Host(RunScopedCredentials.Host, RunScopedCredentials.Port, "/", h =>
                         {
                             h.Username("totally-bogus");
                             h.Password("not-real-at-all");
 
                             h.OnRefreshConnectionFactory = async factory =>
                             {
-                                factory.UserName = "guest";
-                                factory.Password = "guest";
+                                factory.UserName = RunScopedCredentials.User;
+                                factory.Password = RunScopedCredentials.Pass;
                             };
                         });
 

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 6,
+  "requirementIds": [
+    "REQ-CI-001",
+    "REQ-CI-007"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "leadDirective": "0005-lead-directive: publish every broker, management and Jolokia port on 127.0.0.1 only",
+  "hostBinding": {
+    "publishedPortsInCompose": [
+      "127.0.0.1:5672:5672",
+      "127.0.0.1:15672:15672",
+      "127.0.0.1:61616:61616",
+      "127.0.0.1:5672:5672",
+      "127.0.0.1:8161:8161"
+    ],
+    "allLoopbackBound": true,
+    "dockerPortRabbitmq": [
+      "5672/tcp -> 127.0.0.1:25672",
+      "15672/tcp -> 127.0.0.1:25673"
+    ],
+    "dockerPortActivemq": [
+      "8161/tcp -> 127.0.0.1:28161",
+      "61616/tcp -> 127.0.0.1:25616"
+    ],
+    "proof": "docker port reports only 127.0.0.1 bindings; a 0.0.0.0 binding would be shown as such"
+  },
+  "loopbackReachability": {
+    "rabbitmqManagementOverview": "200",
+    "activemqJolokiaBroker": "200",
+    "rabbitmqGuestRejected": "401",
+    "activemqWithoutCredentials": "401"
+  },
+  "policyValidator": {
+    "positiveRun": "PASS ci-policy all invariants hold",
+    "positiveExitCode": 0,
+    "selfTestsRan": 25,
+    "selfTestsExitCode": 0,
+    "sabotageCases": [
+      "bare host port mapping without host IP",
+      "binding to 0.0.0.0",
+      "bare mapping on the Jolokia port",
+      "weakened run credential requirement",
+      "guest account",
+      "relaxed loopback_users",
+      "returning rabbitmq image",
+      "returning activemq image",
+      "missing base digest",
+      "moving latest tag",
+      "missing plugin checksum",
+      "lock without plugin checksum",
+      "removed required category",
+      "upstream repository guard",
+      "master branch guard",
+      "bypassed test count gate",
+      "pack without required gates",
+      "pack without run artifact",
+      "pack without package hashes",
+      "nuget push",
+      "container registry push",
+      "invalid analyzer release header"
+    ],
+    "positiveCases": [
+      "conforming repository",
+      "forbidden image named only in a comment",
+      "semicolon provenance comment"
+    ]
+  },
+  "knownLimits": [
+    "The negative network check against an external interface could not be executed: this host currently exposes no non-loopback IPv4 address. The binding itself is proven by docker port, which reports 127.0.0.1 exclusively."
+  ]
+}

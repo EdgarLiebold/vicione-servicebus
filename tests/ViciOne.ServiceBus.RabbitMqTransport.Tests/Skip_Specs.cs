@@ -12,7 +12,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         RabbitMqTestFixture
     {
         [Test]
-        [Explicit]
         public async Task Should_properly_complete_without_dying()
         {
             await Task.WhenAll(Enumerable.Range(0, 1000).Select(n => Bus.Publish(new PingMessage())));

@@ -70,7 +70,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                     x.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(options =>
+                        {
+                            options.VHost = "test";
+                            options.ApplyRunScopedCredentials();
+                        });
 
                     x.SetKebabCaseEndpointNameFormatter();
 
@@ -419,7 +423,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .AddViciOneServiceBusTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(options =>
+                        {
+                            options.VHost = "test";
+                            options.ApplyRunScopedCredentials();
+                        });
 
                     x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(10));
                     x.SetKebabCaseEndpointNameFormatter();

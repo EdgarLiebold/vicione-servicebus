@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.Analyzers.Tests
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using Microsoft.CodeAnalysis;
@@ -18,21 +19,43 @@ namespace ViciOne.ServiceBus.Analyzers.Tests
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
-        static readonly MetadataReference CoreLibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-        static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
+        /// <summary>
+        /// The full shared framework reference set of the runtime the tests execute on.
+        /// A hand-picked subset silently omitted facades such as System.Runtime and System.ComponentModel, which made every
+        /// test snippet fail to bind with CS0012 and therefore made every analyzer report zero diagnostics.
+        /// </summary>
+        static readonly MetadataReference[] FrameworkReferences = CreateFrameworkReferences();
+
         static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
-        static readonly MetadataReference CollectionsReference = MetadataReference.CreateFromFile(typeof(Stack<>).Assembly.Location);
-#if NET6_0
-    static readonly MetadataReference RuntimeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime, Version=6.0.0.0").Location);
-#else
-        static readonly MetadataReference RuntimeReference = MetadataReference.CreateFromFile(typeof(ISet<>).Assembly.Location);
-#endif
-        static readonly MetadataReference NetStandardReference = MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location);
         static readonly MetadataReference ViciOneServiceBusReference = MetadataReference.CreateFromFile(typeof(Bus).Assembly.Location);
         static readonly MetadataReference GreenPipesReference = MetadataReference.CreateFromFile(typeof(IProbeSite).Assembly.Location);
         static readonly MetadataReference NewIdReference = MetadataReference.CreateFromFile(typeof(NewId).Assembly.Location);
-        static readonly MetadataReference SystemPrivateUriReference = MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location);
+
+        static MetadataReference[] CreateFrameworkReferences()
+        {
+            var runtimeDirectory = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            if (string.IsNullOrEmpty(runtimeDirectory))
+                throw new InvalidOperationException("The shared framework directory could not be resolved for the analyzer test compilation.");
+
+            var references = new List<MetadataReference>();
+            foreach (var path in Directory.EnumerateFiles(runtimeDirectory, "*.dll"))
+            {
+                try
+                {
+                    references.Add(MetadataReference.CreateFromFile(path));
+                }
+                catch (BadImageFormatException)
+                {
+                    // Native libraries share the directory on some platforms and carry no metadata.
+                }
+            }
+
+            if (references.Count == 0)
+                throw new InvalidOperationException($"No framework references were resolved from '{runtimeDirectory}'.");
+
+            return references.ToArray();
+        }
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -71,7 +94,22 @@ namespace ViciOne.ServiceBus.Analyzers.Tests
             var diagnostics = new List<Diagnostic>();
             foreach (var project in projects)
             {
-                var compilationWithAnalyzers = project.GetCompilationAsync().Result.WithAnalyzers(ImmutableArray.Create(analyzer));
+                var compilation = project.GetCompilationAsync().Result;
+
+                // A test snippet that does not bind produces zero analyzer diagnostics, which would silently look
+                // like "the analyzer found nothing". Surface reference and compilation defects instead of hiding them.
+                var compilationErrors = compilation.GetDiagnostics()
+                    .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error)
+                    .ToArray();
+                if (compilationErrors.Length > 0)
+                {
+                    throw new InvalidOperationException(
+                        $"The analyzer test compilation reported {compilationErrors.Length} error(s); analyzer results would be meaningless. "
+                        + "First errors: "
+                        + string.Join(" | ", compilationErrors.Take(5).Select(diagnostic => diagnostic.ToString())));
+                }
+
+                var compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
                 ImmutableArray<Diagnostic> diags = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
                 foreach (var diag in diags)
                 {
@@ -155,14 +193,15 @@ namespace ViciOne.ServiceBus.Analyzers.Tests
             var solution = new AdhocWorkspace()
                 .CurrentSolution
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
-                .AddMetadataReference(projectId, CoreLibReference)
-                .AddMetadataReference(projectId, SystemCoreReference)
+                .AddMetadataReferences(projectId, FrameworkReferences)
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
-                .AddMetadataReference(projectId, CodeAnalysisReference)
-                .AddMetadataReference(projectId, CollectionsReference)
-                .AddMetadataReference(projectId, RuntimeReference)
-                .AddMetadataReference(projectId, NetStandardReference)
-                .AddMetadataReference(projectId, SystemPrivateUriReference);
+                .AddMetadataReference(projectId, CodeAnalysisReference);
+
+            // Analyzer fixtures are type declarations, not programs. The workspace default is a console application,
+            // which fails every fixture with CS5001 before any analyzer runs.
+            var compilationOptions = solution.GetProject(projectId).CompilationOptions;
+            if (compilationOptions != null)
+                solution = solution.WithProjectCompilationOptions(projectId, compilationOptions.WithOutputKind(OutputKind.DynamicallyLinkedLibrary));
 
             if (includeViciOneServiceBus)
             {

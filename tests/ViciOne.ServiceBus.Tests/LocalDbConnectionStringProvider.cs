@@ -9,13 +9,13 @@ namespace ViciOne.ServiceBus.Tests
     public static class LocalDbConnectionStringProvider
     {
         /// <summary>
-        /// This is a list of the connection strings that we will attempt to find what LocalDb versions
-        /// are on the local pc which we can run the unit tests against
+        /// Candidate connection strings, tried in order. The run-scoped fixture comes first, so a
+        /// developer machine that also happens to run a SQL Server on the default port cannot be
+        /// measured by accident. The remaining entries are the historic ones from the imported
+        /// baseline and stay as a fallback for someone running against their own server.
         /// </summary>
         static readonly string[] _possibleLocalDbConnectionStrings =
         {
-            @"Server=tcp:localhost;Persist Security Info=False;User ID=sa;Password=Password12!;Encrypt=False;TrustServerCertificate=True;", // the linux mssql 2017 installed on appveyor
-            @"Server=tcp:mssql;Persist Security Info=False;User ID=sa;Password=Password12!;Encrypt=False;TrustServerCertificate=True;", // the linux mssql 2017 installed on gha
             @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;", // the localdb installed with VS 2015
             @"Data Source=(LocalDb)\ProjectsV12;Integrated Security=True;", // the localdb with VS 2013
             @"Data Source=(LocalDb)\v11.0;Integrated Security=True;" // the older version of localdb
@@ -37,6 +37,14 @@ namespace ViciOne.ServiceBus.Tests
             {
                 if (!string.IsNullOrWhiteSpace(_connectionString))
                     return _connectionString + "Initial Catalog=" + initialCatalog;
+
+                // The fixture the runner started wins, and it is not probed: if it is configured it is
+                // the only server these specs may measure.
+                if (RunScopedDatabase.SqlServerIsConfigured)
+                {
+                    _connectionString = RunScopedDatabase.SqlServerConnectionStringPrefix;
+                    return _connectionString + "Initial Catalog=" + initialCatalog;
+                }
 
                 // Lets find a localdb that we can use for our unit test
                 foreach (var connectionString in _possibleLocalDbConnectionStrings)
@@ -61,7 +69,9 @@ namespace ViciOne.ServiceBus.Tests
                 if (string.IsNullOrWhiteSpace(_connectionString))
                 {
                     exceptions.Insert(0, new InvalidOperationException(
-                        "Couldn't connect to any of the LocalDB Databases. You might have a version installed that is not in the list. Please check the list and modify as necessary"));
+                        $"No SQL Server available. Either start the pinned fixture, which publishes "
+                        + $"{RunScopedDatabase.SqlServerHostVariable} and {RunScopedDatabase.SqlServerPortVariable}, "
+                        + "or install one of the listed LocalDB versions."));
                     throw new AggregateException(exceptions);
                 }
             }

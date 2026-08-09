@@ -1,24 +1,19 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# This file used to reference vicione-servicebus/activemq:latest, an image that does not exist.
+# It now extends the single pinned fixture definition instead of restating it.
+#
+#   source ../../build/test-infrastructure/new-run-credentials.sh
+#   docker compose up -d --wait
 services:
   activemq:
-    image: vicione-servicebus/activemq:latest
-    environment:
-      - "ACTIVEMQ_ADMIN_LOGIN=admin"
-      - "ACTIVEMQ_ADMIN_PASSWORD=admin"
-      - "ACTIVEMQ_LOGGER_LOGLEVEL=TRACE"
-      - "ACTIVEMQ_OPTS=-Xms512m -Xms512m"
-      - "ACTIVEMQ_CONFIG_SCHEDULERENABLED=true"
-    ports:
-      - "8161:8161"
-      - "61616:61616"
-      - "61613:61613"
-      - "5672:5672"
+    extends:
+      file: ../../build/test-infrastructure/compose.yaml
+      service: activemq
+
+  # Artemis is a separate broker, not part of the ViciOne fixture. It is defined once in the pinned
+  # compose file and only referenced here, so this project cannot drift into a second definition.
   artemis:
-    image: quay.io/artemiscloud/activemq-artemis-broker
-    environment:
-      - "AMQ_USER=admin"
-      - "AMQ_PASSWORD=admin"
-    hostname: artemis
-    ports:
-      - '61618:61616'
-      - '8163:8161'
+    extends:
+      file: ../../build/test-infrastructure/compose.yaml
+      service: artemis

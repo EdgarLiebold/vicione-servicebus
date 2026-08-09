@@ -161,7 +161,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
         [TestFixture]
-        [Explicit]
         public class WhenAMessageIsPublishedToTheEndpointSuccessfully :
             RabbitMqTestFixture
         {
@@ -177,6 +176,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             }
 
             [Test]
+            [Explicit("Manual observation of the channel count; runs into the harness timeout unattended")]
             public async Task Should_take_time_to_watch_channel_use()
             {
                 ConsumeContext<A> received = await _receivedA;
@@ -196,7 +196,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
         [TestFixture]
-        [Explicit]
         public class WhenAMessageIsPublishedToTheEndpointFaulting :
             RabbitMqTestFixture
         {
@@ -212,6 +211,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             }
 
             [Test]
+            [Explicit("Manual observation of the channel count; runs into the harness timeout unattended")]
             public async Task Should_take_time_to_watch_channel_use()
             {
                 ConsumeContext<Fault<A>> received = await _faultA;
@@ -310,7 +310,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(consumeContext.SourceAddress, Is.EqualTo(new Uri("rabbitmq://localhost/test/input_queue")));
+                    Assert.That(consumeContext.SourceAddress, Is.EqualTo(new Uri(HostAddress, "input_queue")));
 
                     Assert.That(consumeContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.MessageId, "N/A"),
                         Is.EqualTo(consumeContext.MessageId.ToString()));

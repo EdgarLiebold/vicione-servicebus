@@ -22,7 +22,11 @@ public class Using_the_direct_reply_to_request_client
             .AddViciOneServiceBusTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(options =>
+                    {
+                        options.VHost = "test";
+                        options.ApplyRunScopedCredentials();
+                    });
 
                 x.SetKebabCaseEndpointNameFormatter();
 

@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 {
     using System;
@@ -11,10 +11,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     public class PublishStop_Specs
     {
         [Test]
-        [Explicit]
         public async Task Should_start_and_stop_async()
         {
-            var queueUri = new Uri("rabbitmq://localhost/test/input_queue2");
+            // The host settings are derived from this URI, so it carries the run-scoped endpoint and
+            // account. A bare "rabbitmq://localhost/..." would resolve to 5672 and guest.
+            var queueUri = RunScopedBroker.QueueAddressWithCredentials("input_queue2");
 
             var rabbitMqHostSettings = queueUri.GetHostSettings();
             var receiveSettings = queueUri.GetReceiveSettings();
@@ -33,10 +34,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
         public async Task Should_start_and_stop_sync()
         {
-            var queueUri = new Uri("rabbitmq://localhost/test/input_queue2");
+            // The host settings are derived from this URI, so it carries the run-scoped endpoint and
+            // account. A bare "rabbitmq://localhost/..." would resolve to 5672 and guest.
+            var queueUri = RunScopedBroker.QueueAddressWithCredentials("input_queue2");
 
             var rabbitMqHostSettings = queueUri.GetHostSettings();
             var receiveSettings = queueUri.GetReceiveSettings();

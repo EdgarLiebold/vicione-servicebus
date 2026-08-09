@@ -13,7 +13,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         [Test]
         public async Task Should_fan_out_published_messages()
         {
-            var firstHarness = new RabbitMqTestHarness();
+            // Both harnesses need their own input queue. With the default name they consume from the
+            // shared 'input_queue', and because their buses recover into the virtual host that the next
+            // fixture recreates, that fixture's own consumer ends up competing with them. RabbitMQ then
+            // hands a message to whichever consumer is next in turn; when it lands on the leftover one
+            // it is discarded, and the waiting fixture never sees it. Measured: this fixture followed by
+            // the Turnout scenario is red with two consumers on input_queue, and green with none.
+            var firstHarness = new RabbitMqTestHarness("unique-instance-first");
             var firstConsumer = new EventConsumer(firstHarness.GetTask<ConsumeContext<SomeEvent>>());
             firstHarness.OnConfigureRabbitMqBus += configurator =>
             {
@@ -29,7 +35,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await firstHarness.Start();
             try
             {
-                var secondHarness = new RabbitMqTestHarness();
+                var secondHarness = new RabbitMqTestHarness("unique-instance-second");
                 var secondConsumer = new EventConsumer(secondHarness.GetTask<ConsumeContext<SomeEvent>>());
                 secondHarness.OnConfigureRabbitMqBus += configurator =>
                 {

@@ -10,7 +10,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     public class When_insufficient_permissions_are_specified
     {
         [Test]
-        [Explicit]
         public async Task Should_cleanup_when_permissions_are_lame()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>

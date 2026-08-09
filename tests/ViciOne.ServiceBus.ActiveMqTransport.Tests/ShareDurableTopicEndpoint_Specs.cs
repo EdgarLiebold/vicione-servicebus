@@ -26,7 +26,15 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         }
 
         public Sending_to_a_shared_topic_subscription_endpoint()
-            : base(new ActiveMqTestHarness { HostAddress = new Uri("amqp://localhost:61618") })
+            : base(new ActiveMqTestHarness
+            {
+                // Shared durable topics are an Artemis feature, so this spec addresses the Artemis
+                // broker rather than the ViciOne fixture. The endpoint is run-scoped; the fixed port
+                // 61618 the imported baseline used could point at any broker on the machine.
+                HostAddress = ArtemisBroker.AmqpAddress,
+                Username = ArtemisBroker.User,
+                Password = ArtemisBroker.Pass
+            })
         {
         }
 

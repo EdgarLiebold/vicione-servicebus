@@ -19,7 +19,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test");
+                // "localhost" without a port is the default 5672 and the guest account, not the fixture
+                // the runner started on an ephemeral port.
+                x.Host(RunScopedBroker.HostAddress, h =>
+                {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
+                });
 
                 ConfigureBusDiagnostics(x);
 
@@ -60,7 +66,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test");
+                // "localhost" without a port is the default 5672 and the guest account, not the fixture
+                // the runner started on an ephemeral port.
+                x.Host(RunScopedBroker.HostAddress, h =>
+                {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
+                });
 
                 ConfigureBusDiagnostics(x);
 
@@ -112,7 +124,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test");
+                // "localhost" without a port is the default 5672 and the guest account, not the fixture
+                // the runner started on an ephemeral port.
+                x.Host(RunScopedBroker.HostAddress, h =>
+                {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
+                });
 
                 ConfigureBusDiagnostics(x);
 
@@ -161,7 +179,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test");
+                // "localhost" without a port is the default 5672 and the guest account, not the fixture
+                // the runner started on an ephemeral port.
+                x.Host(RunScopedBroker.HostAddress, h =>
+                {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
+                });
 
                 ConfigureBusDiagnostics(x);
 

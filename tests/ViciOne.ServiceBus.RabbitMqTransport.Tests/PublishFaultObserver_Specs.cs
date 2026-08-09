@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class PublishFaultObserver_Specs :
         RabbitMqTestFixture
     {

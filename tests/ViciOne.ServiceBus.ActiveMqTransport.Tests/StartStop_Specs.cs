@@ -23,6 +23,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             {
                 ConfigureBusDiagnostics(x);
 
+                // Without an explicit host the factory keeps its default endpoint, localhost:61616,
+                // which is not the fixture the runner started.
+                x.Host(RunScopedBroker.AddressFor(ActiveMqHostAddress.ActiveMqScheme), h =>
+                {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
+                });
+
                 x.ReceiveEndpoint("input_queue", e =>
                 {
                     e.Handler<PingMessage>(async context =>
@@ -72,10 +80,10 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingActiveMq(x =>
             {
-                x.Host(new Uri("amqp://localhost:5672"), h =>
+                x.Host(RunScopedBroker.AddressFor(ActiveMqHostAddress.AmqpScheme), h =>
                 {
-                    h.Username("admin");
-                    h.Password("admin");
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
                 ConfigureBusDiagnostics(x);
 

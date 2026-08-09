@@ -1,0 +1,721 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="44ed36c9-db5d-4880-9108-12b531943ddc" name="@Edgars-iMac-2 2026-08-09 04:38:23" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-09T04:38:23.2035370+00:00" queuing="2026-08-09T04:38:23.2035370+00:00" start="2026-08-09T04:38:22.2764500+00:00" finish="2026-08-09T04:38:23.3066960+00:00" />
+  <TestSettings name="default" id="275f20f8-f5d4-4dd1-a350-303452bf7239">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-09_04_38_23" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="0a182bd6-cca2-41a7-aae1-8736848be4e5" testId="ec7cbc9d-ea74-8cd4-6ad9-5ccc9eb8e47c" testName="Should_generate_sequential_ids_quickly" computerName="Edgars-iMac-2" duration="00:00:00.0003550" startTime="2026-08-09T04:38:23.1954460+00:00" endTime="2026-08-09T04:38:23.1958010+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0a182bd6-cca2-41a7-aae1-8736848be4e5">
+      <Output>
+        <StdOut>9d9e0000-6d6c-1461-6531-08def5d00bba
+9d9e0000-6d6c-1461-6532-08def5d00bba
+9d9e0000-6d6c-1461-6533-08def5d00bba
+9d9e0000-6d6c-1461-6534-08def5d00bba
+9d9e0000-6d6c-1461-6535-08def5d00bba
+9d9e0100-6d6c-1461-6535-08def5d00bba
+9d9e0000-6d6c-1461-6536-08def5d00bba
+9d9e0000-6d6c-1461-6537-08def5d00bba
+9d9e0000-6d6c-1461-6538-08def5d00bba</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="687c08ac-cda4-458b-9a87-caec122aa3bf" testId="8814af6c-5376-6744-0ac0-e80267ea80dc" testName="Should_compare_known_conversions_DashedHexBase16BracketsUpper" computerName="Edgars-iMac-2" duration="00:00:00.0003490" startTime="2026-08-09T04:38:23.1714670+00:00" endTime="2026-08-09T04:38:23.1718160+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="687c08ac-cda4-458b-9a87-caec122aa3bf">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ac0d25b6-4580-4ba1-b599-44cc28266792" testId="62da303b-a7a5-ce39-57d4-7792dce4b566" testName="Should_keep_them_ordered_for_ToSequentialGuid_when_using_array_call" computerName="Edgars-iMac-2" duration="00:00:00.0084900" startTime="2026-08-09T04:38:23.1067730+00:00" endTime="2026-08-09T04:38:23.1152620+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac0d25b6-4580-4ba1-b599-44cc28266792">
+      <Output>
+        <StdOut>Sql: 08def5d0-0bac-daa1-9649-0000d2020001
+Sql: 08def5d0-0bac-daa1-9649-0000d2020081
+Sql: 08def5d0-0bac-daa1-9649-0000d2020101
+Sql: 08def5d0-0bac-daa1-9649-0000d2020181
+Sql: 08def5d0-0bac-daa1-9649-0000d2020201
+Sql: 08def5d0-0bac-daa1-9649-0000d2020281
+Sql: 08def5d0-0bac-daa1-9649-0000d2020301
+Sql: 08def5d0-0bac-daa1-9649-0000d2020381</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="361c8f76-8224-4cfb-bfc3-54e34d712492" testId="0a3fc19b-a7fa-4c1b-4920-e42bae3debea" testName="Should_convert_from_a_guid_quickly" computerName="Edgars-iMac-2" duration="00:00:00.0001190" startTime="2026-08-09T04:38:23.2442860+00:00" endTime="2026-08-09T04:38:23.2444050+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="361c8f76-8224-4cfb-bfc3-54e34d712492" />
+    <UnitTestResult executionId="15d03fc7-f78c-457f-9556-6eb76ba7223f" testId="23fd4e34-068e-71cc-3df8-12d92fc973bc" testName="Should_match_exception_type_with_filter" computerName="Edgars-iMac-2" duration="00:00:00.0001670" startTime="2026-08-09T04:38:23.0854140+00:00" endTime="2026-08-09T04:38:23.0855810+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="15d03fc7-f78c-457f-9556-6eb76ba7223f" />
+    <UnitTestResult executionId="495c99ac-771a-4b55-9c22-7fd0a18f7680" testId="751d1a6c-e5e9-34d6-a2a9-5c21e2d50d88" testName="Should_match_string_output_b" computerName="Edgars-iMac-2" duration="00:00:00.0001130" startTime="2026-08-09T04:38:23.2459930+00:00" endTime="2026-08-09T04:38:23.2461050+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="495c99ac-771a-4b55-9c22-7fd0a18f7680" />
+    <UnitTestResult executionId="9b6bbdd3-5a9a-42e3-a01d-fc415099eceb" testId="bd7c2a99-e998-bf79-1ed5-9dda546c49c0" testName="Should_format_just_like_a_narrow_guid_formatter" computerName="Edgars-iMac-2" duration="00:00:00.0006860" startTime="2026-08-09T04:38:23.1392670+00:00" endTime="2026-08-09T04:38:23.1399520+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9b6bbdd3-5a9a-42e3-a01d-fc415099eceb" />
+    <UnitTestResult executionId="5a96d268-897e-4b6b-986f-0f34a58b5104" testId="155bc360-d30a-29e6-6c0f-4b18914151d1" testName="Should_generate_known_guid_batch" computerName="Edgars-iMac-2" duration="00:00:00.0005270" startTime="2026-08-09T04:38:23.2000810+00:00" endTime="2026-08-09T04:38:23.2006080+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a96d268-897e-4b6b-986f-0f34a58b5104" />
+    <UnitTestResult executionId="a3fb3d63-d485-4385-a4d8-2796cef5967d" testId="d2d64eb3-faa1-c3ea-9940-411cd7d40a58" testName="Should_be_able_to_extract_timestamp_with_process_id" computerName="Edgars-iMac-2" duration="00:00:00.0000380" startTime="2026-08-09T04:38:23.1801040+00:00" endTime="2026-08-09T04:38:23.1801420+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a3fb3d63-d485-4385-a4d8-2796cef5967d" />
+    <UnitTestResult executionId="912707da-9754-41c0-90ef-b6ba0928b054" testId="7cfdf0ea-43c5-3698-ef62-a625f4d1af84" testName="Should_compare_known_conversions_DashedHexBase16BracketsLower" computerName="Edgars-iMac-2" duration="00:00:00.0003900" startTime="2026-08-09T04:38:23.1710690+00:00" endTime="2026-08-09T04:38:23.1714580+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="912707da-9754-41c0-90ef-b6ba0928b054">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2e2e4ad8-0306-44c8-80b3-96bc341b8a22" testId="a56f44d0-be0d-15a5-27bb-2802509a7cc9" testName="Should_compare_known_conversions_Base32Lower" computerName="Edgars-iMac-2" duration="00:00:00.0045380" startTime="2026-08-09T04:38:23.1646010+00:00" endTime="2026-08-09T04:38:23.1691390+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2e2e4ad8-0306-44c8-80b3-96bc341b8a22">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a8e163eb-c36c-4264-b7ca-fd45aff87092" testId="dda9f196-ebab-6305-a19a-ae00e9088dba" testName="Should_compare_known_conversions_HexBase16Upper" computerName="Edgars-iMac-2" duration="00:00:00.0002180" startTime="2026-08-09T04:38:23.1759250+00:00" endTime="2026-08-09T04:38:23.1761420+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a8e163eb-c36c-4264-b7ca-fd45aff87092">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="af1201a3-0c5c-46ba-956f-a7322e77c1e8" testId="9ee15429-4c70-7a43-f3bc-046e30a96e39" testName="Should_match_string_output_n" computerName="Edgars-iMac-2" duration="00:00:00.0000870" startTime="2026-08-09T04:38:23.2462110+00:00" endTime="2026-08-09T04:38:23.2462990+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af1201a3-0c5c-46ba-956f-a7322e77c1e8" />
+    <UnitTestResult executionId="e9909aef-05f1-4913-9d23-dfe4409b4e24" testId="f2e3c8e2-3fd8-0a8b-582a-1f4f164d3136" testName="Should_accept_multiple_this_operators_subclass" computerName="Edgars-iMac-2" duration="00:00:00.0003600" startTime="2026-08-09T04:38:23.1987110+00:00" endTime="2026-08-09T04:38:23.1990710+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9909aef-05f1-4913-9d23-dfe4409b4e24" />
+    <UnitTestResult executionId="66c82374-77c8-4f27-b076-08b2e7fc5424" testId="18ce3f66-4093-9a11-d937-74943ff8a8a8" testName="Should_compare_known_conversions_CustomBase32" computerName="Edgars-iMac-2" duration="00:00:00.0013320" startTime="2026-08-09T04:38:23.1697270+00:00" endTime="2026-08-09T04:38:23.1710590+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66c82374-77c8-4f27-b076-08b2e7fc5424">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c8a56dfe-6956-4cd4-98ae-45cc9dd575c8" testId="d0086cef-efcd-8f8a-7a16-cc76432c177a" testName="Should_pull_the_network_adapter_mac_address" computerName="Edgars-iMac-2" duration="00:00:00.0114299" startTime="2026-08-09T04:38:23.2167260+00:00" endTime="2026-08-09T04:38:23.2281560+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c8a56dfe-6956-4cd4-98ae-45cc9dd575c8" />
+    <UnitTestResult executionId="ac693f8f-8409-462f-a90f-c41b833505b0" testId="70448f37-5398-a629-e866-e9c98f2e2976" testName="Should_compare_known_conversions_DashedHexBase16Lower" computerName="Edgars-iMac-2" duration="00:00:00.0033910" startTime="2026-08-09T04:38:23.1718230+00:00" endTime="2026-08-09T04:38:23.1752140+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac693f8f-8409-462f-a90f-c41b833505b0">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0ade0800-e2eb-47cf-8a39-e213fa2b4163" testId="d5b19f15-9ee1-ffb0-7be7-f79327200137" testName="Should_make_the_round_trip_successfully_via_sequential_guid" computerName="Edgars-iMac-2" duration="00:00:00.0000830" startTime="2026-08-09T04:38:23.2452590+00:00" endTime="2026-08-09T04:38:23.2453420+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0ade0800-e2eb-47cf-8a39-e213fa2b4163" />
+    <UnitTestResult executionId="668ca3f3-e231-4d8d-8d7b-9e200fc69635" testId="e09a0903-def1-fcb7-bb0f-c1dd5e7e8127" testName="Should_not_match_when_processor_id_provided" computerName="Edgars-iMac-2" duration="00:00:00.0001399" startTime="2026-08-09T04:38:23.2039990+00:00" endTime="2026-08-09T04:38:23.2041390+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="668ca3f3-e231-4d8d-8d7b-9e200fc69635" />
+    <UnitTestResult executionId="73b87a41-11dd-438e-81c7-ac8ce13daeb2" testId="7e167914-941b-3d99-4531-e1718672549d" testName="Should_compare_known_conversions_DashedHexBase16Upper" computerName="Edgars-iMac-2" duration="00:00:00.0003430" startTime="2026-08-09T04:38:23.1752300+00:00" endTime="2026-08-09T04:38:23.1755720+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="73b87a41-11dd-438e-81c7-ac8ce13daeb2">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a0814be4-ec39-4c5a-b96a-7db5934c54ca" testId="76550ae0-8b9d-1bb9-6bb4-240ad339e522" testName="Should_match_parsed_guid_bs" computerName="Edgars-iMac-2" duration="00:00:00.0001170" startTime="2026-08-09T04:38:23.2453490+00:00" endTime="2026-08-09T04:38:23.2454670+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a0814be4-ec39-4c5a-b96a-7db5934c54ca" />
+    <UnitTestResult executionId="39ca8ab5-cbb3-4e24-af30-e98380362fa1" testId="26bb7be5-1069-cf5f-fb42-88152cece942" testName="Should_be_using_the_correct_algorithm" computerName="Edgars-iMac-2" duration="00:00:00.0145230" startTime="2026-08-09T04:38:23.1801790+00:00" endTime="2026-08-09T04:38:23.1947020+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="39ca8ab5-cbb3-4e24-af30-e98380362fa1" />
+    <UnitTestResult executionId="143f64a0-002b-4b8a-b269-a8ab5bb75415" testId="0031d601-5bc1-f15c-8414-7beff76d193a" testName="Should_generate_unique_identifiers_with_each_invocation" computerName="Edgars-iMac-2" duration="00:00:00.0000030" startTime="2026-08-09T04:38:23.1958140+00:00" endTime="2026-08-09T04:38:23.1958170+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="143f64a0-002b-4b8a-b269-a8ab5bb75415" />
+    <UnitTestResult executionId="5d4c83c7-2ea6-4b74-b07b-88e2610d098b" testId="14191c8e-6b30-2e08-c266-3944f1549760" testName="Should_include_the_parameter_name_in_the_exception" computerName="Edgars-iMac-2" duration="00:00:00.0102610" startTime="2026-08-09T04:38:23.0683590+00:00" endTime="2026-08-09T04:38:23.0785590+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d4c83c7-2ea6-4b74-b07b-88e2610d098b" />
+    <UnitTestResult executionId="96a8736c-5c6c-41b1-a049-1344e3bd03cf" testId="6a86868d-bd12-aae5-2054-cd81363b12c8" testName="Should_be_fast_and_friendly" computerName="Edgars-iMac-2" duration="00:00:00.0000010" startTime="2026-08-09T04:38:23.1801750+00:00" endTime="2026-08-09T04:38:23.1801760+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96a8736c-5c6c-41b1-a049-1344e3bd03cf" />
+    <UnitTestResult executionId="8f95fb25-5c5c-4f0e-8988-a0b662910338" testId="7ea90718-9c74-4d61-4872-889a1977d42b" testName="Should_match_parsed_guid_ns" computerName="Edgars-iMac-2" duration="00:00:00.0001030" startTime="2026-08-09T04:38:23.2457600+00:00" endTime="2026-08-09T04:38:23.2458630+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8f95fb25-5c5c-4f0e-8988-a0b662910338" />
+    <UnitTestResult executionId="c4118e89-5142-49c9-a42e-59243d72125e" testId="0cbc7a1a-37f4-0df4-85be-2c3577bdef6a" testName="Should_match_parsed_guid_ps" computerName="Edgars-iMac-2" duration="00:00:00.0001030" startTime="2026-08-09T04:38:23.2458710+00:00" endTime="2026-08-09T04:38:23.2459750+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c4118e89-5142-49c9-a42e-59243d72125e" />
+    <UnitTestResult executionId="1db0b024-43cf-45d0-8da0-c309df235a2e" testId="21b80ffe-f689-8d88-14fa-97471b603bce" testName="Should_keep_them_ordered_for_sql_server_when_using_array_call" computerName="Edgars-iMac-2" duration="00:00:00.0186860" startTime="2026-08-09T04:38:23.0880100+00:00" endTime="2026-08-09T04:38:23.1066960+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1db0b024-43cf-45d0-8da0-c309df235a2e">
+      <Output>
+        <StdOut>Normal: d2020100-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020001
+Normal: d2028100-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020081
+Normal: d2020101-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020101
+Normal: d2028101-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020181
+Normal: d2020102-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020201
+Normal: d2028102-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020281
+Normal: d2020103-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020301
+Normal: d2028103-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020381</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="aa0a40f2-3eb0-441c-8118-1eb2fced066a" testId="393bbcfd-dc08-a985-f551-8940b1f511c2" testName="Should_be_able_to_extract_timestamp" computerName="Edgars-iMac-2" duration="00:00:00.0002240" startTime="2026-08-09T04:38:23.1798720+00:00" endTime="2026-08-09T04:38:23.1800960+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aa0a40f2-3eb0-441c-8118-1eb2fced066a" />
+    <UnitTestResult executionId="719c500f-6562-4507-825a-67d30c0403d4" testId="f4a8e83a-8d66-e1a5-f72a-3208f9b43a46" testName="Should_be_able_to_determine_lower_id" computerName="Edgars-iMac-2" duration="00:00:00.0003800" startTime="2026-08-09T04:38:23.1794820+00:00" endTime="2026-08-09T04:38:23.1798620+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="719c500f-6562-4507-825a-67d30c0403d4" />
+    <UnitTestResult executionId="7212c406-52a2-41fb-923e-ba966fa1d298" testId="0f065bef-d970-456e-3725-97ded57ca113" testName="Should_work_from_guid_to_newid_to_guid" computerName="Edgars-iMac-2" duration="00:00:00.0002850" startTime="2026-08-09T04:38:23.1400420+00:00" endTime="2026-08-09T04:38:23.1403270+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7212c406-52a2-41fb-923e-ba966fa1d298" />
+    <UnitTestResult executionId="40dd67ba-89ad-4ca0-9e1b-69676bcba35d" testId="7feab299-fcf5-4416-3449-d9b36d13c58d" testName="Should_pull_all_adapters" computerName="Edgars-iMac-2" duration="00:00:00.0124220" startTime="2026-08-09T04:38:23.2042780+00:00" endTime="2026-08-09T04:38:23.2167000+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40dd67ba-89ad-4ca0-9e1b-69676bcba35d">
+      <Output>
+        <StdOut>Network Interface: lo0 - Loopback
+Network Interface: gif0 - Tunnel
+Network Interface: stf0 - Tunnel
+Network Interface: en0 - Ethernet
+Network Interface: en2 - Ethernet
+Network Interface: en3 - Ethernet
+Network Interface: en10 - Ethernet
+Network Interface: ap1 - Wireless80211
+Network Interface: en1 - Wireless80211
+Network Interface: bridge0 - Ethernet
+Network Interface: awdl0 - Wireless80211
+Network Interface: llw0 - Wireless80211
+Network Interface: utun0 - Unknown
+Network Interface: utun1 - Unknown
+Network Interface: utun2 - Unknown
+Network Interface: utun3 - Unknown</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fa2ab929-267b-44ef-ab5e-1f9a97be52fc" testId="dbe801ce-5ae4-3a21-b3fe-83a0195cd79a" testName="Should_match_parsed_guid_ds" computerName="Edgars-iMac-2" duration="00:00:00.0002730" startTime="2026-08-09T04:38:23.2454790+00:00" endTime="2026-08-09T04:38:23.2457520+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fa2ab929-267b-44ef-ab5e-1f9a97be52fc" />
+    <UnitTestResult executionId="a417ae1a-79a4-4dda-b4b4-1880b6f9486a" testId="b7eff512-ee0a-fd0a-7660-f5329d8a7ba5" testName="Should_pull_using_net" computerName="Edgars-iMac-2" duration="00:00:00.0132930" startTime="2026-08-09T04:38:23.2308330+00:00" endTime="2026-08-09T04:38:23.2441260+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a417ae1a-79a4-4dda-b4b4-1880b6f9486a">
+      <Output>
+        <StdOut>Network Interface: en0
+Network Interface: en2
+Network Interface: en3
+Network Interface: en10
+Network Interface: ap1
+Network Interface: en1
+Network Interface: bridge0
+Network Interface: awdl0
+Network Interface: llw0</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3015748c-3007-41ed-95f5-8823e125ee4a" testId="fad4aa2c-7931-3cf1-2d49-f813fa5203fc" testName="Should_format_just_like_a_parenthesis_guid_formatter" computerName="Edgars-iMac-2" duration="00:00:00.0000740" startTime="2026-08-09T04:38:23.1399610+00:00" endTime="2026-08-09T04:38:23.1400350+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3015748c-3007-41ed-95f5-8823e125ee4a" />
+    <UnitTestResult executionId="173cd20c-d097-4cfb-9e98-7113f75e1f40" testId="14e165e3-9d6a-6d9e-efd6-e3efc97b699c" testName="Should_display_sequentially_for_newid" computerName="Edgars-iMac-2" duration="00:00:00.0001680" startTime="2026-08-09T04:38:23.2447750+00:00" endTime="2026-08-09T04:38:23.2449440+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="173cd20c-d097-4cfb-9e98-7113f75e1f40">
+      <Output>
+        <StdOut>08def5d0-0bc1-e53d-1461-6d6c9d9e0001</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="67bd4d8a-03a6-4d89-8da6-612c6dfa9c12" testId="0f20f1e6-0454-7d66-93fc-e067a06062cb" testName="Should_convert_using_the_optimized_human_readable_formatter" computerName="Edgars-iMac-2" duration="00:00:00.0000760" startTime="2026-08-09T04:38:23.1788440+00:00" endTime="2026-08-09T04:38:23.1789200+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="67bd4d8a-03a6-4d89-8da6-612c6dfa9c12" />
+    <UnitTestResult executionId="d4d1b797-c669-4df5-aa8e-48517c9d2811" testId="b7495299-0e40-690b-ee64-a8fe5b2dec3e" testName="Should_be_able_to_determine_greater_id" computerName="Edgars-iMac-2" duration="00:00:00.0002550" startTime="2026-08-09T04:38:23.1792190+00:00" endTime="2026-08-09T04:38:23.1794740+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d4d1b797-c669-4df5-aa8e-48517c9d2811" />
+    <UnitTestResult executionId="4b7ca1d5-d28a-42d2-9ad6-d162d44ea6a8" testId="27c41409-65a9-d35c-2220-a9abe66874ac" testName="Should_match_when_all_providers_equal" computerName="Edgars-iMac-2" duration="00:00:00.0002340" startTime="2026-08-09T04:38:23.2033560+00:00" endTime="2026-08-09T04:38:23.2035900+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b7ca1d5-d28a-42d2-9ad6-d162d44ea6a8" />
+    <UnitTestResult executionId="82a4dcfa-b2ca-4929-94aa-4b79425a4e4b" testId="c72133b4-9c40-c1a5-9c25-1d8cb637df52" testName="Should_make_the_round_trip_successfully_via_guid" computerName="Edgars-iMac-2" duration="00:00:00.0000900" startTime="2026-08-09T04:38:23.2451620+00:00" endTime="2026-08-09T04:38:23.2452520+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="82a4dcfa-b2ca-4929-94aa-4b79425a4e4b" />
+    <UnitTestResult executionId="83031c6a-afe5-4a2b-acc1-334f20fdd9e7" testId="ba50c3e9-749e-f2b0-2108-f832f92b8c9b" testName="Should_compare_known_conversions_HexBase16Lower" computerName="Edgars-iMac-2" duration="00:00:00.0002850" startTime="2026-08-09T04:38:23.1756310+00:00" endTime="2026-08-09T04:38:23.1759160+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83031c6a-afe5-4a2b-acc1-334f20fdd9e7">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f0b720cd-49e7-42b8-9fae-75bdb23f6021" testId="76fedd94-4105-eaea-501f-b9839b5a769d" testName="Should_match_string_output_p" computerName="Edgars-iMac-2" duration="00:00:00.0000840" startTime="2026-08-09T04:38:23.2463060+00:00" endTime="2026-08-09T04:38:23.2463900+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f0b720cd-49e7-42b8-9fae-75bdb23f6021" />
+    <UnitTestResult executionId="94b4861a-67f5-44d9-903f-f574a58ad13d" testId="7580e70a-82f2-0133-0f33-ce1adf5d8e19" testName="Should_match_sequentially_with_sequential_guid" computerName="Edgars-iMac-2" duration="00:00:00.0011110" startTime="2026-08-09T04:38:23.2022110+00:00" endTime="2026-08-09T04:38:23.2033220+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94b4861a-67f5-44d9-903f-f574a58ad13d">
+      <Output>
+        <StdOut>08def5d0-0bbb-6500-9649-0000d2020000
+08def5d0-0bbb-6500-9649-0000d2020100
+08def5d0-0bbb-6500-9649-0000d2020200</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="04d03062-6339-4b43-b2c4-f4b2d638a2a1" testId="c15aadfd-4ea6-1459-0247-1096027d9fae" testName="Should_match_when_all_providers_equal_with_guid_method" computerName="Edgars-iMac-2" duration="00:00:00.0001440" startTime="2026-08-09T04:38:23.2036030+00:00" endTime="2026-08-09T04:38:23.2037470+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="04d03062-6339-4b43-b2c4-f4b2d638a2a1" />
+    <UnitTestResult executionId="eee1f0fc-4488-4c54-8510-b4d8340c71b6" testId="88a720bf-890d-7873-1c40-2eb026a282f4" testName="Should_generate_known_sequential_guid" computerName="Edgars-iMac-2" duration="00:00:00.0002200" startTime="2026-08-09T04:38:23.2006420+00:00" endTime="2026-08-09T04:38:23.2008630+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eee1f0fc-4488-4c54-8510-b4d8340c71b6" />
+    <UnitTestResult executionId="08fe4bcc-f6f1-44af-b477-81b11db1c49b" testId="34c983a2-d019-f335-24ea-48d869adb64a" testName="Should_support_the_same_constructor" computerName="Edgars-iMac-2" duration="00:00:00.0001510" startTime="2026-08-09T04:38:23.2475800+00:00" endTime="2026-08-09T04:38:23.2477310+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="08fe4bcc-f6f1-44af-b477-81b11db1c49b" />
+    <UnitTestResult executionId="3d1bfbcb-e09c-4398-974c-7446e92a25fa" testId="3f10b746-77b4-ec8e-fb51-b52acd021804" testName="Should_convert_back_using_parser" computerName="Edgars-iMac-2" duration="00:00:00.0008790" startTime="2026-08-09T04:38:23.1773320+00:00" endTime="2026-08-09T04:38:23.1782100+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d1bfbcb-e09c-4398-974c-7446e92a25fa" />
+    <UnitTestResult executionId="c083996d-2244-448e-86c0-dde5767009d7" testId="b0fba5f3-8ed5-ded2-f5fb-567a2a2c6f69" testName="Should_not_match_when_generated_from_two_processes" computerName="Edgars-iMac-2" duration="00:00:00.0001560" startTime="2026-08-09T04:38:23.2037850+00:00" endTime="2026-08-09T04:38:23.2039400+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c083996d-2244-448e-86c0-dde5767009d7" />
+    <UnitTestResult executionId="21599fd5-b254-40ee-9f49-6683e44b435a" testId="88b71d92-8356-f18a-28ab-f41494d776a6" testName="Should_match_sequentially" computerName="Edgars-iMac-2" duration="00:00:00.0012690" startTime="2026-08-09T04:38:23.2009090+00:00" endTime="2026-08-09T04:38:23.2021780+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="21599fd5-b254-40ee-9f49-6683e44b435a">
+      <Output>
+        <StdOut>d2020000-0000-9649-31fb-08def5d00bbb
+d2020100-0000-9649-31fb-08def5d00bbb
+d2020200-0000-9649-31fb-08def5d00bbb</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1f562fc1-3581-43d9-bc59-366a42083019" testId="d325540a-2e5f-8c13-425f-b64fd23026f3" testName="Should_be_using_the_correct_algorithm_for_sequential_guids" computerName="Edgars-iMac-2" duration="00:00:00.0007069" startTime="2026-08-09T04:38:23.1947250+00:00" endTime="2026-08-09T04:38:23.1954320+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f562fc1-3581-43d9-bc59-366a42083019" />
+    <UnitTestResult executionId="7171dc00-92e3-4f09-be94-ff53da6b704c" testId="b005bac6-5691-9763-316e-a770d51e72b5" testName="Should_translate_often_transposed_characters_to_proper_values" computerName="Edgars-iMac-2" duration="00:00:00.0000920" startTime="2026-08-09T04:38:23.1789270+00:00" endTime="2026-08-09T04:38:23.1790180+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7171dc00-92e3-4f09-be94-ff53da6b704c" />
+    <UnitTestResult executionId="11fd7a49-16c5-450f-948f-8116021d42a9" testId="b06b1cca-4614-7bae-d46f-4a12b4b237a4" testName="Should_convert_to_guid_quickly_from_guid" computerName="Edgars-iMac-2" duration="00:00:00.0000970" startTime="2026-08-09T04:38:23.2446710+00:00" endTime="2026-08-09T04:38:23.2447680+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="11fd7a49-16c5-450f-948f-8116021d42a9" />
+    <UnitTestResult executionId="f5b26c85-8e2e-4a2b-a5f2-ea657a90792c" testId="ab2759c8-0bee-0b8a-4212-68b756833bae" testName="Should_not_match_exception_type_with_filter" computerName="Edgars-iMac-2" duration="00:00:00.0002740" startTime="2026-08-09T04:38:23.0855890+00:00" endTime="2026-08-09T04:38:23.0858630+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f5b26c85-8e2e-4a2b-a5f2-ea657a90792c" />
+    <UnitTestResult executionId="d097b7d8-ec17-4bb5-9d6a-8fcc04f755ca" testId="4e024e28-0fb3-3a4b-d4da-f0afdb6528c5" testName="Should_parse_newid_guid_as_newid" computerName="Edgars-iMac-2" duration="00:00:00.0008260" startTime="2026-08-09T04:38:23.2463970+00:00" endTime="2026-08-09T04:38:23.2472230+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d097b7d8-ec17-4bb5-9d6a-8fcc04f755ca" />
+    <UnitTestResult executionId="76892d87-23e8-4a53-95c8-ee0ed6b1a6f5" testId="3d80d27b-22ce-f1c2-4a96-9c8344449c52" testName="Should_generate_known_guid" computerName="Edgars-iMac-2" duration="00:00:00.0008240" startTime="2026-08-09T04:38:23.1992010+00:00" endTime="2026-08-09T04:38:23.2000250+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76892d87-23e8-4a53-95c8-ee0ed6b1a6f5" />
+    <UnitTestResult executionId="f246013a-513f-47bb-bcb8-cc1d6a1e9652" testId="94f30e7b-1f92-cc01-3e3c-3b6baedfe076" testName="Should_convert_using_standard_base32_formatting_characters" computerName="Edgars-iMac-2" duration="00:00:00.0000830" startTime="2026-08-09T04:38:23.1787530+00:00" endTime="2026-08-09T04:38:23.1788360+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f246013a-513f-47bb-bcb8-cc1d6a1e9652" />
+    <UnitTestResult executionId="066b5689-cdc1-4c60-8502-cb990a936c3d" testId="448e1a80-0b98-de2f-a435-669ed4acd57b" testName="Should_format_just_like_a_default_guid_formatter" computerName="Edgars-iMac-2" duration="00:00:00.0037020" startTime="2026-08-09T04:38:23.1353350+00:00" endTime="2026-08-09T04:38:23.1390370+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="066b5689-cdc1-4c60-8502-cb990a936c3d" />
+    <UnitTestResult executionId="ef18bb4c-c2c7-4fea-89ea-74acdaa5ae2f" testId="46a76f6e-6e29-5d6b-50b9-d985b730a62f" testName="Should_work_from_newid_to_guid_to_newid" computerName="Edgars-iMac-2" duration="00:00:00.0001080" startTime="2026-08-09T04:38:23.2477390+00:00" endTime="2026-08-09T04:38:23.2478470+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ef18bb4c-c2c7-4fea-89ea-74acdaa5ae2f">
+      <Output>
+        <StdOut>9d9e0100-6d6c-1461-5a55-08def5d00bc2</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4a79c1c2-5d0c-4a36-93c7-1a937213222e" testId="1f46b33a-4adf-bf01-92bb-1bd399af79ee" testName="Should_keep_them_ordered_for_sql_server" computerName="Edgars-iMac-2" duration="00:00:00.0196190" startTime="2026-08-09T04:38:23.1155000+00:00" endTime="2026-08-09T04:38:23.1351190+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4a79c1c2-5d0c-4a36-93c7-1a937213222e">
+      <Output>
+        <StdOut>Normal: 804a0000-6d6c-1461-3452-08def5d01ff2 Sql: 08def5d0-1ff2-3452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-f452-08def81a5622 Sql: 08def81a-5622-f452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-b452-08defedcf513 Sql: 08defedc-f513-b452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-7452-08df0a17fcc4 Sql: 08df0a17-fcc4-7452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-3452-08df19cb6d35 Sql: 08df19cb-6d35-3452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-f452-08df2df74665 Sql: 08df2df7-4665-f452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-b452-08df469b8856 Sql: 08df469b-8856-b452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-7452-08df63b83307 Sql: 08df63b8-3307-7452-1461-6d6c804a0000</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e6645670-aba1-423d-b7bd-e16baaedc48a" testId="7a0d0930-4011-6d16-ec2d-8504c601ced3" testName="Should_pull_using_host_name" computerName="Edgars-iMac-2" duration="00:00:00.0026380" startTime="2026-08-09T04:38:23.2281800+00:00" endTime="2026-08-09T04:38:23.2308180+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6645670-aba1-423d-b7bd-e16baaedc48a" />
+    <UnitTestResult executionId="e5f85ecc-ccc4-4b9f-b9d7-5a25aabb4886" testId="f7a4b9e3-6ca8-74db-f37b-023f8183e499" testName="Should_compare_known_conversions_Base32Upper" computerName="Edgars-iMac-2" duration="00:00:00.0005599" startTime="2026-08-09T04:38:23.1691570+00:00" endTime="2026-08-09T04:38:23.1697170+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e5f85ecc-ccc4-4b9f-b9d7-5a25aabb4886">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e9b0037c-1acd-4df5-b0b6-82e1eddb9bf0" testId="7e8772e5-24c2-c51f-bb64-21aa39d14767" testName="Should_compare_known_conversions_ZBase32Lower" computerName="Edgars-iMac-2" duration="00:00:00.0009130" startTime="2026-08-09T04:38:23.1761500+00:00" endTime="2026-08-09T04:38:23.1770630+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9b0037c-1acd-4df5-b0b6-82e1eddb9bf0">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="329a8092-e8d8-40c6-8ceb-1636422400e9" testId="40ab5563-64a9-8b1d-55db-3f44d60af5ed" testName="Should_convert_to_guid_quickly" computerName="Edgars-iMac-2" duration="00:00:00.0002350" startTime="2026-08-09T04:38:23.2444230+00:00" endTime="2026-08-09T04:38:23.2446580+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="329a8092-e8d8-40c6-8ceb-1636422400e9" />
+    <UnitTestResult executionId="78dc335e-ea09-476a-821d-888b17184c48" testId="6eac8a74-8df7-de50-ec72-0a38be5c27f6" testName="Should_match_exception_type" computerName="Edgars-iMac-2" duration="00:00:00.0007290" startTime="2026-08-09T04:38:23.0846770+00:00" endTime="2026-08-09T04:38:23.0854050+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="78dc335e-ea09-476a-821d-888b17184c48" />
+    <UnitTestResult executionId="fbf8d5c6-edad-4752-9310-7e0f42bac234" testId="c3111827-4e65-313f-1aec-0a132976e5cf" testName="Should_make_the_round_trip_successfully_via_bytes" computerName="Edgars-iMac-2" duration="00:00:00.0001920" startTime="2026-08-09T04:38:23.2449570+00:00" endTime="2026-08-09T04:38:23.2451500+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fbf8d5c6-edad-4752-9310-7e0f42bac234" />
+    <UnitTestResult executionId="e3ecc5c6-e9ff-4759-8730-d258bbe440b8" testId="8b8150d9-25d4-a9fe-6310-4b505eed71e8" testName="Should_match_string_output_d" computerName="Edgars-iMac-2" duration="00:00:00.0000910" startTime="2026-08-09T04:38:23.2461130+00:00" endTime="2026-08-09T04:38:23.2462040+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e3ecc5c6-e9ff-4759-8730-d258bbe440b8" />
+    <UnitTestResult executionId="9efebada-abdf-4140-8930-5658039735f1" testId="548b71a9-68a8-51fe-7ded-3edf93028c6f" testName="Should_parse_sequential_guid_as_newid" computerName="Edgars-iMac-2" duration="00:00:00.0001810" startTime="2026-08-09T04:38:23.2472440+00:00" endTime="2026-08-09T04:38:23.2474250+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9efebada-abdf-4140-8930-5658039735f1" />
+    <UnitTestResult executionId="2db24cf0-bd60-4b9d-b59d-b482fdca7d03" testId="4ef1c002-bc83-3a4b-22b5-484fe1c5f739" testName="Should_match_base_exception_type_with_filter" computerName="Edgars-iMac-2" duration="00:00:00.0047780" startTime="2026-08-09T04:38:23.0798710+00:00" endTime="2026-08-09T04:38:23.0846500+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2db24cf0-bd60-4b9d-b59d-b482fdca7d03" />
+    <UnitTestResult executionId="e02fd738-a7be-4118-8791-640eef56be4e" testId="ed606934-1ce1-9dfd-195a-9b70e566d338" testName="Should_be_completely_thread_safe_to_avoid_duplicates" computerName="Edgars-iMac-2" duration="00:00:00.0000040" startTime="2026-08-09T04:38:23.1801680+00:00" endTime="2026-08-09T04:38:23.1801720+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e02fd738-a7be-4118-8791-640eef56be4e" />
+    <UnitTestResult executionId="62d10067-b87b-4cc3-a7b3-58f4cb3e5e43" testId="138b5bfe-43c5-bc8f-a860-44994b523278" testName="Should_be_able_to_determine_equal_ids" computerName="Edgars-iMac-2" duration="00:00:00.0000910" startTime="2026-08-09T04:38:23.1791200+00:00" endTime="2026-08-09T04:38:23.1792120+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62d10067-b87b-4cc3-a7b3-58f4cb3e5e43" />
+    <UnitTestResult executionId="fa2c49d1-6e92-43f3-9ff4-90e2a1519c16" testId="a202703d-37a6-fe6f-04cf-ab3ee0050639" testName="Should_convert_back_using_standard_parser" computerName="Edgars-iMac-2" duration="00:00:00.0003560" startTime="2026-08-09T04:38:23.1782650+00:00" endTime="2026-08-09T04:38:23.1786220+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fa2c49d1-6e92-43f3-9ff4-90e2a1519c16" />
+    <UnitTestResult executionId="2bf700d2-134a-49e9-9e34-a57488ee352e" testId="8fdf0ad2-2340-c3f5-f329-34896703e307" testName="Should_convert_using_custom_base32_formatting_characters" computerName="Edgars-iMac-2" duration="00:00:00.0001150" startTime="2026-08-09T04:38:23.1786310+00:00" endTime="2026-08-09T04:38:23.1787450+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2bf700d2-134a-49e9-9e34-a57488ee352e" />
+    <UnitTestResult executionId="2343bd81-0ef3-4a42-aa2b-002ecc24b0ed" testId="21c88733-f2ec-0987-d3a1-e2c74f338816" testName="Should_properly_handle_string_passthrough" computerName="Edgars-iMac-2" duration="00:00:00.0001260" startTime="2026-08-09T04:38:23.2474460+00:00" endTime="2026-08-09T04:38:23.2475720+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2343bd81-0ef3-4a42-aa2b-002ecc24b0ed" />
+    <UnitTestResult executionId="4dd376ec-fc0a-420e-81d1-8bb168584fbd" testId="ec9603c2-4362-9acf-45aa-9b52f462eb07" testName="Should_format_just_like_a_fancy_guid_formatter" computerName="Edgars-iMac-2" duration="00:00:00.0001710" startTime="2026-08-09T04:38:23.1390860+00:00" endTime="2026-08-09T04:38:23.1392570+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4dd376ec-fc0a-420e-81d1-8bb168584fbd" />
+    <UnitTestResult executionId="89cc54e6-69c7-4936-9eab-50fcce89e146" testId="e4dbe592-85e7-c06e-302f-7d07715ca6cc" testName="Should_compare_known_conversions_ZBase32Upper" computerName="Edgars-iMac-2" duration="00:00:00.0002520" startTime="2026-08-09T04:38:23.1770720+00:00" endTime="2026-08-09T04:38:23.1773240+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89cc54e6-69c7-4936-9eab-50fcce89e146">
+      <Output>
+        <StdOut>Compared 549 equal conversions</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b82f5d27-7cd5-405f-9fed-6143d0cc9ad6" testId="70b480c4-43b6-28ef-f878-2acbcc21d877" testName="Should_accept_multiple_this_operators" computerName="Edgars-iMac-2" duration="00:00:00.0027560" startTime="2026-08-09T04:38:23.1959070+00:00" endTime="2026-08-09T04:38:23.1986620+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b82f5d27-7cd5-405f-9fed-6143d0cc9ad6" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_compare_known_conversions_DashedHexBase16BracketsUpper" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="8814af6c-5376-6744-0ac0-e80267ea80dc">
+      <Execution id="687c08ac-cda4-458b-9a87-caec122aa3bf" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_DashedHexBase16BracketsUpper" />
+    </UnitTest>
+    <UnitTest name="Should_generate_known_guid_batch" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="155bc360-d30a-29e6-6c0f-4b18914151d1">
+      <Execution id="5a96d268-897e-4b6b-986f-0f34a58b5104" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_generate_known_guid_batch" />
+    </UnitTest>
+    <UnitTest name="Should_format_just_like_a_fancy_guid_formatter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="ec9603c2-4362-9acf-45aa-9b52f462eb07">
+      <Execution id="4dd376ec-fc0a-420e-81d1-8bb168584fbd" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_a_new_id" name="Should_format_just_like_a_fancy_guid_formatter" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_HexBase16Upper" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="dda9f196-ebab-6305-a19a-ae00e9088dba">
+      <Execution id="a8e163eb-c36c-4264-b7ca-fd45aff87092" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_HexBase16Upper" />
+    </UnitTest>
+    <UnitTest name="Should_match_string_output_d" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="8b8150d9-25d4-a9fe-6310-4b505eed71e8">
+      <Execution id="e3ecc5c6-e9ff-4759-8730-d258bbe440b8" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_string_output_d" />
+    </UnitTest>
+    <UnitTest name="Should_not_match_when_generated_from_two_processes" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="b0fba5f3-8ed5-ded2-f5fb-567a2a2c6f69">
+      <Execution id="c083996d-2244-448e-86c0-dde5767009d7" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_not_match_when_generated_from_two_processes" />
+    </UnitTest>
+    <UnitTest name="Should_match_string_output_b" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="751d1a6c-e5e9-34d6-a2a9-5c21e2d50d88">
+      <Execution id="495c99ac-771a-4b55-9c22-7fd0a18f7680" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_string_output_b" />
+    </UnitTest>
+    <UnitTest name="Should_work_from_guid_to_newid_to_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="0f065bef-d970-456e-3725-97ded57ca113">
+      <Execution id="7212c406-52a2-41fb-923e-ba966fa1d298" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_a_new_id" name="Should_work_from_guid_to_newid_to_guid" />
+    </UnitTest>
+    <UnitTest name="Should_match_base_exception_type_with_filter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="4ef1c002-bc83-3a4b-22b5-484fe1c5f739">
+      <Execution id="2db24cf0-bd60-4b9d-b59d-b482fdca7d03" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.ExceptionFilter_Specs" name="Should_match_base_exception_type_with_filter" />
+    </UnitTest>
+    <UnitTest name="Should_pull_using_net" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="b7eff512-ee0a-fd0a-7660-f5329d8a7ba5">
+      <Execution id="a417ae1a-79a4-4dda-b4b4-1880b6f9486a" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_getting_a_network_address_for_the_id_generator" name="Should_pull_using_net" />
+    </UnitTest>
+    <UnitTest name="Should_pull_the_network_adapter_mac_address" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="d0086cef-efcd-8f8a-7a16-cc76432c177a">
+      <Execution id="c8a56dfe-6956-4cd4-98ae-45cc9dd575c8" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_getting_a_network_address_for_the_id_generator" name="Should_pull_the_network_adapter_mac_address" />
+    </UnitTest>
+    <UnitTest name="Should_display_sequentially_for_newid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="14e165e3-9d6a-6d9e-efd6-e3efc97b699c">
+      <Execution id="173cd20c-d097-4cfb-9e98-7113f75e1f40" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_display_sequentially_for_newid" />
+    </UnitTest>
+    <UnitTest name="Should_format_just_like_a_parenthesis_guid_formatter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="fad4aa2c-7931-3cf1-2d49-f813fa5203fc">
+      <Execution id="3015748c-3007-41ed-95f5-8823e125ee4a" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_a_new_id" name="Should_format_just_like_a_parenthesis_guid_formatter" />
+    </UnitTest>
+    <UnitTest name="Should_be_using_the_correct_algorithm_for_sequential_guids" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="d325540a-2e5f-8c13-425f-b64fd23026f3">
+      <Execution id="1f562fc1-3581-43d9-bc59-366a42083019" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_using_the_correct_algorithm_for_sequential_guids" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_DashedHexBase16BracketsLower" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7cfdf0ea-43c5-3698-ef62-a625f4d1af84">
+      <Execution id="912707da-9754-41c0-90ef-b6ba0928b054" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_DashedHexBase16BracketsLower" />
+    </UnitTest>
+    <UnitTest name="Should_be_using_the_correct_algorithm" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="26bb7be5-1069-cf5f-fb42-88152cece942">
+      <Execution id="39ca8ab5-cbb3-4e24-af30-e98380362fa1" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_using_the_correct_algorithm" />
+    </UnitTest>
+    <UnitTest name="Should_match_parsed_guid_ps" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="0cbc7a1a-37f4-0df4-85be-2c3577bdef6a">
+      <Execution id="c4118e89-5142-49c9-a42e-59243d72125e" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_parsed_guid_ps" />
+    </UnitTest>
+    <UnitTest name="Should_convert_to_guid_quickly" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="40ab5563-64a9-8b1d-55db-3f44d60af5ed">
+      <Execution id="329a8092-e8d8-40c6-8ceb-1636422400e9" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_convert_to_guid_quickly" />
+    </UnitTest>
+    <UnitTest name="Should_convert_back_using_parser" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="3f10b746-77b4-ec8e-fb51-b52acd021804">
+      <Execution id="3d1bfbcb-e09c-4398-974c-7446e92a25fa" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_convert_back_using_parser" />
+    </UnitTest>
+    <UnitTest name="Should_keep_them_ordered_for_sql_server_when_using_array_call" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="21b80ffe-f689-8d88-14fa-97471b603bce">
+      <Execution id="1db0b024-43cf-45d0-8da0-c309df235a2e" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Generating_ids_and_preserve_same_order_for_sql_and_ToSequentialGuid" name="Should_keep_them_ordered_for_sql_server_when_using_array_call" />
+    </UnitTest>
+    <UnitTest name="Should_convert_from_a_guid_quickly" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="0a3fc19b-a7fa-4c1b-4920-e42bae3debea">
+      <Execution id="361c8f76-8224-4cfb-bfc3-54e34d712492" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_convert_from_a_guid_quickly" />
+    </UnitTest>
+    <UnitTest name="Should_accept_multiple_this_operators" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="70b480c4-43b6-28ef-f878-2acbcc21d877">
+      <Execution id="b82f5d27-7cd5-405f-9fed-6143d0cc9ad6" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_type_extensions" name="Should_accept_multiple_this_operators" />
+    </UnitTest>
+    <UnitTest name="Should_convert_using_the_optimized_human_readable_formatter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="0f20f1e6-0454-7d66-93fc-e067a06062cb">
+      <Execution id="67bd4d8a-03a6-4d89-8da6-612c6dfa9c12" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_convert_using_the_optimized_human_readable_formatter" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_CustomBase32" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="18ce3f66-4093-9a11-d937-74943ff8a8a8">
+      <Execution id="66c82374-77c8-4f27-b076-08b2e7fc5424" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_CustomBase32" />
+    </UnitTest>
+    <UnitTest name="Should_support_the_same_constructor" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="34c983a2-d019-f335-24ea-48d869adb64a">
+      <Execution id="08fe4bcc-f6f1-44af-b477-81b11db1c49b" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_support_the_same_constructor" />
+    </UnitTest>
+    <UnitTest name="Should_work_from_newid_to_guid_to_newid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="46a76f6e-6e29-5d6b-50b9-d985b730a62f">
+      <Execution id="ef18bb4c-c2c7-4fea-89ea-74acdaa5ae2f" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_work_from_newid_to_guid_to_newid" />
+    </UnitTest>
+    <UnitTest name="Should_not_match_exception_type_with_filter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="ab2759c8-0bee-0b8a-4212-68b756833bae">
+      <Execution id="f5b26c85-8e2e-4a2b-a5f2-ea657a90792c" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.ExceptionFilter_Specs" name="Should_not_match_exception_type_with_filter" />
+    </UnitTest>
+    <UnitTest name="Should_generate_unique_identifiers_with_each_invocation" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="0031d601-5bc1-f15c-8414-7beff76d193a">
+      <Execution id="143f64a0-002b-4b8a-b269-a8ab5bb75415" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_generate_unique_identifiers_with_each_invocation" />
+    </UnitTest>
+    <UnitTest name="Should_match_when_all_providers_equal_with_guid_method" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="c15aadfd-4ea6-1459-0247-1096027d9fae">
+      <Execution id="04d03062-6339-4b43-b2c4-f4b2d638a2a1" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_match_when_all_providers_equal_with_guid_method" />
+    </UnitTest>
+    <UnitTest name="Should_convert_using_custom_base32_formatting_characters" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="8fdf0ad2-2340-c3f5-f329-34896703e307">
+      <Execution id="2bf700d2-134a-49e9-9e34-a57488ee352e" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_convert_using_custom_base32_formatting_characters" />
+    </UnitTest>
+    <UnitTest name="Should_format_just_like_a_narrow_guid_formatter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="bd7c2a99-e998-bf79-1ed5-9dda546c49c0">
+      <Execution id="9b6bbdd3-5a9a-42e3-a01d-fc415099eceb" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_a_new_id" name="Should_format_just_like_a_narrow_guid_formatter" />
+    </UnitTest>
+    <UnitTest name="Should_match_parsed_guid_ns" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7ea90718-9c74-4d61-4872-889a1977d42b">
+      <Execution id="8f95fb25-5c5c-4f0e-8988-a0b662910338" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_parsed_guid_ns" />
+    </UnitTest>
+    <UnitTest name="Should_not_match_when_processor_id_provided" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="e09a0903-def1-fcb7-bb0f-c1dd5e7e8127">
+      <Execution id="668ca3f3-e231-4d8d-8d7b-9e200fc69635" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_not_match_when_processor_id_provided" />
+    </UnitTest>
+    <UnitTest name="Should_format_just_like_a_default_guid_formatter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="448e1a80-0b98-de2f-a435-669ed4acd57b">
+      <Execution id="066b5689-cdc1-4c60-8502-cb990a936c3d" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_a_new_id" name="Should_format_just_like_a_default_guid_formatter" />
+    </UnitTest>
+    <UnitTest name="Should_keep_them_ordered_for_sql_server" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="1f46b33a-4adf-bf01-92bb-1bd399af79ee">
+      <Execution id="4a79c1c2-5d0c-4a36-93c7-1a937213222e" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Generating_ids_over_time" name="Should_keep_them_ordered_for_sql_server" />
+    </UnitTest>
+    <UnitTest name="Should_match_string_output_p" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="76fedd94-4105-eaea-501f-b9839b5a769d">
+      <Execution id="f0b720cd-49e7-42b8-9fae-75bdb23f6021" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_string_output_p" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_ZBase32Lower" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7e8772e5-24c2-c51f-bb64-21aa39d14767">
+      <Execution id="e9b0037c-1acd-4df5-b0b6-82e1eddb9bf0" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_ZBase32Lower" />
+    </UnitTest>
+    <UnitTest name="Should_pull_using_host_name" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7a0d0930-4011-6d16-ec2d-8504c601ced3">
+      <Execution id="e6645670-aba1-423d-b7bd-e16baaedc48a" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_getting_a_network_address_for_the_id_generator" name="Should_pull_using_host_name" />
+    </UnitTest>
+    <UnitTest name="Should_generate_known_sequential_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="88a720bf-890d-7873-1c40-2eb026a282f4">
+      <Execution id="eee1f0fc-4488-4c54-8510-b4d8340c71b6" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_generate_known_sequential_guid" />
+    </UnitTest>
+    <UnitTest name="Should_match_sequentially_with_sequential_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7580e70a-82f2-0133-0f33-ce1adf5d8e19">
+      <Execution id="94b4861a-67f5-44d9-903f-f574a58ad13d" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_match_sequentially_with_sequential_guid" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_ZBase32Upper" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="e4dbe592-85e7-c06e-302f-7d07715ca6cc">
+      <Execution id="89cc54e6-69c7-4936-9eab-50fcce89e146" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_ZBase32Upper" />
+    </UnitTest>
+    <UnitTest name="Should_be_able_to_extract_timestamp" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="393bbcfd-dc08-a985-f551-8940b1f511c2">
+      <Execution id="aa0a40f2-3eb0-441c-8118-1eb2fced066a" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_able_to_extract_timestamp" />
+    </UnitTest>
+    <UnitTest name="Should_keep_them_ordered_for_ToSequentialGuid_when_using_array_call" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="62da303b-a7a5-ce39-57d4-7792dce4b566">
+      <Execution id="ac0d25b6-4580-4ba1-b599-44cc28266792" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Generating_ids_and_preserve_same_order_for_sql_and_ToSequentialGuid" name="Should_keep_them_ordered_for_ToSequentialGuid_when_using_array_call" />
+    </UnitTest>
+    <UnitTest name="Should_be_able_to_extract_timestamp_with_process_id" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="d2d64eb3-faa1-c3ea-9940-411cd7d40a58">
+      <Execution id="a3fb3d63-d485-4385-a4d8-2796cef5967d" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_able_to_extract_timestamp_with_process_id" />
+    </UnitTest>
+    <UnitTest name="Should_include_the_parameter_name_in_the_exception" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="14191c8e-6b30-2e08-c266-3944f1549760">
+      <Execution id="5d4c83c7-2ea6-4b74-b07b-88e2610d098b" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.ExceptionFilter_Specs" name="Should_include_the_parameter_name_in_the_exception" />
+    </UnitTest>
+    <UnitTest name="Should_be_completely_thread_safe_to_avoid_duplicates" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="ed606934-1ce1-9dfd-195a-9b70e566d338">
+      <Execution id="e02fd738-a7be-4118-8791-640eef56be4e" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_completely_thread_safe_to_avoid_duplicates" />
+    </UnitTest>
+    <UnitTest name="Should_accept_multiple_this_operators_subclass" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="f2e3c8e2-3fd8-0a8b-582a-1f4f164d3136">
+      <Execution id="e9909aef-05f1-4913-9d23-dfe4409b4e24" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_type_extensions" name="Should_accept_multiple_this_operators_subclass" />
+    </UnitTest>
+    <UnitTest name="Should_match_exception_type" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="6eac8a74-8df7-de50-ec72-0a38be5c27f6">
+      <Execution id="78dc335e-ea09-476a-821d-888b17184c48" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.ExceptionFilter_Specs" name="Should_match_exception_type" />
+    </UnitTest>
+    <UnitTest name="Should_be_fast_and_friendly" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="6a86868d-bd12-aae5-2054-cd81363b12c8">
+      <Execution id="96a8736c-5c6c-41b1-a049-1344e3bd03cf" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_fast_and_friendly" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_Base32Lower" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="a56f44d0-be0d-15a5-27bb-2802509a7cc9">
+      <Execution id="2e2e4ad8-0306-44c8-80b3-96bc341b8a22" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_Base32Lower" />
+    </UnitTest>
+    <UnitTest name="Should_match_parsed_guid_bs" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="76550ae0-8b9d-1bb9-6bb4-240ad339e522">
+      <Execution id="a0814be4-ec39-4c5a-b96a-7db5934c54ca" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_parsed_guid_bs" />
+    </UnitTest>
+    <UnitTest name="Should_be_able_to_determine_equal_ids" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="138b5bfe-43c5-bc8f-a860-44994b523278">
+      <Execution id="62d10067-b87b-4cc3-a7b3-58f4cb3e5e43" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_able_to_determine_equal_ids" />
+    </UnitTest>
+    <UnitTest name="Should_generate_known_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="3d80d27b-22ce-f1c2-4a96-9c8344449c52">
+      <Execution id="76892d87-23e8-4a53-95c8-ee0ed6b1a6f5" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_generate_known_guid" />
+    </UnitTest>
+    <UnitTest name="Should_generate_sequential_ids_quickly" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="ec7cbc9d-ea74-8cd4-6ad9-5ccc9eb8e47c">
+      <Execution id="0a182bd6-cca2-41a7-aae1-8736848be4e5" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_generate_sequential_ids_quickly" />
+    </UnitTest>
+    <UnitTest name="Should_be_able_to_determine_greater_id" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="b7495299-0e40-690b-ee64-a8fe5b2dec3e">
+      <Execution id="d4d1b797-c669-4df5-aa8e-48517c9d2811" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_able_to_determine_greater_id" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_DashedHexBase16Upper" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7e167914-941b-3d99-4531-e1718672549d">
+      <Execution id="73b87a41-11dd-438e-81c7-ac8ce13daeb2" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_DashedHexBase16Upper" />
+    </UnitTest>
+    <UnitTest name="Should_translate_often_transposed_characters_to_proper_values" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="b005bac6-5691-9763-316e-a770d51e72b5">
+      <Execution id="7171dc00-92e3-4f09-be94-ff53da6b704c" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_translate_often_transposed_characters_to_proper_values" />
+    </UnitTest>
+    <UnitTest name="Should_pull_all_adapters" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="7feab299-fcf5-4416-3449-d9b36d13c58d">
+      <Execution id="40dd67ba-89ad-4ca0-9e1b-69676bcba35d" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_getting_a_network_address_for_the_id_generator" name="Should_pull_all_adapters" />
+    </UnitTest>
+    <UnitTest name="Should_match_exception_type_with_filter" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="23fd4e34-068e-71cc-3df8-12d92fc973bc">
+      <Execution id="15d03fc7-f78c-457f-9556-6eb76ba7223f" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.ExceptionFilter_Specs" name="Should_match_exception_type_with_filter" />
+    </UnitTest>
+    <UnitTest name="Should_convert_to_guid_quickly_from_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="b06b1cca-4614-7bae-d46f-4a12b4b237a4">
+      <Execution id="11fd7a49-16c5-450f-948f-8116021d42a9" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_convert_to_guid_quickly_from_guid" />
+    </UnitTest>
+    <UnitTest name="Should_be_able_to_determine_lower_id" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="f4a8e83a-8d66-e1a5-f72a-3208f9b43a46">
+      <Execution id="719c500f-6562-4507-825a-67d30c0403d4" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator" name="Should_be_able_to_determine_lower_id" />
+    </UnitTest>
+    <UnitTest name="Should_make_the_round_trip_successfully_via_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="c72133b4-9c40-c1a5-9c25-1d8cb637df52">
+      <Execution id="82a4dcfa-b2ca-4929-94aa-4b79425a4e4b" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_make_the_round_trip_successfully_via_guid" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_DashedHexBase16Lower" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="70448f37-5398-a629-e866-e9c98f2e2976">
+      <Execution id="ac693f8f-8409-462f-a90f-c41b833505b0" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_DashedHexBase16Lower" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_Base32Upper" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="f7a4b9e3-6ca8-74db-f37b-023f8183e499">
+      <Execution id="e5f85ecc-ccc4-4b9f-b9d7-5a25aabb4886" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_Base32Upper" />
+    </UnitTest>
+    <UnitTest name="Should_match_parsed_guid_ds" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="dbe801ce-5ae4-3a21-b3fe-83a0195cd79a">
+      <Execution id="fa2ab929-267b-44ef-ab5e-1f9a97be52fc" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_parsed_guid_ds" />
+    </UnitTest>
+    <UnitTest name="Should_match_string_output_n" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="9ee15429-4c70-7a43-f3bc-046e30a96e39">
+      <Execution id="af1201a3-0c5c-46ba-956f-a7322e77c1e8" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_match_string_output_n" />
+    </UnitTest>
+    <UnitTest name="Should_convert_using_standard_base32_formatting_characters" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="94f30e7b-1f92-cc01-3e3c-3b6baedfe076">
+      <Execution id="f246013a-513f-47bb-bcb8-cc1d6a1e9652" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_convert_using_standard_base32_formatting_characters" />
+    </UnitTest>
+    <UnitTest name="Should_make_the_round_trip_successfully_via_bytes" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="c3111827-4e65-313f-1aec-0a132976e5cf">
+      <Execution id="fbf8d5c6-edad-4752-9310-7e0f42bac234" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_make_the_round_trip_successfully_via_bytes" />
+    </UnitTest>
+    <UnitTest name="Should_parse_newid_guid_as_newid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="4e024e28-0fb3-3a4b-d4da-f0afdb6528c5">
+      <Execution id="d097b7d8-ec17-4bb5-9d6a-8fcc04f755ca" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_parse_newid_guid_as_newid" />
+    </UnitTest>
+    <UnitTest name="Should_parse_sequential_guid_as_newid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="548b71a9-68a8-51fe-7ded-3edf93028c6f">
+      <Execution id="9efebada-abdf-4140-8930-5658039735f1" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_parse_sequential_guid_as_newid" />
+    </UnitTest>
+    <UnitTest name="Should_match_when_all_providers_equal" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="27c41409-65a9-d35c-2220-a9abe66874ac">
+      <Execution id="4b7ca1d5-d28a-42d2-9ad6-d162d44ea6a8" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_match_when_all_providers_equal" />
+    </UnitTest>
+    <UnitTest name="Should_match_sequentially" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="88b71d92-8356-f18a-28ab-f41494d776a6">
+      <Execution id="21599fd5-b254-40ee-9f49-6683e44b435a" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_generating_id" name="Should_match_sequentially" />
+    </UnitTest>
+    <UnitTest name="Should_convert_back_using_standard_parser" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="a202703d-37a6-fe6f-04cf-ab3ee0050639">
+      <Execution id="fa2c49d1-6e92-43f3-9ff4-90e2a1519c16" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_convert_back_using_standard_parser" />
+    </UnitTest>
+    <UnitTest name="Should_properly_handle_string_passthrough" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="21c88733-f2ec-0987-d3a1-e2c74f338816">
+      <Execution id="2343bd81-0ef3-4a42-aa2b-002ecc24b0ed" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_properly_handle_string_passthrough" />
+    </UnitTest>
+    <UnitTest name="Should_compare_known_conversions_HexBase16Lower" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="ba50c3e9-749e-f2b0-2108-f832f92b8c9b">
+      <Execution id="83031c6a-afe5-4a2b-acc1-334f20fdd9e7" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_formatters" name="Should_compare_known_conversions_HexBase16Lower" />
+    </UnitTest>
+    <UnitTest name="Should_make_the_round_trip_successfully_via_sequential_guid" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.abstractions.tests/bin/release/net9.0/vicione.servicebus.abstractions.tests.dll" id="d5b19f15-9ee1-ffb0-7be7-f79327200137">
+      <Execution id="0ade0800-e2eb-47cf-8a39-e213fa2b4163" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.Abstractions.Tests.When_interoperating_with_the_guid_type" name="Should_make_the_round_trip_successfully_via_sequential_guid" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="ec7cbc9d-ea74-8cd4-6ad9-5ccc9eb8e47c" executionId="0a182bd6-cca2-41a7-aae1-8736848be4e5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8814af6c-5376-6744-0ac0-e80267ea80dc" executionId="687c08ac-cda4-458b-9a87-caec122aa3bf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62da303b-a7a5-ce39-57d4-7792dce4b566" executionId="ac0d25b6-4580-4ba1-b599-44cc28266792" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0a3fc19b-a7fa-4c1b-4920-e42bae3debea" executionId="361c8f76-8224-4cfb-bfc3-54e34d712492" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="23fd4e34-068e-71cc-3df8-12d92fc973bc" executionId="15d03fc7-f78c-457f-9556-6eb76ba7223f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="751d1a6c-e5e9-34d6-a2a9-5c21e2d50d88" executionId="495c99ac-771a-4b55-9c22-7fd0a18f7680" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd7c2a99-e998-bf79-1ed5-9dda546c49c0" executionId="9b6bbdd3-5a9a-42e3-a01d-fc415099eceb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="155bc360-d30a-29e6-6c0f-4b18914151d1" executionId="5a96d268-897e-4b6b-986f-0f34a58b5104" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d2d64eb3-faa1-c3ea-9940-411cd7d40a58" executionId="a3fb3d63-d485-4385-a4d8-2796cef5967d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7cfdf0ea-43c5-3698-ef62-a625f4d1af84" executionId="912707da-9754-41c0-90ef-b6ba0928b054" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a56f44d0-be0d-15a5-27bb-2802509a7cc9" executionId="2e2e4ad8-0306-44c8-80b3-96bc341b8a22" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dda9f196-ebab-6305-a19a-ae00e9088dba" executionId="a8e163eb-c36c-4264-b7ca-fd45aff87092" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9ee15429-4c70-7a43-f3bc-046e30a96e39" executionId="af1201a3-0c5c-46ba-956f-a7322e77c1e8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f2e3c8e2-3fd8-0a8b-582a-1f4f164d3136" executionId="e9909aef-05f1-4913-9d23-dfe4409b4e24" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="18ce3f66-4093-9a11-d937-74943ff8a8a8" executionId="66c82374-77c8-4f27-b076-08b2e7fc5424" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d0086cef-efcd-8f8a-7a16-cc76432c177a" executionId="c8a56dfe-6956-4cd4-98ae-45cc9dd575c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="70448f37-5398-a629-e866-e9c98f2e2976" executionId="ac693f8f-8409-462f-a90f-c41b833505b0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d5b19f15-9ee1-ffb0-7be7-f79327200137" executionId="0ade0800-e2eb-47cf-8a39-e213fa2b4163" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e09a0903-def1-fcb7-bb0f-c1dd5e7e8127" executionId="668ca3f3-e231-4d8d-8d7b-9e200fc69635" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7e167914-941b-3d99-4531-e1718672549d" executionId="73b87a41-11dd-438e-81c7-ac8ce13daeb2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76550ae0-8b9d-1bb9-6bb4-240ad339e522" executionId="a0814be4-ec39-4c5a-b96a-7db5934c54ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="26bb7be5-1069-cf5f-fb42-88152cece942" executionId="39ca8ab5-cbb3-4e24-af30-e98380362fa1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0031d601-5bc1-f15c-8414-7beff76d193a" executionId="143f64a0-002b-4b8a-b269-a8ab5bb75415" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14191c8e-6b30-2e08-c266-3944f1549760" executionId="5d4c83c7-2ea6-4b74-b07b-88e2610d098b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6a86868d-bd12-aae5-2054-cd81363b12c8" executionId="96a8736c-5c6c-41b1-a049-1344e3bd03cf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ea90718-9c74-4d61-4872-889a1977d42b" executionId="8f95fb25-5c5c-4f0e-8988-a0b662910338" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0cbc7a1a-37f4-0df4-85be-2c3577bdef6a" executionId="c4118e89-5142-49c9-a42e-59243d72125e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="21b80ffe-f689-8d88-14fa-97471b603bce" executionId="1db0b024-43cf-45d0-8da0-c309df235a2e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="393bbcfd-dc08-a985-f551-8940b1f511c2" executionId="aa0a40f2-3eb0-441c-8118-1eb2fced066a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4a8e83a-8d66-e1a5-f72a-3208f9b43a46" executionId="719c500f-6562-4507-825a-67d30c0403d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0f065bef-d970-456e-3725-97ded57ca113" executionId="7212c406-52a2-41fb-923e-ba966fa1d298" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7feab299-fcf5-4416-3449-d9b36d13c58d" executionId="40dd67ba-89ad-4ca0-9e1b-69676bcba35d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dbe801ce-5ae4-3a21-b3fe-83a0195cd79a" executionId="fa2ab929-267b-44ef-ab5e-1f9a97be52fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b7eff512-ee0a-fd0a-7660-f5329d8a7ba5" executionId="a417ae1a-79a4-4dda-b4b4-1880b6f9486a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fad4aa2c-7931-3cf1-2d49-f813fa5203fc" executionId="3015748c-3007-41ed-95f5-8823e125ee4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14e165e3-9d6a-6d9e-efd6-e3efc97b699c" executionId="173cd20c-d097-4cfb-9e98-7113f75e1f40" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0f20f1e6-0454-7d66-93fc-e067a06062cb" executionId="67bd4d8a-03a6-4d89-8da6-612c6dfa9c12" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b7495299-0e40-690b-ee64-a8fe5b2dec3e" executionId="d4d1b797-c669-4df5-aa8e-48517c9d2811" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="27c41409-65a9-d35c-2220-a9abe66874ac" executionId="4b7ca1d5-d28a-42d2-9ad6-d162d44ea6a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c72133b4-9c40-c1a5-9c25-1d8cb637df52" executionId="82a4dcfa-b2ca-4929-94aa-4b79425a4e4b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba50c3e9-749e-f2b0-2108-f832f92b8c9b" executionId="83031c6a-afe5-4a2b-acc1-334f20fdd9e7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76fedd94-4105-eaea-501f-b9839b5a769d" executionId="f0b720cd-49e7-42b8-9fae-75bdb23f6021" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7580e70a-82f2-0133-0f33-ce1adf5d8e19" executionId="94b4861a-67f5-44d9-903f-f574a58ad13d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c15aadfd-4ea6-1459-0247-1096027d9fae" executionId="04d03062-6339-4b43-b2c4-f4b2d638a2a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88a720bf-890d-7873-1c40-2eb026a282f4" executionId="eee1f0fc-4488-4c54-8510-b4d8340c71b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="34c983a2-d019-f335-24ea-48d869adb64a" executionId="08fe4bcc-f6f1-44af-b477-81b11db1c49b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3f10b746-77b4-ec8e-fb51-b52acd021804" executionId="3d1bfbcb-e09c-4398-974c-7446e92a25fa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b0fba5f3-8ed5-ded2-f5fb-567a2a2c6f69" executionId="c083996d-2244-448e-86c0-dde5767009d7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88b71d92-8356-f18a-28ab-f41494d776a6" executionId="21599fd5-b254-40ee-9f49-6683e44b435a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d325540a-2e5f-8c13-425f-b64fd23026f3" executionId="1f562fc1-3581-43d9-bc59-366a42083019" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b005bac6-5691-9763-316e-a770d51e72b5" executionId="7171dc00-92e3-4f09-be94-ff53da6b704c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b06b1cca-4614-7bae-d46f-4a12b4b237a4" executionId="11fd7a49-16c5-450f-948f-8116021d42a9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ab2759c8-0bee-0b8a-4212-68b756833bae" executionId="f5b26c85-8e2e-4a2b-a5f2-ea657a90792c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4e024e28-0fb3-3a4b-d4da-f0afdb6528c5" executionId="d097b7d8-ec17-4bb5-9d6a-8fcc04f755ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d80d27b-22ce-f1c2-4a96-9c8344449c52" executionId="76892d87-23e8-4a53-95c8-ee0ed6b1a6f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="94f30e7b-1f92-cc01-3e3c-3b6baedfe076" executionId="f246013a-513f-47bb-bcb8-cc1d6a1e9652" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="448e1a80-0b98-de2f-a435-669ed4acd57b" executionId="066b5689-cdc1-4c60-8502-cb990a936c3d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="46a76f6e-6e29-5d6b-50b9-d985b730a62f" executionId="ef18bb4c-c2c7-4fea-89ea-74acdaa5ae2f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1f46b33a-4adf-bf01-92bb-1bd399af79ee" executionId="4a79c1c2-5d0c-4a36-93c7-1a937213222e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a0d0930-4011-6d16-ec2d-8504c601ced3" executionId="e6645670-aba1-423d-b7bd-e16baaedc48a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f7a4b9e3-6ca8-74db-f37b-023f8183e499" executionId="e5f85ecc-ccc4-4b9f-b9d7-5a25aabb4886" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7e8772e5-24c2-c51f-bb64-21aa39d14767" executionId="e9b0037c-1acd-4df5-b0b6-82e1eddb9bf0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="40ab5563-64a9-8b1d-55db-3f44d60af5ed" executionId="329a8092-e8d8-40c6-8ceb-1636422400e9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6eac8a74-8df7-de50-ec72-0a38be5c27f6" executionId="78dc335e-ea09-476a-821d-888b17184c48" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c3111827-4e65-313f-1aec-0a132976e5cf" executionId="fbf8d5c6-edad-4752-9310-7e0f42bac234" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8b8150d9-25d4-a9fe-6310-4b505eed71e8" executionId="e3ecc5c6-e9ff-4759-8730-d258bbe440b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="548b71a9-68a8-51fe-7ded-3edf93028c6f" executionId="9efebada-abdf-4140-8930-5658039735f1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4ef1c002-bc83-3a4b-22b5-484fe1c5f739" executionId="2db24cf0-bd60-4b9d-b59d-b482fdca7d03" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ed606934-1ce1-9dfd-195a-9b70e566d338" executionId="e02fd738-a7be-4118-8791-640eef56be4e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="138b5bfe-43c5-bc8f-a860-44994b523278" executionId="62d10067-b87b-4cc3-a7b3-58f4cb3e5e43" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a202703d-37a6-fe6f-04cf-ab3ee0050639" executionId="fa2c49d1-6e92-43f3-9ff4-90e2a1519c16" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8fdf0ad2-2340-c3f5-f329-34896703e307" executionId="2bf700d2-134a-49e9-9e34-a57488ee352e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="21c88733-f2ec-0987-d3a1-e2c74f338816" executionId="2343bd81-0ef3-4a42-aa2b-002ecc24b0ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ec9603c2-4362-9acf-45aa-9b52f462eb07" executionId="4dd376ec-fc0a-420e-81d1-8bb168584fbd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e4dbe592-85e7-c06e-302f-7d07715ca6cc" executionId="89cc54e6-69c7-4936-9eab-50fcce89e146" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="70b480c4-43b6-28ef-f878-2acbcc21d877" executionId="b82f5d27-7cd5-405f-9fed-6143d0cc9ad6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="76" executed="71" passed="71" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running all tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.Tests.dll
+   NUnit3TestExecutor discovered 71 of 76 NUnit test cases using Current Discovery mode, Non-Explicit run
+Normal: d2020100-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020001
+Normal: d2028100-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020081
+Normal: d2020101-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020101
+Normal: d2028101-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020181
+Normal: d2020102-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020201
+Normal: d2028102-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020281
+Normal: d2020103-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020301
+Normal: d2028103-0000-9649-1df2-08def5d00baa Sql: 08def5d0-0baa-1df2-9649-0000d2020381
+
+Sql: 08def5d0-0bac-daa1-9649-0000d2020001
+Sql: 08def5d0-0bac-daa1-9649-0000d2020081
+Sql: 08def5d0-0bac-daa1-9649-0000d2020101
+Sql: 08def5d0-0bac-daa1-9649-0000d2020181
+Sql: 08def5d0-0bac-daa1-9649-0000d2020201
+Sql: 08def5d0-0bac-daa1-9649-0000d2020281
+Sql: 08def5d0-0bac-daa1-9649-0000d2020301
+Sql: 08def5d0-0bac-daa1-9649-0000d2020381
+
+Normal: 804a0000-6d6c-1461-3452-08def5d01ff2 Sql: 08def5d0-1ff2-3452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-f452-08def81a5622 Sql: 08def81a-5622-f452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-b452-08defedcf513 Sql: 08defedc-f513-b452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-7452-08df0a17fcc4 Sql: 08df0a17-fcc4-7452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-3452-08df19cb6d35 Sql: 08df19cb-6d35-3452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-f452-08df2df74665 Sql: 08df2df7-4665-f452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-b452-08df469b8856 Sql: 08df469b-8856-b452-1461-6d6c804a0000
+Normal: 804a0000-6d6c-1461-7452-08df63b83307 Sql: 08df63b8-3307-7452-1461-6d6c804a0000
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+Compared 549 equal conversions
+
+9d9e0000-6d6c-1461-6531-08def5d00bba
+9d9e0000-6d6c-1461-6532-08def5d00bba
+9d9e0000-6d6c-1461-6533-08def5d00bba
+9d9e0000-6d6c-1461-6534-08def5d00bba
+9d9e0000-6d6c-1461-6535-08def5d00bba
+9d9e0100-6d6c-1461-6535-08def5d00bba
+9d9e0000-6d6c-1461-6536-08def5d00bba
+9d9e0000-6d6c-1461-6537-08def5d00bba
+9d9e0000-6d6c-1461-6538-08def5d00bba
+
+d2020000-0000-9649-31fb-08def5d00bbb
+d2020100-0000-9649-31fb-08def5d00bbb
+d2020200-0000-9649-31fb-08def5d00bbb
+
+08def5d0-0bbb-6500-9649-0000d2020000
+08def5d0-0bbb-6500-9649-0000d2020100
+08def5d0-0bbb-6500-9649-0000d2020200
+
+Network Interface: lo0 - Loopback
+Network Interface: gif0 - Tunnel
+Network Interface: stf0 - Tunnel
+Network Interface: en0 - Ethernet
+Network Interface: en2 - Ethernet
+Network Interface: en3 - Ethernet
+Network Interface: en10 - Ethernet
+Network Interface: ap1 - Wireless80211
+Network Interface: en1 - Wireless80211
+Network Interface: bridge0 - Ethernet
+Network Interface: awdl0 - Wireless80211
+Network Interface: llw0 - Wireless80211
+Network Interface: utun0 - Unknown
+Network Interface: utun1 - Unknown
+Network Interface: utun2 - Unknown
+Network Interface: utun3 - Unknown
+
+Network Interface: en0
+Network Interface: en2
+Network Interface: en3
+Network Interface: en10
+Network Interface: ap1
+Network Interface: en1
+Network Interface: bridge0
+Network Interface: awdl0
+Network Interface: llw0
+
+08def5d0-0bc1-e53d-1461-6d6c9d9e0001
+
+9d9e0100-6d6c-1461-5a55-08def5d00bc2
+
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

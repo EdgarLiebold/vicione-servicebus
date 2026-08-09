@@ -10,7 +10,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class ExclusiveConsumer_Specs :
         RabbitMqTestFixture
     {

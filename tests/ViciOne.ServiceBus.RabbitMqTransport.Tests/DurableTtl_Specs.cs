@@ -12,7 +12,6 @@ using Testing;
 public class When_configuring_a_durable_ttl_queue
 {
     [Test]
-    [Explicit]
     public async Task Should_comply_with_new_broker_rules()
     {
         await using var provider = new ServiceCollection()
@@ -24,7 +23,11 @@ public class When_configuring_a_durable_ttl_queue
             .AddViciOneServiceBusTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(options =>
+                    {
+                        options.VHost = "test";
+                        options.ApplyRunScopedCredentials();
+                    });
 
                 x.UsingRabbitMq((context, cfg) =>
                 {

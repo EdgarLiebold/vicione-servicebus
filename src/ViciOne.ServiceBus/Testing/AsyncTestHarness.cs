@@ -13,16 +13,64 @@ namespace ViciOne.ServiceBus.Testing
         IDisposable
     {
         readonly Lazy<AsyncInactivityObserver> _inactivityObserver;
+        readonly CancellationTokenSource _harnessLifetime;
+        readonly object _scopeLock;
         CancellationToken _cancellationToken;
         CancellationTokenSource _cancellationTokenSource;
         Task<bool> _cancelledTask;
+        bool _disposed;
 
         protected AsyncTestHarness()
         {
             TestTimeout = Debugger.IsAttached ? TimeSpan.FromMinutes(50) : TimeSpan.FromSeconds(30);
             TestInactivityTimeout = Debugger.IsAttached ? TimeSpan.FromMinutes(30) : TimeSpan.FromSeconds(6);
 
-            _inactivityObserver = new Lazy<AsyncInactivityObserver>(() => new AsyncInactivityObserver(TestInactivityTimeout, TestCancellationToken));
+            _scopeLock = new object();
+            _harnessLifetime = new CancellationTokenSource();
+
+            // The observer is connected to the message lists once, when the bus starts, and it lives for
+            // the whole fixture. Its timeout loop awaits Task.Delay(timeout, token); if that token were
+            // the per test budget, the first expired test would end the loop for good and inactivity
+            // detection would be dead for every later test in the same fixture. It is therefore bound to
+            // the lifetime of the harness instead, which ends in Dispose.
+            _inactivityObserver = new Lazy<AsyncInactivityObserver>(
+                () => new AsyncInactivityObserver(TestInactivityTimeout, _harnessLifetime.Token));
+        }
+
+        /// <summary>
+        /// Begins the scope of one test and grants it the whole configured <see cref="TestTimeout" />.
+        /// <para>
+        /// NUnit creates one fixture instance and reuses it for every test method in that fixture, so
+        /// without this the budget created on first use is shared by all of them: whatever the first
+        /// tests spend is taken from the last ones, and once it is gone every remaining test that honours
+        /// the token fails at once, no matter how fast it is.
+        /// </para>
+        /// <para>
+        /// A live source keeps its identity and only has its deadline moved. That matters, because a
+        /// fixture typically creates its expected tasks through <see cref="GetTask{T}" /> while it is
+        /// being set up, and those tasks are bound to the token that existed then. An expired or
+        /// explicitly cancelled source is never revived; the next test starts from a fresh one.
+        /// </para>
+        /// <para>
+        /// This type carries no test framework dependency. The framework lifecycle calls this once, in
+        /// ViciOne.ServiceBus.TestFramework.
+        /// </para>
+        /// </summary>
+        public void BeginTestScope()
+        {
+            lock (_scopeLock)
+            {
+                if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource.CancelAfter(TestTimeout);
+                    return;
+                }
+
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = null;
+                _cancellationToken = CancellationToken.None;
+                _cancelledTask = null;
+            }
         }
 
         /// <summary>
@@ -44,18 +92,21 @@ namespace ViciOne.ServiceBus.Testing
         {
             get
             {
-                if (_cancellationToken == CancellationToken.None)
+                lock (_scopeLock)
                 {
-                    _cancellationTokenSource = new CancellationTokenSource((int)TestTimeout.TotalMilliseconds);
-                    _cancellationToken = _cancellationTokenSource.Token;
+                    if (_cancellationToken == CancellationToken.None)
+                    {
+                        _cancellationTokenSource = new CancellationTokenSource((int)TestTimeout.TotalMilliseconds);
+                        _cancellationToken = _cancellationTokenSource.Token;
 
-                    TaskCompletionSource<bool> source = TaskUtil.GetTask<bool>();
-                    _cancelledTask = source.Task;
+                        TaskCompletionSource<bool> source = TaskUtil.GetTask<bool>();
+                        _cancelledTask = source.Task;
 
-                    _cancellationToken.Register(() => source.TrySetCanceled());
+                        _cancellationToken.Register(() => source.TrySetCanceled());
+                    }
+
+                    return _cancellationToken;
                 }
-
-                return _cancellationToken;
             }
         }
 
@@ -83,7 +134,20 @@ namespace ViciOne.ServiceBus.Testing
 
         public virtual void Dispose()
         {
-            _cancellationTokenSource?.Dispose();
+            // Disposing twice has to stay harmless: a container fixture disposes the harness itself and
+            // the service provider disposes it again, and Cancel on an already disposed source throws.
+            lock (_scopeLock)
+            {
+                if (_disposed)
+                    return;
+
+                _disposed = true;
+                _cancellationTokenSource?.Dispose();
+            }
+
+            // Ends the inactivity timeout loop, which runs for the lifetime of the harness.
+            _harnessLifetime.Cancel();
+            _harnessLifetime.Dispose();
         }
 
         /// <summary>
@@ -91,7 +155,13 @@ namespace ViciOne.ServiceBus.Testing
         /// </summary>
         public void Cancel()
         {
-            _cancellationTokenSource?.Cancel();
+            CancellationTokenSource source;
+            lock (_scopeLock)
+                source = _cancellationTokenSource;
+
+            // Applies to the running test. The next test does not inherit the cancelled state, because
+            // BeginTestScope refuses to revive a cancelled source.
+            source?.Cancel();
         }
 
         public void ForceInactive()

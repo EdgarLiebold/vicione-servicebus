@@ -27,7 +27,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .AddViciOneServiceBusTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(options =>
+                        {
+                            options.VHost = "test";
+                            options.ApplyRunScopedCredentials();
+                        });
 
                     x.AddInMemoryInboxOutbox();
 
@@ -119,9 +123,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 Assert.That(Bus.Topology.TryGetPublishAddress<TheWorldImploded>(out var address));
 
+                // Derived from the configured host address: the fixture is published on an
+                // ephemeral loopback port, so a constant would assert an endpoint that no longer exists.
+                // Concatenated rather than resolved relatively: the exchange name contains a colon,
+                // which Uri would otherwise read as a scheme and turn into an absolute address.
                 Assert.That(address,
-                    Is.EqualTo(new Uri(
-                        "rabbitmq://localhost/test/ViciOne.ServiceBus.RabbitMqTransport.Tests:AlternateExchange_Specs-TheWorldImploded?alternateexchange=publish-not-delivered")));
+                    Is.EqualTo(new Uri(HostAddress
+                        + "ViciOne.ServiceBus.RabbitMqTransport.Tests:AlternateExchange_Specs-TheWorldImploded?alternateexchange=publish-not-delivered")));
             });
         }
 

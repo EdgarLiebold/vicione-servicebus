@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 16,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "finding": {
+    "title": "Part of the required RabbitMQ proof was measuring a broker outside the pinned fixture",
+    "mechanism": "The fixture publishes an ephemeral loopback port per run. A spec that configures \"localhost\" without a port, or configures no host at all, therefore does not reach it. It reaches whatever else holds the default port 5672 instead. On this machine that was a developer container unrelated to the work package.",
+    "howItWasFound": "The sweep for bus set ups without an explicit host binding listed 43 call sites. Rather than judge them by reading, the foreign container was stopped and the required category was run again with nothing else changed.",
+    "note": "The container was stopped with the owner's explicit permission and restarted afterwards, including its original restart policy. It was never deleted."
+  },
+  "measurement": {
+    "withForeignBroker": {
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 302,
+        "failed": 4
+      },
+      "comment": "The state reported before this record."
+    },
+    "withoutForeignBroker": {
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 289,
+        "failed": 17
+      },
+      "comment": "Same build, same fixture, foreign broker stopped. Thirteen more tests fail, with 'Broker unreachable: guest@localhost' and 'Connection refused (localhost:15672)'."
+    },
+    "afterBinding": {
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 294,
+        "failed": 12
+      },
+      "comment": "Five fixtures bound to the run-scoped endpoint. Three regressions of my own remained: the host was corrected but the empty host callback left the connection on the guest defaults."
+    },
+    "afterCredentials": {
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 298,
+        "failed": 8
+      },
+      "comment": "Run-scoped account applied in those callbacks as well. This is the honest state that does not depend on any foreign broker."
+    }
+  },
+  "boundFixtures": [
+    {
+      "fixture": "Consuming_messages_from_a_stream",
+      "was": "RabbitMqTransportOptions set only VHost, so host, port, management port and account stayed at their defaults"
+    },
+    {
+      "fixture": "PublishStop_Specs",
+      "was": "host settings derived from the literal URI rabbitmq://localhost/test/input_queue2"
+    },
+    {
+      "fixture": "Sending_a_request_to_a_different_host",
+      "was": "x.Host(\"localhost\", \"test\") and x.Host(\"127.0.0.1\", \"test\") with an empty callback"
+    },
+    {
+      "fixture": "StartStop_Specs",
+      "was": "x.Host(\"localhost\", \"test\") at four call sites"
+    },
+    {
+      "fixture": "Stopping_the_bus",
+      "was": "x.Host(\"localhost\", \"test\") with an empty callback"
+    }
+  ],
+  "deliberatelyUntouched": {
+    "fixture": "Failing_to_connect_to_rabbitmq",
+    "why": "Its disposition is the open question of record 0015. Five of its tests assert nothing at all and two of those sleep 30 and 60 seconds waiting for a human to act, so binding alone would not make them valid required proofs. No edit was made before the decision."
+  },
+  "remainingFailures": [
+    {
+      "fixture": "Failing_to_connect_to_rabbitmq",
+      "test": "Should_recover_from_a_crashed_server",
+      "duration": "00:01:00.0084180",
+      "message": "ViciOne.ServiceBus.RabbitMqConnectionException : Broker unreachable: guest@localhost:5672/ ----> RabbitMQ.Client.Excepti"
+    },
+    {
+      "fixture": "Failing_to_connect_to_rabbitmq",
+      "test": "Should_start_without_any_configuration",
+      "duration": "00:00:05.0046780",
+      "message": "ViciOne.ServiceBus.RabbitMqConnectionException : Broker unreachable: guest@localhost:5672/ ----> RabbitMQ.Client.Excepti"
+    },
+    {
+      "fixture": "Failing_to_connect_to_rabbitmq",
+      "test": "Should_startup_and_shut_down_cleanly",
+      "duration": "00:00:30.0050870",
+      "message": "ViciOne.ServiceBus.RabbitMqConnectionException : Broker unreachable: guest@localhost:5672/ ----> RabbitMQ.Client.Excepti"
+    },
+    {
+      "fixture": "Failing_to_connect_to_rabbitmq",
+      "test": "Should_startup_and_shut_down_cleanly_with_an_endpoint",
+      "duration": "00:00:00.0054900",
+      "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled."
+    },
+    {
+      "fixture": "Failing_to_connect_to_rabbitmq",
+      "test": "Should_startup_and_shut_down_cleanly_with_publish",
+      "duration": "00:01:00.0042610",
+      "message": "ViciOne.ServiceBus.RabbitMqConnectionException : Broker unreachable: guest@localhost:5672/ ----> RabbitMQ.Client.Excepti"
+    },
+    {
+      "fixture": "Submitting_a_job_to_turnout_that_faults",
+      "test": "Should_get_the_job_accepted",
+      "duration": "00:00:29.6493590",
+      "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled."
+    },
+    {
+      "fixture": "Submitting_a_job_to_turnout_that_faults",
+      "test": "Should_have_published_the_fault_event",
+      "duration": "00:00:00.0006080",
+      "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled."
+    },
+    {
+      "fixture": "Using_delayed_redelivery_for_a_specific_message_type_with_send",
+      "test": "Should_not_send_twice",
+      "duration": "00:00:29.7480640",
+      "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled."
+    }
+  ],
+  "stillOpenCausally": [
+    "Submitting_a_job_to_turnout_that_faults: Should_get_the_job_accepted runs 29.6 s and times out, while the whole fixture in order passes in 1.4 s in isolation. Should_have_published_the_fault_event then fails after 0.0006 s as collateral of the shared budget described in record 0015.",
+    "The delayed redelivery family is sporadic: the case that failed here is Using_delayed_redelivery_for_a_specific_message_type_with_send, a different one than in the previous run. The plugin itself is measured healthy in record 0015."
+  ],
+  "guardAdded": {
+    "rule": "test-endpoint in tools/ci/policy_validator.py",
+    "what": "Rejects a literal broker endpoint on a local host in any RabbitMQ or ActiveMQ spec.",
+    "selfTests": "Six added, including a sabotage case and two false-positive guards; 36 self-tests pass.",
+    "knownGap": "The rule matches endpoints that carry a port. The portless form, x.Host(\"localhost\", \"test\"), is not yet rejected, because the only remaining occurrences are in Failing_to_connect_to_rabbitmq and tightening the rule now would turn the policy gate red on a fixture whose disposition the lead has not decided."
+  }
+}

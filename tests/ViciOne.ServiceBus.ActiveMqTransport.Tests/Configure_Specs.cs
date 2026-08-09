@@ -161,15 +161,15 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         [TestCase(ActiveMqHostAddress.AmqpScheme)]
         public async Task Should_connect_locally(string protocol)
         {
-            var host = (protocol == ActiveMqHostAddress.AmqpScheme)
-                ? new Uri("amqp://localhost:5672")
-                : new Uri("activemq://localhost:61616");
+            // Endpoint and account come from the fixture the canonical runner started; both are
+            // per run and cannot be written into the spec.
+            var host = RunScopedBroker.AddressFor(protocol);
             var busControl = Bus.Factory.CreateUsingActiveMq(cfg =>
             {
                 cfg.Host(host, h =>
                 {
-                    h.Username("admin");
-                    h.Password("admin");
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
             });
 

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 17,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Requirement to evidence matrix for the effective slice",
+  "readingRule": "A gate is GREEN only if its own instrument reports zero failures and a zero exit code. Nothing is summarised upward; a red gate stays red in this table.",
+  "gates": [
+    {
+      "gate": "policy",
+      "state": "GREEN",
+      "evidence": "tools/ci/policy_validator.py + test_policy_validator.py",
+      "result": "All invariants hold; 36 self-tests, including a sabotage case for the test-endpoint rule."
+    },
+    {
+      "gate": "analyzer",
+      "state": "GREEN",
+      "evidence": "records/0017/analyzer/analyzer.trx",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "abstractions",
+      "state": "GREEN",
+      "evidence": "records/0017/abstractions/abstractions.trx",
+      "counters": {
+        "total": 76,
+        "executed": 71,
+        "passed": 71,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "rabbitmq",
+      "state": "GREEN",
+      "evidence": "records/0017/rabbitmq-disposed/rabbitmq.trx",
+      "counters": {
+        "total": 326,
+        "executed": 301,
+        "passed": 301,
+        "failed": 0
+      },
+      "detail": "Measured with the foreign broker on the default port stopped, so no result depends on it. The 25 not executed cases are the visible manual and explicit profile; none reports a PASS."
+    },
+    {
+      "gate": "pack",
+      "state": "GREEN",
+      "evidence": "records/0016/REQ-CI-002_PACK.json",
+      "result": "33 packages, exit code 0, hashed, nothing published.",
+      "caveat": "ViciOne.ServiceBus.MessagePack carries a High advisory through MessagePack 3.1.6."
+    },
+    {
+      "gate": "activemq (extended profile, not required)",
+      "state": "GREEN",
+      "evidence": "records/0016/activemq-both/activemq.trx",
+      "counters": {
+        "total": 142,
+        "executed": 137,
+        "passed": 137,
+        "failed": 0
+      },
+      "detail": "Both brokers started, so the artemis branch runs instead of falling back to a fixed port."
+    },
+    {
+      "gate": "core",
+      "state": "RED",
+      "evidence": "records/0017/core/core.trx",
+      "counters": {
+        "total": 1880,
+        "executed": 1837,
+        "passed": 1835,
+        "failed": 2
+      },
+      "detail": "Two load dependent cases, both 5 of 5 green in isolation at very stable durations. Neither is the shared budget defect; both are reported rather than papered over."
+    },
+    {
+      "gate": "entity-framework",
+      "state": "RED",
+      "evidence": "records/0016/REQ-CI-002_ENTITY_FRAMEWORK_GATE.json",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 16,
+        "failed": 139
+      },
+      "detail": "Unsatisfiable as configured: 108 tests need SQL Server LocalDB and 31 need PostgreSQL, neither is a pinned fixture, and LocalDB does not exist on Linux, so the ubuntu runner cannot satisfy it either. Pinning two database fixtures or removing a required category is a lead decision."
+    }
+  ],
+  "summary": {
+    "green": 6,
+    "red": 2,
+    "freezeReady": false,
+    "whyNot": "Two gates are red. entity-framework cannot be satisfied without a decision on database fixtures, and core carries two load dependent cases whose repair would be a new intervention beyond the reslice."
+  },
+  "environmentPinning": {
+    "timezone": "UTC, pinned in tools/ci/run_test_category.py and written into every category record",
+    "why": "Two cron cases build a template hour in one offset and reuse it across 31 October 2010, the day of a European DST transition: measured 3 of 5 in CEST against 5 of 5 in UTC. Pinning the zone removes an environment difference between a local run and the runner and weakens no assertion."
+  },
+  "notADependencyClearance": "The pack gate is green and one of its packages carries a High advisory. That is recorded, not cleared."
+}

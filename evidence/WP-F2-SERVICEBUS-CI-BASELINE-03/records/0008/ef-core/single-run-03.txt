@@ -1,0 +1,76 @@
+Test run for /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll (.NETCoreApp,Version=v9.0)
+A total of 1 test files matched the specified pattern.
+NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll
+   NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+13:40:38.134-I Configured endpoint Ping, Consumer: ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox+PingConsumer
+13:40:38.230-I Applying migrations for ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.ReliableDbContext
+13:40:39.596-D Starting bus instances: IBus
+13:40:39.598-D Starting bus: loopback://localhost/
+13:40:39.624-D Endpoint Ready: loopback://localhost/Ping
+13:40:39.624-D Endpoint Ready: loopback://localhost/EdgarsiMac2_testhost_bus_zunoyydppokgdayrbdxxkoq6bd
+13:40:39.626-I Bus started: loopback://localhost/
+13:40:39.935-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage
+13:40:42.389-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage
+13:40:42.429-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage bcc50000-6d6c-1461-053a-08def541df31 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+13:40:42.430-D Outbox Sent: bcc50000-6d6c-1461-c894-08def541df27 1 bcc50000-6d6c-1461-053a-08def541df31
+13:40:42.434-D Outbox Delivered: bcc50000-6d6c-1461-c894-08def541df27 08/08/2026 11:40:42
+13:40:42.458-D RECEIVE loopback://localhost/Ping bcc50000-6d6c-1461-053a-08def541df31 ViciOne.ServiceBus.TestFramework.Messages.PingMessage ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox+PingConsumer(00:00:00.0122445)
+13:40:42.504-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage bcc50000-6d6c-1461-2a7c-08def541e091 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+13:40:42.504-D Outbox Sent: bcc50000-6d6c-1461-3968-08def541e091 2 bcc50000-6d6c-1461-2a7c-08def541e091
+13:40:42.504-D Outbox Delivered: bcc50000-6d6c-1461-3968-08def541e091 08/08/2026 11:40:42
+13:40:42.506-D RECEIVE loopback://localhost/Ping bcc50000-6d6c-1461-2a7c-08def541e091 ViciOne.ServiceBus.TestFramework.Messages.PingMessage ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox+PingConsumer(00:00:00.0016546)
+13:40:47.512-D Stopping bus instances: IBus
+13:40:47.514-D Stopping bus: loopback://localhost/
+13:40:47.518-D Endpoint Stopping: loopback://localhost/Ping
+13:40:47.518-D Consumer Stopping: loopback://localhost/Ping (Stop Receive Transport)
+13:40:47.522-D Endpoint Completed: loopback://localhost/Ping
+13:40:47.525-D Consumer Completed: loopback://localhost/Ping: 2 received, 1 concurrent
+13:40:47.527-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_testhost_bus_zunoyydppokgdayrbdxxkoq6bd
+13:40:47.527-D Consumer Stopping: loopback://localhost/EdgarsiMac2_testhost_bus_zunoyydppokgdayrbdxxkoq6bd (Stop Receive Transport)
+13:40:47.527-D Endpoint Completed: loopback://localhost/EdgarsiMac2_testhost_bus_zunoyydppokgdayrbdxxkoq6bd
+13:40:47.527-D Consumer Completed: loopback://localhost/EdgarsiMac2_testhost_bus_zunoyydppokgdayrbdxxkoq6bd: 0 received, 0 concurrent
+13:40:47.536-I Bus stopped: loopback://localhost/
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Using_the_bus_outbox                                                           │ Duration │ Timeline                                           ┃
+┠────────────────────────────────────────────────────────────────────────────────┼──────────┼────────────────────────────────────────────────────┨
+┃ Should_support_multiple_save_changes                                           │  9s476ms │ ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▍ ┃
+┃ ┝ Experimental.System.Net.NameResolution.DnsLookup                             │      1ms │  ▍                                                 ┃
+┃ ┝ Experimental.System.Net.Sockets.Connect                                      │      4ms │  ▍                                                 ┃
+┃ ┝ Experimental.System.Net.Security.TlsHandshake                                │     36µs │  ▍                                                 ┃
+┃ ┝ Experimental.System.Net.NameResolution.DnsLookup                             │    421µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.Sockets.Connect                                      │    126µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.Security.TlsHandshake                                │     30µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.NameResolution.DnsLookup                             │    318µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.Sockets.Connect                                      │     96µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.Security.TlsHandshake                                │     15µs │     ▍                                              ┃
+┃ ┝ Experimental.System.Net.NameResolution.DnsLookup                             │    272µs │      ▍                                             ┃
+┃ ┝ Experimental.System.Net.Sockets.Connect                                      │     93µs │      ▍                                             ┃
+┃ ┝ Experimental.System.Net.Security.TlsHandshake                                │     10µs │      ▍                                             ┃
+┃ ┝ Experimental.System.Net.NameResolution.DnsLookup                             │    368µs │        ▍                                           ┃
+┃ ┝ Experimental.System.Net.Sockets.Connect                                      │     96µs │        ▍                                           ┃
+┃ ┝ Experimental.System.Net.Security.TlsHandshake                                │     19µs │        ▍                                           ┃
+┃ └ Should_support_multiple_save_changes                                         │  2s573ms │          ▐▒▒▒▒▒▒▒▒▒▒▒▍                             ┃
+┃   ┝ outbox send                                                                │    143ms │          ▍                                         ┃
+┃   │ └ outbox process                                                           │     40ms │                       ▍                            ┃
+┃   │   └ urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage send │     18ms │                       ▍                            ┃
+┃   │     └ Ping receive                                                         │     33ms │                        ▍                           ┃
+┃   │       └ Ping process                                                       │     13ms │                        ▍                           ┃
+┃   ┝ outbox send                                                                │      2ms │                       ▍                            ┃
+┃   │ └ outbox process                                                           │    688µs │                        ▍                           ┃
+┃   │   └ urn:message:ViciOne.ServiceBus.TestFramework.Messages:PingMessage send │    271µs │                        ▍                           ┃
+┃   │     └ Ping receive                                                         │      2ms │                        ▍                           ┃
+┃   │       └ Ping process                                                       │      1ms │                        ▍                           ┃
+┃   ┝ Experimental.System.Net.NameResolution.DnsLookup                           │    630µs │                        ▍                           ┃
+┃   ┝ Experimental.System.Net.Sockets.Connect                                    │    126µs │                        ▍                           ┃
+┃   └ Experimental.System.Net.Security.TlsHandshake                              │     18µs │                        ▍                           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+
+NUnit Adapter 6.1.0.0: Test execution complete
+  Passed Should_support_multiple_save_changes [9 s]
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 10,6171 Seconds

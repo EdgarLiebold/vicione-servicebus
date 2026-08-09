@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     using TestFramework.Messages;
 
 
-    [Explicit]
     [TestFixture]
     public class Connecting_receive_endpoints :
         RabbitMqTestFixture

@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
 {
     using System;
@@ -107,8 +107,23 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
         }
 
         #pragma warning disable NUnit1032
-        Task<ConsumeContext<InitiateSimpleSaga>> _received;
+        TaskCompletionSource<ConsumeContext<InitiateSimpleSaga>> _expectation;
         #pragma warning restore NUnit1032
+
+        /// <summary>
+        /// The expectation of the running test. All three tests here assert that the message has NOT
+        /// arrived yet, so a single task created once during fixture set up made them order dependent:
+        /// the first test completed it and every later one found it already completed and failed at
+        /// once. Measured: each of them passes on its own, and the last one in the fixture failed after
+        /// 19 ms. Re-arming per test removes the shared state; no assertion changes.
+        /// </summary>
+        Task<ConsumeContext<InitiateSimpleSaga>> _received => _expectation.Task;
+
+        [SetUp]
+        public void ArmTheExpectation()
+        {
+            _expectation = GetTask<ConsumeContext<InitiateSimpleSaga>>();
+        }
 
         TransactionOutboxTestsDbContext GetDbContext()
         {
@@ -119,7 +134,13 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
-            _received = Handled<InitiateSimpleSaga>(configurator);
+            // The endpoint is configured once for the whole fixture, so the handler completes whichever
+            // expectation the running test armed rather than one task shared by all of them.
+            configurator.Handler<InitiateSimpleSaga>(context =>
+            {
+                _expectation?.TrySetResult(context);
+                return Task.CompletedTask;
+            });
         }
 
         public TransactionalBusOutbox_Specs()

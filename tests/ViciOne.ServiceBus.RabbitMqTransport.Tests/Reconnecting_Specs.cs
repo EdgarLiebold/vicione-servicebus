@@ -15,7 +15,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         RabbitMqTestFixture
     {
         [Test]
-        [Explicit]
         public async Task Should_fault_nicely()
         {
             await Bus.Publish(new ReconnectMessage { Value = "Before" });

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 17,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Effect of the per test budget correction and of the second isolation defect",
+  "correction": {
+    "what": "AsyncTestHarness.BeginTestScope grants every NUnit test the configured TestTimeout again. A live source keeps its identity and only has its deadline moved, so tasks created while a fixture is being set up stay valid; an expired or explicitly cancelled source is never revived.",
+    "framework": "The NUnit lifecycle is bound once, in ViciOne.ServiceBus.TestFramework.AsyncTestFixture. ViciOne.ServiceBus keeps no test framework reference.",
+    "inactivity": "The inactivity observer is bound to the lifetime of the harness instead of the per test token. Its timeout loop awaits Task.Delay(timeout, token); bound to a test budget the first expiry ended the loop for good and inactivity was dead for every later test.",
+    "ownRegression": "The first version of Dispose was not safe to call twice. A container fixture disposes the harness and the service provider disposes it again, and Cancel on a disposed source throws, which turned every container fixture teardown into an ObjectDisposedException while the tests themselves stayed green. Dispose is idempotent now and a regression test covers it."
+  },
+  "regressionTests": {
+    "file": "tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs",
+    "covers": [
+      "a predecessor does not reduce the following budget",
+      "an expired budget is not reused",
+      "a manually cancelled state is not reused",
+      "Cancel and TestCancelledTask act on the current test only",
+      "inactivity still works after a predecessor budget expired",
+      "disposing twice is harmless"
+    ],
+    "throughTheRealLifecycle": "Granting_the_test_timeout_through_the_fixture runs two ordered tests on one fixture instance; the first spends 1.5 s of a 2 s budget and the second still receives the whole timeout.",
+    "sabotageCheck": "With BeginTestScope neutered and the observer bound to the test token again, 6 of 7 fail. The one that still passes is the half that only spends the budget."
+  },
+  "secondIsolationDefect": {
+    "title": "A fixture occupied the shared input_queue and silently ate the next fixture's messages",
+    "how": "Bisected over the real execution order: prefixes of 68, 102, 119, 128 and 132 fixtures left the Turnout scenario green, 133 turned it red. Minimal reproduction is two fixtures.",
+    "trigger": "Specifying_a_unique_instance_for_an_endpoint builds two RabbitMqTestHarness instances with the default input queue name. Their buses recover into the virtual host the next fixture recreates, so that fixture's own consumer competes with them. RabbitMQ hands the message to whichever consumer is next in turn; on the leftover one it is discarded.",
+    "measured": "During the Turnout scenario input_queue carried 2 consumers on 2 separate connections. With its own queue names the same pair is 6 of 6 green and input_queue carries none.",
+    "disprovenOnTheWay": [
+      "the delayed message scheduler (delayed plus Turnout alone: 8 of 8 green)",
+      "a polluted endpoint name formatter (all 15 endpoint names identical)",
+      "undisposed harnesses (disposing them changed nothing)"
+    ]
+  },
+  "requiredRabbitMqProgression": [
+    {
+      "state": "before any binding, foreign broker stopped",
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 289,
+        "failed": 17
+      }
+    },
+    {
+      "state": "five fixtures bound to the run-scoped broker",
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 298,
+        "failed": 8
+      }
+    },
+    {
+      "state": "per test budget granted",
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 299,
+        "failed": 7
+      }
+    },
+    {
+      "state": "input_queue isolation fixed",
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 301,
+        "failed": 5
+      }
+    },
+    {
+      "state": "assertion-less cases moved into the visible manual profile",
+      "counters": {
+        "total": 326,
+        "executed": 301,
+        "passed": 301,
+        "failed": 0
+      }
+    }
+  ],
+  "dispositionOfFailingToConnect": {
+    "rule": "Reslice point 5: a due RabbitMQ fixture binds only the run-scoped pinned broker, and cases without an assertion or with an explicitly human observation stay visible in the manual profile and never count as a PASS.",
+    "bound": [
+      "Should_fault_when_credentials_are_bad now uses the pinned fixture with a deliberately wrong secret; against rabbitmq://localhost/ the exception could equally have come from nothing listening on that port at all."
+    ],
+    "manualProfile": [
+      "Should_recover_from_a_crashed_server",
+      "Should_start_without_any_configuration",
+      "Should_startup_and_shut_down_cleanly",
+      "Should_startup_and_shut_down_cleanly_with_an_endpoint",
+      "Should_startup_and_shut_down_cleanly_with_publish"
+    ],
+    "why": "None of the five asserts anything, so none could carry coverage even if it ran green. Two of them sleep 30 and 60 seconds waiting for a human, three configure no host on purpose and therefore cannot address the run-scoped fixture.",
+    "visibility": "Recorded case by case in build/test-infrastructure/extended-profile-inventory.json, including the exact command to run them."
+  },
+  "stillOpen": {
+    "core": [
+      {
+        "test": "ContainerTests.KillSwitch_Specs.Should_be_degraded_after_too_many_exceptions",
+        "measured": "5 of 5 green in isolation at a very stable 10.39 s; fails after 20 s in the full run. The wait is HealthCheckServiceExtensions.WaitForHealthStatus with its own fresh 15 s source per call, so this is not the shared budget. Under full load the health status does not reach the expected value inside that window.",
+        "notFixed": "Making the wait event driven instead of a one second poll would be a new intervention beyond the reslice, so it is reported rather than changed."
+      },
+      {
+        "test": "Receiving_and_grouping_messages_by_ref_type.Should_receive_one_batch_per_group",
+        "measured": "5 of 5 green in isolation at a very stable 0.625 s; failed once in a full run with a batch grouping assertion. Sporadic and load dependent.",
+        "notFixed": "No timeout may be extended and no assertion relaxed."
+      }
+    ]
+  }
+}

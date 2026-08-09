@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 {
     using System;
@@ -11,7 +11,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Failing_to_connect_to_rabbitmq :
         AsyncTestFixture
     {
@@ -51,10 +50,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 BusTestFixture.ConfigureBusDiagnostics(x);
 
-                x.Host(new Uri("rabbitmq://localhost/"), h =>
+                // Against the pinned fixture with a deliberately wrong secret. Addressing
+                // rabbitmq://localhost/ meant addressing whatever held the default port, and the
+                // exception could just as well have come from nothing listening there at all.
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
-                    h.Username("guest");
-                    h.Password("guessed");
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass + "-wrong");
                 });
             });
 
@@ -75,7 +77,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
+        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It sleeps 30 s while a human is expected to crash the broker.")]
+        [Category("Manual")]
         public async Task Should_recover_from_a_crashed_server()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
@@ -103,7 +106,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
+        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
+        [Category("Manual")]
         public async Task Should_start_without_any_configuration()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
@@ -123,7 +127,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
+        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
+        [Category("Manual")]
         public async Task Should_startup_and_shut_down_cleanly()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x => BusTestFixture.ConfigureBusDiagnostics(x));
@@ -145,7 +150,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
+        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It sleeps 60 s, which no test budget covers, and observes the connection by eye.")]
+        [Category("Manual")]
         public async Task Should_startup_and_shut_down_cleanly_with_an_endpoint()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
@@ -180,7 +186,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        [Explicit]
+        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
+        [Category("Manual")]
         public async Task Should_startup_and_shut_down_cleanly_with_publish()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>

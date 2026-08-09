@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 8,
+  "requirementId": "REQ-CI-005",
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subject": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Should_support_multiple_save_changes",
+  "baselineReference": "ENTITY_FRAMEWORK = EXPECTED_RED via gate A0066-ENTITY-FRAMEWORK; the prescribed single test failed on macOS for want of a SQL Server fixture. The original CI observation was Expected 2 / But was 1.",
+  "environment": {
+    "host": "macOS, Docker 29.5.2",
+    "sqlServerImage": "mcr.microsoft.com/azure-sql-edge",
+    "portBinding": "127.0.0.1:1433:1433",
+    "note": "SQL Server provided as a loopback-bound container; the connection string provider resolves Server=tcp:localhost with the sa account."
+  },
+  "singleTestRepetitions": {
+    "required": 20,
+    "executed": 20,
+    "allSuccessful": true,
+    "passedTotal": 20,
+    "failedTotal": 0,
+    "teardownErrorsObserved": 0,
+    "runs": [
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-01.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-02.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-03.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-04.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-05.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-06.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-07.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-08.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-09.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-10.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-11.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-12.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-13.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-14.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-15.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-16.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-17.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-18.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-19.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      },
+      {
+        "log": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/ef-core/single-run-20.txt",
+        "successful": true,
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "teardownError": false
+      }
+    ]
+  },
+  "fullProjectRepetitions": {
+    "required": 2,
+    "executed": 0,
+    "blocked": true,
+    "reason": "The full project also exercises PostgreSQL on port 5432, which is held on this host by an unrelated development container (vicione-postgres). Running the suite against it would write into a foreign development database, so it was not attempted.",
+    "resolution": "Execute in CI, where the workflow provisions its own postgres service, or after the local port is released."
+  },
+  "noMaskingApplied": {
+    "retryAdded": false,
+    "timeoutIncreased": false,
+    "filterChanged": false,
+    "assertionChanged": false,
+    "categoryChanged": false,
+    "statement": "The test and its production path were not modified in any way. Only infrastructure was provided."
+  },
+  "classification": "NOT_REPRODUCED_LOCALLY: 20 of 20 repetitions green against a correctly provisioned SQL Server. This does not by itself clear the original CI observation, which arose on a different host under different timing; the full project repetitions remain outstanding."
+}

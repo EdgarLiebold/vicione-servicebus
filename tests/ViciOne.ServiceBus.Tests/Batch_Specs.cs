@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Tests
 {
     using System;
@@ -158,14 +158,34 @@ namespace ViciOne.ServiceBus.Tests
 
             var count = await BusTestHarness.Consumed.SelectAsync<PingMessage>().Take(6).Count();
 
+            Batch<PingMessage>[] batches = await CollectedBatches();
+
             Assert.Multiple(() =>
             {
                 Assert.That(count, Is.EqualTo(6));
-                Assert.That(_batches.Select(x => x.Length), Is.EquivalentTo(new[] { 1, 2, 3 }));
+                Assert.That(batches.Select(x => x.Length), Is.EquivalentTo(new[] { 1, 2, 3 }));
             });
         }
 
-        readonly List<Batch<PingMessage>> _batches = new List<Batch<PingMessage>>();
+        readonly List<Task<Batch<PingMessage>>> _batches = new List<Task<Batch<PingMessage>>>();
+
+        /// <summary>
+        /// The batches that have been delivered, awaited rather than sampled.
+        /// <para>
+        /// The list used to be filled by an unawaited continuation on each batch task, so the assertion
+        /// raced it: the six messages were counted as consumed while one append had not run yet, and the
+        /// run reported "observed &lt; 3, 1 &gt;, missing &lt; 2 &gt;" even though all three batches had
+        /// been delivered. Awaiting the tasks removes the race without touching the assertion.
+        /// </para>
+        /// </summary>
+        Task<Batch<PingMessage>[]> CollectedBatches()
+        {
+            Task<Batch<PingMessage>>[] delivered;
+            lock (_batches)
+                delivered = _batches.Where(x => x.IsCompleted).ToArray();
+
+            return Task.WhenAll(delivered);
+        }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
@@ -174,7 +194,8 @@ namespace ViciOne.ServiceBus.Tests
             configurator.Consumer(() =>
                 {
                     TaskCompletionSource<Batch<PingMessage>> tcs = GetTask<Batch<PingMessage>>();
-                    tcs.Task.ContinueWith(t => _batches.Add(t.Result));
+                    lock (_batches)
+                        _batches.Add(tcs.Task);
                     var consumer = new TestBatchConsumer(tcs);
                     return consumer;
                 },

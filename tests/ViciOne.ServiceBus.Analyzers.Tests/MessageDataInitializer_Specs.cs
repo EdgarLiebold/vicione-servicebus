@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 using ViciOne.ServiceBus;
 ";
 
@@ -57,7 +58,7 @@ namespace ConsoleApplication1
                     "Anonymous type is missing properties that are in the message contract 'ProcessDocument'. The following properties are missing: Id, CustomerId, Document, Stream.",
                 Severity = DiagnosticSeverity.Info,
                 Locations =
-                    new[] {new DiagnosticResultLocation("Test0.cs", 27, 48)}
+                    new[] {new DiagnosticResultLocation("Test0.cs", 28, 48)}
             };
 
             VerifyCSharpDiagnostic(test, expected);
@@ -93,7 +94,7 @@ namespace ConsoleApplication1
                     "Anonymous type does not map to message contract 'ProcessDocument'. The following properties of the anonymous type are incompatible: Document, Stream.",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
-                    new[] {new DiagnosticResultLocation("Test0.cs", 27, 48)}
+                    new[] {new DiagnosticResultLocation("Test0.cs", 28, 48)}
             };
 
             VerifyCSharpDiagnostic(test, expected);

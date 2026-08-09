@@ -33,13 +33,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
         async Task ProduceInvalidMessage()
         {
-            var options = new ActiveMqTransportOptions();
-
-            var brokerAddress = $"activemq:tcp://{options.Host}:{options.Port}";
+            // ActiveMqTransportOptions carries the library defaults, which point at localhost:61616
+            // with a well known account. This spec produces a raw message straight onto the broker,
+            // so it has to address the fixture the runner started, not whatever holds the default port.
+            var brokerAddress = $"activemq:tcp://{RunScopedBroker.Host}:{RunScopedBroker.OpenWirePort}";
 
             var factory = new NMSConnectionFactory(brokerAddress);
 
-            var connection = factory.ConnectionFactory.CreateConnection(options.User, options.Pass);
+            var connection = factory.ConnectionFactory.CreateConnection(RunScopedBroker.User, RunScopedBroker.Pass);
             try
             {
                 var session = connection.CreateSession(AcknowledgementMode.ClientAcknowledge);

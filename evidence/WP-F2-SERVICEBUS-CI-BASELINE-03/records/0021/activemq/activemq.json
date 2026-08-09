@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "activemq",
+  "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0021/activemq/activemq.trx",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 142,
+    "executed": 137,
+    "passed": 137,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true
+}

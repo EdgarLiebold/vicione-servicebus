@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 18,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "The entity-framework gate was never structurally unsatisfiable",
+  "myEarlierClaim": "LocalDB does not exist on Linux, so the ubuntu runner cannot satisfy this gate either.",
+  "whyThatWasWrong": [
+    "LocalDbConnectionStringProvider tries five connection strings in order and the first two are a Linux SQL Server, commented in the source as 'the linux mssql 2017 installed on appveyor' and '... on gha'. Only entries three to five are Windows LocalDB, so the class name is a misnomer.",
+    "The imported baseline ran these tests on ubuntu-latest with two service containers, mcr.microsoft.com/azure-sql-edge on 1433 and postgres:14.7 on 5432.",
+    "The build.yml of this work package already declared exactly those two service containers. In CI the gate would have run; my local run simply had no databases. The claim was wrong twice over."
+  ],
+  "whatWasActuallyMissing": "A pinned fixture, and a binding. The specs wrote host, port and account straight into the source: localhost:1433 with 'sa' and localhost:5432 with 'postgres', both with the well known password Password12!. That is the same defect that made fourteen RabbitMQ tests measure a foreign container.",
+  "whatWasDone": [
+    "SQL Server and PostgreSQL pinned by digest in images.lock.json and defined in the one pinned compose file, with ephemeral loopback ports and a secret generated per run.",
+    "SQL Server cannot rename its 'sa' account, so only the secret is run-scoped; PostgreSQL takes both from the run.",
+    "LocalDbConnectionStringProvider and PostgresTestDbParameters now read the run-scoped endpoint. The fixture wins and is not probed, so a developer machine that also runs a database on the default port cannot be measured by accident.",
+    "The entity-framework job in build.yml no longer declares service containers with moving tags and a well known password; it starts the same pinned fixture a developer starts.",
+    "The canonical runner now clears the compose project before starting, not only afterwards: a database image applies its credentials only when it initialises an empty data directory, so a volume left behind kept the old secret and a run failed authentication against its own fixture. Measured: that state produced 31 authentication failures; with the clean start the same tree passes.",
+    "The PostgreSQL data directory is a tmpfs, so nothing survives a run at all."
+  ],
+  "sharedExpectationDefect": {
+    "fixture": "TransactionalBusOutbox_Specs",
+    "what": "Three tests awaited one task created once during fixture set up, and all three assert that the message has NOT arrived yet. The first test completed it, so every later one failed at once; the last failed after 19 ms. Each of them passes on its own.",
+    "fix": "The expectation is armed per test and the endpoint handler completes the one the running test armed. No assertion changed. The fixture is 3 of 3 green in order."
+  },
+  "progression": [
+    {
+      "state": "no database fixture at all",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 16,
+        "failed": 139
+      }
+    },
+    {
+      "state": "both fixtures pinned and bound",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 154,
+        "failed": 1
+      }
+    },
+    {
+      "state": "shared expectation armed per test, clean fixture start",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 155,
+        "failed": 0
+      }
+    }
+  ]
+}

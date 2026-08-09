@@ -1,0 +1,30 @@
+ 1/28  PASSED     31.5s  Configuring_the_publish_topology_at_startup.Should_create_the_exchanges
+ 2/28  PASSED     30.2s  Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges
+ 3/28  PASSED     43.3s  Connecting_receive_endpoints.Should_clean_up_properly
+ 4/28  PASSED     39.8s  ExclusiveConsumer_Specs.Should_not_be_allowed_twice
+ 5/28  PASSED     40.6s  Failing_to_connect_to_rabbitmq.Should_fault_nicely
+ 6/28  PASSED     32.3s  Failing_to_connect_to_rabbitmq.Should_fault_when_credentials_are_bad
+ 7/28  PASSED     59.2s  Failing_to_connect_to_rabbitmq.Should_recover_from_a_crashed_server
+ 8/28  PASSED     30.0s  Failing_to_connect_to_rabbitmq.Should_start_without_any_configuration
+ 9/28  PASSED     29.9s  Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly
+10/28  PASSED     91.4s  Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_an_endpoint
+11/28  PASSED     33.2s  Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_publish
+12/28  FAILED     32.2s  Failure_Specs.Should_properly_fail_on_exclusive_launch
+13/28  FAILED     43.3s  JobConsumer_Specs.Should_cancel_on_shutdown_and_then_restart_the_job
+14/28  TIMEOUT   403.9s  Pounding_the_crap_out_of_the_send_endpoint.Should_end_well
+15/28  PASSED     61.5s  PublishFaultObserver_Specs.Should_handle_the_observer_fault
+16/28  PASSED     32.8s  PublishStop_Specs.Should_start_and_stop_async
+17/28  PASSED     31.1s  PublishStop_Specs.Should_start_and_stop_sync
+18/28  FAILED     40.5s  PublishTimeout_Specs.Should_fault_with_operation_cancelled_on_publish
+19/28  FAILED     60.7s  Publishing_a_message_in_a_consumer_with_baggage.Should_source_address_from_the_endpoint
+20/28  PASSED     51.6s  Reconnecting_Specs.Should_fault_nicely
+21/28  PASSED     28.5s  WhenAMessageIsPublishedToTheEndpointFaulting.Should_not_increase_channel_count
+22/28  FAILED     58.0s  WhenAMessageIsPublishedToTheEndpointFaulting.Should_take_time_to_watch_channel_use
+23/28  PASSED     28.5s  WhenAMessageIsPublishedToTheEndpointSuccessfully.Should_not_increase_channel_count
+24/28  FAILED     57.3s  WhenAMessageIsPublishedToTheEndpointSuccessfully.Should_take_time_to_watch_channel_use
+25/28  PASSED     38.2s  Skipping_messages_should_not_crash_the_service.Should_properly_complete_without_dying
+26/28  PASSED     28.2s  When_configuring_a_durable_ttl_queue.Should_comply_with_new_broker_rules
+27/28  PASSED     41.9s  When_insufficient_permissions_are_specified.Should_cleanup_when_permissions_are_lame
+28/28  FAILED    148.6s  When_the_consumer_timeout_is_reached_waiting_for_a_batch.Should_properly_handle_message_redelivery
+
+fertig

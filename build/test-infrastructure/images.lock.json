@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "TEST_INFRASTRUCTURE_IMAGE_LOCK",
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "description": "Single source of truth for every pinned test fixture input. Local compose runs and GitHub Actions both build from these values. No moving tag is permitted anywhere.",
+  "baseImages": {
+    "activemq": {
+      "repository": "apache/activemq-classic",
+      "tag": "6.2.0",
+      "digest": "sha256:992bc29a8459f6772ff14d168a8b011c9cde7a769ec01d72788c9cc4e9229564",
+      "reference": "apache/activemq-classic:6.2.0@sha256:992bc29a8459f6772ff14d168a8b011c9cde7a769ec01d72788c9cc4e9229564",
+      "rationale": "Officially maintained Apache image. It replaces the abandoned upstream fixture image whose only tag was last pushed 2023-01-10."
+    },
+    "artemis": {
+      "repository": "quay.io/artemiscloud/activemq-artemis-broker",
+      "tag": "",
+      "digest": "sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a",
+      "reference": "quay.io/artemiscloud/activemq-artemis-broker@sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a",
+      "rationale": "Artemis is a second, separate broker used by the parameterized 'artemis' flavor of a subset of the ActiveMQ specs. It is not the ViciOne fixture and is not a required gate. It is pinned here so the branch has a reproducible endpoint instead of the hardcoded port 61618 with admin/admin it carried from the imported baseline."
+    },
+    "mssql": {
+      "repository": "mcr.microsoft.com/azure-sql-edge",
+      "tag": "latest",
+      "digest": "sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf",
+      "reference": "mcr.microsoft.com/azure-sql-edge@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf",
+      "rationale": "SQL Server for the Entity Framework specs. The imported baseline ran them on ubuntu with exactly this image as a service container, so the 'LocalDb' in the provider name is a misnomer: its first two candidates are a Linux SQL Server, not Windows LocalDB. The tag is pinned by digest because 'latest' is a moving target."
+    },
+    "postgres": {
+      "repository": "postgres",
+      "tag": "16",
+      "digest": "sha256:95206741a5b214807675e14165369d05b93a9cf692223b616d07cca227e74b0b",
+      "reference": "postgres:16@sha256:95206741a5b214807675e14165369d05b93a9cf692223b616d07cca227e74b0b",
+      "rationale": "PostgreSQL for the Entity Framework specs. The imported baseline used postgres:14.7; 16 is the current supported line and the specs use no version specific behaviour."
+    },
+    "rabbitmq": {
+      "repository": "rabbitmq",
+      "tag": "4.2-management",
+      "digest": "sha256:a2751b3b5eed89e47ebbd5e776de0d6d85d924002773933ab881da49c073b85d",
+      "reference": "rabbitmq:4.2-management@sha256:a2751b3b5eed89e47ebbd5e776de0d6d85d924002773933ab881da49c073b85d",
+      "rationale": "Official Docker library image. The management plugin is required because the test set up creates and cleans the 'test' virtual host over the HTTP API on port 15672."
+    }
+  },
+  "plugins": {
+    "rabbitmq_delayed_message_exchange": {
+      "version": "4.2.0",
+      "url": "https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/v4.2.0/rabbitmq_delayed_message_exchange-4.2.0.ez",
+      "sha256": "f168b2c09810cde3726961d31f38e3408e6a7fbff3929908d6f962061d8e70a1",
+      "sizeBytes": 42795,
+      "rationale": "Community plugin, not part of the official image. Fifteen call sites use UseDelayedMessageScheduler and six declare x-delayed exchange arguments, so the tests cannot run without it. Built against RabbitMQ server 4.2.0, matching the pinned base."
+    }
+  },
+  "publication": {
+    "registryPush": false,
+    "rationale": "This slice publishes no image. Both fixtures are built from the pinned bases during the run, identically for local compose and CI."
+  }
+}

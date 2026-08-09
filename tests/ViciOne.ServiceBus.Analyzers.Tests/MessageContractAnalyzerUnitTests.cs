@@ -2392,6 +2392,7 @@ namespace ConsoleApplication1
             return bus.Publish<T>(message);
         }
     }
+}
 ";
 
             VerifyCSharpDiagnostic(test);
@@ -2412,7 +2413,7 @@ namespace ConsoleApplication1
 
     public class NotificationConsumer : IConsumer<INotification>
     {
-        public Task Consume(ConsumeContext context)
+        public Task Consume(ConsumeContext<INotification> context)
         {
             var message = new {};
 
@@ -2427,6 +2428,7 @@ namespace ConsoleApplication1
             return context.Publish<TMessage>(message);
         }
     }
+}
 ";
 
             VerifyCSharpDiagnostic(test);

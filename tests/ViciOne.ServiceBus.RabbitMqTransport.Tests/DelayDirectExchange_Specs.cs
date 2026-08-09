@@ -25,7 +25,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .AddViciOneServiceBusTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(options =>
+                        {
+                            options.VHost = "test";
+                            options.ApplyRunScopedCredentials();
+                        });
 
                     x.AddDelayedMessageScheduler();
 

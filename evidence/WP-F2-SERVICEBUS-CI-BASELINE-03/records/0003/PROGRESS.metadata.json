@@ -1,0 +1,16 @@
+{
+  "checkpoint": "IMPLEMENTATION",
+  "completedRequirementIds": [],
+  "activeRequirementIds": [
+    "REQ-CI-003"
+  ],
+  "evidence": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0003/RECOVERY_IMPORT.json",
+      "sha256": "8ae4eea710110055c8662d56c54a5f88db2779d311459478aafb5431935fc798"
+    }
+  ],
+  "summary": "Recovery import complete: exactly the eight directed paths restored byte-identically from the handoff stash, no evidence-02 path restored, other stashes untouched, analyzer suite 111/111 green on the restored state.",
+  "nextAction": "Build the pinned RabbitMQ and ActiveMQ broker fixtures with a run-scoped non-guest account for REQ-CI-001.",
+  "blocker": null
+}

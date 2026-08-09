@@ -1,0 +1,122 @@
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# One fixture definition for both worlds. A local developer and GitHub Actions start the very
+# same services from the very same pinned build contexts; nothing is published to a registry.
+#
+# Host ports are ephemeral: "127.0.0.1::5672" lets Docker assign a free loopback port per run and
+# publish it atomically. A fixed port collides with anything already listening on the developer
+# machine, and probing for a free port first would only trade the collision for a binding race.
+# The canonical runner asks Docker afterwards which ports were actually bound.
+#
+# Do not start these by hand; tools/ci/run_broker_category.py is the single entry point for local
+# runs and for CI alike:
+#
+#   python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq --project <csproj>
+#
+# Credentials are never stored here. new-run-credentials.sh generates a fresh account per run
+# and exports the variables consumed below; an unset variable fails the run instead of silently
+# falling back to a well known account.
+#
+# Every published port binds to 127.0.0.1 explicitly. A bare "5672:5672" listens on every host
+# interface depending on the Docker host configuration, which publishes a test broker far wider
+# than a local or CI fixture ever needs. Container-to-container traffic inside the compose network
+# is unaffected by this and keeps working.
+
+services:
+  rabbitmq:
+    build:
+      context: ./rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${VICIONE_SERVICEBUS_RMQ_USER:?run credentials are missing, source new-run-credentials.sh}
+      RABBITMQ_DEFAULT_PASS: ${VICIONE_SERVICEBUS_RMQ_PASS:?run credentials are missing, source new-run-credentials.sh}
+    ports:
+      - "127.0.0.1::5672"
+      - "127.0.0.1::15672"
+    healthcheck:
+      # Readiness must cover the management API as well: the test set up creates the 'test'
+      # virtual host over HTTP, so a broker that answers AMQP but not HTTP is not ready.
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_port_connectivity"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 10s
+
+  # Artemis is a second, separate broker. A subset of the ActiveMQ specs is parameterized over an
+  # 'artemis' flavor and used to address a fixed port 61618 with a well known admin account. That
+  # made the branch unclassifiable: it was neither a pinned fixture nor visibly excluded. It is
+  # defined here so it obeys the same rules as every other fixture, and it remains outside the
+  # required path; the extended profile inventory states where it stands.
+  artemis:
+    image: quay.io/artemiscloud/activemq-artemis-broker@sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a
+    environment:
+      AMQ_USER: ${VICIONE_SERVICEBUS_ARTEMIS_USER:?run credentials are missing, source new-run-credentials.sh}
+      AMQ_PASSWORD: ${VICIONE_SERVICEBUS_ARTEMIS_PASS:?run credentials are missing, source new-run-credentials.sh}
+    ports:
+      - "127.0.0.1::61616"
+      - "127.0.0.1::8161"
+    healthcheck:
+      # The acceptor binds to the container address, not to loopback, so the check has to dial the
+      # container's own name. A check against localhost never connects and would never turn healthy.
+      test: ["CMD-SHELL", "/opt/amq/bin/artemis check node --url tcp://$$HOSTNAME:61616 --user \"$$AMQ_USER\" --password \"$$AMQ_PASSWORD\""]
+      interval: 5s
+      timeout: 15s
+      retries: 24
+      start_period: 15s
+
+  # The Entity Framework specs need a real SQL Server and a real PostgreSQL. The imported baseline ran
+  # them on ubuntu with service containers; the connection provider is called LocalDb but its first two
+  # candidates are a Linux SQL Server. Both are pinned here so the required category has a fixture at all.
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${VICIONE_SERVICEBUS_MSSQL_PASS:?run credentials are missing, source new-run-credentials.sh}
+    ports:
+      - "127.0.0.1::1433"
+    healthcheck:
+      # A started process is not a usable server: readiness means the engine answers a query.
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1'"]
+      interval: 5s
+      timeout: 10s
+      retries: 36
+      start_period: 20s
+
+  postgres:
+    image: postgres:16@sha256:95206741a5b214807675e14165369d05b93a9cf692223b616d07cca227e74b0b
+    environment:
+      POSTGRES_USER: ${VICIONE_SERVICEBUS_PG_USER:?run credentials are missing, source new-run-credentials.sh}
+      POSTGRES_PASSWORD: ${VICIONE_SERVICEBUS_PG_PASS:?run credentials are missing, source new-run-credentials.sh}
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1::5432"
+    # The data directory lives in memory. A test fixture keeps nothing between runs, and this removes the
+    # one way a stale volume could survive with the credentials of an earlier run.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 5s
+
+  activemq:
+    build:
+      context: ./activemq
+    environment:
+      ACTIVEMQ_CONNECTION_USER: ${VICIONE_SERVICEBUS_AMQ_USER:?run credentials are missing, source new-run-credentials.sh}
+      ACTIVEMQ_CONNECTION_PASSWORD: ${VICIONE_SERVICEBUS_AMQ_PASS:?run credentials are missing, source new-run-credentials.sh}
+      ACTIVEMQ_WEB_USER: ${VICIONE_SERVICEBUS_AMQ_USER:?run credentials are missing, source new-run-credentials.sh}
+      ACTIVEMQ_WEB_PASSWORD: ${VICIONE_SERVICEBUS_AMQ_PASS:?run credentials are missing, source new-run-credentials.sh}
+    ports:
+      - "127.0.0.1::61616"
+      - "127.0.0.1::5672"
+      - "127.0.0.1::8161"
+    healthcheck:
+      # Readiness means the Jolokia endpoint answers, because that is what the harness uses to
+      # inspect and clean the broker. A running process that does not serve Jolokia is not ready.
+      test: ["CMD-SHELL", "curl -sf -u \"$$ACTIVEMQ_WEB_USER:$$ACTIVEMQ_WEB_PASSWORD\" -H 'Origin: http://localhost' http://localhost:8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost | grep -q '\"status\":200'"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 10s

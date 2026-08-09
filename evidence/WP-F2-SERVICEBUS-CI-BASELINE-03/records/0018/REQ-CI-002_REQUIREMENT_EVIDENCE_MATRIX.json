@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 18,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Requirement to evidence matrix for the effective slice",
+  "readingRule": "A gate is GREEN only if its own instrument reports zero failures and a zero exit code. Every run below comes from the same working tree.",
+  "gates": [
+    {
+      "gate": "policy",
+      "state": "GREEN",
+      "evidence": "tools/ci/policy_validator.py + test_policy_validator.py",
+      "result": "All invariants hold; 41 self-tests including sabotage cases for broker and database endpoints."
+    },
+    {
+      "gate": "analyzer",
+      "state": "GREEN",
+      "evidence": "records/0018/analyzer/analyzer.trx",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "abstractions",
+      "state": "GREEN",
+      "evidence": "records/0018/abstractions/abstractions.trx",
+      "counters": {
+        "total": 76,
+        "executed": 71,
+        "passed": 71,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "rabbitmq",
+      "state": "GREEN",
+      "evidence": "records/0018/rabbitmq/rabbitmq.trx",
+      "counters": {
+        "total": 326,
+        "executed": 301,
+        "passed": 301,
+        "failed": 0
+      },
+      "detail": "Measured with the foreign broker on the default port stopped, so no result depends on it."
+    },
+    {
+      "gate": "entity-framework",
+      "state": "GREEN",
+      "evidence": "records/0018/entity-framework-clean/entity-framework-core.trx",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 155,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "pack",
+      "state": "GREEN",
+      "evidence": "records/0018/SHA256SUMS",
+      "result": "33 packages, exit code 0, hashed, nothing published.",
+      "caveat": "ViciOne.ServiceBus.MessagePack carries a High advisory through MessagePack 3.1.6. The green gate is not a clearance of it."
+    },
+    {
+      "gate": "activemq (extended profile, not required)",
+      "state": "GREEN",
+      "evidence": "records/0018/activemq/activemq.trx",
+      "counters": {
+        "total": 142,
+        "executed": 137,
+        "passed": 137,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "core",
+      "state": "RED",
+      "evidence": "records/0018/core-1/core.trx and core-2/core.trx",
+      "counters": {
+        "total": 1880,
+        "executed": 1837,
+        "passed": 1836,
+        "failed": 1
+      },
+      "detail": "Two independent open cases, each measured and each green in isolation. Two consecutive runs failed exactly one of them, a different one each time. Nothing is filtered, no assertion is relaxed and no timeout is extended.",
+      "openCases": [
+        {
+          "test": "Receiving_and_grouping_messages_by_ref_type.Should_receive_one_batch_per_group",
+          "diagnosis": "Not vague flakiness. The test waits for six consumed messages and then reads _batches, a fixture level list that is filled by an unawaited ContinueWith on each batch task. The failure data proves it: observed < 3, 1 >, missing < 2 >. All three batches were consumed; one append had simply not run yet when the assertion executed.",
+          "isolation": "5 of 5 green at a very stable 0.625 s.",
+          "fixWouldBe": "Let the test await the batches it expects instead of asserting against a list populated by fire and forget continuations. That changes how the spec synchronises, so it is submitted rather than taken."
+        },
+        {
+          "test": "ContainerTests.KillSwitch_Specs.Should_be_degraded_after_too_many_exceptions",
+          "diagnosis": "Genuinely load dependent. WaitForHealthStatus carries its own fresh 15 s source per call, so the shared budget does not explain it; under full load one transition does not complete inside that window.",
+          "isolation": "5 of 5 green at a very stable 10.39 s.",
+          "improvementMade": "Sampling moved from one second to 50 ms. The budget is unchanged and a status that never arrives still expires, so this can hide nothing. It moved the failure from 20.0 s to 15.1 s and let one full run pass, without removing the sensitivity.",
+          "fixWouldBe": "An event driven wait instead of polling. Submitted rather than taken."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "green": 7,
+    "red": 1,
+    "freezeReady": false,
+    "whyNot": "core is red with two sporadic load dependent cases. Neither is filtered, neither assertion is relaxed and no timeout is extended."
+  },
+  "packages": [
+    {
+      "package": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sizeBytes": 7694977,
+      "sha256": "033329fd9f184396df1527ace8315ff38b9f454cc8f3bf4e93853087ed31f647"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sizeBytes": 1540884,
+      "sha256": "75c6ca65bbcb0f973d9b8e5238117286d0a19b11675076b0f791a62be1ca15b8"
+    },
+    {
+      "package": "ViciOne.ServiceBus.ActiveMQ.1.0.0.nupkg",
+      "sizeBytes": 467370,
+      "sha256": "fdbaf678dcacb5c55c9fbe2ebb6a33e20e47fb74dfff13c5bb52eaa76110b141"
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sizeBytes": 70084,
+      "sha256": "ad5c0d806bb66e65bc02b1b05f7065965ebb5dee688cb409917db4f847ccae43"
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonSQS.1.0.0.nupkg",
+      "sizeBytes": 608962,
+      "sha256": "daea0b8459e7f92e76433b8737998df34c4125a6a414280a0afc1c4e70361119"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg",
+      "sizeBytes": 48734,
+      "sha256": "549c5a9bc4ad946b19353465e2811ef430680e2d3f0dc8cba27f3cb57cf17ede"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Cosmos.1.0.0.nupkg",
+      "sizeBytes": 156635,
+      "sha256": "26a22da7a1feec9c9469c43a0a81caccbb03e5cf05c11903ad3d73f5414c4504"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Cosmos.Table.1.0.0.nupkg",
+      "sizeBytes": 142301,
+      "sha256": "b6509d55ef2fa0b28cffac54b13f224c613982f1c0da628cd9683afe0e6ea4fc"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg",
+      "sizeBytes": 667089,
+      "sha256": "15874e6a7d40608151f2b0c7d34b0b424c23d83bd8daa5bc3b78e0cc785729aa"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg",
+      "sizeBytes": 77498,
+      "sha256": "34011fd0be9f170435aa626aeab3bdea5bdbd16c4b0b5a2d981e3227e4412aae"
+    },
+    {
+      "package": "ViciOne.ServiceBus.DapperIntegration.1.0.0.nupkg",
+      "sizeBytes": 110672,
+      "sha256": "98a3ac360636a86ac8b455e8e9556be8c7850368b3a94d882b4d9a39067550b0"
+    },
+    {
+      "package": "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sizeBytes": 106757,
+      "sha256": "39c2090c2653f8b67bdeb33c7013551220731e79bfdeb0b7c9a5b24d16dee9f0"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFramework.1.0.0.nupkg",
+      "sizeBytes": 44874,
+      "sha256": "3b8273c3e4c24f09a8698b0c76e99ddb0f50337afc4fbd17bc6c73707e55c657"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sizeBytes": 278036,
+      "sha256": "2d0abdde3c072668e0d847896511da81b24a56a7912ad024d1b4aa930530d660"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHub.1.0.0.nupkg",
+      "sizeBytes": 339588,
+      "sha256": "41942e00da5547bdd21220c4f2936407d5e09d2fc7fcdd45e4048d455a592fb3"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Hangfire.1.0.0.nupkg",
+      "sizeBytes": 160228,
+      "sha256": "e3fa742960548cc9009ee05df735547b3dc53a3e7a8627c494140caccf77518e"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Interop.NServiceBus.1.0.0.nupkg",
+      "sizeBytes": 103334,
+      "sha256": "37ac7abdfe3ad83684c888c943fb2eb5140dd8cc80b1a1bd3bb2ffcdc27c92da"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Kafka.1.0.0.nupkg",
+      "sizeBytes": 483141,
+      "sha256": "15fcb905d0403f8f551f9aef0855f27573346a3636c525116cb6fe8fcfb76d7c"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Marten.1.0.0.nupkg",
+      "sizeBytes": 78375,
+      "sha256": "c39e05c13b363cff10f810c70688a227632b27f976ff5ab03bbed117c706f9ab"
+    },
+    {
+      "package": "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "sizeBytes": 118733,
+      "sha256": "a5c05c28ab82ef1d3bceca5fa853240e1feb9503d4ae739080ecb70dc1c9ef1a"
+    },
+    {
+      "package": "ViciOne.ServiceBus.MongoDb.1.0.0.nupkg",
+      "sizeBytes": 357295,
+      "sha256": "ca6fdab5f90d1fefa7f964dce177ac843f1d6769dd0eab9421c3555ced851cb3"
+    },
+    {
+      "package": "ViciOne.ServiceBus.NHibernate.1.0.0.nupkg",
+      "sizeBytes": 127064,
+      "sha256": "1e365280220463e91caf1740eb268b98a4898df2658619a06e09a88fd655013d"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Newtonsoft.1.0.0.nupkg",
+      "sizeBytes": 212134,
+      "sha256": "3446f60c211c5b4834bbbe59d41a4f9ba6b7cb762de9fe123788571cae3d2204"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Quartz.1.0.0.nupkg",
+      "sizeBytes": 157835,
+      "sha256": "68750b9988bd327689b4f945c5268871748a6f6a7f70ba8e472dc51ef1a7285f"
+    },
+    {
+      "package": "ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg",
+      "sizeBytes": 654336,
+      "sha256": "9b23a5a513579ee147ad1ce32125020a113764acb1f697b4abd58096e357b88d"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Redis.1.0.0.nupkg",
+      "sizeBytes": 125198,
+      "sha256": "8d0950a07df16bb6e74d5d292bc5638869e0d43cbaf3f864e3468852af26fe5e"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SignalR.1.0.0.nupkg",
+      "sizeBytes": 118134,
+      "sha256": "1cd687af50d34db751774137e5ea20071b792fe6b61b86944feb06a636d57e34"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSQL.1.0.0.nupkg",
+      "sizeBytes": 288155,
+      "sha256": "e4000a425f206422e77b753650fc1cadbd5f194f65275332ed66386ac68a1f2c"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg",
+      "sizeBytes": 287179,
+      "sha256": "b73d5aa4f06a9da591cdac54e1e66bfa6bd3d092ec68559ecf1e48f17c8b5282"
+    },
+    {
+      "package": "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg",
+      "sizeBytes": 62179,
+      "sha256": "3435e2c1e57920a1eef095060f2a99e86c03743b357a1ab85eab3395d05a950e"
+    },
+    {
+      "package": "ViciOne.ServiceBus.TestFramework.1.0.0.nupkg",
+      "sizeBytes": 313823,
+      "sha256": "73b1324e5441e60c0d8bd0d1a55235f342784e29cf571e1384fe41ecad5ef419"
+    },
+    {
+      "package": "ViciOne.ServiceBus.WebJobs.EventHubs.1.0.0.nupkg",
+      "sizeBytes": 101489,
+      "sha256": "3561059ff607729a3b8113ab133cb8a14b4c2f09f528c6cb46c4a0fa2969bf3d"
+    },
+    {
+      "package": "ViciOne.ServiceBus.WebJobs.ServiceBus.1.0.0.nupkg",
+      "sizeBytes": 77549,
+      "sha256": "f16c05cb7c4ce26a403fee7217b2ee17c1ef2fffc4323cafbf3fedf6dd46cc13"
+    }
+  ]
+}

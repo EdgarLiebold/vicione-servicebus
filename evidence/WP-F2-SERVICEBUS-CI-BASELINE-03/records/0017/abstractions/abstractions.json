@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "abstractions",
+  "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0017/abstractions/abstractions.trx -f net9.0",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 76,
+    "executed": 71,
+    "passed": 71,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true
+}

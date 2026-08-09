@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 {
     using System;
@@ -21,8 +21,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test", h =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    // The fixture provisions a run-scoped account; the empty callback left the
+                    // connection on the guest defaults and it could not authenticate.
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
 
                 ConfigureBusDiagnostics(x);
@@ -83,8 +87,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test", h =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    // The fixture provisions a run-scoped account; the empty callback left the
+                    // connection on the guest defaults and it could not authenticate.
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
 
                 ConfigureBusDiagnostics(x);

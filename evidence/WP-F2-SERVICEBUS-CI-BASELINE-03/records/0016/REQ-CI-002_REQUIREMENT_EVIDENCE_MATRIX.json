@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 16,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Requirement to evidence matrix for the effective slice",
+  "readingRule": "A gate is GREEN only if its own instrument reports zero failures. Nothing below is summarised upward; a red gate stays red in this table.",
+  "gates": [
+    {
+      "gate": "policy",
+      "state": "GREEN",
+      "evidence": "tools/ci/policy_validator.py, tools/ci/test_policy_validator.py",
+      "result": "All invariants hold; 36 self-tests pass, including a sabotage case for the new test-endpoint rule."
+    },
+    {
+      "gate": "analyzer",
+      "state": "GREEN",
+      "evidence": "records/0016/analyzer/analyzer.trx",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "abstractions",
+      "state": "GREEN",
+      "evidence": "records/0016/abstractions/abstractions.trx",
+      "counters": {
+        "total": 76,
+        "executed": 71,
+        "passed": 71,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "core",
+      "state": "RED",
+      "evidence": "records/0016/core/core.trx",
+      "counters": {
+        "total": 1872,
+        "executed": 1829,
+        "passed": 1828,
+        "failed": 1
+      },
+      "detail": "One failure: ContainerTests.KillSwitch_Specs.Should_be_degraded_after_too_many_exceptions, 20.0 s in the full run, 3 of 3 green in isolation at 10.4 s. It is first in its fixture, so the shared budget of record 0015 does not explain it. Open."
+    },
+    {
+      "gate": "rabbitmq",
+      "state": "RED",
+      "evidence": "records/0016/rabbitmq-bound-2/rabbitmq.trx",
+      "counters": {
+        "total": 326,
+        "executed": 306,
+        "passed": 298,
+        "failed": 8
+      },
+      "detail": "Measured with the foreign broker stopped, so no result depends on it. Five of the eight red are in Failing_to_connect_to_rabbitmq and are deliberately untouched pending record 0015. Two are the Turnout pair, one is the sporadic delayed family."
+    },
+    {
+      "gate": "entity-framework",
+      "state": "RED",
+      "evidence": "records/0016/REQ-CI-002_ENTITY_FRAMEWORK_GATE.json",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 16,
+        "failed": 139
+      },
+      "detail": "Unsatisfiable as configured: 108 tests need SQL Server LocalDB and 31 need PostgreSQL. Neither is a pinned fixture, and LocalDB does not exist on Linux, so the ubuntu runner cannot satisfy this gate either. 16 tests need no database and pass."
+    },
+    {
+      "gate": "pack",
+      "state": "GREEN",
+      "evidence": "records/0016/REQ-CI-002_PACK.json",
+      "result": "33 packages, exit code 0, hashed, nothing published.",
+      "caveat": "ViciOne.ServiceBus.MessagePack carries a High advisory through MessagePack 3.1.6."
+    },
+    {
+      "gate": "activemq (extended profile, not required)",
+      "state": "GREEN",
+      "evidence": "records/0016/activemq-both/activemq.trx",
+      "counters": {
+        "total": 142,
+        "executed": 137,
+        "passed": 137,
+        "failed": 0
+      },
+      "detail": "Both brokers started, so the artemis branch runs instead of falling back to a fixed port."
+    }
+  ],
+  "summary": {
+    "green": 5,
+    "red": 3,
+    "freezeReady": false,
+    "whyNot": "Three gates are red and record 0015 is unanswered. The entity-framework gate cannot be satisfied without a decision on database fixtures, which is a scope decision."
+  },
+  "environmentPinning": {
+    "timezone": "UTC, pinned in tools/ci/run_test_category.py",
+    "why": "Two cron cases build a template hour in one offset and reuse it across 31 October 2010, the day of a European DST transition. They fail in CEST and pass in UTC: measured 3 of 5 against 5 of 5. Pinning the zone removes an environment difference between a local run and the runner; it weakens no assertion."
+  }
+}

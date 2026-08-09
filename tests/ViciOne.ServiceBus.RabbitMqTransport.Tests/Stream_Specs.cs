@@ -15,7 +15,17 @@ public class Consuming_messages_from_a_stream
     public async Task Should_process_messages()
     {
         await using var provider = new ServiceCollection()
-            .Configure<RabbitMqTransportOptions>(options => options.VHost = "test")
+            .Configure<RabbitMqTransportOptions>(options =>
+            {
+                // Only VHost was set here, so host, port, management port and account stayed at their
+                // defaults and the spec talked to whatever held 5672 and 15672.
+                options.Host = RunScopedBroker.Host;
+                options.Port = (ushort)RunScopedBroker.AmqpPort;
+                options.ManagementPort = (ushort)RunScopedBroker.ManagementPort;
+                options.VHost = RunScopedBroker.VirtualHost;
+                options.User = RunScopedBroker.User;
+                options.Pass = RunScopedBroker.Pass;
+            })
             .ConfigureRabbitMqTestOptions(options =>
             {
                 options.CreateVirtualHostIfNotExists = true;

@@ -1,0 +1,106 @@
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# Extended profile for transports and stores that the fork preserves but ViciOne does not ship today.
+#
+# These jobs are deliberately manual. They are NOT part of the required profile and they are NOT
+# hidden behind an unsatisfiable repository or branch condition. The predecessor did the latter, and
+# the effect was that whole categories silently disappeared from a run that still reported green.
+# A job that is not due here is reported as not executed, never as passed.
+#
+# Anything needing a secret or external infrastructure is marked as such below and stays skipped
+# until that infrastructure is genuinely available. That is a stated gap, not a pass.
+name: Extended Transports
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Which extended target to run'
+        required: true
+        type: choice
+        options:
+          - activemq
+          - amazon-sqs
+          - kafka
+          - mongodb
+          - redis
+          - marten
+          - nhibernate
+          - dapper
+          - quartz
+          - hangfire
+          - sql-transport
+          - entity-framework-classic
+  # Callable so a scheduled entry point can reuse this one definition instead of restating the
+  # jobs. One definition, several triggers; no second copy that could drift.
+  workflow_call:
+    inputs:
+      target:
+        description: 'Which extended target to run'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+jobs:
+  activemq:
+    name: "Extended: ActiveMQ"
+    if: inputs.target == 'activemq'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      # The suite spans two brokers: a subset of the specs is parameterized over an 'artemis' flavor
+      # that addresses a separate broker. Both fixtures are started so no spec has to fall back to a
+      # fixed port. Neither is a required gate; this whole workflow is the extended profile.
+      - name: ActiveMQ tests
+        run: |
+          python3 tools/ci/run_broker_category.py \
+            --broker activemq \
+            --broker artemis \
+            --category activemq \
+            --project tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
+            --evidence-dir artifacts/extended/activemq \
+            --ports-out artifacts/extended/activemq/endpoints.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: extended-activemq
+          path: artifacts/extended/activemq
+
+  inventory:
+    name: "Extended: profile inventory"
+    # Runs on every dispatch, whatever the target, and states the honest execution state of each
+    # preserved target. It reports the inventory and nothing else, so it can never be mistaken for
+    # a transport gate. A target without a pinned fixture is named as NOT EXECUTED here rather than
+    # being silently skipped by an unsatisfiable condition.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Report execution state of every preserved target
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          inventory = json.load(open("build/test-infrastructure/extended-profile-inventory.json"))
+          width = max(len(t["id"]) for t in inventory["targets"])
+          print("Preserved extended targets and their honest execution state:\n")
+          for target in sorted(inventory["targets"], key=lambda t: (t["state"], t["id"])):
+              print(f"  {target['id']:<{width}}  {target['state']}")
+          print("\nOnly IMPLEMENTED_MANUAL targets can be executed from this workflow.")
+          print("Every other state means NOT EXECUTED. None of them is a pass.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extended-profile-inventory
+          path: build/test-infrastructure/extended-profile-inventory.json

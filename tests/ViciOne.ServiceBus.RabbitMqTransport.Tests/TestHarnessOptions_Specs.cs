@@ -27,7 +27,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                     x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
 
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test2");
+                        .Configure(options =>
+                        {
+                            options.VHost = "test2";
+                            options.ApplyRunScopedCredentials();
+                        });
                 })
                 .BuildServiceProvider(true);
 

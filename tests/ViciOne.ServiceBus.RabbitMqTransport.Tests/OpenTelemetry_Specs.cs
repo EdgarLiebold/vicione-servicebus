@@ -34,6 +34,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 {
                     x.AddConsumer<MonitoredSubmitOrderConsumer>();
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
+
                     x.UsingRabbitMq((context, cfg) =>
                     {
                         cfg.UseNewtonsoftJsonSerializer();
@@ -83,6 +88,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .AddViciOneServiceBusTestHarness(x =>
                 {
                     x.AddConsumer<MonitoredSubmitOrderConsumer>();
+
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
@@ -136,6 +146,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 {
                     x.AddConsumer<MonitoredSubmitOrderConsumer>();
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
+
                     x.UsingRabbitMq((context, cfg) =>
                     {
                         cfg.ConfigureEndpoints(context);
@@ -185,6 +200,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .AddViciOneServiceBusTestHarness(x =>
                 {
                     x.AddConsumer<MonitoredSubmitOrderConsumer>();
+
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
@@ -240,6 +260,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                         });
                     });
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
+
                     x.UsingRabbitMq((context, cfg) =>
                     {
                         cfg.ConfigureEndpoints(context);
@@ -283,6 +308,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                     x.AddActivity<TestActivity, TestArguments, TestLog>();
                     x.AddActivity<SecondTestActivity, TestArguments, TestLog>();
+
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
@@ -348,6 +378,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                     x.AddSagaStateMachine<TestStateMachine, Instance>()
                         .InMemoryRepository();
+
+                    x.AddOptions<RabbitMqTransportOptions>()
+
+                        .Configure(options => options.ApplyRunScopedCredentials());
+
 
                     x.UsingRabbitMq((context, cfg) =>
                     {

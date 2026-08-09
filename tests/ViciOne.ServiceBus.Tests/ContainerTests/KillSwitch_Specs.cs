@@ -36,13 +36,21 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
                         cfg.UseKillSwitch(options => options
                             .SetActivationThreshold(5)
                             .SetTripThreshold(10)
-                            .SetRestartTimeout(s: 5));
+// Measured: the scenario needs one restart cycle per kill switch trip, and it trips more than
+                            // once because the bad messages left in the queue at the moment the endpoint stops are
+                            // consumed again after the restart. A full core run produced three stops, so at five
+                            // seconds per cycle the scenario needed exactly the fifteen seconds the health wait
+                            // allows and failed on the edge. The sibling spec in this same project, and the ActiveMQ
+                            // one, already use one second. This aligns them; no assertion, threshold or budget changes.
+                            .SetRestartTimeout(s: 1));
 
                         cfg.ConfigureEndpoints(context);
                     });
                 });
 
-            IServiceProvider provider = services.BuildServiceProvider(true);
+            // The provider owns the bus, its timers and the kill switch. It was never disposed, so every
+            // run of this spec left them behind for the rest of the process.
+            await using var provider = services.BuildServiceProvider(true);
 
             var healthChecks = provider.GetService<HealthCheckService>();
 

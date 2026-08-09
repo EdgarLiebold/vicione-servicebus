@@ -1,7 +1,13 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# This file used to reference vicione-servicebus/rabbitmq:latest, an image that does not exist.
+# It now extends the single pinned fixture definition instead of restating it, so a local run and
+# a CI run start byte-identical containers.
+#
+#   source ../../build/test-infrastructure/new-run-credentials.sh
+#   docker compose up -d --wait
 services:
   rabbit:
-    image: vicione-servicebus/rabbitmq:latest
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    extends:
+      file: ../../build/test-infrastructure/compose.yaml
+      service: rabbitmq

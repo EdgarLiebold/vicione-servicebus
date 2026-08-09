@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "rabbitmq",
+  "project": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0017/rabbitmq-disposed/rabbitmq.trx",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 326,
+    "executed": 301,
+    "passed": 301,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true
+}

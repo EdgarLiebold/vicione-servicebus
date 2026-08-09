@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 16,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "finding": {
+    "title": "The entity-framework required gate cannot be satisfied, because no database fixture was ever pinned",
+    "detail": "The category is listed among the required categories in build.yml, but the specs need a SQL Server LocalDB instance and a PostgreSQL server. Neither is part of the pinned test infrastructure. LocalDB does not exist on Linux or macOS at all, so the gate cannot pass on the ubuntu runner either. This is the same class of defect the policy validator was written for, an unsatisfiable required gate, in a different shape."
+  },
+  "counters": {
+    "total": 159,
+    "executed": 155,
+    "passed": 16,
+    "failed": 139
+  },
+  "byRequiredBackend": {
+    "POSTGRESQL": {
+      "count": 31,
+      "tests": [
+        "Locating_an_existing_ef_saga<PostgresTestDbParameters>.A_correlated_message_should_find_the_correct_saga",
+        "Locating_an_existing_ef_saga<PostgresTestDbParameters>.An_initiating_message_should_start_the_saga",
+        "Optimistic_saga_with_transactions_disabled<PostgresTestDbParameters>.Should_handle_multiple_saga_instances_without_transactions",
+        "Optimistic_saga_with_transactions_disabled<PostgresTestDbParameters>.Should_work_with_optimistic_repository_and_transactions_disabled",
+        "Optimistic_saga_with_transactions_enabled<PostgresTestDbParameters>.Should_work_with_optimistic_repository_and_transactions_enabled",
+        "Pessimistic_saga_with_transactions_enabled<PostgresTestDbParameters>.Should_work_with_pessimistic_repository_and_transactions_enabled",
+        "Saving_audit_records_to_the_audit_store<PostgresTestDbParameters>.Should_have_consume_audit_records",
+        "Saving_audit_records_to_the_audit_store<PostgresTestDbParameters>.Should_have_send_audit_record",
+        "SlowConcurrentSaga_Specs<PostgresTestDbParameters>.Two_Initiating_Messages_Deadlock_Results_In_One_Instance",
+        "Submitting_a_job_to_turnout<PostgresTestDbParameters>.Should_get_the_job_accepted",
+        "Submitting_a_job_to_turnout<PostgresTestDbParameters>.Should_have_published_the_job_completed_event",
+        "Submitting_a_job_to_turnout<PostgresTestDbParameters>.Should_have_published_the_job_started_event"
+      ],
+      "truncated": 19
+    },
+    "SQL_SERVER_LOCALDB": {
+      "count": 108,
+      "tests": [
+        "EntityFrameworkBurgerFutureSpecs.Should_complete",
+        "EntityFrameworkBurgerFutureSpecs.Should_fault",
+        "EntityFrameworkCalculateFutureSpecs.Should_complete",
+        "EntityFrameworkComboFutureSpecs.Should_complete",
+        "EntityFrameworkFryFutureSpecs.Should_complete",
+        "EntityFrameworkFryShakeFutureSpecs.Should_complete",
+        "EntityFrameworkFryShakeFutureSpecs.Should_fault",
+        "EntityFrameworkOrderFutureSpecs.Should_complete",
+        "EntityFrameworkOrderFutureSpecs.Should_complete_durably",
+        "EntityFrameworkOrderFutureSpecs.Should_fault_with_lettuce",
+        "EntityFrameworkOrderFutureSpecs.Should_fault_with_lettuce_durably",
+        "EntityFrameworkPriceCalculationFuture_Faulted.Should_faulted"
+      ],
+      "truncated": 96
+    }
+  },
+  "runsWithoutAnyDatabase": {
+    "count": 16,
+    "tests": [
+      "Configurator_TransactionConfiguration_Specs.Should_accept_configure_transaction_false",
+      "Configurator_TransactionConfiguration_Specs.Should_accept_configure_transaction_true",
+      "Configurator_TransactionConfiguration_Specs.Should_allow_multiple_configuration_calls",
+      "Configurator_TransactionConfiguration_Specs.Should_support_fluent_configuration",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.OptimisticLockStrategy_Should_Allow_Transaction_Disabled",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.OptimisticLockStrategy_Should_Have_Transaction_Enabled_By_Default",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.OptimisticLockStrategy_Should_Support_Different_Isolation_Levels",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.PessimisticLockStrategy_Should_Have_Transaction_Enabled_By_Default",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.PessimisticLockStrategy_Should_Support_Different_Isolation_Levels",
+      "LockStrategy_TransactionConfiguration_Specs<PostgresTestDbParameters>.Should_Create_Lock_Strategies_With_Custom_Query_Customization",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreateOptimistic_Should_Accept_Transactions_Disabled",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreateOptimistic_Should_Accept_Transactions_Enabled_Explicitly",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreateOptimistic_Should_Default_To_Transactions_Enabled",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreateOptimistic_Should_Work_With_DbContextFactory_And_Transaction_Setting",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreateOptimistic_Should_Work_With_Query_Customization_And_Transaction_Setting",
+      "RepositoryFactory_TransactionConfiguration_Specs<PostgresTestDbParameters>.CreatePessimistic_Should_Default_To_Transactions_Enabled"
+    ]
+  },
+  "honesty": "The 16 passing tests are the ones that need no database. They are a real result, but they are not evidence that the entity-framework category is green; 139 of 155 executed tests failed.",
+  "notADeveloperDecision": "Pinning two additional database fixtures, or removing a category from the required profile, changes the required proof surface. Both are lead decisions."
+}

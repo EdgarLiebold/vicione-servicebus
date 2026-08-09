@@ -1,8 +1,13 @@
-﻿# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+# The rabbit service referenced vicione-servicebus/rabbitmq:latest, which does not exist.
+# It now extends the single pinned fixture definition.
+# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 version: '2.3'
 services:
   rabbitmq:
-    image: vicione-servicebus/rabbitmq:latest
+    extends:
+      file: ../../build/test-infrastructure/compose.yaml
+      service: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"

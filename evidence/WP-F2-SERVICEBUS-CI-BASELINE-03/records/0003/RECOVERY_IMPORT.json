@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 3,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "directive": "0002-lead-directive Recovery-Import",
+  "preImportState": {
+    "head": "e38203cbf112eeb3354cc394735f28287cdcb748",
+    "workingTreeClean": true,
+    "evidenceRoot03Existed": false,
+    "evidenceRoot02Existed": false,
+    "note": "Captured before any file was written; both evidence roots were absent."
+  },
+  "importedFiles": [
+    {
+      "path": "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "4311058c8f7a35e7bb350b82492c1575d5076d0d249f7ad24dbd131c70ad7c1d",
+      "workingTreeSha256": "4311058c8f7a35e7bb350b82492c1575d5076d0d249f7ad24dbd131c70ad7c1d"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Unshipped.md",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5",
+      "workingTreeSha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "787c9db553818e2fc5b336ca91cfca34680e71ef94b5d04912b0a42a191a3d9b",
+      "workingTreeSha256": "787c9db553818e2fc5b336ca91cfca34680e71ef94b5d04912b0a42a191a3d9b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/DictionaryInitializer_Specs.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "e7394f6201dbd573678ed8b0433e9c5f65d3606d6e0967697d594cafcefcd940",
+      "workingTreeSha256": "e7394f6201dbd573678ed8b0433e9c5f65d3606d6e0967697d594cafcefcd940"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "b25e0f91b3a3d30d07d49d6bcea9ada48622aa6c9b10a5a7dd74914e772ad431",
+      "workingTreeSha256": "b25e0f91b3a3d30d07d49d6bcea9ada48622aa6c9b10a5a7dd74914e772ad431"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "2d23d18ec7bc1d25c6e19f7a8ec4fa614c8636c294aaa3795378420ac773c350",
+      "workingTreeSha256": "2d23d18ec7bc1d25c6e19f7a8ec4fa614c8636c294aaa3795378420ac773c350"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/MessageDataInitializer_Specs.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35",
+      "stashBlobSha256": "31ffc8252373ab6ac770ee19c5113e1090ced6f6b6ff255abb92d077a24d061c",
+      "workingTreeSha256": "31ffc8252373ab6ac770ee19c5113e1090ced6f6b6ff255abb92d077a24d061c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Analyzers.Tests/HarnessIntegrity_Specs.cs",
+      "source": "20a22ab39ed9f7a97fc680bc404cf07665941d35^3",
+      "stashBlobSha256": "368228e663105f4e7164af4c3caea192348bc6bd47a414787f02814750215a11",
+      "workingTreeSha256": "368228e663105f4e7164af4c3caea192348bc6bd47a414787f02814750215a11"
+    }
+  ],
+  "allBytesIdentical": true,
+  "productDiffPaths": [
+    "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md",
+    "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Unshipped.md",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/DictionaryInitializer_Specs.cs",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/HarnessIntegrity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs",
+    "tests/ViciOne.ServiceBus.Analyzers.Tests/MessageDataInitializer_Specs.cs"
+  ],
+  "productDiffPathCount": 8,
+  "exactlyTheEightDirectedPaths": true,
+  "noEvidence02PathRestored": true,
+  "otherStashesUntouched": {
+    "supplement": "18e5c59f341843090926afa06c701882af7492c4",
+    "previousWorkPackage": "f312854fec260f3aaa901288fa93c44f75bd649c",
+    "appliedOrDeleted": false
+  },
+  "blanketStashApplyUsed": false,
+  "analyzerSuiteOnRestoredState": {
+    "total": 111,
+    "passed": 111,
+    "failed": 0,
+    "command": "dotnet test tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj -c Release"
+  },
+  "head": "e38203cbf112eeb3354cc394735f28287cdcb748"
+}

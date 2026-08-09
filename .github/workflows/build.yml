@@ -1,591 +1,207 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
-name: ViciOne.ServiceBus
-env:
-  VICIONE_SERVICEBUS_VERSION: 8.5.10
+# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
+#
+# The required ViciOne CI profile. Every job here must really run and must prove a positive test
+# count; a category that executes nothing is rejected by tools/ci/run_test_category.py rather than
+# passing silently. Upstream repository and branch guards are gone: they were structurally false in
+# this fork and made the whole publish chain disappear while the run still looked green.
+#
+# Transports that the fork preserves but ViciOne does not ship live in extended-transports.yml.
+# They stay visible and manually runnable instead of being hidden behind an unsatisfiable condition.
+name: Required CI
+
 on:
   push:
+    branches:
+      - '**'
     paths:
       - 'src/**'
       - 'tests/**'
+      - 'tools/ci/**'
+      - 'build/test-infrastructure/**'
       - 'ViciOne.ServiceBus.sln'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
-      - '**/build.yml'
-    branches:
-      - '**'
+      - '.github/workflows/build.yml'
   pull_request:
     paths:
       - 'src/**'
       - 'tests/**'
+      - 'tools/ci/**'
+      - 'build/test-infrastructure/**'
       - 'ViciOne.ServiceBus.sln'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
-      - '**/build.yml'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
 jobs:
-  compile:
-    name: Build
-    timeout-minutes: 15
+  policy:
+    name: "Required: Policy"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate CI policy
+        run: python3 tools/ci/policy_validator.py
+      - name: Policy self-tests
+        run: python3 tools/ci/test_policy_validator.py
+
+  build:
+    name: "Required: Build"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
-      max-parallel: 2
+      fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'windows-latest']
-    runs-on: ${{ matrix.os }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.x'
-
-      - name: Restore NuGet packages
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
         run: dotnet restore
-        working-directory: ./
-
       - name: Build
         run: dotnet build -c Release --no-restore
-        working-directory: ./
 
-  test-ubuntu:
-    name: Unit Tests
+  analyzer:
+    name: "Required: Analyzer"
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Analyzer tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category analyzer \
+            --project tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj \
+            --evidence-dir artifacts/required/analyzer
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-analyzer
+          path: artifacts/required/analyzer
 
-      - name: Unit Tests
-        run: dotnet test -c Release -f net9.0 --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.Tests
-
-      - name: Test Abstractions
-        run: dotnet test -c Release -f net9.0 --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.Abstractions.Tests
-
-  test-activemq:
-    name: "Transports: ActiveMQ"
-    timeout-minutes: 10
+  core-unit:
+    name: "Required: Core/Unit"
     runs-on: ubuntu-latest
-    services:
-      activemq:
-        image: vicione-servicebus/activemq:latest
-        ports:
-          - "61616:61616"
-          - "8161:8161"
-          - "5672:5672"
+    timeout-minutes: 30
     steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Core tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category core \
+            --project tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj \
+            --evidence-dir artifacts/required/core -- -f net9.0
+      - name: Abstractions tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category abstractions \
+            --project tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj \
+            --evidence-dir artifacts/required/core -- -f net9.0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-core-unit
+          path: artifacts/required/core
 
-      - name: Test ActiveMQ
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.ActiveMqTransport.Tests
-
-  test-sql-transport:
-    name: "Transport: SQL"
-    timeout-minutes: 10
+  rabbitmq:
+    name: "Required: RabbitMQ"
     runs-on: ubuntu-latest
-    services:
-      mssql:
-        image: mcr.microsoft.com/azure-sql-edge
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: "Password12!"
-        ports:
-          - 1433:1433
-      postgres:
-        image: postgres:14.7
-        env:
-          POSTGRES_PASSWORD: "Password12!"
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      # One run path for local and CI: the runner starts the pinned fixture, reads the ephemeral
+      # loopback ports back from Docker, generates the run-scoped account, hands both to the test
+      # process alone and tears the fixture down in a finally block.
+      - name: RabbitMQ tests
+        run: |
+          python3 tools/ci/run_broker_category.py \
+            --broker rabbitmq \
+            --category rabbitmq \
+            --project tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
+            --evidence-dir artifacts/required/rabbitmq \
+            --ports-out artifacts/required/rabbitmq/endpoints.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-rabbitmq
+          path: artifacts/required/rabbitmq
+
+  entity-framework:
+    name: "Required: EntityFrameworkCore"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # No service containers here. The databases come from the same pinned compose definition a developer
+    # uses locally, started through the canonical runner, with a secret generated for this run. The
+    # service containers that stood here used moving image tags and the well known password Password12!,
+    # so a local run and the runner were not the same fixture and the account was not run-scoped.
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Database Transport
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.SqlTransport.Tests
-
-
-  test-azure-service-bus:
-    name: "Transports: Azure Service Bus"
-    if: false # too flaky at this point
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Azure Service Bus
-        env:
-          VICIONE_SERVICEBUS_ASB_KEYVALUE: ${{ secrets.AZURE_SERVICEBUS }}
-          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
-  test-rabbitmq:
-    name: "Transports: RabbitMQ"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      rabbitmq:
-        image: vicione-servicebus/rabbitmq:latest
-        ports:
-          - "5672:5672"
-          - "15672:15672"
-        options: --health-cmd "rabbitmqctl node_health_check" --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test RabbitMQ
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.RabbitMqTransport.Tests
-  test-sqs:
-    name: "Transports: SQS (+S3)"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      localstack:
-        image: localstack/localstack:3.0.2
-        ports:
-          - "4566:4566"
-          - "4571:4571"
-        options: --health-cmd "curl --fail http://localhost:4566/health || exit 1" --health-interval 10s --health-timeout 5s --health-retries 5 --health-start-period 15s
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test SQS
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests
-  test-azure-table:
-    name: "Storage: Azure Table"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Spin up test environment
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: EntityFrameworkCore tests
         run: |
-          docker compose -f docker-compose.yml up -d
-        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
-
-      - name: Test Azure Table
-        env:
-          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
-
-      - name: Stop test environment
-        run: |
-          docker compose -f docker-compose.yml down
-        working-directory: tests/ViciOne.ServiceBus.Azure.Table.Tests
-  test-cosmosdb:
-    name: "Storage: CosmosDB"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'ViciOne.ServiceBus/ViciOne.ServiceBus'
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+          python3 tools/ci/run_broker_category.py \
+            --broker mssql \
+            --broker postgres \
+            --category entity-framework-core \
+            --project tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
+            --evidence-dir artifacts/required/entity-framework \
+            --ports-out artifacts/required/entity-framework/endpoints.json
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          dotnet-version: '10.0.x'
-
-      - name: Test CosmosDB
-        env:
-          VICIONE_SERVICEBUS_COSMOS_ENDPOINT: ${{ secrets.AZURE_COSMOSENDPOINT }}
-          VICIONE_SERVICEBUS_COSMOS_KEY: ${{ secrets.AZURE_COSMOSKEY }}
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.Azure.Cosmos.Tests
-  test-dapper:
-    name: "Storage: Dapper"
-    timeout-minutes: 10
+          name: required-entity-framework
+          path: artifacts/required/entity-framework
+  pack:
+    name: "Required: Pack"
     runs-on: ubuntu-latest
-    services:
-      mssql:
-        image: mcr.microsoft.com/azure-sql-edge
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: "Password12!"
-        ports:
-          - 1433:1433
-    env:
-      # otherwise the client barks
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Dapper
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.DapperIntegration.Tests
-  test-entity-framework:
-    name: "Storage: EntityFramework"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      mssql:
-        image: mcr.microsoft.com/azure-sql-edge
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: "Password12!"
-        ports:
-          - 1433:1433
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: "Password12!"
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    env:
-      # otherwise the client barks
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test EntityFrameworkCore
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
-
-      - name: Test EntityFramework
-        run: dotnet test -c Release --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
-        working-directory: tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests
-  test-marten:
-    name: "Storage: Marten"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: "Password12!"
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Marten
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.MartenIntegration.Tests
-  test-mongo:
-    name: "Storage: MongoDB"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Spin up test environment
-        run: |
-          docker compose -f docker-compose.yml up -d
-        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
-
-      - name: Test MongoDB
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
-
-      - name: Stop test environment
-        run: |
-          docker compose -f docker-compose.yml down
-        working-directory: tests/ViciOne.ServiceBus.MongoDbIntegration.Tests
-  test-nhibernate:
-    name: "Storage: NHibernate"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test NHibernate
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.NHibernateIntegration.Tests
-  test-redis:
-    name: "Storage: Redis"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      redis:
-        image: redis
-        ports:
-          - '6379:6379'
-        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Redis
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.RedisIntegration.Tests
-  test-valkey:
-    name: "Storage: Valkey"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    services:
-      valkey:
-        image: valkey/valkey:8
-        ports:
-          - '6379:6379'
-        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Valkey
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.RedisIntegration.Tests
-  test-hangfire:
-    name: "Scheduler: Hangfire"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Hangfire
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.HangfireIntegration.Tests
-  test-quartz:
-    name: "Scheduler: Quartz"
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test Quartz
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.QuartzIntegration.Tests
-  test-eventhub:
-    name: "Rider: EventHub"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Spin up test environment
-        run: |
-          docker compose -f docker-compose.yml up -d
-        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
-
-      - name: Test EventHub
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        env:
-          VICIONE_SERVICEBUS_EH_NAMESPACE: ${{ secrets.AZURE_EVENTHUB }}
-          VICIONE_SERVICEBUS_AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE }}
-        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
-
-      - name: Stop test environment
-        run: |
-          docker compose -f docker-compose.yml down
-        working-directory: tests/ViciOne.ServiceBus.EventHubIntegration.Tests
-  test-kafka:
-    name: "Rider: Kafka"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Spin up test environment
-        run: |
-          docker compose -f docker-compose.yml up -d
-        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
-
-      - name: Test Kafka
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
-
-      - name: Stop test environment
-        run: |
-          docker compose -f docker-compose.yml down
-        working-directory: tests/ViciOne.ServiceBus.KafkaIntegration.Tests
-
-  test-signalr:
-    name: SignalR
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Test SignalR
-        run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/ViciOne.ServiceBus.SignalR.Tests
-
-  calc-version:
-    name: Calculate Version
-    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Pack runs only after every required gate is green. It builds verifiable run artifacts and
+    # publishes nothing: no nuget.org push, no registry, no external side effect of any kind.
     needs:
-      - compile
-      - test-ubuntu
-      - test-activemq
-      # - test-azure-service-bus
-      - test-rabbitmq
-      - test-sqs
-      - test-sql-transport
-      - test-azure-table
-      - test-cosmosdb
-      - test-dapper
-      - test-entity-framework
-      - test-marten
-      - test-mongo
-      - test-nhibernate
-      - test-redis
-      - test-valkey
-      - test-hangfire
-      - test-quartz
-      # - test-eventhub
-      - test-kafka
-      - test-signalr
-    outputs:
-      version: ${{ steps.v.outputs.version }}
+      - policy
+      - build
+      - analyzer
+      - core-unit
+      - rabbitmq
+      - entity-framework
     steps:
-      - id: v
-        run: |
-          if [ "${{ github.ref }}" = 'refs/heads/master' ]; then
-            echo "version=${VICIONE_SERVICEBUS_VERSION}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${VICIONE_SERVICEBUS_VERSION}-develop.${{ github.run_number }}" >> $GITHUB_OUTPUT
-          fi
-
-  publish:
-    name: Build and Publish NuGets
-    timeout-minutes: 60
-    runs-on: windows-latest
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'ViciOne.ServiceBus/ViciOne.ServiceBus' && success()
-    env:
-      DOTNET_INSTALL_DIR: D:\dotnet
-      NUGET_PACKAGES: D:\.nuget\packages
-    needs:
-      - calc-version
-    steps:
-      - name: Version Output Check
-        run: |
-          echo "${{ needs.calc-version.outputs.version }}"
-
-      - name: Check out code
-        uses: actions/checkout@v5
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.x'
-
-      - name: Build and Pack Solution
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Pack
+        run: dotnet pack -c Release -o artifacts/packages
+      - name: Hash packages
         run: |
-          dotnet build -c Release -p:Version=${{ needs.calc-version.outputs.version }}
-          dotnet pack --no-build -c Release -p:PackageVersion=${{ needs.calc-version.outputs.version }} -o ./artifacts
-
-      - name: Publish NuGets
-        working-directory: artifacts
-        run: |
-          dotnet nuget push * -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate --no-symbols
-
+          set -euo pipefail
+          test -n "$(ls -A artifacts/packages)" || { echo "pack produced no package"; exit 1; }
+          sha256sum artifacts/packages/*.nupkg | tee artifacts/packages/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: required-packages
+          path: artifacts/packages
+          if-no-files-found: error

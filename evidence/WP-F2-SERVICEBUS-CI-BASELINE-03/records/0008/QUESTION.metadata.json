@@ -1,0 +1,60 @@
+{
+  "decisionClass": "PROOF_OR_GATE_CHANGE",
+  "blockedRequirementIds": [
+    "REQ-CI-001",
+    "REQ-CI-002"
+  ],
+  "evidence": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/REQ-CI-002_FLAKY_CONFLICT.json",
+      "sha256": "f01dd7274c68805789a38f6316d825a8790f7dec7b0384f8d99289600ab7b9e4"
+    },
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0008/rabbitmq-nonflaky.trx",
+      "sha256": "20b332e33646ae9fc3812397666f020de606830617042d9c0ecfed9ab4e44a36"
+    }
+  ],
+  "options": [
+    {
+      "id": "OPT-DEFLAKE-ALL",
+      "title": "Alle sechs Faelle urseachlich entflaken und ungefiltert fahren",
+      "pros": [
+        "Das Pflichtgate deckt am Ende mehr ab",
+        "REQ-CI-002 bleibt woertlich erfuellt"
+      ],
+      "cons": [
+        "Arbeit unbekannter Tiefe an fremdem Testbestand",
+        "Die Order-Abhaengigkeit ist Konstruktionsprinzip und kein Defekt",
+        "Verzoegert den Abschluss ohne kalkulierbaren Horizont"
+      ]
+    },
+    {
+      "id": "OPT-EXCLUDE-FLAKY-DECLARED",
+      "title": "Vom Testbestand deklarierte Flaky-Fixtures aus dem Pflichtgate nehmen und benannt ausweisen",
+      "pros": [
+        "Der Ausschluss ist benannt und gezaehlt statt still",
+        "Folgt dem bereits angenommenen Muster der erweiterten Transporte",
+        "Kein Test wird veraendert oder abgeschwaecht",
+        "Pflichtgate wird ehrlich gruen mit 246 von 246 ausgefuehrten Tests"
+      ],
+      "cons": [
+        "35 markierte Stellen bleiben ausserhalb des Pflichtgates",
+        "REQ-CI-002 sagt woertlich ungefiltert und muss ausgelegt werden"
+      ]
+    },
+    {
+      "id": "OPT-KEEP-UNFILTERED",
+      "title": "Ungefiltert lassen und sechs rote Tests im Pflichtgate hinnehmen",
+      "pros": [
+        "Der volle Testbestand bleibt sichtbar im Pflichtlauf",
+        "Keine Auslegung noetig"
+      ],
+      "cons": [
+        "37 von 325 Tests laufen ohnehin nicht",
+        "Dauerhaft rotes Pflichtgate widerspricht dem Auftragsziel",
+        "Ein Gate das immer rot ist wird ignoriert"
+      ]
+    }
+  ],
+  "recommendedOptionId": "OPT-EXCLUDE-FLAKY-DECLARED"
+}

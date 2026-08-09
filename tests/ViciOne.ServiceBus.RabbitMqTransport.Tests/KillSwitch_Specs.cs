@@ -28,7 +28,11 @@ public class Using_the_kill_switch_with_rabbitmq
                 x.AddConsumer<MessageConsumer>();
 
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(options =>
+                    {
+                        options.VHost = "test";
+                        options.ApplyRunScopedCredentials();
+                    });
 
                 x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(10));
 
@@ -42,7 +46,10 @@ public class Using_the_kill_switch_with_rabbitmq
                     cfg.UseKillSwitch(options => options
                         .SetActivationThreshold(9)
                         .SetTripThreshold(10)
-                        .SetRestartTimeout(s: 5));
+// Same reasoning as the core spec: the scenario needs one restart cycle per trip and it
+                        // trips more than once, so five seconds per cycle sits on the edge of the fifteen second
+                        // health wait. The ActiveMQ spec already uses one second.
+                        .SetRestartTimeout(s: 1));
 
                     cfg.ConfigureEndpoints(context);
                 });

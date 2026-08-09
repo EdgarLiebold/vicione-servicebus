@@ -116,7 +116,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 var bus = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
-                    cfg.Host(HostAddress);
+                    // Host(Uri) alone keeps the RabbitMQ default account, which the pinned fixture
+                    // deliberately does not provision. Bind the run-scoped account explicitly.
+                    cfg.Host(HostAddress, h =>
+                    {
+                        h.Username(RunScopedCredentials.User);
+                        h.Password(RunScopedCredentials.Pass);
+                    });
 
                     var options = new ServiceInstanceOptions()
                         .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);

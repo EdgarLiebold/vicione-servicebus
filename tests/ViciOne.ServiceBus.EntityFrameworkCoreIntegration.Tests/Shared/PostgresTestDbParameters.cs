@@ -1,6 +1,7 @@
 // ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
 {
+    using ViciOne.ServiceBus.Tests;
     using System;
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
 
         public void Apply(Type dbContextType, DbContextOptionsBuilder builder)
         {
-            builder.UseNpgsql("host=localhost;user id=postgres;password=Password12!;database=ViciOneServiceBusUnitTests;", m =>
+            // The endpoint and account come from the fixture the runner started. The literal that stood
+            // here addressed the default port with a well known account, so it measured whatever held
+            // that port rather than the pinned fixture.
+            builder.UseNpgsql(RunScopedDatabase.PostgresConnectionString("ViciOneServiceBusUnitTests"), m =>
             {
                 m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 m.MigrationsHistoryTable($"__{dbContextType.Name}");

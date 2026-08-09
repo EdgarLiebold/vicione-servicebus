@@ -21,17 +21,52 @@ namespace ViciOne.ServiceBus.Testing
         Uri _hostAddress;
         Uri _inputQueueAddress;
 
+        /// <summary>Environment variable carrying the user of the run-scoped broker account.</summary>
+        public const string UsernameVariable = "VICIONE_SERVICEBUS_AMQ_USER";
+
+        /// <summary>Environment variable carrying the secret of the run-scoped broker account.</summary>
+        public const string PasswordVariable = "VICIONE_SERVICEBUS_AMQ_PASS";
+
+        /// <summary>Environment variable carrying the host the fixture is reachable on.</summary>
+        public const string HostVariable = "VICIONE_SERVICEBUS_AMQ_HOST";
+
+        /// <summary>Environment variable carrying the OpenWire port Docker bound for this run.</summary>
+        public const string OpenWirePortVariable = "VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT";
+
+        /// <summary>Environment variable carrying the AMQP port Docker bound for this run.</summary>
+        public const string AmqpPortVariable = "VICIONE_SERVICEBUS_AMQ_AMQP_PORT";
+
+        /// <summary>Environment variable carrying the Jolokia port Docker bound for this run.</summary>
+        public const string JolokiaPortVariable = "VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT";
+
+        const int DefaultJolokiaPort = 8161;
+
+        static int ReadPort(string variable, int fallback)
+        {
+            var value = Environment.GetEnvironmentVariable(variable);
+            return int.TryParse(value, out var port) && port > 0 ? port : fallback;
+        }
+
         public ActiveMqTestHarness(string protocol = ActiveMqHostAddress.ActiveMqScheme, string inputQueueName = null)
         {
-            Username = "admin";
-            Password = "admin";
+            // The pinned ViciOne fixture provisions a run-scoped account and publishes ephemeral
+            // loopback ports, so neither the account nor any port may be assumed. The historic
+            // defaults remain only as a fallback for a consumer pointing the harness at its own
+            // broker; the ViciOne run supplies every value through the canonical runner.
+            Username = Environment.GetEnvironmentVariable(UsernameVariable) ?? "admin";
+            Password = Environment.GetEnvironmentVariable(PasswordVariable) ?? "admin";
 
             InputQueueName = inputQueueName ?? "input_queue";
 
-            if (protocol == ActiveMqHostAddress.AmqpScheme)
-                HostAddress = new Uri("amqp://localhost:5672");
-            else
-                HostAddress = new Uri("activemq://localhost:61616");
+            var host = Environment.GetEnvironmentVariable(HostVariable);
+            if (string.IsNullOrWhiteSpace(host))
+                host = "localhost";
+
+            AdminPort = ReadPort(JolokiaPortVariable, DefaultJolokiaPort);
+
+            HostAddress = protocol == ActiveMqHostAddress.AmqpScheme
+                ? new Uri($"amqp://{host}:{ReadPort(AmqpPortVariable, 5672)}")
+                : new Uri($"activemq://{host}:{ReadPort(OpenWirePortVariable, 61616)}");
         }
 
         public Uri HostAddress
@@ -46,7 +81,11 @@ namespace ViciOne.ServiceBus.Testing
 
         public string Username { get; set; }
         public string Password { get; set; }
-        public int AdminPort { get; set; } = 8161;
+        /// <summary>
+        /// Jolokia port of the fixture. The canonical runner publishes an ephemeral loopback port per
+        /// run and passes the port it actually bound through <see cref="JolokiaPortVariable" />.
+        /// </summary>
+        public int AdminPort { get; set; }
         public string AdminPath { get; set; } = "api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost";
         public bool CleanVirtualHost { get; set; } = true;
         public override string InputQueueName { get; }
@@ -108,9 +147,9 @@ namespace ViciOne.ServiceBus.Testing
 
         public override async Task Clean()
         {
-            if (AdminPort != 8161)
-                return;
-
+            // This used to return silently whenever AdminPort differed from the default 8161, which
+            // disabled the entire reset as soon as the fixture published an ephemeral port. A
+            // condition that switches isolation off without saying so is worse than no reset at all.
             var settings = GetHostSettings();
 
             using var connection = settings.CreateConnection();
