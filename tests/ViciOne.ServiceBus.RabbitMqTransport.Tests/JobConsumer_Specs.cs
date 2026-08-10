@@ -57,11 +57,38 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     [TestFixture]
     public class JobConsumer_Specs
     {
+        /// <summary>
+        /// The job service must accept work again after its bus has been stopped and started.
+        /// <para>
+        /// JobService.Stop set a stopping flag and nothing ever cleared it, so a restarted service
+        /// rejected every StartJob with JobServiceStoppingException. The saga retried after its delay
+        /// and was rejected again, without end; the job never completed and this spec timed out.
+        /// </para>
+        /// </summary>
         [Test]
-        [Explicit]
         public async Task Should_cancel_on_shutdown_and_then_restart_the_job()
         {
             await using var provider = new ServiceCollection()
+                // This spec drives the hosted service lifecycle by hand: it stops every service, waits,
+                // and starts them again. Measured, that leaves one connection open at the broker after
+                // the explicit stop, and RabbitMQ.Client recovers it automatically — straight into the
+                // virtual host the next spec has just cleaned. The seven sibling specs in this fixture
+                // then faulted their receive transport with 'ObjectDisposedException on channel', while
+                // the same seven pass when this one is filtered out.
+                //
+                // The subject of this spec is cancel on shutdown and restart, not which virtual host it
+                // runs in, so it gets its own. Nothing it leaves behind can reach the shared one.
+                .ConfigureRabbitMqTestOptions(options =>
+                {
+                    // Created, never cleaned. The clean up runs inside RabbitMqTestHarnessHostedService,
+                    // which is one of the hosted services this spec stops and starts by hand — so
+                    // cleaning on start wiped the virtual host in the middle of the scenario and deleted
+                    // the job sagas the restart is supposed to resume. Measured: the job then never
+                    // completed, at ten, thirty and sixty seconds alike. A virtual host used by this one
+                    // spec needs no cleaning anyway.
+                    options.CleanVirtualHost = false;
+                    options.CreateVirtualHostIfNotExists = true;
+                })
                 .AddViciOneServiceBus(x =>
                 {
                     x.AddOptions<TextWriterLoggerOptions>();
@@ -72,7 +99,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                     x.AddOptions<RabbitMqTransportOptions>()
                         .Configure(options =>
                         {
-                            options.VHost = "test";
+                            options.VHost = "test-job-restart";
                             options.ApplyRunScopedCredentials();
                         });
 
@@ -140,6 +167,16 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 await service.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
             await completed.Task.OrTimeout(TimeSpan.FromSeconds(10));
+
+            // The spec starts the hosted services by hand, so it has to stop them by hand as well.
+            // Leaving them running let the provider dispose channels that were still in use: the
+            // broker reported 'ObjectDisposedException on channel' and the seven sibling specs in this
+            // fixture, plus the job distribution spec, faulted on a receive transport they had nothing
+            // to do with. Nothing above this line changes; this only returns what the spec borrowed.
+            await handle.StopAsync();
+
+            foreach (var service in services.Reverse())
+                await service.StopAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         [Test]

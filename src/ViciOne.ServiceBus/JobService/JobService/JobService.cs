@@ -131,6 +131,15 @@ public class JobService :
 
     public async Task BusStarted(IPublishEndpoint publishEndpoint)
     {
+        // Stop sets this and nothing cleared it again. A bus that is stopped and started once more —
+        // a restart, a host cycling its services, the shutdown-and-restart scenario the job specs
+        // cover — therefore kept a job service that considered itself stopping for good: every
+        // StartJob was rejected with JobServiceStoppingException, the attempt faulted, the saga
+        // retried after its delay, and the same rejection happened again without end. The heartbeat
+        // below is the other half of the state Stop tears down, and that half was always restored;
+        // this flag was simply forgotten.
+        _stopping = false;
+
         await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimit(publishEndpoint))).ConfigureAwait(false);
 
         void PublishHeartbeats(object state)

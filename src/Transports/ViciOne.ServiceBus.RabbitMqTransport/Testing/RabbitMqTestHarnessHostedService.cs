@@ -124,8 +124,52 @@ namespace ViciOne.ServiceBus.Testing
             catch (Exception ex)
             {
                 if (connection.IsOpen)
-                    await connection.CloseAsync(500, $"Completed (not OK): {ex.Message}");
+                {
+                    try
+                    {
+                        await connection.CloseAsync(500, CloseReason($"Completed (not OK): {ex.Message}"));
+                    }
+                    catch (Exception closeException)
+                    {
+                        // Closing is the cleanup for a failure that already happened. If it fails too it
+                        // must not replace what actually went wrong: the original exception was being
+                        // swallowed and callers saw an unrelated one from this line instead.
+                        _logger.LogDebug(closeException, "Closing the connection after a failed clean up faulted");
+                    }
+                }
             }
+        }
+
+
+        /// <summary>
+        /// Fits a connection close reason into what AMQP can carry.
+        /// <para>
+        /// The reason travels in a shortstr, which holds at most 255 bytes. Both close sites built it
+        /// from an exception message, so any message longer than that overflowed the frame buffer and
+        /// threw ArgumentException: "The output byte buffer is too small to contain the encoded data,
+        /// encoding codepage '65001'". Because that happened inside a catch handler, the real failure
+        /// vanished and eight job specs reported an encoding error for a harness start that had failed
+        /// for an entirely different reason.
+        /// </para>
+        /// <para>
+        /// Trimming runs over characters rather than bytes so a multi byte character is never cut in
+        /// half, which would produce a replacement character and a reason nobody can read.
+        /// </para>
+        /// </summary>
+        static string CloseReason(string text)
+        {
+            const int maximumBytes = 255;
+
+            if (Encoding.UTF8.GetByteCount(text) <= maximumBytes)
+                return text;
+
+            // Substring rather than a span: this assembly also targets netstandard2.0, which has no
+            // span overload for GetByteCount. It is a rare error path, so the allocation is cheap.
+            var length = Math.Min(text.Length, maximumBytes);
+            while (length > 0 && Encoding.UTF8.GetByteCount(text.Substring(0, length)) > maximumBytes)
+                length--;
+
+            return text.Substring(0, length);
         }
 
         async Task ConfigureVirtualHost()
@@ -155,7 +199,19 @@ namespace ViciOne.ServiceBus.Testing
             catch (Exception ex)
             {
                 if (connection.IsOpen)
-                    await connection.CloseAsync(500, $"Completed (not OK): {ex.Message}");
+                {
+                    try
+                    {
+                        await connection.CloseAsync(500, CloseReason($"Completed (not OK): {ex.Message}"));
+                    }
+                    catch (Exception closeException)
+                    {
+                        // Closing is the cleanup for a failure that already happened. If it fails too it
+                        // must not replace what actually went wrong: the original exception was being
+                        // swallowed and callers saw an unrelated one from this line instead.
+                        _logger.LogDebug(closeException, "Closing the connection after a failed clean up faulted");
+                    }
+                }
             }
         }
 

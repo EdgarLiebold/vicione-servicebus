@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 30,
+  "requirementIds": [
+    "REQ-CI-002",
+    "REQ-CI-004",
+    "REQ-CI-006",
+    "REQ-CI-007",
+    "REQ-CI-009"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Requirement to evidence matrix for re-slice 0005",
+  "boundSlice": {
+    "revision": "0005",
+    "fileSha256": "098606ff1154a453945943363e8d3af542a535c7f8e61e68c75f89442605f2e0",
+    "contentSha256": "2b64cf2479021c201102945838f90b72b3e0d5153ced2222187b6ccd50dd3f38"
+  },
+  "readingRule": "A gate is green only where its own instrument reports zero failures and a zero exit code.",
+  "gates": [
+    {
+      "gate": "policy",
+      "required": true,
+      "state": "GREEN",
+      "result": "PASS ci-policy all invariants hold; 53 self-tests OK"
+    },
+    {
+      "gate": "build",
+      "required": true,
+      "state": "GREEN",
+      "result": "dotnet build ViciOne.ServiceBus.sln -c Release, exit 0, 0 errors, four target frameworks",
+      "windows": "NOT_EXECUTED locally; the matrix stays visible in the required profile and is not reported as passed"
+    },
+    {
+      "gate": "analyzer",
+      "required": true,
+      "state": "GREEN",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "abstractions",
+      "required": true,
+      "state": "GREEN",
+      "counters": {
+        "total": 76,
+        "executed": 71,
+        "passed": 71,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "core",
+      "required": true,
+      "state": "GREEN",
+      "counters": {
+        "total": 1880,
+        "executed": 1837,
+        "passed": 1837,
+        "failed": 0
+      },
+      "detail": "Two consecutive full runs after re-slice 0005, 1837 of 1837 each."
+    },
+    {
+      "gate": "rabbitmq",
+      "required": true,
+      "state": "GREEN",
+      "counters": {
+        "total": 327,
+        "executed": 307,
+        "passed": 307,
+        "failed": 0
+      },
+      "detail": "Unfiltered. All five cases from record 0027 now execute and pass. Twenty cases are not executed and every one of them is named in the inventory; zero unclassified."
+    },
+    {
+      "gate": "entity-framework",
+      "required": true,
+      "state": "GREEN",
+      "counters": {
+        "total": 159,
+        "executed": 155,
+        "passed": 155,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "pack",
+      "required": true,
+      "state": "GREEN",
+      "result": "exit 0, 33 packages, hashed, nothing published"
+    },
+    {
+      "gate": "activemq",
+      "required": false,
+      "state": "GREEN",
+      "counters": {
+        "total": 144,
+        "executed": 139,
+        "passed": 139,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "public-api",
+      "required": true,
+      "state": "GREEN",
+      "result": "33 assemblies, 27473 members at the baseline and 27488 now, 15 additions, zero removals, zero changes on the messaging surface. None of the four production corrections moved the public surface."
+    },
+    {
+      "gate": "vulnerability",
+      "required": true,
+      "state": "GREEN",
+      "result": "187 findings, 44 high or critical, zero transitive without a resolved dependency path"
+    }
+  ],
+  "summary": {
+    "requiredGates": 10,
+    "requiredGreen": 10,
+    "requiredRed": 0,
+    "openDefects": 0,
+    "freezeReady": true
+  },
+  "productionCorrections": [
+    {
+      "file": "src/ViciOne.ServiceBus/Transports/HostConfigurationRetryExtensions.cs",
+      "what": "A cancellation raised on the linked backoff token is decided from the sources, not from the exception."
+    },
+    {
+      "file": "src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs",
+      "what": "The wait for the on-demand bus endpoint is bounded and reports instead of blocking forever."
+    },
+    {
+      "file": "src/ViciOne.ServiceBus/JobService/JobService/JobService.cs",
+      "what": "BusStarted clears the stopping flag that Stop sets, so a restarted job service accepts work again."
+    },
+    {
+      "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Testing/RabbitMqTestHarnessHostedService.cs",
+      "what": "The AMQP close reason is trimmed to what the protocol carries and a failed close no longer replaces the real failure."
+    }
+  ],
+  "productOwnerAuthorised": [
+    {
+      "id": "D1",
+      "case": "Failure_Specs.Should_properly_fail_on_exclusive_launch",
+      "authorised": "Product owner, 2026-08-10, to be reported to the lead architect",
+      "whatChanged": "The assertion moved to the point where the conflict can arise, the materialisation of the bus endpoint, because on-demand materialisation is deliberate and Start() cannot meet the conflict. The asserted type is exact, not relaxed to a base type.",
+      "whatDidNotChange": "The on-demand behaviour itself, and the fact that a conflict must be reported."
+    },
+    {
+      "id": "D3",
+      "case": "JobConsumer_Specs.Should_cancel_on_shutdown_and_then_restart_the_job",
+      "authorised": "Product owner, 2026-08-10, to be reported to the lead architect",
+      "whatChanged": "The spec runs in its own virtual host, created but not cleaned, so the hosted service restart it performs cannot wipe the sagas mid-scenario and cannot disturb its siblings.",
+      "authorisationNotUsed": "A budget increase was also authorised and is not used. It was tried at thirty and sixty seconds and did not help, because the cause was the mid-scenario clean up, not the budget. The original ten seconds are restored."
+    }
+  ],
+  "notWeakened": [
+    "No assertion was relaxed; one was strengthened and one moved under product owner authorisation.",
+    "No timeout was extended in the delivered state.",
+    "No retry was added.",
+    "No ordering was loosened.",
+    "No filter was introduced in the required path.",
+    "No [Ignore] was added; five [Explicit] were removed so the cases run.",
+    "No case was reclassified as not due; the open list is empty because every case was fixed.",
+    "Directory.Packages.props is untouched; RabbitMQ.Client stays at 7.2.1."
+  ],
+  "notCleared": [
+    "MessagePack 3.1.6 / GHSA-hv8m-jj95-wg3x in ViciOne.ServiceBus.MessagePack remains a mandatory follow-up order."
+  ]
+}

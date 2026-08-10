@@ -40,12 +40,20 @@ namespace ViciOne.ServiceBus.Transports
                         await factory().ConfigureAwait(false);
                         return;
                     }
-                    catch (OperationCanceledException exception) when (exception.CancellationToken == stoppingToken)
-                    {
-                        throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
-                    }
                     catch (OperationCanceledException)
                     {
+                        // The backoff above waits on tokenSource.Token, which is linked from both
+                        // sources, so a cancellation raised there carries the linked token and equals
+                        // neither of them. Deciding from the exception's token therefore never reached
+                        // the stopping branch, and a caller that cancelled its own publish received a
+                        // TaskCanceledException bound to a token it had never seen. The sources are
+                        // asked directly instead, in the same order and with the same outcome the two
+                        // explicit checks in this method already use.
+                        if (stoppingToken.IsCancellationRequested)
+                            throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
+
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         throw;
                     }
                     catch (Exception exception)

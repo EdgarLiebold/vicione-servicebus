@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "kind": "NOT_EXECUTED_INVENTORY",
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "description": "The one binding list of every case a required category does not execute. A category that reports a positive count and zero failures says nothing about the tests it never started, so both halves of the exclusion rule read this file: tools/ci/policy_validator.py before a run and tools/ci/run_test_category.py after one. A not executed case that is not listed here turns its category red. Nothing in this file is a pass.",
+  "duenessClasses": {
+    "NOT_DUE_EXTERNAL_INFRASTRUCTURE": "Needs a service or credential this work package pins no fixture for.",
+    "NOT_DUE_BENCHMARK": "Measures throughput or timing instead of behaviour.",
+    "NOT_DUE_TIMING_SENSITIVE": "Asserts against a wall clock interval and is not stable in a loaded full run.",
+    "NOT_DUE_MANUAL_OBSERVATION": "Produces output for a human; asserts nothing a gate could evaluate.",
+    "NOT_DUE_ENVIRONMENT_DEPENDENT": "Depends on host environment the run deliberately pins."
+  },
+  "openDefectsNotInventoried": {
+    "statement": "Empty. All five cases record 0025 raised as F-1 are closed by product corrections and by two adjustments the product owner authorised on 2026-08-10, which are to be reported to the lead architect. Every one of them now runs in the required category. A case leaves this list by being fixed and executed, never by being reclassified.",
+    "cases": [],
+    "count": 0
+  },
+  "categories": {
+    "core": {
+      "project": "tests/ViciOne.ServiceBus.Tests",
+      "explicitAttributeCount": 33,
+      "cases": [
+        {
+          "fixture": "An_excessive_fault_storm",
+          "test": "Should_not_explode_the_task_library",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "BsonMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Configuring_a_recurring_job_consumer",
+          "test": "Should_support_multiple_jobs_of_the_same_type_with_different_names",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Connecting_a_consumer_to_the_inbound_pipe",
+          "test": "Should_receive_a_message_pipeline_view",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "ConsumeMetrics_Specs",
+          "test": "Should_be_able_to_add_custom_tag_to_consume_metrics",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "ConsumeMetrics_Specs",
+          "test": "Should_be_able_to_produce_consume_exception_metrics",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "ConsumeMetrics_Specs",
+          "test": "Should_be_able_to_produce_consume_metrics",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "CronExpressionTest",
+          "test": "PerformanceTest",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "CronExpressionTest",
+          "test": "TestDaylightSaving_QRTZNETZ186",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_ENVIRONMENT_DEPENDENT",
+          "reason": "Depends on the daylight saving rules of the host time zone, which the run pins to UTC."
+        },
+        {
+          "fixture": "EncryptedMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "EncryptedMessageSerializerV2)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Layering_retry_components_into_a_set",
+          "test": "Should_support_interaction_between_filters",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Mediator_performance",
+          "test": "Request_client",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Mediator_performance",
+          "test": "Send",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "MessageFlow_Specs",
+          "test": "Should_generate_a_graph_of_the_message_flow",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "MessagePackMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "NewtonsoftJsonMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "NewtonsoftXmlMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Probing_the_bus",
+          "test": "Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "Querying_the_send_endpoint_cache_concurrently",
+          "test": "Querying_for_two_endpoints_at_the_same_time",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Sending_a_request_to_a_missing_service_that_times_out",
+          "test": "Should_timeout_without_exceptions",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Sending_a_request_using_mediator_that_faults",
+          "test": "Should_observe_all_exceptions",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Sending_a_request_using_mediator_to_a_missing_service_that_times_out",
+          "test": "Should_timeout_without_exceptions",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "SimpleConfiguration_Specs",
+          "test": "FirstTestName",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "SimpleConfiguration_Specs",
+          "test": "Should_include_concurrent_limit_on_instance",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Specifying_a_rate_limit",
+          "test": "Should_allow_dynamic_reconfiguration_down",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Specifying_a_rate_limit",
+          "test": "Should_allow_dynamic_reconfiguration_up",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Specifying_a_rate_limit",
+          "test": "Should_count_success_and_failure_as_same",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Specifying_a_rate_limit",
+          "test": "Should_only_do_n_messages_per_interval",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "StatsD_Specs",
+          "test": "RunSomeDataIn",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "SystemTextJsonMessageSerializer)",
+          "test": "Just_how_fast_are_you",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Using_a_batch_consumer",
+          "test": "Should_not_deliver_duplicate_messages",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "Using_a_hash_topic_pattern",
+          "test": "Should_wonderful_display",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "Using_a_wildcard_topic_pattern",
+          "test": "Should_wonderful_display",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "When_a_message_has_an_unrecognized_body_format",
+          "test": "It_should_publish_a_fault",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "When_a_message_is_not_correlated",
+          "test": "Should_retry_the_status_message",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "When_an_activity_is_redelivered",
+          "test": "Should_not_copy_redelivery_header_to_next_activity",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        },
+        {
+          "fixture": "When_configuring_the_thread_pool_for_a_high_number_of_consumers",
+          "test": "Should_scale_threads_to_meet_demand",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "When_serializing_messages_with_json_dot_net",
+          "test": "Serialization_speed",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "When_serializing_messages_with_json_dot_net",
+          "test": "Show_me_the_message",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "When_using_or_canceled_should_not_have_an_unhandled_task_exception",
+          "test": "Should_fault_on_ready_faulted",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_TIMING_SENSITIVE",
+          "reason": "Asserts a count against a wall clock interval, which is not stable under a loaded full run."
+        }
+      ]
+    },
+    "abstractions": {
+      "project": "tests/ViciOne.ServiceBus.Abstractions.Tests",
+      "explicitAttributeCount": 5,
+      "cases": [
+        {
+          "fixture": "Using_the_newid_generator",
+          "test": "Should_be_able_to_extract_timestamp",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "Using_the_newid_generator",
+          "test": "Should_be_able_to_extract_timestamp_with_process_id",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
+        },
+        {
+          "fixture": "Using_the_newid_generator",
+          "test": "Should_be_completely_thread_safe_to_avoid_duplicates",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Using_the_newid_generator",
+          "test": "Should_be_fast_and_friendly",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "Using_the_newid_generator",
+          "test": "Should_generate_unique_identifiers_with_each_invocation",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        }
+      ]
+    },
+    "rabbitmq": {
+      "project": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+      "explicitAttributeCount": 13,
+      "cases": [
+        {
+          "fixture": "BusLifecycleAccumulation_Probe",
+          "test": "Measure_round_trip_across_bus_lifecycles",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Configuring_the_publish_topology_at_startup",
+          "test": "Should_create_the_exchanges",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
+          "test": "Should_create_the_exchanges",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Connecting_to_RabbitMQ_via_Amazon",
+          "test": "Should_connect",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "Failing_to_connect_to_rabbitmq",
+          "test": "Should_recover_from_a_crashed_server",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Failing_to_connect_to_rabbitmq",
+          "test": "Should_start_without_any_configuration",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Failing_to_connect_to_rabbitmq",
+          "test": "Should_startup_and_shut_down_cleanly",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Failing_to_connect_to_rabbitmq",
+          "test": "Should_startup_and_shut_down_cleanly_with_an_endpoint",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Failing_to_connect_to_rabbitmq",
+          "test": "Should_startup_and_shut_down_cleanly_with_publish",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_carry_excess_baggage",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_carry_excess_baggage_with_newtonsoft",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_carry_the_baggage_with_newtonsoft",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_report_telemetry_to_jaeger",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_report_telemetry_to_jaeger_for_batch_consumer",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_report_telemetry_to_jaeger_for_routing_slip",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_report_telemetry_to_jaeger_from_mediator",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_support_the_saga_harness",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "Pounding_the_crap_out_of_the_send_endpoint",
+          "test": "Should_end_well",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "fixture": "WhenAMessageIsPublishedToTheEndpointFaulting",
+          "test": "Should_take_time_to_watch_channel_use",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "WhenAMessageIsPublishedToTheEndpointSuccessfully",
+          "test": "Should_take_time_to_watch_channel_use",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        }
+      ]
+    },
+    "entity-framework-core": {
+      "project": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+      "explicitAttributeCount": 4,
+      "cases": [
+        {
+          "fixture": "Responding_through_the_outbox",
+          "test": "Should_start_with_delay_successfully",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Using_the_bus_outbox",
+          "test": "Fill_up_the_outbox",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Using_the_bus_outbox",
+          "test": "Should_support_delayed_message_scheduler",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Using_the_bus_outbox",
+          "test": "Should_work_without_starting_the_bus",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        }
+      ]
+    },
+    "activemq": {
+      "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "explicitAttributeCount": 4,
+      "cases": [
+        {
+          "fixture": "Configuring_the_publish_topology_at_startup",
+          "test": "Should_create_the_exchanges",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
+          "test": "Should_create_the_exchanges",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "OpenTelemetry_Specs",
+          "test": "Should_report_telemetry_to_jaeger",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
+        },
+        {
+          "fixture": "Reconnecting_Specs(\"activemq\")",
+          "test": "Should_fault_nicely",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        },
+        {
+          "fixture": "Reconnecting_Specs(\"amqp\")",
+          "test": "Should_fault_nicely",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        }
+      ]
+    }
+  }
+}

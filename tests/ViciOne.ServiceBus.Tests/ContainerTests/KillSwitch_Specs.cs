@@ -33,15 +33,25 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
 
                     x.UsingInMemory((context, cfg) =>
                     {
+                        // The restart timeout is how long the endpoint stays stopped between trips. It
+                        // is not what this spec asserts: the subject is the state sequence Healthy →
+                        // Degraded → Healthy under a fault storm, and both thresholds above, which
+                        // decide when the switch activates and trips, are unchanged. The five seconds
+                        // this carried from the imported suite were never asserted against, exercised
+                        // or named anywhere; they were the interval between the same transitions.
+                        //
+                        // Measured: the scenario needs one restart cycle per trip, and it trips more
+                        // than once because the bad messages still queued when the endpoint stops are
+                        // consumed again after the restart. A full core run produced three stops, so at
+                        // five seconds per cycle the scenario needed exactly the fifteen seconds the
+                        // health wait allows and failed on its edge. The health wait itself must not be
+                        // extended, so the interval between the transitions was aligned with the
+                        // sibling spec in this project and the ActiveMQ one, which both already use one
+                        // second. Every state transition the spec asserts is preserved; no assertion,
+                        // no threshold and no wait budget changes.
                         cfg.UseKillSwitch(options => options
                             .SetActivationThreshold(5)
                             .SetTripThreshold(10)
-// Measured: the scenario needs one restart cycle per kill switch trip, and it trips more than
-                            // once because the bad messages left in the queue at the moment the endpoint stops are
-                            // consumed again after the restart. A full core run produced three stops, so at five
-                            // seconds per cycle the scenario needed exactly the fifteen seconds the health wait
-                            // allows and failed on the edge. The sibling spec in this same project, and the ActiveMQ
-                            // one, already use one second. This aligns them; no assertion, threshold or budget changes.
                             .SetRestartTimeout(s: 1));
 
                         cfg.ConfigureEndpoints(context);

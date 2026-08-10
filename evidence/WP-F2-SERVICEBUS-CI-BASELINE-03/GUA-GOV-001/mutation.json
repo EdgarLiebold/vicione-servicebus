@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "GUA-GOV-001",
+  "recordSequence": 26,
+  "kind": "MUTATION",
+  "mutants": [
+    {
+      "id": "DROP:GUARANTEE:GUA-GOV-001",
+      "mutation": "Remove the public overload Task Publish<T>(T, CancellationToken) from IPublishEndpoint",
+      "killedBy": [
+        "compiler",
+        "surface comparison"
+      ],
+      "compiler": {
+        "command": "dotnet build src/ViciOne.ServiceBus.Abstractions/... -c Release",
+        "exitCode": 1
+      },
+      "comparison": {
+        "result": "FAIL api-surface 1 messaging surface change(s)",
+        "detail": "method ViciOne.ServiceBus.IPublishEndpoint.Publish(2)"
+      },
+      "note": "The first run of this mutant survived the comparison and that was a real defect in the instrument: overloads with the same parameter count rendered as one line, so a set difference could not see one of them go. Repeated lines are now numbered, and the mutant is killed. The defect was found by the mutation, which is what the mutation is for."
+    },
+    {
+      "id": "OWNER:GUARANTEE:GUA-GOV-001",
+      "mutation": "Claim the guarantee without naming its owner or anchor",
+      "killedBy": [
+        "slice binding"
+      ],
+      "detail": "The slice binds GUA-GOV-001 to owner A13 at anchor §5 with proof profile ENGINEERING. This record carries the same subject id, and a proof written against any other subject does not satisfy the contract's evidenceTarget path."
+    },
+    {
+      "id": "BEHAVIOR:GUARANTEE:GUA-GOV-001",
+      "mutation": "Change the behaviour of a public member without changing its signature",
+      "killedBy": [
+        "spec"
+      ],
+      "detail": "This is exactly what happened to ActiveMqTestHarness.Clean, and a signature comparison cannot see it. Cleaning_the_broker.Should_not_disable_itself_on_a_non_default_admin_port asserts the changed behaviour directly: with a non-default admin port Clean must attempt the reset instead of returning silently."
+    },
+    {
+      "id": "TEST-SABOTAGE:GUARANTEE:GUA-GOV-001",
+      "mutation": "Disable the proof instead of the subject",
+      "killedBy": [
+        "policy validator"
+      ],
+      "detail": "Six sabotage paths through the required profile were measured; all six are rejected. See records/0026/REQ-CI-007_POLICY_SABOTAGE_MATRIX.json."
+    }
+  ],
+  "result": "ALL_KILLED"
+}

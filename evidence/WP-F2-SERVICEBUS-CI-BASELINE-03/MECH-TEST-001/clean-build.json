@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "MECH-TEST-001",
+  "recordSequence": 26,
+  "kind": "CLEAN_BUILD",
+  "command": "python3 tools/ci/policy_validator.py && python3 tools/ci/test_policy_validator.py",
+  "exitCode": 0,
+  "selfTests": {
+    "before": 41,
+    "after": 53,
+    "result": "OK"
+  },
+  "why": "The mechanism is standard library tooling with no build of its own, so its clean state is the validator passing on the repository together with its own self-tests."
+}

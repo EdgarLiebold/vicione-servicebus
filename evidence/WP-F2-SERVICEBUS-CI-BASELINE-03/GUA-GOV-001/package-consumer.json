@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "GUA-GOV-001",
+  "recordSequence": 26,
+  "kind": "PACKAGE_CONSUMER",
+  "statement": "The surface a consumer sees is read from the built assemblies that go into the packages, so the comparison above is the consumer view. The package artifacts and their hashes are bound in the pack record.",
+  "boundIn": "records/0026/REQ-CI-004_PACK.json",
+  "consumerVisibleChange": {
+    "member": "ViciOne.ServiceBus.Testing.ActiveMqTestHarness.Clean()",
+    "change": "The guard 'if (AdminPort != 8161) return;' is gone. For a consumer on a non-default admin port the method now performs the reset it always promised instead of returning silently.",
+    "documented": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Testing/ActiveMqTestHarness.cs",
+    "bound": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/CleanSemantics_Specs.cs"
+  }
+}

@@ -31,6 +31,64 @@ class CategoryError(RuntimeError):
 TEST_TIMEZONE = "UTC"
 ZERO_COUNTERS = {"total": 0, "executed": 0, "passed": 0, "failed": 0, "notExecuted": 0}
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+NOT_EXECUTED_INVENTORY = REPO_ROOT / "build/test-infrastructure/not-executed-inventory.json"
+
+
+def read_not_executed(trx_path: Path) -> list[str]:
+    """Every case the run did not execute, as 'Fixture.Test'.
+
+    The TRX summary is no help here: its notExecuted counter reads 0 even when total and executed
+    differ by twenty-five, so the only reliable source is the result list itself.
+    """
+    if not trx_path.is_file():
+        return []
+    try:
+        root = ElementTree.parse(trx_path).getroot()
+    except ElementTree.ParseError:
+        return []
+
+    definitions = {}
+    for definition in root.findall("t:TestDefinitions/t:UnitTest", TRX_NAMESPACE):
+        method = definition.find("t:TestMethod", TRX_NAMESPACE)
+        if method is None:
+            continue
+        class_name = method.attrib.get("className", "").split(",")[0]
+        definitions[definition.attrib.get("id")] = (
+            f"{class_name.split('.')[-1]}.{method.attrib.get('name', '')}"
+        )
+
+    names = []
+    for result in root.findall("t:Results/t:UnitTestResult", TRX_NAMESPACE):
+        # Only cases that really did not run. Reading this as "anything but Passed" also swept up
+        # failures, so a failing test was reported as an unclassified skip as well and the two
+        # rejections said different things about the same case.
+        if result.attrib.get("outcome") != "NotExecuted":
+            continue
+        name = definitions.get(result.attrib.get("testId"))
+        if name and name not in names:
+            names.append(name)
+    return sorted(names)
+
+
+def inventoried_cases(category: str) -> set[str] | None:
+    """The cases the inventory permits this category to leave unexecuted.
+
+    None means the inventory could not be read at all, which is itself a failure: without it there
+    is no statement about what the category skips, and a required category may not skip silently.
+    """
+    if not NOT_EXECUTED_INVENTORY.is_file():
+        return None
+    try:
+        data = json.loads(NOT_EXECUTED_INVENTORY.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    entry = data.get("categories", {}).get(category)
+    if entry is None:
+        # A category the inventory does not mention is a category that skips nothing.
+        return set()
+    return {f"{case.get('fixture')}.{case.get('test')}" for case in entry.get("cases", [])}
+
 
 def read_counters(trx_path: Path) -> dict[str, int]:
     """Read the authoritative counters from a TRX result file.
@@ -83,6 +141,9 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
 
     completed = subprocess.run(command, text=True, capture_output=True, env=environment)
     counters = read_counters(trx_path)
+    skipped = read_not_executed(trx_path)
+    permitted = inventoried_cases(category)
+    unlisted = sorted(set(skipped) - permitted) if permitted is not None else skipped
 
     record = {
         "schemaVersion": 1,
@@ -94,6 +155,8 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
         "exitCode": completed.returncode,
         "counters": counters,
         "trxProduced": trx_path.is_file(),
+        "notExecuted": skipped,
+        "notExecutedUnlisted": unlisted,
     }
     # Written before the gate is evaluated: a rejected category must leave evidence too.
     (evidence_dir / f"{category}.json").write_text(
@@ -109,6 +172,18 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
         raise CategoryError(f"Required category '{category}' executed no test at all; every test was skipped or filtered.")
     if counters["failed"] > 0:
         raise CategoryError(f"Required category '{category}' reported {counters['failed']} failing test(s).")
+    # A green category says nothing about the cases it never started. Every one of those has to be
+    # named in the inventory, with a reason, before the category may be read as a proof.
+    if permitted is None:
+        raise CategoryError(
+            f"Required category '{category}' has no readable not-executed inventory at "
+            f"{NOT_EXECUTED_INVENTORY.relative_to(REPO_ROOT)}; a required category may not skip silently."
+        )
+    if unlisted:
+        raise CategoryError(
+            f"Required category '{category}' did not execute {len(unlisted)} case(s) that the "
+            f"inventory does not name: {', '.join(unlisted)}."
+        )
     if completed.returncode != 0:
         raise CategoryError(f"Required category '{category}' exited with {completed.returncode}.")
 

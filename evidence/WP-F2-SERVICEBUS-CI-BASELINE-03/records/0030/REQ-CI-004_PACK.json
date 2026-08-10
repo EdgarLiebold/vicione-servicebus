@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "recordSequence": 30,
+  "category": "pack",
+  "requirementIds": [
+    "REQ-CI-004"
+  ],
+  "command": "dotnet pack ViciOne.ServiceBus.sln -c Release -o artifacts/packages --nologo -v minimal",
+  "exitCode": 0,
+  "packageCount": 33,
+  "publication": {
+    "pushed": false,
+    "statement": "Nothing is published; the validator rejects every publish path."
+  },
+  "notCleared": "ViciOne.ServiceBus.MessagePack still carries the High advisory through MessagePack 3.1.6 (GHSA-hv8m-jj95-wg3x). The green pack gate is not a clearance of it and it remains a mandatory follow-up order.",
+  "buildOutputRemoved": "artifacts/ is deleted after hashing; it is not in any write scope and must not enter the freeze.",
+  "packages": [
+    {
+      "package": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "141e7104f96f2ea3f6e2e109324db173bd7aba6fa6a47ea70382c3fdbbdcee66"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "746e549349acdb7116fddc80747c5b67fabce0aa34fa8c529041aa786dc9cf6a"
+    },
+    {
+      "package": "ViciOne.ServiceBus.ActiveMQ.1.0.0.nupkg",
+      "sha256": "ef941dc9b14a3e984e2e93b28c6a66d1b92fdcd3709e6bf7e69c2cf279c7556a"
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "1c19bc3a30d5a4c49810933c77da4c66cd12ca5a4a972d98a19fa9115faea6c2"
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonSQS.1.0.0.nupkg",
+      "sha256": "dd3e6af655a2ab84bf42289bbcab758e5e6e9b60723478efd77b8c0691a70c7e"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg",
+      "sha256": "f0277c2cee29b8cd528458d8c5b916666a3b011097dc44e83e1c15580136cfd0"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Cosmos.1.0.0.nupkg",
+      "sha256": "1f50ca902cf6980126664db6d14660445f875156ce00e9e0ca0588a187c48deb"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Cosmos.Table.1.0.0.nupkg",
+      "sha256": "54010c5d6525d1baae68cf67f190b0c3a43f395767fd2526378f50991e5b07b1"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg",
+      "sha256": "f14f11f31d6638fecc73e652b572529c6a2883f58024314ac0b307b884de6955"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg",
+      "sha256": "7c3596cd4271c043be1b8b3bdaf84bc732dfee0ff18f3cfdae7e7155863dee51"
+    },
+    {
+      "package": "ViciOne.ServiceBus.DapperIntegration.1.0.0.nupkg",
+      "sha256": "5d8aed0e97aa152f64654261ab08de4cb0caa5d019981d12e4c810f477f4d28e"
+    },
+    {
+      "package": "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sha256": "e4a80e23ffea51128858ec38ea64f9764b32ae3fd7555bcfcf6fa0c6d230ed1c"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFramework.1.0.0.nupkg",
+      "sha256": "9acd896749a1c315d097054dd65c4629ceb17bce5458aaf157e4f6e0fd08e684"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "fb781aa586311c7a502854c57bd546643c8cd94462ef9e710d8ee65041f4a1de"
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHub.1.0.0.nupkg",
+      "sha256": "1f0e0f238c4a2fd1b607ae423c7dfb79e4679593cb5da10e612fa5568d769b68"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Hangfire.1.0.0.nupkg",
+      "sha256": "e629e4b64ce0d4d1ce93867d3512fe79767bf5d51769317df0d1d1a32e5b2d6f"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Interop.NServiceBus.1.0.0.nupkg",
+      "sha256": "9b217b132e8b2cfaf5d57837b7c4d323b2a5abc1995bfac52c3302459a6af9a7"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Kafka.1.0.0.nupkg",
+      "sha256": "e80614564d9060426165c60c59b0352ef029734b90c5b035296fda9da896b481"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Marten.1.0.0.nupkg",
+      "sha256": "775549c2663f399dd0091feb1a09f0a3fd75be996c73db232db0a311eda8ef68"
+    },
+    {
+      "package": "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "sha256": "2942742c07676f6c9113d900ef6c8bf3fc65006417fb41ff7250db54dd72102b"
+    },
+    {
+      "package": "ViciOne.ServiceBus.MongoDb.1.0.0.nupkg",
+      "sha256": "40347573ed2820f66e38071ba9e1d877f1c9e656d1627c0eb0f459ab28392d13"
+    },
+    {
+      "package": "ViciOne.ServiceBus.NHibernate.1.0.0.nupkg",
+      "sha256": "ca09faaad0252ba2b2dc206ef6258fe59bcd572b9c384c0ae0966af6835bb873"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Newtonsoft.1.0.0.nupkg",
+      "sha256": "175d7a4e737ef375e6e475acd7b7343cf4b143ce833b2d9f775b3d6fcef82897"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Quartz.1.0.0.nupkg",
+      "sha256": "726ea75a33b6b7595278b548a4ca82bb7c981b9bb86755d5a28a5d89d59d8d58"
+    },
+    {
+      "package": "ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg",
+      "sha256": "89a4bb1786a0cb00cda72c105af5273a1cd5f02d98a292018256537a523e794c"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Redis.1.0.0.nupkg",
+      "sha256": "43b34e347a724fce34b2fa6e660c7db5f37f74eab4fafcf80e015934dbce50e9"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SignalR.1.0.0.nupkg",
+      "sha256": "939bbbd7d9e14083dcd092126322f574d07b600e386cd99d23f4ccae88ba77a7"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSQL.1.0.0.nupkg",
+      "sha256": "7de81907ffbfb6487666fa1ab70de54a2febdbb546fec6c38b6ac12cbc120a25"
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg",
+      "sha256": "8f6d87a4eeffecbd52c11ee031c6ebdeea2babb24840e6ed8fe7732baf579107"
+    },
+    {
+      "package": "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg",
+      "sha256": "4e7e80dea8e7444bb4987dc6dd94abd5fef3186ef96d51c7ff9a101ee4613f58"
+    },
+    {
+      "package": "ViciOne.ServiceBus.TestFramework.1.0.0.nupkg",
+      "sha256": "98f52c0f04887c438b7577ce83478c2e7ea1bf75298981a67a0ff4ac7afdb0d8"
+    },
+    {
+      "package": "ViciOne.ServiceBus.WebJobs.EventHubs.1.0.0.nupkg",
+      "sha256": "807cd57dac9646b3d0f8057ce55f92d5ab6a5e9aebc9d8fbc1872663f18d9621"
+    },
+    {
+      "package": "ViciOne.ServiceBus.WebJobs.ServiceBus.1.0.0.nupkg",
+      "sha256": "34bcec10fb73316f1b4998265e6a41f4394d57e3afa59d3e2563e7bc849e6394"
+    }
+  ]
+}

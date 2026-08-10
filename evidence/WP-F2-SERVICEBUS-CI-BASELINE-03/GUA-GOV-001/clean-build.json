@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "GUA-GOV-001",
+  "recordSequence": 26,
+  "kind": "CLEAN_BUILD",
+  "command": "dotnet build ViciOne.ServiceBus.sln -c Release --nologo -v minimal",
+  "exitCode": 0,
+  "errors": 0,
+  "targetFrameworks": [
+    "netstandard2.0",
+    "net8.0",
+    "net9.0",
+    "net10.0"
+  ],
+  "boundIn": "records/0026/REQ-CI-002_BUILD_GATE.json",
+  "why": "A surface can only be read from assemblies that exist, so the clean build is the precondition of the whole proof."
+}

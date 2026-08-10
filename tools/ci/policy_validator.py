@@ -45,6 +45,22 @@ CANONICAL_RUNNER = "tools/ci/run_broker_category.py"
 BROKER_CATEGORIES = ("rabbitmq", "activemq")
 KNOWN_CREDENTIALS = ("guest", "admin")
 
+# The single binding list of everything a required category does not execute. Both halves of the
+# exclusion rule read it: this validator before a run, run_test_category.py after one.
+NOT_EXECUTED_INVENTORY = "build/test-infrastructure/not-executed-inventory.json"
+
+# The guard that keeps the historic localhost/guest defaults out of the required broker run.
+RUN_SCOPED_GUARD_FILE = "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestSetUpFixture.cs"
+RUN_SCOPED_GUARD_METHOD = "RequireRunScopedCredentials"
+RUN_SCOPED_GUARD_VARIABLES = (
+    "UsernameVariable", "PasswordVariable", "HostVariable", "PortVariable", "ManagementPortVariable",
+)
+
+# A required job runs on every push and pull request. A job level condition can only ever reduce
+# that, and an unsatisfiable one removes the category while the run still reports success. Step
+# level conditions are unaffected: they sit deeper and cannot remove the job.
+REQUIRED_JOB_CONDITION = re.compile(r"^    if:", re.M)
+
 # Ports a broker fixture listens on. A spec that writes one of these literally cannot be addressing
 # the run-scoped fixture, because that one is published on an ephemeral port chosen per run.
 # 61618 is included deliberately: it was the fixed Artemis port of the imported baseline.
@@ -83,6 +99,16 @@ class Policy:
     def read(self, relative: str) -> str | None:
         path = self.root / relative
         return path.read_text(encoding="utf-8") if path.is_file() else None
+
+    @staticmethod
+    def job_section(body: str, job: str) -> str:
+        """The body of one workflow job, cut at the next job rather than the next indented line."""
+        marker = f"\n  {job}:"
+        if marker not in body:
+            return ""
+        rest = body.split(marker, 1)[1]
+        following = re.search(r"\n  [A-Za-z][\w-]*:\s*$", rest, re.M)
+        return rest[: following.start()] if following else rest
 
     # -- rules ---------------------------------------------------------------------------------
 
@@ -180,9 +206,7 @@ class Policy:
                 continue
             # Cut at the next job, which is a two-space indented key at column three, not at the
             # next indented line of any kind.
-            rest = body.split(marker, 1)[1]
-            following = re.search(r"\n  [A-Za-z][\w-]*:\s*$", rest, re.M)
-            section = rest[: following.start()] if following else rest
+            section = self.job_section(body, category)
             if CANONICAL_RUNNER not in section:
                 self.fail("canonical-runner",
                           f"broker category '{category}' does not go through {CANONICAL_RUNNER}; "
@@ -209,19 +233,144 @@ class Policy:
                                   f"{relative} makes the well known account '{credential}' effective: {line.strip()}")
 
     def check_no_required_test_masking(self) -> None:
-        """The required path may not filter, skip or ignore its way to green."""
+        """The required path may not filter, skip or ignore its way to green.
+
+        This used to match a quoted category predicate. That was one spelling of one selector: the
+        same exclusion written with single quotes, or written against FullyQualifiedName, Name or
+        the NUnit selector, walked straight past it. A required category is defined by running
+        everything it contains, so no selector is admissible here at all and the rule matches the
+        switch rather than the predicate behind it.
+        """
         workflow = self.read(".github/workflows/build.yml")
         if workflow is None:
             return
         body = strip_comments(workflow)
         for pattern, detail in (
-            (r"--filter\s+\"?Category\s*!=", "the required path filters a test category"),
-            (r"--filter\s+\"?TestCategory\s*!=", "the required path filters a test category"),
+            (r"--filter\b", "the required path selects a subset of its tests"),
+            (r"NUnit\.Where", "the required path applies an NUnit selector"),
+            (r"--settings\b", "the required path loads a run settings file, which can carry a filter"),
+            (r"TestCaseFilter", "the required path applies a test case filter"),
             (r"--blame-hang", "the required path masks hangs instead of failing"),
             (r"VSTEST_.*SKIP", "the required path sets a skip switch"),
         ):
             if re.search(pattern, body):
                 self.fail("test-masking", f"{detail}: pattern '{pattern}'")
+
+    def check_no_silent_test_exclusion(self) -> None:
+        """Every test the required categories do not execute is named in one inventory.
+
+        A category that reports a positive count and zero failures says nothing about the tests it
+        never started. NUnit offers two ways to leave one out, and they are treated differently on
+        purpose:
+
+          [Ignore]    never appears in this repository and is rejected outright. It disables a case
+                      without a run time decision, which is exactly the regression this rule exists
+                      for.
+          [Explicit]  is inherited from the imported suite for cases that genuinely cannot run in a
+                      required category. Each of them is listed in the inventory with its reason, and
+                      the count per project is bound, so a new one cannot appear unnoticed.
+
+        The run time half of this rule is in run_test_category.py, which rejects any not executed
+        case the inventory does not name. This half catches the same mutation before a run.
+        """
+        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        if inventory is None:
+            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} is missing; "
+                                        "the required categories would have no binding list of what they skip")
+            return
+        try:
+            data = json.loads(inventory)
+        except json.JSONDecodeError as error:
+            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} is not readable: {error}")
+            return
+
+        categories = data.get("categories")
+        if not isinstance(categories, dict) or not categories:
+            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} names no category")
+            return
+
+        for name, category in sorted(categories.items()):
+            project = str(category.get("project", ""))
+            directory = self.root / project
+            if not project or not directory.is_dir():
+                self.fail("test-exclusion", f"category '{name}' names no existing test project: '{project}'")
+                continue
+
+            sources = [
+                source for source in sorted(directory.rglob("*.cs"))
+                if "/bin/" not in source.as_posix() and "/obj/" not in source.as_posix()
+            ]
+            ignored = 0
+            explicit = 0
+            for source in sources:
+                for number, line in enumerate(source.read_text(encoding="utf-8-sig", errors="replace").splitlines(), 1):
+                    if line.lstrip().startswith("//"):
+                        continue
+                    if "[Ignore" in line:
+                        ignored += 1
+                        self.fail("test-exclusion",
+                                  f"{source.relative_to(self.root).as_posix()}:{number} uses [Ignore]; "
+                                  "a required project may not silence a case without a run time decision")
+                    explicit += line.count("[Explicit")
+
+            declared = category.get("explicitAttributeCount")
+            if not isinstance(declared, int) or declared != explicit:
+                self.fail("test-exclusion",
+                          f"category '{name}' declares {declared} [Explicit] attributes but {project} carries "
+                          f"{explicit}; a new exclusion has to be classified in {NOT_EXECUTED_INVENTORY}")
+
+            cases = category.get("cases")
+            if not isinstance(cases, list):
+                self.fail("test-exclusion", f"category '{name}' has no case list")
+                continue
+            for case in cases:
+                if not isinstance(case, dict) or not {"fixture", "test", "mechanism", "dueness", "reason"} <= set(case):
+                    self.fail("test-exclusion", f"category '{name}' has an incomplete case entry: {case}")
+                    continue
+                if str(case.get("dueness", "")).startswith("DUE"):
+                    self.fail("test-exclusion",
+                              f"category '{name}' lists a due case as not executed: "
+                              f"{case.get('fixture')}.{case.get('test')}. A due case is run, never inventoried.")
+            _ = ignored
+
+    def check_run_scoped_credential_guard(self) -> None:
+        """The required broker suite refuses to start without the run-scoped fixture configuration.
+
+        Both the harness and the spec helper keep the historic localhost/guest defaults so an
+        external consumer can still point them at their own broker. That is deliberate, and it is
+        also exactly the fallback that once let a foreign broker on the default port carry fourteen
+        green tests. The single thing that keeps it out of the required run is this guard, so the
+        guard itself is bound here: it must name every variable the fixture provides and it must
+        fail the run, not warn.
+        """
+        guard = self.read(RUN_SCOPED_GUARD_FILE)
+        if guard is None:
+            self.fail("run-scoped-guard", f"{RUN_SCOPED_GUARD_FILE} is missing; "
+                                          "the required broker suite could fall back to localhost and guest")
+            return
+        body = strip_comments(guard)
+        for variable in RUN_SCOPED_GUARD_VARIABLES:
+            if variable not in body:
+                self.fail("run-scoped-guard",
+                          f"{RUN_SCOPED_GUARD_FILE} does not require {variable}; "
+                          "an unset value would silently fall back to a default")
+        if "Assert.Fail" not in body:
+            self.fail("run-scoped-guard", f"{RUN_SCOPED_GUARD_FILE} does not fail the run on a missing value")
+        if "[OneTimeSetUp]" not in body or "[SetUpFixture]" not in body:
+            self.fail("run-scoped-guard",
+                      f"{RUN_SCOPED_GUARD_FILE} does not run the check as a set up fixture, "
+                      "so individual specs could start before it")
+        # Defining the method is not calling it. The declaration sits below the one time set up, so
+        # a plain substring search after that marker finds the definition and reports a guard that
+        # no longer runs as present.
+        called = any(
+            line.strip() == f"{RUN_SCOPED_GUARD_METHOD}();"
+            for line in body.splitlines()
+        )
+        if not called:
+            self.fail("run-scoped-guard",
+                      f"{RUN_SCOPED_GUARD_FILE} defines {RUN_SCOPED_GUARD_METHOD} but never calls it, "
+                      "so the required run would start without the fixture configuration")
 
     def check_required_profile(self) -> None:
         workflow = self.read(".github/workflows/build.yml")
@@ -230,8 +379,17 @@ class Policy:
             return
         body = strip_comments(workflow)
         for category in REQUIRED_CATEGORIES:
-            if f"\n  {category}:" not in body:
+            marker = f"\n  {category}:"
+            if marker not in body:
                 self.fail("required-profile", f"required category '{category}' is absent from the required profile")
+                continue
+            # Present is not the same as reachable. The three literals below are the guards that
+            # actually came back once, but any job level condition can hide a category just as well,
+            # so the shape is rejected rather than the three spellings.
+            if REQUIRED_JOB_CONDITION.search(self.job_section(body, category)):
+                self.fail("required-profile",
+                          f"required category '{category}' carries a job level condition; a required "
+                          "category runs unconditionally or it is not required")
         for guard in ("refs/heads/master", "refs/heads/develop", "ViciOne.ServiceBus/ViciOne.ServiceBus"):
             if guard in body:
                 self.fail("required-profile", f"an upstream repository or branch guard returned: {guard}")
@@ -265,10 +423,23 @@ class Policy:
             if body is None:
                 continue
             stripped = strip_comments(body)
-            if "nuget push" in stripped or "api.nuget.org" in stripped:
-                self.fail("publication", f"{relative} pushes to nuget.org")
-            if "docker push" in stripped or "ghcr.io" in stripped:
-                self.fail("publication", f"{relative} publishes a container image")
+            # Matching the two command spellings was too narrow: a workflow publishes just as
+            # effectively through an action, and neither 'nuget push' nor 'docker push' appears in
+            # that case. The rule now covers the effect rather than one way of writing it.
+            for pattern, detail in (
+                (r"nuget\s+push", "pushes a package"),
+                (r"api\.nuget\.org", "addresses the nuget.org publish endpoint"),
+                (r"nuget\.org/api", "addresses the nuget.org publish endpoint"),
+                (r"--api-key", "passes a publish credential"),
+                (r"NUGET_API_KEY", "passes a publish credential"),
+                (r"docker\s+push", "publishes a container image"),
+                (r"ghcr\.io", "addresses a container registry"),
+                (r"push-action", "uses a publishing action"),
+                (r"^\s*push:\s*true", "enables publishing on an action"),
+                (r"login-action", "authenticates against a registry"),
+            ):
+                if re.search(pattern, stripped, re.M):
+                    self.fail("publication", f"{relative} {detail}: pattern '{pattern}'")
 
     def check_analyzer_release_tracking(self) -> None:
         for name in ("AnalyzerReleases.Shipped.md", "AnalyzerReleases.Unshipped.md"):
@@ -335,6 +506,7 @@ class Policy:
         for rule in (self.check_no_forbidden_images, self.check_pinning, self.check_host_binding,
                      self.check_credentials, self.check_canonical_runner,
                      self.check_no_effective_known_credentials, self.check_no_required_test_masking,
+                     self.check_no_silent_test_exclusion, self.check_run_scoped_credential_guard,
                      self.check_no_hardcoded_broker_endpoint_in_tests,
                      self.check_required_profile, self.check_pack,
                      self.check_no_publication, self.check_analyzer_release_tracking):

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "MECH-TEST-001",
+  "recordSequence": 26,
+  "kind": "PROOF_CONTRACT_RESULT",
+  "proofContractId": "PROOF-MECHANISM-MECH-TEST-001",
+  "statement": "Test census and proof maturity reporting",
+  "mechanism": "build/test-infrastructure/not-executed-inventory.json is the census: every case a required category does not execute is named there with its mechanism, its due-ness and its reason. Both halves of the rule read it, tools/ci/policy_validator.py before a run and tools/ci/run_test_category.py after one, so a category cannot report a positive count and zero failures while silently skipping something.",
+  "scenarios": {
+    "positive": "75 not executed cases across five categories, each classified. See architecture.json.",
+    "negative": "A case that is not in the census turns its category red rather than passing. See mutation.json.",
+    "boundary": "A due case may never appear in the census: the validator rejects any entry whose due-ness starts with DUE. The five open F-1 cases are therefore deliberately absent, and the RabbitMQ category stays red on them.",
+    "failure": "A missing or unreadable census is itself a failure, in both halves, rather than a silent pass.",
+    "recovery": "The census is regenerated from the bound TRX results and the sources, so it can be rebuilt and rechecked."
+  },
+  "evidence": [
+    "clean-build.json",
+    "package-consumer.json",
+    "architecture.json",
+    "mutation.json"
+  ],
+  "result": "PASS",
+  "residual": "Proof maturity across the whole product is a central report the lead owns. What this repository can state is its own census and the fact that it is enforced, which is what is provided here."
+}

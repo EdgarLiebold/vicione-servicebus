@@ -16,6 +16,12 @@ namespace ViciOne.ServiceBus
     public class ViciOneServiceBusBus :
         IBusControl
     {
+        /// <summary>
+        /// How long a consumer connection waits for the on-demand bus endpoint. Same value StartAsync
+        /// falls back to when the caller supplies no token, so both express one notion of "too long".
+        /// </summary>
+        static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+
         readonly IBusObserver _busObservable;
         readonly IConsumePipe _consumePipe;
         readonly IHost _host;
@@ -46,14 +52,53 @@ namespace ViciOne.ServiceBus
             _publishEndpoint = new PublishEndpoint(_receiveEndpoint);
         }
 
+        /// <summary>
+        /// Waits for the bus endpoint to be ready after a consumer has been connected to a running bus.
+        /// <para>
+        /// The bus endpoint is materialised on demand: it declares its queue when something first
+        /// consumes on the bus, not when the bus starts. Connecting a consumer is therefore what brings
+        /// it up, and waiting here is deliberate — handing back a subscription that is not live yet
+        /// would silently drop messages.
+        /// </para>
+        /// <para>
+        /// The wait used to be unbounded and uncancellable. An endpoint that can never start, for
+        /// instance because another connection already holds its exclusive queue, left the caller
+        /// blocked on its thread for good: no exception, no timeout, nothing naming a cause. Measured
+        /// against the pinned fixture, StartAsync returned normally and the first ConnectHandler never
+        /// came back. The bound below is the same sixty seconds this class already applies in
+        /// <see cref="StartAsync" /> when a caller supplies no token of its own, so no second notion of
+        /// "too long" is introduced, and TaskUtil.Await already accepted a token — it was simply never
+        /// given one.
+        /// </para>
+        /// </summary>
+        void WaitUntilBusEndpointIsReady()
+        {
+            if (_busHandle == null || _receiveEndpoint.Started.IsCompletedSuccessfully())
+                return;
+
+            using var timeout = new CancellationTokenSource(ReadyTimeout);
+            try
+            {
+                TaskUtil.Await(_receiveEndpoint.Started, timeout.Token);
+            }
+            // Asked of the source rather than of the exception: a cancellation raised through a linked
+            // token carries neither, which is how a comparable check elsewhere in this transport went
+            // unreachable.
+            catch (OperationCanceledException) when (timeout.IsCancellationRequested)
+            {
+                throw new ConnectionException(
+                    $"The bus endpoint did not become ready within {ReadyTimeout.TotalSeconds:0} s, so the consumer "
+                    + $"could not be connected: {Address}");
+            }
+        }
+
         ConnectHandle IConsumePipeConnector.ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         {
             LogContext.SetCurrentIfNull(_logContext);
 
             var handle = _consumePipe.ConnectConsumePipe(pipe);
 
-            if (_busHandle != null && !_receiveEndpoint.Started.IsCompletedSuccessfully())
-                TaskUtil.Await(_receiveEndpoint.Started);
+            WaitUntilBusEndpointIsReady();
 
             return handle;
         }
@@ -64,8 +109,7 @@ namespace ViciOne.ServiceBus
 
             var handle = _consumePipe.ConnectConsumePipe(pipe, options);
 
-            if (_busHandle != null && !_receiveEndpoint.Started.IsCompletedSuccessfully())
-                TaskUtil.Await(_receiveEndpoint.Started);
+            WaitUntilBusEndpointIsReady();
 
             return handle;
         }
@@ -76,8 +120,7 @@ namespace ViciOne.ServiceBus
 
             var handle = _consumePipe.ConnectRequestPipe(requestId, pipe);
 
-            if (_busHandle != null && !_receiveEndpoint.Started.IsCompletedSuccessfully())
-                TaskUtil.Await(_receiveEndpoint.Started);
+            WaitUntilBusEndpointIsReady();
 
             return handle;
         }

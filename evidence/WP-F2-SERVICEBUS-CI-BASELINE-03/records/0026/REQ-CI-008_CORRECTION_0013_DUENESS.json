@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 26,
+  "requirementIds": [
+    "REQ-CI-008"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Append-only correction of the due-ness stated for five cases in record 0013",
+  "findingId": "F-9",
+  "correctionToRecord0013": {
+    "field": "cases[].dueness",
+    "statedIncorrectly": "DUE_AND_GREEN",
+    "correctValue": "NOT_DUE_MANUAL_OBSERVATION",
+    "cases": [
+      "Failing_to_connect_to_rabbitmq.Should_recover_from_a_crashed_server",
+      "Failing_to_connect_to_rabbitmq.Should_start_without_any_configuration",
+      "Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly",
+      "Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_an_endpoint",
+      "Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_publish"
+    ],
+    "why": "Record 0013 read the outcome of a single isolated run and recorded 'executes and passes in isolation against the pinned fixture'. That is true and it is not sufficient: none of the five asserts anything, so none could carry coverage even if it ran green. Two of them sleep 30 and 60 seconds waiting for a human and three configure no host on purpose, so they cannot address the run-scoped fixture at all.",
+    "note": "Record 0017 already applied the better classification, in its manualProfile section, but did not mark it as a correction of record 0013. Two records therefore stated opposite due-ness for the same five cases and neither pointed at the other. This entry is that missing pointer. Records 0013 and 0017 themselves are unchanged; the procedure is the one record 0013 used for its own correction of record 0011.",
+    "boundIn": "build/test-infrastructure/not-executed-inventory.json"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "MECH-TEST-001",
+  "recordSequence": 26,
+  "kind": "PACKAGE_CONSUMER",
+  "statement": "The mechanism ships in no package. It is repository-local tooling under tools/ci and a data file under build/test-infrastructure, both outside every packable project, so there is no consumer surface to bind. The surface comparison confirms it: none of the fifteen changes comes from these paths.",
+  "boundIn": "records/0026/REQ-CI-004_API_SURFACE_COMPARISON.json"
+}

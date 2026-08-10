@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "MECH-TEST-001",
+  "recordSequence": 26,
+  "kind": "ARCHITECTURE",
+  "census": "build/test-infrastructure/not-executed-inventory.json",
+  "categories": {
+    "core": 41,
+    "abstractions": 5,
+    "rabbitmq": 20,
+    "entity-framework-core": 4,
+    "activemq": 5
+  },
+  "totalInventoried": 75,
+  "unclassified": 0,
+  "deliberatelyNotInventoried": {
+    "count": 5,
+    "why": "The five cases record 0025 raised as F-1. Their root causes were reproduced and all of them lie outside the write scope of re-slice 0004, so their due-ness is a lead decision. Classifying them here would be the very thing the finding objected to.",
+    "effect": "The required RabbitMQ category is red until that decision exists."
+  }
+}

@@ -145,11 +145,30 @@ namespace ViciOne.ServiceBus.Testing
             return host.Settings;
         }
 
+        /// <summary>
+        /// Resets the broker by deleting every queue and topic it holds.
+        /// <para>
+        /// <b>Changed behaviour.</b> This used to begin with <c>if (AdminPort != 8161) return;</c> and
+        /// therefore did nothing at all whenever the admin port differed from the imported default.
+        /// The pinned ViciOne fixture publishes an ephemeral loopback port per run, so that condition
+        /// silently disabled the entire reset for every run of this harness, and one fixture could
+        /// affect the next. A condition that switches isolation off without saying so is worse than no
+        /// reset at all, so it is gone.
+        /// </para>
+        /// <para>
+        /// For a consumer who points this harness at their own broker the consequence is real and is
+        /// stated here rather than left to be discovered: on a non-default admin port this method now
+        /// performs the reset it always promised instead of returning silently. It deletes every queue
+        /// and topic of the addressed broker, so it belongs against a test broker and never against
+        /// one that carries anything worth keeping. <see cref="CleanVirtualHost" /> decides whether the
+        /// harness calls it at all.
+        /// </para>
+        /// <para>
+        /// Covered by <c>Cleaning_the_broker.Should_not_disable_itself_on_a_non_default_admin_port</c>.
+        /// </para>
+        /// </summary>
         public override async Task Clean()
         {
-            // This used to return silently whenever AdminPort differed from the default 8161, which
-            // disabled the entire reset as soon as the fixture published an ephemeral port. A
-            // condition that switches isolation off without saying so is worse than no reset at all.
             var settings = GetHostSettings();
 
             using var connection = settings.CreateConnection();

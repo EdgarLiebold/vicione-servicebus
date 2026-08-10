@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "GUA-GOV-001",
+  "recordSequence": 26,
+  "kind": "PROOF_CONTRACT_RESULT",
+  "proofContractId": "PROOF-GUARANTEE-GUA-GOV-001",
+  "statement": "No discovered capability, platform mechanism or behavioural guarantee is removed without an explicit product decision.",
+  "scope": "Product repository half only. The lead replays the central gates against this freeze; what is provable inside repositories/vicione-servicebus is provided here.",
+  "scenarios": {
+    "positive": "The full public surface of all 33 assemblies is compared against the baseline: 27473 members before, 27488 after, 15 additions, zero removals. See architecture.json.",
+    "negative": "A removal is not accepted silently. Removing one overload of IPublishEndpoint.Publish is rejected twice, by the compiler and by the surface comparison. See mutation.json.",
+    "boundary": "The two members closest to the boundary are AsyncTestHarness.BeginTestScope, which is new and public in a shipped assembly, and ActiveMqTestHarness.Clean, whose behaviour changed without its signature changing. Both are recorded rather than assumed harmless; Clean is additionally bound by a spec.",
+    "failure": "A build that does not produce every assembly cannot produce a surface, and the comparison then reports the missing assembly rather than an empty difference. See clean-build.json.",
+    "recovery": "The comparison is repeatable from the two trees at any time: the baseline is restored from commit e38203cbf112eeb3354cc394735f28287cdcb748 and dumped with the same tool."
+  },
+  "evidence": [
+    "clean-build.json",
+    "package-consumer.json",
+    "architecture.json",
+    "mutation.json"
+  ],
+  "result": "PASS",
+  "residual": "The guarantee also covers capabilities that are not expressed as public API. Those are the lead's central gates, not something this repository can prove on its own."
+}

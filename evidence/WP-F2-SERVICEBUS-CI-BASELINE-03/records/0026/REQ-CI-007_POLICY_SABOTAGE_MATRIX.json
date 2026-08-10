@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 26,
+  "requirementIds": [
+    "REQ-CI-007",
+    "REQ-CI-002"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Policy validator sabotage matrix after hardening",
+  "findingId": "F-5",
+  "method": "The tree is copied, exactly one mutation is applied, and tools/ci/policy_validator.py runs against the copy. Each mutation below survived the previous version of the rules; the rule it defeated is named with it.",
+  "selfTests": {
+    "command": "python3 tools/ci/test_policy_validator.py",
+    "before": 41,
+    "after": 53,
+    "result": "OK"
+  },
+  "positiveCase": {
+    "command": "python3 tools/ci/policy_validator.py",
+    "exitCode": 0,
+    "result": "PASS ci-policy all invariants hold"
+  },
+  "mutants": [
+    {
+      "id": "M1",
+      "class": "REQUIRED_TEST_FILTERING",
+      "mutation": "--filter 'Category!=Flaky' on the required RabbitMQ step, single quotes",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "test-masking",
+      "whyItSurvived": "the pattern allowed an optional double quote only, so a single quote skipped past it",
+      "fix": "the rule matches the --filter switch itself, not a predicate spelling"
+    },
+    {
+      "id": "M2",
+      "class": "REQUIRED_TEST_FILTERING",
+      "mutation": "--filter \"FullyQualifiedName!~KillSwitch\" on the required RabbitMQ step",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "test-masking",
+      "whyItSurvived": "only Category and TestCategory predicates were matched",
+      "fix": "same rule; NUnit.Where, --settings and TestCaseFilter are covered as well"
+    },
+    {
+      "id": "M3",
+      "class": "IGNORE_OR_SKIP",
+      "mutation": "[Ignore(\"temporarily disabled\")] on a due RabbitMQ case",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "test-exclusion",
+      "whyItSurvived": "no rule read the test sources, and run_test_category.py checked only total, executed and failed",
+      "fix": "[Ignore] is rejected outright, the [Explicit] count per project is bound to the inventory, and run_test_category.py now rejects any not executed case the inventory does not name"
+    },
+    {
+      "id": "M4",
+      "class": "PUBLICATION",
+      "mutation": "docker/build-push-action@v6 with push: true in the pack job",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "publication",
+      "whyItSurvived": "the rule matched the literals 'docker push' and 'ghcr.io', which an action does not contain",
+      "fix": "publishing actions, push: true, login actions and publish credentials are covered"
+    },
+    {
+      "id": "M5",
+      "class": "UNSATISFIABLE_GUARD",
+      "mutation": "if: github.repository == 'NoSuchOrg/NoSuchRepo' on the required RabbitMQ job",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "required-profile",
+      "whyItSurvived": "three historic guard literals were matched and job presence was checked, not reachability",
+      "fix": "a required job may carry no job level condition at all; step level conditions are unaffected"
+    },
+    {
+      "id": "M6",
+      "class": "BROKER_FALLBACK",
+      "mutation": "RequireRunScopedCredentials() removed from the RabbitMQ set up fixture",
+      "before": "SURVIVED",
+      "after": "KILLED",
+      "rule": "run-scoped-guard",
+      "whyItSurvived": "the endpoint rule exempts the run-scoped helpers and never scans src/, so the guard was the only barrier and nothing bound it",
+      "fix": "the guard is bound: it must name all five variables, fail the run rather than warn, run as a set up fixture and actually be called"
+    }
+  ],
+  "residual": "The historic localhost/guest defaults in RabbitMqTestHarness and RunScopedBroker are unchanged, because removing them would change behaviour for a consumer pointing the harness at their own broker, which is a public API decision and not a developer one. They are now unreachable in a required run by a bound guard instead of by an unbound one."
+}

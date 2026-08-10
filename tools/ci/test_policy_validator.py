@@ -108,6 +108,91 @@ jobs:
 SHIPPED = "## Release 1.0\n\n### New Rules\nRule ID | Category | Severity | Notes\n"
 UNSHIPPED = ""
 
+RABBITMQ_TEST_PROJECT = "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests"
+
+SET_UP_FIXTURE = """\
+using NUnit.Framework;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
+{
+    [SetUpFixture]
+    public class RabbitMqTestSetUpFixture
+    {
+        [OneTimeSetUp]
+        public void Before_any()
+        {
+            RequireRunScopedCredentials();
+        }
+
+        static void RequireRunScopedCredentials()
+        {
+            foreach (var variable in new[]
+                     {
+                         RabbitMqTestHarness.UsernameVariable, RabbitMqTestHarness.PasswordVariable,
+                         RabbitMqTestHarness.HostVariable, RabbitMqTestHarness.PortVariable,
+                         RabbitMqTestHarness.ManagementPortVariable
+                     })
+            {
+                Assert.Fail(variable);
+            }
+        }
+    }
+}
+"""
+
+MANUAL_SPEC = """\
+using NUnit.Framework;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
+{
+    [TestFixture]
+    public class Watching_by_hand
+    {
+        [Test]
+        [Explicit]
+        public void Should_be_watched_by_a_human()
+        {
+        }
+    }
+}
+"""
+
+REQUIRED_SPEC = """\
+using NUnit.Framework;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
+{
+    [TestFixture]
+    public class Delivering_a_message
+    {
+        [Test]
+        public void Should_arrive()
+        {
+        }
+    }
+}
+"""
+
+NOT_EXECUTED_INVENTORY = {
+    "schemaVersion": 1,
+    "kind": "NOT_EXECUTED_INVENTORY",
+    "categories": {
+        "rabbitmq": {
+            "project": RABBITMQ_TEST_PROJECT,
+            "explicitAttributeCount": 1,
+            "cases": [
+                {
+                    "fixture": "Watching_by_hand",
+                    "test": "Should_be_watched_by_a_human",
+                    "mechanism": "EXPLICIT",
+                    "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+                    "reason": "Asserts nothing a gate could evaluate.",
+                }
+            ],
+        }
+    },
+}
+
 
 class PolicyTestCase(unittest.TestCase):
     def setUp(self) -> None:
@@ -121,6 +206,15 @@ class PolicyTestCase(unittest.TestCase):
         (infra / "images.lock.json").write_text(json.dumps(LOCK, indent=2), encoding="utf-8")
         (infra / "rabbitmq/Dockerfile").write_text(RABBIT_DOCKERFILE, encoding="utf-8")
         (infra / "activemq/Dockerfile").write_text(ACTIVEMQ_DOCKERFILE, encoding="utf-8")
+        (infra / "not-executed-inventory.json").write_text(
+            json.dumps(NOT_EXECUTED_INVENTORY, indent=2), encoding="utf-8"
+        )
+
+        specs = self.root / RABBITMQ_TEST_PROJECT
+        specs.mkdir(parents=True)
+        (specs / "RabbitMqTestSetUpFixture.cs").write_text(SET_UP_FIXTURE, encoding="utf-8")
+        (specs / "ManualWatch_Specs.cs").write_text(MANUAL_SPEC, encoding="utf-8")
+        (specs / "Delivery_Specs.cs").write_text(REQUIRED_SPEC, encoding="utf-8")
 
         workflows = self.root / ".github/workflows"
         workflows.mkdir(parents=True)
@@ -149,6 +243,12 @@ class PolicyTestCase(unittest.TestCase):
 
     def workflow(self) -> Path:
         return self.root / ".github/workflows/build.yml"
+
+    def inventory(self) -> Path:
+        return self.root / "build/test-infrastructure/not-executed-inventory.json"
+
+    def rabbitmq_spec(self, name: str) -> Path:
+        return self.root / RABBITMQ_TEST_PROJECT / name
 
     # -- positive ------------------------------------------------------------------------------
 
@@ -296,6 +396,81 @@ class PolicyTestCase(unittest.TestCase):
             BUILD_WORKFLOW.replace("--category rabbitmq", '--category rabbitmq -- --filter "Category!=Flaky"'),
             encoding="utf-8")
         self.assert_rejected("test-masking")
+
+    # The six mutations below all survived the first version of these rules. They are the reason the
+    # rules now match the switch and the shape rather than one spelling of one predicate.
+
+    def test_rejects_a_single_quoted_category_filter(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("--category rabbitmq", "--category rabbitmq -- --filter 'Category!=Flaky'"),
+            encoding="utf-8")
+        self.assert_rejected("test-masking")
+
+    def test_rejects_a_fully_qualified_name_filter(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("--category rabbitmq",
+                                   '--category rabbitmq -- --filter "FullyQualifiedName!~KillSwitch"'),
+            encoding="utf-8")
+        self.assert_rejected("test-masking")
+
+    def test_rejects_an_nunit_selector(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("--category rabbitmq",
+                                   '--category rabbitmq -- -- NUnit.Where="cat != Flaky"'),
+            encoding="utf-8")
+        self.assert_rejected("test-masking")
+
+    def test_rejects_ignoring_a_required_case(self) -> None:
+        self.rabbitmq_spec("Delivery_Specs.cs").write_text(
+            REQUIRED_SPEC.replace("        [Test]", '        [Test]\n        [Ignore("temporarily disabled")]'),
+            encoding="utf-8")
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_a_new_explicit_case_that_is_not_inventoried(self) -> None:
+        self.rabbitmq_spec("Delivery_Specs.cs").write_text(
+            REQUIRED_SPEC.replace("        [Test]", "        [Test]\n        [Explicit]"),
+            encoding="utf-8")
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_inventorying_a_due_case_as_not_executed(self) -> None:
+        inventory = json.loads(json.dumps(NOT_EXECUTED_INVENTORY))
+        inventory["categories"]["rabbitmq"]["cases"][0]["dueness"] = "DUE_OPEN_DEFECT"
+        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_a_missing_not_executed_inventory(self) -> None:
+        self.inventory().unlink()
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_publishing_through_an_action(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW + "      - uses: docker/build-push-action@v6\n        with:\n          push: true\n",
+            encoding="utf-8")
+        self.assert_rejected("publication")
+
+    def test_rejects_a_job_level_condition_on_a_required_category(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("  rabbitmq:\n", "  rabbitmq:\n    if: github.repository == 'nobody/nothing'\n"),
+            encoding="utf-8")
+        self.assert_rejected("required-profile")
+
+    def test_rejects_removing_the_run_scoped_credential_guard(self) -> None:
+        self.rabbitmq_spec("RabbitMqTestSetUpFixture.cs").write_text(
+            SET_UP_FIXTURE.replace("            RequireRunScopedCredentials();\n", ""),
+            encoding="utf-8")
+        self.assert_rejected("run-scoped-guard")
+
+    def test_rejects_a_guard_that_no_longer_covers_every_variable(self) -> None:
+        self.rabbitmq_spec("RabbitMqTestSetUpFixture.cs").write_text(
+            SET_UP_FIXTURE.replace("RabbitMqTestHarness.ManagementPortVariable", "null"),
+            encoding="utf-8")
+        self.assert_rejected("run-scoped-guard")
+
+    def test_rejects_a_guard_that_only_warns(self) -> None:
+        self.rabbitmq_spec("RabbitMqTestSetUpFixture.cs").write_text(
+            SET_UP_FIXTURE.replace("Assert.Fail(variable)", "TestContext.Out.WriteLine(variable)"),
+            encoding="utf-8")
+        self.assert_rejected("run-scoped-guard")
 
     def test_rejects_blame_hang_masking(self) -> None:
         self.workflow().write_text(BUILD_WORKFLOW.replace("--category core", "--category core -- --blame-hang-timeout 5m"),

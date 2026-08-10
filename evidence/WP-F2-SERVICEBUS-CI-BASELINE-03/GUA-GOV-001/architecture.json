@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "subjectId": "GUA-GOV-001",
+  "recordSequence": 26,
+  "kind": "ARCHITECTURE",
+  "instrument": "tools/ci/api_surface.cs and tools/ci/compare_api_surface.py",
+  "baselineCommit": "e38203cbf112eeb3354cc394735f28287cdcb748",
+  "totals": {
+    "assemblies": 33,
+    "baselineMembers": 27473,
+    "currentMembers": 27488,
+    "added": 15,
+    "removed": 0,
+    "messagingChanges": 0,
+    "testingChanges": 15
+  },
+  "messagingSurfaceUnchanged": true,
+  "boundIn": [
+    "records/0026/API_SURFACE_BASELINE.json",
+    "records/0026/API_SURFACE_CURRENT.json",
+    "records/0026/REQ-CI-004_API_SURFACE_COMPARISON.json"
+  ],
+  "statement": "Nothing was removed. Every one of the fifteen additions is on the test-driving surface: the Testing namespaces of the product assemblies and ViciOne.ServiceBus.TestFramework, which the task contract binds. The public messaging API is byte for byte the same set of members it was at the baseline."
+}
