@@ -82,6 +82,14 @@ namespace ViciOne.ServiceBus.Transports
                     }
                 }
 
+                // Same precedence as the pre-flight check inside the loop and as the catch handler:
+                // stopping first, then the caller. This block had it the other way round, so the answer
+                // to "both tokens are cancelled" depended on which path left the loop — a caller
+                // cancellation surfaced here and a ConnectionException surfaced there, for the same
+                // input. The transport being gone is the stronger statement either way.
+                if (stoppingToken.IsCancellationRequested)
+                    throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
+
                 if (cancellationToken.IsCancellationRequested)
                     cancellationToken.ThrowIfCancellationRequested();
 

@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIREMENT_EVIDENCE_MATRIX",
+  "directive": "0071",
+  "slice": "revisions/0008",
+  "sliceFileSha256": "60f312e98e84e9033f6bbb0ecffc27825e53e6e60cfe555e9c53e63144484709",
+  "why": "Record 0071 requires every verification line of the slice, not a summary of them. The earlier matrix carried twelve lines against fifteen: REQ-CI-006 was read only as far as its fourth line and REQ-CI-008's lines were taken from the acceptance criterion instead of the requirement.",
+  "totals": {
+    "verificationLines": 15,
+    "expected": 15,
+    "acceptanceCriteria": 3
+  },
+  "requirements": [
+    {
+      "id": "REQ-CI-002",
+      "verificationLineCount": 4,
+      "lines": [
+        {
+          "index": 1,
+          "sliceLine": "Alle durch die zwei Pins tatsächlich invalidierten Pflichtgates werden nach dem finalen Restore genau einmal frisch ausgeführt; nicht invalidierte frühere Gates dürfen nur mit nachgewiesen identischem Eingabefingerprint weitergelten.",
+          "answer": "Five categories were re-run against the final state; six carry over, each with a fingerprint over its input paths and an empty change list against ff6f04d.",
+          "evidence": [
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sliceLine": "Der vollständige Diff gegen die unveränderte Work-Package-Basis zeigt außer den bereits abgenommenen Änderungen nur die zwei zentralen Versionspins und erforderliche neue record-eigene Evidence.",
+          "answer": "Outside evidence, the only change since ff6f04d is the withdrawal of the two policy files record 0071 ordered withdrawn; against the base freeze the pin file changes exactly two lines.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            },
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sliceLine": "Es entstehen keine Änderungen an öffentlicher API, Wireformat, Serialisierungsvertrag, RabbitMQ-Topologie, Persistenz, TFM, Suppressionen oder Produktlogik.",
+          "answer": "Messaging surface unchanged at 27274 members with zero testing changes, proved from both snapshots; no TFM moved and no suppression was introduced.",
+          "evidence": [
+            {
+              "path": "records/0072/api-surface/API_SURFACE_BASELINE.json",
+              "sha256": "af0b2075f89f2d0478463a2cf085667c31e3aa0d5dfacd014190c5ee949c0dcd"
+            },
+            {
+              "path": "records/0072/api-surface/API_SURFACE_CURRENT.json",
+              "sha256": "af0b2075f89f2d0478463a2cf085667c31e3aa0d5dfacd014190c5ee949c0dcd"
+            },
+            {
+              "path": "records/0072/api-surface/API_SURFACE_DIFF.json",
+              "sha256": "1f3ed3f05d638bce44a0c3269e8de36b98aad4edadd0e6f8ff5f2a2744fa2f3b"
+            },
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sliceLine": "Kein Testfilter, Ignore, Skip, Timeoutanstieg, Retry, Assertionabbau oder Gate-Suppression wird zur Herstellung eines grünen Ergebnisses verwendet.",
+          "answer": "Ignore, Explicit, Retry and Timeout counts across the test tree are unchanged against the base at 1, 113, 1 and 0.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REQ-CI-006",
+      "verificationLineCount": 6,
+      "lines": [
+        {
+          "index": 1,
+          "sliceLine": "Der ausgelieferte ViciOne.ServiceBus.MessagePack-Graph löst MessagePack exakt auf 3.1.8 auf; der net9.0-SignalR-Testgraph löst Microsoft.AspNetCore.SignalR.Protocols.MessagePack auf 9.0.19 und dessen MessagePack-Abhängigkeit auf 2.5.302 auf.",
+          "answer": "Both proved from the restored assets bytes themselves, not from a summary.",
+          "evidence": [
+            {
+              "path": "records/0072/dependency-graph/ViciOne.ServiceBus.MessagePack.project.assets.json",
+              "sha256": "969e18ccd2db5c642e702814648a245f13bdadf07fcec072fad972632e6005a6"
+            },
+            {
+              "path": "records/0072/dependency-graph/ViciOne.ServiceBus.SignalR.Tests.project.assets.json",
+              "sha256": "eea77b63512eb659a0b12f5afd9a955d3d656db066f47fe4bf6ddbca1a9b5ae9"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sliceLine": "Die vorhandenen MessagePack-Serialisierungstests im Core-Testprojekt und das vollständige SignalR-Testprojekt laufen nach frischem Restore und Build vollständig grün mit positiver Testanzahl und ohne übersprungene fällige Tests.",
+          "answer": "Core 1900 total, 1857 passed, 0 failed, of which 38 MessagePack serialisation specs; SignalR 26 of 26. Inputs byte identical since those runs.",
+          "evidence": [
+            {
+              "path": "records/0070/core/core.trx",
+              "sha256": "747018213819160e64e9568380925e01f843b6f83c70ec75d473c1e82adf2731"
+            },
+            {
+              "path": "records/0070/core-messagepack/messagepack-serialization.trx",
+              "sha256": "ba69c845617a2995efae47e8f9f89ee91922d749049b8b923997bb924305b848"
+            },
+            {
+              "path": "records/0070/signalr/signalr.trx",
+              "sha256": "5d1a411094881b069f1f4b477ccd811e748cd6da79f9e62f681364da96ef8780"
+            },
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sliceLine": "Directory.Packages.props ändert ausschließlich MessagePack von 3.1.6 auf 3.1.8 und Microsoft.AspNetCore.SignalR.Protocols.MessagePack von 9.0.0 auf 9.0.19; weitere Dependencyänderungen erzwingen vor dem Edit eine neue QUESTION.",
+          "answer": "Exactly two changed lines, both MessagePack related.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sliceLine": "Ein frisches Inventar für alle Projekte und Zielrahmen weist keinen NU1902- oder NU1903-Befund für MessagePack und keine durch diesen Re-Slice neu eingeführte High- oder Critical-Vulnerability aus.",
+          "answer": "Zero MessagePack findings and zero newly introduced; totals fall from 187 with 44 high to 19 with 2, and no shipped project carries a high finding. Its inputs are byte identical since that run.",
+          "evidence": [
+            {
+              "path": "records/0070/VULNERABILITY_INVENTORY.json",
+              "sha256": "c359ea771ed210b7323d62b8be9aaa2d9f3a743b6027e1da87a67fc05d414969"
+            },
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "sliceLine": "Offizielle Paketmetadaten, Paket-/Assetgraphen und Locks werden als record-eigene Evidence gebunden; die am 12.08.2026 geprüften sicheren Mindestlinien 3.1.7 und 2.5.301 bleiben nachvollziehbar.",
+          "answer": "The official nuspec bytes for both packages are bound here, and SignalR 9.0.19 declares MessagePack 2.5.302 with a native net9.0 group in its own metadata.",
+          "evidence": [
+            {
+              "path": "records/0072/dependency-graph/MessagePack.3.1.8.nuspec",
+              "sha256": "0806bb01868e9a7d6f1db23be44caff85ee3af879fa2949ff03aa7af6599d415"
+            },
+            {
+              "path": "records/0072/dependency-graph/Microsoft.AspNetCore.SignalR.Protocols.MessagePack.9.0.19.nuspec",
+              "sha256": "d0d48265ea5eefdcdbbb4b1b9ffb25b266562f2e3b73fba272c9ef4a1b52a784"
+            },
+            {
+              "path": "records/0072/dependency-graph/ViciOne.ServiceBus.MessagePack.project.assets.json",
+              "sha256": "969e18ccd2db5c642e702814648a245f13bdadf07fcec072fad972632e6005a6"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "sliceLine": "VersionOverride, eine direkte MessagePack-Referenz im SignalR-Testprojekt, ASP.NET-Core-Majorwechsel, netstandard-Fallback, TFM-Änderung und Vulnerability-Suppression sind verboten.",
+          "answer": "Each checked against the base rather than asserted; no VersionOverride exists in any project or props file.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            },
+            {
+              "path": "records/0072/dependency-graph/ViciOne.ServiceBus.SignalR.Tests.project.assets.json",
+              "sha256": "eea77b63512eb659a0b12f5afd9a955d3d656db066f47fe4bf6ddbca1a9b5ae9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REQ-CI-008",
+      "verificationLineCount": 5,
+      "lines": [
+        {
+          "index": 1,
+          "sliceLine": "Build, Core einschließlich MessagePack-Serialisierung, vollständiges SignalR-Projekt, API-Oberfläche, Pack und Vulnerabilityinventar sind nach den Versionsänderungen frisch; weitere Pflichtgates folgen ausschließlich der dokumentierten Eingabeinvalidierung.",
+          "answer": "Build and pack and API surface freshly against the final state; core, SignalR and the inventory carried over with proven identical inputs.",
+          "evidence": [
+            {
+              "path": "records/0072/raw/build.log",
+              "sha256": "3fcafda0618f8fa10f783fbbe93da23a97bf5f03ae3355654d7ebe289612baeb"
+            },
+            {
+              "path": "records/0072/raw/pack.log",
+              "sha256": "ab26407dec8d7a2829d6a7fccecf5181415082e8075f9562ac7f072b05aeddf4"
+            },
+            {
+              "path": "records/0072/api-surface/API_SURFACE_DIFF.json",
+              "sha256": "1f3ed3f05d638bce44a0c3269e8de36b98aad4edadd0e6f8ff5f2a2744fa2f3b"
+            },
+            {
+              "path": "records/0070/core/core.trx",
+              "sha256": "747018213819160e64e9568380925e01f843b6f83c70ec75d473c1e82adf2731"
+            },
+            {
+              "path": "records/0070/signalr/signalr.trx",
+              "sha256": "5d1a411094881b069f1f4b477ccd811e748cd6da79f9e62f681364da96ef8780"
+            },
+            {
+              "path": "records/0070/VULNERABILITY_INVENTORY.json",
+              "sha256": "c359ea771ed210b7323d62b8be9aaa2d9f3a743b6027e1da87a67fc05d414969"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sliceLine": "Der Freeze bindet den finalen Commit und Baum, den effektiven Slice 0008, den vollständigen Diff, die Dependencygraphen, Befehle, Exitcodes, Testzahlen, TRX/Rohlogs, API-Oberfläche, Paketanzahl, Pakethashes und das Vulnerabilityinventar.",
+          "answer": "Not yet claimed: record 0071 forbids a commit and a freeze at this point. This matrix carries everything except the commit and tree, which the freeze record will bind once the lead accepts 0072.",
+          "evidence": [
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            },
+            {
+              "path": "records/0072/dependency-graph/ViciOne.ServiceBus.MessagePack.project.assets.json",
+              "sha256": "969e18ccd2db5c642e702814648a245f13bdadf07fcec072fad972632e6005a6"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sliceLine": "Der Packnachweis umfasst wieder die vollständige erwartete Paketmenge und belegt unveränderte öffentliche Oberfläche sowie ausbleibende Veröffentlichung.",
+          "answer": "33 packages hashed by file name, raw log bound, artifacts produced outside the tree and removed; the surface comparison is bound beside it.",
+          "evidence": [
+            {
+              "path": "records/0072/packages/SHA256SUMS",
+              "sha256": "28816bb0034d8b4583735cd869535ce6bf68ddbf7a47c2082dc6eea078afb0a0"
+            },
+            {
+              "path": "records/0072/raw/pack.log",
+              "sha256": "ab26407dec8d7a2829d6a7fccecf5181415082e8075f9562ac7f072b05aeddf4"
+            },
+            {
+              "path": "records/0072/api-surface/API_SURFACE_DIFF.json",
+              "sha256": "1f3ed3f05d638bce44a0c3269e8de36b98aad4edadd0e6f8ff5f2a2744fa2f3b"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sliceLine": "Jede Evidence-Datei besitzt einen neuen niemals überschriebenen record-eigenen Pfad; die Requirement-zu-Evidence-Matrix ordnet jeden Nachweis eindeutig REQ-CI-002, REQ-CI-006 oder REQ-CI-008 zu.",
+          "answer": "All new bytes live under records/0072; records/0070 is kept byte for byte and marked as the superseded provisional correction evidence.",
+          "evidence": [
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "sliceLine": "Vor Freeze sind Repository-Diff, verbotene Änderungen und Evidencevollständigkeit maschinenprüfbar grün; danach erhält das unabhängige Developer Red Team den unveränderten Kandidaten.",
+          "answer": "The forbidden change check and the category matrix are machine readable and green; the red team handover follows the freeze, which is not issued yet.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            },
+            {
+              "path": "records/0072/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "0b919207b297f6a9b949e279ce5ef1e23566ef087d0b20138b0e9c7a8b1f1e22"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-CI-002",
+      "requirementIds": [
+        "REQ-CI-002"
+      ],
+      "evidenceClasses": [
+        "Frische Rohlogs/TRX aller invalidierten Pflichtgates",
+        "Gate-Input-Fingerprint- und Invalidierungsmatrix",
+        "Vollständiger Diff und Verbotener-Diff-Prüfung"
+      ],
+      "coveredBy": [
+        "records/0072/BASELINE_CATEGORY_MATRIX.json",
+        "records/0070/FORBIDDEN_DIFF_CHECK.json",
+        "records/0072/api-surface/API_SURFACE_BASELINE.json"
+      ]
+    },
+    {
+      "id": "AC-CI-006",
+      "requirementIds": [
+        "REQ-CI-006"
+      ],
+      "evidenceClasses": [
+        "Core-MessagePack- und vollständige SignalR-TRX mit positiven Testzahlen",
+        "Frisches NU1902-/NU1903- und High-/Critical-Vulnerabilityinventar",
+        "Offizielle NuGet-Versions- und Nuspec-Metadaten",
+        "Prüfung gegen VersionOverride, direkte SignalR-MessagePack-Referenz, TFM- und Suppressionsänderung",
+        "Wiederhergestellte project.assets.json-Graphen für ViciOne.ServiceBus.MessagePack und SignalR net9.0"
+      ],
+      "coveredBy": [
+        "records/0072/dependency-graph/ViciOne.ServiceBus.MessagePack.project.assets.json",
+        "records/0070/core/core.trx",
+        "records/0070/FORBIDDEN_DIFF_CHECK.json",
+        "records/0070/VULNERABILITY_INVENTORY.json",
+        "records/0072/dependency-graph/MessagePack.3.1.8.nuspec"
+      ]
+    },
+    {
+      "id": "AC-CI-008",
+      "requirementIds": [
+        "REQ-CI-008"
+      ],
+      "evidenceClasses": [
+        "API-Oberflächen- und vollständiger Packnachweis mit Artefakthashes",
+        "Finaler Commit- und Baumhash",
+        "Hash des effektiven Development Slice 0008",
+        "Implementierungsfreeze und Developer-Red-Team-Übergabe",
+        "Requirement-zu-Evidence-Matrix"
+      ],
+      "coveredBy": [
+        "records/0072/raw/build.log",
+        "records/0072/BASELINE_CATEGORY_MATRIX.json",
+        "records/0072/packages/SHA256SUMS",
+        "records/0072/BASELINE_CATEGORY_MATRIX.json",
+        "records/0070/FORBIDDEN_DIFF_CHECK.json"
+      ]
+    }
+  ]
+}

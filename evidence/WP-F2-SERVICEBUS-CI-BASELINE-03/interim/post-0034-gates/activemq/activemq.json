@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "activemq",
+  "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/post-0034-gates/activemq/activemq.trx",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 144,
+    "executed": 139,
+    "passed": 139,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true,
+  "notExecuted": [
+    "Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
+    "Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
+    "OpenTelemetry_Specs.Should_report_telemetry_to_jaeger",
+    "Reconnecting_Specs(\"activemq\").Should_fault_nicely",
+    "Reconnecting_Specs(\"amqp\").Should_fault_nicely"
+  ],
+  "notExecutedUnlisted": []
+}

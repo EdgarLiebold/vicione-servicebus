@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "MECH-TEST-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "ARCHITECTURE",
   "census": "build/test-infrastructure/not-executed-inventory.json",
   "categories": {
@@ -18,5 +18,6 @@
     "count": 5,
     "why": "The five cases record 0025 raised as F-1. Their root causes were reproduced and all of them lie outside the write scope of re-slice 0004, so their due-ness is a lead decision. Classifying them here would be the very thing the finding objected to.",
     "effect": "The required RabbitMQ category is red until that decision exists."
-  }
+  },
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

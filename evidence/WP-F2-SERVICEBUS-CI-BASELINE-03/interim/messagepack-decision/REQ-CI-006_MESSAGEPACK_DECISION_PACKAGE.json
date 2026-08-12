@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 30,
+  "requirementIds": [
+    "REQ-CI-006"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Prepared decision package for the MessagePack high finding",
+  "status": "NOT_YET_BOUND_BY_A_RECORD",
+  "why": "Re-slice 0005 item 7 requires a stop with vendor evidence, a reproduced cause, options with pros and cons, a recommended exact version and the required root file scope before any package change. This is that package. The change itself is not made: Directory.Packages.props is not in the write scopes of revision 0005, and a new write scope can only come from a re-slice, never from an answer.",
+  "vendorEvidence": {
+    "advisory": "GHSA-hv8m-jj95-wg3x",
+    "cve": "CVE-2026-48109",
+    "cvss": 8.2,
+    "severity": "High",
+    "title": "LZ4 decompression may fail with AccessViolationException after dereferencing memory from bad input",
+    "mechanism": "A crafted payload with manipulated LZ4 token or length fields forces out-of-bounds reads from the compressed input buffer. Only the optional LZ4 path is affected: compression modes Lz4Block and Lz4BlockArray.",
+    "affected": "every 2.x before 2.5.301, and 3.x from 3.0.214-rc.1 up to 3.1.7",
+    "fixedIn": [
+      "2.5.301",
+      "3.1.7"
+    ],
+    "sources": [
+      "https://github.com/MessagePack-CSharp/MessagePack-CSharp/security/advisories/GHSA-hv8m-jj95-wg3x",
+      "https://github.com/advisories/GHSA-hv8m-jj95-wg3x"
+    ]
+  },
+  "exposureInThisRepository": {
+    "current": "MessagePack 3.1.6, pinned in Directory.Packages.props line 33",
+    "distanceToFix": "one patch version: 3.1.6 to 3.1.7",
+    "ownCodePath": "ViciOne does not configure LZ4 anywhere. InternalMessagePackResolver uses MessagePackSerializerOptions.Standard, which applies no compression, so the product's own serialization never enters the vulnerable path.",
+    "residualExposure": "The shipped package still carries the vulnerable dependency, and a consumer may supply its own MessagePackSerializerOptions with Lz4Block or Lz4BlockArray. The exposure is therefore real for consumers even though it is not reachable through the product's own defaults.",
+    "directArtifact": "src/ViciOne.ServiceBus.MessagePack, which ships as ViciOne.ServiceBus.MessagePack",
+    "transitiveArtifacts": 10,
+    "note": "The ten transitive occurrences are all test projects and ship nothing."
+  },
+  "options": [
+    {
+      "id": "OPT-PATCH-3-1-7",
+      "title": "Raise the pin to MessagePack 3.1.7",
+      "pros": [
+        "Closes the advisory at its source and for every consumer",
+        "One patch version inside the same minor line, so no API break is expected",
+        "The vendor names 3.1.7 as the fix; no interpretation is needed"
+      ],
+      "cons": [
+        "Directory.Packages.props is a root file and outside every current write scope, so it needs re-slice 0006",
+        "The full required gate set has to run again afterwards, because the dependency is in the packaged surface"
+      ]
+    },
+    {
+      "id": "OPT-KEEP-AND-DOCUMENT",
+      "title": "Keep 3.1.6 and document that the vulnerable path is unused",
+      "pros": [
+        "No dependency change and no new scope",
+        "Accurate for the product's own serialization, which never uses LZ4"
+      ],
+      "cons": [
+        "A consumer can still reach the path through its own options, so the exposure is only hidden, not removed",
+        "The advisory stays open against a shipped package, which the publication gate will meet again later"
+      ]
+    },
+    {
+      "id": "OPT-REPOSITORY-LOCAL-GUARD",
+      "title": "Reject LZ4 compression modes in the ViciOne serializer",
+      "pros": [
+        "Removes the reachable path without touching any dependency",
+        "Stays inside the existing write scope"
+      ],
+      "cons": [
+        "Changes public behaviour for a consumer that legitimately wants LZ4, which is a contract decision",
+        "The vulnerable code still ships inside the package",
+        "Solves less than the patch and costs more than it"
+      ]
+    }
+  ],
+  "recommendation": {
+    "optionId": "OPT-PATCH-3-1-7",
+    "exactVersion": "3.1.7",
+    "requiredScope": [
+      "repositories/vicione-servicebus/Directory.Packages.props"
+    ],
+    "verificationAfterwards": [
+      "restore and clean build",
+      "full unfiltered RabbitMQ, core twice, analyzer, abstractions, entity-framework",
+      "pack with fresh hashes",
+      "public API surface comparison, which must stay unchanged",
+      "vulnerability inventory, which must no longer report GHSA-hv8m-jj95-wg3x"
+    ]
+  },
+  "whyNotDoneNow": "The product owner may decide the risk and has. The mechanism is separate: write scopes are a lead artifact, and the orchestration contract states that a new scope can only take effect through a re-slice. Editing a root file outside the scope would be exactly the overreach this chain exists to prevent, and it would invalidate the freeze that was just delivered.",
+  "howItGotHere": "Prepared on 2026-08-10 after the product owner asked what closing the MessagePack high finding would take. It was briefly committed on top of the freeze, which moved HEAD off the commit record 0030 binds; that commit was reset and the file kept outside the repository. It belongs to the chain and had reached no record, so it is placed here until one binds it."
+}

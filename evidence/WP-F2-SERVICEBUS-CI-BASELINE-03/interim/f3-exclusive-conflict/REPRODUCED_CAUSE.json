@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "REPRODUCED_CAUSE",
+  "recordSequence": null,
+  "findingIds": [
+    "F-3"
+  ],
+  "directive": "0035",
+  "why": "Record 0035 requires the reproduced cause before any edit, and requires Team 1 to stop with a QUESTION if the specific error propagation would only be possible through a public contract change or a change of the general retry semantics. This file is that reproduction.",
+  "fixture": {
+    "image": "rabbitmq:4.2-management@sha256:a2751b3b5eed89e47ebbd5e776de0d6d85d924002773933ab881da49c073b85d",
+    "runner": "python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq --project tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/... --evidence-dir <dir> -- --filter FullyQualifiedName~Probing_the_exclusive_conflict",
+    "probeSource": "ExclusiveConflictProbe_Specs.cs.txt",
+    "probeSourceNote": "The probe is stored here rather than in the test tree. It is a diagnostic and not a gate, so leaving it in place would have meant carrying a permanently excluded test in the not-executed inventory. It restores into tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ unchanged."
+  },
+  "observed": {
+    "brokerCause": "operation queue.declare caused a channel exception resource_locked: cannot obtain exclusive access to locked queue 'exclusively-yours' in vhost 'test'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.",
+    "brokerRepetitions": "The same channel exception is raised again and again with a growing gap -- 20:07:25, 20:07:32, 20:07:40, 20:07:59 -- which is the receive transport retrying the declare with its exponential backoff.",
+    "callerReceives": "ViciOne.ServiceBus.ConnectionException",
+    "callerElapsed": "00:01:00.0097649",
+    "callerCause": "none -- the exception the caller receives carries no broker cause at all",
+    "trx": "F3_PROBE.trx",
+    "brokerLog": "F3_PROBE_BROKER.log"
+  },
+  "diagnosis": {
+    "classification": "RESOURCE_LOCKED is AMQP reply code 405. The RabbitMQ receive transport retry policy handles OperationInterruptedException when ChannelShouldBeClosed() is true, and that predicate is 'ShutdownReason?.ReplyCode >= 300' -- a blanket rule that puts a permanent configuration conflict in the same class as a transient connection fault.",
+    "consequence": "The declare is retried for as long as the other connection holds the queue. The receive endpoint's Started task therefore never faults, and the caller connecting a consumer waits out the sixty second readiness limit and is told only that the endpoint did not become ready.",
+    "whyTheCurrentSpecIsGreenForTheWrongReason": "The measured elapsed time is 60.0097 s, which is the readiness limit to four decimal places, and the type is exactly ConnectionException -- the readiness timeout's own type. The spec named for the exclusivity conflict asserts the safety net that catches any endpoint that fails to come up, for any reason.",
+    "notePrecedent": "The same policy already classifies one permanent broker error as non-retryable: x.Ignore<AuthenticationFailureException>(). There is precedent for the distinction; what is missing is where the line is drawn."
+  },
+  "whyThisIsAQuestionAndNotAnEdit": "Both routes to the required behaviour fall inside what record 0035 reserved. Making the conflict surface promptly and specifically means either changing how a broker error class is retried, or changing what a public connect call does when the endpoint faults during startup. Record 0035 requires a stop before the edit in exactly those two cases.",
+  "options": [
+    {
+      "id": "OPT-CLASSIFY-405-PERMANENT",
+      "summary": "Classify RESOURCE_LOCKED as a permanent broker error in the RabbitMQ receive transport retry policy, so the endpoint faults instead of retrying and the caller receives the converted RabbitMqConnectionException with the broker cause.",
+      "for": "Follows the precedent already in the policy for AuthenticationFailureException. The exception the caller gets is produced by machinery that already exists -- ReceiveTransport calls ConvertException, which builds a RabbitMqConnectionException carrying the real cause -- so nothing new has to be invented. Permanent and transient stay distinguishable, and they become so at the point where the distinction is actually made.",
+      "against": "It is a change of retry semantics for that error class. A bus whose exclusive queue is released later -- the other holder disconnects -- would no longer recover by itself; it would fault. The lock is only permanent for as long as the other connection lives, so 'permanent' is a judgement about intent, not a property of the broker's answer.",
+      "mustNotTouch": "Reply code 406 PRECONDITION_FAILED has to stay retryable. That is the code the acknowledgement timeout in F-1 produces, and the redelivery there depends on the transport reconnecting after the broker closes the channel. Any classification that swept 4xx into 'permanent' would break the case this same round just proved."
+    },
+    {
+      "id": "OPT-SURFACE-STARTUP-FAULT",
+      "summary": "Leave the retry policy alone and let the readiness wait observe the endpoint's transport faults: a consumer being connected receives the first real fault instead of waiting for the readiness limit.",
+      "for": "Does not change retry semantics at all -- the transport goes on retrying in the background exactly as before. The caller learns the real cause within about a second instead of sixty, and the generic readiness timeout stays what record 0035 wants it to be: the last resort for an endpoint that never comes up for some other reason.",
+      "against": "It changes what a public connect call does when a startup fault occurs. A transient fault during startup -- one the transport would have retried away well inside the sixty second window -- would now surface to the caller instead of being absorbed. That trade could be softened with a grace period before the fault is surfaced, at the price of a second timing constant."
+    },
+    {
+      "id": "OPT-REOPEN-F3",
+      "summary": "Leave the product untouched and carry the exclusivity case as an open defect into a follow-up order, as the MessagePack high finding already is.",
+      "for": "Changes no product behaviour on the strength of a single spec. The reproduced cause and this evidence stay, so the follow-up starts from a measurement rather than from scratch.",
+      "against": "The five cases from re-slice 0005 would not all be closed, and the spec keeps a name that promises more than it proves -- although with this record it would at least be documented rather than implied."
+    }
+  ],
+  "recommendation": "OPT-SURFACE-STARTUP-FAULT, with a stated grace period. It is the only one of the three that gives the caller the real broker cause without deciding, on behalf of every user of the transport, that an exclusive lock is permanent -- and the reproduction shows the specific exception is already being built and observed today; it simply never reaches the caller."
+}

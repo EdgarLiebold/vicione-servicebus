@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kind": "REPRODUCED_CAUSE",
+  "recordSequence": null,
+  "directive": "0045",
+  "requirementIds": ["REQ-CI-002"],
+  "findingIds": ["F-3"],
+  "why": "Record 0045 block 1 assumed the remaining failure was a lost structured cause at ChannelContextFactory. That assumption was implemented in full and did not change the outcome. This file records what the code and the instrumentation actually show, so the next decision rests on a cause rather than on another attempt.",
+  "whatWasImplemented": {
+    "structuredCause": "CreateSharedChannel keeps the outer synthetic 491 and carries the broker's unaltered ShutdownEventArgs; IsExclusiveResourceConflict recognises only a real reply code 405 and every text search is removed.",
+    "secondAttempt": "The last shutdown seen by the factory is remembered, so a channel disposed before it can be read still yields its reason.",
+    "result": "No change to the failing case. Isolated the specs are green in 22 s; under full suite load they are not."
+  },
+  "measurement": {
+    "instrumented": "Failure_Specs prints the whole exception chain of every endpoint fault: type, reply code, and the carried close reason.",
+    "observed": "RabbitMqConnectionException(code=-) carried=none -> OperationInterruptedException(code=491) carried=none [terminal=False], four times in a row.",
+    "meaning": "The 491 is raised because the channel handed out is already closed. carried=none means Channel.CloseReason was null AND no shutdown notification had reached the factory. A channel is closed with no reason only when it was discarded locally, never when the broker closed it."
+  },
+  "codeAnalysis": {
+    "recycle": "Recycle<T> replaces a supervisor when it stops, so a new ChannelContextSupervisor brings a new ChannelContextFactory with it. Anything the previous factory remembered dies with it — which is why remembering the shutdown there could not help.",
+    "channelOrigin": "ChannelContextFactory.CreateContext obtains the channel from the connection context supervisor, which is not recycled together with the channel supervisor. A channel taken from a connection that is going away is closed on arrival, and has no close reason because no peer ever closed it.",
+    "conclusion": "Under load the bus endpoint never issues its declare at all. There is no broker answer to classify, so no classification can help. Isolated, the declare does reach the broker, the real 405 arrives, and every spec passes."
+  },
+  "whatThisRulesOut": [
+    "A classification defect: the recognition is exact and is proved by seven sabotages, including 405 versus 406 and the loss of every ShutdownEventArgs field.",
+    "A delivery defect: waiters are woken, handles are disconnected, and the marker is honoured only when true — each proved by its own sabotage.",
+    "A lost structured cause at the point record 0045 named: it is now carried, and the failing case does not reach that point."
+  ],
+  "whereItSits": "The channel lifecycle of the transport — specifically that a channel is handed out from a connection that can no longer carry it. Records 0041 and 0045 freed ChannelContextFactory for the named replacement point only; the connection supervisor and the recycle mechanics around it were not freed.",
+  "cost": "Stated plainly because it is part of the record: the last five full gate runs took about an hour and did not advance the diagnosis. The answer came from one instrumented run and from reading Recycle and ChannelContextFactory. The order should have been the other way round."
+}

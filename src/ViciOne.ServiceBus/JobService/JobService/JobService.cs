@@ -1,4 +1,4 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.JobService;
 
 using System;
@@ -19,7 +19,34 @@ public class JobService :
 {
     readonly ConcurrentDictionary<Guid, JobHandle> _jobs;
     readonly Dictionary<Type, IJobTypeRegistration> _jobTypes;
-    Timer _heartbeat;
+    /// <summary>
+    /// The single owner of a lifecycle transition. Stop and BusStarted both move the stopping state and
+    /// the heartbeat, and volatile only makes a write visible — it orders nothing. A later transition
+    /// therefore has to wait for the running one, or a BusStarted that overtakes a Stop leaves a service
+    /// that considers itself running while the stop is still draining jobs. A monitor lock is not an
+    /// option here because both transitions await.
+    /// </summary>
+    readonly SemaphoreSlim _lifecycle = new SemaphoreSlim(1, 1);
+
+    /// <summary>
+    /// The admission boundary between "no more jobs" and "this job is mine".
+    /// <para>
+    /// The lifecycle gate above orders Stop against BusStarted, but not against a job arriving. StartJob
+    /// could read a service that was not stopping, be overtaken by a Stop that drained an empty set, and
+    /// register its handle afterwards — a job that outlives the stop that was supposed to end it. Both
+    /// halves of that race are short and synchronous, so a monitor lock closes it: setting the stopping
+    /// state, and deciding whether a job is admitted.
+    /// </para>
+    /// </summary>
+    readonly object _admission = new object();
+
+    /// <summary>Jobs admitted but not yet registered. Guarded by <see cref="_admission" />.</summary>
+    int _admitted;
+
+    /// <summary>The running heartbeat, or null. Only ever touched while <see cref="_lifecycle" /> is held.</summary>
+    Heartbeat _heartbeat;
+
+    /// <summary>Guarded by <see cref="_admission" />; never read outside it.</summary>
     bool _stopping;
 
     public JobService(JobServiceSettings settings)
@@ -62,7 +89,21 @@ public class JobService :
 
         var jobContext = new ConsumeJobContext<T>(context, InstanceAddress, job, jobOptions);
 
-        if (_stopping)
+        // Admission and refusal are one decision, taken under the lock that Stop also takes. Reading a
+        // flag and registering afterwards left a window in which a stop could begin, find nothing to
+        // drain and finish, while this job was already on its way in.
+        var admitted = false;
+
+        lock (_admission)
+        {
+            if (!_stopping)
+            {
+                _admitted++;
+                admitted = true;
+            }
+        }
+
+        if (!admitted)
         {
             LogContext.Debug?.Log("Rejecting job: {JobType} {JobId} ({RetryAttempt}) - Job Service is stopping", TypeCache<T>.ShortName, startJob.JobId,
                 startJob.RetryAttempt);
@@ -74,27 +115,51 @@ public class JobService :
             LogContext.Debug?.Log("Executing job: {JobType} {JobId} ({RetryAttempt})", TypeCache<T>.ShortName, startJob.JobId,
                 startJob.RetryAttempt);
 
-            var jobTask = jobPipe.Send(jobContext);
+            try
+            {
+                var jobTask = jobPipe.Send(jobContext);
 
-            var jobHandle = new ConsumerJobHandle<T>(jobContext, jobTask, jobOptions.JobCancellationTimeout);
+                var jobHandle = new ConsumerJobHandle<T>(jobContext, jobTask, jobOptions.JobCancellationTimeout);
 
-            Add(jobHandle);
+                Add(jobHandle);
+            }
+            finally
+            {
+                // Released only once the handle is registered, or once registering has failed. A stop
+                // running in parallel waits for this count, so the job is never invisible to it.
+                lock (_admission)
+                    _admitted--;
+            }
         }
     }
 
     public async Task Stop(IPublishEndpoint publishEndpoint)
     {
-        _stopping = true;
-
-        if (_heartbeat != null)
+        await _lifecycle.WaitAsync().ConfigureAwait(false);
+        try
         {
-            _heartbeat.Dispose();
-            _heartbeat = null;
+            await StopUnderGate(publishEndpoint).ConfigureAwait(false);
         }
+        finally
+        {
+            _lifecycle.Release();
+        }
+    }
+
+    async Task StopUnderGate(IPublishEndpoint publishEndpoint)
+    {
+        // Set before anything else and cleared only by a BusStarted that completes: while the stop
+        // drains, and until a start has really succeeded, no new job is accepted.
+        lock (_admission)
+            _stopping = true;
+
+        await StopHeartbeat().ConfigureAwait(false);
 
         await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishJobInstanceStopped(publishEndpoint))).ConfigureAwait(false);
 
-        while (_jobs.IsEmpty == false)
+        // Admitted but not yet registered counts as outstanding. Draining only the registered jobs
+        // would let a job that was admitted a moment before the stop appear after it had finished.
+        while (_jobs.IsEmpty == false || Volatile.Read(ref _admitted) > 0)
         {
             async Task CancelJob(JobHandle jobHandle)
             {
@@ -117,7 +182,30 @@ public class JobService :
             }
 
             await Task.WhenAll(_jobs.Values.Select(jobHandle => Task.Run(() => CancelJob(jobHandle)))).ConfigureAwait(false);
+
+            if (_jobs.IsEmpty && Volatile.Read(ref _admitted) > 0)
+                await Task.Yield();
         }
+    }
+
+    /// <summary>
+    /// Ends the running heartbeat and waits for it. Called only under the lifecycle gate.
+    /// <para>
+    /// Waiting is the point. A timer was disposed without waiting for the publication it had already
+    /// started, so a heartbeat could reach the broker after Stop had returned — the service announcing
+    /// itself alive after saying it had stopped. The loop owns its own publication and is awaited here,
+    /// so when this returns nothing of it is still in flight.
+    /// </para>
+    /// </summary>
+    async Task StopHeartbeat()
+    {
+        var heartbeat = _heartbeat;
+        if (heartbeat == null)
+            return;
+
+        _heartbeat = null;
+
+        await heartbeat.Stop().ConfigureAwait(false);
     }
 
     public void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
@@ -131,33 +219,44 @@ public class JobService :
 
     public async Task BusStarted(IPublishEndpoint publishEndpoint)
     {
-        // Stop sets this and nothing cleared it again. A bus that is stopped and started once more —
-        // a restart, a host cycling its services, the shutdown-and-restart scenario the job specs
-        // cover — therefore kept a job service that considered itself stopping for good: every
-        // StartJob was rejected with JobServiceStoppingException, the attempt faulted, the saga
-        // retried after its delay, and the same rejection happened again without end. The heartbeat
-        // below is the other half of the state Stop tears down, and that half was always restored;
-        // this flag was simply forgotten.
-        _stopping = false;
-
-        await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimit(publishEndpoint))).ConfigureAwait(false);
-
-        void PublishHeartbeats(object state)
+        await _lifecycle.WaitAsync().ConfigureAwait(false);
+        try
         {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeat(publishEndpoint))).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    LogContext.Debug?.Log(exception, "Failed to publish heartbeat");
-                }
-            });
-        }
+            // Whatever a previous lifecycle left behind goes first, so a successful start owns exactly
+            // one heartbeat rather than adding a second one beside an older timer.
+            await StopHeartbeat().ConfigureAwait(false);
 
-        _heartbeat = new Timer(PublishHeartbeats, null, Settings.HeartbeatInterval, Settings.HeartbeatInterval);
+            await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimit(publishEndpoint))).ConfigureAwait(false);
+
+            // Exactly one generation per successful start: the previous one is ended and awaited above,
+            // so two loops never publish side by side.
+            _heartbeat = new Heartbeat(this, publishEndpoint, Settings.HeartbeatInterval);
+
+            // Last, and only on the success path. Stop sets this and nothing cleared it again, which is
+            // what left a restarted service rejecting every job for good; clearing it before the start
+            // has actually completed would be the same defect with the sign reversed.
+            lock (_admission)
+                _stopping = false;
+        }
+        catch
+        {
+            // A start that did not complete leaves no running state and no live heartbeat behind.
+            await StopHeartbeat().ConfigureAwait(false);
+
+            lock (_admission)
+                _stopping = true;
+
+            throw;
+        }
+        finally
+        {
+            _lifecycle.Release();
+        }
+    }
+
+    Task PublishHeartbeats(IPublishEndpoint publishEndpoint)
+    {
+        return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeat(publishEndpoint)));
     }
 
     public Guid GetJobTypeId<T>()
@@ -193,6 +292,77 @@ public class JobService :
             if (TryRemoveJob(jobHandle.JobId, out _))
                 await jobHandle.DisposeAsync().ConfigureAwait(false);
         });
+    }
+
+
+    /// <summary>
+    /// One generation of heartbeat publication, owned by the start that created it.
+    /// <para>
+    /// A timer plus a fire-and-forget Task.Run cannot be ended: disposing the timer stops further ticks
+    /// but says nothing about the publication already running, so a heartbeat could still reach the
+    /// broker after Stop had returned. This loop holds its own cancellation and its own task, so ending
+    /// it is something that can be awaited — and Stop does await it.
+    /// </para>
+    /// <para>
+    /// The interval is a delay between publications rather than a rate, so two publications of the same
+    /// generation never overlap however slow the broker is.
+    /// </para>
+    /// </summary>
+    class Heartbeat
+    {
+        readonly CancellationTokenSource _stopping;
+        readonly Task _publishing;
+
+        public Heartbeat(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval)
+        {
+            _stopping = new CancellationTokenSource();
+            _publishing = Run(service, publishEndpoint, interval, _stopping.Token);
+        }
+
+        public async Task Stop()
+        {
+            _stopping.Cancel();
+
+            try
+            {
+                await _publishing.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // The loop ended because it was asked to.
+            }
+            finally
+            {
+                _stopping.Dispose();
+            }
+        }
+
+        static async Task Run(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await Task.Delay(interval, cancellationToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
+                try
+                {
+                    await service.PublishHeartbeats(publishEndpoint).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Debug?.Log(exception, "Failed to publish heartbeat");
+                }
+            }
+        }
     }
 
 

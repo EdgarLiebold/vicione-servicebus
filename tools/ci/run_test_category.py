@@ -120,6 +120,8 @@ def read_counters(trx_path: Path) -> dict[str, int]:
     }
 
 
+
+
 def run_category(category: str, project: str, evidence_dir: Path, extra: list[str]) -> dict[str, object]:
     evidence_dir.mkdir(parents=True, exist_ok=True)
     trx_path = evidence_dir / f"{category}.trx"

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "REPRODUCED_CAUSE",
+  "recordSequence": null,
+  "directive": "0047",
+  "requirementIds": ["REQ-CI-002"],
+  "findingIds": ["F-3"],
+  "why": "Record 0047 named a masking hypothesis and required it to be confirmed with exception identity before any change. It is confirmed and corrected. A second cause remains, and this file names it from the code rather than from another run.",
+  "confirmedHypothesis": {
+    "statement": "PipeContextSupervisor.Send let clean up replace the primary exception.",
+    "code": [
+      "The catch awaited activeContext.Faulted(exception) and only then rethrew: a fault report that threw meant the rethrow was never reached.",
+      "The finally awaited Stop and DisposeAsync unguarded: either replaces whatever is propagating, including a rethrow that took care to preserve it.",
+      "RabbitMqExtensions.Cleanup promises in its own summary to close and dispose 'without throwing any exceptions', but only CloseAsync was inside the guard. Disposing a channel the broker has just closed throws, so the promise broke exactly on the failure path."
+    ],
+    "correction": "Fault reporting, stop and dispose are each guarded. The primary exception always reaches the caller; the secondary failure stays visible in structured logging. Cleanup now guards its dispose as its summary always claimed.",
+    "proof": "Failing_while_cleaning_up_after_a_failure, five transport neutral specs in the core assembly: reporting fails, stop fails, dispose fails, all three fail, and the success path stays untouched. The mutation that puts the clean up failure back in front turns two of them red."
+  },
+  "remainingCause": {
+    "statement": "The channel context supervisor hands out a cached channel that the broker has already closed.",
+    "code": [
+      "PipeContextSupervisor.GetContext returns the cached handle while 'IsDisposed' is false. A channel closed by the broker does not make the handle disposed, so the handle stays eligible.",
+      "What disposes it is ChannelContextFactory.HandleShutdown, and it does so fire and forget: Task.Run(() => asyncContext.Stop(args.ReplyText)).",
+      "Between the broker closing the channel and that stop completing there is a window. Every Send inside it receives the dead channel, and CreateSharedChannel raises the synthetic 491 — with no reason at all, because the channel object was disposed during clean up and its CloseReason is gone with it."
+    ],
+    "measured": "Every endpoint fault in the failing runs reads OperationInterruptedException(code=491) carried=none. Not one carries a broker reason, which is only possible for a channel discarded locally.",
+    "consequence": "The declare never runs inside that window, so there is no broker answer to classify. Once the stop lands, a fresh channel is created, the declare runs, and the real 405 appears — after 33 to 54 seconds. Isolated the window is effectively zero and every spec passes in 22 s.",
+    "whyItIsNotTheFreedChange": "Record 0047 freed the smallest internal correction that preserves the structured cause. This is a different change: making the invalidation take effect before the next GetContext. It is neither the structured cause nor the masking, and it sits in the lifecycle area that records 0041 and 0045 fenced."
+  },
+  "correctedInThisRound": [
+    "The masking, with a transport neutral test and its mutant.",
+    "The _lastShutdown store rejected by record 0047 is removed; only a CloseReason actually present on the affected channel is carried.",
+    "structured-cause-dropped is no longer a surviving sabotage: a direct producer test calls ChannelContextFactory.ChannelAlreadyClosed and asserts the carried reason is the same instance, with initiator, reply code, reply text, class, method and cause intact. The mutation that removes the attaching turns it red. The test assembly is signed with the product key so the transport can grant it friend access; the public surface is unchanged.",
+    "old-fault-survives-restart is now a behaviour test: the same harness, stopped, the queue released, started again, must connect.",
+    "The last fixed delays are gone from both exclusivity fixtures; a shared probe asks the broker whether the queue is held or released, with an upper bound and a failure naming the unmet precondition."
+  ],
+  "gate": "332 total, 327 passed, 5 failed. All five are this work's own exclusivity specs, and all five fail through the window described above."
+}

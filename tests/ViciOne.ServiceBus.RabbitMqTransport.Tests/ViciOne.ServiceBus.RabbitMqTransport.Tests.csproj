@@ -1,6 +1,10 @@
 ﻿<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Signed with the product key so the transport can grant it friend access: record 0047
+       requires a direct test of the internal producer of the already-closed channel exception. -->
+  <Import Project="../../signing.props" />
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>

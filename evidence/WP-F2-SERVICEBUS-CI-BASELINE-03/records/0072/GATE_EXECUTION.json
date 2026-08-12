@@ -1,0 +1,40 @@
+[
+  {
+    "category": "BUILD",
+    "command": "dotnet build ViciOne.ServiceBus.sln --nologo -c Release",
+    "startedUtc": "2026-08-12T17:07:46.842099+00:00",
+    "exitCode": 0,
+    "rawLog": {
+      "path": "records/0072/raw/build.log",
+      "sha256": "3fcafda0618f8fa10f783fbbe93da23a97bf5f03ae3355654d7ebe289612baeb"
+    }
+  },
+  {
+    "category": "POLICY",
+    "command": "python3 tools/ci/policy_validator.py",
+    "startedUtc": "2026-08-12T17:08:38.439261+00:00",
+    "exitCode": 0,
+    "rawLog": {
+      "path": "records/0072/raw/policy.log",
+      "sha256": "6beaecf1b0fd28e16dbcf3cd67682175c9489ebcb8500cb463436050490b939e"
+    },
+    "toolHash": {
+      "path": "tools/ci/policy_validator.py",
+      "sha256": "43c4558c1b9660c3f03e32b78228ef919de5cd8e6be34e274c70a048247b2f75"
+    }
+  },
+  {
+    "category": "POLICY_SELF_TESTS",
+    "command": "python3 tools/ci/test_policy_validator.py",
+    "startedUtc": "2026-08-12T17:08:40.237988+00:00",
+    "exitCode": 0,
+    "rawLog": {
+      "path": "records/0072/raw/policy_self_tests.log",
+      "sha256": "c1feeea4f3e0bffbf1d0cf9a568dfa4d4ddf23cb157b7c62113e5a3a5ba87e0b"
+    },
+    "toolHash": {
+      "path": "tools/ci/test_policy_validator.py",
+      "sha256": "d49b409a9e8d8cc1adb97672ec10f0a5ad9b94256efe3f871fa523f35ea20f25"
+    }
+  }
+]

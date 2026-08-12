@@ -84,5 +84,7 @@
     "No [Ignore] was added; three [Explicit] were removed so cases run.",
     "No case was reclassified as not due.",
     "Directory.Packages.props is untouched."
-  ]
+  ],
+  "status": "SUPERSEDED_INTERIM",
+  "supersededBy": "records/0030/REQ-CI-002_REQUIREMENT_EVIDENCE_MATRIX.json and the TRX in the same folder. This file records the state part way through re-slice 0005, when the RabbitMQ category still reported eight failures and three decisions were open. It contradicted the freeze while lying inside the freeze record's own path, so the same interim marker the other two intermediate artifacts carry now applies here and the file has moved to interim/."
 }

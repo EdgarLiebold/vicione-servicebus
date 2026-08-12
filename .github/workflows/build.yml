@@ -9,29 +9,16 @@
 # They stay visible and manually runnable instead of being hidden behind an unsatisfiable condition.
 name: Required CI
 
+# No path filter. The rule below it rejects a job level condition because an unsatisfiable one makes
+# a required category vanish while the run still reports success; a path allowlist on the trigger does
+# the same thing to every job at once, and for every change outside the list. The delivered list left
+# .editorconfig, signing.props, .gitattributes, .devcontainer/** and everything under tools/ outside
+# tools/ci/** without any required gate. A required profile runs on every push and pull request.
 on:
   push:
     branches:
       - '**'
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'tools/ci/**'
-      - 'build/test-infrastructure/**'
-      - 'ViciOne.ServiceBus.sln'
-      - 'Directory.Build.props'
-      - 'Directory.Packages.props'
-      - '.github/workflows/build.yml'
   pull_request:
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'tools/ci/**'
-      - 'build/test-infrastructure/**'
-      - 'ViciOne.ServiceBus.sln'
-      - 'Directory.Build.props'
-      - 'Directory.Packages.props'
-      - '.github/workflows/build.yml'
   workflow_dispatch:
 
 permissions:
@@ -139,7 +126,8 @@ jobs:
             --category rabbitmq \
             --project tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
             --evidence-dir artifacts/required/rabbitmq \
-            --ports-out artifacts/required/rabbitmq/endpoints.json
+            --ports-out artifacts/required/rabbitmq/endpoints.json \
+            --one-refusal-per-vhost 'test-exclusive-*'
       - uses: actions/upload-artifact@v4
         if: always()
         with:

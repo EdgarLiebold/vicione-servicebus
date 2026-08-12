@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "kind": "DEVELOPER_EVIDENCE",
+  "recordSequence": 33,
+  "requirementIds": [
+    "REQ-CI-002",
+    "REQ-CI-004",
+    "REQ-CI-007",
+    "REQ-CI-008"
+  ],
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "title": "Correction of findings F-4 to F-12 from record 0032",
+  "againstFreeze": {
+    "commit": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+    "tree": "9c3ee122480334b4f86921d1b34d0aa9884c9fb0"
+  },
+  "notFrozenYet": "No new freeze is produced in this round; F-1 to F-3 are put to the lead as record 0034.",
+  "findings": [
+    {
+      "id": "F-4",
+      "state": "CLOSED",
+      "what": "A status artefact inside records/0030 contradicted the freeze, the matrix and the TRX counters.",
+      "done": "Moved to interim/reslice-0005/ and marked SUPERSEDED_INTERIM with a pointer to what replaced it. Nothing was deleted; the record path of the freeze now carries one end state, not two.",
+      "files": [
+        "evidence/.../interim/reslice-0005/REQ-CI-002_RESLICE_0005_STATUS.json"
+      ]
+    },
+    {
+      "id": "F-5",
+      "state": "CLOSED",
+      "what": "build and policy were counted as green required gates on prose; their only instrument records belonged to the discarded freeze.",
+      "done": "Both executed again and bound with command, exit code and counters in this record's own path.",
+      "files": [
+        "records/0033/REQ-CI-002_BUILD_GATE.json",
+        "records/0033/REQ-CI-007_POLICY_SABOTAGE_MATRIX.json"
+      ]
+    },
+    {
+      "id": "F-6",
+      "state": "CLOSED",
+      "what": "Both close sites still swallowed the original exception entirely; only the close failure was logged.",
+      "done": "The original exception is reported at error level before the close is attempted, at both sites. The inner catch for the close failure is unchanged, so the two failures stay separate.",
+      "files": [
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Testing/RabbitMqTestHarnessHostedService.cs"
+      ]
+    },
+    {
+      "id": "F-7",
+      "state": "CLOSED",
+      "what": "The bounded wait turned a throw into the regular failure case, and on that path the already connected pipe handle was lost: no disconnect for the caller, and a request pipe kept its request id bound.",
+      "done": "All three connectors go through one helper that disconnects the handle before letting the exception out.",
+      "files": [
+        "src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs"
+      ]
+    },
+    {
+      "id": "F-8",
+      "state": "CLOSED",
+      "what": "Two reproduced validator bypasses: the required profile's own trigger was never read, and the default-credential sentinel missed a URI carrying userinfo.",
+      "done": "The trigger is held to the same invariant as a job condition, and the path allowlist was removed from build.yml so the required profile runs on every push and pull request. The endpoint regex accepts an optional userinfo group. Four self-tests added, 53 to 57.",
+      "files": [
+        "tools/ci/policy_validator.py",
+        "tools/ci/test_policy_validator.py",
+        ".github/workflows/build.yml"
+      ]
+    },
+    {
+      "id": "F-9",
+      "state": "CLOSED",
+      "what": "CloseReason trimmed on UTF-16 code units, so a character outside the basic plane could be cut in half — the replacement character its own comment promised to avoid.",
+      "done": "A trailing high surrogate is dropped before the substring is taken.",
+      "files": [
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Testing/RabbitMqTestHarnessHostedService.cs"
+      ]
+    },
+    {
+      "id": "F-10",
+      "state": "CLOSED_AND_FOUND_MORE",
+      "what": "The stopping branch, newly reachable after the correction, had no test at all.",
+      "done": "Three specs run the retry loop directly against a stub host configuration: stopping alone, both tokens at once, and caller alone with a check on the reported token.",
+      "additionalDefect": "The both-cancelled spec failed. Inside the loop and in the catch handler stopping wins; after the loop the caller won. The same input produced a different answer depending on which path left the loop. The post-loop block now applies the same precedence as the other two.",
+      "files": [
+        "tests/ViciOne.ServiceBus.Tests/HostConfigurationRetry_Specs.cs",
+        "src/ViciOne.ServiceBus/Transports/HostConfigurationRetryExtensions.cs"
+      ]
+    },
+    {
+      "id": "F-11",
+      "state": "CLOSED",
+      "what": "_stopping gained a second writer without any synchronisation; _heartbeat has the same shape.",
+      "done": "Both fields are volatile, so a reader sees the last write rather than a cached one.",
+      "files": [
+        "src/ViciOne.ServiceBus/JobService/JobService/JobService.cs"
+      ]
+    },
+    {
+      "id": "F-12",
+      "state": "CLOSED",
+      "what": "The two proof contract folders still carried recordSequence 26 and referenced records/0026.",
+      "done": "All ten files reissued for this correction round with their references pointing at its evidence.",
+      "files": [
+        "evidence/.../GUA-GOV-001/*.json",
+        "evidence/.../MECH-TEST-001/*.json"
+      ]
+    }
+  ],
+  "gatesAfterTheCorrection": [
+    {
+      "gate": "policy",
+      "state": "GREEN",
+      "result": "PASS, exit 0; 57 self-tests OK, up from 53"
+    },
+    {
+      "gate": "build",
+      "state": "GREEN",
+      "result": "exit 0, 0 errors, four target frameworks"
+    },
+    {
+      "gate": "analyzer",
+      "state": "GREEN",
+      "counters": {
+        "total": 111,
+        "executed": 111,
+        "passed": 111,
+        "failed": 0
+      }
+    },
+    {
+      "gate": "core",
+      "state": "GREEN",
+      "counters": {
+        "total": 1883,
+        "executed": 1840,
+        "passed": 1840,
+        "failed": 0
+      },
+      "detail": "Three more than before, which are the new retry specs."
+    },
+    {
+      "gate": "rabbitmq",
+      "state": "GREEN",
+      "counters": {
+        "total": 327,
+        "executed": 307,
+        "passed": 307,
+        "failed": 0
+      },
+      "detail": "Unfiltered; 20 not executed, all inventoried, zero unclassified."
+    },
+    {
+      "gate": "public-api",
+      "state": "GREEN",
+      "result": "27488 members, 15 testing additions, zero removals, messaging surface unchanged — identical to the freeze."
+    }
+  ],
+  "notWeakened": [
+    "No assertion was relaxed.",
+    "No timeout was extended.",
+    "No retry was added.",
+    "No ordering was loosened.",
+    "No filter was introduced; one was removed from the trigger.",
+    "No [Ignore] was added and no [Explicit] was added.",
+    "No case was reclassified.",
+    "Directory.Packages.props is untouched."
+  ]
+}

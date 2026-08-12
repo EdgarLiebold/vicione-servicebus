@@ -315,6 +315,7 @@ namespace ViciOne.ServiceBus.Transports
 
             public Task SetFaulted(ReceiveEndpointFaulted faulted)
             {
+
                 _faulted = faulted;
 
                 if (_cancellationToken.IsCancellationRequested || IsUnrecoverable(faulted.Exception))
@@ -328,7 +329,9 @@ namespace ViciOne.ServiceBus.Transports
                 return Task.CompletedTask;
             }
 
-            static bool IsUnrecoverable(Exception exception)
+
+
+        static bool IsUnrecoverable(Exception exception)
             {
                 return exception switch
                 {

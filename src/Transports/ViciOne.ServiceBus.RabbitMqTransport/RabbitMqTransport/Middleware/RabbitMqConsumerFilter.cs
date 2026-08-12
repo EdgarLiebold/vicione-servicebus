@@ -45,10 +45,14 @@ public class RabbitMqConsumerFilter :
         }
         catch (OperationCanceledException)
         {
-            await context.Channel.Cleanup(491, "BasicConsumeAsync canceled");
+            // A cancellation this process asked for stays a cancellation. Dressing it up as a broker
+            // answer told every layer above that the peer had closed the channel, which was never true
+            // and which the retry policy has to reason about. The channel is handed back to its owner
+            // rather than closed here, so the single disposal path still applies.
+            if (context is RabbitMqChannelContext owned)
+                await owned.DisposeAsync().ConfigureAwait(false);
 
-            throw new OperationInterruptedException(
-                new ShutdownEventArgs(ShutdownInitiator.Peer, 491, $"BasicConsumeAsync canceled: {_context.InputAddress}"));
+            throw;
         }
 
         await consumer.Ready.ConfigureAwait(false);

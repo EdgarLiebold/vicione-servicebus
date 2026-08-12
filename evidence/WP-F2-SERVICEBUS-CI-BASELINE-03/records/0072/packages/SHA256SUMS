@@ -1,0 +1,37 @@
+# sha256 of the packages this run produced, by file name only.
+# The artifacts themselves are deliberately not part of the freeze: REQ-CI-004 binds the
+# hashes and the package surface in the evidence path, not the packages. They are rebuilt
+# by 'dotnet pack -c Release' against the frozen tree and re-hashed to check this list.
+531eb92d47f71a00a430cd7e295b2528439607f0faee72089360312003edb574  ViciOne.ServiceBus.1.0.0.nupkg
+701fe0de7dd049748742963e7b1af65715d2546e872eca48550c24f92fe8dae9  ViciOne.ServiceBus.Abstractions.1.0.0.nupkg
+d810669fa5570420dec046b44b544cfdc8b2141c2b22d8349fd23f2374a57730  ViciOne.ServiceBus.ActiveMQ.1.0.0.nupkg
+9ab545f94494018decb0c008d0c469b38cf48719fbcfbb5783f7595685c75c0c  ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg
+2b658c0cd82fd6363239ff12b4cfb4b624ccbfadb751d003930b3c7642087f6d  ViciOne.ServiceBus.AmazonSQS.1.0.0.nupkg
+3e213f4fbda40d5054aad1d078c6a2017b0672d38dab2259f1966276d4c969dd  ViciOne.ServiceBus.Analyzers.1.0.0.nupkg
+6b0f708a7c363318f49834dae6eb2478b09fe9a3b1284bc7f306484405329684  ViciOne.ServiceBus.Azure.Cosmos.1.0.0.nupkg
+eb33f4f8d897c3cd772a1a5d8f46a6c49e19465cac8d1fe06dbe897b15e0af77  ViciOne.ServiceBus.Azure.Cosmos.Table.1.0.0.nupkg
+c3356afda078e0aedcee88e4db30adb50390fbbe7970f4c8e8009755c1457dee  ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg
+e58009d2f4a8016638a90df0d85d7a7bcba0bc2a605fed9291d29a62959e64f3  ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg
+88cff0d53d9effbaabc96b1e96531c4569476a90306fe52f9ba5f13885969f4b  ViciOne.ServiceBus.DapperIntegration.1.0.0.nupkg
+5ffd20c6ef92b54610c947a4156cca69d6985fc68ec758f47356aae96f09c228  ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg
+cc4613827eefe6927fe84ab85185f9fcfbd86913ef8a564791269f3fedd0731d  ViciOne.ServiceBus.EntityFramework.1.0.0.nupkg
+f81bf1863000f54f718313a7d87455395824cb85953135912157b5fb279b9762  ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg
+2cabf2882e703b6e14d5030396dc94c609306f822068582a1a3ce2a72f5eaa4f  ViciOne.ServiceBus.EventHub.1.0.0.nupkg
+4ea19907206c7c5a95aac883030b453c4a8b90e8996900c07ef8c5d0f701a463  ViciOne.ServiceBus.Hangfire.1.0.0.nupkg
+da6adf8b8e726ae807e4a599f9c64e5241237cb1c4f2909498fb48574a5870e2  ViciOne.ServiceBus.Interop.NServiceBus.1.0.0.nupkg
+0da29f9d7f216877f8411cb90b83e61c3d4c35f94c919681b8c4e65f6e3c6555  ViciOne.ServiceBus.Kafka.1.0.0.nupkg
+7c6dc6a7e4c42c47354af3e384c5cb05818bf1ddc402fb17df7ebb86baf4f694  ViciOne.ServiceBus.Marten.1.0.0.nupkg
+da2b921e91016d20bcd2be35a8d6bfd6a93e42344bedc910d8630e26d97b2807  ViciOne.ServiceBus.MessagePack.1.0.0.nupkg
+d0ed96515c3f3327e561b3b2c370e176a36e4a30a0f28cc6f0ed33d42f3249ce  ViciOne.ServiceBus.MongoDb.1.0.0.nupkg
+9a4803eee8678122a491357af2a2f11d0ad874715856d21cf7f173c1d4f91edd  ViciOne.ServiceBus.NHibernate.1.0.0.nupkg
+2dd516f5b14aa07809925cde13737debb8b31b1c67e4e676e0884f354fde9f83  ViciOne.ServiceBus.Newtonsoft.1.0.0.nupkg
+9bee7aa55359827a3525d6690e958b4d1230422159fdfa46c070933c5e14d072  ViciOne.ServiceBus.Quartz.1.0.0.nupkg
+22a2dd51041ea0dd14ff43cedadf25170a73d715d06915625f34cbe8d5fb1606  ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg
+cf50194d38fa141bf67b0afe4735bc6364182df0636d2ff185349f6992693369  ViciOne.ServiceBus.Redis.1.0.0.nupkg
+d34eb899cb88f1faf423d8b7536ecd3012f397a1372adf9129e0a5c633ca8f2f  ViciOne.ServiceBus.SignalR.1.0.0.nupkg
+9d8b89763f82943584014077d754d4d0888cee038360a84c4e8455ef52550337  ViciOne.ServiceBus.SqlTransport.PostgreSQL.1.0.0.nupkg
+800bca3888c5d0bbf87f4c0652896b00a61c3e315e6f33cfce1913be056e09a6  ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg
+5eb9dee69d716f7ef59d1a80792b7ff12b06d9531e0a26955196ffccb283557c  ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg
+00a75b16e3da4a608aaad4201a197c0996e13d4468f74674b0a7d9c0a1624652  ViciOne.ServiceBus.TestFramework.1.0.0.nupkg
+e78dde1fcc653482f08440ae3dec92f38ab4701f740db54efeef12698ea3614d  ViciOne.ServiceBus.WebJobs.EventHubs.1.0.0.nupkg
+4f01634e343dc5cd014a7911d0e76b23f4cab14dbeddcf9a27c483b8baff78b9  ViciOne.ServiceBus.WebJobs.ServiceBus.1.0.0.nupkg

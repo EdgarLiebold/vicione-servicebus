@@ -31,6 +31,13 @@ public class ChannelContextFactory :
 
         Task HandleShutdown(object sender, ShutdownEventArgs args)
         {
+            // Invalidation first, and it keeps the broker's own reason. Disposal is not started here:
+            // the client raises this notification while the refused operation is still unwinding, and
+            // taking the channel away underneath it is what replaced the broker's answer with an
+            // ObjectDisposedException. The lifetime disposes once the last operation has finished.
+            if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqChannelContext channelContext)
+                channelContext.Lifetime.Invalidate(args);
+
             Task.Run(() => asyncContext.Stop(args.ReplyText))
                 .IgnoreUnobservedExceptions();
 
@@ -82,8 +89,16 @@ public class ChannelContextFactory :
             : await contextTask.OrCanceled(cancellationToken).ConfigureAwait(false);
 
         if (context.Channel.IsClosed)
-            throw new OperationInterruptedException(
-                new ShutdownEventArgs(ShutdownInitiator.Peer, 491, $"Channel is already closed: {context.Channel.CloseReason}"));
+        {
+            var reason = context.Channel.CloseReason;
+
+            // The broker's own answer when there is one, and this transport's own when there is not.
+            // Nothing is invented, and nothing travels as prose or in Exception.Data.
+            throw reason != null
+                ? new OperationInterruptedException(reason)
+                : new OperationInterruptedException(
+                    new ShutdownEventArgs(ShutdownInitiator.Library, 491, "The channel is no longer available"));
+        }
 
         return new ScopeChannelContext(context, cancellationToken);
     }

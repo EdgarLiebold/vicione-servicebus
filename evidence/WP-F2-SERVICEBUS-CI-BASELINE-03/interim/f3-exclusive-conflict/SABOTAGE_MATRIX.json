@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "kind": "TARGETED_PROOF_RESULT",
+  "recordSequence": null,
+  "directive": "0039",
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "findingIds": [
+    "F-3"
+  ],
+  "why": "Record 0039 binds OPT-CLASSIFY-405-PERMANENT in a narrower form than the option was written in, and requires each of three named sabotages to be caught red by the right gate. This file records the mechanism, the measurement before and after, and every sabotage run.",
+  "boundSemantics": {
+    "onlyThisCase": "RESOURCE_LOCKED, AMQP reply code 405, and nothing else. There is no rule over the 4xx range, no grace period and no second timing constant.",
+    "beforeAndAfter": {
+      "before": "The caller received ViciOne.ServiceBus.ConnectionException after 00:01:00,0097 with no broker cause, while the broker had answered resource_locked four times and the declare loop kept running.",
+      "after": "The caller receives RabbitMqConnectionException with the original OperationInterruptedException, reply code 405 and the unaltered reply text. The whole exclusivity spec now runs in 16 s, and no further declare attempt follows the terminal failure."
+    },
+    "threeChanges": [
+      {
+        "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/OperationInterruptedExceptionExtensions.cs",
+        "what": "An internal predicate that recognises the conflict at any depth of the exception chain. Internal on purpose: the public surface does not grow.",
+        "whyChainWalk": "By the time the failure leaves the transport it has been wrapped at least once. A predicate that only looked at the outermost exception would have answered correctly only by accident."
+      },
+      {
+        "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs",
+        "what": "IsExceptionTransient answers false for the conflict, alongside the refused credential it already answered false for.",
+        "effect": "The framework's existing IsUnrecoverable question now answers yes for this case, so no new notion of 'terminal' had to be invented."
+      },
+      {
+        "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/Configuration/RabbitMqHostConfiguration.cs",
+        "what": "The receive transport retry policy excludes the conflict, on the raw broker exception and on the wrapped ConnectionException alike.",
+        "whyBoth": "Excluding it on the inner form alone was measured and was not enough: Handle<ConnectionException>() had no predicate at all, so the wrapped form was still retried and the spec failed on one further declare attempt inside the quiet window. That failure is what produced the second change to this file."
+      },
+      {
+        "file": "src/ViciOne.ServiceBus/Transports/ReceiveEndpoint.cs",
+        "what": "The transport observer completes Started with the exception when, and only when, the fault is unrecoverable. IsUnrecoverable moved up one level so the endpoint handle and this observer ask the same single question.",
+        "whyNotAnyFault": "A recoverable fault leaves Started pending exactly as before. Handing the first fault of any kind to the caller would report a failed connect for an endpoint that comes up a second later, and an API call cannot be failed and then, without being called again, successful."
+      }
+    ]
+  },
+  "regressionSpecs": {
+    "405": "Failure_Specs.Should_properly_fail_on_exclusive_launch - exact type RabbitMqConnectionException, inner OperationInterruptedException, ReplyCode 405, reply text contains 'exclusive', elapsed under a 20 s budget against a 60 s readiness limit, and a fault counter that does not grow during an 8 s quiet window after the failure.",
+    "405Recovery": "Failure_Specs.Should_start_again_once_the_exclusive_queue_is_released - the attempt ends but the name does not: a bus started after the holder released the queue takes it.",
+    "406": "ConsumerTimeout_Specs.Should_properly_handle_message_redelivery - the real redelivery stays green, and Classifying_a_broker_error.Should_retry_a_precondition_failure pins the classification directly.",
+    "transient": "Recovering_from_a_transient_startup_failure - both paths: an ordinary endpoint start over a queue with a conflicting argument, and the bus endpoint over an exchange declared with the wrong type. Each recovers once the obstacle is removed, and neither reports the fault to the caller.",
+    "classification": "Classifying_a_broker_error - six specs over the classification contract itself: 405 and a refused credential are terminal; 406, an unreachable broker and a dropped connection stay transient; the conflict is recognised through a wrapped cause."
+  },
+  "sabotage": [
+    {
+      "id": "blanket-4xx",
+      "does": "Widens the predicate from reply code 405 to the whole 4xx range - the rule record 0039 forbids.",
+      "failed": 3,
+      "redTests": [
+        "Should_retry_a_precondition_failure",
+        "Should_not_report_a_recoverable_startup_fault_to_the_caller",
+        "Should_not_report_a_recoverable_bus_endpoint_fault_to_the_caller"
+      ],
+      "verdict": "CAUGHT"
+    },
+    {
+      "id": "405-transient",
+      "does": "Removes the classification, so the conflict counts as transient again and nothing ends the caller's wait.",
+      "failed": 4,
+      "redTests": [
+        "Should_not_retry_a_queue_held_exclusively_elsewhere",
+        "Should_recognise_the_conflict_through_a_wrapped_cause",
+        "Should_properly_fail_on_exclusive_launch",
+        "Should_start_again_once_the_exclusive_queue_is_released"
+      ],
+      "verdict": "CAUGHT",
+      "note": "The run takes 2 min 12 s under this mutation against 16 s without it, which is the sixty second readiness limit reappearing twice over."
+    },
+    {
+      "id": "405-retried",
+      "does": "Restores the unconditional Handle<ConnectionException>(), so the wrapped conflict is retried and the declare loop continues in the background.",
+      "failed": 1,
+      "redTests": [
+        "Should_properly_fail_on_exclusive_launch"
+      ],
+      "verdict": "CAUGHT",
+      "note": "Caught by the quiet window rather than by the exception, which is the point of asserting both: the caller can already have the right exception while the endpoint goes on knocking."
+    },
+    {
+      "id": "passthrough-any-fault",
+      "does": "Completes Started with the exception for every fault instead of only unrecoverable ones - the first-arbitrary-error passthrough.",
+      "failed": 1,
+      "redTests": [
+        "Should_not_report_a_recoverable_bus_endpoint_fault_to_the_caller"
+      ],
+      "verdict": "CAUGHT",
+      "note": "Survived the first round. The transient spec covered an ordinary endpoint start, and nothing awaits that endpoint's Started task, so the mutation was invisible there. Only the bus endpoint has a caller waiting on it, and that is where the rule can actually be broken; the spec for it exists because the sabotage found the gap."
+    }
+  ],
+  "mutationTooling": {
+    "note": "Every mutation is applied to a working copy and reverted from a byte identical backup. All four sources were verified identical to the backup after the last run."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "signalr",
+  "project": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0070/signalr/signalr.trx",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 26,
+    "executed": 26,
+    "passed": 26,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true,
+  "notExecuted": [],
+  "notExecutedUnlisted": []
+}

@@ -79,8 +79,12 @@ KNOWN_DATABASE_SECRET = "Password12!"
 # Only a local host can accidentally reach a real broker on the developer machine or the runner.
 # Address parsing specs legitimately carry literals such as "rabbitmq://remote-host:5672/queue" as
 # data; those never open a connection and are not what this rule is about.
+# The optional userinfo group is the point: without it the rule matched amqp://localhost:5672 and
+# missed amqp://guest:guest@localhost:5672, which is the spelling that actually carries the default
+# account — exactly the "due broker fixture with a default-credential fallback" REQ-CI-007 names.
 LOCAL_BROKER_ENDPOINT = re.compile(
-    r"(?:amqp|activemq|rabbitmq|tcp)://(?P<host>localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]):(?P<port>\d{2,5})")
+    r"(?:amqp|activemq|rabbitmq|tcp)://(?:[^/@\s]*@)?"
+    r"(?P<host>localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]):(?P<port>\d{2,5})")
 
 
 def strip_comments(text: str) -> str:
@@ -396,6 +400,18 @@ class Policy:
         if "run_test_category.py" not in body:
             self.fail("required-profile", "required categories do not go through the test count gate")
 
+        # A job level condition was rejected while the trigger above it was never read. A path or
+        # branch filter on the workflow itself removes every required job at once and for every change
+        # outside the list, which is the same effect with a wider blast radius. The invariant this file
+        # states is that a required job runs on every push and pull request, so the trigger is held to
+        # it too.
+        trigger = body.split("\njobs:", 1)[0]
+        for keyword in ("paths:", "paths-ignore:", "branches-ignore:"):
+            if re.search(rf"^\s+{re.escape(keyword)}", trigger, re.M):
+                self.fail("required-profile",
+                          f"the required profile filters its own trigger with '{keyword}'; a change outside that "
+                          "list would run no required job at all")
+
     def check_pack(self) -> None:
         workflow = self.read(".github/workflows/build.yml")
         if workflow is None:
@@ -502,6 +518,55 @@ class Policy:
                                       f"{relative}:{number} hardcodes broker endpoint "
                                       f"{match.group('host')}:{port}; a spec must read the run-scoped endpoint")
 
+    def check_transport_operations_take_a_lease(self) -> None:
+        """Every broker operation of the RabbitMQ contexts must hold its owner's lease.
+
+        The ownership model is only worth as much as its least careful member. A single operation that
+        calls the client directly can have the channel or connection disposed underneath it while it is
+        still unwinding, and the broker's answer is then replaced by an ObjectDisposedException -- the
+        defect the model exists to prevent. Four operations were outside it after the first pass and
+        nothing noticed, because the rule lived in a review rather than in a gate. It lives here now, so
+        an operation added later without a lease fails the run instead of being found by reading.
+
+        Structural on purpose: what is checked is that each public operation body mentions a lease, not
+        what it does with one. That cannot prove correct use, and it is not meant to -- the deterministic
+        lifetime specs do that. It proves that no operation silently bypasses the owner.
+        """
+        contexts = {
+            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/RabbitMqChannelContext.cs":
+                {"NotifyFaulted", "DisposeAsync"},
+            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/RabbitMqConnectionContext.cs":
+                {"DisposeAsync"},
+        }
+
+        signature = re.compile(r"^        public (?:async )?(?:Task|ValueTask|void)(?:<[^>]+>)? (\w+)\(", re.M)
+        # A call, not the word: 'NoLease()' contains 'Lease' and must not satisfy the rule.
+        takes_lease = re.compile(r"\b(?:TryLease|Lease)\s*\(")
+
+        for relative, exempt in contexts.items():
+            source = self.read(relative)
+            if source is None:
+                # Absent in the validator's own fixtures, which build a minimal repository. A file that
+                # really disappeared from the product is a build error long before this rule runs.
+                continue
+
+            lines = source.splitlines()
+            starts = [(match.group(1), source[: match.start()].count("\n")) for match in signature.finditer(source)]
+            if not starts:
+                self.fail("transport-lease", f"{relative} exposes no operation, so this rule matched nothing")
+                continue
+
+            for index, (name, first) in enumerate(starts):
+                last = starts[index + 1][1] if index + 1 < len(starts) else len(lines)
+                body = "\n".join(lines[first:last])
+
+                if name in exempt or takes_lease.search(body):
+                    continue
+
+                self.fail("transport-lease",
+                          f"{relative}: {name} calls the broker without taking a lease, so the subject can be "
+                          "disposed while it is still running")
+
     def run(self) -> int:
         for rule in (self.check_no_forbidden_images, self.check_pinning, self.check_host_binding,
                      self.check_credentials, self.check_canonical_runner,
@@ -509,7 +574,8 @@ class Policy:
                      self.check_no_silent_test_exclusion, self.check_run_scoped_credential_guard,
                      self.check_no_hardcoded_broker_endpoint_in_tests,
                      self.check_required_profile, self.check_pack,
-                     self.check_no_publication, self.check_analyzer_release_tracking):
+                     self.check_no_publication, self.check_analyzer_release_tracking,
+                     self.check_transport_operations_take_a_lease):
             rule()
 
         if self.failures:

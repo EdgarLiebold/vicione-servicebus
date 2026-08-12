@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "entity-framework-core",
+  "project": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/post-0034-gates/entity-framework/entity-framework-core.trx",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 159,
+    "executed": 155,
+    "passed": 155,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true,
+  "notExecuted": [
+    "Responding_through_the_outbox.Should_start_with_delay_successfully",
+    "Using_the_bus_outbox.Fill_up_the_outbox",
+    "Using_the_bus_outbox.Should_support_delayed_message_scheduler",
+    "Using_the_bus_outbox.Should_work_without_starting_the_bus"
+  ],
+  "notExecutedUnlisted": []
+}

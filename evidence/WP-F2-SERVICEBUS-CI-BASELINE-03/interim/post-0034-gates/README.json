@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "INTERIM_GATE_RUNS",
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "status": "NOT_YET_BOUND_BY_A_RECORD",
+  "why": "Gates re-run after the corrections of record 0033, while the decision on findings F-1 to F-3 in record 0034 is outstanding. They are deliberately not inside records/0033: that record is published and its gate table names a different set, and putting fresh results into a closed record path is exactly what finding F-4 objected to.",
+  "boundBy": "the next freeze record, once the lead has dispositioned F-1 to F-3",
+  "purpose": "The production corrections of this round touch the bus, the job service, the retry loop and the RabbitMQ test harness. Every category that consumes them has to be shown green again before any freeze, whichever option the lead chooses.",
+  "categories": [
+    "abstractions",
+    "entity-framework-core",
+    "activemq",
+    "pack",
+    "vulnerability"
+  ],
+  "results": {
+    "abstractions": {
+      "total": 76,
+      "executed": 71,
+      "passed": 71,
+      "failed": 0,
+      "state": "GREEN"
+    },
+    "entity-framework-core": {
+      "total": 159,
+      "executed": 155,
+      "passed": 155,
+      "failed": 0,
+      "state": "GREEN"
+    },
+    "activemq": {
+      "total": 144,
+      "executed": 139,
+      "passed": 139,
+      "failed": 0,
+      "state": "GREEN",
+      "required": false
+    },
+    "pack": {
+      "packageCount": 33,
+      "exitCode": 0,
+      "state": "GREEN",
+      "note": "Package hashes moved against the freeze because the assemblies carry the corrections; the set of 33 packages is unchanged."
+    },
+    "vulnerability": {
+      "findings": 187,
+      "highOrCritical": 44,
+      "transitiveWithoutPath": 0,
+      "state": "GREEN",
+      "note": "MessagePack 3.1.6 / GHSA-hv8m-jj95-wg3x remains the one high finding in a packable project and remains a mandatory follow-up order."
+    }
+  },
+  "togetherWithRecord0033": "With policy, build, analyzer, core, rabbitmq and the public API comparison bound in record 0033, every required category of this order has now been executed against the corrected tree. What is missing for a freeze is not a run; it is the disposition of F-1 to F-3."
+}

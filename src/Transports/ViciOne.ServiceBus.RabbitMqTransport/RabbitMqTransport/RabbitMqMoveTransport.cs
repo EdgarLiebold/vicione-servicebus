@@ -30,8 +30,15 @@ public class RabbitMqMoveTransport<TSettings>
 
         if (channelContext.Channel.IsClosed)
         {
-            throw new OperationInterruptedException(
-                new ShutdownEventArgs(ShutdownInitiator.Peer, 491, $"Channel is already closed: {channelContext.Channel.CloseReason}"));
+            // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
+            // any time; the operations themselves go through the owning context and its lease. The
+            // reason reported is the one the channel actually closed for. Where there is none — a
+            // close this process started — the initiator is Library, because a locally produced
+            // state must not claim the peer sent it.
+            var reason = channelContext.Channel.CloseReason;
+
+            throw new OperationInterruptedException(reason
+                ?? new ShutdownEventArgs(ShutdownInitiator.Library, 491, "The channel is no longer available"));
         }
 
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext =

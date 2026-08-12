@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "kind": "BISECTION_RESULT",
+  "recordSequence": null,
+  "directive": "0039",
+  "requirementIds": ["REQ-CI-002"],
+  "findingIds": ["F-3"],
+  "why": "The classification bound by record 0039 is implemented and green. Delivering the resulting failure to the caller is not, and every variant of it disturbed unrelated specs. This file records what was measured rather than what was suspected, because three of the suspicions were wrong and each cost a full suite run.",
+  "referenceRuns": {
+    "beforeAnyF3Change": "331 total, 311 passed, 0 failed — the suite is green without this work, so nothing here is pre-existing flakiness.",
+    "current": "322 total, 321 passed, 1 failed — the one failure is this work's own Failure_Specs.Should_properly_fail_on_exclusive_launch, which asserts the delivery that is not implemented."
+  },
+  "whatIsDone": {
+    "classification": "RESOURCE_LOCKED 405 is not transient and is not retried, in all three shapes it arrives in: raw OperationInterruptedException, wrapped RabbitMqConnectionException, and AlreadyClosedException, which derives from OperationInterruptedException and slipped past a rule written for the base type alone. 406 PRECONDITION_FAILED and every other class keep their existing behaviour.",
+    "evidence": "SABOTAGE_MATRIX.json — four sabotages, each caught by the right gate.",
+    "publicSurface": "unchanged at 27488 members; the predicate is internal and the marker travels in Exception.Data."
+  },
+  "whatIsOpen": {
+    "requirement": "Record 0039 point 2: the caller receives the specific exception promptly. The classification alone does not deliver it — the endpoint stops retrying, but the readiness wait has no signal for failure and runs to its sixty second limit.",
+    "measuredElapsed": "00:01:02 in the full suite for the one failing spec, against 00:00:31 when the delivery is present."
+  },
+  "variantsMeasured": [
+    {
+      "id": "fault-started-in-receive-endpoint",
+      "what": "The receive endpoint completes its own Started task with the exception on any unrecoverable fault.",
+      "result": "6 unrelated specs failed",
+      "whyItWasWrong": "Reaches every endpoint in the process, not the one being waited for. Started is created once per endpoint and never reset, so a fault at shutdown stays for good."
+    },
+    {
+      "id": "whenany-per-call",
+      "what": "The wait becomes WhenAny(ready, faulted).",
+      "result": "5 unrelated specs failed"
+    },
+    {
+      "id": "whenany-per-bus",
+      "what": "The same, with the observer connected once per bus instead of per call.",
+      "result": "5 unrelated specs failed",
+      "refutes": "That the cost of attaching and detaching per call was the cause."
+    },
+    {
+      "id": "linked-token-on-istransient",
+      "what": "A linked cancellation source ends the wait; the filter is ConnectionException.IsTransient == false.",
+      "result": "7 failed",
+      "rootCauseFound": "IsTransient does not mean what the name suggests. ConnectionException(string message, bool isTransient = false) defaults to false, and ConnectionContextFactory announces an ordinary shutdown with exactly that constructor: 'The connection is stopping and cannot be used'. Filtering on that flag therefore treated every routine bus stop as a dead endpoint — which is why the failures were always in the run after a stop, never the first, and never in isolation. Asserted directly by Classifying_a_broker_error.Should_show_that_an_ordinary_shutdown_is_also_reported_as_non_transient."
+    },
+    {
+      "id": "linked-token-on-marker",
+      "what": "The same, with the filter narrowed to the actual 405 conflict.",
+      "result": "3 unrelated specs failed",
+      "note": "The narrowing works: the exclusivity spec passes in the full suite for the first time. Three failures remain."
+    },
+    {
+      "id": "marker-without-interruption",
+      "what": "The marker is set and read, but nothing interrupts the running wait.",
+      "result": "321 passed, only this work's own exclusivity spec failed",
+      "significance": "The reference point. Everything except the interruption of a running wait is compatible with the suite."
+    },
+    {
+      "id": "marker-with-direct-registration",
+      "what": "The waiter registers its own cancellation source with the observer under a lock; no linked source at all.",
+      "result": "3 unrelated specs failed",
+      "refutes": "That the linked cancellation source, or its cost, was the cause. A lock and a list produce the same three failures."
+    }
+  ],
+  "conclusion": "Interrupting the running readiness wait reproduces the same three failures regardless of the mechanism used to interrupt it, while the identical code without the interruption leaves 321 specs green. The remaining suspicion is therefore the wait itself — TaskUtil.Await installs an execution environment and a synchronization dispatcher, and this wait is entered by every ConnectConsumePipe and every ConnectRequestPipe, so a request client passes through it on each request. That is a general behaviour, not the 405 case, which is why it is put to the lead instead of changed.",
+  "affectedSpecs": [
+    "Should_fault_nicely",
+    "Should_clean_up_properly",
+    "Should_receive_the_message_b"
+  ],
+  "affectedSpecsNote": "They fail with timeouts, not with this work's exception, and always in the second or third instance of a fixture. The broker log of a failing run carries four resource_locked entries, all on the exclusivity virtual host — the affected specs never see a 405 at all."
+}

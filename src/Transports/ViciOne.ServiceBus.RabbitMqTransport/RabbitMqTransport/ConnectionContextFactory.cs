@@ -35,6 +35,12 @@ public class ConnectionContextFactory :
 
         Task HandleShutdown(object sender, ShutdownEventArgs args)
         {
+            // Invalidate before stopping, and never dispose from inside this notification: an operation
+            // that is still unwinding — a channel creation, say — has to finish touching the connection
+            // before the connection goes away. Stopping stays off this thread for the same reason.
+            if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqConnectionContext connectionContext)
+                connectionContext.Lifetime.Invalidate(args);
+
             Task.Run(() => contextHandle.Stop(args.ReplyText))
                 .IgnoreUnobservedExceptions();
 
@@ -77,8 +83,13 @@ public class ConnectionContextFactory :
             : await contextTask.OrCanceled(cancellationToken).ConfigureAwait(false);
 
         if (!context.Connection.IsOpen)
-            throw new OperationInterruptedException(
-                new ShutdownEventArgs(ShutdownInitiator.Peer, 491, $"Connection is already closed: {context.Connection.CloseReason}"));
+        {
+            // The connection's own reason, not a locally invented one claiming the peer said this.
+            var reason = context.Connection.CloseReason;
+
+            throw new OperationInterruptedException(reason
+                ?? new ShutdownEventArgs(ShutdownInitiator.Library, 491, "The connection is no longer available"));
+        }
 
         return new SharedConnectionContext(context, cancellationToken);
     }
@@ -90,7 +101,7 @@ public class ConnectionContextFactory :
         var description = _hostConfiguration.Settings.ToDescription(_connectionFactory.Value);
 
         if (supervisor.Stopping.IsCancellationRequested)
-            throw new RabbitMqConnectionException($"The connection is stopping and cannot be used: {description}");
+            throw RabbitMqConnectionException.Stopping(description);
 
         IConnection connection = null;
         try

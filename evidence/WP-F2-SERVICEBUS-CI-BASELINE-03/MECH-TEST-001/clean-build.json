@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "MECH-TEST-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "CLEAN_BUILD",
   "command": "python3 tools/ci/policy_validator.py && python3 tools/ci/test_policy_validator.py",
   "exitCode": 0,
@@ -11,5 +11,6 @@
     "after": 53,
     "result": "OK"
   },
-  "why": "The mechanism is standard library tooling with no build of its own, so its clean state is the validator passing on the repository together with its own self-tests."
+  "why": "The mechanism is standard library tooling with no build of its own, so its clean state is the validator passing on the repository together with its own self-tests.",
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

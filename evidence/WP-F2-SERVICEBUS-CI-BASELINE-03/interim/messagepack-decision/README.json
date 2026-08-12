@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "kind": "INTERIM_DECISION_PACKAGE",
+  "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "status": "NOT_YET_BOUND_BY_A_RECORD",
+  "why": "Re-slice 0005 item 7 requires vendor evidence, a reproduced cause, options and a recommended exact version before any package change. This is that package for MessagePack 3.1.6 / GHSA-hv8m-jj95-wg3x. The change itself is not made: Directory.Packages.props is a root file outside every write scope, and a new scope can only take effect through a re-slice.",
+  "boundBy": "the next record that carries it to the lead"
+}

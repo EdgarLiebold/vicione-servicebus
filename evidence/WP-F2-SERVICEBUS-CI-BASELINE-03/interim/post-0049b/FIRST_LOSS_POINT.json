@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "kind": "REPRODUCED_CAUSE",
+  "recordSequence": null,
+  "directive": "0049",
+  "requirementIds": ["REQ-CI-002"],
+  "findingIds": ["F-3"],
+  "why": "Record 0049 required the first point at which the exception instance, its structured 405 or its propagation is lost, correlated station by station. This is that measurement. The two earlier causal claims made from source reading alone are withdrawn.",
+  "method": {
+    "instrumentation": "Temporary, removed after this run. Each station logs a monotonic timestamp, exception type, object identity, ShutdownReason code, carried close reason and the terminal marker: the declare catch, the supervisor catch, after Faulted, before and after the transport's conversion, and the notification to the endpoint observer.",
+    "runs": "Two: one isolated run of Should_properly_fail_on_exclusive_launch as the reference, and one loaded run in which it fails. No gate was used as a diagnostic substitute for the trace."
+  },
+  "referenceTrace": {
+    "description": "The passing case. One attempt, one exception instance, nothing lost.",
+    "stations": [
+      "declare-catch  OperationInterruptedException id=45214701 code=405",
+      "send-catch     OperationInterruptedException id=45214701 code=405",
+      "after-faulted  OperationInterruptedException id=45214701 code=405",
+      "transport-before-convert OperationInterruptedException id=45214701 code=405",
+      "transport-after-convert  RabbitMqConnectionException  id=10452251",
+      "transport-notify         RabbitMqConnectionException  id=10452251"
+    ],
+    "reading": "The identity is preserved from the declare to the conversion, and after-faulted appears, so the clean up masking corrected in this round no longer occurs."
+  },
+  "failingTrace": {
+    "description": "The loaded case. Five attempts. The first four never see the broker at all.",
+    "attemptsOneToFour": [
+      "declare-catch  ObjectDisposedException      id=64582008 code=-   channelOpen=False",
+      "send-catch     OperationInterruptedException id=39277931 code=491 carried=none"
+    ],
+    "attemptFive": [
+      "declare-catch  OperationInterruptedException id=199793 code=405",
+      "transport-after-convert terminal=True",
+      "transport-notify        terminal=True"
+    ],
+    "reading": "On the first four attempts the declare throws ObjectDisposedException — the channel object is already disposed, so the call never reaches the broker. A different instance then arrives at the supervisor as a synthetic 491. On the fifth attempt a live channel is obtained, the declare reaches the broker, the real 405 arrives and is delivered correctly with the terminal marker set. The exponential backoff between those attempts is what costs the 33 to 60 seconds."
+  },
+  "firstLossPoint": {
+    "location": "ConfigureRabbitMqTopologyFilter.ConfigureTopology, catch (ObjectDisposedException)",
+    "code": "await context.Channel.Cleanup(491, \"ObjectDisposedException on channel\", cancellationToken); throw new OperationInterruptedException(new ShutdownEventArgs(ShutdownInitiator.Peer, 491, \"ObjectDisposedException on channel\"));",
+    "whatIsLost": "The original ObjectDisposedException is discarded and replaced by a fabricated ShutdownEventArgs that claims ShutdownInitiator.Peer — a broker answer that never existed. The identity change is visible in the trace: id=64582008 enters the catch and id=39277931 leaves it.",
+    "whyItMatters": "The fabricated 491 is a channel level error and is therefore classified as worth retrying, so a local, immediately recoverable condition consumes the endpoint's retry budget with exponential backoff. The handler also disposes the channel it was given, which leaves the next attempt in the same state, so the pattern repeats until a fresh channel is obtained.",
+    "relationToTheInvariant": "This is the same rule record 0047 bound and this round implemented in PipeContextSupervisor: a failure of clean up, or a failure that clean up handles, must not replace the answer of the operation. Here it is worse than a replacement, because the substitute asserts a peer origin."
+  },
+  "withdrawn": [
+    "Record 0046: the claim that under load no declare reaches the broker. The bound broker log contradicts it, and the trace shows the declare failing locally before it is sent rather than not being attempted.",
+    "Record 0048: the claim that a cached closed channel context is the cause. The trace shows ObjectDisposedException at the declare, not a closed-channel 491 from CreateSharedChannel, and the fabricated 491 comes from the topology filter."
+  ],
+  "processNote": "One earlier attempt at this measurement was invalidated because the solution was rebuilt while the run was in flight. That run is discarded and not counted. The run recorded here was built once and left untouched."
+}

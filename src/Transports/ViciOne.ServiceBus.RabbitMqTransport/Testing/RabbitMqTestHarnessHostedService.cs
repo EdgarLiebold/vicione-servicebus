@@ -123,6 +123,13 @@ namespace ViciOne.ServiceBus.Testing
             }
             catch (Exception ex)
             {
+                // Two different failures, and only one of them is the answer. The setup failure is what
+                // actually went wrong and it used to disappear here entirely: the method returned
+                // normally, the caller learned nothing, and a broken virtual host first became visible
+                // as an unrelated failure in some later spec. Logging it was not enough — a log entry is
+                // not an error contract — so it is rethrown below with its own type, cause and stack.
+                _logger.LogError(ex, "Preparing the virtual host failed");
+
                 if (connection.IsOpen)
                 {
                     try
@@ -131,12 +138,14 @@ namespace ViciOne.ServiceBus.Testing
                     }
                     catch (Exception closeException)
                     {
-                        // Closing is the cleanup for a failure that already happened. If it fails too it
-                        // must not replace what actually went wrong: the original exception was being
-                        // swallowed and callers saw an unrelated one from this line instead.
+                        // Closing stays best effort. A failure here is diagnosable on its own and must
+                        // neither replace nor swallow the setup failure.
                         _logger.LogDebug(closeException, "Closing the connection after a failed clean up faulted");
                     }
                 }
+
+                // Bare rethrow: the original stack is preserved, which a "throw ex" would discard.
+                throw;
             }
         }
 
@@ -169,6 +178,13 @@ namespace ViciOne.ServiceBus.Testing
             while (length > 0 && Encoding.UTF8.GetByteCount(text.Substring(0, length)) > maximumBytes)
                 length--;
 
+            // Characters are UTF-16 code units, not code points. A character outside the basic plane is
+            // a surrogate pair of two of them, and cutting between the two leaves a lone high surrogate
+            // that encodes as the replacement character — exactly what the paragraph above promises not
+            // to produce. True for two and three byte characters, false for four byte ones until here.
+            if (length > 0 && char.IsHighSurrogate(text[length - 1]))
+                length--;
+
             return text.Substring(0, length);
         }
 
@@ -198,6 +214,13 @@ namespace ViciOne.ServiceBus.Testing
             }
             catch (Exception ex)
             {
+                // Two different failures, and only one of them is the answer. The setup failure is what
+                // actually went wrong and it used to disappear here entirely: the method returned
+                // normally, the caller learned nothing, and a broken virtual host first became visible
+                // as an unrelated failure in some later spec. Logging it was not enough — a log entry is
+                // not an error contract — so it is rethrown below with its own type, cause and stack.
+                _logger.LogError(ex, "Preparing the virtual host failed");
+
                 if (connection.IsOpen)
                 {
                     try
@@ -206,12 +229,14 @@ namespace ViciOne.ServiceBus.Testing
                     }
                     catch (Exception closeException)
                     {
-                        // Closing is the cleanup for a failure that already happened. If it fails too it
-                        // must not replace what actually went wrong: the original exception was being
-                        // swallowed and callers saw an unrelated one from this line instead.
+                        // Closing stays best effort. A failure here is diagnosable on its own and must
+                        // neither replace nor swallow the setup failure.
                         _logger.LogDebug(closeException, "Closing the connection after a failed clean up faulted");
                     }
                 }
+
+                // Bare rethrow: the original stack is preserved, which a "throw ex" would discard.
+                throw;
             }
         }
 

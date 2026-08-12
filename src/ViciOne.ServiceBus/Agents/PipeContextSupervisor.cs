@@ -57,17 +57,52 @@ namespace ViciOne.ServiceBus.Agents
             }
             catch (Exception exception)
             {
-                await activeContext.Faulted(exception).ConfigureAwait(false);
+
+                // Reporting the fault is cleanup, and cleanup may fail. When it did, this throw was
+                // never reached and the caller received the failure of the clean up instead of the one
+                // that caused it — a broker refusing a queue arrived as "channel already closed", with
+                // the real answer nowhere in it. The primary exception is the answer; whatever happens
+                // while tidying up after it stays diagnostic.
+                try
+                {
+                    await activeContext.Faulted(exception).ConfigureAwait(false);
+
+                }
+                catch (Exception faultException)
+                {
+
+                    LogContext.Error?.Log(faultException, "Reporting the fault of the context faulted, the primary failure is unaffected: {ContextType}",
+                        TypeCache<TContext>.ShortName);
+                }
 
                 throw;
             }
             finally
             {
-                await activeContext.Stop(cancellationToken).ConfigureAwait(false);
+                // Same rule on the way out. A finally that throws replaces whatever was propagating,
+                // including a rethrow that just took care to preserve it.
+                try
+                {
+                    await activeContext.Stop(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception stopException)
+                {
 
-                await activeContext.DisposeAsync().ConfigureAwait(false);
+                    LogContext.Error?.Log(stopException, "Stopping the context faulted, the primary failure is unaffected: {ContextType}", TypeCache<TContext>.ShortName);
+                }
+
+                try
+                {
+                    await activeContext.DisposeAsync().ConfigureAwait(false);
+                }
+                catch (Exception disposeException)
+                {
+
+                    LogContext.Error?.Log(disposeException, "Disposing the context faulted, the primary failure is unaffected: {ContextType}", TypeCache<TContext>.ShortName);
+                }
             }
         }
+
 
         public void Probe(ProbeContext context)
         {

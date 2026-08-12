@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "GUA-GOV-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "PROOF_CONTRACT_RESULT",
   "proofContractId": "PROOF-GUARANTEE-GUA-GOV-001",
   "statement": "No discovered capability, platform mechanism or behavioural guarantee is removed without an explicit product decision.",
@@ -21,5 +21,6 @@
     "mutation.json"
   ],
   "result": "PASS",
-  "residual": "The guarantee also covers capabilities that are not expressed as public API. Those are the lead's central gates, not something this repository can prove on its own."
+  "residual": "The guarantee also covers capabilities that are not expressed as public API. Those are the lead's central gates, not something this repository can prove on its own.",
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

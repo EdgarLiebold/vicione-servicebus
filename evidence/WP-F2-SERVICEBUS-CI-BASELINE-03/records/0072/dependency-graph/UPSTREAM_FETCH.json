@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "UPSTREAM_FETCH",
+  "why": "The official metadata is bound as bytes, but this repository normalises text line endings, so the bytes it stores are not always the bytes the server sent. Both hashes are recorded here: the upstream one, against which the fetch can be repeated, and the stored one, which is what a checkout of this evidence yields. Recording only one of the two would make a correct verification look like a mismatch.",
+  "fetchedOn": "2026-08-12",
+  "files": [
+    {
+      "file": "MessagePack.3.1.8.nuspec",
+      "url": "https://api.nuget.org/v3-flatcontainer/messagepack/3.1.8/messagepack.nuspec",
+      "upstreamSha256": "0806bb01868e9a7d6f1db23be44caff85ee3af879fa2949ff03aa7af6599d415",
+      "storedSha256": "0806bb01868e9a7d6f1db23be44caff85ee3af879fa2949ff03aa7af6599d415",
+      "normalised": false
+    },
+    {
+      "file": "Microsoft.AspNetCore.SignalR.Protocols.MessagePack.9.0.19.nuspec",
+      "url": "https://api.nuget.org/v3-flatcontainer/microsoft.aspnetcore.signalr.protocols.messagepack/9.0.19/microsoft.aspnetcore.signalr.protocols.messagepack.nuspec",
+      "upstreamSha256": "8a0355d51d0cae78a4c820a8868202fe87ebf0248a5b814ee0bc21550b874a73",
+      "storedSha256": "d0d48265ea5eefdcdbbb4b1b9ffb25b266562f2e3b73fba272c9ef4a1b52a784",
+      "normalised": true
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "recordSequence": 33,
+  "requirementIds": [
+    "REQ-CI-007",
+    "REQ-CI-002"
+  ],
+  "findingIds": [
+    "F-5",
+    "F-8"
+  ],
+  "category": "policy",
+  "why": "Same reason as the build gate: record 0030 carried policy on prose, and the only instrument record was the one written for the discarded freeze.",
+  "validator": {
+    "command": "python3 tools/ci/policy_validator.py",
+    "exitCode": 0,
+    "result": "PASS ci-policy all invariants hold"
+  },
+  "selfTests": {
+    "command": "python3 tools/ci/test_policy_validator.py",
+    "exitCode": 0,
+    "before": 53,
+    "after": 57,
+    "result": "OK"
+  },
+  "newRulesFromFinding0032": [
+    {
+      "id": "F-8a",
+      "class": "REQUIRED_PROFILE_TRIGGER",
+      "was": "check_required_profile rejected a job level condition but never read the trigger above it. build.yml carried a path allowlist on push and pull_request, so any change outside that list ran no required job at all. Reproduced by the red team: reducing paths to a never existing directory still returned PASS.",
+      "now": "The trigger is held to the same invariant the file already states: paths, paths-ignore and branches-ignore on the required workflow are rejected. The allowlist was removed from build.yml, so the required profile runs on every push and pull request. The delivered list had left .editorconfig, signing.props, .gitattributes, .devcontainer/** and everything under tools/ outside tools/ci/** without any required gate.",
+      "coveredBy": [
+        "test_rejects_a_path_filter_on_the_required_trigger",
+        "test_rejects_a_paths_ignore_filter_on_the_required_trigger"
+      ]
+    },
+    {
+      "id": "F-8b",
+      "class": "DEFAULT_CREDENTIAL_FALLBACK",
+      "was": "LOCAL_BROKER_ENDPOINT required the host immediately after the scheme, so amqp://localhost:5672 was rejected while amqp://guest:guest@localhost:5672 passed — the spelling that actually carries the default account, which is the case REQ-CI-007 names.",
+      "now": "An optional userinfo group precedes the host, so a credentialed local endpoint is rejected too.",
+      "coveredBy": [
+        "test_rejects_a_broker_endpoint_that_carries_credentials",
+        "test_rejects_a_credentialed_endpoint_on_the_loopback_address"
+      ]
+    }
+  ],
+  "previouslyKilledMutants": [
+    "single-quoted category filter",
+    "FullyQualifiedName filter",
+    "NUnit selector",
+    "[Ignore] on a due case",
+    "uninventoried [Explicit]",
+    "publishing action",
+    "job level condition",
+    "removal of the run-scoped credential guard",
+    "missing not-executed inventory",
+    "a due case listed as not executed"
+  ]
+}

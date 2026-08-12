@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "GUA-GOV-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "MUTATION",
   "mutants": [
     {
@@ -44,8 +44,9 @@
       "killedBy": [
         "policy validator"
       ],
-      "detail": "Six sabotage paths through the required profile were measured; all six are rejected. See records/0026/REQ-CI-007_POLICY_SABOTAGE_MATRIX.json."
+      "detail": "Six sabotage paths through the required profile were measured; all six are rejected. See records/0033/REQ-CI-007_POLICY_SABOTAGE_MATRIX.json."
     }
   ],
-  "result": "ALL_KILLED"
+  "result": "ALL_KILLED",
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

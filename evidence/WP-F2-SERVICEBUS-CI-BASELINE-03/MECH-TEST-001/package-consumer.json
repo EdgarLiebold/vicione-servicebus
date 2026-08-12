@@ -2,8 +2,9 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "MECH-TEST-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "PACKAGE_CONSUMER",
   "statement": "The mechanism ships in no package. It is repository-local tooling under tools/ci and a data file under build/test-infrastructure, both outside every packable project, so there is no consumer surface to bind. The surface comparison confirms it: none of the fifteen changes comes from these paths.",
-  "boundIn": "records/0026/REQ-CI-004_API_SURFACE_COMPARISON.json"
+  "boundIn": "records/0033/REQ-CI-004_API_SURFACE_COMPARISON.json",
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

@@ -39,10 +39,24 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
 
             ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
             {
-                x.Handle<ConnectionException>();
-                x.Handle<AlreadyClosedException>();
+                // Everything the broker answers is retried, except the one answer that repeating cannot
+                // change: a queue this connection cannot obtain exclusively. Retrying it kept the failed
+                // endpoint start alive in the background indefinitely, so the caller never learned the
+                // reason and the declare loop went on knocking at a queue that belonged to someone else.
+                //
+                // The exclusion sits on every rule that can carry that answer, and it took two
+                // measurements to get the list right. The same refusal reaches this policy in three
+                // shapes: raw as OperationInterruptedException, wrapped as RabbitMqConnectionException
+                // once the transport has converted it, and — under load, when the channel is already
+                // gone by the time the next operation runs — as AlreadyClosedException, which derives
+                // from OperationInterruptedException and so slipped past a rule written for the base
+                // type alone. Each shape left behind produced a retry loop that the isolated spec did
+                // not show and the full suite did.
+                x.Handle<ConnectionException>(exception => !exception.IsExclusiveResourceConflict());
+                x.Handle<AlreadyClosedException>(exception => !exception.IsExclusiveResourceConflict());
                 x.Handle<EndOfStreamException>();
-                x.Handle<OperationInterruptedException>(exception => exception.ChannelShouldBeClosed());
+                x.Handle<OperationInterruptedException>(exception =>
+                    exception.ChannelShouldBeClosed() && !exception.IsExclusiveResourceConflict());
                 x.Handle<NotSupportedException>(exception => exception.Message.Contains("Pipelining of requests forbidden"));
 
                 x.Ignore<AuthenticationFailureException>();

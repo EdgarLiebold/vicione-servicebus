@@ -2,6 +2,7 @@
 namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,25 +61,34 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Declares the topology one operation at a time, and stops at the first failure.
+    /// <para>
+    /// These operations share one channel, and the first error the broker answers with closes it. Run
+    /// in parallel through Task.WhenAll, the others then failed against a channel that was already
+    /// going away, and whichever of those failures the await happened to surface could hide the one
+    /// that mattered. Sequential execution means the first failure is the broker's own, every time.
+    /// </para>
+    /// <para>
+    /// The ObjectDisposedException handler that used to sit here is gone. It replaced a local failure
+    /// with a fabricated ShutdownEventArgs claiming ShutdownInitiator.Peer — a broker answer that never
+    /// existed — and that fabrication is what the channel ownership now makes unnecessary: an operation
+    /// holds a lease, so the channel is not disposed underneath it.
+    /// </para>
+    /// </summary>
     async Task ConfigureTopology(ChannelContext context, CancellationToken cancellationToken)
     {
-        try
-        {
-            await Task.WhenAll(_brokerTopology.Queues.Select(queue => Declare(context, queue, cancellationToken))).ConfigureAwait(false);
+        foreach (var queue in _brokerTopology.Queues)
+            await Declare(context, queue, cancellationToken).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.Exchanges.Select(exchange => Declare(context, exchange, cancellationToken))).ConfigureAwait(false);
+        foreach (var exchange in _brokerTopology.Exchanges)
+            await Declare(context, exchange, cancellationToken).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.QueueBindings.Select(binding => Bind(context, binding, cancellationToken))).ConfigureAwait(false);
+        foreach (var binding in _brokerTopology.QueueBindings)
+            await Bind(context, binding, cancellationToken).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.ExchangeBindings.Select(binding => Bind(context, binding, cancellationToken))).ConfigureAwait(false);
-        }
-        catch (ObjectDisposedException)
-        {
-            await context.Channel.Cleanup(491, "ObjectDisposedException on channel", cancellationToken).ConfigureAwait(false);
-
-            throw new OperationInterruptedException(
-                new ShutdownEventArgs(ShutdownInitiator.Peer, 491, "ObjectDisposedException on channel"));
-        }
+        foreach (var binding in _brokerTopology.ExchangeBindings)
+            await Bind(context, binding, cancellationToken).ConfigureAwait(false);
     }
 
     static Task Declare(ChannelContext context, Exchange exchange, CancellationToken cancellationToken)
@@ -91,15 +101,19 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
 
     static async Task Declare(ChannelContext context, Queue queue, CancellationToken cancellationToken)
     {
+
         try
         {
             var ok = await context.QueueDeclare(queue.QueueName, queue.Durable, queue.Exclusive, queue.AutoDelete, queue.QueueArguments, cancellationToken)
                 .ConfigureAwait(false);
 
             RabbitMqLogMessages.DeclareQueue(queue, ok.ConsumerCount, ok.MessageCount);
+
         }
         catch (Exception exception)
         {
+
+
             LogContext.Error?.Log(exception, "Declare queue faulted: {Queue}", queue);
 
             throw;

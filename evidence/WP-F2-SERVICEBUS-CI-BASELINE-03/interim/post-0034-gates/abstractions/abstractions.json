@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "abstractions",
+  "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+  "command": "dotnet test tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/post-0034-gates/abstractions/abstractions.trx -f net9.0",
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 76,
+    "executed": 71,
+    "passed": 71,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "trxProduced": true,
+  "notExecuted": [
+    "Using_the_newid_generator.Should_be_able_to_extract_timestamp",
+    "Using_the_newid_generator.Should_be_able_to_extract_timestamp_with_process_id",
+    "Using_the_newid_generator.Should_be_completely_thread_safe_to_avoid_duplicates",
+    "Using_the_newid_generator.Should_be_fast_and_friendly",
+    "Using_the_newid_generator.Should_generate_unique_identifiers_with_each_invocation"
+  ],
+  "notExecutedUnlisted": []
+}

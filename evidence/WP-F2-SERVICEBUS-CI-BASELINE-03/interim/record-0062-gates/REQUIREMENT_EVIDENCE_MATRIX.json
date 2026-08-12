@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIREMENT_EVIDENCE_MATRIX",
+  "recordSequence": null,
+  "status": "CLOSE_OUT_CANDIDATE",
+  "directive": "0061",
+  "why": "Record 0061 accepted the substance of record 0060 and bound three narrow corrections plus the mutation evidence that record 0060 reported but did not bind. This matrix carries the corrected mechanism and supersedes the parts of record 0060's matrix that no longer describe the code.",
+  "requirementAssignment": {
+    "REQ-CI-002": ["F-1", "F-3", "F-6", "F-11"],
+    "correction": "Records 0037 and 0038 named REQ-CI-003 and REQ-CI-006 for these cases. Record 0043 ruled that wrong and without effect. MessagePack remains a separate mandatory follow-up under REQ-CI-006."
+  },
+  "corrections": [
+    {
+      "point": "0061 §3",
+      "title": "The public exception semantics stay compatible",
+      "state": "CLOSED",
+      "mechanism": "The public string constructor calls base(message) again and is non-transient exactly as it was in the freeze. The one internal site that reports a stopping connection uses a non-public path instead: an internal constructor taking the flag, reached through the internal factory RabbitMqConnectionException.Stopping, which sets it to transient. No public API was added, and no external caller receives a new meaning for an unchanged signature.",
+      "proof": "One brokerless spec asserts both halves together: the stop is transient and the public constructor is not. It fails if either moves. Record 0060 changed the public constructor, which a signature gate cannot see -- that is the defect this corrects."
+    },
+    {
+      "point": "0061 §4",
+      "title": "One authoritative completion for the lifetime",
+      "state": "CLOSED",
+      "mechanism": "The only representation of the disposal's end is the completion source _disposed. It completes when the subject is really gone and carries the disposal's failure as a result rather than as a faulted task, so a disposal nobody awaits cannot become an unobserved exception while an owner that does await still receives the original exception with its stack. The field _disposal, which record 0060 described as the stored dispose task but which was only ever written and never read, is gone. There is no async void, nothing waits inside the RabbitMQ shutdown callback, and DisposeSubject still catches everything and completes _disposed.",
+      "proof": "The specs for a failing disposal, with an owner waiting and with nobody waiting, are unchanged and still pass. The comment, the code and this matrix now say the same thing, which they did not before."
+    },
+    {
+      "point": "0061 §5 test hygiene",
+      "title": "The fixed quiet window and a dead diagnostic",
+      "state": "CLOSED",
+      "mechanism": "The eight second Task.Delay is gone from Failure_Specs, together with the diagnostic that read the string carrier ViciOne.ServiceBus.RabbitMq.ClosedChannelReason, which no longer exists. The retry rule is carried by the runner's exact per-vhost count from the broker log and by the typed classification specs. The FaultCounter stays for the remaining cause-faithful diagnosis.",
+      "proof": "The focused broker run finished in 4 s against 10 s before, with the same seven specs passing and the same one-refusal gate holding."
+    }
+  ],
+  "mutationEvidence": {
+    "path": "interim/record-0062-mutants/MUTATION_MATRIX.json",
+    "state": "BOUND",
+    "summary": "All five failure models named in record 0059 turn a responsible detector red: disposal beginning while a lease is held, the real Peer/405 replaced by a local 491, 405 retried, 406 wrongly made terminal, and a failed connect not releasing its registration. Each entry carries its exact mutation, its smallest detector, the expected and actual result, and the source hash before and after -- identical in all five.",
+    "finding": "M1 stayed green on its first attempt. Its detector checked the disposal flag after a single await Task.Yield(), which races the queued disposal and would have passed whatever the implementation did. The detector was strengthened and the mutant left untouched; the class comment claiming nothing there waits for a duration was corrected at the same time."
+  },
+  "gates": {
+    "state": "GREEN",
+    "build": "0 errors",
+    "policy": "PASS, 60 self tests",
+    "rabbitmq": "366 total, 346 passed, 0 failed",
+    "oneRefusalPerVhost": "5 virtual hosts, exactly one refusal each, checked in the run",
+    "core": "1900 total, 1857 passed, 0 failed",
+    "publicApi": "messaging unchanged, 27274 members, 0 testing changes, compared against the freeze",
+    "pack": "33 packages hashed",
+    "whitespace": "git diff --check clean",
+    "reused": "Analyzer 111 of 111 and the vulnerability inventory of 187 findings with 44 high or critical are reused from record 0060, as record 0061 §6 permits: this block changes no analyzer source and no package reference. Core was re-run rather than reused, because removing the trailing whitespace in src/ViciOne.ServiceBus/Transports/ReceiveEndpoint.cs changed one of its inputs."
+  },
+  "supersedes": [
+    "interim/record-0060-gates/REQUIREMENT_EVIDENCE_MATRIX.json for its §4 statement about a stored dispose task, which described a field that was never read, and for its §6 statement, which corrected the internal stop by changing a public constructor"
+  ],
+  "withdrawn": [
+    "Record 0046: that under load no declare reaches the broker.",
+    "Record 0048: that a cached closed channel context is the cause.",
+    "Record 0051: that the first four attempts did not reach the broker. The broker answered all five.",
+    "Record 0058: that every channel operation holds a lease for its whole duration. Four did not."
+  ]
+}

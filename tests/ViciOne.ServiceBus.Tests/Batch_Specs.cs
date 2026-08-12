@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.Tests
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using ViciOne.ServiceBus.Internals;
     using ViciOne.ServiceBus.Testing;
     using NUnit.Framework;
     using TestFramework;
@@ -94,7 +95,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Category("Flaky")]
     public class Receiving_and_grouping_messages :
         InMemoryTestFixture
     {
@@ -113,15 +113,55 @@ namespace ViciOne.ServiceBus.Tests
 
             var count = await BusTestHarness.Consumed.SelectAsync<PingMessage>().Take(6).Count();
 
+            Batch<PingMessage>[] batches = await CollectedBatches();
+
             Assert.Multiple(() =>
             {
                 Assert.That(count, Is.EqualTo(6));
 
-                Assert.That(_batches.Select(x => x.Length), Is.EquivalentTo(new[] { 1, 2, 3 }));
+                Assert.That(batches.Select(x => x.Length), Is.EquivalentTo(new[] { 1, 2, 3 }));
             });
         }
 
-        readonly List<Batch<PingMessage>> _batches = new List<Batch<PingMessage>>();
+        /// <summary>How many groups the six messages above fall into: one, two and three.</summary>
+        const int ExpectedBatches = 3;
+
+        readonly List<Task<Batch<PingMessage>>> _batches = new List<Task<Batch<PingMessage>>>();
+        readonly TaskCompletionSource<bool> _allStarted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        /// <summary>
+        /// The batches that were delivered, awaited rather than sampled.
+        /// <para>
+        /// Counting the six consumed messages says nothing about the batches: the last group's consumer
+        /// can still be running when the sixth message is counted, and reading the list at that moment
+        /// found two of three. The run then reported "observed &lt; 3, 1 &gt;, missing &lt; 2 &gt;" for a
+        /// delivery that had in fact happened — the failure this fixture was labelled flaky for. Waiting
+        /// for all three consumers to exist and then awaiting their batches removes the race without
+        /// touching the assertion. No delay and no repetition: a race a sleep hides is still there.
+        /// </para>
+        /// </summary>
+        async Task<Batch<PingMessage>[]> CollectedBatches()
+        {
+            await _allStarted.Task.OrTimeout(TimeSpan.FromSeconds(30));
+
+            Task<Batch<PingMessage>>[] delivered;
+            lock (_batches)
+                delivered = _batches.ToArray();
+
+            return await Task.WhenAll(delivered).OrTimeout(TimeSpan.FromSeconds(30));
+        }
+
+        /// <summary>Registers a batch consumer's delivery, and reports when the last group has one.</summary>
+        void Track(Task<Batch<PingMessage>> batch)
+        {
+            lock (_batches)
+            {
+                _batches.Add(batch);
+
+                if (_batches.Count == ExpectedBatches)
+                    _allStarted.TrySetResult(true);
+            }
+        }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
@@ -130,7 +170,7 @@ namespace ViciOne.ServiceBus.Tests
             configurator.Consumer(() =>
             {
                 TaskCompletionSource<Batch<PingMessage>> tcs = GetTask<Batch<PingMessage>>();
-                tcs.Task.ContinueWith(t => _batches.Add(t.Result));
+                Track(tcs.Task);
                 var consumer = new TestBatchConsumer(tcs);
                 return consumer;
             }, cc => cc.Options<BatchOptions>(x => x.SetTimeLimit(TimeSpan.FromMilliseconds(300)).GroupBy<PingMessage, Guid>(ctx => ctx.CorrelationId)));
@@ -139,7 +179,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Category("Flaky")]
     public class Receiving_and_grouping_messages_by_ref_type :
         InMemoryTestFixture
     {
@@ -167,24 +206,44 @@ namespace ViciOne.ServiceBus.Tests
             });
         }
 
+        /// <summary>How many groups the six messages above fall into: one, two and three.</summary>
+        const int ExpectedBatches = 3;
+
         readonly List<Task<Batch<PingMessage>>> _batches = new List<Task<Batch<PingMessage>>>();
+        readonly TaskCompletionSource<bool> _allStarted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         /// <summary>
-        /// The batches that have been delivered, awaited rather than sampled.
+        /// The batches that were delivered, awaited rather than sampled.
         /// <para>
-        /// The list used to be filled by an unawaited continuation on each batch task, so the assertion
-        /// raced it: the six messages were counted as consumed while one append had not run yet, and the
-        /// run reported "observed &lt; 3, 1 &gt;, missing &lt; 2 &gt;" even though all three batches had
-        /// been delivered. Awaiting the tasks removes the race without touching the assertion.
+        /// Counting the six consumed messages says nothing about the batches: the last group's consumer
+        /// can still be running when the sixth message is counted, and reading the list at that moment
+        /// found two of three. The run then reported "observed &lt; 3, 1 &gt;, missing &lt; 2 &gt;" for a
+        /// delivery that had in fact happened — the failure this fixture was labelled flaky for. Waiting
+        /// for all three consumers to exist and then awaiting their batches removes the race without
+        /// touching the assertion. No delay and no repetition: a race a sleep hides is still there.
         /// </para>
         /// </summary>
-        Task<Batch<PingMessage>[]> CollectedBatches()
+        async Task<Batch<PingMessage>[]> CollectedBatches()
         {
+            await _allStarted.Task.OrTimeout(TimeSpan.FromSeconds(30));
+
             Task<Batch<PingMessage>>[] delivered;
             lock (_batches)
-                delivered = _batches.Where(x => x.IsCompleted).ToArray();
+                delivered = _batches.ToArray();
 
-            return Task.WhenAll(delivered);
+            return await Task.WhenAll(delivered).OrTimeout(TimeSpan.FromSeconds(30));
+        }
+
+        /// <summary>Registers a batch consumer's delivery, and reports when the last group has one.</summary>
+        void Track(Task<Batch<PingMessage>> batch)
+        {
+            lock (_batches)
+            {
+                _batches.Add(batch);
+
+                if (_batches.Count == ExpectedBatches)
+                    _allStarted.TrySetResult(true);
+            }
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
@@ -194,8 +253,7 @@ namespace ViciOne.ServiceBus.Tests
             configurator.Consumer(() =>
                 {
                     TaskCompletionSource<Batch<PingMessage>> tcs = GetTask<Batch<PingMessage>>();
-                    lock (_batches)
-                        _batches.Add(tcs.Task);
+                    Track(tcs.Task);
                     var consumer = new TestBatchConsumer(tcs);
                     return consumer;
                 },

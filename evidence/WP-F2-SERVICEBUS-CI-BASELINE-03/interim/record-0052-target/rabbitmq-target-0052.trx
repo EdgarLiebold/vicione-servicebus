@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="60b686a9-38fe-41c9-88cb-a300650bd097" name="@Edgars-iMac-2 2026-08-12 05:44:36" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-12T05:44:36.3349630+00:00" queuing="2026-08-12T05:44:36.3349630+00:00" start="2026-08-12T05:44:20.1000340+00:00" finish="2026-08-12T05:44:36.3405820+00:00" />
+  <TestSettings name="default" id="b5c4751b-8976-44ce-bbc9-2058a61e47b7">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-12_05_44_36" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="651c717a-6e2b-475d-84cc-942d3c8ac178" testId="51db8c78-a284-09e9-9358-290f3e17b2fe" testName="Should_properly_fail_on_exclusive_launch" computerName="Edgars-iMac-2" duration="00:00:13.3898560" startTime="2026-08-12T05:44:22.8561210+00:00" endTime="2026-08-12T05:44:36.2461580+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="651c717a-6e2b-475d-84cc-942d3c8ac178">
+      <Output>
+        <StdErr>TRACE|1800848631345329|attempt=2|attempt-start|-|id=0|code=-|terminal=none|
+
+TRACE|1800848631373520|attempt=2|attempt-start|-|id=0|code=-|terminal=none|
+
+TRACE|1800848747667965|attempt=2|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True
+
+TRACE|1800848751157290|attempt=2|queue-tasks-started|-|id=0|code=-|count=1 channel=36736776
+
+TRACE|1800848777450592|attempt=2|declare-ok|-|id=0|code=-|index=0 queue=input_queue
+
+TRACE|1800848881348393|attempt=2|declare-start|-|id=0|code=-|index=0 queue=exclusively-yours exclusive=True channelOpen=True
+
+TRACE|1800848881525891|attempt=2|queue-tasks-started|-|id=0|code=-|count=1 channel=60644701
+
+TRACE|1800848886784263|attempt=2|declare-ok|-|id=0|code=-|index=0 queue=exclusively-yours
+
+TRACE|1800853596153812|attempt=3|attempt-start|-|id=0|code=-|terminal=none|
+
+TRACE|1800853596176153|attempt=4|attempt-start|-|id=0|code=-|terminal=none|
+
+TRACE|1800853606976245|attempt=4|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True
+
+TRACE|1800853607042020|attempt=4|queue-tasks-started|-|id=0|code=-|count=1 channel=5598643
+
+TRACE|1800853612325571|attempt=4|declare-ok|-|id=0|code=-|index=0 queue=input_queue
+
+TRACE|1800853623873395|attempt=4|declare-start|-|id=0|code=-|index=0 queue=exclusively-yours exclusive=True channelOpen=True
+
+TRACE|1800853623907203|attempt=4|queue-tasks-started|-|id=0|code=-|count=1 channel=65230257
+
+TRACE|1800853628406875|attempt=4|declare-threw|OperationInterruptedException|id=48638444|code=405|index=0 queue=exclusively-yours channelOpen=False
+
+TRACE|1800853629100308|attempt=4|whenall-thrown|OperationInterruptedException|id=48638444|code=405|
+
+TRACE|1800853629413904|attempt=4|whenall-inner|OperationInterruptedException|id=48638444|code=405|
+
+TRACE|1800853632094626|attempt=4|transport-notify|RabbitMqConnectionException|id=1432091|code=-|terminal=True|
+
+TRACE|1800853634212412|attempt=4|terminal-observer|RabbitMqConnectionException|id=1432091|code=-|terminal=True|waiters=1
+
+TRACE|1800853636584202|attempt=4|can-retry|RabbitMqConnectionException|id=1432091|code=-|terminal=True|result=False
+
+TRACE|1800854553023860|attempt=5|attempt-start|-|id=0|code=-|terminal=none|
+
+TRACE|1800854553224655|attempt=5|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True
+
+TRACE|1800854553308225|attempt=5|queue-tasks-started|-|id=0|code=-|count=1 channel=36736776
+
+TRACE|1800854555835904|attempt=5|declare-ok|-|id=0|code=-|index=0 queue=input_queue</StdErr>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_properly_fail_on_exclusive_launch" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="51db8c78-a284-09e9-9358-290f3e17b2fe">
+      <Execution id="651c717a-6e2b-475d-84cc-942d3c8ac178" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_properly_fail_on_exclusive_launch" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="51db8c78-a284-09e9-9358-290f3e17b2fe" executionId="651c717a-6e2b-475d-84cc-942d3c8ac178" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll
+   NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.1766950+00:00">
+        <Text>TRACE|1800848631345329|attempt=2|attempt-start|-|id=0|code=-|terminal=none|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.1769430+00:00">
+        <Text>TRACE|1800848631373520|attempt=2|attempt-start|-|id=0|code=-|terminal=none|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.2909380+00:00">
+        <Text>TRACE|1800848747667965|attempt=2|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.2941770+00:00">
+        <Text>TRACE|1800848751157290|attempt=2|queue-tasks-started|-|id=0|code=-|count=1 channel=36736776</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.3205740+00:00">
+        <Text>TRACE|1800848777450592|attempt=2|declare-ok|-|id=0|code=-|index=0 queue=input_queue</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.4245280+00:00">
+        <Text>TRACE|1800848881348393|attempt=2|declare-start|-|id=0|code=-|index=0 queue=exclusively-yours exclusive=True channelOpen=True</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.4245600+00:00">
+        <Text>TRACE|1800848881525891|attempt=2|queue-tasks-started|-|id=0|code=-|count=1 channel=60644701</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:23.4297980+00:00">
+        <Text>TRACE|1800848886784263|attempt=2|declare-ok|-|id=0|code=-|index=0 queue=exclusively-yours</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1395460+00:00">
+        <Text>TRACE|1800853596153812|attempt=3|attempt-start|-|id=0|code=-|terminal=none|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1395850+00:00">
+        <Text>TRACE|1800853596176153|attempt=4|attempt-start|-|id=0|code=-|terminal=none|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1502150+00:00">
+        <Text>TRACE|1800853606976245|attempt=4|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1502890+00:00">
+        <Text>TRACE|1800853607042020|attempt=4|queue-tasks-started|-|id=0|code=-|count=1 channel=5598643</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1555270+00:00">
+        <Text>TRACE|1800853612325571|attempt=4|declare-ok|-|id=0|code=-|index=0 queue=input_queue</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1670810+00:00">
+        <Text>TRACE|1800853623873395|attempt=4|declare-start|-|id=0|code=-|index=0 queue=exclusively-yours exclusive=True channelOpen=True</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1671100+00:00">
+        <Text>TRACE|1800853623907203|attempt=4|queue-tasks-started|-|id=0|code=-|count=1 channel=65230257</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1716000+00:00">
+        <Text>TRACE|1800853628406875|attempt=4|declare-threw|OperationInterruptedException|id=48638444|code=405|index=0 queue=exclusively-yours channelOpen=False</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1721610+00:00">
+        <Text>TRACE|1800853629100308|attempt=4|whenall-thrown|OperationInterruptedException|id=48638444|code=405|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1724570+00:00">
+        <Text>TRACE|1800853629413904|attempt=4|whenall-inner|OperationInterruptedException|id=48638444|code=405|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1751160+00:00">
+        <Text>TRACE|1800853632094626|attempt=4|transport-notify|RabbitMqConnectionException|id=1432091|code=-|terminal=True|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1773740+00:00">
+        <Text>TRACE|1800853634212412|attempt=4|terminal-observer|RabbitMqConnectionException|id=1432091|code=-|terminal=True|waiters=1</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:28.1796970+00:00">
+        <Text>TRACE|1800853636584202|attempt=4|can-retry|RabbitMqConnectionException|id=1432091|code=-|terminal=True|result=False</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:29.0970310+00:00">
+        <Text>TRACE|1800854553023860|attempt=5|attempt-start|-|id=0|code=-|terminal=none|</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:29.0970990+00:00">
+        <Text>TRACE|1800854553224655|attempt=5|declare-start|-|id=0|code=-|index=0 queue=input_queue exclusive=False channelOpen=True</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:29.0971160+00:00">
+        <Text>TRACE|1800854553308225|attempt=5|queue-tasks-started|-|id=0|code=-|count=1 channel=36736776</Text>
+      </RunInfo>
+      <RunInfo computerName="Edgars-iMac-2" outcome="Warning" timestamp="2026-08-12T05:44:29.0989500+00:00">
+        <Text>TRACE|1800854555835904|attempt=5|declare-ok|-|id=0|code=-|index=0 queue=input_queue</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

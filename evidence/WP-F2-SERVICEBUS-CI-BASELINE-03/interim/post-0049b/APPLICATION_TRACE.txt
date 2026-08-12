@@ -1,0 +1,97 @@
+== Should_start_again_once_the_exclusive_queue_is_released  00:01:04.4696160
+TRACE|1777273594473896|declare-catch|ObjectDisposedException|id=18957420|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777273594770397|send-catch|terminal=none|OperationInterruptedException|id=16827845|code=491|carried=none|
+TRACE|1777273594825378|after-faulted|terminal=none|OperationInterruptedException|id=16827845|code=491|carried=none|
+TRACE|1777273595001785|transport-before-convert|terminal=none|OperationInterruptedException|id=16827845|code=491|carried=none|
+TRACE|1777273595020874|transport-after-convert|terminal=none|RabbitMqConnectionException|id=26143612|code=-|carried=none|
+TRACE|1777273595024266|transport-notify|terminal=none|RabbitMqConnectionException|id=26143612|code=-|carried=none|
+TRACE|1777282070075336|declare-catch|ObjectDisposedException|id=4730162|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777282070333059|send-catch|terminal=none|OperationInterruptedException|id=19903265|code=491|carried=none|
+TRACE|1777282070350981|after-faulted|terminal=none|OperationInterruptedException|id=19903265|code=491|carried=none|
+TRACE|1777282070411097|transport-before-convert|terminal=none|OperationInterruptedException|id=19903265|code=491|carried=none|
+TRACE|1777282070423963|transport-after-convert|terminal=none|RabbitMqConnectionException|id=8208643|code=-|carried=none|
+TRACE|1777282070443905|transport-notify|terminal=none|RabbitMqConnectionException|id=8208643|code=-|carried=none|
+TRACE|1777292726713959|declare-catch|ObjectDisposedException|id=14804184|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777292726948870|send-catch|terminal=none|OperationInterruptedException|id=40839911|code=491|carried=none|
+TRACE|1777292726961124|after-faulted|terminal=none|OperationInterruptedException|id=40839911|code=491|carried=none|
+TRACE|1777292727026495|transport-before-convert|terminal=none|OperationInterruptedException|id=40839911|code=491|carried=none|
+TRACE|1777292727038383|transport-after-convert|terminal=none|RabbitMqConnectionException|id=18874001|code=-|carried=none|
+TRACE|1777292727040258|transport-notify|terminal=none|RabbitMqConnectionException|id=18874001|code=-|carried=none|
+TRACE|1777308680120389|declare-catch|ObjectDisposedException|id=50447718|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777308680356513|send-catch|terminal=none|OperationInterruptedException|id=2664798|code=491|carried=none|
+TRACE|1777308680367842|after-faulted|terminal=none|OperationInterruptedException|id=2664798|code=491|carried=none|
+TRACE|1777308680423311|transport-before-convert|terminal=none|OperationInterruptedException|id=2664798|code=491|carried=none|
+TRACE|1777308680434070|transport-after-convert|terminal=none|RabbitMqConnectionException|id=23225714|code=-|carried=none|
+TRACE|1777308680435945|transport-notify|terminal=none|RabbitMqConnectionException|id=23225714|code=-|carried=none|
+== Should_not_inherit_the_old_failure_after_a_restart  00:01:00.2988770
+TRACE|1777153562824460|declare-catch|ObjectDisposedException|id=22659573|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777153563058160|send-catch|terminal=none|OperationInterruptedException|id=49734539|code=491|carried=none|
+TRACE|1777153563072886|after-faulted|terminal=none|OperationInterruptedException|id=49734539|code=491|carried=none|
+TRACE|1777153563127610|transport-before-convert|terminal=none|OperationInterruptedException|id=49734539|code=491|carried=none|
+TRACE|1777153563140164|transport-after-convert|terminal=none|RabbitMqConnectionException|id=4354274|code=-|carried=none|
+TRACE|1777153563143603|transport-notify|terminal=none|RabbitMqConnectionException|id=4354274|code=-|carried=none|
+TRACE|1777162040333242|declare-catch|ObjectDisposedException|id=67031583|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777162040646777|send-catch|terminal=none|OperationInterruptedException|id=24312697|code=491|carried=none|
+TRACE|1777162040702037|after-faulted|terminal=none|OperationInterruptedException|id=24312697|code=491|carried=none|
+TRACE|1777162040821473|transport-before-convert|terminal=none|OperationInterruptedException|id=24312697|code=491|carried=none|
+TRACE|1777162040850486|transport-after-convert|terminal=none|RabbitMqConnectionException|id=22030208|code=-|carried=none|
+TRACE|1777162040856000|transport-notify|terminal=none|RabbitMqConnectionException|id=22030208|code=-|carried=none|
+TRACE|1777174165765174|declare-catch|ObjectDisposedException|id=66843662|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777174166122459|send-catch|terminal=none|OperationInterruptedException|id=30637960|code=491|carried=none|
+TRACE|1777174166140827|after-faulted|terminal=none|OperationInterruptedException|id=30637960|code=491|carried=none|
+TRACE|1777174166249709|transport-before-convert|terminal=none|OperationInterruptedException|id=30637960|code=491|carried=none|
+TRACE|1777174166267671|transport-after-convert|terminal=none|RabbitMqConnectionException|id=11576440|code=-|carried=none|
+TRACE|1777174166271217|transport-notify|terminal=none|RabbitMqConnectionException|id=11576440|code=-|carried=none|
+TRACE|1777186338572771|declare-catch|ObjectDisposedException|id=33279711|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777186338883912|send-catch|terminal=none|OperationInterruptedException|id=38670801|code=491|carried=none|
+TRACE|1777186338897980|after-faulted|terminal=none|OperationInterruptedException|id=38670801|code=491|carried=none|
+TRACE|1777186338992037|transport-before-convert|terminal=none|OperationInterruptedException|id=38670801|code=491|carried=none|
+TRACE|1777186339014894|transport-after-convert|terminal=none|RabbitMqConnectionException|id=16765071|code=-|carried=none|
+TRACE|1777186339018967|transport-notify|terminal=none|RabbitMqConnectionException|id=16765071|code=-|carried=none|
+TRACE|1777208020640353|declare-catch|OperationInterruptedException|id=59729969|code=405|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777208020971027|send-catch|terminal=none|OperationInterruptedException|id=59729969|code=405|carried=none|
+TRACE|1777208020992079|after-faulted|terminal=none|OperationInterruptedException|id=59729969|code=405|carried=none|
+TRACE|1777208021098219|transport-before-convert|terminal=none|OperationInterruptedException|id=59729969|code=405|carried=none|
+TRACE|1777208021114850|transport-after-convert|terminal=True|RabbitMqConnectionException|id=15064852|code=-|carried=none|
+TRACE|1777208021119355|transport-notify|terminal=True|RabbitMqConnectionException|id=15064852|code=-|carried=none|
+TRACE|1777208111805028|send-catch|terminal=none|OperationCanceledException|id=43769422|code=-|carried=none|
+TRACE|1777208111826834|after-faulted|terminal=none|OperationCanceledException|id=43769422|code=-|carried=none|
+TRACE|1777208112254324|send-catch|terminal=none|TaskCanceledException|id=15091772|code=-|carried=none|
+TRACE|1777208112270808|after-faulted|terminal=none|TaskCanceledException|id=15091772|code=-|carried=none|
+TRACE|1777208112383572|transport-notify|terminal=none|TaskCanceledException|id=15091772|code=-|carried=none|
+TRACE|1777208112585880|send-catch|terminal=none|OperationCanceledException|id=41395400|code=-|carried=none|
+TRACE|1777208112615059|after-faulted|terminal=none|OperationCanceledException|id=41395400|code=-|carried=none|
+TRACE|1777208112650805|send-catch|terminal=none|OperationCanceledException|id=6246494|code=-|carried=none|
+TRACE|1777208112658033|after-faulted|terminal=none|OperationCanceledException|id=6246494|code=-|carried=none|
+TRACE|1777208112752725|transport-notify|terminal=none|OperationCanceledException|id=41395400|code=-|carried=none|
+== Should_properly_fail_on_exclusive_launch  00:01:01.0257010
+TRACE|1777213640641073|declare-catch|ObjectDisposedException|id=64582008|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777213640907635|send-catch|terminal=none|OperationInterruptedException|id=39277931|code=491|carried=none|
+TRACE|1777213640930975|after-faulted|terminal=none|OperationInterruptedException|id=39277931|code=491|carried=none|
+TRACE|1777213641071321|transport-before-convert|terminal=none|OperationInterruptedException|id=39277931|code=491|carried=none|
+TRACE|1777213641100314|transport-after-convert|terminal=none|RabbitMqConnectionException|id=61301722|code=-|carried=none|
+TRACE|1777213641150105|transport-notify|terminal=none|RabbitMqConnectionException|id=61301722|code=-|carried=none|
+TRACE|1777220757386663|declare-catch|ObjectDisposedException|id=25226041|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777220757645570|send-catch|terminal=none|OperationInterruptedException|id=46366488|code=491|carried=none|
+TRACE|1777220757659407|after-faulted|terminal=none|OperationInterruptedException|id=46366488|code=491|carried=none|
+TRACE|1777220757719134|transport-before-convert|terminal=none|OperationInterruptedException|id=46366488|code=491|carried=none|
+TRACE|1777220757730932|transport-after-convert|terminal=none|RabbitMqConnectionException|id=28115002|code=-|carried=none|
+TRACE|1777220757733366|transport-notify|terminal=none|RabbitMqConnectionException|id=28115002|code=-|carried=none|
+TRACE|1777229407475005|declare-catch|ObjectDisposedException|id=35342536|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777229407699069|send-catch|terminal=none|OperationInterruptedException|id=4792336|code=491|carried=none|
+TRACE|1777229407725537|after-faulted|terminal=none|OperationInterruptedException|id=4792336|code=491|carried=none|
+TRACE|1777229407841372|transport-before-convert|terminal=none|OperationInterruptedException|id=4792336|code=491|carried=none|
+TRACE|1777229407855404|transport-after-convert|terminal=none|RabbitMqConnectionException|id=4630857|code=-|carried=none|
+TRACE|1777229407858794|transport-notify|terminal=none|RabbitMqConnectionException|id=4630857|code=-|carried=none|
+TRACE|1777244372894756|declare-catch|ObjectDisposedException|id=17926296|code=-|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777244373195680|send-catch|terminal=none|OperationInterruptedException|id=21740313|code=491|carried=none|
+TRACE|1777244373211598|after-faulted|terminal=none|OperationInterruptedException|id=21740313|code=491|carried=none|
+TRACE|1777244373316207|transport-before-convert|terminal=none|OperationInterruptedException|id=21740313|code=491|carried=none|
+TRACE|1777244373329055|transport-after-convert|terminal=none|RabbitMqConnectionException|id=22830241|code=-|carried=none|
+TRACE|1777244373331504|transport-notify|terminal=none|RabbitMqConnectionException|id=22830241|code=-|carried=none|
+TRACE|1777269115346118|declare-catch|OperationInterruptedException|id=199793|code=405|carried=none|queue=exclusively-yours channelOpen=False
+TRACE|1777269115601310|send-catch|terminal=none|OperationInterruptedException|id=199793|code=405|carried=none|
+TRACE|1777269115616128|after-faulted|terminal=none|OperationInterruptedException|id=199793|code=405|carried=none|
+TRACE|1777269115713288|transport-before-convert|terminal=none|OperationInterruptedException|id=199793|code=405|carried=none|
+TRACE|1777269115750802|transport-after-convert|terminal=True|RabbitMqConnectionException|id=37223100|code=-|carried=none|
+TRACE|1777269115755361|transport-notify|terminal=True|RabbitMqConnectionException|id=37223100|code=-|carried=none|

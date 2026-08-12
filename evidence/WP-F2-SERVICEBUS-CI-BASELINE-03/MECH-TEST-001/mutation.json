@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "subjectId": "MECH-TEST-001",
-  "recordSequence": 26,
+  "recordSequence": 33,
   "kind": "MUTATION",
   "mutants": [
     {
@@ -40,5 +40,6 @@
       "detail": "[Ignore] is rejected outright, a new [Explicit] breaks the bound attribute count, and at run time any not executed case the census does not name fails its category. Covered by test_rejects_ignoring_a_required_case and test_rejects_a_new_explicit_case_that_is_not_inventoried."
     }
   ],
-  "result": "ALL_KILLED"
+  "result": "ALL_KILLED",
+  "reissuedFor": "Finding 0032 F-12: these were written for record 0026, against the discarded freeze and before any production correction. Re-slice 0005 requires the affected gates to be run again, so they are rebound to this correction round and their references point at its evidence."
 }

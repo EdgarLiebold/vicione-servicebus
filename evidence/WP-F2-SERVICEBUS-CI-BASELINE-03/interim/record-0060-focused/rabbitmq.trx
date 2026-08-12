@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="fc71be48-0e67-4fef-90c6-89597b8b62cc" name="@Edgars-iMac-2 2026-08-12 09:49:23" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-12T09:49:23.7793590+00:00" queuing="2026-08-12T09:49:23.7793600+00:00" start="2026-08-12T09:49:21.1320910+00:00" finish="2026-08-12T09:49:33.3140560+00:00" />
+  <TestSettings name="default" id="a42ca929-8682-4786-bfc0-fc066388ce73">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-12_09_49_23" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="5a440fc6-61b7-437a-96b0-1ddd42ee00a0" testId="25f4e234-c20d-b8ee-2973-6aa071c92c1a" testName="Should_give_every_waiting_caller_the_same_answer" computerName="Edgars-iMac-2" duration="00:00:00.8389730" startTime="2026-08-12T09:49:22.8516030+00:00" endTime="2026-08-12T09:49:23.6905100+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a440fc6-61b7-437a-96b0-1ddd42ee00a0" />
+    <UnitTestResult executionId="6ffa3403-061c-4193-b974-0cf9237fbf1b" testId="9a800920-fccc-cf72-b976-be70490e6495" testName="Should_not_inherit_the_old_failure_after_a_restart" computerName="Edgars-iMac-2" duration="00:00:00.3852740" startTime="2026-08-12T09:49:23.9404640+00:00" endTime="2026-08-12T09:49:24.3257480+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ffa3403-061c-4193-b974-0cf9237fbf1b" />
+    <UnitTestResult executionId="7e2aa52d-4863-4f74-87a1-ba0f30972854" testId="5986c5e9-6c05-149a-fded-5d77644b3052" testName="Should_refuse_the_contender_with_405_and_leave_its_connection_usable" computerName="Edgars-iMac-2" duration="00:00:00.0608630" startTime="2026-08-12T09:49:33.1761780+00:00" endTime="2026-08-12T09:49:33.2370420+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7e2aa52d-4863-4f74-87a1-ba0f30972854" />
+    <UnitTestResult executionId="ff473171-915d-4f8b-81fb-5ac0b5f6f53c" testId="74cd9a95-bd8e-e828-864e-7155e49ce1c6" testName="Should_hand_the_queue_over_once_the_holder_is_gone" computerName="Edgars-iMac-2" duration="00:00:00.0715240" startTime="2026-08-12T09:49:33.1046170+00:00" endTime="2026-08-12T09:49:33.1761420+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ff473171-915d-4f8b-81fb-5ac0b5f6f53c" />
+    <UnitTestResult executionId="88005bc1-08bf-4920-b8de-c78c6d77a427" testId="8a3153fe-0117-d6cd-d6d2-792a304a697c" testName="Should_start_again_once_the_exclusive_queue_is_released" computerName="Edgars-iMac-2" duration="00:00:00.5191310" startTime="2026-08-12T09:49:32.5829920+00:00" endTime="2026-08-12T09:49:33.1021370+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="88005bc1-08bf-4920-b8de-c78c6d77a427" />
+    <UnitTestResult executionId="1376f58e-50d4-4346-b56b-2e61c79e0b98" testId="51db8c78-a284-09e9-9358-290f3e17b2fe" testName="Should_properly_fail_on_exclusive_launch" computerName="Edgars-iMac-2" duration="00:00:08.2569199" startTime="2026-08-12T09:49:24.3257840+00:00" endTime="2026-08-12T09:49:32.5829320+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1376f58e-50d4-4346-b56b-2e61c79e0b98" />
+    <UnitTestResult executionId="bbfe7ba6-add9-4621-8061-80ff47091c09" testId="a156d794-ea46-a332-cf89-cb5661e251ab" testName="Should_give_the_connection_back_when_the_connect_fails" computerName="Edgars-iMac-2" duration="00:00:00.2486550" startTime="2026-08-12T09:49:23.6917640+00:00" endTime="2026-08-12T09:49:23.9404260+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bbfe7ba6-add9-4621-8061-80ff47091c09" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_give_every_waiting_caller_the_same_answer" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="25f4e234-c20d-b8ee-2973-6aa071c92c1a">
+      <Execution id="5a440fc6-61b7-437a-96b0-1ddd42ee00a0" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_give_every_waiting_caller_the_same_answer" />
+    </UnitTest>
+    <UnitTest name="Should_give_the_connection_back_when_the_connect_fails" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="a156d794-ea46-a332-cf89-cb5661e251ab">
+      <Execution id="bbfe7ba6-add9-4621-8061-80ff47091c09" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_give_the_connection_back_when_the_connect_fails" />
+    </UnitTest>
+    <UnitTest name="Should_properly_fail_on_exclusive_launch" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="51db8c78-a284-09e9-9358-290f3e17b2fe">
+      <Execution id="1376f58e-50d4-4346-b56b-2e61c79e0b98" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_properly_fail_on_exclusive_launch" />
+    </UnitTest>
+    <UnitTest name="Should_start_again_once_the_exclusive_queue_is_released" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="8a3153fe-0117-d6cd-d6d2-792a304a697c">
+      <Execution id="88005bc1-08bf-4920-b8de-c78c6d77a427" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_start_again_once_the_exclusive_queue_is_released" />
+    </UnitTest>
+    <UnitTest name="Should_refuse_the_contender_with_405_and_leave_its_connection_usable" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="5986c5e9-6c05-149a-fded-5d77644b3052">
+      <Execution id="7e2aa52d-4863-4f74-87a1-ba0f30972854" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.The_broker_contract_for_an_exclusive_queue" name="Should_refuse_the_contender_with_405_and_leave_its_connection_usable" />
+    </UnitTest>
+    <UnitTest name="Should_not_inherit_the_old_failure_after_a_restart" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="9a800920-fccc-cf72-b976-be70490e6495">
+      <Execution id="6ffa3403-061c-4193-b974-0cf9237fbf1b" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.Failure_Specs" name="Should_not_inherit_the_old_failure_after_a_restart" />
+    </UnitTest>
+    <UnitTest name="Should_hand_the_queue_over_once_the_holder_is_gone" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="74cd9a95-bd8e-e828-864e-7155e49ce1c6">
+      <Execution id="ff473171-915d-4f8b-81fb-5ac0b5f6f53c" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.The_broker_contract_for_an_exclusive_queue" name="Should_hand_the_queue_over_once_the_holder_is_gone" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="25f4e234-c20d-b8ee-2973-6aa071c92c1a" executionId="5a440fc6-61b7-437a-96b0-1ddd42ee00a0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a800920-fccc-cf72-b976-be70490e6495" executionId="6ffa3403-061c-4193-b974-0cf9237fbf1b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5986c5e9-6c05-149a-fded-5d77644b3052" executionId="7e2aa52d-4863-4f74-87a1-ba0f30972854" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="74cd9a95-bd8e-e828-864e-7155e49ce1c6" executionId="ff473171-915d-4f8b-81fb-5ac0b5f6f53c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8a3153fe-0117-d6cd-d6d2-792a304a697c" executionId="88005bc1-08bf-4920-b8de-c78c6d77a427" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="51db8c78-a284-09e9-9358-290f3e17b2fe" executionId="1376f58e-50d4-4346-b56b-2e61c79e0b98" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a156d794-ea46-a332-cf89-cb5661e251ab" executionId="bbfe7ba6-add9-4621-8061-80ff47091c09" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="7" executed="7" passed="7" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll
+   NUnit3TestExecutor discovered 7 of 7 NUnit test cases using Current Discovery mode, Non-Explicit run
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

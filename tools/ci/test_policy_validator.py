@@ -72,6 +72,14 @@ LOCK = {
 
 BUILD_WORKFLOW = """\
 name: Required CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
 jobs:
   policy:
     steps:
@@ -472,6 +480,30 @@ class PolicyTestCase(unittest.TestCase):
             encoding="utf-8")
         self.assert_rejected("run-scoped-guard")
 
+    def test_rejects_a_path_filter_on_the_required_trigger(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("  pull_request:\n",
+                                   "    paths:\n      - 'src/**'\n  pull_request:\n"),
+            encoding="utf-8")
+        self.assert_rejected("required-profile")
+
+    def test_rejects_a_paths_ignore_filter_on_the_required_trigger(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("  pull_request:\n",
+                                   "    paths-ignore:\n      - 'docs/**'\n  pull_request:\n"),
+            encoding="utf-8")
+        self.assert_rejected("required-profile")
+
+    def test_rejects_a_broker_endpoint_that_carries_credentials(self) -> None:
+        self.spec("Credentialed_Specs.cs",
+                  'var host = new Uri("amqp://guest:guest@localhost:5672");\n')
+        self.assert_rejected("test-endpoint")
+
+    def test_rejects_a_credentialed_endpoint_on_the_loopback_address(self) -> None:
+        self.spec("Loopback_Specs.cs",
+                  'var host = new Uri("rabbitmq://guest:guest@127.0.0.1:5672/test");\n')
+        self.assert_rejected("test-endpoint")
+
     def test_rejects_blame_hang_masking(self) -> None:
         self.workflow().write_text(BUILD_WORKFLOW.replace("--category core", "--category core -- --blame-hang-timeout 5m"),
                                    encoding="utf-8")
@@ -562,6 +594,46 @@ class PolicyTestCase(unittest.TestCase):
         (self.root / "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md").write_text(
             "; ViciOne modification\n" + SHIPPED, encoding="utf-8")
         self.assertEqual([], self.failures())
+
+
+    # -- the ownership rule ------------------------------------------------------------------------
+
+    CHANNEL_CONTEXT = "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/RabbitMqChannelContext.cs"
+
+    def write_channel_context(self, publish_body: str) -> None:
+        path = self.root / self.CHANNEL_CONTEXT
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "namespace ViciOne.ServiceBus.RabbitMqTransport\n"
+            "{\n"
+            "    public class RabbitMqChannelContext\n"
+            "    {\n"
+            "        public Task BasicPublishAsync(string exchange)\n"
+            "        {\n"
+            f"{publish_body}\n"
+            "        }\n"
+            "\n"
+            "        public Task NotifyFaulted(Exception exception)\n"
+            "        {\n"
+            "            return Task.CompletedTask;\n"
+            "        }\n"
+            "    }\n"
+            "}\n",
+            encoding="utf-8")
+
+    def test_accepts_an_operation_that_takes_a_lease(self) -> None:
+        self.write_channel_context("            using var lease = Lease();\n            return Task.CompletedTask;")
+        self.assertEqual([], self.failures())
+
+    def test_rejects_an_operation_that_calls_the_broker_without_a_lease(self) -> None:
+        self.write_channel_context("            return _channel.BasicPublishAsync(exchange);")
+        self.assert_rejected("transport-lease")
+
+    def test_rejects_a_name_that_merely_contains_lease(self) -> None:
+        # 'NoLease()' contains the word and must not satisfy the rule: the earlier substring form of
+        # this check accepted exactly that and would have accepted the defect it exists to catch.
+        self.write_channel_context("            using var lease = NoLease();\n            return Task.CompletedTask;")
+        self.assert_rejected("transport-lease")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIREMENT_EVIDENCE_MATRIX",
+  "directive": "0069 F-3",
+  "slice": "revisions/0008",
+  "sliceFileSha256": "60f312e98e84e9033f6bbb0ecffc27825e53e6e60cfe555e9c53e63144484709",
+  "sliceContentSha256": "8296624366e9ffc67e324671897b6d188b8f7d36643fd5ca14ca5d46c6876587",
+  "why": "Record 0069 F-3: the previous freeze put every proof under interim/, the area this repository marks as not yet bound by a record. Each verification line of the slice is answered here by a byte artifact in a record path that is never overwritten.",
+  "requirements": [
+    {
+      "id": "REQ-CI-002",
+      "verification": [
+        {
+          "line": "All mandatory gates actually invalidated by the two pins run exactly once fresh after the final restore; earlier gates may only carry over with a proven identical input fingerprint.",
+          "answer": "Stronger than required: all eleven baseline categories were run fresh, so nothing carries over and no identity proof is load bearing.",
+          "evidence": [
+            {
+              "path": "records/0070/BASELINE_CATEGORY_MATRIX.json",
+              "sha256": "830e56f41e5f85d76ff2273c746618f1dd08397c0f5f3ea236e8bb243a780619"
+            },
+            {
+              "path": "records/0070/GATE_EXECUTION.json",
+              "sha256": "e3922137f482f6bc76f9213fdf0c3e4e2fdbc774ff8afd098df2374b181999c9"
+            }
+          ]
+        },
+        {
+          "line": "The full diff against the unchanged work package base shows only the accepted changes, the two central pins and required new record evidence.",
+          "answer": "The pin file changes exactly two lines; every forbidden change category is checked against the base.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        },
+        {
+          "line": "No change to public API, wire format, serialisation contract, RabbitMQ topology, persistence, TFM, suppressions or product logic.",
+          "answer": "Messaging surface unchanged at 27274 members with zero testing changes; no TFM moved and no suppression was introduced.",
+          "evidence": [
+            {
+              "path": "records/0070/API_SURFACE_DIFF.json",
+              "sha256": "1f3ed3f05d638bce44a0c3269e8de36b98aad4edadd0e6f8ff5f2a2744fa2f3b"
+            },
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        },
+        {
+          "line": "No test filter, ignore, skip, timeout raise, retry or assertion weakening is used to produce a green result.",
+          "answer": "Ignore, Explicit, Retry and Timeout attribute counts across the test tree are identical to the base: 1, 113, 1, 0.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REQ-CI-006",
+      "verification": [
+        {
+          "line": "The shipped ViciOne.ServiceBus.MessagePack graph resolves MessagePack to exactly 3.1.8; the net9.0 SignalR test graph resolves SignalR.Protocols.MessagePack to 9.0.19 and its MessagePack dependency to 2.5.302.",
+          "answer": "Both read from the restored assets, and the shipped one additionally from the packed nuspec.",
+          "evidence": [
+            {
+              "path": "records/0070/REQ-CI-006_DEPENDENCY_GRAPH.json",
+              "sha256": "92facc0588835f7330fbb03da771eb6eb3685399cbfeac97ec3aed276de0b342"
+            }
+          ]
+        },
+        {
+          "line": "The MessagePack serialisation tests in the core test project and the complete SignalR test project run fully green with a positive test count and no skipped due tests.",
+          "answer": "Core 1900 total with 1857 passed and 0 failed, of which 38 MessagePack serialisation specs; SignalR 26 of 26.",
+          "evidence": [
+            {
+              "path": "records/0070/core/core.trx",
+              "sha256": "747018213819160e64e9568380925e01f843b6f83c70ec75d473c1e82adf2731"
+            },
+            {
+              "path": "records/0070/signalr/signalr.trx",
+              "sha256": "5d1a411094881b069f1f4b477ccd811e748cd6da79f9e62f681364da96ef8780"
+            },
+            {
+              "path": "records/0070/core-messagepack/messagepack-serialization.trx",
+              "sha256": "ba69c845617a2995efae47e8f9f89ee91922d749049b8b923997bb924305b848"
+            }
+          ]
+        },
+        {
+          "line": "Directory.Packages.props changes only the two pins; any further dependency change forces a new QUESTION before the edit.",
+          "answer": "Exactly two changed lines, both MessagePack related; no other dependency moved.",
+          "evidence": [
+            {
+              "path": "records/0070/FORBIDDEN_DIFF_CHECK.json",
+              "sha256": "4890360e218f265f91eeaa0dc66fd3dafb00ec5d0e1f14eda6da5185f1c31017"
+            }
+          ]
+        },
+        {
+          "line": "A fresh inventory over all projects and target frameworks shows no NU1902 or NU1903 finding for MessagePack and none newly introduced by this re-slice.",
+          "answer": "Zero MessagePack findings and zero newly introduced; totals fall from 187 with 44 high to 19 with 2, and no shipped project carries a high finding.",
+          "evidence": [
+            {
+              "path": "records/0070/VULNERABILITY_INVENTORY.json",
+              "sha256": "c359ea771ed210b7323d62b8be9aaa2d9f3a743b6027e1da87a67fc05d414969"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REQ-CI-008",
+      "verification": [
+        {
+          "line": "API surface and full pack proof with artifact hashes.",
+          "answer": "Messaging surface unchanged; 33 package hashes, by file name, with the contract stated in the file header. The artifacts themselves are deliberately not in the freeze.",
+          "evidence": [
+            {
+              "path": "records/0070/API_SURFACE_DIFF.json",
+              "sha256": "1f3ed3f05d638bce44a0c3269e8de36b98aad4edadd0e6f8ff5f2a2744fa2f3b"
+            },
+            {
+              "path": "records/0070/packages/SHA256SUMS",
+              "sha256": "395c16091ee1d1d62a6c8c14c166eb1566e925e354edaa949c48ebfa91897f54"
+            }
+          ]
+        },
+        {
+          "line": "Final commit and tree hash, and the hash of the effective development slice 0008.",
+          "answer": "The slice hashes are recorded above and were recomputed from the file before the first edit. The commit and tree hash cannot live inside the tree they name; they are bound by the freeze record that follows this correction.",
+          "evidence": [
+            {
+              "path": "development/outbox/<freeze>.json",
+              "note": "carries commit, tree and the slice hash"
+            }
+          ]
+        },
+        {
+          "line": "Implementation freeze and developer red team handover.",
+          "answer": "The freeze follows this correction; the previous handover produced record 0069, whose five findings this correction answers.",
+          "evidence": [
+            {
+              "path": "red-team/outbox/0069-finding.json",
+              "note": "the finding this correction answers"
+            }
+          ]
+        },
+        {
+          "line": "Requirement to evidence matrix.",
+          "answer": "This file.",
+          "evidence": [
+            {
+              "path": "records/0070/REQUIREMENT_EVIDENCE_MATRIX.json",
+              "note": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

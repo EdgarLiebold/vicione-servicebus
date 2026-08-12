@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "kind": "TARGETED_PROOF_RESULT",
+  "recordSequence": null,
+  "directive": "0045",
+  "requirementIds": ["REQ-CI-002"],
+  "findingIds": ["F-3", "F-11"],
+  "why": "Record 0045 rejected the previous matrix because it described the discarded ReceiveEndpoint mechanism while the delivered code uses a local TerminalFaultObserver. This one is fresh, and it is written against what was actually built.",
+  "mechanismUnderTest": {
+    "structuredCause": "ChannelContextFactory.CreateSharedChannel keeps the outer synthetic reply code 491 and carries the broker's unaltered ShutdownEventArgs beside it. The classification reads that object; every search for reply text or RESOURCE_LOCKED has been removed.",
+    "delivery": "ViciOneServiceBusBus connects one TerminalFaultObserver per bus. A waiter registers its own cancellation source for the duration of the wait; the observer publishes the cause and wakes the waiters under the same lock. A started endpoint returns before any of it."
+  },
+  "sabotages": [
+    {"id": "marker-never-set", "removes": "the terminal marker on the exception", "failed": 3, "verdict": "CAUGHT"},
+    {"id": "marker-value-ignored", "removes": "the marker's value, leaving only its presence", "failed": 3, "verdict": "CAUGHT",
+     "note": "The first attempt mutated producer and consumer together and cancelled itself out — a false green that came from the mutation, not from the code. Mutating only the producer is what makes it a probe."},
+    {"id": "waiters-never-woken", "removes": "the wake-up of registered waiters", "failed": 2, "verdict": "CAUGHT"},
+    {"id": "any-fault-passthrough", "removes": "the marker check, so any first fault reaches the caller", "failed": 1, "verdict": "CAUGHT"},
+    {"id": "handle-not-disconnected", "removes": "the disconnect of the already connected pipe on the failure path", "failed": 1, "verdict": "CAUGHT",
+     "note": "Survived the first round. Nothing observed the leak until a spec connected the same request id twice: the first connect fails, and without the disconnect the id stays bound, so the second is refused by the pipe instead of by the broker."},
+    {"id": "conflict-still-retried", "removes": "the exclusion of the conflict from the retry policy", "failed": 1, "verdict": "CAUGHT"},
+    {"id": "precondition-made-terminal", "changes": "the recognised reply code from 405 to 406", "failed": 10, "verdict": "CAUGHT"},
+    {"id": "structured-cause-dropped", "removes": "the carried close reason at the producer", "failed": 0, "verdict": "NOT CAUGHT",
+     "note": "Reported rather than papered over. Since the conflict now reaches the classification with a real reply code 405 before any channel is reused, the carrier is not on the path any test takes. It is mandated by record 0045 and is kept, and the consumer side of it is covered by Should_not_retry_a_closed_channel_whose_broker_reason_was_the_conflict and by the field-loss counter-probe. What no test reaches today is the producer attaching it."},
+    {"id": "old-fault-survives-restart", "removes": "clearing the observer field on stop", "failed": 0, "verdict": "INERT",
+     "note": "Not a gap. A start always assigns a fresh observer, so the field cleared on stop cannot be inherited by a later start; the mutation therefore cannot change behaviour. The invariant holds by construction rather than by assertion, and is stated here as such instead of being credited to a test."}
+  ],
+  "jobServiceSabotages": [
+    {"id": "admission-not-counted", "removes": "counting an admitted but unregistered job in the drain", "caughtBy": "Should_not_finish_a_stop_while_a_job_is_still_being_admitted", "verdict": "CAUGHT"},
+    {"id": "heartbeat-not-awaited", "removes": "awaiting the heartbeat that is already publishing", "caughtBy": "Should_not_finish_a_stop_while_a_heartbeat_is_still_publishing", "verdict": "CAUGHT"}
+  ],
+  "fixtureHardening": {
+    "sleepsRemoved": "The last fixed delays that stood in for state are gone. BusEndpointReady_Specs and Failure_Specs both ask the broker whether the exclusive queue is held or released, through one shared probe with a thirty second bound that fails naming the unmet precondition. The quiet window after the terminal failure stays a delay, because there it is the assertion rather than a substitute for one.",
+    "twoTestErrorsFound": "Building the admission race test surfaced two mistakes of its own: the hold has to be synchronous, because StartJob never awaits the pipe, and an earlier version nulled the release object before waiting on it, so the release had nothing to signal. A time-based test would have shown neither."
+  },
+  "mutationTooling": "Every sabotage is applied to a working copy and reverted from a byte identical backup; the sources were verified identical to the backup after the last run."
+}

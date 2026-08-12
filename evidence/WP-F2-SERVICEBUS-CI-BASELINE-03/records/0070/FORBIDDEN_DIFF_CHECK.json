@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "FORBIDDEN_DIFF_CHECK",
+  "acceptanceCriterion": "AC-CI-002",
+  "base": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+  "why": "Slice 0008 forbids a list of change categories outright. Each is checked against the base here rather than asserted in prose, so a violation is a failing row and not a missing sentence.",
+  "checks": [
+    {
+      "name": "central pin file changes exactly two lines",
+      "lines": [
+        "-    <PackageVersion Include=\"MessagePack\" Version=\"3.1.6\" />",
+        "+    <PackageVersion Include=\"MessagePack\" Version=\"3.1.8\" />",
+        "-    <PackageVersion Include=\"Microsoft.AspNetCore.SignalR.Protocols.MessagePack\" Version=\"9.0.0\" />",
+        "+    <PackageVersion Include=\"Microsoft.AspNetCore.SignalR.Protocols.MessagePack\" Version=\"9.0.19\" />"
+      ],
+      "pass": true
+    },
+    {
+      "name": "no target framework changed in any project or props file",
+      "changed": {},
+      "pass": true
+    },
+    {
+      "name": "no warning suppression or vulnerability suppression introduced",
+      "introduced": [],
+      "pass": true
+    },
+    {
+      "name": "no test weakening markers added",
+      "before": {
+        "Ignore": 1,
+        "Explicit": 113,
+        "Retry": 1,
+        "Timeout": 0
+      },
+      "after": {
+        "Ignore": 1,
+        "Explicit": 113,
+        "Retry": 1,
+        "Timeout": 0
+      },
+      "pass": true
+    },
+    {
+      "name": "no VersionOverride in any project or props file",
+      "hits": [],
+      "pass": true,
+      "scope": "*.csproj and *.props only",
+      "note": "Scoped deliberately. An unscoped grep also matches this work package's own evidence prose, where the word appears because the option was considered and rejected — which is a statement about the decision, not a use of the attribute."
+    }
+  ],
+  "allPass": true,
+  "headBinding": "Deliberately not recorded here. A file cannot carry the hash of the tree that contains it, and an earlier version of this file named a candidate that was later rewritten -- which is exactly the staleness it would invite. The commit and tree of the candidate are bound by the freeze record, which lives outside the tree it names."
+}

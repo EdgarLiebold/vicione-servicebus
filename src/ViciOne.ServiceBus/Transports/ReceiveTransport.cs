@@ -159,7 +159,10 @@ namespace ViciOne.ServiceBus.Transports
                                     : null;
                             }
 
-                            if (retryContext == null && !policyContext.CanRetry(exception, out retryContext))
+                            var canRetry = retryContext != null || policyContext.CanRetry(exception, out retryContext);
+
+
+                            if (!canRetry)
                             {
                                 LogContext.Error?.Log(exception, "ReceiveTransport Cannot Retry: {InputAddress}", _context.InputAddress);
                                 break;
@@ -220,15 +223,22 @@ namespace ViciOne.ServiceBus.Transports
 
             async Task<Exception> NotifyFaulted(Exception originalException, string message)
             {
+
                 var exception = _context.ConvertException(originalException, message);
+
 
                 await NotifyFaulted(exception).ConfigureAwait(false);
 
                 return exception;
             }
 
+
+
+
             Task NotifyFaulted(Exception exception)
             {
+
+
                 return _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception);
             }
 

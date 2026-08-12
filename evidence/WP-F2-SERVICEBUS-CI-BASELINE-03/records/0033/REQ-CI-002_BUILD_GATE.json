@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "recordSequence": 33,
+  "requirementIds": [
+    "REQ-CI-002"
+  ],
+  "findingId": "F-5",
+  "category": "build",
+  "why": "Record 0030 counted build as a green required gate on prose alone. Its only instrument record sat under records/0026, which belongs to the discarded freeze and predates all production corrections. Record 0029 item 6 rules that out: earlier evidence does not replace a fresh proof.",
+  "command": "dotnet build ViciOne.ServiceBus.sln -c Release --nologo -v minimal",
+  "exitCode": 0,
+  "errors": 0,
+  "platform": "macOS-15.7.7-x86_64-i386-64bit",
+  "dotnet": "10.0.302",
+  "logSha256": "9af3489f9ceac9a6991be825fbcd064600ba2788bf56d1074d0316882d328230",
+  "targetFrameworks": [
+    "netstandard2.0",
+    "net8.0",
+    "net9.0",
+    "net10.0"
+  ],
+  "windows": {
+    "state": "NOT_EXECUTED",
+    "reason": "No Windows host is available to this run. The required profile keeps the ubuntu and windows matrix visible in build.yml; the Windows leg is not proven here and is not reported as passed."
+  }
+}

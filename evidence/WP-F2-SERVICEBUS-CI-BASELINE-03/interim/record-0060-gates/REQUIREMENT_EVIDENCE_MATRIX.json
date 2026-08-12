@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "kind": "REQUIREMENT_EVIDENCE_MATRIX",
+  "recordSequence": null,
+  "status": "CORRECTION_BLOCK_CLOSED",
+  "directive": "0059",
+  "why": "Record 0059 rejected the close-out candidate of record 0058 and bound one connected correction block. This matrix describes the mechanism actually delivered for that block, point by point, and separates what is proved by a mutation from what is not.",
+  "requirementAssignment": {
+    "REQ-CI-002": ["F-1", "F-3", "F-6", "F-11"],
+    "correction": "Records 0037 and 0038 named REQ-CI-003 and REQ-CI-006 for these cases. Record 0043 ruled that wrong and without effect. MessagePack remains a separate mandatory follow-up under REQ-CI-006."
+  },
+  "correctedClaim": {
+    "record": "0058",
+    "claim": "Every channel operation holds a lease for its whole duration.",
+    "state": "WITHDRAWN_AND_CORRECTED",
+    "detail": "False when written. BasicPublishAsync, ExchangeDeclare, BasicNack and BasicCancel called the client directly. The ExchangeDeclare edit had failed on its anchor in the earlier pass and the claim was never checked against the source. All four are under the lease now, and the rule is a gate rather than a claim."
+  },
+  "block": [
+    {
+      "point": "0059 §2",
+      "title": "Lease protection was incomplete",
+      "state": "CLOSED",
+      "mechanism": "All thirteen broker operations of RabbitMqChannelContext hold their lease for the whole call. BasicPublishAsync holds it until the client's own task finishes even when publisher confirms are off and the caller does not wait, and that task is observed on both paths, so a publish nobody awaits cannot become an unobserved exception. BasicNack answers a refused lease with silence, because a nack on a finished channel is not an error; every other operation reports the stored close reason. Direct Channel access is inventoried: three sites read IsClosed and CloseReason, which are race-safe diagnostics, and they now report the real reason instead of inventing one. RabbitMqConsumerFilter no longer closes the channel behind its owner's back.",
+      "proof": "A new policy rule, transport-lease, fails the run when any public operation of either context reaches the broker without taking a lease. Mutation: removing the publish lease -- the exact defect 0059 found -- turns the policy gate red and names the operation. A second mutation removing the connection's lease does the same. Three self-tests cover it, including one for a name that merely contains the word Lease, which an earlier substring form of the rule wrongly accepted."
+    },
+    {
+      "point": "0059 §3",
+      "title": "Connection lifetime was missing",
+      "state": "CLOSED",
+      "mechanism": "One type owns both. TransportLifetime is parameterized by its subject rather than duplicated, so a second, divergent lifetime semantics cannot arise. The connection shutdown handler invalidates first and keeps the original ShutdownEventArgs, channel creation holds a lease for its whole duration, no operation starts after invalidation, disposal happens exactly once and only with no active operation, and RabbitMqConnectionContext.DisposeAsync hands over to the lifetime instead of disposing the connection directly. CreateSharedConnection reports the connection's own CloseReason.",
+      "proof": "Every lifetime spec runs against both subjects, channel and connection. The wiring of channel creation is covered by the policy rule above."
+    },
+    {
+      "point": "0059 §4",
+      "title": "The ownership implementation itself",
+      "state": "CLOSED",
+      "mechanism": "The disposal is an async Task started exactly once behind an Interlocked gate and represented by a stored task; async void is gone. Its end and its failure are observable through a completion source carrying the failure as a result rather than as a faulted task, so a disposal nobody awaits cannot surface as an unobserved exception, and an owner that does await gets the original exception with its stack. A failure is logged at error level where it happens. The lease is a sealed class with an idempotent release, not a copyable struct.",
+      "proof": "Two mutations, both red: making the lease non-idempotent again turns two specs red, and swallowing the disposal failure turns four red. Both new rules have their own specs: a lease disposed three times while another operation runs, and a disposal delegate that throws, once with an owner waiting and once with nobody waiting."
+    },
+    {
+      "point": "0059 §5",
+      "title": "Synthetic peer answers",
+      "state": "CLOSED",
+      "mechanism": "No locally produced state claims the peer sent it. ConnectionContextFactory, RabbitMqMoveTransport and RabbitMqReceiveLockContext report the real CloseReason where there is one and ShutdownInitiator.Library where there is none. RabbitMqConsumerFilter's local cancellation stays a cancellation and is rethrown as one. No reply code is reconstructed from message text.",
+      "proof": "No ShutdownInitiator.Peer is constructed anywhere in the product source; the only remaining mention is a comment describing the removed defect."
+    },
+    {
+      "point": "0059 §6",
+      "title": "The terminal marker",
+      "state": "CLOSED",
+      "mechanism": "The duplicated string key ViciOne.ServiceBus.TerminalEndpointFailure is gone from both assemblies, along with every Data access. The caller inventory found exactly one production site producing the message-only exception: the connection that is stopping. That is now transient, which is what it always was in fact -- a stop is precisely the failure a later start resolves. The waiting core filters on ConnectionException.IsTransient, walking the cause chain. 405 and a refused credential stay permanent. No public API was added.",
+      "proof": "Mutation: putting the stop back to non-transient turns the classification spec red. A second spec asserts the two permanent answers stayed permanent, so loosening everything cannot pass unnoticed."
+    },
+    {
+      "point": "0059 §7",
+      "title": "The core spec that changed from red to green",
+      "state": "CLOSED",
+      "mechanism": "Both grouping fixtures wait for their batches instead of sampling them: the consumer factory registers each batch task, the assertion waits until all three groups have one and then awaits them, with a bound and no sleep. The ref-type variant was still sampling what happened to be complete and is fixed the same way. Neither fixture is labelled flaky any more, because neither is.",
+      "proof": "INCOMPLETE, stated as such. Green three times, and a mutation that never signals completion turns both red, which proves the wait is reached and load-bearing. But the mutation back to the sampling form stays green in isolation five times out of five: the race only appeared under category load. This correction is therefore proved by construction and by reaching the wait, not by a red mutation of the defect itself."
+    },
+    {
+      "point": "0059 §8.1",
+      "title": "Direct RabbitMQ contract test",
+      "state": "CLOSED",
+      "mechanism": "Two direct RabbitMQ.Client connections, no bus and no harness. The holder takes the exclusive queue; the contender receives Peer with reply code 405, its channel is closed, its connection stays open, and a new channel on that same connection declares and uses another queue. A second spec shows the queue is handed over once the holder's connection is gone, so the conflict is a matter of ownership and not of the name.",
+      "proof": "Both pass against the pinned broker. They are the protocol precondition that every other proof in this area rested on and that was only ever assumed."
+    },
+    {
+      "point": "0059 §8.2 and §8.3",
+      "title": "Connection invariants, and unit tests that are unit tests",
+      "state": "CLOSED",
+      "mechanism": "The lifetime and classification specs moved to a sibling namespace of the broker tests. NUnit applies a SetUpFixture to its own namespace and everything below it, so as a sibling the broker set up no longer applies. Every lifetime invariant is asserted for both subjects.",
+      "proof": "27 of 27 pass in 56 ms with every broker environment variable unset, no Docker and no management API."
+    },
+    {
+      "point": "0059 §8.4",
+      "title": "Exactly one broker attempt, as a machine gate",
+      "state": "CLOSED",
+      "mechanism": "The runner counts exclusivity refusals per virtual host from the broker's own freshly collected log and fails the run unless every matching virtual host saw exactly one. It refuses to pass when it matches nothing, so it cannot pass vacuously, and it names the virtual host and the count when it fails. Wired into the required RabbitMQ job.",
+      "proof": "Four synthetic logs: exactly one each passes; two refusals in one host fails as a retry; a host with none fails as a conflict that never happened; a log with no matching host fails as a vacuous pass. In both real runs it reported five virtual hosts with exactly one refusal each."
+    },
+    {
+      "point": "0059 §8.5",
+      "title": "The exclusive queue probe",
+      "state": "CLOSED",
+      "mechanism": "It asks whether the queue is exclusive, which is the precondition the specs need, instead of whether anyone is consuming, which is a different question with a different answer. One HttpClient for the whole run instead of one per poll. A management API error now fails instead of being read as not held. No proof rests on it: the protocol itself is asserted in the direct contract test."
+    },
+    {
+      "point": "0059 §8.6",
+      "title": "Teardown",
+      "state": "CLOSED",
+      "mechanism": "Every clean up runs even after an earlier one throws. After a failed test the primary result stands and the clean up failure is recorded beside it; after a passing test a clean up failure fails the test, because there it is the only failure there is. The test-local virtual host is deleted deterministically, which removes an exclusively held queue that cannot be deleted on its own."
+    }
+  ],
+  "gates": {
+    "state": "GREEN",
+    "build": "0 errors",
+    "policy": "PASS, 60 self tests, including three for the new ownership rule",
+    "core": "1900 total, 1857 passed, 0 failed",
+    "rabbitmq": "366 total, 346 passed, 0 failed",
+    "oneRefusalPerVhost": "5 virtual hosts, exactly one refusal each, checked in the run",
+    "analyzer": "111 of 111",
+    "publicApi": "messaging unchanged, 27274 members, 0 testing changes, compared against the freeze",
+    "pack": "33 packages hashed",
+    "vulnerability": "187 findings, 44 high or critical; the MessagePack high finding remains a separate mandatory follow-up and is not released by this block"
+  },
+  "notProved": [
+    "The sampling form of the batch defect does not reproduce in isolation, so §7 is not backed by a red mutation of the defect itself. Stated in the record rather than presented as proof."
+  ],
+  "supersedes": [
+    "interim/record-0057-gates/REQUIREMENT_EVIDENCE_MATRIX.json, whose §2 statement that every channel operation holds a lease was false"
+  ],
+  "withdrawn": [
+    "Record 0046: that under load no declare reaches the broker.",
+    "Record 0048: that a cached closed channel context is the cause.",
+    "Record 0051: that the first four attempts did not reach the broker. The broker answered all five.",
+    "Record 0058: that every channel operation holds a lease for its whole duration. Four did not."
+  ]
+}

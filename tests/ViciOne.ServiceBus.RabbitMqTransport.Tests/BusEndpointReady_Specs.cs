@@ -32,9 +32,26 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     [TestFixture]
     public class Connecting_a_consumer_to_an_unavailable_bus_endpoint
     {
+        /// <summary>
+        /// A virtual host of this fixture's own.
+        /// <para>
+        /// An exclusively held queue is the one leftover the shared virtual host cannot clean up: the
+        /// harness tears a run down by deleting every queue, and a queue another connection still holds
+        /// refuses to be deleted. While the conflict took a full sixty seconds to surface this fixture
+        /// ran long enough for the broker to have released it by the time the next one started. Once the
+        /// conflict is reported in seconds, that accidental grace disappears — measured, the very next
+        /// fixture then failed cleaning the shared virtual host. The name below removes the coupling
+        /// instead of restoring the delay.
+        /// </para>
+        /// </summary>
+        const string VirtualHost = "test-unavailable-bus-endpoint";
+
         static RabbitMqTestHarness ClaimingTheSameExclusiveBusEndpoint()
         {
             var harness = new RabbitMqTestHarness();
+
+            harness.HostAddress = new UriBuilder(harness.HostAddress) { Path = $"/{VirtualHost}/" }.Uri;
+
             harness.OnConfigureRabbitMqBus += configurator =>
             {
                 configurator.OverrideDefaultBusEndpointQueueName("exclusively-yours");
@@ -55,7 +72,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             // Materialises the bus endpoint, so its exclusive queue is really held by this connection.
             first.SubscribeHandler<PingMessage>();
-            await Task.Delay(2000);
+
+            // The broker is asked, not the clock. A sleep here claimed the queue was held and would
+            // have gone on claiming it while the declare was still running, turning a broken
+            // precondition into an unexplained timeout much later.
+            await ExclusiveQueueProbe.WaitUntilHeld(first, "exclusively-yours");
 
             var second = ClaimingTheSameExclusiveBusEndpoint();
             try
@@ -74,7 +95,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             finally
             {
                 await second.Stop();
-                await Task.Delay(500);
                 await first.Stop();
             }
         }

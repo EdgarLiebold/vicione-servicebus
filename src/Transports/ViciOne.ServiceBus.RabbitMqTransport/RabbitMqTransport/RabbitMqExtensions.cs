@@ -28,11 +28,27 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
                     if (channel.IsOpen)
                         await channel.CloseAsync(replyCode, message, cancellationToken).ConfigureAwait(false);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
+                    // Deliberately not thrown — but an empty catch is not "diagnostically visible", and
+                    // record 0049 is right that it was one. It is recorded at error level with the reply
+                    // code and message it was closing with, and never replaces the primary failure.
+                    LogContext.Error?.Log(exception, "Closing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
+                        replyCode, message);
                 }
 
-                await channel.DisposeAsync().ConfigureAwait(false);
+                // Inside the guard, not beside it. Disposing a channel the broker has just closed
+                // throws, and this method promises in its own summary not to — so the promise was
+                // broken exactly when it mattered, on the failure path.
+                try
+                {
+                    await channel.DisposeAsync().ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Error?.Log(exception, "Disposing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
+                        replyCode, message);
+                }
             }
         }
 

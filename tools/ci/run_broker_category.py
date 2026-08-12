@@ -20,8 +20,10 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import os
+import re
 import secrets
 import subprocess
 import sys
@@ -101,6 +103,76 @@ def stop(environment: dict[str, str] | None = None) -> None:
     compose("down", "-v", capture=True, environment=environment)
 
 
+def capture_logs(brokers: list[str], evidence_dir: Path, environment: dict[str, str]) -> None:
+    """Write each broker's own log next to the test results, before the fixture is torn down.
+
+    A broker states things no test process can observe about itself: that it took a delivery back
+    because the acknowledgement timed out, that it refused an exclusive queue, which channel it closed
+    and why. Once 'down -v' has run, that record is gone for good, so it is collected here rather than
+    reconstructed from assertions afterwards. Failure to collect it does not fail the run -- the log is
+    evidence about a run that has already produced its verdict.
+    """
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    for broker in brokers:
+        result = compose("logs", "--no-color", "--timestamps", broker, capture=True, environment=environment)
+        if result.returncode != 0:
+            print(f"WARN broker-log {broker}: not collected ({result.stderr.strip()})", file=sys.stderr)
+            continue
+        target = evidence_dir / f"{broker}-broker.log"
+        target.write_text(result.stdout, encoding="utf-8")
+        print(f"broker log {broker}: {target} ({len(result.stdout.splitlines())} lines)")
+
+
+# A vhost the broker created, and a channel exception it answered with, as the broker itself writes
+# them. Both are matched loosely on purpose: the surrounding wording differs between RabbitMQ versions,
+# the quoted vhost name does not.
+VHOST_CREATED = re.compile(r"Adding vhost '([^']+)'")
+RESOURCE_LOCKED = re.compile(r"resource_locked.*?vhost '([^']+)'")
+
+
+def assert_one_refusal_per_vhost(log_path: Path, pattern: str) -> bool:
+    """Fail the run when a virtual host saw anything other than exactly one exclusivity refusal.
+
+    Reply code 405 is permanent: asking a second time cannot change the answer, so a second refusal in
+    the same virtual host is a retry loop that should not exist, and no refusal at all is a spec whose
+    precondition never came about. Both were previously invisible to the suite -- the specs counted
+    endpoint faults and watched a quiet window, which says nothing about how often the broker was
+    actually asked. Counted here from the broker's own log, freshly collected and never reused, so the
+    rule fails the run by itself instead of depending on someone reading the log afterwards.
+    """
+    if not log_path.exists():
+        print(f"FAIL one-refusal: {log_path} was not collected, so the rule could not be checked", file=sys.stderr)
+        return False
+
+    log = log_path.read_text(encoding="utf-8", errors="replace")
+
+    expected = {name for name in VHOST_CREATED.findall(log) if fnmatch.fnmatch(name, pattern)}
+
+    counted: dict[str, int] = {name: 0 for name in expected}
+    for name in RESOURCE_LOCKED.findall(log):
+        if fnmatch.fnmatch(name, pattern):
+            counted[name] = counted.get(name, 0) + 1
+
+    if not counted:
+        print(f"FAIL one-refusal: no virtual host matching '{pattern}' appears in {log_path.name}, "
+              "so the rule matched nothing and would pass vacuously", file=sys.stderr)
+        return False
+
+    if not expected:
+        print(f"WARN one-refusal: no vhost creation matching '{pattern}' was found in {log_path.name}; "
+              "a virtual host that saw no refusal at all cannot be detected in this run", file=sys.stderr)
+
+    wrong = {name: count for name, count in sorted(counted.items()) if count != 1}
+    if wrong:
+        for name, count in wrong.items():
+            reason = "no refusal, so the conflict never happened" if count == 0 else f"{count} refusals, so it was retried"
+            print(f"FAIL one-refusal {name}: {reason}", file=sys.stderr)
+        return False
+
+    print(f"one-refusal: {len(counted)} virtual host(s) matching '{pattern}', exactly one refusal each")
+    return True
+
+
 def resolve_ports(broker: str, environment: dict[str, str]) -> dict[str, str]:
     """Ask Docker for the ports it actually bound, and refuse anything outside loopback."""
     resolved: dict[str, str] = {}
@@ -145,6 +217,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", required=True)
     parser.add_argument("--evidence-dir", required=True, type=Path)
     parser.add_argument("--ports-out", type=Path, help="Optional file for the resolved endpoints, secrets excluded.")
+    parser.add_argument(
+        "--one-refusal-per-vhost",
+        metavar="GLOB",
+        help="Fail the run unless every virtual host matching GLOB saw exactly one exclusivity refusal, "
+             "counted from the broker's own freshly collected log.",
+    )
     parser.add_argument("rest", nargs="*")
     args = parser.parse_args(argv)
 
@@ -156,6 +234,8 @@ def main(argv: list[str] | None = None) -> int:
 
     environment = dict(os.environ)
     environment.update(credentials)
+
+    captured: set[str] = set()
 
     try:
         start(brokers, environment)
@@ -181,11 +261,33 @@ def main(argv: list[str] | None = None) -> int:
              *(["--", *args.rest] if args.rest else [])],
             env=environment, text=True, check=False,
         )
+
+        if args.one_refusal_per_vhost:
+            # Before the teardown, and on the log this run produced. The check runs even when the tests
+            # already failed: a retry loop is worth naming either way, and it must never be the reason a
+            # red run looks green.
+            capture_logs(brokers, args.evidence_dir, environment)
+            captured.update(brokers)
+
+            for broker in brokers:
+                if not assert_one_refusal_per_vhost(args.evidence_dir / f"{broker}-broker.log", args.one_refusal_per_vhost):
+                    return completed.returncode or 1
+
         return completed.returncode
     except RunnerError as error:
         print(f"FAIL broker-category {args.category}: {error}", file=sys.stderr)
         return 1
     finally:
+        # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
+        # refusal check already collected are not fetched a second time: that would overwrite the very
+        # file the verdict was read from.
+        try:
+            remaining = [broker for broker in brokers if broker not in captured]
+            if remaining:
+                capture_logs(remaining, args.evidence_dir, environment)
+        except OSError as error:
+            print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
+
         # Trap equivalent: the fixture is removed on success, on failure and on an exception alike.
         stop(environment)
 

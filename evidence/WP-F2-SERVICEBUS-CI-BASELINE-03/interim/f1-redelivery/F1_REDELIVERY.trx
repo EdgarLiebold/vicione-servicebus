@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="50791726-9a40-4a7a-90b6-e0886e0c52d2" name="@Edgars-iMac-2 2026-08-10 20:06:07" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-10T20:06:07.5084990+00:00" queuing="2026-08-10T20:06:07.5084990+00:00" start="2026-08-10T20:03:56.2229890+00:00" finish="2026-08-10T20:06:07.5179570+00:00" />
+  <TestSettings name="default" id="7593eb69-ff84-4cfb-b3ab-26513f8d2acb">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-10_20_06_07" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="55cca5d0-6ba6-442b-a782-ea56c12db906" testId="df466496-e0b6-c019-efcd-90cf81f37c84" testName="Should_properly_handle_message_redelivery" computerName="Edgars-iMac-2" duration="00:02:09.7022680" startTime="2026-08-10T20:03:57.6795370+00:00" endTime="2026-08-10T20:06:07.3856340+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55cca5d0-6ba6-442b-a782-ea56c12db906">
+      <Output>
+        <StdOut>20:03:57.916-I Configured endpoint redelivery, Consumer: ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+RedeliveryConsumer
+20:03:58.052-I Created virtual host: test-redelivery
+20:03:58.201-D Starting bus instances: IBus
+20:03:58.204-D Starting bus: rabbitmq://127.0.0.1:33109/test-redelivery
+20:03:58.228-D Connect: vicione_ci@127.0.0.1:33109/test-redelivery
+20:03:58.240-D Connected: vicione_ci@127.0.0.1:33109/test-redelivery (address: amqp://127.0.0.1:33109, local: 57127)
+20:03:58.258-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:03:58.285-D Declare queue: name: redelivery, durable, x-consumer-timeout: 60000, consumer-count: 0 message-count: 0
+20:03:58.287-D Declare exchange: name: redelivery, type: fanout, durable
+20:03:58.289-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:03:58.301-D Bind queue: source: redelivery, destination: redelivery
+20:03:58.330-D Bind exchange: source: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, destination: redelivery
+20:03:58.355-D Consumer Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:03:58.356-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:03:58.359-I Bus started: rabbitmq://127.0.0.1:33109/test-redelivery
+20:03:58.406-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.515-D Delivery 1 of 3 messages
+20:05:58.254-D Channel Shutdown: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q, Concurrent Peak: 3, 406-PRECONDITION_FAILED - delivery acknowledgement on channel 1 timed out. Timeout value used: 60000 ms. This timeout value can be configured, see consumers doc guide to learn more
+20:05:58.256-D Delivery 1 was taken back by the broker
+20:05:58.257-D Consumer Channel Shutdown: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q, Concurrent Peak: 3, 406-PRECONDITION_FAILED - delivery acknowledgement on channel 1 timed out. Timeout value used: 60000 ms. This timeout value can be configured, see consumers doc guide to learn more
+20:05:58.257-D Consumer Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery (Consume Loop Exited)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7748944)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7749293)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7744339)
+20:05:58.274-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:58.276-D Consumer Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery: 3 received, 3 concurrent, amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.283-D Declare queue: name: redelivery, durable, x-consumer-timeout: 60000, consumer-count: 0 message-count: 3
+20:05:59.284-D Declare exchange: name: redelivery, type: fanout, durable
+20:05:59.284-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:05:59.286-D Bind queue: source: redelivery, destination: redelivery
+20:05:59.292-D Bind exchange: source: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, destination: redelivery
+20:05:59.300-D Consumer Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.300-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.302-D Delivery 2 of 3 messages
+20:05:59.304-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.Batch&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt; ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+RedeliveryConsumer(00:00:00.0016348)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037408)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037394)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037579)
+20:05:59.306-D Stopping bus instances: IBus
+20:05:59.308-D Stopping bus: rabbitmq://127.0.0.1:33109/test-redelivery
+20:05:59.312-D Endpoint Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.315-D Consumer Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery (Stop Receive Transport)
+20:05:59.321-D Consumer Cancel Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.321-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.321-D Consumer Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery: 3 received, 3 concurrent, amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.329-D Endpoint Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:05:59.330-D Send Transport Stopping: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage
+20:05:59.330-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:05:59.333-D Disconnect: vicione_ci@127.0.0.1:33109/test-redelivery
+20:05:59.336-D Disconnected: vicione_ci@127.0.0.1:33109/test-redelivery
+20:05:59.337-I Bus stopped: rabbitmq://127.0.0.1:33109/test-redelivery
+deliveries=2 firstDiscarded=True effects=3 perMessage=[High Priority 3=1, High Priority 2=1, High Priority 1=1] ready=0 unacked=0 queues=[redelivery]</StdOut>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_properly_handle_message_redelivery" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.rabbitmqtransport.tests/bin/release/net9.0/vicione.servicebus.rabbitmqtransport.tests.dll" id="df466496-e0b6-c019-efcd-90cf81f37c84">
+      <Execution id="55cca5d0-6ba6-442b-a782-ea56c12db906" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch" name="Should_properly_handle_message_redelivery" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="df466496-e0b6-c019-efcd-90cf81f37c84" executionId="55cca5d0-6ba6-442b-a782-ea56c12db906" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll
+   NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+20:03:57.916-I Configured endpoint redelivery, Consumer: ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+RedeliveryConsumer
+20:03:58.052-I Created virtual host: test-redelivery
+20:03:58.201-D Starting bus instances: IBus
+20:03:58.204-D Starting bus: rabbitmq://127.0.0.1:33109/test-redelivery
+20:03:58.228-D Connect: vicione_ci@127.0.0.1:33109/test-redelivery
+20:03:58.240-D Connected: vicione_ci@127.0.0.1:33109/test-redelivery (address: amqp://127.0.0.1:33109, local: 57127)
+20:03:58.258-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:03:58.285-D Declare queue: name: redelivery, durable, x-consumer-timeout: 60000, consumer-count: 0 message-count: 0
+20:03:58.287-D Declare exchange: name: redelivery, type: fanout, durable
+20:03:58.289-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:03:58.301-D Bind queue: source: redelivery, destination: redelivery
+20:03:58.330-D Bind exchange: source: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, destination: redelivery
+20:03:58.355-D Consumer Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:03:58.356-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:03:58.359-I Bus started: rabbitmq://127.0.0.1:33109/test-redelivery
+20:03:58.406-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.471-D SEND rabbitmq://127.0.0.1:33109/test-redelivery/ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage
+20:03:58.515-D Delivery 1 of 3 messages
+20:05:58.254-D Channel Shutdown: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q, Concurrent Peak: 3, 406-PRECONDITION_FAILED - delivery acknowledgement on channel 1 timed out. Timeout value used: 60000 ms. This timeout value can be configured, see consumers doc guide to learn more
+20:05:58.256-D Delivery 1 was taken back by the broker
+20:05:58.257-D Consumer Channel Shutdown: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q, Concurrent Peak: 3, 406-PRECONDITION_FAILED - delivery acknowledgement on channel 1 timed out. Timeout value used: 60000 ms. This timeout value can be configured, see consumers doc guide to learn more
+20:05:58.257-D Consumer Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery (Consume Loop Exited)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7748944)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7749293)
+20:05:58.266-I R-CANCEL rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:01:59.7744339)
+20:05:58.274-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:58.276-D Consumer Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery: 3 received, 3 concurrent, amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.283-D Declare queue: name: redelivery, durable, x-consumer-timeout: 60000, consumer-count: 0 message-count: 3
+20:05:59.284-D Declare exchange: name: redelivery, type: fanout, durable
+20:05:59.284-D Declare exchange: name: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, type: fanout, durable
+20:05:59.286-D Bind queue: source: redelivery, destination: redelivery
+20:05:59.292-D Bind exchange: source: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage, destination: redelivery
+20:05:59.300-D Consumer Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.300-D Endpoint Ready: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.302-D Delivery 2 of 3 messages
+20:05:59.304-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.Batch&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt; ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+RedeliveryConsumer(00:00:00.0016348)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-ba1c-08def71a83bb ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037408)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-4092-08def71a83b5 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037394)
+20:05:59.305-D RECEIVE rabbitmq://127.0.0.1:33109/test-redelivery/redelivery fafb0000-6d6c-1461-7d40-08def71a83b1 ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage ViciOne.ServiceBus.Batching.BatchConsumer&lt;ViciOne.ServiceBus.RabbitMqTransport.Tests.When_the_consumer_timeout_is_reached_waiting_for_a_batch+TextMessage&gt;(00:00:00.0037579)
+20:05:59.306-D Stopping bus instances: IBus
+20:05:59.308-D Stopping bus: rabbitmq://127.0.0.1:33109/test-redelivery
+20:05:59.312-D Endpoint Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.315-D Consumer Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery (Stop Receive Transport)
+20:05:59.321-D Consumer Cancel Ok: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery - amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.321-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery
+20:05:59.321-D Consumer Completed: rabbitmq://127.0.0.1:33109/test-redelivery/redelivery: 3 received, 3 concurrent, amq.ctag-u6vNwKdPXe297G3Dl9ec4Q
+20:05:59.329-D Endpoint Stopping: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:05:59.330-D Send Transport Stopping: ViciOne.ServiceBus.RabbitMqTransport.Tests:When_the_consumer_timeout_is_reached_waiting_for_a_batch-TextMessage
+20:05:59.330-D Endpoint Completed: rabbitmq://127.0.0.1:33109/test-redelivery/EdgarsiMac2_testhost_bus_9m7oyydppokgns7hbdxxqgwdnh?temporary=true
+20:05:59.333-D Disconnect: vicione_ci@127.0.0.1:33109/test-redelivery
+20:05:59.336-D Disconnected: vicione_ci@127.0.0.1:33109/test-redelivery
+20:05:59.337-I Bus stopped: rabbitmq://127.0.0.1:33109/test-redelivery
+deliveries=2 firstDiscarded=True effects=3 perMessage=[High Priority 3=1, High Priority 2=1, High Priority 1=1] ready=0 unacked=0 queues=[redelivery]
+
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
