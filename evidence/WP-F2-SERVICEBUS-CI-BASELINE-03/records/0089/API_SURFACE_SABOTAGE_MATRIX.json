@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "kind": "API_SURFACE_SABOTAGE_MATRIX",
+  "directive": "0088",
+  "why": "Record 0088 showed that a caller supplied measurement space and a caller chosen build target defeat any up front check. The tool now owns both.",
+  "withdrawnClaim": {
+    "record": "0087",
+    "claim": "Building in the given root bound the bytes to the commit.",
+    "detail": "It did not. An external project selected through --solution wrote a counterfeit into the measured root after every check had passed."
+  },
+  "probes": [
+    {
+      "probe": "the main worktree carries a correctly named counterfeit in its ignored bin and modified tracked files",
+      "expectation": "the run uses only its own fresh worktree of the bound commit and reports the real surface",
+      "observed": {
+        "mainWorktreeDirtyLines": 2,
+        "counterfeitBytesInIgnoredBin": 79360,
+        "measuredAssemblies": 33,
+        "measuredMembers": 27488
+      },
+      "exitCode": 0,
+      "red": false,
+      "provesByConstruction": true
+    },
+    {
+      "probe": "an external build target through --solution",
+      "expectation": "rejected as an unrecognised option; no external target is executed",
+      "command": "python3 tools/ci/collect_api_assemblies.py --repository . --commit 53b2e3995344fe7ec651a43a494c35942088f957 --census evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0089/API_SURFACE_CENSUS.json --out /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/o2 --manifest /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/m2.json --solution /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/Fremd.sln",
+      "exitCode": 2,
+      "output": [
+        "usage: collect_api_assemblies.py [-h] --repository REPOSITORY --commit COMMIT",
+        "--census CENSUS --out OUT --manifest MANIFEST"
+      ],
+      "red": true
+    },
+    {
+      "probe": "an external reader through --reader",
+      "expectation": "rejected as an unrecognised option",
+      "command": "python3 tools/ci/collect_api_assemblies.py --repository . --commit 53b2e3995344fe7ec651a43a494c35942088f957 --census evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0089/API_SURFACE_CENSUS.json --out /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/o3 --manifest /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/m3.json --reader /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/fremd.cs",
+      "exitCode": 2,
+      "output": [
+        "usage: collect_api_assemblies.py [-h] --repository REPOSITORY --commit COMMIT",
+        "--census CENSUS --out OUT --manifest MANIFEST"
+      ],
+      "red": true
+    },
+    {
+      "probe": "a census project path that resolves outside the measured worktree",
+      "expectation": "red as an escape",
+      "command": "python3 tools/ci/collect_api_assemblies.py --repository . --commit 53b2e3995344fe7ec651a43a494c35942088f957 --census /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/census-escape.json --out /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/o4 --manifest /private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/p89/m4.json",
+      "exitCode": 1,
+      "output": [
+        "FAIL api-assemblies: 1 of 1 expected assemblies could not be collected:",
+        "ViciOne.ServiceBus: /private/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/api-surface-provenance-4k80_b4f/worktree/../outside/Escape.csproj resolves to /private/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/api-surface-provenance-4k80_b4f/outside/Escape.csproj, which is outside the measured worktree"
+      ],
+      "red": true
+    }
+  ],
+  "positiveProbe": {
+    "probe": "both sides built once each in the tool's own worktree",
+    "baseline": {
+      "commit": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+      "tree": "9c3ee122480334b4f86921d1b34d0aa9884c9fb0",
+      "assemblies": 33
+    },
+    "current": {
+      "commit": "53b2e3995344fe7ec651a43a494c35942088f957",
+      "tree": "f07cbc96fdd3fb37668eca13c7b12019d45fb87c",
+      "assemblies": 33
+    },
+    "members": 27488,
+    "difference": {
+      "added": 0,
+      "removed": 0,
+      "messagingSurfaceUnchanged": true
+    },
+    "exitCode": 0,
+    "red": false
+  },
+  "allNegativesRed": true
+}

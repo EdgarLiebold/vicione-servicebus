@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "kind": "API_SURFACE_INPUT_MANIFEST",
+  "measuredCommit": "53b2e3995344fe7ec651a43a494c35942088f957",
+  "measuredTree": "f07cbc96fdd3fb37668eca13c7b12019d45fb87c",
+  "provenance": "measured in a detached worktree of this commit that the tool created under its own temporary directory, proved clean and free of build output before the build and unchanged in its tracked files after it, then removed by the tool. The caller supplies neither the measured root nor the build target nor the reader.",
+  "buildCommand": "dotnet build ViciOne.ServiceBus.sln -c Release --nologo",
+  "tools": [
+    {
+      "path": "tools/ci/collect_api_assemblies.py",
+      "sha256": "4cd14ba959b39b2d69e49fcbd98a22f8784738d6b0566044a30a33635b05b3b7"
+    },
+    {
+      "path": "tools/ci/api_surface.cs",
+      "sha256": "ffcc086de0a2c47510be3f2390cdde7039d5e2a4fd958144016fd65f6bcd2c2e"
+    }
+  ],
+  "census": {
+    "path": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0089/API_SURFACE_CENSUS.json",
+    "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52"
+  },
+  "assemblyCount": 33,
+  "assemblies": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus",
+      "source": "src/ViciOne.ServiceBus/bin/Release/net9.0/ViciOne.ServiceBus.dll",
+      "sha256": "37837be39d595ddd5f695175ec680fd8a3c9ce897a38315dd593a66585101a20"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Abstractions",
+      "source": "src/ViciOne.ServiceBus.Abstractions/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "62336683f8d7bda1a27010b7832c8167162928ec6d3c5e87793d5c2c64dd03fe"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.ActiveMqTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.ActiveMqTransport",
+      "source": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/bin/Release/net9.0/ViciOne.ServiceBus.ActiveMqTransport.dll",
+      "sha256": "213bdf334cf87a867796dceb915c7982c82b784bba930ccd4e10d1f37d9e739d"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AmazonS3",
+      "project": "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.AmazonS3",
+      "source": "src/Persistence/ViciOne.ServiceBus.AmazonS3/bin/Release/net9.0/ViciOne.ServiceBus.AmazonS3.dll",
+      "sha256": "9933c2ea82616a0e72b43905510df001a69b725511635c641a43088784af1a84"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AmazonSqsTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.AmazonSqsTransport",
+      "source": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/bin/Release/net9.0/ViciOne.ServiceBus.AmazonSqsTransport.dll",
+      "sha256": "c80ebab25fb7fa685f41e1d21bb571e8b354c2b83b883b1095030d1c16595e44"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Analyzers",
+      "project": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+      "targetFramework": "netstandard2.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Analyzers",
+      "source": "src/ViciOne.ServiceBus.Analyzers/bin/Release/netstandard2.0/ViciOne.ServiceBus.Analyzers.dll",
+      "sha256": "822e77582f88a9e13a752344e846d36c4efd8f983b6ef857cfd9ae905f0f618c"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Cosmos",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Cosmos/ViciOne.ServiceBus.Azure.Cosmos.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Cosmos",
+      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Cosmos/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Cosmos.dll",
+      "sha256": "3f8ef4f6852e306817837eeaf6d673dd608ca289e52149ce412e0933ab41504d"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "project": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "source": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/bin/Release/net9.0/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll",
+      "sha256": "b83743eb8ef9cfcbd06725f657c9b009fd3b330f79bf446764e5c1cf4ae247ab"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Storage",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Storage",
+      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Storage.dll",
+      "sha256": "affe3cb8d7c8c49a2e969c1835cd4b6bd7c97bee922e640785713ecf66aa574a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Table",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Table",
+      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Table/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Table.dll",
+      "sha256": "bd15f07252d24b1e9c73f1491ef3c1a11746e061e3387b75be7f928095126138"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.DapperIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.DapperIntegration/ViciOne.ServiceBus.DapperIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.DapperIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.DapperIntegration/bin/Release/net9.0/ViciOne.ServiceBus.DapperIntegration.dll",
+      "sha256": "7999255fe83f7d7ccb567521bc8391a123173d6390c33d9e652d067fd6664565"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.DynamoDbIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.DynamoDbIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/bin/Release/net9.0/ViciOne.ServiceBus.DynamoDbIntegration.dll",
+      "sha256": "b3d310760ba26233699cc50eb5db8c8177c2d626c9eaebf7c0e83827a4ccf00a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/bin/Release/net9.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll",
+      "sha256": "d6dac4c6ee511feed6f6e788bff836968f1b840a8c643641e18f68c40765d00a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkIntegration/ViciOne.ServiceBus.EntityFrameworkIntegration.csproj",
+      "targetFramework": "netstandard2.1",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EntityFrameworkIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkIntegration/bin/Release/netstandard2.1/ViciOne.ServiceBus.EntityFrameworkIntegration.dll",
+      "sha256": "11aea1c751bd329521310b2adca65a517213b25697248cfe661578f343bada54"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EventHubIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EventHubIntegration",
+      "source": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/bin/Release/net9.0/ViciOne.ServiceBus.EventHubIntegration.dll",
+      "sha256": "d67a3862a258c4596262af7bc19183674045806062b6b888ce126767718fd738"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.HangfireIntegration",
+      "project": "src/Scheduling/ViciOne.ServiceBus.HangfireIntegration/ViciOne.ServiceBus.HangfireIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.HangfireIntegration",
+      "source": "src/Scheduling/ViciOne.ServiceBus.HangfireIntegration/bin/Release/net9.0/ViciOne.ServiceBus.HangfireIntegration.dll",
+      "sha256": "4e8b60a9b5bfa2a84b97f81b872a8c4725b6d89f62444dd4c52013253bcc5000"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Interop.NServiceBus",
+      "project": "src/ViciOne.ServiceBus.Interop.NServiceBus/ViciOne.ServiceBus.Interop.NServiceBus.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Interop.NServiceBus",
+      "source": "src/ViciOne.ServiceBus.Interop.NServiceBus/bin/Release/net9.0/ViciOne.ServiceBus.Interop.NServiceBus.dll",
+      "sha256": "2bbdd29db9c97998bc4c2e026181e243215aafe46735a8b30ff14584a9a394ff"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.KafkaIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.KafkaIntegration/ViciOne.ServiceBus.KafkaIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.KafkaIntegration",
+      "source": "src/Transports/ViciOne.ServiceBus.KafkaIntegration/bin/Release/net9.0/ViciOne.ServiceBus.KafkaIntegration.dll",
+      "sha256": "d8e6c3ecd3b007e0feccb44dd2f2494d86e9b399d343744c0f3e64ed124830ae"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MartenIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.MartenIntegration/ViciOne.ServiceBus.MartenIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MartenIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.MartenIntegration/bin/Release/net9.0/ViciOne.ServiceBus.MartenIntegration.dll",
+      "sha256": "0cf1f8b93e866092eadffa52f0193618c42189a55fc24a0c65fc339cfa14bc41"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MessagePack",
+      "project": "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MessagePack",
+      "source": "src/ViciOne.ServiceBus.MessagePack/bin/Release/net9.0/ViciOne.ServiceBus.MessagePack.dll",
+      "sha256": "e83508fcf66962103831d19a40bf70a59449f935d08f60d76481fec29b1f98a2"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MongoDbIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/ViciOne.ServiceBus.MongoDbIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MongoDbIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/bin/Release/net9.0/ViciOne.ServiceBus.MongoDbIntegration.dll",
+      "sha256": "66f1051988a238e627a1ec40ad1bb880c8adf827c0daa3eaaf74f1eb09054b0b"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.NHibernateIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.NHibernateIntegration/ViciOne.ServiceBus.NHibernateIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.NHibernateIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.NHibernateIntegration/bin/Release/net9.0/ViciOne.ServiceBus.NHibernateIntegration.dll",
+      "sha256": "7cfb1e88d8856ec66371c84ecc44221f8242cc827f14e78b47c4407ebd64aa0e"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Newtonsoft",
+      "project": "src/ViciOne.ServiceBus.Newtonsoft/ViciOne.ServiceBus.Newtonsoft.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Newtonsoft",
+      "source": "src/ViciOne.ServiceBus.Newtonsoft/bin/Release/net9.0/ViciOne.ServiceBus.Newtonsoft.dll",
+      "sha256": "e747a91cdf37680540d0f92cfd96e6a4b7f9127c8d8b6fe8a764cbfe7e3ab897"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.QuartzIntegration",
+      "project": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.QuartzIntegration",
+      "source": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.dll",
+      "sha256": "a361b38c85fd46bae8161e350fb7ad40f31a69455b861377854d7825d39bae56"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMqTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.RabbitMqTransport",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.dll",
+      "sha256": "615d0983e9a6f673ee43b625b44e316461a9196c2999f257b2d038e106e8de30"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RedisIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.RedisIntegration/ViciOne.ServiceBus.RedisIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.RedisIntegration",
+      "source": "src/Persistence/ViciOne.ServiceBus.RedisIntegration/bin/Release/net9.0/ViciOne.ServiceBus.RedisIntegration.dll",
+      "sha256": "8dc0225bdc224c2129bb46f08f655a13e019e5c8748133ac7a0930b88bd19433"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SignalR",
+      "project": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SignalR",
+      "source": "src/ViciOne.ServiceBus.SignalR/bin/Release/net9.0/ViciOne.ServiceBus.SignalR.dll",
+      "sha256": "75f0d364db4f36f12af2b34159650e8d9e161eea5bc3fbc57d5912b68738860a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/bin/Release/net9.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "sha256": "5cf92e2df5fb519a12296cd805b8a78f8a5d9d08da4c6ce5f6f000b783148d32"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/bin/Release/net9.0/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "sha256": "da60bb6271ee590cf8e391a0fcf5e46a1be03b311be1831ea22a6f09635be3f2"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "project": "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "source": "src/ViciOne.ServiceBus.StateMachineVisualizer/bin/Release/net9.0/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+      "sha256": "741a944a14538b76be7e8f6106f8782b4cbf631b9b164cbf6a100f01e38e9f94"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.TestFramework",
+      "project": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.TestFramework",
+      "source": "src/ViciOne.ServiceBus.TestFramework/bin/Release/net9.0/ViciOne.ServiceBus.TestFramework.dll",
+      "sha256": "3fcb961b43087901d56d475230c5dc94f8903d6f18f5b5ba015f7c561649653e"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.WebJobs.EventHubsIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.WebJobs.EventHubsIntegration/ViciOne.ServiceBus.WebJobs.EventHubsIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.WebJobs.EventHubsIntegration",
+      "source": "src/Transports/ViciOne.ServiceBus.WebJobs.EventHubsIntegration/bin/Release/net9.0/ViciOne.ServiceBus.WebJobs.EventHubsIntegration.dll",
+      "sha256": "766ab4730f926dceb47aaef02697759e9cfa71b0097bb7707bc5de65fbfc06a0"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.WebJobs.ServiceBusIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.WebJobs.ServiceBusIntegration",
+      "source": "src/Transports/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration/bin/Release/net9.0/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration.dll",
+      "sha256": "90a61b09e02aea8f43ecc5e53f2e72d4b7783b2cfdbf85c0f1435854e25761c1"
+    }
+  ]
+}

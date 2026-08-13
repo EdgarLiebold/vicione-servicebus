@@ -1,38 +1,42 @@
-"""Collect exactly the assemblies a census names, from their own evaluated project, or fail.
+"""Build one commit in a worktree this tool owns, and collect exactly the assemblies a census names.
 
 ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-13.
 
-A public surface comparison is only worth its scope. An early collection globbed one target framework
-across every bin directory, so two assemblies that build no output for it -- one of them a shipped
-package -- dropped out of the measurement while the run stayed green and reported "31 assemblies" as
-if that were the whole set. Nothing contradicted it, because nothing had been told what the whole set
-is. The expected set is therefore an input here, not a discovery.
+A public surface comparison is only worth its scope and its provenance, and each of those was learned
+the hard way, in that order:
 
-Two later versions of this tool claimed guarantees they did not have, and records 0081 and 0083
-demonstrated each of them:
+  * an early collection globbed one target framework across every bin directory, so two assemblies
+    that build no output for it -- one of them a shipped package -- silently left the measurement.
+    The expected set is therefore an input, a census, not a discovery.
+  * reading a project file as XML is not evaluating it, and forcing TargetFramework as a global
+    property overrides the very declaration the check is about. What a project declares is read from
+    MSBuild with nothing forced; only the output path and assembly name are read for the chosen
+    framework.
+  * a file name is what someone called the file, so the surface reader keys on AssemblyDefinition.
+  * a verified commit said nothing about bytes in an ignored directory: a counterfeit assembly in a
+    clean checkout's bin passed with a green commit check and an empty status.
+  * and finally, building in a root the caller prepared proves nothing either. Given a caller chosen
+    solution, an external project wrote a counterfeit into the measured root after every up front
+    check had passed.
 
-  * reading the project file as XML is not evaluating it. Imports, Directory.Build.props, conditions,
-    property expansion and SDK defaults are invisible to a regular expression, and a version of this
-    tool skipped the check entirely when it could not read a literal. The frameworks, the assembly
-    name and the output path now come from MSBuild's own evaluation for Release and the chosen
-    framework, and a property MSBuild cannot resolve is a failure, never a reason to skip.
-  * a file name is what someone called the file. A real ViciOne.ServiceBus.dll copied over the name
-    ViciOne.ServiceBus.Abstractions.dll was measured as Abstractions with the wrong member count. The
-    surface reader now keys on the assembly's own identity and refuses a file whose name disagrees
-    with it, so the census name is held against both the evaluated AssemblyName and the metadata.
-  * emptying the output directory with a recursive delete made an evidence tool destructive towards
-    any path it was handed. A non-empty output directory is now refused and left exactly as it was.
+So the caller no longer supplies the measurement space at all. This tool is given the repository, the
+commit and the census; it creates its own temporary directory, adds a fresh detached worktree of that
+commit inside it, refuses to continue unless that worktree starts clean and empty of build output,
+builds the one solution that lies within it, collects, and removes only what it created itself. There
+is no --solution and no --reader: an external build target or an external reader is not expressible.
 
-    python3 tools/ci/collect_api_assemblies.py --census <census.json> --root <tree> \
-        --out <empty directory> --manifest <manifest.json> [--commit <sha>]
+    python3 tools/ci/collect_api_assemblies.py --repository <repo> --commit <sha> \
+        --census <census.json> --out <empty directory> --manifest <manifest.json> \
+        [--build-log <log>]
 
-Standard library only; MSBuild and the repository's own surface reader are invoked as processes.
+Standard library only; git, MSBuild and the reader beside this file are invoked as processes.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -40,10 +44,24 @@ import tempfile
 from pathlib import Path
 
 WANTED = ("TargetFrameworks", "TargetFramework", "AssemblyName", "TargetPath")
+SOLUTION = "ViciOne.ServiceBus.sln"
+BUILD = ("dotnet", "build", SOLUTION, "-c", "Release", "--nologo")
+READER = Path(__file__).with_name("api_surface.cs")
 
 
 class CensusError(Exception):
-    """A deviation between what the census promises and what the tree evaluates to."""
+    """A deviation between what is promised and what the measured space actually holds."""
+
+
+def git(root: Path, *args: str, check: bool = True) -> str:
+    result = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
+    if check and result.returncode != 0:
+        raise CensusError(f"git {' '.join(args)} failed in {root}: {result.stderr.strip()[:300]}")
+    return result.stdout.strip()
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def load_census(path: Path) -> dict:
@@ -51,13 +69,11 @@ def load_census(path: Path) -> dict:
     entries = census.get("entries")
     if not isinstance(entries, list) or not entries:
         raise CensusError(f"the census at {path} lists no assemblies")
-
-    expected = census.get("expectedCount")
-    if expected != len(entries):
+    if census.get("expectedCount") != len(entries):
         raise CensusError(
-            f"the census disagrees with itself: expectedCount is {expected} but it lists {len(entries)} entries"
+            f"the census disagrees with itself: expectedCount is {census.get('expectedCount')} "
+            f"but it lists {len(entries)} entries"
         )
-
     seen: dict[str, str] = {}
     for entry in entries:
         for field in ("assembly", "project", "targetFramework"):
@@ -72,46 +88,69 @@ def load_census(path: Path) -> dict:
     return census
 
 
+def require_pristine(worktree: Path, commit: str, when: str) -> None:
+    """The measured worktree must hold the bound commit, unmodified in everything git tracks."""
+    head = git(worktree, "rev-parse", "HEAD")
+    if head != commit:
+        raise CensusError(f"{when}: the measured worktree is at {head}, not at the bound commit {commit}")
+
+    dirty = git(worktree, "status", "--porcelain")
+    if dirty:
+        raise CensusError(f"{when}: the measured worktree is not clean:\n  " + "\n  ".join(dirty.splitlines()[:5]))
+
+    if subprocess.run(["git", "-C", str(worktree), "diff", "--quiet"]).returncode != 0:
+        raise CensusError(f"{when}: tracked files in the measured worktree differ from the bound commit")
+    if subprocess.run(["git", "-C", str(worktree), "diff", "--cached", "--quiet"]).returncode != 0:
+        raise CensusError(f"{when}: the index of the measured worktree differs from the bound commit")
+
+
+def require_no_output(worktree: Path) -> None:
+    leftovers = [line.removeprefix("Would remove ").strip()
+                 for line in git(worktree, "clean", "-ndx").splitlines() if line.strip()]
+    if leftovers:
+        raise CensusError(
+            f"the freshly created worktree already holds {len(leftovers)} untracked or ignored path(s), which cannot "
+            f"be: {', '.join(leftovers[:5])}"
+        )
+
+
+def canonical_within(root: Path, candidate: Path) -> Path:
+    """A canonical, symlink free path that stays inside the measured worktree."""
+    resolved = Path(os.path.realpath(candidate))
+    try:
+        resolved.relative_to(root)
+    except ValueError as error:
+        raise CensusError(f"{candidate} resolves to {resolved}, which is outside the measured worktree") from error
+    return resolved
+
+
 def evaluate(project: Path, tfm: str | None) -> dict[str, str]:
     """MSBuild's own answer for Release, optionally for one chosen framework.
 
-    Called twice per entry, and the difference matters. Passing TargetFramework as a global property
-    overrides the project's own declaration: a project that declares netstandard2.0 and nothing else
-    answers 'net9.0' when asked with that property set, so a check built on the forced evaluation
-    confirms whatever it was told. Measured, that is exactly what happened -- the probe for a framework
-    the project does not build came back green. What the project declares is therefore read without
-    forcing anything, and only the output path and assembly name are read for the chosen framework.
+    Called twice per entry, and the difference matters: passing TargetFramework as a global property
+    overrides the project's own declaration, so a project that declares only netstandard2.0 answers
+    net9.0 when asked that way. What the project declares is read with nothing forced.
     """
     forced = [f"-property:TargetFramework={tfm}"] if tfm else []
     result = subprocess.run(
         ["dotnet", "msbuild", str(project), "-property:Configuration=Release", *forced,
-         *(f"-getProperty:{name}" for name in WANTED)],
-        capture_output=True, text=True,
-    )
+         *(f"-getProperty:{name}" for name in WANTED)], capture_output=True, text=True)
     if result.returncode != 0:
-        raise CensusError(
-            f"{project.name}: MSBuild could not evaluate the project for {tfm}: "
-            + (result.stderr.strip() or result.stdout.strip())[:300]
-        )
+        raise CensusError(f"MSBuild could not evaluate the project for {tfm}: "
+                          + (result.stderr.strip() or result.stdout.strip())[:300])
     try:
         properties = json.loads(result.stdout)["Properties"]
     except Exception as error:
-        raise CensusError(f"{project.name}: the MSBuild evaluation was not readable: {error}") from error
-
+        raise CensusError(f"the MSBuild evaluation was not readable: {error}") from error
     missing = [name for name in WANTED if name not in properties]
     if missing:
-        raise CensusError(f"{project.name}: MSBuild did not report {', '.join(missing)}, so nothing confirms the entry")
+        raise CensusError(f"MSBuild did not report {', '.join(missing)}")
     return properties
 
 
-def collect(census: dict, root: Path, out: Path) -> list[dict]:
-    # Refused rather than emptied. This directory is whatever the caller passed, and an evidence tool
-    # that recursively deletes a caller supplied path is a worse defect than the one it guards against.
+def collect(census: dict, worktree: Path, out: Path) -> list[dict]:
     if out.exists() and any(out.iterdir()):
-        raise CensusError(
-            f"the output directory {out} is not empty; it is left untouched. Point --out at a new directory, "
-            "so that nothing the census does not name can be measured."
-        )
+        raise CensusError(f"the output directory {out} is not empty; it is left untouched")
     out.mkdir(parents=True, exist_ok=True)
 
     collected: list[dict] = []
@@ -119,193 +158,135 @@ def collect(census: dict, root: Path, out: Path) -> list[dict]:
 
     for entry in census["entries"]:
         assembly, project, tfm = entry["assembly"], entry["project"], entry["targetFramework"]
-
-        project_path = root/project
-        if not within(root, project_path):
-            problems.append(f"{assembly}: the census points at {project}, which resolves outside the measured root")
-            continue
-        if not project_path.is_file():
-            problems.append(f"{assembly}: the census names {project}, which does not exist under {root}")
-            continue
-
         try:
-            # What the project itself declares, asked without forcing a framework on it.
+            project_path = canonical_within(worktree, worktree/project)
+            if not project_path.is_file():
+                raise CensusError(f"the census names {project}, which does not exist in the measured worktree")
+
             own = evaluate(project_path, None)
             declared = {part.strip() for part in
                         (own["TargetFrameworks"] or own["TargetFramework"]).split(";") if part.strip()}
             if not declared:
-                problems.append(f"{assembly}: {project} evaluates to no target framework at all, so nothing confirms the entry")
-                continue
+                raise CensusError(f"{project} evaluates to no target framework at all")
             if tfm not in declared:
-                problems.append(
-                    f"{assembly}: the census measures '{tfm}', which {project} does not build; MSBuild evaluates its "
-                    f"own frameworks to {', '.join(sorted(declared))}"
-                )
-                continue
+                raise CensusError(f"the census measures '{tfm}', which {project} does not build; MSBuild evaluates "
+                                  f"its own frameworks to {', '.join(sorted(declared))}")
 
-            # Only now the chosen framework, for the output path and the assembly name.
             evaluated = evaluate(project_path, tfm)
+            if evaluated["AssemblyName"] != assembly:
+                raise CensusError(f"{project} evaluates its AssemblyName to '{evaluated['AssemblyName']}'")
+
+            source = canonical_within(worktree, Path(evaluated["TargetPath"]))
+            if not source.is_file():
+                raise CensusError(f"MSBuild reports its output as {source}, which is missing")
         except CensusError as error:
-            problems.append(str(error))
-            continue
-
-        if evaluated["AssemblyName"] != assembly:
-            problems.append(
-                f"{assembly}: {project} evaluates its AssemblyName to '{evaluated['AssemblyName']}', so the census "
-                "names an assembly this project does not produce"
-            )
-            continue
-
-        source = Path(evaluated["TargetPath"])
-        if not within(root, source):
-            problems.append(
-                f"{assembly}: MSBuild reports its output as {source}, which resolves outside the measured root"
-            )
-            continue
-        if not source.is_file():
-            problems.append(
-                f"{assembly}: MSBuild reports its output as {source}, which is missing; the project is not built "
-                f"for {tfm}"
-            )
+            problems.append(f"{assembly}: {error}")
             continue
 
         shutil.copy2(source, out/f"{assembly}.dll")
-        collected.append({
-            "assembly": assembly,
-            "project": project,
-            "targetFramework": tfm,
-            "evaluatedAssemblyName": evaluated["AssemblyName"],
-            "source": str(source.resolve().relative_to(root.resolve())),
-            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-        })
+        collected.append({"assembly": assembly, "project": project, "targetFramework": tfm,
+                          "evaluatedAssemblyName": evaluated["AssemblyName"],
+                          "source": str(source.relative_to(worktree)), "sha256": sha256(source)})
 
     if problems:
-        raise CensusError(
-            f"{len(problems)} of {len(census['entries'])} expected assemblies could not be collected:\n  "
-            + "\n  ".join(problems)
-        )
+        raise CensusError(f"{len(problems)} of {len(census['entries'])} expected assemblies could not be collected:\n  "
+                          + "\n  ".join(problems))
     return collected
 
 
-def verify_identities(reader: Path, directory: Path, expected: set[str]) -> None:
-    """The surface reader keys on each file's AssemblyDefinition and refuses a name that disagrees."""
+def verify_identities(directory: Path, expected: set[str]) -> None:
     with tempfile.TemporaryDirectory() as scratch:
         out = Path(scratch)/"surface.json"
-        result = subprocess.run(["dotnet", "run", str(reader), "--", str(directory), str(out)],
+        result = subprocess.run(["dotnet", "run", str(READER), "--", str(directory), str(out)],
                                 capture_output=True, text=True)
         if result.returncode != 0 or not out.is_file():
-            raise CensusError(
-                "the surface reader rejected the collected assemblies, so their identity is not established: "
-                + (result.stderr.strip() or result.stdout.strip())[:400]
-            )
+            raise CensusError("the surface reader rejected the collected assemblies: "
+                              + (result.stderr.strip() or result.stdout.strip())[:400])
         surface = json.loads(out.read_text(encoding="utf-8"))
-
     assemblies = surface.get("assemblies")
     identities = set(assemblies) if isinstance(assemblies, dict) else {item["name"] for item in assemblies}
     if identities != expected:
-        raise CensusError(
-            "the collected assemblies do not identify as the census expects; "
-            f"only in the files: {sorted(identities - expected)}; only in the census: {sorted(expected - identities)}"
-        )
-
-
-def head_of(root: Path) -> tuple[str | None, str | None]:
-    def git(*args: str) -> str | None:
-        result = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
-        return result.stdout.strip() if result.returncode == 0 else None
-
-    return git("rev-parse", "HEAD"), git("rev-parse", "HEAD^{tree}")
-
-
-def require_no_existing_output(root: Path) -> None:
-    """Nothing ignored may already sit in the measured root before this run builds it.
-
-    Record 0086 put a counterfeit ViciOne.ServiceBus.dll into a clean checkout's bin directory and the
-    collection passed: the commit check was green, git status was empty and the assembly identified
-    correctly, because bin is ignored and a clean status says nothing about ignored files. So the
-    absence of pre-existing output is checked directly, before anything is built.
-    """
-    result = subprocess.run(["git", "-C", str(root), "clean", "-ndx"], capture_output=True, text=True)
-    if result.returncode != 0:
-        raise CensusError(f"{root} could not be inspected for pre-existing build output: {result.stderr.strip()[:300]}")
-    found = [line.removeprefix("Would remove ").strip() for line in result.stdout.splitlines() if line.strip()]
-    if found:
-        raise CensusError(
-            f"{root} already holds {len(found)} untracked or ignored path(s) before the build, so the measured bytes "
-            f"would not be known to come from the bound commit: {', '.join(found[:5])}"
-            + (" ..." if len(found) > 5 else "")
-        )
-
-
-def build(root: Path, solution: str, log: Path | None) -> None:
-    """Produce the measured bytes here and now, from the commit that was just verified."""
-    result = subprocess.run(["dotnet", "build", solution, "-c", "Release", "--nologo"],
-                            cwd=root, capture_output=True, text=True)
-    if log:
-        log.parent.mkdir(parents=True, exist_ok=True)
-        log.write_text(result.stdout + result.stderr, encoding="utf-8")
-    if result.returncode != 0:
-        raise CensusError(
-            f"the build of {solution} in {root} failed, so no measured bytes exist for the bound commit: "
-            + (result.stderr.strip() or result.stdout.strip())[-400:]
-        )
-
-
-def within(root: Path, candidate: Path) -> bool:
-    """Whether a canonical path stays inside the canonical measured root."""
-    try:
-        candidate.resolve().relative_to(root.resolve())
-        return True
-    except ValueError:
-        return False
+        raise CensusError("the collected assemblies do not identify as the census expects; "
+                          f"only in the files: {sorted(identities - expected)}; "
+                          f"only in the census: {sorted(expected - identities)}")
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repository", required=True, type=Path, help="Source repository; never measured directly.")
+    parser.add_argument("--commit", required=True, help="The commit whose bytes are measured.")
     parser.add_argument("--census", required=True, type=Path)
-    parser.add_argument("--root", required=True, type=Path, help="Clean, commit bound tree that is measured.")
     parser.add_argument("--out", required=True, type=Path, help="Empty directory the assemblies are copied to.")
     parser.add_argument("--manifest", required=True, type=Path)
-    parser.add_argument("--commit", required=True,
-                        help="The commit whose bytes are measured; checked against the root's HEAD.")
-    parser.add_argument("--solution", default="ViciOne.ServiceBus.sln",
-                        help="Solution built inside the measured root before collecting.")
-    parser.add_argument("--build-log", type=Path, help="Where the build output is written.")
-    parser.add_argument("--reader", type=Path, default=Path(__file__).with_name("api_surface.cs"))
+    parser.add_argument("--build-log", type=Path)
     args = parser.parse_args(argv)
+
+    owned: Path | None = None
+    worktree: Path | None = None
+    repository = args.repository.resolve()
+    collected: list[dict] = []
+    commit = tree = ""
 
     try:
         census = load_census(args.census)
 
-        root = args.root.resolve()
-        head, tree = head_of(root)
-        if head is None:
-            raise CensusError(f"{root} is not a git work tree, so nothing confirms which commit its bytes come from")
-        if args.commit != head:
-            raise CensusError(f"--commit {args.commit} does not match the HEAD of {root}, which is {head}")
+        commit = git(repository, "rev-parse", f"{args.commit}^{{commit}}")
+        if commit != args.commit:
+            raise CensusError(f"--commit {args.commit} is not a full commit id of {repository}; it resolves to {commit}")
+        tree = git(repository, "rev-parse", f"{commit}^{{tree}}")
 
-        require_no_existing_output(root)
-        build(root, args.solution, args.build_log)
+        # The measurement space is created here and belongs to this run alone. Whatever the caller's
+        # own worktree holds -- modified tracked files, ignored build output, a counterfeit assembly --
+        # cannot reach it.
+        owned = Path(tempfile.mkdtemp(prefix="api-surface-provenance-"))
+        worktree = Path(os.path.realpath(owned/"worktree"))
+        git(repository, "worktree", "add", "--detach", str(worktree), commit)
 
-        collected = collect(census, root, args.out)
-        verify_identities(args.reader, args.out, {entry["assembly"] for entry in census["entries"]})
+        require_pristine(worktree, commit, "before the build")
+        require_no_output(worktree)
+
+        solution = canonical_within(worktree, worktree/SOLUTION)
+        if not solution.is_file():
+            raise CensusError(f"{SOLUTION} does not exist in the measured worktree")
+
+        result = subprocess.run(list(BUILD), cwd=worktree, capture_output=True, text=True)
+        if args.build_log:
+            args.build_log.parent.mkdir(parents=True, exist_ok=True)
+            args.build_log.write_text(result.stdout + result.stderr, encoding="utf-8")
+        if result.returncode != 0:
+            raise CensusError(f"the build of {SOLUTION} failed: "
+                              + (result.stderr.strip() or result.stdout.strip())[-400:])
+
+        # Only untracked build output may have appeared; nothing tracked may have moved.
+        require_pristine(worktree, commit, "after the build")
+
+        collected = collect(census, worktree, args.out)
+        verify_identities(args.out, {entry["assembly"] for entry in census["entries"]})
     except CensusError as error:
         print(f"FAIL api-assemblies: {error}", file=sys.stderr)
         return 1
+    finally:
+        # Only what this run created. A caller supplied path is never removed.
+        if worktree is not None and worktree.exists():
+            subprocess.run(["git", "-C", str(repository), "worktree", "remove", "--force", str(worktree)],
+                           capture_output=True, text=True)
+        if owned is not None and owned.exists():
+            shutil.rmtree(owned, ignore_errors=True)
 
     args.manifest.parent.mkdir(parents=True, exist_ok=True)
     args.manifest.write_text(json.dumps({
         "schemaVersion": 1,
         "kind": "API_SURFACE_INPUT_MANIFEST",
-        "measuredCommit": head,
+        "measuredCommit": commit,
         "measuredTree": tree,
-        "provenance": ("the measured root was verified to hold this commit, proved to contain no pre-existing "
-                       "untracked or ignored output, and then built in this same run, so the bytes below were "
-                       "produced from that commit rather than found at a path"),
-        "buildCommand": f"dotnet build {args.solution} -c Release --nologo",
-        "propertySource": "dotnet msbuild -getProperty for Configuration=Release and the censused framework",
-        "identityCheck": "the surface reader keys on AssemblyDefinition and refuses a file name that disagrees",
-        "census": {"path": str(args.census), "sha256": hashlib.sha256(args.census.read_bytes()).hexdigest()},
+        "provenance": ("measured in a detached worktree of this commit that the tool created under its own temporary "
+                       "directory, proved clean and free of build output before the build and unchanged in its tracked "
+                       "files after it, then removed by the tool. The caller supplies neither the measured root nor "
+                       "the build target nor the reader."),
+        "buildCommand": " ".join(BUILD),
+        "tools": [{"path": f"tools/ci/{Path(__file__).name}", "sha256": sha256(Path(__file__))},
+                  {"path": f"tools/ci/{READER.name}", "sha256": sha256(READER)}],
+        "census": {"path": str(args.census), "sha256": sha256(args.census)},
         "assemblyCount": len(collected),
         "assemblies": sorted(collected, key=lambda item: item["assembly"]),
     }, indent=2) + "\n", encoding="utf-8")
