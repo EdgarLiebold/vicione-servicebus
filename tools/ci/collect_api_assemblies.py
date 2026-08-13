@@ -121,6 +121,9 @@ def collect(census: dict, root: Path, out: Path) -> list[dict]:
         assembly, project, tfm = entry["assembly"], entry["project"], entry["targetFramework"]
 
         project_path = root/project
+        if not within(root, project_path):
+            problems.append(f"{assembly}: the census points at {project}, which resolves outside the measured root")
+            continue
         if not project_path.is_file():
             problems.append(f"{assembly}: the census names {project}, which does not exist under {root}")
             continue
@@ -154,6 +157,11 @@ def collect(census: dict, root: Path, out: Path) -> list[dict]:
             continue
 
         source = Path(evaluated["TargetPath"])
+        if not within(root, source):
+            problems.append(
+                f"{assembly}: MSBuild reports its output as {source}, which resolves outside the measured root"
+            )
+            continue
         if not source.is_file():
             problems.append(
                 f"{assembly}: MSBuild reports its output as {source}, which is missing; the project is not built "
@@ -167,7 +175,7 @@ def collect(census: dict, root: Path, out: Path) -> list[dict]:
             "project": project,
             "targetFramework": tfm,
             "evaluatedAssemblyName": evaluated["AssemblyName"],
-            "source": str(source),
+            "source": str(source.resolve().relative_to(root.resolve())),
             "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         })
 
@@ -209,29 +217,77 @@ def head_of(root: Path) -> tuple[str | None, str | None]:
     return git("rev-parse", "HEAD"), git("rev-parse", "HEAD^{tree}")
 
 
+def require_no_existing_output(root: Path) -> None:
+    """Nothing ignored may already sit in the measured root before this run builds it.
+
+    Record 0086 put a counterfeit ViciOne.ServiceBus.dll into a clean checkout's bin directory and the
+    collection passed: the commit check was green, git status was empty and the assembly identified
+    correctly, because bin is ignored and a clean status says nothing about ignored files. So the
+    absence of pre-existing output is checked directly, before anything is built.
+    """
+    result = subprocess.run(["git", "-C", str(root), "clean", "-ndx"], capture_output=True, text=True)
+    if result.returncode != 0:
+        raise CensusError(f"{root} could not be inspected for pre-existing build output: {result.stderr.strip()[:300]}")
+    found = [line.removeprefix("Would remove ").strip() for line in result.stdout.splitlines() if line.strip()]
+    if found:
+        raise CensusError(
+            f"{root} already holds {len(found)} untracked or ignored path(s) before the build, so the measured bytes "
+            f"would not be known to come from the bound commit: {', '.join(found[:5])}"
+            + (" ..." if len(found) > 5 else "")
+        )
+
+
+def build(root: Path, solution: str, log: Path | None) -> None:
+    """Produce the measured bytes here and now, from the commit that was just verified."""
+    result = subprocess.run(["dotnet", "build", solution, "-c", "Release", "--nologo"],
+                            cwd=root, capture_output=True, text=True)
+    if log:
+        log.parent.mkdir(parents=True, exist_ok=True)
+        log.write_text(result.stdout + result.stderr, encoding="utf-8")
+    if result.returncode != 0:
+        raise CensusError(
+            f"the build of {solution} in {root} failed, so no measured bytes exist for the bound commit: "
+            + (result.stderr.strip() or result.stdout.strip())[-400:]
+        )
+
+
+def within(root: Path, candidate: Path) -> bool:
+    """Whether a canonical path stays inside the canonical measured root."""
+    try:
+        candidate.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--census", required=True, type=Path)
     parser.add_argument("--root", required=True, type=Path, help="Clean, commit bound tree that is measured.")
     parser.add_argument("--out", required=True, type=Path, help="Empty directory the assemblies are copied to.")
     parser.add_argument("--manifest", required=True, type=Path)
-    parser.add_argument("--commit", help="Identity claimed for the tree; checked against its HEAD.")
+    parser.add_argument("--commit", required=True,
+                        help="The commit whose bytes are measured; checked against the root's HEAD.")
+    parser.add_argument("--solution", default="ViciOne.ServiceBus.sln",
+                        help="Solution built inside the measured root before collecting.")
+    parser.add_argument("--build-log", type=Path, help="Where the build output is written.")
     parser.add_argument("--reader", type=Path, default=Path(__file__).with_name("api_surface.cs"))
     args = parser.parse_args(argv)
 
     try:
         census = load_census(args.census)
 
-        head, tree = head_of(args.root)
-        if args.commit:
-            if head is None:
-                raise CensusError(
-                    f"--commit {args.commit} was claimed, but {args.root} is not a git work tree, so nothing confirms it"
-                )
-            if args.commit != head:
-                raise CensusError(f"--commit {args.commit} does not match the HEAD of {args.root}, which is {head}")
+        root = args.root.resolve()
+        head, tree = head_of(root)
+        if head is None:
+            raise CensusError(f"{root} is not a git work tree, so nothing confirms which commit its bytes come from")
+        if args.commit != head:
+            raise CensusError(f"--commit {args.commit} does not match the HEAD of {root}, which is {head}")
 
-        collected = collect(census, args.root, args.out)
+        require_no_existing_output(root)
+        build(root, args.solution, args.build_log)
+
+        collected = collect(census, root, args.out)
         verify_identities(args.reader, args.out, {entry["assembly"] for entry in census["entries"]})
     except CensusError as error:
         print(f"FAIL api-assemblies: {error}", file=sys.stderr)
@@ -243,7 +299,10 @@ def main(argv: list[str] | None = None) -> int:
         "kind": "API_SURFACE_INPUT_MANIFEST",
         "measuredCommit": head,
         "measuredTree": tree,
-        "commitClaimVerified": bool(args.commit) and args.commit == head,
+        "provenance": ("the measured root was verified to hold this commit, proved to contain no pre-existing "
+                       "untracked or ignored output, and then built in this same run, so the bytes below were "
+                       "produced from that commit rather than found at a path"),
+        "buildCommand": f"dotnet build {args.solution} -c Release --nologo",
         "propertySource": "dotnet msbuild -getProperty for Configuration=Release and the censused framework",
         "identityCheck": "the surface reader keys on AssemblyDefinition and refuses a file name that disagrees",
         "census": {"path": str(args.census), "sha256": hashlib.sha256(args.census.read_bytes()).hexdigest()},
