@@ -35,13 +35,40 @@ if (!root.Exists)
 }
 
 // One assembly may be built for several target frameworks. The public surface is the same contract
-// in each of them, so the first one found wins and the name stays the key.
+// in each of them, so the first one found wins and the identity stays the key.
+//
+// The key is the assembly's own name from its AssemblyDefinition, not its file name. Record 0083
+// showed what the file name is worth here: a real ViciOne.ServiceBus.dll copied over the name
+// ViciOne.ServiceBus.Abstractions.dll was measured as Abstractions, with the wrong 13292 members and
+// exit code 0. A file name is what someone called the file; only the metadata says what it is.
 var assemblies = new SortedDictionary<string, string>(StringComparer.Ordinal);
 foreach (var file in root.EnumerateFiles("ViciOne.ServiceBus*.dll", SearchOption.AllDirectories))
 {
     if (file.FullName.Contains("/obj/", StringComparison.Ordinal))
         continue;
-    var name = Path.GetFileNameWithoutExtension(file.Name);
+
+    string name;
+    try
+    {
+        using var stream = File.OpenRead(file.FullName);
+        using var reader = new PEReader(stream);
+        var metadata = reader.GetMetadataReader();
+        name = metadata.GetString(metadata.GetAssemblyDefinition().Name);
+    }
+    catch (Exception exception)
+    {
+        Console.Error.WriteLine($"{file.FullName}: not a readable managed assembly: {exception.Message}");
+        return 2;
+    }
+
+    var declared = Path.GetFileNameWithoutExtension(file.Name);
+    if (!string.Equals(name, declared, StringComparison.Ordinal))
+    {
+        Console.Error.WriteLine(
+            $"{file.FullName}: the file is named '{declared}' but its assembly identity is '{name}'");
+        return 2;
+    }
+
     if (!assemblies.ContainsKey(name))
         assemblies[name] = file.FullName;
 }

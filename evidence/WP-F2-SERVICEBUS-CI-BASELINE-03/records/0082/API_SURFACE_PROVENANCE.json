@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "kind": "API_SURFACE_PROVENANCE",
+  "directive": "0081",
+  "why": "Record 0081 found the chain's promises stronger than its checks and its current side unreachable. Both are answered: every guarantee is now an executed check with a probe that fails for its own reason, and each side is identified by a commit the tool verified against that tree's HEAD plus the git tree id of src, which survives an evidence-only amend.",
+  "comparedSides": {
+    "baseline": {
+      "commit": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+      "commitClaimVerified": true,
+      "srcSubtree": "924e1a8f258e463879057cbc3a4510acd04e5175",
+      "reachable": "refs/heads/main ancestor; the accepted work package base",
+      "inputManifest": {
+        "path": "records/0082/api-surface/INPUT_MANIFEST_BASELINE.json",
+        "sha256": "f76b9ebc24017ab656b93347a16be7c0ff1e83bd973e17cb9f6213d8ecd16d85",
+        "assemblyCount": 33
+      }
+    },
+    "current": {
+      "commit": "53b2e3995344fe7ec651a43a494c35942088f957",
+      "commitClaimVerified": true,
+      "srcSubtree": "120e79e9b9d14609722c6aade6515d95a23443d4",
+      "reachable": "refs/heads/main at collection time",
+      "inputManifest": {
+        "path": "records/0082/api-surface/INPUT_MANIFEST_CURRENT.json",
+        "sha256": "34b9c04348ac6c6cbc112f746048a7bd2f76c568d58a071fcc077f133ed2f7f9",
+        "assemblyCount": 33
+      }
+    }
+  },
+  "identityOfTheMeasuredState": "The commit that carries this evidence cannot name itself, so the freeze commit will differ from the one recorded above. The src subtree id is the stable identity: an evidence-only amend leaves src untouched, so the measured product state stays reproducible from any commit carrying the same subtree. The freeze record states that its commit carries exactly this subtree.",
+  "correctedClaim": {
+    "record": "0079",
+    "claim": "comparedSides.current.commit 10fe2711 identified the measured side.",
+    "state": "WITHDRAWN",
+    "detail": "That commit hung on no ref after the amend and would vanish with the next garbage collection, so a fresh clone could not reproduce the side. The current side is now collected against a commit the tool verified against HEAD, and additionally identified by the src subtree."
+  },
+  "census": {
+    "path": "records/0082/API_SURFACE_CENSUS.json",
+    "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52",
+    "expectedCount": 33,
+    "groundTruth": "records/0030/API_SURFACE_CURRENT.json",
+    "boundIntoBothManifests": true
+  },
+  "checksTheCollectorPerforms": [
+    "the census framework must appear in the project's own TargetFramework or TargetFrameworks",
+    "--commit must equal the HEAD of the tree being read",
+    "the output directory is emptied, so no unnamed assembly can be measured",
+    "the collected files must identify as the census expects, read from their metadata by the surface reader",
+    "no duplicate assembly identity and no census that disagrees with its own expectedCount"
+  ],
+  "tools": [
+    {
+      "path": "tools/ci/collect_api_assemblies.py",
+      "sha256": "3062d8920fff12e9bda396731c401fb69365a51fe379d2117c88733c16cfabad"
+    },
+    {
+      "path": "tools/ci/api_surface.cs",
+      "sha256": "636d4da98abd1e25ffe3298030d1407540c5671dbf7433f8e8676777315d8a45"
+    },
+    {
+      "path": "tools/ci/compare_api_surface.py",
+      "sha256": "9cc2fb7506887f8033c60f81ebc66e83163b7543da298b4ac8d561f77cf74d1c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "records/0082/API_SURFACE_CENSUS.json",
+      "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52"
+    },
+    {
+      "path": "records/0082/API_SURFACE_SABOTAGE_MATRIX.json",
+      "sha256": "270a733b813f6678d5a944a5b10e3b9b6347c1071655c53aa67cce4547080de4"
+    },
+    {
+      "path": "records/0082/api-surface/INPUT_MANIFEST_BASELINE.json",
+      "sha256": "f76b9ebc24017ab656b93347a16be7c0ff1e83bd973e17cb9f6213d8ecd16d85"
+    },
+    {
+      "path": "records/0082/api-surface/INPUT_MANIFEST_CURRENT.json",
+      "sha256": "34b9c04348ac6c6cbc112f746048a7bd2f76c568d58a071fcc077f133ed2f7f9"
+    },
+    {
+      "path": "records/0082/api-surface/API_SURFACE_BASELINE.json",
+      "sha256": "db38d8ec0af8440c170fabfdc3aba7176c9363563a1f5e0e5a15259ffd0d5ade"
+    },
+    {
+      "path": "records/0082/api-surface/API_SURFACE_CURRENT.json",
+      "sha256": "db38d8ec0af8440c170fabfdc3aba7176c9363563a1f5e0e5a15259ffd0d5ade"
+    },
+    {
+      "path": "records/0082/api-surface/API_SURFACE_DIFF.json",
+      "sha256": "c2741156a2a7ac91c110ffacde9d012da80a70ec42a41115ed47fffd34e7fc4d"
+    },
+    {
+      "path": "records/0082/api-surface/api_surface.log",
+      "sha256": "d64c48f76078569de31c456e28b730a647853bf8c7ca3a51b2f65a22052afc20"
+    }
+  ],
+  "result": {
+    "assemblyCount": 33,
+    "memberCount": 27488,
+    "verdict": "messaging surface unchanged, 0 testing changes",
+    "matchesAcceptedRecord0030": true
+  },
+  "errorClosure": {
+    "sabotageMatrix": {
+      "path": "records/0082/API_SURFACE_SABOTAGE_MATRIX.json",
+      "sha256": "270a733b813f6678d5a944a5b10e3b9b6347c1071655c53aa67cce4547080de4"
+    },
+    "redProbes": 5,
+    "preventedByConstruction": 1
+  },
+  "supersedes": [
+    {
+      "path": "records/0072/api-surface/**",
+      "state": "NARROWER_SCOPE_SUPERSEDED"
+    },
+    {
+      "path": "records/0077/api-surface/**",
+      "state": "CORRECT_NUMBERS_UNPROVEN_CHAIN_SUPERSEDED"
+    },
+    {
+      "path": "records/0079/**",
+      "state": "OVERSTATED_GUARANTEES_SUPERSEDED",
+      "note": "Kept byte for byte. Its numbers hold; three of its four claimed guarantees did not exist."
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "kind": "API_SURFACE_PROVENANCE",
+  "directive": "0083",
+  "why": "Record 0083 held three guarantees open. Each is now an executed check whose probe varies exactly one property, and both sides are measured from clean, commit bound worktrees with their full commit and tree recorded.",
+  "comparedSides": {
+    "baseline": {
+      "commit": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+      "tree": "9c3ee122480334b4f86921d1b34d0aa9884c9fb0",
+      "commitClaimVerified": true,
+      "worktree": "clean detached worktree at that commit, status empty before collecting",
+      "inputManifest": {
+        "path": "records/0084/api-surface/INPUT_MANIFEST_BASELINE.json",
+        "sha256": "d40a8fd779310ae388dfb1ac9080c648785d2d0b18ec4cc23aaee4d56cb84e61",
+        "assemblyCount": 33
+      }
+    },
+    "current": {
+      "commit": "53b2e3995344fe7ec651a43a494c35942088f957",
+      "tree": "f07cbc96fdd3fb37668eca13c7b12019d45fb87c",
+      "commitClaimVerified": true,
+      "worktree": "clean detached worktree at that commit, status empty before collecting",
+      "inputManifest": {
+        "path": "records/0084/api-surface/INPUT_MANIFEST_CURRENT.json",
+        "sha256": "d907056d29c91f34506c37739c00153647eb5be49e1d44f726c6a7e4c01187d4",
+        "assemblyCount": 33
+      }
+    }
+  },
+  "reachability": "The measured candidate stays reachable because this correction is committed on top of it rather than over it: 53b2e399 remains the parent of the evidence commit the freeze binds. No claim is made that any subtree alone reproduces the build -- the full commit and tree of each measured side are recorded, and the 33 concrete output paths and hashes with them.",
+  "withdrawnClaim": {
+    "record": "0082",
+    "claim": "The src subtree identifies the measured build inputs.",
+    "detail": "It does not. Central props, package versions and other build inputs live outside src. The measured sides are identified by their full commit and tree instead."
+  },
+  "census": {
+    "path": "records/0084/API_SURFACE_CENSUS.json",
+    "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52",
+    "expectedCount": 33,
+    "groundTruth": "records/0030/API_SURFACE_CURRENT.json",
+    "boundIntoBothManifests": true
+  },
+  "checksTheChainPerforms": [
+    "the project's own frameworks come from an MSBuild evaluation with nothing forced, and must contain the censused framework",
+    "AssemblyName and TargetPath come from an MSBuild evaluation for that framework; a property MSBuild cannot resolve is a failure",
+    "the surface reader keys on AssemblyDefinition and refuses a file whose name disagrees with its identity",
+    "a non-empty output directory is refused and left untouched, so nothing unnamed can be measured and nothing is deleted",
+    "--commit must equal the HEAD of the measured tree",
+    "no duplicate assembly identity and no census that disagrees with its own expectedCount"
+  ],
+  "tools": [
+    {
+      "path": "tools/ci/collect_api_assemblies.py",
+      "sha256": "2e0ff108065c0cf0f6c55fea4b852b53dfcbb64da2f49495b69d81609b929b1d"
+    },
+    {
+      "path": "tools/ci/api_surface.cs",
+      "sha256": "ffcc086de0a2c47510be3f2390cdde7039d5e2a4fd958144016fd65f6bcd2c2e"
+    },
+    {
+      "path": "tools/ci/compare_api_surface.py",
+      "sha256": "9cc2fb7506887f8033c60f81ebc66e83163b7543da298b4ac8d561f77cf74d1c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "records/0084/API_SURFACE_CENSUS.json",
+      "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52"
+    },
+    {
+      "path": "records/0084/API_SURFACE_SABOTAGE_MATRIX.json",
+      "sha256": "437266cdc68a905276826c997189aa2b0a1834fe5596c13086f01087e9384e90"
+    },
+    {
+      "path": "records/0084/api-surface/INPUT_MANIFEST_BASELINE.json",
+      "sha256": "d40a8fd779310ae388dfb1ac9080c648785d2d0b18ec4cc23aaee4d56cb84e61"
+    },
+    {
+      "path": "records/0084/api-surface/INPUT_MANIFEST_CURRENT.json",
+      "sha256": "d907056d29c91f34506c37739c00153647eb5be49e1d44f726c6a7e4c01187d4"
+    },
+    {
+      "path": "records/0084/api-surface/API_SURFACE_BASELINE.json",
+      "sha256": "db38d8ec0af8440c170fabfdc3aba7176c9363563a1f5e0e5a15259ffd0d5ade"
+    },
+    {
+      "path": "records/0084/api-surface/API_SURFACE_CURRENT.json",
+      "sha256": "db38d8ec0af8440c170fabfdc3aba7176c9363563a1f5e0e5a15259ffd0d5ade"
+    },
+    {
+      "path": "records/0084/api-surface/API_SURFACE_DIFF.json",
+      "sha256": "c2741156a2a7ac91c110ffacde9d012da80a70ec42a41115ed47fffd34e7fc4d"
+    },
+    {
+      "path": "records/0084/api-surface/api_surface.log",
+      "sha256": "d6ee66dc640b99f92105c2d413541fc006c5d70ca1eca0041b58f006ea362e6a"
+    }
+  ],
+  "result": {
+    "assemblyCount": 33,
+    "memberCount": 27488,
+    "verdict": "messaging surface unchanged, 0 testing changes",
+    "matchesAcceptedRecord0030": true
+  },
+  "errorClosure": {
+    "sabotageMatrix": {
+      "path": "records/0084/API_SURFACE_SABOTAGE_MATRIX.json",
+      "sha256": "437266cdc68a905276826c997189aa2b0a1834fe5596c13086f01087e9384e90"
+    },
+    "negativeProbes": 4,
+    "positiveProbes": 1
+  },
+  "supersedes": [
+    {
+      "path": "records/0072/api-surface/**",
+      "state": "NARROWER_SCOPE_SUPERSEDED"
+    },
+    {
+      "path": "records/0077/api-surface/**",
+      "state": "UNPROVEN_CHAIN_SUPERSEDED"
+    },
+    {
+      "path": "records/0079/**",
+      "state": "OVERSTATED_GUARANTEES_SUPERSEDED"
+    },
+    {
+      "path": "records/0082/**",
+      "state": "GUARANTEES_STILL_OPEN_SUPERSEDED",
+      "note": "Kept byte for byte. Its framework check was defeated by the forced property it used to select the framework."
+    }
+  ]
+}

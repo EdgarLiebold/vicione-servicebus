@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "kind": "API_SURFACE_INPUT_MANIFEST",
+  "measuredCommit": "513967af07da9d4aa7af29ae7ea07ae14bb34fea",
+  "measuredTree": "9c3ee122480334b4f86921d1b34d0aa9884c9fb0",
+  "commitClaimVerified": true,
+  "propertySource": "dotnet msbuild -getProperty for Configuration=Release and the censused framework",
+  "identityCheck": "the surface reader keys on AssemblyDefinition and refuses a file name that disagrees",
+  "census": {
+    "path": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/records/0084/API_SURFACE_CENSUS.json",
+    "sha256": "0487c69cfa723d7b49e0c54718a7fb968e37fa29e040ebd3659d5455b18ced52"
+  },
+  "assemblyCount": 33,
+  "assemblies": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus/bin/Release/net9.0/ViciOne.ServiceBus.dll",
+      "sha256": "621c8ea1ac7993d08c758b8db3e09fcd97b6884b5797e133a851207622b7f2b8"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Abstractions",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.Abstractions/bin/Release/net9.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "349f4311d37ca8ee4eb3c0c04771c096b7f6a0f3e6695e22e73935a6dd3a3fa6"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.ActiveMqTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.ActiveMqTransport",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/bin/Release/net9.0/ViciOne.ServiceBus.ActiveMqTransport.dll",
+      "sha256": "aee0e3f250b0e8d0b6b196707a7a586290fef9caf6941d836209be1ed1a57929"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AmazonS3",
+      "project": "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.AmazonS3",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.AmazonS3/bin/Release/net9.0/ViciOne.ServiceBus.AmazonS3.dll",
+      "sha256": "d045c23f2accd181743cdb7e08da0a518d809fafd14b45e28cbe9cc89d66fe32"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AmazonSqsTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.AmazonSqsTransport",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/bin/Release/net9.0/ViciOne.ServiceBus.AmazonSqsTransport.dll",
+      "sha256": "aeae3319c0dc0be99329e5f74ab0f7063526838f04cb56c7a4fbd2479af05e94"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Analyzers",
+      "project": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+      "targetFramework": "netstandard2.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Analyzers",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.Analyzers/bin/Release/netstandard2.0/ViciOne.ServiceBus.Analyzers.dll",
+      "sha256": "c04cac0d131e2ba11577a9fe56900caa45304bd0383d5350ac64e0fb839f864b"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Cosmos",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Cosmos/ViciOne.ServiceBus.Azure.Cosmos.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Cosmos",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.Azure.Cosmos/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Cosmos.dll",
+      "sha256": "fc4372f53580509ac2aa56598dde3ed8d9c58d02bfc23dd38390cb6c4b57fadd"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "project": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/bin/Release/net9.0/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll",
+      "sha256": "29aaea3cff2d69874fb780642f4f03f4fdb668227b28d5489ab44c650f4b73bd"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Storage",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Storage",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.Azure.Storage/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Storage.dll",
+      "sha256": "8e5eb6146ea73d4ee7a6dc669f25f4e47694845f14059e6ff068ca4f36311bf6"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Table",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Azure.Table",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.Azure.Table/bin/Release/net9.0/ViciOne.ServiceBus.Azure.Table.dll",
+      "sha256": "52b1e3d51645854773aebb09052594f1ed45ddbd13db830008497e3d0052c148"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.DapperIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.DapperIntegration/ViciOne.ServiceBus.DapperIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.DapperIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.DapperIntegration/bin/Release/net9.0/ViciOne.ServiceBus.DapperIntegration.dll",
+      "sha256": "b97a38e0595834cc0df7848ae1a122d59fe149a5213830ac790cc004ac7a50b6"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.DynamoDbIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.DynamoDbIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/bin/Release/net9.0/ViciOne.ServiceBus.DynamoDbIntegration.dll",
+      "sha256": "06b3ab8d1b5224fd84edde126b13c32254383d9400cd828a20ea1558740cc9c5"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/bin/Release/net9.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll",
+      "sha256": "8568150c749d8b2730230ef33429165a6f72c23c05d63736dfc915c1a68b6420"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkIntegration/ViciOne.ServiceBus.EntityFrameworkIntegration.csproj",
+      "targetFramework": "netstandard2.1",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EntityFrameworkIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.EntityFrameworkIntegration/bin/Release/netstandard2.1/ViciOne.ServiceBus.EntityFrameworkIntegration.dll",
+      "sha256": "63da88ebf68f5a431c9792b441c0ada2fa6667fe7dfecae775a7017e2d934fb7"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.EventHubIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.EventHubIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.EventHubIntegration/bin/Release/net9.0/ViciOne.ServiceBus.EventHubIntegration.dll",
+      "sha256": "52f7e3623a37df7fc9399dc1525ecbe162390bfd0093824bc7f6a1fe376f9e5f"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.HangfireIntegration",
+      "project": "src/Scheduling/ViciOne.ServiceBus.HangfireIntegration/ViciOne.ServiceBus.HangfireIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.HangfireIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Scheduling/ViciOne.ServiceBus.HangfireIntegration/bin/Release/net9.0/ViciOne.ServiceBus.HangfireIntegration.dll",
+      "sha256": "7f3ff6879851a6687c9137ce9a18ce4acc2093886cd3a4306351f5e70455cee2"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Interop.NServiceBus",
+      "project": "src/ViciOne.ServiceBus.Interop.NServiceBus/ViciOne.ServiceBus.Interop.NServiceBus.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Interop.NServiceBus",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.Interop.NServiceBus/bin/Release/net9.0/ViciOne.ServiceBus.Interop.NServiceBus.dll",
+      "sha256": "98809290ee3907d2f44fe3a1f766f32f7b5812c43ea8fd1268e64fbcf647eaf0"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.KafkaIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.KafkaIntegration/ViciOne.ServiceBus.KafkaIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.KafkaIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.KafkaIntegration/bin/Release/net9.0/ViciOne.ServiceBus.KafkaIntegration.dll",
+      "sha256": "d619f6906a4f2909102085b55e53de223174b269a13b4fb9a44ff73de4664d04"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MartenIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.MartenIntegration/ViciOne.ServiceBus.MartenIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MartenIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.MartenIntegration/bin/Release/net9.0/ViciOne.ServiceBus.MartenIntegration.dll",
+      "sha256": "2b230ee1ccb3fe8ad73cf7aa406e26701669986b0dc7c5596c285927f18a81d7"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MessagePack",
+      "project": "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MessagePack",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.MessagePack/bin/Release/net9.0/ViciOne.ServiceBus.MessagePack.dll",
+      "sha256": "9143e98ba5a9e3352dbd6dcd55be0a23d0c628103df981a77abaf9544f7e4dc1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.MongoDbIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/ViciOne.ServiceBus.MongoDbIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.MongoDbIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/bin/Release/net9.0/ViciOne.ServiceBus.MongoDbIntegration.dll",
+      "sha256": "9bf5ffbfc5c38b6ed7e65571f0bbe85611c175399309f4f0812ce9cbb14c1e4a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.NHibernateIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.NHibernateIntegration/ViciOne.ServiceBus.NHibernateIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.NHibernateIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.NHibernateIntegration/bin/Release/net9.0/ViciOne.ServiceBus.NHibernateIntegration.dll",
+      "sha256": "c25b073d0db992533943b5d581cd3a83b74f5230503f4ce63353166fa2558c95"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Newtonsoft",
+      "project": "src/ViciOne.ServiceBus.Newtonsoft/ViciOne.ServiceBus.Newtonsoft.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.Newtonsoft",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.Newtonsoft/bin/Release/net9.0/ViciOne.ServiceBus.Newtonsoft.dll",
+      "sha256": "f390373bda0b50fd2214a7ae73f56acb4d54c2b7e6b646bfe3b0a62908312e51"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.QuartzIntegration",
+      "project": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.QuartzIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.dll",
+      "sha256": "572009dae0388073777179715a95440f6de9a93ec2b751834a1ee6f5c27a9217"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMqTransport",
+      "project": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.RabbitMqTransport",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.RabbitMqTransport/bin/Release/net9.0/ViciOne.ServiceBus.RabbitMqTransport.dll",
+      "sha256": "182a71c16419805ee395961ce35439f4df552d978323819df4f9b9fda61b09ba"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RedisIntegration",
+      "project": "src/Persistence/ViciOne.ServiceBus.RedisIntegration/ViciOne.ServiceBus.RedisIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.RedisIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Persistence/ViciOne.ServiceBus.RedisIntegration/bin/Release/net9.0/ViciOne.ServiceBus.RedisIntegration.dll",
+      "sha256": "7339213736ca02db909bda3f410895eafa162fd9c9c2bada8532de26ca91ab3a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SignalR",
+      "project": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SignalR",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.SignalR/bin/Release/net9.0/ViciOne.ServiceBus.SignalR.dll",
+      "sha256": "b7fdd49d0510a371958b0979d44cacf69ec97f12546052dfe049dccc6015b6c9"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/bin/Release/net9.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "sha256": "f3d11683feb28fbf488354edae96d5f5255dc4daa1f5c47803ab5f36abd0ad76"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/bin/Release/net9.0/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "sha256": "d9ba416b34c7d8eabb3b0692b19efdb1612c69b3a6c5074f0c6f5504339184f4"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "project": "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.StateMachineVisualizer/bin/Release/net9.0/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+      "sha256": "d778f994984daabe582b9518e59b675555d7727e06cadb277c5c43a36f2b379b"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.TestFramework",
+      "project": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.TestFramework",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/ViciOne.ServiceBus.TestFramework/bin/Release/net9.0/ViciOne.ServiceBus.TestFramework.dll",
+      "sha256": "c844239b1d727c70344a039172d3952ec787571408ac7b0945f620fd5e903042"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.WebJobs.EventHubsIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.WebJobs.EventHubsIntegration/ViciOne.ServiceBus.WebJobs.EventHubsIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.WebJobs.EventHubsIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.WebJobs.EventHubsIntegration/bin/Release/net9.0/ViciOne.ServiceBus.WebJobs.EventHubsIntegration.dll",
+      "sha256": "48850e20126623fc200728f4f0bcace7822157887a95b8f8801e1ea10c414588"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.WebJobs.ServiceBusIntegration",
+      "project": "src/Transports/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration.csproj",
+      "targetFramework": "net9.0",
+      "evaluatedAssemblyName": "ViciOne.ServiceBus.WebJobs.ServiceBusIntegration",
+      "source": "/private/tmp/claude-501/-Users-edgar-liebold-Downloads-ViciOne-Suite-2-0/e6d41b39-3bc3-4205-a874-5dd07db1d41d/scratchpad/wt-base/src/Transports/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration/bin/Release/net9.0/ViciOne.ServiceBus.WebJobs.ServiceBusIntegration.dll",
+      "sha256": "99eb13a98050d15c8ae8f804bc3c61428433533bf0814866a376c5aa1e296317"
+    }
+  ]
+}
