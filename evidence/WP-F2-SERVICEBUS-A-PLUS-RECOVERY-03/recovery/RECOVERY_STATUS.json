@@ -255,7 +255,11 @@
       },
       "risks": [
         "REQ-CLEAN-006 requires a genuinely representative ephemeral counterpart for every retained external cloud adapter. Missing credentials or missing container runtime keeps the adapter and the whole freeze open and turns this row BLOCKED."
-      ]
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-006",
@@ -738,7 +742,11 @@
       "risks": [
         "Locked restore and the package modernization of REC-021 interact; lock files must be regenerated per group instead of being frozen too early.",
         "Availability of every required package from nuget.org alone must be verified; a package only available on an internal feed would be a dependency question, not a local workaround."
-      ]
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-018",
@@ -915,7 +923,11 @@
       "risks": [
         "The named stable lines are resolutions at check time; actual availability may differ at restore time. A line that provably cannot be reconciled with .NET 10 or a retained capability stops only that package group with its own QUESTION, never a blanket keep-with-reason.",
         "A package group change must not be used to diagnose already red tests; the green before-state is the guard."
-      ]
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-022",
@@ -989,14 +1001,19 @@
         ]
       },
       "risks": [
-        "Requires a genuinely representative SQS counterpart. Whether a local emulator reproduces visibility renewal faithfully has to be proven; if it does not and no real AWS access exists, this row becomes BLOCKED with a QUESTION."
-      ]
+        "Requires a genuinely representative SQS counterpart. Whether a local emulator reproduces visibility renewal faithfully has to be proven; if it does not and no real AWS access exists, this row becomes BLOCKED with a QUESTION.",
+        "Measured: no AWS credentials, no AWS CLI and no AWS configuration on this host."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-024",
       "subject": "Quartz explicit tests",
       "disposition": "REIMPLEMENT_WITH_CORRECTION",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "requirementIds": [
         "REQ-CLEAN-003",
         "REQ-CLEAN-005",
@@ -1031,7 +1048,15 @@
       "risks": [
         "Making a timing-dependent scheduler test deterministic must not lower its assertion strength; the only acceptable route is a deterministic trigger, not a longer timeout.",
         "The Quartz test project currently references ViciOne.ServiceBus.Newtonsoft, so REC-015 and this row interact."
-      ]
+      ],
+      "progress": {
+        "done": "The three inherited red cases of the Quartz project are causally solved and proven: two turnout cases through the job retry policy and one scheduler load case through the idiomatic scheduled-event declaration. Counters before 84 passed and 3 failed, after 87 passed and 0 failed, with total, executed and the Explicit case set unchanged.",
+        "open": "The six inherited Explicit cases are still not deterministic and not in the required category, so the canonical Quartz category gate stays red. That is the remaining REC-024 work.",
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/CAUSAL_ANALYSIS.json",
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-after/quartz.json"
+        ]
+      }
     },
     {
       "id": "REC-025",
@@ -1075,7 +1100,11 @@
       "risks": [
         "Requires a working container runtime on this machine. Availability must be established early, because without it this row and the whole freeze stay open.",
         "TLP-005 requires run-unique compose ownership; until that is proven sabotage-proof, broker runs are serialized explicitly."
-      ]
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-026",
@@ -1114,8 +1143,13 @@
         ]
       },
       "risks": [
-        "Highest freeze risk of the whole package. Real ephemeral Azure resources require a subscription and credentials that are not part of the slice. Without them this row becomes BLOCKED, and REQ-CLEAN-006 explicitly keeps the entire freeze open in that case. A structured QUESTION with options is prepared for that situation."
-      ]
+        "Highest freeze risk of the whole package. Real ephemeral Azure resources require a subscription and credentials that are not part of the slice. Without them this row becomes BLOCKED, and REQ-CLEAN-006 explicitly keeps the entire freeze open in that case. A structured QUESTION with options is prepared for that situation.",
+        "Measured: no Azure credentials, no Azure CLI and no Azure configuration on this host. Without an ephemeral real Azure resource this row cannot reach PROVEN and REQ-CLEAN-006 keeps the whole freeze open."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-027",
@@ -1154,7 +1188,11 @@
       },
       "risks": [
         "DynamoDB, S3 and Azure Table need adequately representative counterparts. Where only an emulator exists, its representativeness must be argued per behavior, not per adapter."
-      ]
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
     },
     {
       "id": "REC-028",
@@ -1335,7 +1373,7 @@
       "id": "REC-033",
       "subject": "Gate ladder and one final freeze",
       "disposition": "REIMPLEMENT_WITH_CORRECTION",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "requirementIds": [
         "REQ-CLEAN-006"
       ],
@@ -1367,7 +1405,14 @@
       },
       "risks": [
         "Inherited gate tooling assumes bin/Release paths and the sln entry point; REC-018 changes both, so the tooling must be migrated before the freeze rather than during it."
-      ]
+      ],
+      "progress": {
+        "done": "Gate ladder applied for the first block: competing hypotheses and one discriminating observation per red case before the first corrective edit, then the smallest affected test set, then one full category run. No full repository gate was used as a diagnostic loop.",
+        "open": "The authorized full gate corpus still runs exactly once at the implementation freeze.",
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/CAUSAL_ANALYSIS.json"
+        ]
+      }
     },
     {
       "id": "REC-034",
@@ -1466,7 +1511,7 @@
       "resolution": "DIR-RECOVERY-FIRST-BLOCK-001: per-callsite justified and inventoried suppression only."
     }
   ],
-  "revision": 2,
+  "revision": 3,
   "revisionHistory": [
     {
       "revision": 1,
@@ -1478,11 +1523,26 @@
       "basedOnCommit": "547f98f41c267c94218f88c9079b38c0b3924712",
       "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
       "note": "Additive correction under lead record 0003: temporal qualification of every baseline observation, and the lead dispositions for REC-008, REC-014, REC-015, REC-016, REC-018, REC-020 and the CS0618 rule. Commit 547f98f4 is not rewritten. No product file changed."
+    },
+    {
+      "revision": 3,
+      "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+      "note": "First implementation block: environment measured, three inherited red Quartz cases causally solved, evidence bound. REC-024 and REC-033 advanced to IN_PROGRESS."
     }
   ],
   "observationPhase": {
     "phase": "BASELINE_AT_BRANCH_CREATION",
     "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
     "rule": "Every baselineObservation in this file states the repository as measured in this phase. A later status update must restate the observation for its own phase and must never re-emit a historical observation as the current branch state."
-  }
+  },
+  "recordedObservations": [
+    {
+      "id": "OBS-JOBSERVICE-STALE-SUSPECT-FAULT",
+      "discoveredIn": "REC-024 causal analysis",
+      "statement": "With a job retry in flight, a late status check of the previous attempt can send a stale JobAttemptFaulted that moves JobSaga to Faulted. The JobAttemptCompleted of the successful retry attempt is then rejected with NotAcceptedStateMachineException and redelivered indefinitely.",
+      "evidence": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/turnout-after-retry-policy.trx",
+      "disposition": "RECORDED_NOT_FIXED",
+      "reason": "Job service runtime semantics are not authorized for change in this cleanup. Recorded like the follow-up classes of REC-012 and REC-030 so the Lead can slice it separately."
+    }
+  ]
 }
