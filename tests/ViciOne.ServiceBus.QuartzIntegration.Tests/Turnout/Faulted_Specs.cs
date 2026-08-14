@@ -356,17 +356,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             await InMemoryTestHarness.Consumed.Any<ScheduleMessage>();
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
-
-            await AdvanceTime(TimeSpan.FromSeconds(60));
-
-            await InMemoryTestHarness.Sent.Any<GetJobAttemptStatus>();
-
-            await InMemoryTestHarness.Consumed.Any<GetJobAttemptStatus>();
-
             await InMemoryTestHarness.Sent.Any<JobAttemptFaulted>();
-
-            await AdvanceTime(-TimeSpan.FromSeconds(60));
 
             // just to capture all the test output in a single window
             ConsumeContext<JobCompleted> completed = await _completed;
@@ -424,7 +414,13 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
                 {
                     e.Consumer(() => new GrindTheGearsConsumer(), cfg =>
                     {
-                        cfg.Options<JobOptions<GrindTheGears>>(jobOptions => jobOptions.SetJobTimeout(TimeSpan.FromSeconds(90)));
+                        // The first attempt reports a fault from the consumer. Only the job retry policy turns a
+                        // reported fault into a retryable one: JobConsumerMessageFilter passes the retry delay to
+                        // NotifyFaulted, which is what puts JobSaga into WaitingToRetry. SuspectJobRetryCount below
+                        // governs the unresponsive instance path instead and never applies to a reported fault.
+                        cfg.Options<JobOptions<GrindTheGears>>(jobOptions => jobOptions
+                            .SetJobTimeout(TimeSpan.FromSeconds(90))
+                            .SetRetry(r => r.Interval(1, TimeSpan.FromSeconds(1))));
                     });
                 });
             });

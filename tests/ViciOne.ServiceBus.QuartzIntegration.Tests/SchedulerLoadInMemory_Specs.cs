@@ -80,8 +80,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                         .Then(context => Console.WriteLine($"Started: {context.Instance.CorrelationId}"))
                         .TransitionTo(Running));
 
+                // The scheduled Stop message is received through the schedule itself. A separate Event<Stop> would be a
+                // second saga message specification for the same message type, which SagaSpecification rejects with a
+                // duplicate key while the state machine is being configured.
                 During(Running,
-                    When(Stopped)
+                    When(StopSchedule.Received)
                         .Publish(context => new Stopped { CorrelationId = context.Instance.CorrelationId })
                         .Then(context => Console.WriteLine($"Stopped: {context.Instance.CorrelationId}"))
                         .Finalize());
@@ -93,7 +96,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
             public State Running { get; private set; }
             public Event<Start> Started { get; private set; }
-            public Event<Stop> Stopped { get; private set; }
         }
 
 
