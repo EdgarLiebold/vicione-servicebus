@@ -290,7 +290,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Using_a_batch_consumer :
         InMemoryTestFixture
     {

@@ -12,7 +12,6 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
         InMemoryTestFixture
     {
         [Test]
-        [Explicit]
         public async Task Should_retry_the_status_message()
         {
             Task<Response<Status>> statusTask = Bus.Request<CheckStatus, Status>(InputQueueAddress, new CheckStatus("A"), TestCancellationToken);

@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Querying_the_send_endpoint_cache_concurrently :
         InMemoryTestFixture
     {

@@ -71,7 +71,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Sending_a_request_to_a_missing_service_that_times_out :
         InMemoryTestFixture
     {
@@ -112,7 +111,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Sending_a_request_using_mediator_to_a_missing_service_that_times_out :
         InMemoryTestFixture
     {
@@ -160,7 +158,6 @@ namespace ViciOne.ServiceBus.Tests
 
 
     [TestFixture]
-    [Explicit]
     public class Sending_a_request_using_mediator_that_faults :
         InMemoryTestFixture
     {

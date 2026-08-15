@@ -14,7 +14,6 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
     public class When_an_activity_is_redelivered
     {
         [Test]
-        [Explicit]
         public async Task Should_not_copy_redelivery_header_to_next_activity()
         {
             await using var provider = new ServiceCollection()

@@ -17,7 +17,6 @@ using TestFramework.Messages;
 
 
 [TestFixture]
-[Explicit]
 public class ConsumeMetrics_Specs
 {
     [Test]
@@ -46,6 +45,10 @@ public class ConsumeMetrics_Specs
 
         Assert.That(await testHarness.Consumed.Any<PingMessage>(), Is.True);
 
+        // The meter records after the consumer returns, so the harness signal alone does not order the snapshot.
+        // Waiting for the expected measurement is the barrier; the token comes from the harness, not from a clock.
+        await collector.WaitForMeasurementsAsync(1, testHarness.CancellationToken);
+
         IReadOnlyList<CollectedMeasurement<long>> metrics = collector.GetMeasurementSnapshot();
 
         Assert.That(metrics, Has.Count.EqualTo(1));
@@ -73,6 +76,9 @@ public class ConsumeMetrics_Specs
         await testHarness.Bus.Publish(new PingMessage());
 
         Assert.That(await testHarness.Consumed.Any<PingMessage>(), Is.True);
+
+        await totalCollector.WaitForMeasurementsAsync(1, testHarness.CancellationToken);
+        await faultCollector.WaitForMeasurementsAsync(1, testHarness.CancellationToken);
 
         IReadOnlyList<CollectedMeasurement<long>> metrics = totalCollector.GetMeasurementSnapshot();
         IReadOnlyList<CollectedMeasurement<long>> faults = faultCollector.GetMeasurementSnapshot();
@@ -127,6 +133,12 @@ public class ConsumeMetrics_Specs
         completed.TrySetResult(true);
 
         Assert.That(await testHarness.Consumed.Any<PingMessage>(), Is.True);
+
+        // The consume total, the duration and the second in progress measurement are recorded after the consumer
+        // returns. Each of them is awaited before the snapshot instead of hoping the harness signal ordered them.
+        await totalCollector.WaitForMeasurementsAsync(1, testHarness.CancellationToken);
+        await durationCollector.WaitForMeasurementsAsync(1, testHarness.CancellationToken);
+        await inProgressCollector.WaitForMeasurementsAsync(2, testHarness.CancellationToken);
 
         IReadOnlyList<CollectedMeasurement<long>> metrics = totalCollector.GetMeasurementSnapshot();
         inProgress = inProgressCollector.GetMeasurementSnapshot();
