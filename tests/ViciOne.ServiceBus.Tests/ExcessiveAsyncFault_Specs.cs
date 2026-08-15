@@ -1,66 +1,94 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Tests
 {
     namespace NoLog
     {
-        using System;
+        using System.Collections.Concurrent;
         using System.Linq;
+        using System.Threading;
         using System.Threading.Tasks;
-        using ViciOne.ServiceBus.Testing;
         using NUnit.Framework;
         using TestFramework;
         using TestFramework.Messages;
+        using ViciOne.ServiceBus.Internals;
 
 
+        /// <summary>
+        /// Every message of a fault storm produces exactly one fault that carries the exception of its consumer.
+        ///
+        /// The previous version sent a thousand messages into a consumer that slept a hundred milliseconds, then
+        /// read the collected faults through a blocking list whose deadline came from the wall clock, so the case
+        /// silently returned a short array when the machine was slow. It also asserted the exception type through a
+        /// projection whose result was discarded, so a fault carrying the wrong exception passed. The storm is now
+        /// bounded by a declared concurrency, the last expected fault is the barrier, and both the count and the
+        /// content of every fault are asserted.
+        /// </summary>
         [TestFixture]
-        [Explicit]
         public class An_excessive_fault_storm :
             InMemoryTestFixture
         {
             [Test]
-            public async Task Should_not_explode_the_task_library()
+            public async Task Should_publish_one_fault_for_every_message_in_the_storm()
             {
-                var limit = 1000;
-                for (var i = 0; i < limit; i++)
+                for (var index = 0; index < StormSize; index++)
                     await InputQueueSendEndpoint.Send(new PingMessage());
 
-                IReceivedMessage<Fault<PingMessage>>[] messages = _consumer.Received.Select<Fault<PingMessage>>().Take(limit).ToArray();
+                await _allFaults.Task.OrCanceled(TestCancellationToken);
 
-                Assert.That(messages, Has.Length.EqualTo(limit));
+                Fault<PingMessage>[] faults = _faults.ToArray();
 
-                Assert.That(messages.Select(x => x.Context.Message.Exceptions[0].ExceptionType == TypeCache<IntentionalTestException>.ShortName).Count(),
-                    Is.EqualTo(limit));
+                Assert.That(faults, Has.Length.EqualTo(StormSize));
+
+                Assert.That(faults, Has.All.Matches<Fault<PingMessage>>(x =>
+                    x.Exceptions.Length == 1
+                    && x.Exceptions[0].ExceptionType == TypeCache<IntentionalTestException>.ShortName));
             }
 
-            PingConsumer _consumer;
+            /// <summary>
+            /// Large enough that the endpoint has to run faults and messages at the same time, small enough to stay
+            /// a stated quantity rather than a load test.
+            /// </summary>
+            const int StormSize = 500;
+
+            /// <summary>
+            /// Declared, so how many deliveries overlap does not depend on the number of processors of the machine.
+            /// </summary>
+            const int ConcurrentDeliveries = 32;
+
+            readonly TaskCompletionSource<bool> _allFaults;
+            readonly ConcurrentBag<Fault<PingMessage>> _faults;
+            int _faultCount;
+
+            public An_excessive_fault_storm()
+            {
+                _faults = new ConcurrentBag<Fault<PingMessage>>();
+                _allFaults = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
             {
-                _consumer = new PingConsumer(TestTimeout);
+                configurator.PrefetchCount = ConcurrentDeliveries;
+                configurator.ConcurrentMessageLimit = ConcurrentDeliveries;
 
-                _consumer.Configure(configurator);
+                configurator.Handler<Fault<PingMessage>>(context =>
+                {
+                    _faults.Add(context.Message);
+
+                    if (Interlocked.Increment(ref _faultCount) == StormSize)
+                        _allFaults.TrySetResult(true);
+
+                    return Task.CompletedTask;
+                });
 
                 configurator.Consumer<MessageConsumer>();
             }
 
 
-            class PingConsumer :
-                MultiTestConsumer
+            public class MessageConsumer :
+                IConsumer<PingMessage>
             {
-                public PingConsumer(TimeSpan timeout)
-                    : base(timeout)
+                public Task Consume(ConsumeContext<PingMessage> context)
                 {
-                    Consume<Fault<PingMessage>>();
-                }
-            }
-
-
-            public class MessageConsumer : IConsumer<PingMessage>
-            {
-                public async Task Consume(ConsumeContext<PingMessage> context)
-                {
-                    await Task.Delay(100);
-
                     throw new IntentionalTestException("Time for crunchin'");
                 }
             }

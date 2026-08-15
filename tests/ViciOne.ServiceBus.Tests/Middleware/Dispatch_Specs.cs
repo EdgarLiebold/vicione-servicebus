@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.Tests.Middleware
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Middleware;
     using NUnit.Framework;
@@ -45,6 +46,16 @@ namespace ViciOne.ServiceBus.Tests.Middleware
         IInputContext
     {
         public InputContext(object value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// A context whose cancellation is observable, so a filter that parks a send can be proven to be waiting
+        /// on that filter and nothing else.
+        /// </summary>
+        public InputContext(object value, CancellationToken cancellationToken)
+            : base(cancellationToken)
         {
             Value = value;
         }

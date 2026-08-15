@@ -2,6 +2,8 @@
 namespace ViciOne.ServiceBus.Tests;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.JobService;
 using ViciOne.ServiceBus.Testing;
@@ -94,8 +96,16 @@ public class Configuring_a_recurring_job_consumer
         await harness.Stop();
     }
 
+    /// <summary>
+    /// Several recurring jobs of one message type, told apart by their name, each keep their own identity and their
+    /// own schedule.
+    ///
+    /// The previous version waited for thirty completions of a consumer that slept four seconds per run, so it took
+    /// minutes and proved only that some job of the type had run often enough. The completion of each named job is
+    /// the barrier now: a completion carrying that job identifier and that name can only be published after that one
+    /// named job has actually run.
+    /// </summary>
     [Test]
-    [Explicit]
     public async Task Should_support_multiple_jobs_of_the_same_type_with_different_names()
     {
         await using var provider = new ServiceCollection()
@@ -106,7 +116,7 @@ public class Configuring_a_recurring_job_consumer
                 x.AddConsumer<MaintenanceJobConsumer>();
 
                 x.AddJobSagaStateMachines(options => options.SlotWaitTime = TimeSpan.FromSeconds(1));
-                x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(15), testTimeout: TimeSpan.FromMinutes(5));
+                x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(15), testTimeout: TimeSpan.FromSeconds(60));
 
                 x.UsingInMemory((context, cfg) =>
                 {
@@ -118,17 +128,39 @@ public class Configuring_a_recurring_job_consumer
             .BuildServiceProvider(true);
 
         var harness = await provider.StartTestHarness();
+        try
+        {
+            IRequestClient<SubmitJob<MaintenanceTask>> client = harness.GetRequestClient<SubmitJob<MaintenanceTask>>();
 
-        IRequestClient<SubmitJob<MaintenanceTask>> client = harness.GetRequestClient<SubmitJob<MaintenanceTask>>();
+            var schedules = new[] { ("One", 2), ("Two", 3), ("Tree", 4), ("Four", 5) };
 
-        var job1Id = await client.AddOrUpdateRecurringJob("One", new MaintenanceTask { Name = "One" }, x => x.Every(seconds: 4), harness.CancellationToken);
-        var job2Id = await client.AddOrUpdateRecurringJob("Two", new MaintenanceTask { Name = "Two" }, x => x.Every(seconds: 8), harness.CancellationToken);
-        var job3Id = await client.AddOrUpdateRecurringJob("Tree", new MaintenanceTask { Name = "Tree" }, x => x.Every(seconds: 10), harness.CancellationToken);
-        var job4Id = await client.AddOrUpdateRecurringJob("Four", new MaintenanceTask { Name = "Four" }, x => x.Every(seconds: 15), harness.CancellationToken);
+            var jobIds = new Dictionary<string, Guid>();
 
-        Assert.That(await harness.Published.SelectAsync<JobCompleted<MaintenanceTask>>().Take(30).Count(), Is.EqualTo(30));
+            foreach ((string name, var seconds) in schedules)
+            {
+                jobIds.Add(name, await client.AddOrUpdateRecurringJob(name, new MaintenanceTask { Name = name },
+                    x => x.Every(seconds: seconds), harness.CancellationToken));
+            }
 
-        await harness.Stop();
+            Assert.That(jobIds.Values.Distinct().Count(), Is.EqualTo(schedules.Length),
+                "Each name must be scheduled as its own recurring job");
+
+            foreach ((string name, _) in schedules)
+            {
+                var jobId = jobIds[name];
+
+                var completed = await harness.Published
+                    .SelectAsync<JobCompleted<MaintenanceTask>>(x => x.Context.Message.JobId == jobId && x.Context.Message.Job.Name == name)
+                    .Take(1)
+                    .Count();
+
+                Assert.That(completed, Is.EqualTo(1), $"The recurring job '{name}' did not complete under its own identity");
+            }
+        }
+        finally
+        {
+            await harness.Stop();
+        }
     }
 
     [Test]
@@ -272,24 +304,13 @@ public class Configuring_a_recurring_job_consumer
             _logger = logger;
         }
 
-        public async Task Run(JobContext<MaintenanceTask> context)
+        public Task Run(JobContext<MaintenanceTask> context)
         {
+            // The four second delay of the previous version only served the removed thirty completion load loop.
+            // Saving job state on cancellation is covered by JobConsumer_Specs, which asserts the saved state.
             _logger.LogInformation("Running MaintenanceTask: {Id} {Name}", context.JobId, context.Job.Name);
 
-            try
-            {
-                await Task.Delay(4000, context.CancellationToken);
-
-                _logger.LogInformation("MaintenanceTask completed: {Id} {Name}", context.JobId, context.Job.Name);
-            }
-            catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("MaintenanceTask exception: {Id} {Name}", context.JobId, context.Job.Name);
-
-                await context.SaveJobState(new MaintenanceTaskState { Variance = 10000 });
-
-                throw;
-            }
+            return Task.CompletedTask;
         }
     }
 }
@@ -301,10 +322,4 @@ public record RecurringJobMessage;
 public record MaintenanceTask
 {
     public string Name { get; set; }
-}
-
-
-public record MaintenanceTaskState
-{
-    public int Variance { get; set; }
 }
