@@ -175,6 +175,11 @@ namespace ViciOne.ServiceBus
 
         static void AddInstrumentation(IServiceCollection collection)
         {
+            // The provider isolated metric path resolves its meter factory from the container. Registering the
+            // standard metric core here is idempotent and does not replace a factory an application registered
+            // itself, so the core does not silently expect the application bootstrap to do it.
+            collection.AddMetrics();
+
             collection.AddOptions<InstrumentationOptions>();
             collection.AddSingleton<IConfigureOptions<InstrumentationOptions>, ConfigureDefaultInstrumentationOptions>();
         }

@@ -64,14 +64,29 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         {
             try
             {
-                var inActive = false;
-                do
+                // The completion may already have been forced before this task was materialized, because the task
+                // is created lazily on the first access. Waiting an interval first would ignore that.
+                var inActive = _inactivityTaskSource.Task.IsCompleted;
+                while (!inActive)
                 {
-                    await Task.Delay(timeout, cancellationToken).ConfigureAwait(false);
+                    using var delayCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                    Task delay = Task.Delay(timeout, delayCancellation.Token);
+
+                    Task completed = await Task.WhenAny(delay, _inactivityTaskSource.Task).ConfigureAwait(false);
+                    if (completed != delay)
+                    {
+                        // Forced while this interval was running. The interval is no longer needed, so it is
+                        // cancelled instead of being left to run to its end.
+                        delayCancellation.Cancel();
+                        delay.IgnoreUnobservedExceptions();
+                        break;
+                    }
+
+                    await delay.ConfigureAwait(false);
 
                     inActive = await CheckSourceActivity().ConfigureAwait(false);
                 }
-                while (!inActive);
 
                 await _inactivityTaskSource.Task.OrCanceled(cancellationToken).ConfigureAwait(false);
             }

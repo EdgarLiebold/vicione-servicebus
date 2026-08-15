@@ -6,10 +6,11 @@ namespace ViciOne.ServiceBus.Logging
 
     internal sealed class LogContextInstrumentationState
     {
-        public LogContextInstrumentationState(Meter meter, InstrumentationOptions options)
+        public LogContextInstrumentationState(Meter meter, InstrumentationOptions options, ILogContext rootLogContext)
         {
             Meter = meter;
             Options = options;
+            RootLogContext = rootLogContext;
 
             ReceiveTotal = meter.CreateCounter<long>(options.ReceiveTotal, "ea", "Number of messages received");
             ReceiveFaultTotal = meter.CreateCounter<long>(options.ReceiveFaultTotal, "ea", "Number of messages receive faults");
@@ -51,6 +52,12 @@ namespace ViciOne.ServiceBus.Logging
 
         public Meter Meter { get; }
         public InstrumentationOptions Options { get; }
+
+        /// <summary>
+        /// The log context this scope owns. Every provider has its own instance, so activating a provider never
+        /// rebinds a root instance another provider already uses.
+        /// </summary>
+        public ILogContext RootLogContext { get; }
         public Counter<long> ReceiveTotal { get; }
         public Counter<long> ReceiveFaultTotal { get; }
         public Counter<long> ReceiveInProgress { get; }

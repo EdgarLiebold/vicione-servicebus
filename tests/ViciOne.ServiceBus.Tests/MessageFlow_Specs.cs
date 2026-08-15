@@ -2,6 +2,7 @@
 namespace ViciOne.ServiceBus.Tests
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace ViciOne.ServiceBus.Tests
             var harness = new InMemoryTestHarness
             {
                 TestTimeout = TimeSpan.FromSeconds(30),
-                TestInactivityTimeout = TimeSpan.FromSeconds(3)
+                TestInactivityTimeout = InactivityTimeout
             };
 
             harness.Consumer(() => new AFooConsumer());
@@ -51,7 +52,17 @@ namespace ViciOne.ServiceBus.Tests
 
                 using var timeline = new StringWriter();
 
+                // Now() states that the chart renders at once instead of waiting for the inactivity period. The
+                // elapsed time is the contract here, which is why it is measured: without it the rendering costs
+                // exactly the configured period even though the flow finished milliseconds ago.
+                var rendering = Stopwatch.StartNew();
+
                 await harness.OutputTimeline(timeline, options => options.Now().IncludeAddress());
+
+                rendering.Stop();
+
+                Assert.That(rendering.Elapsed, Is.LessThan(InactivityTimeout),
+                    "Now() must render the timeline without waiting out the inactivity period");
 
                 var rendered = timeline.ToString();
 
@@ -93,6 +104,8 @@ namespace ViciOne.ServiceBus.Tests
         /// produces two DFoo and each EFoo produces one, which is six plus three.
         /// </summary>
         const int ExpectedDFoo = 9;
+
+        static readonly TimeSpan InactivityTimeout = TimeSpan.FromSeconds(3);
 
         const string InputQueueName = "input_queue";
     }

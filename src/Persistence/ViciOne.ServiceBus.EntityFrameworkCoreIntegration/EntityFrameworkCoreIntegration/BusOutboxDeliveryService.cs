@@ -64,6 +64,11 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            // A background service starts on the execution context of the host, which carries no log context of this
+            // provider. It is established here, before the first await, so that the outbox delivery instruments
+            // record through the meter scope of this provider and not through whatever happened to be ambient.
+            LogContext.ConfigureCurrentLogContextIfNull(_provider);
+
             using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
             {
                 PrefetchCount = _options.QueryMessageLimit,

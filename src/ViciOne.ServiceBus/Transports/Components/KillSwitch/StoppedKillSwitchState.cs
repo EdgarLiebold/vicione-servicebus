@@ -58,7 +58,10 @@ namespace ViciOne.ServiceBus.Transports.Components
 
         void Restart(object state)
         {
-            LogContext.SetCurrentIfNull(_killSwitch.LogContext);
+            // The restart runs on a timer thread whose ambient context can belong to something else entirely, so
+            // the context of this kill switch is set as the operation boundary instead of only filling a null.
+            if (_killSwitch.LogContext != null)
+                LogContext.Current = _killSwitch.LogContext;
 
             try
             {

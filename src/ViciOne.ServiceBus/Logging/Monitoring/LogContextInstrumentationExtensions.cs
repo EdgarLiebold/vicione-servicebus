@@ -12,6 +12,8 @@ namespace ViciOne.ServiceBus.Logging
     using Courier.Contracts;
     using Metadata;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
     using Middleware;
     using Monitoring;
@@ -435,8 +437,8 @@ namespace ViciOne.ServiceBus.Logging
             var meterFactory = provider.GetService<IMeterFactory>();
             if (meterFactory == null)
             {
-                TryConfigure(instrumentationOptions);
-                BindInstrumentation(LogContext.Current, Volatile.Read(ref _fallbackState));
+                // The dependency injection path uses its own meter factory scope only. It never falls back to the
+                // state of the explicit non dependency injection path.
                 return;
             }
 
@@ -448,29 +450,55 @@ namespace ViciOne.ServiceBus.Logging
                         Version = HostMetadataCache.Host.ViciOneServiceBusVersion
                     });
 
-                    return new LogContextInstrumentationState(meter, instrumentationOptions);
+                    ILoggerFactory loggerFactory = provider.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
+
+                    return new LogContextInstrumentationState(meter, instrumentationOptions, new BusLogContext(loggerFactory));
                 }, LazyThreadSafetyMode.ExecutionAndPublication));
 
-            BindInstrumentation(LogContext.Current, lazyState.Value);
+            LogContextInstrumentationState instrumentation = lazyState.Value;
+
+            BindInstrumentation(instrumentation.RootLogContext, instrumentation);
+
+            // Activates the scope of this provider. The root context belongs to this scope, so no instance another
+            // provider already uses is rebound here.
+            LogContext.Current = instrumentation.RootLogContext;
         #else
             TryConfigure(instrumentationOptions);
-            BindInstrumentation(LogContext.Current, Volatile.Read(ref _fallbackState));
         #endif
         }
 
         public static void TryConfigure(InstrumentationOptions options)
         {
-            if (Volatile.Read(ref _fallbackState) != null)
-                return;
-
-            lock (_fallbackLock)
+            if (Volatile.Read(ref _fallbackState) == null)
             {
-                if (_fallbackState != null)
-                    return;
+                lock (_fallbackLock)
+                {
+                    if (_fallbackState == null)
+                    {
+                        var meter = new Meter(InstrumentationOptions.MeterName, HostMetadataCache.Host.ViciOneServiceBusVersion);
 
-                var meter = new Meter(InstrumentationOptions.MeterName, HostMetadataCache.Host.ViciOneServiceBusVersion);
-                Volatile.Write(ref _fallbackState, new LogContextInstrumentationState(meter, options));
+                        ILogContext root = LogContext.Current ?? new BusLogContext(NullLoggerFactory.Instance);
+
+                        Volatile.Write(ref _fallbackState, new LogContextInstrumentationState(meter, options, root));
+                    }
+                }
             }
+
+            LogContextInstrumentationState fallback = Volatile.Read(ref _fallbackState);
+
+            // The explicit non dependency injection path binds its state to its own current log context. That is the
+            // only way this state is ever reached; nothing resolves to it implicitly.
+            ILogContext current = LogContext.Current;
+            if (current == null)
+            {
+                // Nothing is current yet, so the root context of this state becomes the current one. Otherwise the
+                // bus would create an unbound context of its own while building and this state would be unreachable.
+                current = fallback.RootLogContext;
+
+                LogContext.Current = current;
+            }
+
+            BindInstrumentation(current, fallback);
         }
 
         internal static void CopyInstrumentation(ILogContext source, ILogContext destination)
@@ -491,12 +519,16 @@ namespace ViciOne.ServiceBus.Logging
             }
         }
 
+        /// <summary>
+        /// Only the state bound to the requested context. A context that carries no binding records nothing; it does
+        /// not implicitly reach the state of the explicit non dependency injection path.
+        /// </summary>
         static LogContextInstrumentationState GetInstrumentation(ILogContext logContext)
         {
             if (logContext != null && _logContextStates.TryGetValue(logContext, out var instrumentation))
                 return instrumentation;
 
-            return Volatile.Read(ref _fallbackState);
+            return null;
         }
 
         static void AddCustomTags(ref TagList tags, PipeContext pipeContext)
