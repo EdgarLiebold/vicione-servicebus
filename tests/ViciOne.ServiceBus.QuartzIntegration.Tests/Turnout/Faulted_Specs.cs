@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Contracts.JobService;
@@ -223,10 +224,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
 
     [TestFixture]
-    [Category("Flaky")]
     public class Submitting_a_job_to_turnout_that_is_abandoned :
         QuartzInMemoryTestFixture
     {
+        const int SuspectJobRetryCount = 0;
+
         [Test]
         [Order(1)]
         public async Task Should_get_the_job_accepted()
@@ -241,23 +243,67 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             Assert.That(response.Message.JobId, Is.EqualTo(_jobId));
 
-            await InMemoryTestHarness.Consumed.Any<ScheduleMessage>();
+            Assert.That(await InMemoryTestHarness.Consumed.Any<ScheduleMessage>(x => x.Exception == null, TestCancellationToken),
+                Is.True, "The job status check of the started attempt was not scheduled");
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            // The worker starts the attempt and then goes silent: the one fault it reports never reaches the
+            // sagas. From here on the job service has to judge the worker through its own status checks.
+            _suppressed = await Await("suppression of the reported fault", _silentWorker.ReportedFaultSuppressed);
 
+            // One controlled step of the scheduler clock is enough. The attempt saga reschedules its status
+            // check against real time, so every following check is already due once the clock has moved.
             await AdvanceTime(TimeSpan.FromSeconds(60));
 
-            await InMemoryTestHarness.Sent.Any<GetJobAttemptStatus>();
+            await AwaitVoid("first status check", _silentWorker.StatusCheckObserved(1));
+            await AwaitVoid("second status check", _silentWorker.StatusCheckObserved(2));
 
-            await InMemoryTestHarness.Consumed.Any<GetJobAttemptStatus>();
+            _suspectFault = await Await("suspect fault", _silentWorker.SuspectFaultObserved);
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            _silentWorker.ReleaseSuspectFault();
 
-            await AdvanceTime(TimeSpan.FromSeconds(60));
+            ConsumeContext<JobFaulted> faulted = await Await("terminal job fault", _faulted);
 
+            Assert.Multiple(() =>
+            {
+                Assert.That(faulted.Message.JobId, Is.EqualTo(_jobId));
 
-            // just to capture all the test output in a single window
-            ConsumeContext<JobFaulted> faulted = await _faulted;
+                Assert.That(_suppressed.AttemptId, Is.EqualTo(_silentWorker.StartedAttemptId),
+                    "The suppressed fault has to belong to the attempt the worker actually started");
+                Assert.That(_suppressed.RetryAttempt, Is.EqualTo(0));
+                Assert.That(_suppressed.Endpoints, Is.EquivalentTo(new[] { "job", "job-attempt" }),
+                    "Exactly the two saga endpoints of the one logical publish are suppressed");
+                Assert.That(_silentWorker.SuppressionCount, Is.EqualTo(2),
+                    "One logical communication loss is exactly the two deliveries of the same message");
+                Assert.That(_silentWorker.RedeliveryCount, Is.Zero,
+                    "The suppressed message must not be redelivered or retried");
+                Assert.That(_silentWorker.FaultOfReportedFaultCount, Is.Zero,
+                    "Suppression must not produce a Fault<JobAttemptFaulted>");
+            });
+
+            async Task AwaitCore(string what, Task step)
+            {
+                try
+                {
+                    await step.WaitAsync(TestCancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    Assert.Fail($"The {what} never happened: {_silentWorker.Diagnostics}");
+                    throw;
+                }
+            }
+
+            Task AwaitVoid(string what, Task step)
+            {
+                return AwaitCore(what, step);
+            }
+
+            async Task<TResult> Await<TResult>(string what, Task<TResult> step)
+            {
+                await AwaitCore(what, step);
+
+                return await step;
+            }
         }
 
         [Test]
@@ -265,6 +311,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         public async Task Should_have_published_the_job_faulted_event()
         {
             ConsumeContext<JobFaulted> faulted = await _faulted;
+
+            Assert.That(faulted.Message.JobId, Is.EqualTo(_jobId));
         }
 
         [Test]
@@ -272,6 +320,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         public async Task Should_have_published_the_job_started_event()
         {
             ConsumeContext<JobStarted> started = await _started;
+
+            Assert.That(started.Message.JobId, Is.EqualTo(_jobId));
         }
 
         [Test]
@@ -279,9 +329,54 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         public async Task Should_have_published_the_job_submitted_event()
         {
             ConsumeContext<JobSubmitted> submitted = await _submitted;
+
+            Assert.That(submitted.Message.JobId, Is.EqualTo(_jobId));
+        }
+
+        [Test]
+        [Order(5)]
+        public async Task Should_have_faulted_through_the_suspect_path()
+        {
+            await _faulted;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_silentWorker.StatusCheckCount, Is.GreaterThanOrEqualTo(2),
+                    "The job service has to judge the silent worker through its own status checks");
+                Assert.That(_suspectFault.AttemptId, Is.EqualTo(_suppressed.AttemptId),
+                    "The suspect fault has to belong to the very attempt whose report was lost");
+                Assert.That(_suspectFault.MessageId, Is.Not.EqualTo(_suppressed.MessageId),
+                    "The suspect fault is a new message and was never suppressed");
+                Assert.That(_suspectFault.RetryDelay, Is.Null,
+                    "Without a suspect retry count the suspect fault must not carry a retry delay");
+            });
+        }
+
+        [Test]
+        [Order(6)]
+        public async Task Should_not_have_retried_or_completed_the_job()
+        {
+            await _faulted;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_silentWorker.HighestRetryAttempt, Is.EqualTo(0),
+                    "Without a suspect retry count the job service must not start a second attempt");
+                Assert.That(_completed.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                    "An abandoned job without retry must not complete");
+                Assert.That(_canceled.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                    "An abandoned job without retry must not be canceled");
+                Assert.That(InMemoryTestHarness.Published.Select<JobFaulted>(x => x.Context.Message.JobId == _jobId).Count(),
+                    Is.EqualTo(1), "Exactly one terminal job fault belongs to this job");
+            });
         }
 
         Guid _jobId;
+        SilentWorkerReceiveSuppression _silentWorker;
+        SuppressedFault _suppressed;
+        ObservedFault _suspectFault;
+        Task<ConsumeContext<JobCanceled>> _canceled;
+        Task<ConsumeContext<JobCompleted>> _completed;
         Task<ConsumeContext<JobFaulted>> _faulted;
         Task<ConsumeContext<JobSubmitted>> _submitted;
         Task<ConsumeContext<JobStarted>> _started;
@@ -296,6 +391,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         {
             base.ConfigureInMemoryBus(configurator);
 
+            _silentWorker = new SilentWorkerReceiveSuppression(() => _jobId);
+
+            // The one injected disturbance of this fixture, installed test locally in front of the saga
+            // consumers. It loses the single fault the worker reports for its attempt, which is how a worker
+            // that stops communicating after the start looks to the job service.
+            configurator.UseFilter(_silentWorker.JobAttemptFaultedFilter);
+            configurator.UseFilter(_silentWorker.GetJobAttemptStatusObserver);
+            configurator.UseFilter(_silentWorker.FaultObserver);
+
             var options = new ServiceInstanceOptions()
                 .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);
 
@@ -303,12 +407,12 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             {
                 instance.ConfigureJobServiceEndpoints(x =>
                 {
-                    x.SuspectJobRetryCount = 0;
+                    x.SuspectJobRetryCount = SuspectJobRetryCount;
                 });
 
                 instance.ReceiveEndpoint(instance.EndpointNameFormatter.Message<GrindTheGears>(), e =>
                 {
-                    e.Consumer(() => new GrindTheGearsConsumer(), cfg =>
+                    e.Consumer(() => new GrindTheGearsConsumer(_silentWorker), cfg =>
                     {
                         cfg.Options<JobOptions<GrindTheGears>>(jobOptions => jobOptions.SetJobTimeout(TimeSpan.FromSeconds(90)));
                     });
@@ -321,14 +425,25 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             _submitted = Handled<JobSubmitted>(configurator, context => context.Message.JobId == _jobId);
             _started = Handled<JobStarted>(configurator, context => context.Message.JobId == _jobId);
             _faulted = Handled<JobFaulted>(configurator, context => context.Message.JobId == _jobId);
+            _completed = Handled<JobCompleted>(configurator, context => context.Message.JobId == _jobId);
+            _canceled = Handled<JobCanceled>(configurator, context => context.Message.JobId == _jobId);
         }
 
 
         class GrindTheGearsConsumer :
             IJobConsumer<GrindTheGears>
         {
+            readonly SilentWorkerReceiveSuppression _silentWorker;
+
+            public GrindTheGearsConsumer(SilentWorkerReceiveSuppression silentWorker)
+            {
+                _silentWorker = silentWorker;
+            }
+
             public async Task Run(JobContext<GrindTheGears> context)
             {
+                _silentWorker.RecordAttempt(context.AttemptId, context.RetryAttempt);
+
                 await Task.Delay(context.Job.Duration);
 
                 throw new OperationCanceledException();
@@ -845,6 +960,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         }
 
         public int SuppressionCount => Volatile.Read(ref _suppressionCount);
+        public int StatusCheckCount => Volatile.Read(ref _statusCheckCount);
         public int RedeliveryCount => Volatile.Read(ref _redeliveryCount);
         public int FaultOfReportedFaultCount => Volatile.Read(ref _faultObserverCount);
         public int HighestRetryAttempt => Volatile.Read(ref _highestRetryAttempt);
@@ -985,7 +1101,10 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         {
             var message = context.Message;
 
-            if (message.JobId != _jobId() || !message.RetryDelay.HasValue)
+            // The reported fault of the worker never passes here, it is suppressed. Any other JobAttemptFaulted
+            // of this job is therefore the fault the attempt saga itself raises after the suspect escalation.
+            // Its retry delay is asserted by the test, because it depends on the configured suspect retry count.
+            if (message.JobId != _jobId() || context.MessageId == _suppressedMessageId)
                 return Task.CompletedTask;
 
             var observed = _suspectFaultObserved.TrySetResult(new ObservedFault
