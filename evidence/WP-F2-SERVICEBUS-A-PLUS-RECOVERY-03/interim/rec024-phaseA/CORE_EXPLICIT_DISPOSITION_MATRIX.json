@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_EXPLICIT_DISPOSITION_MATRIX",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directiveId": "LEAD_DIRECTIVE 0023, phase B step 1",
+  "status": "FIRST_PASS_SOURCE_BOUND",
+  "project": "tests/ViciOne.ServiceBus.Tests",
+  "explicitDeclarations": 33,
+  "notExecutedIdentitiesInTheLastRun": 43,
+  "note": "Two identities appear twice with the same fixture and test name in different files, which is why 33 declarations map to more not-executed case identities together with parameterised cases.",
+  "method": "Every row is bound to file and line and carries the measured signals of its body: number of assertions, console writes, timing reads, loops and body length. The disposition follows the signals and the retained component contract, never the test name.",
+  "summary": {
+    "REQUIRED_BEHAVIOR": 18,
+    "BENCHMARK": 5,
+    "QUESTION": 4,
+    "HUMAN_DIAGNOSTIC": 6
+  },
+  "items": [
+    {
+      "identity": "Receiving_a_bunch_of_messages_in_a_batch_by_convention_using_mediator.Should_not_deliver_duplicate_messages",
+      "file": "tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs",
+      "line": 293,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 2,
+        "bodyLines": 90
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Asserts a duplicate free batch of a retained mediator path."
+    },
+    {
+      "identity": "(file scope).Should_be_able_to_add_custom_tag_to_consume_metrics",
+      "file": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs",
+      "line": 20,
+      "signals": {
+        "assertions": 11,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 90
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Eleven assertions on the retained metrics surface."
+    },
+    {
+      "identity": "When_an_activity_is_redelivered.Should_not_copy_redelivery_header_to_next_activity",
+      "file": "tests/ViciOne.ServiceBus.Tests/ContainerTests/RedeliveryHeader_Specs.cs",
+      "line": 17,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 44
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Asserts a header rule of the retained courier path."
+    },
+    {
+      "identity": "CronExpressionTest.PerformanceTest",
+      "file": "tests/ViciOne.ServiceBus.Tests/CronExpressionTests.cs",
+      "line": 808,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 1,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 20
+      },
+      "disposition": "BENCHMARK",
+      "reason": "No assertion, stopwatch and console output only."
+    },
+    {
+      "identity": "StatsD_Specs.RunSomeDataIn",
+      "file": "tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs",
+      "line": 12,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 1,
+        "timingReads": 0,
+        "loops": 1,
+        "bodyLines": 18
+      },
+      "disposition": "QUESTION",
+      "reason": "Console only and aimed at an external StatsD endpoint. Depends on whether the StatsD surface is part of the retained scope at all."
+    },
+    {
+      "identity": "(file scope).Should_not_explode_the_task_library",
+      "file": "tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs",
+      "line": 16,
+      "signals": {
+        "assertions": 2,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 1,
+        "bodyLines": 52
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two assertions on fault storm behaviour; needs controlled barriers instead of load."
+    },
+    {
+      "identity": "Probing_the_bus.Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+      "file": "tests/ViciOne.ServiceBus.Tests/Introspection_Specs.cs",
+      "line": 26,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 7
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "Seven lines, no assertion; produces a probe dump for a human."
+    },
+    {
+      "identity": "Mediator_performance.Send",
+      "file": "tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs",
+      "line": 175,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 2,
+        "timingReads": 3,
+        "loops": 2,
+        "bodyLines": 23
+      },
+      "disposition": "BENCHMARK",
+      "reason": "No assertion, stopwatch and console output only."
+    },
+    {
+      "identity": "Mediator_performance.Request_client",
+      "file": "tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs",
+      "line": 200,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 2,
+        "timingReads": 3,
+        "loops": 2,
+        "bodyLines": 32
+      },
+      "disposition": "BENCHMARK",
+      "reason": "No assertion, stopwatch and console output only."
+    },
+    {
+      "identity": "(file scope).Should_generate_a_graph_of_the_message_flow",
+      "file": "tests/ViciOne.ServiceBus.Tests/MessageFlow_Specs.cs",
+      "line": 11,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 31
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "No assertion; produces a graph."
+    },
+    {
+      "identity": "Layering_retry_components_into_a_set.Should_support_interaction_between_filters",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/LayeredRetry_Specs.cs",
+      "line": 17,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 1,
+        "bodyLines": 41
+      },
+      "disposition": "QUESTION",
+      "reason": "Forty one lines without a single assertion although the name claims filter interaction. Either a real assertion exists in the harness or the case is a diagnostic; the source alone does not decide."
+    },
+    {
+      "identity": "When_using_or_canceled_should_not_have_an_unhandled_task_exception.Should_fault_on_ready_faulted",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/OrCanceled_Specs.cs",
+      "line": 17,
+      "signals": {
+        "assertions": 4,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 41
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Four assertions on task fault handling."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_down",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs",
+      "line": 18,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 30
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Rate limit behaviour with a wall clock interval; needs controlled time."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_up",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs",
+      "line": 50,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 30
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Rate limit behaviour with a wall clock interval; needs controlled time."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs",
+      "line": 82,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 38
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two declarations with the same identity in RateLimit_Specs and Concurrency_Specs; both need controlled time."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+      "file": "tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs",
+      "line": 122,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 27
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two declarations with the same identity in RateLimit_Specs and Concurrency_Specs; both need controlled time."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "file": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+      "line": 86,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 38
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two declarations with the same identity in RateLimit_Specs and Concurrency_Specs; both need controlled time."
+    },
+    {
+      "identity": "Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+      "file": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+      "line": 126,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 2,
+        "loops": 1,
+        "bodyLines": 27
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two declarations with the same identity in RateLimit_Specs and Concurrency_Specs; both need controlled time."
+    },
+    {
+      "identity": "Connecting_a_consumer_to_the_inbound_pipe.Should_receive_a_message_pipeline_view",
+      "file": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs",
+      "line": 33,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 11
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "Eleven lines, no assertion; prints a pipeline view."
+    },
+    {
+      "identity": "Configuring_a_recurring_job_consumer.Should_support_multiple_jobs_of_the_same_type_with_different_names",
+      "file": "tests/ViciOne.ServiceBus.Tests/RecurringJobConsumer_Specs.cs",
+      "line": 98,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 35
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Asserts a count against a wall clock interval; needs the controlled scheduler clock of phase A."
+    },
+    {
+      "identity": "Sending_a_request_to_a_missing_service.Should_timeout_without_exceptions",
+      "file": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs",
+      "line": 74,
+      "signals": {
+        "assertions": 4,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 38
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Four assertions on request timeout behaviour."
+    },
+    {
+      "identity": "Sending_a_request_to_a_missing_service_that_times_out.Should_timeout_without_exceptions",
+      "file": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs",
+      "line": 115,
+      "signals": {
+        "assertions": 4,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 45
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Four assertions on request timeout behaviour."
+    },
+    {
+      "identity": "Sending_a_request_using_mediator_to_a_missing_service_that_times_out.Should_observe_all_exceptions",
+      "file": "tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs",
+      "line": 163,
+      "signals": {
+        "assertions": 4,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 43
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Four assertions on mediator request behaviour."
+    },
+    {
+      "identity": "When_a_message_is_not_correlated.Should_retry_the_status_message",
+      "file": "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs",
+      "line": 15,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 11
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Asserts the retry of an uncorrelated status message."
+    },
+    {
+      "identity": "(file scope).Querying_for_two_endpoints_at_the_same_time",
+      "file": "tests/ViciOne.ServiceBus.Tests/SendEndpointCache_Specs.cs",
+      "line": 11,
+      "signals": {
+        "assertions": 1,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 17
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Asserts the send endpoint cache under concurrent access."
+    },
+    {
+      "identity": "When_serializing_messages_with_json_dot_net.Show_me_the_message",
+      "file": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs",
+      "line": 85,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 6
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "Six lines, no assertion; prints a message."
+    },
+    {
+      "identity": "When_serializing_messages_with_json_dot_net.Serialization_speed",
+      "file": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs",
+      "line": 200,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 6,
+        "loops": 3,
+        "bodyLines": 36
+      },
+      "disposition": "BENCHMARK",
+      "reason": "No assertion, six timing reads over three loops."
+    },
+    {
+      "identity": "(file scope).Just_how_fast_are_you",
+      "file": "tests/ViciOne.ServiceBus.Tests/Serialization/Performance_Specs.cs",
+      "line": 21,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 2,
+        "timingReads": 6,
+        "loops": 3,
+        "bodyLines": 81
+      },
+      "disposition": "BENCHMARK",
+      "reason": "No assertion, six timing reads and console output."
+    },
+    {
+      "identity": "When_a_message_fails_to_deserialize_properly.It_should_publish_a_fault",
+      "file": "tests/ViciOne.ServiceBus.Tests/SerializationFault_Specs.cs",
+      "line": 50,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 23
+      },
+      "disposition": "QUESTION",
+      "reason": "The name claims a published fault but the body carries no assertion. Needs a decision whether the fault assertion is added or the case is a diagnostic."
+    },
+    {
+      "identity": "(file scope).FirstTestName",
+      "file": "tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs",
+      "line": 12,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 0,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 68
+      },
+      "disposition": "QUESTION",
+      "reason": "Sixty eight lines of configuration sample without assertion and without a functional name. Needs a decision whether it becomes a configuration contract test or is removed with its sample."
+    },
+    {
+      "identity": "When_configuring_the_thread_pool_for_a_high_number_of_consumers.Should_scale_threads_to_meet_demand",
+      "file": "tests/ViciOne.ServiceBus.Tests/Threading_Specs.cs",
+      "line": 18,
+      "signals": {
+        "assertions": 2,
+        "consoleWrites": 2,
+        "timingReads": 2,
+        "loops": 2,
+        "bodyLines": 24
+      },
+      "disposition": "REQUIRED_BEHAVIOR",
+      "reason": "Two assertions plus timing; needs controlled barriers instead of thread pool timing."
+    },
+    {
+      "identity": "Using_a_hash_topic_pattern.Should_wonderful_display",
+      "file": "tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs",
+      "line": 24,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 1,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 7
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "Seven lines, console output only."
+    },
+    {
+      "identity": "Using_a_wildcard_topic_pattern.Should_wonderful_display",
+      "file": "tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs",
+      "line": 86,
+      "signals": {
+        "assertions": 0,
+        "consoleWrites": 1,
+        "timingReads": 0,
+        "loops": 0,
+        "bodyLines": 7
+      },
+      "disposition": "HUMAN_DIAGNOSTIC",
+      "reason": "Seven lines, console output only."
+    }
+  ],
+  "openWork": "This matrix is the basis of phase B. The implementation, the moves into the benchmark tools, the added assertions and the closing core run are not started."
+}
