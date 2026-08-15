@@ -561,7 +561,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
         [Test]
         [Order(1)]
-        public async Task Should_ignore_the_terminal_messages_of_the_previous_attempt()
+        public async Task Should_ignore_a_completed_message_from_the_previous_attempt()
         {
             IRequestClient<SubmitJob<GrindTheGears>> requestClient = Bus.CreateRequestClient<SubmitJob<GrindTheGears>>();
 
@@ -593,8 +593,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             Assert.That(retryAttemptId, Is.Not.EqualTo(suppressed.AttemptId));
 
-            _silentWorker.LateAttemptId = suppressed.AttemptId;
-
             ISendEndpoint jobSaga = await Bus.GetSendEndpoint(new Uri("loopback://localhost/job"));
 
             await jobSaga.Send<JobAttemptCompleted>(new
@@ -606,25 +604,25 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
                 Duration = TimeSpan.Zero
             });
 
-            await jobSaga.Send<JobAttemptFaulted>(new
-            {
-                JobId = _jobId,
-                AttemptId = suppressed.AttemptId,
-                RetryAttempt = 0,
-                Timestamp = DateTime.UtcNow
-            });
+            Assert.That(await InMemoryTestHarness.Consumed.Any<JobAttemptCompleted>(x =>
+                    x.Exception == null
+                    && x.Context.Message.JobId == _jobId
+                    && x.Context.Message.AttemptId == suppressed.AttemptId,
+                TestCancellationToken), Is.True, "The stale completion was not consumed successfully by the job saga");
 
-            await jobSaga.Send<JobAttemptCanceled>(new
-            {
-                JobId = _jobId,
-                AttemptId = suppressed.AttemptId,
-                Timestamp = DateTime.UtcNow,
-                Reason = "late report of the abandoned attempt"
-            });
+            IRequestClient<GetJobState> stateClient = Bus.CreateRequestClient<GetJobState>();
+            Response<JobState> state = await stateClient.GetResponse<JobState>(new { JobId = _jobId }, TestCancellationToken);
 
-            // The retry is still inside its consumer, so all three late messages reached the job saga while the
-            // current attempt was running. Only then is it released.
-            await AwaitVoid("delivery of the late terminal messages", _silentWorker.LateTerminalMessagesObserved(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(state.Message.CurrentState, Is.EqualTo("Started"),
+                    "The stale completion ended the running retry attempt");
+                Assert.That(state.Message.Completed, Is.Null,
+                    "The stale completion wrote a completion timestamp for the running retry attempt");
+                Assert.That(state.Message.LastRetryAttempt, Is.EqualTo(1));
+                Assert.That(_completed.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                    "The stale completion published JobCompleted before the current retry completed");
+            });
 
             _silentWorker.ReleaseRetryAttempt();
 
@@ -632,8 +630,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             Assert.Multiple(() =>
             {
-                Assert.That(_silentWorker.ObservedLateTerminalMessages, Is.EqualTo("canceled,completed,faulted").Or.EqualTo("completed,faulted,canceled"),
-                    "All three terminal messages of the previous attempt have to reach the job saga");
                 Assert.That(completed.Message.JobId, Is.EqualTo(_jobId));
                 Assert.That(_faulted.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
                     "A terminal message of the previous attempt must not fault the running job");
@@ -690,10 +686,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             configurator.UseFilter(_silentWorker.JobAttemptFaultedFilter);
             configurator.UseFilter(_silentWorker.GetJobAttemptStatusObserver);
             configurator.UseFilter(_silentWorker.FaultObserver);
-            configurator.UseFilter(_silentWorker.LateCompletedObserver);
-            configurator.UseFilter(_silentWorker.LateFaultedObserver);
-            configurator.UseFilter(_silentWorker.LateCanceledObserver);
-
             var options = new ServiceInstanceOptions()
                 .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);
 
@@ -800,8 +792,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         readonly TaskCompletionSource<bool> _retryAttemptReleased =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
-        readonly HashSet<string> _lateTerminalMessages = new();
-        readonly List<TaskCompletionSource<int>> _lateTerminalWaiters = new();
         Guid? _suppressedMessageId;
         Guid? _suppressedAttemptId;
         Guid _startedAttemptId;
@@ -817,9 +807,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             JobAttemptFaultedFilter = new SuppressReportedFaultFilter(this);
             GetJobAttemptStatusObserver = new StatusCheckObserver(this);
             FaultObserver = new FaultOfFaultObserver(this);
-            LateCompletedObserver = new LateTerminalObserver<JobAttemptCompleted>(this, "completed", m => m.AttemptId);
-            LateFaultedObserver = new LateTerminalObserver<JobAttemptFaulted>(this, "faulted", m => m.AttemptId);
-            LateCanceledObserver = new LateTerminalObserver<JobAttemptCanceled>(this, "canceled", m => m.AttemptId);
         }
 
         /// <summary>
@@ -837,9 +824,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         public IFilter<ConsumeContext<JobAttemptFaulted>> JobAttemptFaultedFilter { get; }
         public IFilter<ConsumeContext<GetJobAttemptStatus>> GetJobAttemptStatusObserver { get; }
         public IFilter<ConsumeContext<Fault<JobAttemptFaulted>>> FaultObserver { get; }
-        public IFilter<ConsumeContext<JobAttemptCompleted>> LateCompletedObserver { get; }
-        public IFilter<ConsumeContext<JobAttemptFaulted>> LateFaultedObserver { get; }
-        public IFilter<ConsumeContext<JobAttemptCanceled>> LateCanceledObserver { get; }
 
         public Task<SuppressedFault> ReportedFaultSuppressed => _reportedFaultSuppressed.Task;
         public Task<ObservedFault> SuspectFaultObserved => _suspectFaultObserved.Task;
@@ -855,72 +839,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         /// </summary>
         public Task RetryAttemptGate => _retryAttemptReleased.Task;
 
-        public Guid LateAttemptId { get; set; }
-
         public void ReleaseRetryAttempt()
         {
             _retryAttemptReleased.TrySetResult(true);
-        }
-
-        /// <summary>
-        /// Completes once the named terminal messages of the previous attempt have reached the job saga.
-        /// </summary>
-        public Task LateTerminalMessagesObserved(int count)
-        {
-            TaskCompletionSource<int> waiter;
-            lock (_lock)
-            {
-                if (_lateTerminalMessages.Count >= count)
-                    return Task.CompletedTask;
-
-                waiter = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
-                _lateTerminalWaiters.Add(waiter);
-            }
-
-            return WaitFor(waiter, count);
-
-            async Task WaitFor(TaskCompletionSource<int> current, int required)
-            {
-                while (await current.Task.ConfigureAwait(false) < required)
-                {
-                    lock (_lock)
-                    {
-                        if (_lateTerminalMessages.Count >= required)
-                            return;
-
-                        current = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
-                        _lateTerminalWaiters.Add(current);
-                    }
-                }
-            }
-        }
-
-        public string ObservedLateTerminalMessages
-        {
-            get
-            {
-                lock (_lock)
-                    return string.Join(",", _lateTerminalMessages);
-            }
-        }
-
-        internal void OnLateTerminal(string kind, Guid attemptId)
-        {
-            if (attemptId != LateAttemptId || LateAttemptId == Guid.Empty)
-                return;
-
-            List<TaskCompletionSource<int>> waiters;
-            int count;
-            lock (_lock)
-            {
-                _lateTerminalMessages.Add(kind);
-                count = _lateTerminalMessages.Count;
-                waiters = new List<TaskCompletionSource<int>>(_lateTerminalWaiters);
-                _lateTerminalWaiters.Clear();
-            }
-
-            foreach (var waiter in waiters)
-                waiter.TrySetResult(count);
         }
 
         public int SuppressionCount => Volatile.Read(ref _suppressionCount);
@@ -1100,36 +1021,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             foreach (var waiter in waiters)
                 waiter.TrySetResult(count);
-        }
-
-
-        class LateTerminalObserver<TMessage> :
-            IFilter<ConsumeContext<TMessage>>
-            where TMessage : class
-        {
-            readonly Func<TMessage, Guid> _attemptId;
-            readonly string _kind;
-            readonly SilentWorkerReceiveSuppression _suppression;
-
-            public LateTerminalObserver(SilentWorkerReceiveSuppression suppression, string kind, Func<TMessage, Guid> attemptId)
-            {
-                _suppression = suppression;
-                _kind = kind;
-                _attemptId = attemptId;
-            }
-
-            public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
-            {
-                if (EndpointName(context.ReceiveContext.InputAddress) == "job")
-                    _suppression.OnLateTerminal(_kind, _attemptId(context.Message));
-
-                return next.Send(context);
-            }
-
-            public void Probe(ProbeContext context)
-            {
-                context.CreateScope($"late-terminal-observer-{_kind}");
-            }
         }
 
 

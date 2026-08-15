@@ -118,7 +118,7 @@ namespace ViciOne.ServiceBus
             );
 
             During(StartingJobAttempt,
-                When(StartJobAttemptFaulted)
+                When(StartJobAttemptFaulted, context => context.Saga.AttemptId == context.Message.Message.AttemptId)
                     .Then(context =>
                     {
                         context.AddIncompleteAttempt(context.Message.Message.AttemptId);
@@ -138,13 +138,13 @@ namespace ViciOne.ServiceBus
             );
 
             During(StartingJobAttempt, Started,
-                When(AttemptStarted)
+                When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .Then(context => context.Saga.Started = context.Message.Timestamp)
                     .PublishJobStarted()
                     .TransitionTo(Started));
 
             During(StartingJobAttempt, Started,
-                When(AttemptCompleted)
+                When(AttemptCompleted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .Then(context =>
                     {
                         context.Saga.Completed = context.Message.Timestamp;
@@ -154,7 +154,7 @@ namespace ViciOne.ServiceBus
                     .TransitionTo(Completed));
 
             During(StartingJobAttempt, Started,
-                When(AttemptFaulted)
+                When(AttemptFaulted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .Then(context =>
                     {
                         context.AddIncompleteAttempt(context.Message.AttemptId);
@@ -187,10 +187,10 @@ namespace ViciOne.ServiceBus
             );
 
             During(Completed,
-                When(AttemptCompleted)
+                When(AttemptCompleted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .FinalizeJobAttempts()
                     .NotifyJobCompleted(),
-                When(AttemptStarted)
+                When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .Then(context => context.Saga.Started = context.Message.Timestamp)
                     .PublishJobStarted(),
                 When(JobCompleted)
@@ -210,15 +210,15 @@ namespace ViciOne.ServiceBus
             );
 
             During(Faulted,
-                When(AttemptFaulted)
+                When(AttemptFaulted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .NotifyJobFaulted(),
-                When(AttemptStarted)
+                When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .Then(context => context.Saga.Started = context.Message.Timestamp)
                     .PublishJobStarted());
 
 
             During(StartingJobAttempt, Started,
-                When(AttemptCanceled)
+                When(AttemptCanceled, context => context.Saga.AttemptId == context.Message.AttemptId)
                     .IfElse(context => string.Equals(context.Message.Reason, JobCancellationReasons.Shutdown, StringComparison.Ordinal),
                         shutdown => shutdown
                             .Then(context => context.Saga.Reason = context.Message.GetCancellationReason())
@@ -230,6 +230,23 @@ namespace ViciOne.ServiceBus
                             .TransitionTo(Canceled)
                     )
             );
+
+            // AttemptId is the generation token for a job. Messages from an earlier generation are valid late deliveries,
+            // not errors, and must never mutate the current saga. Current-generation events retain the existing state rules.
+            During([Submitted, WaitingToStart, WaitingToRetry, Canceled, CancellationPending],
+                Ignore(AttemptStarted, context => context.Saga.AttemptId != context.Message.AttemptId));
+
+            During([Submitted, WaitingToStart, WaitingToRetry, Faulted, Canceled, CancellationPending],
+                Ignore(AttemptCompleted, context => context.Saga.AttemptId != context.Message.AttemptId));
+
+            During([Submitted, WaitingToStart, WaitingForSlot, Completed, Canceled, AllocatingJobSlot, CancellationPending],
+                Ignore(AttemptFaulted, context => context.Saga.AttemptId != context.Message.AttemptId));
+
+            During([Submitted, WaitingToStart, WaitingToRetry, Completed, Faulted, CancellationPending],
+                Ignore(AttemptCanceled, context => context.Saga.AttemptId != context.Message.AttemptId));
+
+            During([Submitted, WaitingToStart, WaitingForSlot, WaitingToRetry, Canceled, AllocatingJobSlot, CancellationPending],
+                Ignore(StartJobAttemptFaulted, context => context.Saga.AttemptId != context.Message.Message.AttemptId));
 
             During([StartingJobAttempt, Started, Completed, Faulted, Canceled, WaitingToRetry],
                 When(SetJobProgress)
