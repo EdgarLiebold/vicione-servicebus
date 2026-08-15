@@ -18,11 +18,12 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
     /// </summary>
     [TestFixture]
     public class Specifying_a_recurring_event :
-        QuartzInMemoryTestFixture
+        FrozenSchedulerClockTestFixture
     {
         const int ExpectedIntervals = 8;
         static readonly TimeSpan ScheduleStart = TimeSpan.FromSeconds(3);
         static readonly TimeSpan IntervalStep = TimeSpan.FromSeconds(1);
+        static readonly TimeSpan HalfStep = TimeSpan.FromSeconds(0.5);
         // The horizon deliberately lies between two due seconds, so the marker never shares its instant with a
         // delivery.
         static readonly TimeSpan BeyondScheduleEnd = TimeSpan.FromSeconds(10.5);
@@ -30,7 +31,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         [SetUp]
         public async Task Reset_the_scheduler_clock_and_the_counters()
         {
-            await ResetTime();
+            await ResetClock();
 
             _intervals.Reset();
         }
@@ -45,7 +46,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                 _recurring = null;
             }
 
-            await ResetTime();
+            await ResetClock();
         }
 
         [Test]
@@ -54,21 +55,29 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             var scheduleId = NewId.NextGuid().ToString();
 
             Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
+            await Scheduler.ScheduleSend(InputQueueAddress, (ClockNow + BeyondScheduleEnd).UtcDateTime, new Done { Name = marker });
 
-            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId),
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId, ClockNow),
                 new Interval { Name = "Joe" });
 
-            // The baseline is built by waiting for deliveries, not by reading a counter: the clock stops one
-            // step before the next due time, so exactly these two deliveries exist at this point.
+            // The baseline is built by waiting for deliveries, not by reading a counter.
             await Advance_to_the_first_delivery();
             await Advance_by(IntervalStep);
-            await Await("the second delivery before the cancele", _intervals.Received(2));
+            await Await("the second delivery before the cancel", _intervals.Received(2));
+
+            // On a frozen clock, stopping half a second before the next due time means nothing further can
+            // become due or be dispatched while the control command travels. That is a structural quiescence,
+            // not something an endpoint concurrency limit could establish.
+            await Advance_by(HalfStep);
 
             var deliveredBeforeCancel = _intervals.Count;
 
             Assert.That(deliveredBeforeCancel, Is.EqualTo(2),
                 "The schedule has to deliver twice before it is canceled");
+
+            // Quartz acquires due triggers ahead of their fire time. Holding the scheduler while the command is
+            // processed releases an already acquired firing, so a canceled schedule is really gone.
+            await HoldScheduler();
 
             await Bus.CancelScheduledRecurringSend(_recurring);
             _recurring = null;
@@ -78,6 +87,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             Assert.That(await InMemoryTestHarness.Consumed.Any<CancelScheduledRecurringMessage>(
                     x => x.Exception == null && x.Context.Message.ScheduleId == scheduleId, TestCancellationToken),
                 Is.True, "The cancel command was not consumed successfully by the scheduler");
+
+            await ReleaseScheduler();
 
             // A controlled horizon well past the end of the schedule. Its own message proves the scheduler has
             // worked through everything up to that point, so an unchanged counter is a statement, not a guess.
@@ -94,27 +105,35 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             var scheduleId = NewId.NextGuid().ToString();
 
             Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
+            await Scheduler.ScheduleSend(InputQueueAddress, (ClockNow + BeyondScheduleEnd).UtcDateTime, new Done { Name = marker });
 
-            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId),
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId, ClockNow),
                 new Interval { Name = "Joe" });
 
-            // The baseline is built by waiting for deliveries, not by reading a counter: the clock stops one
-            // step before the next due time, so exactly these two deliveries exist at this point.
+            // The baseline is built by waiting for deliveries, not by reading a counter.
             await Advance_to_the_first_delivery();
             await Advance_by(IntervalStep);
             await Await("the second delivery before the pause", _intervals.Received(2));
+
+            // On a frozen clock, stopping half a second before the next due time means nothing further can
+            // become due or be dispatched while the control command travels. That is a structural quiescence,
+            // not something an endpoint concurrency limit could establish.
+            await Advance_by(HalfStep);
 
             var deliveredBeforePause = _intervals.Count;
 
             Assert.That(deliveredBeforePause, Is.EqualTo(2),
                 "The schedule has to deliver twice before it is paused");
 
+            await HoldScheduler();
+
             await Bus.PauseScheduledRecurringSend(_recurring);
 
             Assert.That(await InMemoryTestHarness.Consumed.Any<PauseScheduledRecurringMessage>(
                     x => x.Exception == null && x.Context.Message.ScheduleId == scheduleId, TestCancellationToken),
                 Is.True, "The pause command was not consumed successfully by the scheduler");
+
+            await ReleaseScheduler();
 
             await Advance_to(BeyondScheduleEnd);
             await Await("the horizon message after the pause", horizon);
@@ -127,9 +146,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         public async Task Should_handle_now_properly()
         {
             Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
+            await Scheduler.ScheduleSend(InputQueueAddress, (ClockNow + BeyondScheduleEnd).UtcDateTime, new Done { Name = marker });
 
-            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(ClockNow), new Interval { Name = "Joe" });
 
             // One step per due second. Each delivery is awaited before the clock moves again, so the count is
             // reached by eight separate firings and not by one jump that coalesces them.
@@ -154,7 +173,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         [Test]
         public async Task Should_contain_additional_headers_that_provide_schedule_key_context()
         {
-            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(ClockNow), new Interval { Name = "Joe" });
 
             await Advance_to_the_first_delivery();
 
@@ -174,7 +193,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         [Test]
         public async Task Should_contain_additional_headers_that_provide_time_domain_context()
         {
-            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(ClockNow), new Interval { Name = "Joe" });
 
             // The previous-sent header only carries a value once a delivery has a predecessor.
             await Advance_to_the_first_delivery();
@@ -216,9 +235,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
         async Task Advance_to(TimeSpan target, string what = null, Task barrier = null)
         {
-            var remaining = target - AppliedTimeOffset;
+            var remaining = target - ClockOffset;
             if (remaining > TimeSpan.Zero)
-                await AdvanceTime(remaining);
+                await AdvanceClock(remaining);
 
             if (barrier != null)
                 await Await(what, barrier);
@@ -226,7 +245,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
         Task Advance_by(TimeSpan step)
         {
-            return AdvanceTime(step);
+            return AdvanceClock(step);
         }
 
         async Task Await(string what, Task barrier)
@@ -237,7 +256,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             }
             catch (OperationCanceledException)
             {
-                Assert.Fail($"The test never observed {what}: {_intervals.Diagnostics} offset={AppliedTimeOffset}");
+                Assert.Fail($"The test never observed {what}: {_intervals.Diagnostics} offset={ClockOffset}");
                 throw;
             }
         }
@@ -396,11 +415,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         class MySchedule :
             DefaultRecurringSchedule
         {
-            public MySchedule()
+            public MySchedule(DateTimeOffset now)
             {
                 CronExpression = "0/1 * * * * ?";
 
-                StartTime = DateTime.Now + ScheduleStart;
+                StartTime = now + ScheduleStart;
                 EndTime = StartTime + TimeSpan.FromSeconds(7);
 
                 Description = "my description";
@@ -411,12 +430,12 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         class MyCancelableSchedule :
             RecurringSchedule
         {
-            public MyCancelableSchedule(string scheduleId)
+            public MyCancelableSchedule(string scheduleId, DateTimeOffset now)
             {
                 ScheduleId = scheduleId;
                 CronExpression = "0/1 * * * * ?";
 
-                StartTime = DateTime.Now + ScheduleStart;
+                StartTime = now + ScheduleStart;
                 EndTime = StartTime + TimeSpan.FromSeconds(20);
             }
 

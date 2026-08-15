@@ -27,6 +27,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
         protected Uri QuartzAddress { get; }
 
+        /// <summary>
+        /// The scheduler factory of the in memory scheduler, so a fixture can drive the scheduler directly.
+        /// </summary>
+        protected ISchedulerFactory SchedulerFactory => _schedulerFactory;
+
         protected ISendEndpoint QuartzEndpoint { get; set; }
 
         protected IMessageScheduler Scheduler => _messageScheduler.Value;
