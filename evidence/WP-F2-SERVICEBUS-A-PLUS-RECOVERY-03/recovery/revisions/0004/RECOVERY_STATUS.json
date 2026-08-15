@@ -1,0 +1,1589 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_RECOVERY_STATUS",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "producedBy": "DEVELOPER_AI",
+  "producedAtCommit": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
+  "producedAtTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
+  "producedBeforeFirstProductEdit": true,
+  "recoveryBranch": "cleanup/servicebus-net10-recovery",
+  "baselineCommit": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
+  "baselineTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
+  "baselineTag": "baseline/servicebus-takeover-2026-08-13",
+  "comparisonBranch": "cleanup/servicebus-net10",
+  "comparisonHead": "e5900afdddf5b8339fe00950c4a95a11bfba162b",
+  "boundMatrix": {
+    "path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/RECOVERY_MATRIX.json",
+    "sha256": "63bbe3d8e529f14da0ac09f3234e78fbd687603eb2f0c01d5cf2909d85091816"
+  },
+  "boundMatrixDocument": {
+    "path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/RECOVERY_MATRIX.md",
+    "sha256": "ba3eb944b124f9428ffbff3e30148dc00e1fe866a508d88fac312a8259004cc3"
+  },
+  "allowedStates": [
+    "BLOCKED",
+    "IN_PROGRESS",
+    "NOT_STARTED",
+    "PROVEN"
+  ],
+  "stateSemantics": {
+    "BLOCKED": "A required proof cannot be produced inside the slice; blocks the freeze and requires a structured QUESTION.",
+    "IN_PROGRESS": "Work started, required evidence not yet complete or not yet bound to the current commit.",
+    "NOT_STARTED": "No product change and no evidence produced yet.",
+    "PROVEN": "The evidence named in requiredEvidence exists, is bound to the current commit and is contradiction-free."
+  },
+  "evidenceDiscipline": {
+    "textSearchRole": "CANDIDATE_DISCOVERY_ONLY",
+    "note": "Every baselineObservation in this file is candidate discovery per TLP-009. No removal, reachability or dispensability conclusion is derived from it. Each item names the semantic layers that must be evaluated before its status may become PROVEN.",
+    "semanticLayers": [
+      "evaluated project and TFM graph",
+      "compiler and symbol identity",
+      "conditional compilation across every retained TFM",
+      "reflection, dependency injection and serializer registration",
+      "pack closure and external consumer compile",
+      "negative removal probe",
+      "smallest affected test set",
+      "public API inventory"
+    ]
+  },
+  "itemCount": 34,
+  "items": [
+    {
+      "id": "REC-001",
+      "subject": "Git baseline and recovery branch",
+      "disposition": "PRESERVE_BASELINE",
+      "status": "IN_PROGRESS",
+      "requirementIds": [
+        "REQ-CLEAN-001",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-001",
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "Measured at start: HEAD 1c6fe74b, tree a73caf70, working tree clean (0 porcelain lines). refs/heads/main and refs/remotes/origin/main both 1c6fe74b. Annotated tag baseline/servicebus-takeover-2026-08-13 is tag object 52b6faed and dereferences to 1c6fe74b. Branch cleanup/servicebus-net10-recovery created from 1c6fe74b, 0 commits ahead, old branch is not an ancestor.",
+      "plannedSemanticProof": [
+        "Re-derive at freeze: rev-parse of HEAD, main, origin/main, tag object and tag^{commit}.",
+        "git merge-base --is-ancestor baseline HEAD must succeed for the freeze commit.",
+        "Assert tag object identity 52b6faed is byte-unchanged and still points at the baseline commit.",
+        "Assert refs/heads/main and refs/remotes/origin/main are still exactly the baseline commit.",
+        "Assert no rebase or history rewrite: the baseline commit object and tree are still reachable and unmodified.",
+        "Full freeze diff and removal manifest generated exactly against 1c6fe74b."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json"
+        ]
+      },
+      "risks": [
+        "Local refs cannot prove the state of the real remote. origin/main is a remote-tracking ref; a genuine remote statement needs a read-only git ls-remote and network access.",
+        "The repository carries three pre-existing stash entries and ignored build/evidence outputs from earlier work packages. They are not part of the baseline tree and must not be modified or cleaned."
+      ]
+    },
+    {
+      "id": "REC-002",
+      "subject": "Aborted cleanup branch and its commit history",
+      "disposition": "DISCARD",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-001",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "cleanup/servicebus-net10 is at e5900afd with exactly 89 commits ahead of the baseline, matching the matrix. The baseline is an ancestor of it; it is not an ancestor of the recovery branch.",
+      "plannedSemanticProof": [
+        "Ancestry proof at freeze: e5900afd must not be an ancestor of the recovery HEAD and no recovery commit may list an old-branch commit as parent.",
+        "Commit-history scan of the recovery branch: English messages only, no inherited German or mixed history.",
+        "Old branch tip must still be exactly e5900afd at freeze.",
+        "Forensic patch-id census against the old branch is reported as comparison information only, never as a source of change."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/BRANCH_ANCESTRY_PROOF.json"
+        ]
+      },
+      "risks": [
+        "Independently reconstructed changes can produce patch-ids identical to old-branch commits, because both follow the same normative requirement. Identity of a patch-id is therefore not evidence of a cherry-pick and must be explained rather than avoided."
+      ]
+    },
+    {
+      "id": "REC-003",
+      "subject": "PO-authorized keep/remove project matrix",
+      "disposition": "RECONSTRUCT",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Baseline contains 33 src projects and 26 projects under tests/ (24 test projects plus ViciOne.ServiceBus.Benchmark and ViciOne.ServiceBus.BenchmarkConsole), one ViciOne.ServiceBus.sln. The retained set of REQ-CLEAN-003 maps to exactly 20 baseline src projects; 13 src projects are removal candidates (Azure.Cosmos, DapperIntegration, EntityFrameworkIntegration, MartenIntegration, MongoDbIntegration, NHibernateIntegration, RedisIntegration, HangfireIntegration, KafkaIntegration, WebJobs.EventHubsIntegration, WebJobs.ServiceBusIntegration, Interop.NServiceBus, Newtonsoft).",
+      "plannedSemanticProof": [
+        "Evaluated MSBuild project graph before and after (restore graph plus -graph build) rather than solution text.",
+        "Removal manifest listing every removed project path with its exclusive closure.",
+        "Negative probe: a retained project still referencing a removed project must fail the build; the clean graph must restore and build green.",
+        "Pack census: the produced package set equals the authorized retained set.",
+        "Test census maps every test project to a retained or removed subject."
+      ],
+      "boundaries": {
+        "product": [
+          "src/**"
+        ],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "ViciOne.ServiceBus.sln",
+          "ViciOne.ServiceBus.slnx",
+          ".github/workflows/**",
+          "build/test-infrastructure/**",
+          "tools/ci/**"
+        ],
+        "package": [
+          "Directory.Packages.props"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/KEEP_REMOVE_MANIFEST.json"
+        ]
+      },
+      "risks": [
+        "The retained count of 20 covers baseline projects only. REQ-CLEAN-005 additionally requires an analyzer/code-fix split with a non-shipping pack project, so the final project count is legitimately higher; this must be stated rather than silently reconciled.",
+        "Shared or linked Compile items can keep a removed project's source compiled elsewhere. Deletion must be proven through evaluated Compile item lists, not through file removal."
+      ]
+    },
+    {
+      "id": "REC-004",
+      "subject": "Hangfire and Azure Cosmos NoSQL adapters",
+      "disposition": "RECONSTRUCT",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-004",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-001",
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "src/Scheduling/ViciOne.ServiceBus.HangfireIntegration and src/Persistence/ViciOne.ServiceBus.Azure.Cosmos exist with their own test projects; both csproj carry a direct Newtonsoft.Json PackageReference; Hangfire and Microsoft.Azure.Cosmos pins exist centrally.",
+      "plannedSemanticProof": [
+        "Complete closure removal with evaluated project graph, not by folder deletion alone.",
+        "Negative scans over types, namespaces, configuration keys, URIs, binary strings and produced package contents.",
+        "Resolved transitive dependency graph must contain no Hangfire and no Microsoft.Azure.Cosmos.",
+        "License, NOTICE, SBOM and policy-gate inventories must lose the Hangfire LGPL exception causally, not textually.",
+        "Consumer compile probe proving no alias or shim replaces the removed surface."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Scheduling/ViciOne.ServiceBus.HangfireIntegration/**",
+          "src/Persistence/ViciOne.ServiceBus.Azure.Cosmos/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.HangfireIntegration.Tests/**",
+          "tests/ViciOne.ServiceBus.Azure.Cosmos.Tests/**"
+        ],
+        "build": [
+          "ViciOne.ServiceBus.sln",
+          ".github/workflows/**",
+          "tools/ci/policy_validator.py",
+          "build/test-infrastructure/**"
+        ],
+        "package": [
+          "Directory.Packages.props",
+          "NOTICE",
+          "COPYRIGHT"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/REMOVAL_MANIFEST.json"
+        ]
+      },
+      "risks": [
+        "The Hangfire LGPL exception may also live in the policy validator and license inventory; a source-only removal would leave an orphaned rule.",
+        "Cosmos removal must not weaken Azure Table Storage, which keeps Cosmos DB for Table through Azure.Data.Tables."
+      ]
+    },
+    {
+      "id": "REC-005",
+      "subject": "Retained optional adapters and StateMachineVisualizer",
+      "disposition": "RECONSTRUCT",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The seven boundary candidates (ActiveMQ, SQL Server transport, Azure Event Hubs, Azure Blob Storage/MessageData, Azure Table Storage, Amazon S3/MessageData, Amazon DynamoDB) and StateMachineVisualizer all exist as baseline projects with their own tests.",
+      "plannedSemanticProof": [
+        "Per component: restore, build, pack and its own relevant tests actually executed.",
+        "Negative composition probe proving none of them is composed automatically into a Suite or target-device artifact.",
+        "Graphviz and Mermaid diagram export of the state machine visualizer proven by test, not by presence of the file."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Transports/**",
+          "src/Persistence/**",
+          "src/ViciOne.ServiceBus.StateMachineVisualizer/**"
+        ],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "ViciOne.ServiceBus.slnx",
+          ".github/workflows/**"
+        ],
+        "package": [
+          "Directory.Packages.props"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RETAINED_COMPONENT_CLOSURE.json"
+        ]
+      },
+      "risks": [
+        "REQ-CLEAN-006 requires a genuinely representative ephemeral counterpart for every retained external cloud adapter. Missing credentials or missing container runtime keeps the adapter and the whole freeze open and turns this row BLOCKED."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-006",
+      "subject": "LegacyObsolete",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "src/ViciOne.ServiceBus/LegacyObsolete contains exactly the five expected files: Activity.cs, Behavior.cs, EventObserver.cs, LegacySerializationExtensions.cs, StateObserver.cs. Residue in ViciOne.ServiceBus.sln.DotSettings still to be evaluated.",
+      "plannedSemanticProof": [
+        "Roslyn symbol-level callsite scan for every removed public type and member across the evaluated project and TFM closure.",
+        "Conditional compilation checked for every retained TFM, not only the default one.",
+        "Reflection, dependency injection and serializer registration scan for name-based use.",
+        "Negative removal probe: compile after deletion per TFM.",
+        "Public API inventory diff proving only the intended symbols disappear and that LegacySetScopedConsumeContext and the remaining obsolete API survive for F-SB-02.",
+        "Smallest affected test set executed."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/LegacyObsolete/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [
+          "ViciOne.ServiceBus.sln.DotSettings"
+        ],
+        "package": [
+          "public API surface of ViciOne.ServiceBus"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/LEGACY_OBSOLETE_REMOVAL.json"
+        ]
+      },
+      "risks": [
+        "Automatonymous compatibility aliases can be reached through relative namespace resolution or extension-method lookup; a plain text scan would miss both. These are exactly the TLP-009 sabotage classes and must be seeded as negative cases.",
+        "Retained adapter tests may still use the alias names, which would surface only after the removal probe."
+      ]
+    },
+    {
+      "id": "REC-007",
+      "subject": "Language version and warning suppressions",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-002",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Directory.Build.props pins <LangVersion>12</LangVersion> and sets <NoWarn>CS1591,CS1998</NoWarn> repository-wide. The analyzer project is the only netstandard2.0 project. Local LangVersion=latest and test-wide CS0618 occurrences still to be evaluated.",
+      "plannedSemanticProof": [
+        "Evaluated MSBuild property per project and TFM after removal, proving the SDK-derived default rather than a text deletion.",
+        "Negative scan for LangVersion, latest, preview, default and 14 in every central and local build file.",
+        "Warning-suppression scan for global CS1998 and test-wide CS0618, with justified local suppressions only.",
+        "global.json binding the released .NET 10 SDK with controlled roll-forward and no preview SDK; evaluated SDK and language version recorded as evidence.",
+        "If the netstandard2.0 analyzer genuinely requires a newer language feature, stop with the exact compiler diagnostic instead of introducing any pin.",
+        "Any CS0618 suppression is per callsite, justified and inventoried; project-wide or test-wide suppression stays forbidden."
+      ],
+      "boundaries": {
+        "product": [
+          "Directory.Build.props",
+          "src/**/*.csproj"
+        ],
+        "tests": [
+          "tests/**/*.csproj"
+        ],
+        "build": [
+          "Directory.Build.props",
+          "Directory.Build.targets",
+          "global.json"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/LANGUAGE_AND_SUPPRESSION_GATE.json"
+        ]
+      },
+      "risks": [
+        "Removing the global CS1998 suppression will surface inherited warnings. Whether they become build errors depends on the effective TreatWarningsAsErrors setting and must be measured before the edit.",
+        "Removing a test-wide CS0618 suppression conflicts with F-SB-02, which keeps the obsolete API in this slice. The resolution must be a locally justified suppression, never removal of the obsolete surface."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "A local CS0618 suppression is admissible only at a demonstrably required callsite of the obsolete API deliberately retained until F-SB-02, must be justified and inventoried and must never act project-wide or test-wide."
+      }
+    },
+    {
+      "id": "REC-008",
+      "subject": "PendingValue asynchronous continuations",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "Two PendingValue implementations exist in the baseline: src/ViciOne.ServiceBus/Caching/Internals/PendingValue.cs and src/ViciOne.ServiceBus/Internals/Caching/PendingValue.cs, with matching IPendingValue interfaces in both namespaces. Which one the live cache instantiates is not yet proven.",
+      "plannedSemanticProof": [
+        "Prove through the evaluated symbol and type graph which PendingValue type the cache actually constructs; both are compiled, so a fix to one alone may be ineffective.",
+        "Smallest discriminating reproducer that is red before and green after the change, with the failure message naming the blocked continuation.",
+        "Use the existing TaskUtil.GetTask<T>() and RunContinuationsAsynchronously path; introduce no second mechanism and no new cache semantics.",
+        "Source diff limited to the TaskCompletionSource creation boundary.",
+        "Mutation probe: reverting the fix must turn the targeted cache tests red for the asserted reason."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/Caching/Internals/PendingValue.cs",
+          "src/ViciOne.ServiceBus/Internals/Caching/PendingValue.cs"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/PENDING_VALUE_REPRODUCER.json"
+        ]
+      },
+      "risks": [
+        "The defect becomes visible only with NUnit 4.6.1 from REC-021, so the causal order is: prove the green before-state, update NUnit, observe the red reproducer, then fix.",
+        "Touching this file is adjacent to REC-009, which must stay at baseline. The boundary has to be proven, not asserted."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "Prove through the evaluated project, TFM and symbol graph which PendingValue implementation is actually instantiated; change only the proven path through the existing TaskUtil mechanism and no further cache, NodeTracker or Bucket semantics."
+      }
+    },
+    {
+      "id": "REC-009",
+      "subject": "Additional NodeTracker and Bucket runtime changes",
+      "disposition": "DISCARD",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003",
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "NodeTracker and Bucket runtime semantics are unchanged baseline code; no over-capacity trigger, RemoveNode evict, MinAge reinterpretation, reschedule chain, latch, fault or count-floor change is present.",
+      "plannedSemanticProof": [
+        "Baseline-to-target source diff for the NodeTracker and Bucket files must be empty.",
+        "Public API inventory shows ValueAdded and the surrounding contract unchanged.",
+        "Negative comparison against the aborted branch documenting that its runtime changes are absent."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/Caching/**",
+          "src/ViciOne.ServiceBus/Internals/Caching/**"
+        ],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/DISCARDED_RUNTIME_NEGATIVE_DIFF.json"
+        ]
+      },
+      "risks": [
+        "REC-008 and REC-010 work in the same area. Without an explicit empty-diff check for these files the discarded semantics could reappear as a side effect."
+      ]
+    },
+    {
+      "id": "REC-010",
+      "subject": "Cache tests",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The two affected cache tests exist in the inherited test suite; their blockage becomes visible only after the NUnit 4.6.1 update. Exact test identity still to be established.",
+      "plannedSemanticProof": [
+        "Deterministic wait for 200 additions and at least the 100 removals required by capacity 100, without sleep, wall-clock polling or a production test hook.",
+        "Assertions on 0 < Count <= Capacity and a non-empty GetAll bounded by capacity; exact end values 100 or 101 are explicitly not asserted as a cache promise.",
+        "Semantic test diff proving retained cases, timeouts, bucket-wise full eviction and assertion strength.",
+        "Mutation probe: without the REC-008 fix these tests must fail, and the failure message must name the asserted progress property."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/CACHE_TEST_PROOF.json"
+        ]
+      },
+      "risks": [
+        "A deterministic wait must not require new production API. Adding one would be a public API change and therefore a stop class, not an implementation detail."
+      ]
+    },
+    {
+      "id": "REC-011",
+      "subject": "TransactionalBus FIFO change",
+      "disposition": "DISCARD",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "src/ViciOne.ServiceBus/Transactions/TransactionalBus.cs uses ConcurrentBag<Func<Task>> at lines 13 and 18; no sequential ordering test exists.",
+      "plannedSemanticProof": [
+        "Baseline-to-target source diff for TransactionalBus and its collaborators must be empty.",
+        "Public API and behavior inventory unchanged.",
+        "No new ordering or concurrency test is introduced in this slice."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/Transactions/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/DISCARDED_RUNTIME_NEGATIVE_DIFF.json"
+        ]
+      },
+      "risks": [
+        "A general modernization sweep over inherited code could touch this file incidentally; the empty-diff check is the guard."
+      ]
+    },
+    {
+      "id": "REC-012",
+      "subject": "Transaction and outbox registration/race findings",
+      "disposition": "SEPARATE_FOLLOW_UP",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "ReplaceScoped, multi-DbContext, concurrent Add/Release, late Add, exception/cancellation handling and TransactionalEnlistmentBus.Release() are baseline code and remain untouched.",
+      "plannedSemanticProof": [
+        "Target negative diff proving no repair in these code paths.",
+        "Findings carried forward by reference in the developer report without implementing them."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/Transactions/**",
+          "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/**"
+        ],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/FOLLOW_UP_FINDINGS.json"
+        ]
+      },
+      "risks": [
+        "EF Core test work in REC-025 runs through the same registrations; the temptation to repair a visible race there must be answered with a finding, not a fix."
+      ]
+    },
+    {
+      "id": "REC-013",
+      "subject": "State-machine test API migration",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "Inherited state-machine tests use the obsolete Instance/Data member names; the exact set of affected members and callsites is candidate work still to be measured.",
+      "plannedSemanticProof": [
+        "Per substituted member, compiler evidence that the old member carries ObsoleteAttribute and that the new member is the documented replacement with identical semantics.",
+        "One atomic commit containing only the API substitution.",
+        "Semantic diff proving unchanged cases, assertions, timeouts and test count.",
+        "Targeted test run of the affected projects."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/STATE_MACHINE_TEST_MIGRATION.json"
+        ]
+      },
+      "risks": [
+        "A mechanical rename can silently change overload resolution. Substitution must be verified through symbol identity, not text."
+      ]
+    },
+    {
+      "id": "REC-014",
+      "subject": "Generated TestResults and unexplained root logo",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The baseline tracks zero TestResults files; the 45 tracked Sequence_*.xml files reported by the matrix belong to the aborted branch. vicione-servicebus-logo.png is tracked in the baseline root; whether the approved root documentation references it is not yet evaluated.",
+      "plannedSemanticProof": [
+        "Tracked-file census gate that fails on any tests/**/TestResults/** path and on any generated build output outside artifacts/.",
+        "Evaluated ArtifactsPath layout proving generated output lands under artifacts/sdk, artifacts/packages and artifacts/required.",
+        "Reference scan for the logo across the approved root documentation and package metadata; a documented purpose keeps it, an undocumented asset is deleted with a corresponding CHANGELIST Deleted entry.",
+        "Do not claim removal of the 45 files of the aborted branch; the target proof is preservation of the clean state plus the negative gate."
+      ],
+      "boundaries": {
+        "product": [
+          "vicione-servicebus-logo.png"
+        ],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          ".gitignore",
+          "Directory.Build.props"
+        ],
+        "package": [
+          "NuGet.README.md",
+          "package metadata"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/TRACKED_OUTPUT_GATE.json"
+        ]
+      },
+      "risks": [
+        "Deleting a baseline root asset is a visible product change. If the root allowlist of PO-2026-08-14-04 does not decide the logo unambiguously, this is a QUESTION rather than a free team decision.",
+        "A package icon reference would make the logo load-bearing; that must be checked in the pack closure, not only in Markdown."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "The fresh baseline with zero tracked TestResults governs. Preserve that state and implement the negative gate; do not claim a cleanup of 45 files on the target branch."
+      }
+    },
+    {
+      "id": "REC-015",
+      "subject": "Direct Newtonsoft usage",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Baseline measurement differs from the matrix wording and is reported as observed: a central Newtonsoft.Json pin exists; four src projects reference it directly (Azure.Cosmos, HangfireIntegration, Interop.NServiceBus, Newtonsoft), all of which are removed anyway; two projects in the retained test scope carry a direct PackageReference (ActiveMqTransport.Tests, AmazonSqsTransport.Tests); seven test and benchmark projects carry a ProjectReference to ViciOne.ServiceBus.Newtonsoft (AmazonSqsTransport.Tests, Azure.ServiceBus.Core.Tests, BenchmarkConsole, HangfireIntegration.Tests, QuartzIntegration.Tests, RabbitMqTransport.Tests, ViciOne.ServiceBus.Tests).",
+      "plannedSemanticProof": [
+        "Per-callsite disposition to System.Text.Json, raw JSON or removal together with the removed feature.",
+        "Resolved package graph including transitive edges proving no Newtonsoft.Json remains in any retained closure without concrete vendor evidence.",
+        "Source negative scan over namespaces, attributes and converter registrations.",
+        "Affected tests executed after each disposition group."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus.Newtonsoft/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/**",
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/**",
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/**",
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/**",
+          "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/**",
+          "tests/ViciOne.ServiceBus.Tests/**"
+        ],
+        "build": [
+          "ViciOne.ServiceBus.slnx"
+        ],
+        "package": [
+          "Directory.Packages.props",
+          "NuGet.config package source mapping"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/NEWTONSOFT_DISPOSITION.json"
+        ]
+      },
+      "risks": [
+        "Retained vendor packages such as Azure, AWS, Quartz or MessagePack may pull Newtonsoft transitively. That is admissible only with concrete evidence of the need, never as a blanket allowance."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "The matrix numbers are diagnostic. The freshly measured, semantically evaluated set of callsites governs. Dispose of every direct package, project and callsite use without exception; the differing count is not a contract conflict."
+      }
+    },
+    {
+      "id": "REC-016",
+      "subject": "CopyToOutputDirectory Always",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Exactly the two expected locations exist: src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj line 29 with a backslash glob tools\\*.ps1, and tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj line 25.",
+      "plannedSemanticProof": [
+        "Evaluated build graph showing the resulting item metadata per project, not the text change.",
+        "Timestamp sabotage: touching the source must copy on the next incremental build, an unchanged build must not copy.",
+        "Verify that the analyzer backslash glob resolves to real items on Linux; if it resolves to nothing, report the change as cosmetic instead of claiming an effect.",
+        "If the glob resolves to nothing: bind the required tool content with a portable path and IfDifferent, or raise a QUESTION before changing anything. Leaving the location as a proven no-op is not an accepted outcome."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj"
+        ],
+        "build": [],
+        "package": [
+          "analyzer package content"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/COPY_TO_OUTPUT_GATE.json"
+        ]
+      },
+      "risks": [
+        "IfDifferent requires a sufficiently current MSBuild; the effective SDK must be confirmed before the change."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "Evaluate both MSBuild locations. If the backslash glob resolves to no files under Linux, the location must not simply remain as ineffective: either bind the genuinely required tool content with a portable path and IfDifferent, or raise a QUESTION before the change when the content is missing or the product purpose is unclear. A pure text change stays insufficient."
+      }
+    },
+    {
+      "id": "REC-017",
+      "subject": "Central package, source mapping and lock configuration",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "Directory.Packages.props exists. The baseline has no NuGet.config, no lock files and no global.json; the developer machine carries three JFrog sources that currently could influence restore.",
+      "plannedSemanticProof": [
+        "Repository-local NuGet.config with clear, exactly nuget.org and complete package source mapping for every package id.",
+        "Locked restore producing identical package bytes locally and in the runner, proven by lock file hashes.",
+        "Negative probe: an added foreign source must not change resolution; a package outside the mapping must fail closed.",
+        "Stale comments and removed ids eliminated causally against the resolved graph."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [
+          "NuGet.config",
+          "global.json"
+        ],
+        "package": [
+          "Directory.Packages.props",
+          "**/packages.lock.json"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RESTORE_ISOLATION_PROOF.json"
+        ]
+      },
+      "risks": [
+        "Locked restore and the package modernization of REC-021 interact; lock files must be regenerated per group instead of being frozen too early.",
+        "Availability of every required package from nuget.org alone must be verified; a package only available on an internal feed would be a dependency question, not a local workaround."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-018",
+      "subject": "Repository structure",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Missing in the baseline root: .config/dotnet-tools.json, artifacts/, benchmarks/, docs/, global.json, NuGet.config, Directory.Build.targets and ViciOne.ServiceBus.slnx. Present instead: ViciOne.ServiceBus.sln. Existing: .devcontainer/, .github/, build/, src/, tests/, tools/, Directory.Build.props, Directory.Packages.props.",
+      "plannedSemanticProof": [
+        "Machine-readable structure inventory with positive and sabotage cases.",
+        "Evaluated ArtifactsPath proving a single output root and the absence of parallel bin/obj locations in source projects.",
+        "The six tools with hard-coded bin/Release access migrated to the canonical paths and proven by execution, not by edit.",
+        "Solution entry point migrated to slnx with a build proof through the new entry point."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          ".config/dotnet-tools.json",
+          "Directory.Build.props",
+          "Directory.Build.targets",
+          "global.json",
+          "NuGet.config",
+          "ViciOne.ServiceBus.slnx",
+          "artifacts/",
+          "benchmarks/",
+          "docs/",
+          "tools/**",
+          ".github/workflows/**"
+        ],
+        "package": [
+          "artifacts/packages"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/STRUCTURE_INVENTORY.json"
+        ]
+      },
+      "risks": [
+        "Switching from sln to slnx changes the entry point for CI, tools and scripts; each consumer must be migrated and proven.",
+        "Only an additionally required functional location, namespace or packaging decision that is not derivable from the decided path set triggers a QUESTION."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "The explicit path set of REC-018 and REQ-CLEAN-005 is decided for this repository and must be implemented completely. A QUESTION is only needed when an additionally required functional location, namespace or packaging decision is not unambiguously derivable from it."
+      }
+    },
+    {
+      "id": "REC-019",
+      "subject": "Root Markdown documentation",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-004",
+        "REQ-CLEAN-005"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-001",
+        "AC-CLEAN-002"
+      ],
+      "baselineObservation": "Baseline root documents: AGENTS.md, COPYRIGHT, LICENSE, MODIFICATIONS.md, NOTICE, NuGet.README.md, README.md, SECURITY.md. Content currency against the retained scope is not yet evaluated.",
+      "plannedSemanticProof": [
+        "Root allowlist gate derived from PO-2026-08-14-04.",
+        "Language gate proving all root Markdown is English.",
+        "Internal link resolution gate.",
+        "Stale-claim scan for removed integrations, obsolete branch, solution, sample and support statements and for the unchanged-full-fork claim.",
+        "AI transparency statement present in the README per the working agreement."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [],
+        "package": [
+          "NuGet.README.md"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/ROOT_DOCUMENT_GATE.json"
+        ]
+      },
+      "risks": [
+        "The exact allowlist of PO-2026-08-14-04 has to be read from DECISIONS.md before the first document edit; a guessed allowlist would silently create a second truth.",
+        "The product repository carries its own AGENTS.md whose relationship to the architecture workspace rules must stay unambiguous."
+      ]
+    },
+    {
+      "id": "REC-020",
+      "subject": "Root CHANGELIST license evidence",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-004"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-001"
+      ],
+      "baselineObservation": "No CHANGELIST.md exists in the baseline; MODIFICATIONS.md exists. Per-file ViciOne change notices are present throughout the inherited sources and are to be replaced by the single generated root CHANGELIST per PO-2026-08-14-01.",
+      "plannedSemanticProof": [
+        "Deterministic generator producing Added, Modified, Deleted and Renamed for every path against the pinned upstream baseline.",
+        "Byte comparison of the checked-in CHANGELIST against a fresh generator run.",
+        "Sabotage cases: wrong baseline binding, missing path, extra path, wrong classification and undetected rename must all be red.",
+        "CHANGELOG.md kept as a separate readable release history that is neither source nor substitute.",
+        "Generate against upstream MassTransit v8.5.10 commit 62ab339afa3bac2e9b3fe1769d0d35d7e44778e9 as the comparison base, naming the ViciOne takeover commit 1c6fe74b as provenance and construction origin."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [
+          "tools/**"
+        ],
+        "package": [
+          "CHANGELIST.md",
+          "CHANGELOG.md",
+          "MODIFICATIONS.md",
+          "NOTICE"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/CHANGELIST_GENERATOR_PROOF.json"
+        ]
+      },
+      "risks": [
+        "No open risk after the lead disposition."
+      ],
+      "leadDisposition": {
+        "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+        "record": "0003-lead-directive",
+        "statement": "The comparison base is the immutable upstream baseline MassTransit v8.5.10, commit 62ab339afa3bac2e9b3fe1769d0d35d7e44778e9, against the final target tree. The ViciOne takeover commit 1c6fe74b is additionally named as provenance and construction origin but does not replace the upstream path difference decided in PO-2026-08-14-01. No QUESTION required."
+      }
+    },
+    {
+      "id": "REC-021",
+      "subject": "Package modernization",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "Central pins exist in Directory.Packages.props. The five named groups are SourceLink and test logger, BenchmarkDotNet, NUnit, Roslyn and SqlClient. The separate Microsoft.SourceLink.GitHub reference is to be dropped because SourceLink ships with the SDK since .NET 8.",
+      "plannedSemanticProof": [
+        "Documented green before-state of the remaining test suite, and the two inherited red Quartz turnout tests solved causally before the first package group.",
+        "Per group only the invalidated restore, compile, test, pack, API or persistence checks, each bound to evidence.",
+        "A real pack run proving repository URL, commit binding, PDBs and reproducible provenance for SourceLink.",
+        "Resolved versions recorded as reproducible resolutions at check time, not as architectural pins."
+      ],
+      "boundaries": {
+        "product": [
+          "src/**"
+        ],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "Directory.Packages.props",
+          "**/packages.lock.json"
+        ],
+        "package": [
+          "artifacts/packages"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/PACKAGE_GROUP_PROOFS/"
+        ]
+      },
+      "risks": [
+        "The named stable lines are resolutions at check time; actual availability may differ at restore time. A line that provably cannot be reconciled with .NET 10 or a retained capability stops only that package group with its own QUESTION, never a blanket keep-with-reason.",
+        "A package group change must not be used to diagnose already red tests; the green before-state is the guard."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-022",
+      "subject": "Complete retained-test census",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The lead recomputation before recovery found 2672 cases with 2361 required, 77 extended, 103 explicit, 130 without a job and 1 platform case. These are diagnostic values, not targets.",
+      "plannedSemanticProof": [
+        "Census regenerated from the final commit through discovery, not from an inherited report.",
+        "Every inherited test mapped to a retained or removed package with a semantic reason.",
+        "Zero unexplained cases; no test disappears silently.",
+        "Cross-check of census counts against the actually executed and reported results."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "tools/ci/**",
+          "build/test-infrastructure/**"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/TEST_CENSUS.json"
+        ]
+      },
+      "risks": [
+        "Inherited inventories such as not-executed-inventory.json and extended-profile-inventory.json are diagnosis, never a completion proof, and must be empty for behavior tests at the end."
+      ]
+    },
+    {
+      "id": "REC-023",
+      "subject": "Amazon SQS long-running tests",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The long consumer case and a further explicit slow consumer case exist in tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests; their assertion strength is not yet evaluated.",
+      "plannedSemanticProof": [
+        "The long consumer proof must actually detect duplicates and visibility renewal, with a negative case that fails when renewal is disabled.",
+        "The slow consumer case regains its substantive assertion or stays visibly blocking; it is never silently made explicit.",
+        "Run against an adequate ephemeral counterpart with a cleanup receipt."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/**"
+        ],
+        "build": [
+          "build/test-infrastructure/**",
+          "tools/ci/**"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/SQS_BEHAVIOR_PROOF.json"
+        ]
+      },
+      "risks": [
+        "Requires a genuinely representative SQS counterpart. Whether a local emulator reproduces visibility renewal faithfully has to be proven; if it does not and no real AWS access exists, this row becomes BLOCKED with a QUESTION.",
+        "Measured: no AWS credentials, no AWS CLI and no AWS configuration on this host."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-024",
+      "subject": "Quartz explicit tests",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "IN_PROGRESS",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "Six inherited explicit cases exist in tests/ViciOne.ServiceBus.QuartzIntegration.Tests; additionally REQ-CLEAN-006 names two inherited red Quartz turnout tests that must be solved before the first package group.",
+      "plannedSemanticProof": [
+        "Each of the six cases made deterministic and moved into the required category without weakening cases or time limits.",
+        "Proof that no external service is required.",
+        "Coverage evidence for one-off and recurring schedules, cancellation, pause, resume, cron, time zones, misfire handling, configurable persistence and clustering.",
+        "The two red turnout tests solved causally with a named first failing fact before any package update."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/**"
+        ],
+        "build": [
+          "build/test-infrastructure/extended-profile-inventory.json",
+          "build/test-infrastructure/not-executed-inventory.json"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/QUARTZ_PROOF.json"
+        ]
+      },
+      "risks": [
+        "The remaining gap of this row is the six inherited Explicit cases."
+      ],
+      "progress": {
+        "solvedAndProven": [
+          "When_processing_a_lot_of_saga_instances: duplicate saga message specification for the message type Stop removed by consuming the scheduled message through the schedule itself.",
+          "Submitting_a_job_to_turnout_that_is_abandoned_and_retried: the suspect path is now proven end to end with test local receive suppression, a held suspect fault and a deterministic reset of the Quartz test clock. Six of six green.",
+          "Three mandatory sabotages are red for their own reason: injection disabled, only one endpoint suppressed, SuspectJobRetryCount ineffective.",
+          "Adversarial probe Submitting_a_job_whose_previous_attempt_reports_late is green with proven delivery of all three late terminal messages while the retry attempt is still running.",
+          "Submitting_a_job_to_turnout_that_is_abandoned: the null retry case now proves the real suspect path with the same receive suppression, no Task.Delay synchronisation, no ignored boolean results and no Flaky marker. Six of six green in three repeated runs; both turnout siblings together twelve of twelve.",
+          "Three sabotages red over the whole fixture: suppression disabled, only one endpoint suppressed, SuspectJobRetryCount = 1."
+        ],
+        "open": "The six inherited Explicit cases are still not deterministic and not in the required category, so the canonical Quartz category gate stays red. No behaviour test fails.",
+        "counters": {
+          "inherited": "93 total, 87 executed, 84 passed, 3 failed, 6 explicit",
+          "now": "96 total, 90 executed, 90 passed, 0 failed, 6 explicit"
+        },
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-suspect/SUSPECT_PROOF.json",
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-green/quartz.json",
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-abandoned/NULL_RETRY_SUSPECT_PROOF.json"
+        ]
+      }
+    },
+    {
+      "id": "REC-025",
+      "subject": "EF Core and SQL test path",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "tools/ci/run_broker_category.py exists as the canonical runner; build/test-infrastructure/compose.yaml and images.lock.json provide the pinned fixture.",
+      "plannedSemanticProof": [
+        "Only the canonical runner with --broker mssql and --broker postgres, with the run-scoped fail-closed fixture.",
+        "Configuration sabotage: without the run-scoped contract the tests must abort before any connection, with no localhost, default port, default password or admin fallback.",
+        "Runner receipt bound to the current commit.",
+        "Old 155/159 or claimed 942-failure prose is explicitly not accepted as current evidence."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/**",
+          "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/**",
+          "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/**",
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/**"
+        ],
+        "build": [
+          "tools/ci/run_broker_category.py",
+          "build/test-infrastructure/**"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/BROKER_RUN_RECEIPTS/"
+        ]
+      },
+      "risks": [
+        "Requires a working container runtime on this machine. Availability must be established early, because without it this row and the whole freeze stay open.",
+        "TLP-005 requires run-unique compose ownership; until that is proven sabotage-proof, broker runs are serialized explicitly."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-026",
+      "subject": "Azure Service Bus and Event Hubs proof",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests and tests/ViciOne.ServiceBus.EventHubIntegration.Tests exist; the 153 known case mappings come from earlier work and count as diagnosis only.",
+      "plannedSemanticProof": [
+        "Per-case profile matrix separating emulator-supported fast cases from cases that need real ephemeral Azure resources.",
+        "Real-resource run with a cleanup receipt; missing permission or missing cleanup stays red.",
+        "No case is counted green by inventory."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/**",
+          "src/Transports/ViciOne.ServiceBus.EventHubIntegration/**"
+        ],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/**",
+          "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/**"
+        ],
+        "build": [
+          "build/test-infrastructure/**",
+          "tools/ci/**"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/AZURE_PROFILE_MATRIX.json"
+        ]
+      },
+      "risks": [
+        "Highest freeze risk of the whole package. Real ephemeral Azure resources require a subscription and credentials that are not part of the slice. Without them this row becomes BLOCKED, and REQ-CLEAN-006 explicitly keeps the entire freeze open in that case. A structured QUESTION with options is prepared for that situation.",
+        "Measured: no Azure credentials, no Azure CLI and no Azure configuration on this host. Without an ephemeral real Azure resource this row cannot reach PROVEN and REQ-CLEAN-006 keeps the whole freeze open."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-027",
+      "subject": "Other retained external adapters",
+      "disposition": "RECONSTRUCT",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "ActiveMQ, RabbitMQ, Azure Table, Azure Blob Storage, Amazon S3 and DynamoDB test projects exist; build/test-infrastructure carries pinned ActiveMQ and RabbitMQ images.",
+      "plannedSemanticProof": [
+        "Per adapter the complete relevant test set executed against an adequate ephemeral counterpart or a documented emulator.",
+        "No retained adapter is removed and none is released with NOT_EXECUTED.",
+        "Fixture isolation proof; broker runs serialized until run-unique compose ownership is proven sabotage-proof."
+      ],
+      "boundaries": {
+        "product": [
+          "src/Transports/**",
+          "src/Persistence/**"
+        ],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "build/test-infrastructure/**",
+          "tools/ci/**"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/ADAPTER_RUN_RECEIPTS/"
+        ]
+      },
+      "risks": [
+        "DynamoDB, S3 and Azure Table need adequately representative counterparts. Where only an emulator exists, its representativeness must be argued per behavior, not per adapter."
+      ],
+      "environmentMeasurement": {
+        "record": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json",
+        "summary": "net10 SDK 10.0.302 present, container runtime available through Docker 29.5.2 on Ubuntu 24.04, no Azure and no AWS access on this host, restore currently not isolated from three JFrog sources."
+      }
+    },
+    {
+      "id": "REC-028",
+      "subject": "Benchmark tools",
+      "disposition": "RECONSTRUCT",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "ViciOne.ServiceBus.Benchmark and ViciOne.ServiceBus.BenchmarkConsole currently live under tests/; BenchmarkConsole references ViciOne.ServiceBus.Newtonsoft; a BenchmarkDotNet.Artifacts output directory exists in the working tree.",
+      "plannedSemanticProof": [
+        "Both tools moved to benchmarks/, net10.0-only and non-packable, with a separate build entry point and a compile proof.",
+        "Negative proof that they appear in no regular test count, package or target-device artifact.",
+        "No MediatR comparison and no cases of removed adapters remain.",
+        "Benchmarks are not executed as tests and are not an automatic freeze gate."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/ViciOne.ServiceBus.Benchmark/**",
+          "tests/ViciOne.ServiceBus.BenchmarkConsole/**"
+        ],
+        "build": [
+          "benchmarks/**",
+          "ViciOne.ServiceBus.slnx",
+          ".gitignore"
+        ],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/BENCHMARK_SEPARATION.json"
+        ]
+      },
+      "risks": [
+        "Benchmark sources may contain behavior cases that are meaningful as tests. Those must be moved without semantic loss instead of being dropped with the benchmark."
+      ]
+    },
+    {
+      "id": "REC-029",
+      "subject": "Claimed 5326-line dead/public API removal",
+      "disposition": "DISCARD",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-005",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "Caching, Monitoring and performance, BusActivity and ExpressionCompiler are present as baseline code and stay.",
+      "plannedSemanticProof": [
+        "Target negative diff proving these areas are still present.",
+        "Public API inventory proving no symbol from these areas disappeared.",
+        "Explicit statement that earlier text or compile removal probes do not prove external dispensability."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/Caching/**",
+          "src/ViciOne.ServiceBus/Monitoring/**",
+          "src/ViciOne.ServiceBus/**"
+        ],
+        "tests": [],
+        "build": [],
+        "package": [
+          "public API surface"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/PUBLIC_API_INVENTORY.json"
+        ]
+      },
+      "risks": [
+        "REC-008 legitimately touches the caching area. The negative proof must distinguish the authorized continuation fix from an unauthorized removal."
+      ]
+    },
+    {
+      "id": "REC-030",
+      "subject": "Encryption, remaining obsolete API and EF outbox poison",
+      "disposition": "SEPARATE_FOLLOW_UP",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "EncryptedMessageDataRepository, the remaining CryptoStream API, the remaining obsolete public API and the inherited EF outbox path are baseline code and stay untouched.",
+      "plannedSemanticProof": [
+        "Target negative diff proving F-SB-01, F-SB-02 and F-SB-03 are not implemented here.",
+        "The existing crypto surface is never presented as an A plus mechanism, an approved body encryption or a closing proof of this order.",
+        "Findings carried by reference in the developer report."
+      ],
+      "boundaries": {
+        "product": [
+          "src/ViciOne.ServiceBus/**",
+          "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/**"
+        ],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/FOLLOW_UP_FINDINGS.json"
+        ]
+      },
+      "risks": [
+        "REC-015 removes the Newtonsoft-coupled legacy body encryption. The boundary between that authorized removal and the untouched F-SB-01 surface must be proven per symbol."
+      ]
+    },
+    {
+      "id": "REC-031",
+      "subject": "Old cleanup evidence and results",
+      "disposition": "DISCARD",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-006",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003",
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "The baseline tracks evidence of WP-F2-SERVICEBUS-IDENTITY and WP-F2-SERVICEBUS-CI-BASELINE-03. The aborted branch freeze evidence is not part of the baseline; ignored log files of earlier work packages exist in the working tree and are not touched.",
+      "plannedSemanticProof": [
+        "All new evidence is record-owned, bound to the current commit and free of contradiction.",
+        "Contradiction table for the inherited claims, in particular the TRX values 1632/1597 and 1656/1620 against the claimed 1657/1621.",
+        "No old prose, TRX or report is reused as a current proof."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/**"
+        ]
+      },
+      "risks": [
+        "Inherited evidence trees of earlier accepted work packages stay untouched; only the aborted cleanup evidence is discarded. Deleting accepted evidence would damage a closed proof state."
+      ]
+    },
+    {
+      "id": "REC-032",
+      "subject": "Commit and publication discipline",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-001",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "Measured in phase BASELINE_AT_BRANCH_CREATION, at which point the recovery branch carried no commit of its own. This is a historical phase statement, not the current branch state: since revision 1 the branch carries the evidence commit 547f98f4 and further work-package commits will follow. The old comparison branch stays locally unchanged at e5900afd.",
+      "plannedSemanticProof": [
+        "Repository-wide history scan of the recovery branch for forbidden commit and tag trailers including case variants.",
+        "Commit messages in English and coherent per subject; no mixed product, test and evidence bulk commits.",
+        "Remote state scan proving nothing was pushed before LEAD_ACCEPT.",
+        "Old branch tip unchanged."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [],
+        "build": [],
+        "package": [],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/COMMIT_DISCIPLINE_SCAN.json"
+        ]
+      },
+      "risks": [
+        "The local git configuration may inject templates or hooks; commit content has to be verified after the fact, not assumed."
+      ],
+      "measuredAtPhase": "BASELINE_AT_BRANCH_CREATION"
+    },
+    {
+      "id": "REC-033",
+      "subject": "Gate ladder and one final freeze",
+      "disposition": "REIMPLEMENT_WITH_CORRECTION",
+      "status": "IN_PROGRESS",
+      "requirementIds": [
+        "REQ-CLEAN-006"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-003"
+      ],
+      "baselineObservation": "The repository carries its own gate tooling under tools/ci and tools/identity; the authorized full gate corpus runs exactly once at the implementation freeze.",
+      "plannedSemanticProof": [
+        "Per corrective edit: competing hypotheses, one discriminating observation, then the smallest affected test set.",
+        "Only invalidated groups are re-run between package groups; no full repository gate as a diagnostic loop.",
+        "Exactly one complete run of clean restore, clean build, full behavior test scope, pack, public API inventory, dependency, vulnerability and license scan and policy gate at the freeze.",
+        "Gate chronology recorded so that the causal proof precedes the single closing full gate."
+      ],
+      "boundaries": {
+        "product": [],
+        "tests": [
+          "tests/**"
+        ],
+        "build": [
+          "tools/ci/**",
+          "tools/identity/**"
+        ],
+        "package": [
+          "artifacts/packages"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/freeze/"
+        ]
+      },
+      "risks": [
+        "Inherited gate tooling assumes bin/Release paths and the sln entry point; REC-018 changes both, so the tooling must be migrated before the freeze rather than during it."
+      ],
+      "progress": {
+        "done": "Gate ladder applied for the first block: competing hypotheses and one discriminating observation per red case before the first corrective edit, then the smallest affected test set, then one full category run. No full repository gate was used as a diagnostic loop.",
+        "open": "The authorized full gate corpus still runs exactly once at the implementation freeze.",
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/CAUSAL_ANALYSIS.json"
+        ]
+      }
+    },
+    {
+      "id": "REC-034",
+      "subject": "Public API and external consumers",
+      "disposition": "PRESERVE_BASELINE",
+      "status": "NOT_STARTED",
+      "requirementIds": [
+        "REQ-CLEAN-003",
+        "REQ-CLEAN-005",
+        "REQ-RECOVERY-001"
+      ],
+      "acceptanceCriterionIds": [
+        "AC-CLEAN-002",
+        "AC-RECOVERY-001"
+      ],
+      "baselineObservation": "The baseline public API is the reference. Authorized reductions are exactly the removed adapter closures and LegacyObsolete.",
+      "plannedSemanticProof": [
+        "Public API inventory diff baseline to target, with every difference attributed to an authorized removal.",
+        "For every removal: compiler and symbol graph, conditional compilation, reflection, dependency injection, serializer registration, pack closure and a consumer compile.",
+        "Unproven removals are Keep; a missing layer classifies the item as unproven rather than removable."
+      ],
+      "boundaries": {
+        "product": [
+          "src/**"
+        ],
+        "tests": [],
+        "build": [
+          "tools/ci/api_surface.cs",
+          "tools/ci/compare_api_surface.py"
+        ],
+        "package": [
+          "artifacts/packages"
+        ],
+        "evidence": [
+          "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/PUBLIC_API_INVENTORY.json"
+        ]
+      },
+      "risks": [
+        "Reducing the target frameworks from four to one changes the compiled surface per framework. The API comparison must compare like with like and must not report the intended framework reduction as an unauthorized API removal."
+      ]
+    }
+  ],
+  "crossCuttingRisks": [
+    {
+      "id": "RISK-EXTERNAL-COUNTERPARTS",
+      "affects": [
+        "REC-005",
+        "REC-023",
+        "REC-025",
+        "REC-026",
+        "REC-027"
+      ],
+      "statement": "REQ-CLEAN-006 requires every retained external adapter to run its full behavior scope against a genuinely representative ephemeral counterpart, and keeps the whole freeze open when one is missing. Container runtime, AWS and Azure availability on the execution host is therefore the single largest freeze risk and is measured before the corresponding work blocks start.",
+      "status": "OPEN",
+      "resolution": "Reported as a structured QUESTION only after measured availability."
+    },
+    {
+      "id": "RISK-CHANGELIST-BASELINE",
+      "affects": [
+        "REC-020"
+      ],
+      "statement": "The reference point of the CHANGELIST must be unambiguous between the pinned upstream MassTransit version and the ViciOne takeover baseline, because the identity rename already turned nearly every path into a rename. An ambiguity here is resolved by QUESTION, not by choosing one.",
+      "status": "RESOLVED_BY_LEAD",
+      "resolution": "DIR-RECOVERY-FIRST-BLOCK-001: comparison base is upstream MassTransit v8.5.10 commit 62ab339a against the final target tree; 1c6fe74b is provenance only."
+    },
+    {
+      "id": "RISK-E01-OWNER",
+      "affects": [
+        "REC-018"
+      ],
+      "statement": "The matrix cites E01 as structure owner, but the active architecture index contains only A00 to A14. Structure is therefore derived from REQ-CLEAN-005 and the explicit path list of REC-018; anything not derivable from those is a QUESTION.",
+      "status": "RESOLVED_BY_LEAD",
+      "resolution": "DIR-RECOVERY-FIRST-BLOCK-001: the explicit path set of REC-018 and REQ-CLEAN-005 is decided and complete for this repository."
+    },
+    {
+      "id": "RISK-MATRIX-DIAGNOSTIC-NUMBERS",
+      "affects": [
+        "REC-014",
+        "REC-015",
+        "REC-022",
+        "REC-031"
+      ],
+      "statement": "Several numbers in the matrix describe the aborted branch or an earlier lead measurement, not the baseline. Measured deviations, such as zero tracked TestResults in the baseline and a different Newtonsoft reference split, are reported to the Lead and the fresh measurement governs the work.",
+      "status": "RESOLVED_BY_LEAD",
+      "resolution": "DIR-RECOVERY-FIRST-BLOCK-001: the fresh semantic measurement governs; the differing counts are not a contract conflict."
+    },
+    {
+      "id": "RISK-OBSOLETE-API-VERSUS-SUPPRESSION",
+      "affects": [
+        "REC-007",
+        "REC-013",
+        "REC-030"
+      ],
+      "statement": "Removing the test-wide CS0618 suppression collides with F-SB-02, which keeps the remaining obsolete API in this slice. The only admissible resolution is a locally justified suppression at the affected callsites.",
+      "status": "RESOLVED_BY_LEAD",
+      "resolution": "DIR-RECOVERY-FIRST-BLOCK-001: per-callsite justified and inventoried suppression only."
+    }
+  ],
+  "revision": 4,
+  "revisionHistory": [
+    {
+      "revision": 1,
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json",
+      "sha256": "b10701034dd687bc31a6b92fe3c9cd6c8d389b49a5a025bc2f88b5a230ba97b1",
+      "boundBy": "PROGRESS 0002",
+      "note": "Initial projection, produced before the first product edit. Restored to its bound bytes after the transport rejection."
+    },
+    {
+      "revision": 2,
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/RECOVERY_STATUS.json",
+      "directiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+      "correctsRejection": "TRANSPORT_REJECTION 0004",
+      "note": "Carries the lead dispositions, the phase rule, the first implementation block and the corrected REC-024 disposition. Created at a new versioned path instead of overwriting the bound revision 1."
+    },
+    {
+      "revision": 3,
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0003/RECOVERY_STATUS.json",
+      "sliceRevision": 4,
+      "decision": "PO-2026-08-15-04, option OPT-PO-CLOCK-AND-STALE-PROBE",
+      "note": "Suspect proof green, three mandatory sabotages red for their own reason, adversarial stale attempt probe green. OBS-JOBSERVICE-STALE-SUSPECT-FAULT withdrawn as not proven."
+    },
+    {
+      "revision": 4,
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0004/RECOVERY_STATUS.json",
+      "sliceRevision": 4,
+      "directiveId": "LEAD_DIRECTIVE 0019",
+      "note": "Null retry turnout sibling closed causally with the same receive suppression; three sabotages red over the whole fixture; the AttemptId product fix eabc8b88 reviewed and accepted."
+    }
+  ],
+  "observationPhase": {
+    "phase": "BASELINE_AT_BRANCH_CREATION",
+    "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
+    "rule": "Every baselineObservation in this file states the repository as measured in this phase. A later status update must restate the observation for its own phase and must never re-emit a historical observation as the current branch state."
+  },
+  "recordedObservations": [
+    {
+      "id": "OBS-JOBSERVICE-STALE-SUSPECT-FAULT",
+      "disposition": "WITHDRAWN_NOT_PROVEN",
+      "reason": "Refuted by the lead diagnosis and re-verified here: the second fault belongs to the new RetryAttempt 1 whose status check was immediately due because the test clock was never reset. The earlier record at revisions/0002 stays byte-unchanged and is superseded by this entry.",
+      "evidence": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-suspect/SUSPECT_PROOF.json"
+    },
+    {
+      "id": "OBS-JOBSAGA-LATE-FAULT-NOT-ACCEPTED",
+      "disposition": "RESOLVED_BY_LEAD_PRODUCT_FIX",
+      "statement": "Superseded by the AttemptId generation guard in commit eabc8b88, which Team 1 reviewed independently with PASS.",
+      "evidence": "vicione-architecture/work/teams/team-1-claude/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/development/outbox/0018-progress.md"
+    }
+  ],
+  "revisionPath": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0004/RECOVERY_STATUS.json",
+  "immutabilityRule": "Revision 1 stays byte-unchanged at recovery/RECOVERY_STATUS.json because PROGRESS 0002 bound it. Every correction gets its own immutable path under recovery/revisions/<NNNN>/. The effective projection is the highest revision.",
+  "acceptedContractCorrections": [
+    {
+      "rejection": "TRANSPORT_REJECTION 0004",
+      "finding": "Files already bound by PROGRESS 0002 were changed at the same path.",
+      "correction": "Revision 1 of both files is restored to its bound bytes; corrections now live at recovery/revisions/0002/. Commit 05fd62d3 stays visible in history as the corrected step and is not rewritten."
+    },
+    {
+      "rejection": "TRANSPORT_REJECTION 0004",
+      "finding": "The claim that the turnout fixture was repaired without case loss or duplication contradicts code and TRX.",
+      "correction": "Accepted. The change is reverted and REC-024 is BLOCKED for these two cases."
+    }
+  ]
+}
