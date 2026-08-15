@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.Tests;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -189,8 +190,8 @@ public class ConsumeMetrics_Specs
             await harnessA.Bus.Publish(new PingMessage());
 
             Assert.That(await harnessA.Consumed.Any<PingMessage>(), Is.True);
-            await collectorA.WaitForMeasurementsAsync(1, harnessA.CancellationToken);
-            await sendCollectorA.WaitForMeasurementsAsync(1, harnessA.CancellationToken);
+            await WaitForOwnMeasurement(collectorA, harnessA.CancellationToken, "consume measurement of the first provider");
+            await WaitForOwnMeasurement(sendCollectorA, harnessA.CancellationToken, "send measurement of the first provider");
 
             Assert.Multiple(() =>
             {
@@ -206,8 +207,8 @@ public class ConsumeMetrics_Specs
             await harnessB.Bus.Publish(new PingMessage());
 
             Assert.That(await harnessB.Consumed.Any<PingMessage>(), Is.True);
-            await collectorB.WaitForMeasurementsAsync(1, harnessB.CancellationToken);
-            await sendCollectorB.WaitForMeasurementsAsync(1, harnessB.CancellationToken);
+            await WaitForOwnMeasurement(collectorB, harnessB.CancellationToken, "consume measurement of the second provider");
+            await WaitForOwnMeasurement(sendCollectorB, harnessB.CancellationToken, "send measurement of the second provider");
 
             Assert.Multiple(() =>
             {
@@ -243,6 +244,22 @@ public class ConsumeMetrics_Specs
         await collector.WaitForMeasurementsAsync(2, harness.CancellationToken);
 
         Assert.That(collector.GetMeasurementSnapshot(), Has.Count.EqualTo(2));
+    }
+
+    /// <summary>
+    /// A collector that never sees a measurement means the recording bus wrote into the meter of another provider.
+    /// The cancellation of the harness is reported as that statement instead of as a bare cancelled task.
+    /// </summary>
+    static async Task WaitForOwnMeasurement(MetricCollector<long> collector, CancellationToken cancellationToken, string description)
+    {
+        try
+        {
+            await collector.WaitForMeasurementsAsync(1, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            Assert.Fail($"No {description} was observed through the meter factory of that provider");
+        }
     }
 
     const string TagName = "custom-metric-name";

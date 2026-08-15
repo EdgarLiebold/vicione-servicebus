@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kind": "PRODUCT_CORRECTION_PROOF",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directiveId": "0029-lead-directive",
+  "selectedOptionId": "OPT-PRODUCT-SLICE-INSTRUMENTATION-SCOPE",
+  "questionRecord": "0028-question",
+  "commit": "af1665af",
+  "subject": "Metric instrumentation of the dependency injection path is scoped to the service provider that owns it",
+  "cause": {
+    "statement": "The dependency injection path held one process wide instrumentation state.",
+    "evidence": [
+      "A static flag latched on the first provider that configured instrumentation, and the meter together with every instrument belonged to that provider.",
+      "A MetricCollector scoped to the IMeterFactory of a later provider therefore observed nothing.",
+      "Measured before the correction: the three ConsumeMetrics cases passed one by one, and run together the first passed and two failed; run together with another bus fixture two of three failed."
+    ]
+  },
+  "correction": {
+    "newInternalType": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextInstrumentationState.cs",
+    "changedFiles": [
+      "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextInstrumentationExtensions.cs",
+      "src/ViciOne.ServiceBus/LogContext.cs",
+      "src/ViciOne.ServiceBus/Configuration/Configuration/BaseHostConfiguration.cs"
+    ],
+    "mechanism": [
+      "One instrumentation state per IMeterFactory, held in a ConditionalWeakTable keyed by that factory and created through a Lazy with ExecutionAndPublication.",
+      "The state is bound to the log context of its provider in a ConditionalWeakTable keyed by ILogContext.",
+      "A derived log context inherits the binding of the context it was created from, and the send and receive log contexts of a host inherit the binding of the host log context.",
+      "The global fallback state carries only the explicit non dependency injection path."
+    ],
+    "publicApiDelta": "none"
+  },
+  "requiredProof": [
+    {
+      "id": 1,
+      "requirement": "The three existing ConsumeMetrics cases stay required and run green together.",
+      "result": "PASS",
+      "measurement": "filter ConsumeMetrics_Specs: discovered 5, passed 5, failed 0, notExecuted 0, 877 ms"
+    },
+    {
+      "id": 2,
+      "requirement": "The same run is green when another bus fixture has started and disposed its own provider first.",
+      "result": "PASS",
+      "measurement": [
+        "filter Introspection_Specs + ConsumeMetrics_Specs: discovered 13, passed 13, failed 0, notExecuted 0 (this exact combination produced two red before the correction)",
+        "filter ContainerTests: discovered 192, passed 192, failed 0, notExecuted 0, 1 m 15 s"
+      ]
+    },
+    {
+      "id": 3,
+      "requirement": "A focused multi provider case proves own observation, no cross observation of equally named instruments, and that disposing provider A does not disable provider B.",
+      "result": "PASS",
+      "caseIdentity": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_isolate_metrics_between_service_providers"
+    },
+    {
+      "id": 4,
+      "requirement": "A focused multi bus case proves that two buses of one provider use its shared instrumentation state.",
+      "result": "PASS",
+      "caseIdentity": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_collect_metrics_from_multiple_buses_in_the_same_service_provider",
+      "correctionApplied": {
+        "finding": "The case failed with TypeLoadException 'Access is denied: ViciOne.ServiceBus.BusInstance`1[ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs+IMetricsBus]'.",
+        "cause": "BusInstanceBuilder emits the bus instance type into a separate dynamic assembly; a bus interface nested in the fixture is not referenceable from there.",
+        "change": "IMetricsBus moved to namespace scope, which is the declaration form used by the existing multi bus cases.",
+        "afterChange": "green"
+      }
+    },
+    {
+      "id": 5,
+      "requirement": "Existing names, tags and the fault, duration and in progress semantics of the three cases stay assertion strong.",
+      "result": "PASS",
+      "evidence": "No assertion was removed or weakened; the three cases keep their tag, exception type, value, duration and in progress count assertions."
+    },
+    {
+      "id": 6,
+      "requirement": "A static negative proof shows the end of the process wide dependency injection latch and the absence of reset, reflection and ordering helpers.",
+      "result": "PASS",
+      "measurement": [
+        "grep _isConfigured over src: 0 hits",
+        "the only remaining mutable static of the file is _fallbackState, which serves the non dependency injection path; everything else is static readonly",
+        "LogContextInstrumentationState declares no static at all",
+        "grep over tests for reset hooks, for the private field names and for BindingFlags.NonPublic: 0 hits",
+        "ViciOne.ServiceBus grants InternalsVisibleTo to nothing, so the tests can only observe through IMeterFactory and MetricCollector",
+        "no [Order], NonParallelizable or Parallelizable declaration in the metrics fixture"
+      ]
+    }
+  ],
+  "mutationProbe": {
+    "purpose": "Show that the isolation case fails for its own reason when the corrected behaviour is removed.",
+    "mutation": "TryConfigure binds every provider to the first instrumentation state that was created, which is the removed first provider wins behaviour.",
+    "result": "RED",
+    "failedCases": "4 of 5 ConsumeMetrics cases",
+    "message": "No consume measurement of the second provider was observed through the meter factory of that provider",
+    "revert": "git checkout of the product file; grep for the probe symbol returns 0; the combined run is green again with 13 of 13"
+  },
+  "testSideStrengthening": {
+    "file": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs",
+    "change": "The four measurement barriers of the isolation case report the missing measurement by name instead of surfacing a bare cancelled task, so a regression names the assurance it broke."
+  },
+  "residualObservations": [
+    {
+      "id": "OBS-INSTRUMENTATION-FALLBACK-IS-LOAD-BEARING",
+      "statement": "A log context that is never bound resolves through the global fallback state.",
+      "detail": "The non dependency injection path (Bus.Factory.CreateUsingX together with UseInstrumentation) never binds, so all of its recording goes through the fallback by design. In a process that mixes both paths, a dependency injection context that is not reached by one of the three copy paths would also record into that fallback meter.",
+      "measuredEffect": "none in the current test corpus: no test calls UseInstrumentation, so the fallback state stays null and an unbound context records nothing rather than into a foreign meter.",
+      "classification": "OBSERVATION_FOR_LEAD"
+    },
+    {
+      "id": "OBS-INSTRUMENTATION-UNPROVEN-BINDINGS",
+      "statement": "Three instrumentation call sites cannot be proven bound by static analysis.",
+      "detail": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/BusOutboxDeliveryService.cs:264 starts the outbox delivery instrument from a BackgroundService that never calls SetCurrentIfNull.",
+        "src/Persistence/ViciOne.ServiceBus.MongoDbIntegration/MongoDbIntegration/BusOutboxDeliveryService.cs:269 has the same shape.",
+        "src/ViciOne.ServiceBus/Transports/Components/KillSwitch/KillSwitch.cs:29 captures LogContext.Current at configuration time and replays it after a restart."
+      ],
+      "detectability": "These paths are not covered by the required proof of directive 0029 and none of them is covered by an existing metric assertion.",
+      "classification": "OBSERVATION_FOR_LEAD"
+    },
+    {
+      "id": "OBS-INSTRUMENTATION-REBIND-LAST-WRITER",
+      "statement": "Binding a log context replaces an earlier binding of the same instance.",
+      "detail": "If two providers are configured on one asynchronous flow and reuse the same LogContext.Current instance, the second binding replaces the first. The already derived send and receive log contexts are separate instances and keep their own binding, which is why the isolation case is green.",
+      "classification": "OBSERVATION_FOR_LEAD"
+    }
+  ]
+}
