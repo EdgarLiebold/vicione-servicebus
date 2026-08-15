@@ -6,7 +6,9 @@ namespace ViciOne.ServiceBus.Logging
     using System.Diagnostics;
     using System.Diagnostics.Metrics;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading;
     using Courier.Contracts;
     using Metadata;
     using Microsoft.Extensions.DependencyInjection;
@@ -19,50 +21,31 @@ namespace ViciOne.ServiceBus.Logging
     public static class LogContextInstrumentationExtensions
     {
         static readonly ConcurrentDictionary<string, string> _labelCache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
-
-        static bool _isConfigured;
-        static Counter<long> _receiveTotal;
-        static Counter<long> _receiveFaultTotal;
-        static Counter<long> _receiveInProgress;
-        static Counter<long> _consumeTotal;
-        static Counter<long> _consumeFaultTotal;
-        static Counter<long> _consumeRetryTotal;
-        static Counter<long> _sagaTotal;
-        static Counter<long> _sagaFaultTotal;
-        static Counter<long> _sendTotal;
-        static Counter<long> _sendFaultTotal;
-        static Counter<long> _executeTotal;
-        static Counter<long> _executeFaultTotal;
-        static Counter<long> _compensateTotal;
-        static Counter<long> _compensateFaultTotal;
-        static Counter<long> _consumerInProgress;
-        static Counter<long> _handlerTotal;
-        static Counter<long> _handlerFaultTotal;
-        static Counter<long> _handlerInProgress;
-        static Counter<long> _sagaInProgress;
-        static Counter<long> _executeInProgress;
-        static Counter<long> _compensateInProgress;
-        static Counter<long> _outboxSendTotal;
-        static Counter<long> _outboxSendFaultTotal;
-        static Counter<long> _outboxDeliveryTotal;
-        static Counter<long> _outboxDeliveryFaultTotal;
-        static Histogram<double> _receiveDuration;
-        static Histogram<double> _consumeDuration;
-        static Histogram<double> _handlerDuration;
-        static Histogram<double> _sagaDuration;
-        static Histogram<double> _deliveryDuration;
-        static Histogram<double> _executeDuration;
-        static Histogram<double> _compensateDuration;
+        static readonly ConditionalWeakTable<ILogContext, LogContextInstrumentationState> _logContextStates =
+            new ConditionalWeakTable<ILogContext, LogContextInstrumentationState>();
+        // IMeterFactory is scoped to one DI service graph. Keying by the factory lets all buses in that graph
+        // share their instruments without coupling independent hosts or keeping disposed providers alive.
+        static readonly ConditionalWeakTable<IMeterFactory, Lazy<LogContextInstrumentationState>> _meterFactoryStates =
+            new ConditionalWeakTable<IMeterFactory, Lazy<LogContextInstrumentationState>>();
+        static readonly object _bindingLock = new object();
+        static readonly object _fallbackLock = new object();
 
         static readonly char[] _delimiters = { '<', '>' };
 
-        static Meter _meter;
-        static InstrumentationOptions _options;
+        // The fallback exists only for the explicit non-DI UseInstrumentation API.
+        static LogContextInstrumentationState _fallbackState;
 
         public static StartedInstrument? StartReceiveInstrument(this ILogContext logContext, ReceiveContext context)
         {
-            if (!_isConfigured || !_receiveTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.ReceiveTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _receiveTotal = instrumentation.ReceiveTotal;
+            var _receiveFaultTotal = instrumentation.ReceiveFaultTotal;
+            var _receiveInProgress = instrumentation.ReceiveInProgress;
+            var _receiveDuration = instrumentation.ReceiveDuration;
 
             var tagList = new TagList
             {
@@ -90,8 +73,15 @@ namespace ViciOne.ServiceBus.Logging
             Stopwatch stopwatch)
             where TMessage : class
         {
-            if (!_isConfigured || !_handlerTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.HandlerTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _handlerTotal = instrumentation.HandlerTotal;
+            var _handlerFaultTotal = instrumentation.HandlerFaultTotal;
+            var _handlerInProgress = instrumentation.HandlerInProgress;
+            var _handlerDuration = instrumentation.HandlerDuration;
 
             var messageTypeLabel = GetMessageTypeLabel<TMessage>();
             var tagList = new TagList
@@ -122,8 +112,15 @@ namespace ViciOne.ServiceBus.Logging
             where T : class
             where TSaga : class, ISaga
         {
-            if (!_isConfigured || !_sagaTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.SagaTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _sagaTotal = instrumentation.SagaTotal;
+            var _sagaFaultTotal = instrumentation.SagaFaultTotal;
+            var _sagaInProgress = instrumentation.SagaInProgress;
+            var _sagaDuration = instrumentation.SagaDuration;
 
             var messageTypeLabel = GetMessageTypeLabel<T>();
             var tagList = new TagList
@@ -154,8 +151,15 @@ namespace ViciOne.ServiceBus.Logging
             where T : class
             where TSaga : class, SagaStateMachineInstance
         {
-            if (!_isConfigured || !_sagaTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.SagaTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _sagaTotal = instrumentation.SagaTotal;
+            var _sagaFaultTotal = instrumentation.SagaFaultTotal;
+            var _sagaInProgress = instrumentation.SagaInProgress;
+            var _sagaDuration = instrumentation.SagaDuration;
 
             var messageTypeLabel = GetMessageTypeLabel<T>();
             var tagList = new TagList
@@ -185,8 +189,17 @@ namespace ViciOne.ServiceBus.Logging
         public static StartedInstrument? StartConsumeInstrument<TConsumer, T>(this ILogContext logContext, ConsumeContext<T> context, Stopwatch timer)
             where T : class
         {
-            if (!_isConfigured || !_consumeTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.ConsumeTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _consumeTotal = instrumentation.ConsumeTotal;
+            var _consumeFaultTotal = instrumentation.ConsumeFaultTotal;
+            var _consumeRetryTotal = instrumentation.ConsumeRetryTotal;
+            var _consumerInProgress = instrumentation.ConsumerInProgress;
+            var _consumeDuration = instrumentation.ConsumeDuration;
+            var _deliveryDuration = instrumentation.DeliveryDuration;
 
             var messageTypeLabel = GetMessageTypeLabel<T>();
             var tagList = new TagList
@@ -231,8 +244,15 @@ namespace ViciOne.ServiceBus.Logging
             where TActivity : class, IExecuteActivity<TArguments>
             where TArguments : class
         {
-            if (!_isConfigured || !_executeTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.ExecuteTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _executeTotal = instrumentation.ExecuteTotal;
+            var _executeFaultTotal = instrumentation.ExecuteFaultTotal;
+            var _executeInProgress = instrumentation.ExecuteInProgress;
+            var _executeDuration = instrumentation.ExecuteDuration;
 
             var tagList = new TagList
             {
@@ -263,8 +283,15 @@ namespace ViciOne.ServiceBus.Logging
             where TActivity : class, ICompensateActivity<TLog>
             where TLog : class
         {
-            if (!_isConfigured || !_compensateTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.CompensateTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _compensateTotal = instrumentation.CompensateTotal;
+            var _compensateFaultTotal = instrumentation.CompensateFaultTotal;
+            var _compensateInProgress = instrumentation.CompensateInProgress;
+            var _compensateDuration = instrumentation.CompensateDuration;
 
             var tagList = new TagList
             {
@@ -293,8 +320,13 @@ namespace ViciOne.ServiceBus.Logging
         public static StartedInstrument? StartSendInstrument<T>(this ILogContext logContext, SendTransportContext transportContext, SendContext<T> context)
             where T : class
         {
-            if (!_isConfigured || !_sendTotal.Enabled)
+            var instrumentation = GetInstrumentation(transportContext.LogContext);
+            if (instrumentation == null || !instrumentation.SendTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _sendTotal = instrumentation.SendTotal;
+            var _sendFaultTotal = instrumentation.SendFaultTotal;
 
             var tagList = new TagList
             {
@@ -317,8 +349,13 @@ namespace ViciOne.ServiceBus.Logging
         public static StartedInstrument? StartOutboxSendInstrument<T>(this ILogContext logContext, SendContext<T> context)
             where T : class
         {
-            if (!_isConfigured || !_outboxSendTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.OutboxSendTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _outboxSendTotal = instrumentation.OutboxSendTotal;
+            var _outboxSendFaultTotal = instrumentation.OutboxSendFaultTotal;
 
             var tagList = new TagList
             {
@@ -340,8 +377,13 @@ namespace ViciOne.ServiceBus.Logging
 
         public static StartedInstrument? StartOutboxDeliveryInstrument(this ILogContext logContext, OutboxMessageContext context)
         {
-            if (!_isConfigured || !_outboxDeliveryTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.OutboxDeliveryTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _outboxDeliveryTotal = instrumentation.OutboxDeliveryTotal;
+            var _outboxDeliveryFaultTotal = instrumentation.OutboxDeliveryFaultTotal;
 
             var tagList = new TagList
             {
@@ -361,8 +403,13 @@ namespace ViciOne.ServiceBus.Logging
         public static StartedInstrument? StartOutboxDeliveryInstrument(this ILogContext logContext,
             OutboxConsumeContext consumeContext, OutboxMessageContext context)
         {
-            if (!_isConfigured || !_outboxDeliveryTotal.Enabled)
+            var instrumentation = GetInstrumentation(logContext);
+            if (instrumentation == null || !instrumentation.OutboxDeliveryTotal.Enabled)
                 return null;
+
+            var _options = instrumentation.Options;
+            var _outboxDeliveryTotal = instrumentation.OutboxDeliveryTotal;
+            var _outboxDeliveryFaultTotal = instrumentation.OutboxDeliveryFaultTotal;
 
             var tagList = new TagList
             {
@@ -383,102 +430,73 @@ namespace ViciOne.ServiceBus.Logging
 
         public static void TryConfigure(IServiceProvider provider)
         {
-            if (_isConfigured)
-                return;
-
             var instrumentationOptions = provider.GetRequiredService<IOptions<InstrumentationOptions>>().Value;
         #if NET8_0_OR_GREATER
             var meterFactory = provider.GetService<IMeterFactory>();
             if (meterFactory == null)
             {
                 TryConfigure(instrumentationOptions);
+                BindInstrumentation(LogContext.Current, Volatile.Read(ref _fallbackState));
                 return;
             }
 
-            var meter = meterFactory.Create(new MeterOptions(InstrumentationOptions.MeterName) { Version = HostMetadataCache.Host.ViciOneServiceBusVersion });
-            Configure(meter, instrumentationOptions);
+            var lazyState = _meterFactoryStates.GetValue(meterFactory, key =>
+                new Lazy<LogContextInstrumentationState>(() =>
+                {
+                    var meter = key.Create(new MeterOptions(InstrumentationOptions.MeterName)
+                    {
+                        Version = HostMetadataCache.Host.ViciOneServiceBusVersion
+                    });
+
+                    return new LogContextInstrumentationState(meter, instrumentationOptions);
+                }, LazyThreadSafetyMode.ExecutionAndPublication));
+
+            BindInstrumentation(LogContext.Current, lazyState.Value);
         #else
             TryConfigure(instrumentationOptions);
+            BindInstrumentation(LogContext.Current, Volatile.Read(ref _fallbackState));
         #endif
         }
 
         public static void TryConfigure(InstrumentationOptions options)
         {
-            if (_isConfigured)
+            if (Volatile.Read(ref _fallbackState) != null)
                 return;
 
-            // We have to dispose manually created meter to flush instruments, some day...
-            Configure(new Meter(InstrumentationOptions.MeterName, HostMetadataCache.Host.ViciOneServiceBusVersion), options);
+            lock (_fallbackLock)
+            {
+                if (_fallbackState != null)
+                    return;
+
+                var meter = new Meter(InstrumentationOptions.MeterName, HostMetadataCache.Host.ViciOneServiceBusVersion);
+                Volatile.Write(ref _fallbackState, new LogContextInstrumentationState(meter, options));
+            }
         }
 
-        static void Configure(Meter meter, InstrumentationOptions options)
+        internal static void CopyInstrumentation(ILogContext source, ILogContext destination)
         {
-            _options = options;
-            _meter = meter;
+            if (source != null && destination != null && _logContextStates.TryGetValue(source, out var instrumentation))
+                BindInstrumentation(destination, instrumentation);
+        }
 
-            // Counters
+        static void BindInstrumentation(ILogContext logContext, LogContextInstrumentationState instrumentation)
+        {
+            if (logContext == null || instrumentation == null)
+                return;
 
-            _receiveTotal = _meter.CreateCounter<long>(options.ReceiveTotal, "ea", "Number of messages received");
-            _receiveFaultTotal = _meter.CreateCounter<long>(options.ReceiveFaultTotal, "ea", "Number of messages receive faults");
+            lock (_bindingLock)
+            {
+                _logContextStates.Remove(logContext);
+                _logContextStates.Add(logContext, instrumentation);
+            }
+        }
 
-            _consumeTotal = _meter.CreateCounter<long>(options.ConsumeTotal, "ea", "Number of messages consumed");
-            _consumeFaultTotal = _meter.CreateCounter<long>(options.ConsumeFaultTotal, "ea", "Number of message consume faults");
-            _consumeRetryTotal = _meter.CreateCounter<long>(options.ConsumeRetryTotal, "ea", "Number of message consume retries");
+        static LogContextInstrumentationState GetInstrumentation(ILogContext logContext)
+        {
+            if (logContext != null && _logContextStates.TryGetValue(logContext, out var instrumentation))
+                return instrumentation;
 
-            _sagaTotal = _meter.CreateCounter<long>(options.SagaTotal, "ea", "Number of sagas executed");
-            _sagaFaultTotal = _meter.CreateCounter<long>(options.SagaFaultTotal, "ea", "Number of sagas faults");
-
-            _handlerTotal = _meter.CreateCounter<long>(options.HandlerTotal, "ea", "Number of messages handled");
-            _handlerFaultTotal = _meter.CreateCounter<long>(options.HandlerFaultTotal, "ea", "Number of message handler faults");
-
-            _sendTotal = _meter.CreateCounter<long>(options.SendTotal, "ea", "Number of messages sent");
-            _sendFaultTotal = _meter.CreateCounter<long>(options.SendFaultTotal, "ea", "Number of message send faults");
-
-            _outboxSendTotal = _meter.CreateCounter<long>(options.OutboxSendTotal, "ea", "Number of messages sent to outbox");
-            _outboxSendFaultTotal = _meter.CreateCounter<long>(options.OutboxSendFaultTotal, "ea", "Number of message send to outbox faults");
-
-            _executeTotal = _meter.CreateCounter<long>(options.ActivityExecuteTotal, "ea", "Number of activities executed");
-            _executeFaultTotal = _meter.CreateCounter<long>(options.ActivityExecuteFaultTotal, "ea", "Number of activity execution faults");
-
-            _compensateTotal = _meter.CreateCounter<long>(options.ActivityCompensateTotal, "ea", "Number of activities compensated");
-            _compensateFaultTotal = _meter.CreateCounter<long>(options.ActivityCompensateFailureTotal, "ea", "Number of activity compensation failures");
-
-            _outboxDeliveryTotal = _meter.CreateCounter<long>(options.OutboxDeliveryTotal, "ea", "Number of outbox delivery messages executed");
-            _outboxDeliveryFaultTotal = _meter.CreateCounter<long>(options.OutboxDeliveryFaultTotal, "ea", "Number of outbox delivery message failures");
-
-            // Gauges
-
-            _receiveInProgress = _meter.CreateCounter<long>(options.ReceiveInProgress, "ea", "Number of messages being received");
-
-            _handlerInProgress = _meter.CreateCounter<long>(options.HandlerInProgress, "ea", "Number of handlers in progress");
-
-            _consumerInProgress = _meter.CreateCounter<long>(options.ConsumerInProgress, "ea", "Number of consumers in progress");
-
-            _sagaInProgress = _meter.CreateCounter<long>(options.SagaInProgress, "ea", "Number of sagas in progress");
-
-            _executeInProgress = _meter.CreateCounter<long>(options.ExecuteInProgress, "ea", "Number of activity executions in progress");
-
-            _compensateInProgress = _meter.CreateCounter<long>(options.CompensateInProgress, "ea", "Number of activity compensations in progress");
-
-            // Histograms
-
-            _receiveDuration = _meter.CreateHistogram<double>(options.ReceiveDuration, "ms", "Elapsed time spent receiving a message, in millis");
-
-            _consumeDuration = _meter.CreateHistogram<double>(options.ConsumeDuration, "ms", "Elapsed time spent consuming a message, in millis");
-
-            _sagaDuration = _meter.CreateHistogram<double>(options.SagaDuration, "ms", "Elapsed time spent saga processing a message, in millis");
-
-            _handlerDuration = _meter.CreateHistogram<double>(options.HandlerDuration, "ms", "Elapsed time spent handler processing a message, in millis");
-
-            _deliveryDuration = _meter.CreateHistogram<double>(options.DeliveryDuration, "ms",
-                "Elapsed time between when the message was sent and when it was consumed, in millis.");
-
-            _executeDuration = _meter.CreateHistogram<double>(options.ActivityExecuteDuration, "ms", "Elapsed time spent executing an activity, in millis");
-
-            _compensateDuration = _meter.CreateHistogram<double>(options.ActivityCompensateDuration, "ms",
-                "Elapsed time spent compensating an activity, in millis");
-
-            _isConfigured = true;
+            return Volatile.Read(ref _fallbackState);
         }
 
         static void AddCustomTags(ref TagList tags, PipeContext pipeContext)

@@ -159,6 +159,92 @@ public class ConsumeMetrics_Specs
             Assert.That(metric.Value, Is.GreaterThan(0));
     }
 
+    [Test]
+    public async Task Should_isolate_metrics_between_service_providers()
+    {
+        var providerA = CreateServiceCollection()
+            .AddViciOneServiceBusTestHarness(configurator => configurator.AddHandler(async (PingMessage _) => { }))
+            .BuildServiceProvider();
+        await using var providerB = CreateServiceCollection()
+            .AddViciOneServiceBusTestHarness(configurator => configurator.AddHandler(async (PingMessage _) => { }))
+            .BuildServiceProvider();
+
+        var providerADisposed = false;
+        try
+        {
+            var harnessA = providerA.GetTestHarness();
+            var harnessB = providerB.GetTestHarness();
+
+            await harnessA.Start();
+            await harnessB.Start();
+
+            var optionsA = providerA.GetRequiredService<IOptions<InstrumentationOptions>>().Value;
+            var optionsB = providerB.GetRequiredService<IOptions<InstrumentationOptions>>().Value;
+
+            using MetricCollector<long> collectorA = GetMetricCollector<long>(providerA, optionsA.ConsumeTotal);
+            using MetricCollector<long> collectorB = GetMetricCollector<long>(providerB, optionsB.ConsumeTotal);
+            using MetricCollector<long> sendCollectorA = GetMetricCollector<long>(providerA, optionsA.SendTotal);
+            using MetricCollector<long> sendCollectorB = GetMetricCollector<long>(providerB, optionsB.SendTotal);
+
+            await harnessA.Bus.Publish(new PingMessage());
+
+            Assert.That(await harnessA.Consumed.Any<PingMessage>(), Is.True);
+            await collectorA.WaitForMeasurementsAsync(1, harnessA.CancellationToken);
+            await sendCollectorA.WaitForMeasurementsAsync(1, harnessA.CancellationToken);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(collectorA.GetMeasurementSnapshot(), Has.Count.EqualTo(1));
+                Assert.That(collectorB.GetMeasurementSnapshot(), Is.Empty);
+                Assert.That(sendCollectorA.GetMeasurementSnapshot(), Has.Count.EqualTo(1));
+                Assert.That(sendCollectorB.GetMeasurementSnapshot(), Is.Empty);
+            });
+
+            await providerA.DisposeAsync();
+            providerADisposed = true;
+
+            await harnessB.Bus.Publish(new PingMessage());
+
+            Assert.That(await harnessB.Consumed.Any<PingMessage>(), Is.True);
+            await collectorB.WaitForMeasurementsAsync(1, harnessB.CancellationToken);
+            await sendCollectorB.WaitForMeasurementsAsync(1, harnessB.CancellationToken);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(collectorB.GetMeasurementSnapshot(), Has.Count.EqualTo(1));
+                Assert.That(sendCollectorB.GetMeasurementSnapshot(), Has.Count.EqualTo(1));
+            });
+        }
+        finally
+        {
+            if (!providerADisposed)
+                await providerA.DisposeAsync();
+        }
+    }
+
+    [Test]
+    public async Task Should_collect_metrics_from_multiple_buses_in_the_same_service_provider()
+    {
+        await using var provider = CreateServiceCollection()
+            .AddViciOneServiceBusTestHarness()
+            .AddViciOneServiceBus<IMetricsBus>(configurator => configurator.UsingInMemory((_, bus) =>
+                bus.Host(new Uri("loopback://localhost/metrics-secondary"))))
+            .BuildServiceProvider(true);
+
+        var harness = provider.GetTestHarness();
+        await harness.Start();
+
+        var instrumentationOptions = provider.GetRequiredService<IOptions<InstrumentationOptions>>().Value;
+        using MetricCollector<long> collector = GetMetricCollector<long>(provider, instrumentationOptions.SendTotal);
+
+        await harness.Bus.Publish(new PingMessage());
+        await provider.GetRequiredService<IMetricsBus>().Publish(new PingMessage());
+
+        await collector.WaitForMeasurementsAsync(2, harness.CancellationToken);
+
+        Assert.That(collector.GetMeasurementSnapshot(), Has.Count.EqualTo(2));
+    }
+
     const string TagName = "custom-metric-name";
 
 
@@ -214,4 +300,14 @@ public class ConsumeMetrics_Specs
         var meterFactory = provider.GetRequiredService<IMeterFactory>();
         return new MetricCollector<T>(meterFactory, InstrumentationOptions.MeterName, instrumentation);
     }
+}
+
+
+/// <summary>
+/// A second bus of the same service provider. Declared at namespace scope because the emitted bus instance type
+/// derives from BusInstance&lt;TBus&gt; in another assembly, which cannot reference a bus interface nested in a fixture.
+/// </summary>
+public interface IMetricsBus :
+    IBus
+{
 }

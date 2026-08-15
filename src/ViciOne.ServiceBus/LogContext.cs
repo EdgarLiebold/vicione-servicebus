@@ -53,8 +53,10 @@ namespace ViciOne.ServiceBus
         public static ILogContext CreateLogContext(string categoryName)
         {
             var current = Current ??= CreateDefaultLogContext();
+            var created = current.CreateLogContext(categoryName);
 
-            return current.CreateLogContext(categoryName);
+            LogContextInstrumentationExtensions.CopyInstrumentation(current, created);
+            return created;
         }
 
         /// <summary>
@@ -64,8 +66,6 @@ namespace ViciOne.ServiceBus
         /// <param name="provider"></param>
         public static void ConfigureCurrentLogContextIfNull(IServiceProvider provider)
         {
-            LogContextInstrumentationExtensions.TryConfigure(provider);
-
             if (Current == null || Current.Logger is NullLogger)
             {
                 var loggerFactory = provider.GetService<ILoggerFactory>();
@@ -74,6 +74,8 @@ namespace ViciOne.ServiceBus
                 else if (Current == null)
                     ConfigureCurrentLogContext();
             }
+
+            LogContextInstrumentationExtensions.TryConfigure(provider);
         }
 
         public static void SetCurrentIfNull(ILogContext context)

@@ -58,6 +58,9 @@ namespace ViciOne.ServiceBus.Configuration
 
                 SendLogContext = value?.CreateLogContext(LogCategoryName.Transport.Send);
                 ReceiveLogContext = value?.CreateLogContext(LogCategoryName.Transport.Receive);
+
+                LogContextInstrumentationExtensions.CopyInstrumentation(value, SendLogContext);
+                LogContextInstrumentationExtensions.CopyInstrumentation(value, ReceiveLogContext);
             }
         }
 
