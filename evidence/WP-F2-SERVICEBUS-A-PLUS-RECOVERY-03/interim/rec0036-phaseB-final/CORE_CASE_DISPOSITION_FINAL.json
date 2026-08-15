@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_CASE_DISPOSITION_FINAL",
+  "revision": 3,
+  "appendOnlyPredecessor": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseB/CORE_EXPLICIT_DISPOSITION_MATRIX.json",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directiveId": "LEAD_DIRECTIVE 0036",
+  "project": "tests/ViciOne.ServiceBus.Tests",
+  "howTheIdentitiesWereObtained": {
+    "baselineCommit": "1e535529",
+    "method": "The identities are not reconstructed from current discovery numbers. The last checkout that still carried all thirty three [Explicit] declarations was built in a separate worktree and its fully qualified cases were discovered there; every declaration was then expanded against that discovery.",
+    "discoveredAtBaseline": 1912,
+    "explicitDeclarations": 33,
+    "identitiesFromExplicitDeclarations": 42,
+    "identitiesFromPlatformGuard": 1,
+    "totalIdentities": 43
+  },
+  "whyThirtyFiveAndThirtySevenBothAppeared": {
+    "statement": "Both numbers were right about different things, and neither was an estimate.",
+    "resultCount": "1906 discovered minus 1869 executed is 37 not executed results after the removals.",
+    "nameCount": "The runner keys a case as the last segment of its class name plus the method name and deduplicates, which yielded 35 names.",
+    "theTwoThatCollapse": [
+      "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+      "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"
+    ],
+    "explanation": "A fixture named Specifying_a_rate_limit exists in both the Middleware and the Pipeline namespace. Their last class segment is identical, so two of the four identities collapse into two names. The same effect turns the original 43 identities into the 41 entries of the not executed inventory."
+  },
+  "dispositionCounts": {
+    "REQUIRED_BEHAVIOUR_TEST": 23,
+    "BENCHMARK_TARGET": 5,
+    "PLATFORM_GUARDED_BEHAVIOUR_TEST": 1,
+    "REQUIRED_BEHAVIOUR_TEST_RENAMED": 3,
+    "REDUNDANT_COVERAGE": 4,
+    "REMOVED_WITH_DECIDED_COMPONENT": 7
+  },
+  "unclassified": [],
+  "renamedTargetsMissing": [],
+  "rows": [
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Configuring_a_recurring_job_consumer.Should_support_multiple_jobs_of_the_same_type_with_different_names",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Configuring_a_recurring_job_consumer.Should_support_multiple_jobs_of_the_same_type_with_different_names"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_add_custom_tag_to_consume_metrics",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_add_custom_tag_to_consume_metrics"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_produce_consume_exception_metrics",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_produce_consume_exception_metrics"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_produce_consume_metrics",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.ConsumeMetrics_Specs.Should_be_able_to_produce_consume_metrics"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.ContainerTests.When_an_activity_is_redelivered.Should_not_copy_redelivery_header_to_next_activity",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.ContainerTests.When_an_activity_is_redelivered.Should_not_copy_redelivery_header_to_next_activity"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.CronExpressionTest.PerformanceTest",
+      "disposition": "BENCHMARK_TARGET",
+      "target": "tests/ViciOne.ServiceBus.BenchmarkConsole/CronExpressionBenchmark.cs :: GetNextValidTimeAfter"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.CronExpressionTest.TestDaylightSaving_QRTZNETZ186",
+      "disposition": "PLATFORM_GUARDED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.CronExpressionTest.TestDaylightSaving_QRTZNETZ186",
+      "note": "Never an [Explicit] case. It carries [Platform(\"WIN\")] at CronExpressionTests.cs:611 and asserts the daylight saving rules of a Windows host, so a run on any other platform reports it as not executed. It is the forty third identity and the only one an [Explicit] scan never sees."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Diagnostics.StatsD_Specs.RunSomeDataIn",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST_RENAMED",
+      "target": "ViciOne.ServiceBus.Tests.Diagnostics.StatsD_Specs.Should_send_one_datagram_per_counter_operation",
+      "targetPresent": true
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Mediator_performance.Request_client",
+      "disposition": "BENCHMARK_TARGET",
+      "target": "tests/ViciOne.ServiceBus.BenchmarkConsole/MediatorThroughputBenchmark.cs :: RequestClient"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Mediator_performance.Send",
+      "disposition": "BENCHMARK_TARGET",
+      "target": "tests/ViciOne.ServiceBus.BenchmarkConsole/MediatorThroughputBenchmark.cs :: Send"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.MessageFlow_Specs.Should_generate_a_graph_of_the_message_flow",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.MessageFlow_Specs.Should_generate_a_graph_of_the_message_flow"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.Layering_retry_components_into_a_set.Should_support_interaction_between_filters",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.Layering_retry_components_into_a_set.Should_support_interaction_between_filters"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_down",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_down"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_up",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_up"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_count_success_and_failure_as_same"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Middleware.When_using_or_canceled_should_not_have_an_unhandled_task_exception.Should_fault_on_ready_faulted",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Middleware.When_using_or_canceled_should_not_have_an_unhandled_task_exception.Should_fault_on_ready_faulted"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.NoLog.An_excessive_fault_storm.Should_not_explode_the_task_library",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST_RENAMED",
+      "target": "ViciOne.ServiceBus.Tests.NoLog.An_excessive_fault_storm.Should_publish_one_fault_for_every_message_in_the_storm",
+      "targetPresent": true
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Pipeline.Connecting_a_consumer_to_the_inbound_pipe.Should_receive_a_message_pipeline_view",
+      "disposition": "REDUNDANT_COVERAGE",
+      "coverage": [
+        "ViciOne.ServiceBus.Tests.Pipeline.Connecting_a_consumer_to_the_inbound_pipe.Should_receive_a_message",
+        "ViciOne.ServiceBus.Tests.Pipeline.Connecting_a_consumer_to_the_inbound_pipe.Should_receive_a_message_via_object"
+      ]
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_count_success_and_failure_as_same"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Probing_the_bus.Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+      "disposition": "REDUNDANT_COVERAGE",
+      "coverage": [
+        "ViciOne.ServiceBus.Tests.Probing_the_bus.Should_extract_receive_endpoint_addresses",
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/EndpointConfiguration_Specs.cs"
+      ]
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Querying_the_send_endpoint_cache_concurrently.Querying_for_two_endpoints_at_the_same_time",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Querying_the_send_endpoint_cache_concurrently.Querying_for_two_endpoints_at_the_same_time"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.When_a_message_is_not_correlated.Should_retry_the_status_message",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.When_a_message_is_not_correlated.Should_retry_the_status_message"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Sending_a_request_to_a_missing_service_that_times_out.Should_timeout_without_exceptions",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Sending_a_request_to_a_missing_service_that_times_out.Should_timeout_without_exceptions"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_that_faults.Should_observe_all_exceptions",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_that_faults.Should_observe_all_exceptions"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_to_a_missing_service_that_times_out.Should_timeout_without_exceptions",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Sending_a_request_using_mediator_to_a_missing_service_that_times_out.Should_timeout_without_exceptions"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.BsonMessageSerializer).Just_how_fast_are_you",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Throughput loop of BsonMessageSerializer, removed together with the decided serializer scope; only the two serializers the product keeps were carried into the benchmark tool."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.EncryptedMessageSerializer).Just_how_fast_are_you",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Throughput loop of EncryptedMessageSerializer, removed together with the decided serializer scope; only the two serializers the product keeps were carried into the benchmark tool."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.EncryptedMessageSerializerV2).Just_how_fast_are_you",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Throughput loop of EncryptedMessageSerializerV2, removed together with the decided serializer scope; only the two serializers the product keeps were carried into the benchmark tool."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.MessagePackMessageSerializer).Just_how_fast_are_you",
+      "disposition": "BENCHMARK_TARGET",
+      "target": "tests/ViciOne.ServiceBus.BenchmarkConsole/SerializationBenchmark.cs :: MessagePack_GetMessageBody"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.NewtonsoftJsonMessageSerializer).Just_how_fast_are_you",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Throughput loop of NewtonsoftJsonMessageSerializer, removed together with the decided serializer scope; only the two serializers the product keeps were carried into the benchmark tool."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.NewtonsoftXmlMessageSerializer).Just_how_fast_are_you",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Throughput loop of NewtonsoftXmlMessageSerializer, removed together with the decided serializer scope; only the two serializers the product keeps were carried into the benchmark tool."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.Serializer_performance(ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer).Just_how_fast_are_you",
+      "disposition": "BENCHMARK_TARGET",
+      "target": "tests/ViciOne.ServiceBus.BenchmarkConsole/SerializationBenchmark.cs :: SystemTextJson_GetMessageBody"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.When_serializing_messages_with_json_dot_net.Serialization_speed",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Stopwatch loop without assertion; removed with the decided Newtonsoft scope instead of being carried into a benchmark."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Serialization.When_serializing_messages_with_json_dot_net.Show_me_the_message",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Diagnostic print of a Newtonsoft serialized message; removed with the decided Newtonsoft scope."
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs.FirstTestName",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST_RENAMED",
+      "target": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs.Should_build_the_configured_endpoint_pipeline",
+      "targetPresent": true
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs.Should_include_concurrent_limit_on_instance",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.SimpleConfiguration_Specs.Should_include_concurrent_limit_on_instance"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Transports.Using_a_hash_topic_pattern.Should_wonderful_display",
+      "disposition": "REDUNDANT_COVERAGE",
+      "coverage": [
+        "ViciOne.ServiceBus.Tests.Transports.Using_a_hash_topic_pattern.Should_match_the_endpoint_binding"
+      ]
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Transports.Using_a_wildcard_topic_pattern.Should_wonderful_display",
+      "disposition": "REDUNDANT_COVERAGE",
+      "coverage": [
+        "ViciOne.ServiceBus.Tests.Transports.Using_a_wildcard_topic_pattern.Should_match_the_endpoint_binding"
+      ]
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.Using_a_batch_consumer.Should_not_deliver_duplicate_messages",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.Using_a_batch_consumer.Should_not_deliver_duplicate_messages"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.When_a_message_has_an_unrecognized_body_format.It_should_publish_a_fault",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.When_a_message_has_an_unrecognized_body_format.It_should_publish_a_fault"
+    },
+    {
+      "identity": "ViciOne.ServiceBus.Tests.When_configuring_the_thread_pool_for_a_high_number_of_consumers.Should_scale_threads_to_meet_demand",
+      "disposition": "REQUIRED_BEHAVIOUR_TEST",
+      "target": "ViciOne.ServiceBus.Tests.When_configuring_the_thread_pool_for_a_high_number_of_consumers.Should_scale_threads_to_meet_demand"
+    }
+  ]
+}

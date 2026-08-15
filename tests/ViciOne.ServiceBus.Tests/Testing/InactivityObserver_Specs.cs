@@ -80,10 +80,103 @@ namespace ViciOne.ServiceBus.Tests.Testing
             Assert.That(observer.InactivityToken.IsCancellationRequested, Is.True);
         }
 
+        [Test]
+        public async Task Should_query_the_source_again_after_every_elapsed_interval()
+        {
+            // The case above drives CheckSourceActivity directly and therefore never enters the interval loop.
+            // This one lets the interval of the product elapse and observes the queries the loop itself makes.
+            using var cancellation = new CancellationTokenSource();
+
+            var observer = new AsyncInactivityObserver(ShortEnoughToElapse, cancellation.Token);
+            var source = new QueryRecordingSource();
+
+            observer.Connected(source);
+
+            Task inactivity = observer.InactivityTask;
+
+            await Reached(source.FirstQuery, "The loop never queried the source after its first interval elapsed");
+
+            // The next query cannot come before another interval has elapsed, so this observation cannot race it.
+            Assert.That(inactivity.IsCompleted, Is.False,
+                "A source that still reports activity must keep the observer waiting after the first interval");
+
+            await Reached(source.SecondQuery, "The loop did not begin another interval after the source reported activity");
+
+            await Reached(inactivity, "The loop did not close once the source reported inactivity");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(observer.InactivityToken.IsCancellationRequested, Is.True);
+                Assert.That(source.QueryCount, Is.EqualTo(2), "The loop must query once per elapsed interval");
+            });
+        }
+
+        /// <summary>
+        /// Waits for an event of the product and reports the missing statement by name. A bare timeout would only
+        /// say that a task was cancelled and never what was not observed.
+        /// </summary>
+        static async Task Reached(Task signal, string missing)
+        {
+            try
+            {
+                await signal.OrTimeout(s: 30);
+            }
+            catch (TimeoutException)
+            {
+                Assert.Fail(missing);
+            }
+        }
+
         /// <summary>
         /// Long enough that the interval of the observer provably cannot elapse while a case runs.
         /// </summary>
         static readonly TimeSpan LongerThanTheCase = TimeSpan.FromMinutes(5);
+
+        /// <summary>
+        /// Short enough that the interval of the product elapses twice within the case, and long enough that the
+        /// observation between two queries cannot race the loop. It is the interval of the product, never a test
+        /// oracle: the case waits for events only.
+        /// </summary>
+        static readonly TimeSpan ShortEnoughToElapse = TimeSpan.FromMilliseconds(500);
+
+
+        /// <summary>
+        /// Reports activity on the first query the loop makes and inactivity from the second on, and makes both
+        /// queries observable.
+        /// </summary>
+        class QueryRecordingSource :
+            IInactivityObservationSource
+        {
+            readonly TaskCompletionSource<bool> _first = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            readonly TaskCompletionSource<bool> _second = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            int _queries;
+
+            public Task FirstQuery => _first.Task;
+            public Task SecondQuery => _second.Task;
+            public int QueryCount => Volatile.Read(ref _queries);
+
+            public bool IsInactive
+            {
+                get
+                {
+                    if (Interlocked.Increment(ref _queries) == 1)
+                    {
+                        _first.TrySetResult(true);
+
+                        return false;
+                    }
+
+                    _second.TrySetResult(true);
+
+                    return true;
+                }
+            }
+
+            public ConnectHandle ConnectInactivityObserver(IInactivityObserver observer)
+            {
+                throw new NotSupportedException("The observer of this case is connected directly");
+            }
+        }
 
 
         class ControlledSource :
