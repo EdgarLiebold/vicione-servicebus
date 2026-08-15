@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "kind": "RECOVERY_LOCAL_SCHEDULING_PROOF",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "sliceRevision": 4,
+  "directiveId": "LEAD_DIRECTIVE 0021",
+  "recoveryItemIds": [
+    "REC-024"
+  ],
+  "requirementIds": [
+    "REQ-CLEAN-005",
+    "REQ-CLEAN-006"
+  ],
+  "productBase": {
+    "parent": "17e6133b97f3887e1d1462cb6169c07769212843",
+    "note": "Tests only; no product, runtime or public API file is touched."
+  },
+  "leadOrderedCorrections": [
+    {
+      "target": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-abandoned/NULL_RETRY_SUSPECT_PROOF.json",
+      "sha256": "8658b059a640b4473f8a33639f115223e30e123206937eb3137a532818da431d",
+      "correction": "Its recoveryItemIds names REC-024 by mistake. Directive 0019 forbade starting REC-024; that record is the necessary turnout pre-block. REC-024 starts with directive 0021 on top of commit 17e6133b. The file stays byte-unchanged."
+    },
+    {
+      "target": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0004/RECOVERY_STATUS.json",
+      "sha256": "3fe4be3ccff9c35572ba12a0e50faef8cb5a623cbd74b7d19c72a053ef4be979",
+      "correction": "Its Quartz counters are stale after the added test identities. No old number is repeated as a current census; the census below is derived from the discovered case identities of the closing runs."
+    }
+  ],
+  "sixExplicitCases": {
+    "cases": [
+      "Specifying_a_recurring_event.Should_cancel_recurring_schedule",
+      "Specifying_a_recurring_event.Should_contain_additional_headers_that_provide_schedule_key_context",
+      "Specifying_a_recurring_event.Should_contain_additional_headers_that_provide_time_domain_context",
+      "Specifying_a_recurring_event.Should_handle_now_properly",
+      "Specifying_a_recurring_event.Should_pause_recurring_schedule",
+      "Specifying_an_event_in_the_past.Should_be_able_to_cancel_a_future_event"
+    ],
+    "explicitRemoved": true,
+    "executedInTheClosingRun": true,
+    "timeControl": "A shared test local control on the existing Quartz adjustment: AdvanceTime tracks the applied offset, ResetTime puts the clock back, and the fixture teardown restores the process wide provider even after a failure. No new product API.",
+    "barriers": "Every step waits for a message or scheduler barrier: the delivery counter of the schedule, the successful consume of the control command, and a horizon marker that lies between two due seconds.",
+    "removed": [
+      "Task.Delay based synchronisation",
+      "wall clock waits of ten and twenty seconds",
+      "large scheduler jumps that hope for a misfire",
+      "discarded boolean results of Any<T>"
+    ],
+    "strengthened": {
+      "cancel": "delivers twice by construction, the cancel command is proven consumed, and the counter is unchanged after a horizon beyond the schedule",
+      "pause": "same construction for the pause command",
+      "scheduleKey": "ScheduleId and ScheduleGroup are compared against the identity of the schedule that produced the message, not against not null",
+      "timeDomain": "Scheduled, Sent, PreviousSent and NextScheduled must exist and be coherent: sent at or after scheduled, previous before sent, next after sent, and next exactly one interval after scheduled",
+      "now": "eight deliveries are reached by eight separate one second steps, each awaited, and the count stays eight beyond the end time",
+      "futureCancel": "the schedule is proven accepted, the cancel is proven consumed, the due time is passed under controlled time and the message is proven absent at a horizon marker"
+    }
+  },
+  "sabotages": [
+    {
+      "case": "Explicit re-added to one of the six",
+      "scope": "unfiltered project run",
+      "result": "RED",
+      "failingFact": "notExecutedUnlisted contains Specifying_a_recurring_event.Should_cancel_recurring_schedule"
+    },
+    {
+      "case": "cancel command omitted",
+      "scope": "fixture run",
+      "result": "RED",
+      "failingFact": "the cancel command was not consumed successfully by the scheduler"
+    },
+    {
+      "case": "wrong schedule key identity",
+      "scope": "targeted",
+      "result": "RED",
+      "failingFact": "expected the generated guid but the header carried the real schedule identity"
+    },
+    {
+      "case": "wrong time domain coherence",
+      "scope": "targeted",
+      "result": "RED",
+      "failingFact": "next scheduled is not less than sent"
+    },
+    {
+      "case": "no scheduler clock reset between cases",
+      "scope": "fixture run",
+      "result": "RED",
+      "failingFact": "the test never observed the first delivery of the recurring schedule, offset 00:00:10.5"
+    }
+  ],
+  "correctedOwnProbes": [
+    {
+      "probe": "Explicit sabotage, first attempt",
+      "problem": "run with a filter, where an Explicit case is not discovered at all and therefore never appears as not executed",
+      "fix": "repeated unfiltered, where it is red"
+    },
+    {
+      "probe": "missing time reset sabotage, first attempt",
+      "problem": "only the SetUp reset was removed while the TearDown reset still put the clock back, so the probe was not discriminating",
+      "fix": "repeated without any reset, where it is red"
+    }
+  ],
+  "residualRaceFoundAndFixed": "The first version of the cancel and pause cases read a counter after a horizon marker. With a concurrent endpoint the marker handler can finish before an earlier interval handler, and the unfiltered project run showed the resulting off by one. The baseline is now built by awaiting a known number of deliveries, the horizon lies between two due seconds, and the endpoint processes one message at a time.",
+  "turnoutAssertions": {
+    "replaced": "await InMemoryTestHarness.Consumed.Any<ScheduleMessage>() in the two accepted turnout fixtures is now an assertion bound to the test cancellation token",
+    "flakyRemoved": [
+      "Submitting_a_job_to_turnout_that_is_abandoned_and_retried",
+      "Submitting_a_job_whose_previous_attempt_reports_late",
+      "When_processing_a_lot_of_saga_instances"
+    ],
+    "flakyKept": "Ten fixtures of the Quartz project keep the category. It is no execution filter: the closing run is unfiltered and green."
+  },
+  "cronCases": {
+    "method": "CronExpressionTest.CanUse_DayOfMonth_And_DayOfWeek_Together",
+    "cases": [
+      "0 15 10 * * MON,THU,FRI 2010",
+      "0 15 10 1 * * 2010"
+    ],
+    "confirmedCause": "The test converted 1 October once from local time to UTC and reused that UTC hour for every day. On 31 October 2010 the local zone leaves daylight saving time, so the same UTC hour is a different local cron time. This is a test data defect, not a product defect.",
+    "fix": "Every checked calendar day builds its own local cron time and converts it, exactly as the sibling cases in the same file already do. No product change.",
+    "positive": "TZ=Europe/Berlin, 5 of 5 green",
+    "negative": "The same run against the previous test file under TZ=Europe/Berlin fails with expected day of 31 for both cases",
+    "note": "Under the canonical runner the timezone is pinned to UTC, where no transition exists and both cases were green even unfixed. The defect only shows in a zone with daylight saving time."
+  },
+  "closingRuns": {
+    "quartz": {
+      "command": "python3 tools/ci/run_test_category.py --category quartz --project tests/ViciOne.ServiceBus.QuartzIntegration.Tests",
+      "verdict": "PASS",
+      "census": {
+        "discovered": 98,
+        "executed": 98,
+        "passed": 98,
+        "failed": 0,
+        "skipped": 0,
+        "outcomes": {
+          "Passed": 98
+        },
+        "notExecutedIdentities": []
+      },
+      "trx": "33007de43fd2d0ce487028dd1efc22b3983bcb6b82baafe487b68310604ec203"
+    },
+    "core": {
+      "command": "python3 tools/ci/run_test_category.py --category core --project tests/ViciOne.ServiceBus.Tests",
+      "verdict": "PASS",
+      "census": {
+        "discovered": 1912,
+        "executed": 1869,
+        "passed": 1869,
+        "failed": 0,
+        "skipped": 43,
+        "outcomes": {
+          "Passed": 1869,
+          "NotExecuted": 43
+        },
+        "notExecutedIdentities": [
+          "An_excessive_fault_storm.Should_not_explode_the_task_library",
+          "BsonMessageSerializer).Just_how_fast_are_you",
+          "Configuring_a_recurring_job_consumer.Should_support_multiple_jobs_of_the_same_type_with_different_names",
+          "Connecting_a_consumer_to_the_inbound_pipe.Should_receive_a_message_pipeline_view",
+          "ConsumeMetrics_Specs.Should_be_able_to_add_custom_tag_to_consume_metrics",
+          "ConsumeMetrics_Specs.Should_be_able_to_produce_consume_exception_metrics",
+          "ConsumeMetrics_Specs.Should_be_able_to_produce_consume_metrics",
+          "CronExpressionTest.PerformanceTest",
+          "CronExpressionTest.TestDaylightSaving_QRTZNETZ186",
+          "EncryptedMessageSerializer).Just_how_fast_are_you",
+          "EncryptedMessageSerializerV2).Just_how_fast_are_you",
+          "Layering_retry_components_into_a_set.Should_support_interaction_between_filters",
+          "Mediator_performance.Request_client",
+          "Mediator_performance.Send",
+          "MessageFlow_Specs.Should_generate_a_graph_of_the_message_flow",
+          "MessagePackMessageSerializer).Just_how_fast_are_you",
+          "NewtonsoftJsonMessageSerializer).Just_how_fast_are_you",
+          "NewtonsoftXmlMessageSerializer).Just_how_fast_are_you",
+          "Probing_the_bus.Should_return_a_wonderful_breakdown_of_the_guts_inside_it",
+          "Querying_the_send_endpoint_cache_concurrently.Querying_for_two_endpoints_at_the_same_time",
+          "Sending_a_request_to_a_missing_service_that_times_out.Should_timeout_without_exceptions",
+          "Sending_a_request_using_mediator_that_faults.Should_observe_all_exceptions",
+          "Sending_a_request_using_mediator_to_a_missing_service_that_times_out.Should_timeout_without_exceptions",
+          "SimpleConfiguration_Specs.FirstTestName",
+          "SimpleConfiguration_Specs.Should_include_concurrent_limit_on_instance",
+          "Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_down",
+          "Specifying_a_rate_limit.Should_allow_dynamic_reconfiguration_up",
+          "Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+          "Specifying_a_rate_limit.Should_count_success_and_failure_as_same",
+          "Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+          "Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
+          "StatsD_Specs.RunSomeDataIn",
+          "SystemTextJsonMessageSerializer).Just_how_fast_are_you",
+          "Using_a_batch_consumer.Should_not_deliver_duplicate_messages",
+          "Using_a_hash_topic_pattern.Should_wonderful_display",
+          "Using_a_wildcard_topic_pattern.Should_wonderful_display",
+          "When_a_message_has_an_unrecognized_body_format.It_should_publish_a_fault",
+          "When_a_message_is_not_correlated.Should_retry_the_status_message",
+          "When_an_activity_is_redelivered.Should_not_copy_redelivery_header_to_next_activity",
+          "When_configuring_the_thread_pool_for_a_high_number_of_consumers.Should_scale_threads_to_meet_demand",
+          "When_serializing_messages_with_json_dot_net.Serialization_speed",
+          "When_serializing_messages_with_json_dot_net.Show_me_the_message",
+          "When_using_or_canceled_should_not_have_an_unhandled_task_exception.Should_fault_on_ready_faulted"
+        ]
+      },
+      "trx": "ce5918b566db8139a718321e655946dae9258e89d9a8e5cbe205f6280327ad19"
+    }
+  },
+  "openAgainstTheDirective": {
+    "requirement": "Directive 0021 section D requires zero failed and zero not executed for both projects.",
+    "quartz": "met: 98 discovered, 98 executed, 98 passed, 0 failed, 0 not executed",
+    "core": "NOT met: 1912 discovered, 1869 executed, 1869 passed, 0 failed, 43 not executed case identities, 41 distinct names",
+    "reason": "Those are the inherited Explicit cases of the core project, benchmarks, manual observation cases and timing sensitive cases. They are listed in the not-executed inventory, which is why the category gate passes.",
+    "disposition": "Reworking them is a scope expansion beyond this block and belongs to the separate obligation of REQ-CLEAN-005 for benchmarks and human diagnosis cases. Reported, not silently accepted, and not repaired here."
+  },
+  "censusFile": {
+    "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024/CENSUS.json",
+    "sha256": "e80b0b72451b0c2ad3c39c4fea394c588cc01b7443b5517ca05c8e34743d389c"
+  }
+}
