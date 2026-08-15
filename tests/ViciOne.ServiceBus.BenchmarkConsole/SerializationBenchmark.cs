@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 using System;
 using BenchmarkDotNet.Attributes;
+using Context;
 using Serialization;
 
 
@@ -12,6 +13,7 @@ public class SerializationBenchmark
     readonly MessagePackMessageSerializer _messagepackSerializer;
     readonly SystemTextJsonMessageSerializer _systemTextJsonSerializer;
     TypeToSerialize _serializationSubject = null!;
+    MessageSendContext<TypeToSerialize> _sendContext = null!;
 
     [Params(0, 4096)]
     public int MessageBufferSize { get; set; }
@@ -36,12 +38,34 @@ public class SerializationBenchmark
             DateTimeValue = DateTime.UtcNow,
             ByteArrayValue = bufferContent
         };
+
+        _sendContext = new MessageSendContext<TypeToSerialize>(_serializationSubject);
     }
 
     [Benchmark]
     public void MessagePack_SerializeObject()
     {
         var messageBody = _messagepackSerializer.SerializeObject(_serializationSubject);
+
+        _ = messageBody.GetBytes();
+    }
+
+    /// <summary>
+    /// The envelope path a send context takes, which is what the removed NUnit serializer performance case
+    /// measured. SerializeObject above measures the object path and is not the same statement.
+    /// </summary>
+    [Benchmark]
+    public void MessagePack_GetMessageBody()
+    {
+        MessageBody messageBody = _messagepackSerializer.GetMessageBody(_sendContext);
+
+        _ = messageBody.GetBytes();
+    }
+
+    [Benchmark]
+    public void SystemTextJson_GetMessageBody()
+    {
+        MessageBody messageBody = _systemTextJsonSerializer.GetMessageBody(_sendContext);
 
         _ = messageBody.GetBytes();
     }

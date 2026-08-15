@@ -805,28 +805,6 @@ public class CronExpressionTest
     }
 
     [Test]
-    [Explicit]
-    public void PerformanceTest()
-    {
-        var quartz = new CronExpression("* * * * * ?");
-
-        var sw = new Stopwatch();
-        sw.Start();
-
-        DateTimeOffset? next = new DateTimeOffset(2012, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
-        for (var i = 0; i < 1000000; i++)
-        {
-            next = quartz.GetNextValidTimeAfter(next.Value);
-
-            if (next is null)
-                break;
-        }
-
-        Console.WriteLine("{0}ms", sw.ElapsedMilliseconds);
-    }
-
-    [Test]
     public void CanGetHashCode()
     {
         var expression = new CronExpression("0 15 15 5 11 ?");
