@@ -11,20 +11,48 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
     public class Specifying_an_event_in_the_past :
         QuartzInMemoryTestFixture
     {
+        [SetUp]
+        public Task Reset_the_scheduler_clock()
+        {
+            return ResetTime();
+        }
+
+        [TearDown]
+        public Task Put_the_scheduler_clock_back()
+        {
+            return ResetTime();
+        }
+
         [Test]
-        [Explicit]
         public async Task Should_be_able_to_cancel_a_future_event()
         {
             Task<ConsumeContext<A>> handler = SubscribeHandler<A>();
+            Task<ConsumeContext<Horizon>> horizon = SubscribeHandler<Horizon>();
 
             ScheduledMessage<A> scheduledMessage =
-                await Scheduler.ScheduleSend(Bus.Address, DateTime.UtcNow + TimeSpan.FromSeconds(120), new A { Name = "Joe" });
+                await Scheduler.ScheduleSend(Bus.Address, DateTime.UtcNow + DueTime, new A { Name = "Joe" });
 
-            await Task.Delay(2000);
+            // The schedule exists: the scheduler consumed the request, not just the transport.
+            Assert.That(await InMemoryTestHarness.Consumed.Any<ScheduleMessage>(
+                    x => x.Exception == null && x.Context.Message.CorrelationId == scheduledMessage.TokenId, TestCancellationToken),
+                Is.True, "The scheduler did not accept the future event");
+
+            // A horizon message beyond the due time of the canceled event. Its arrival proves the scheduler has
+            // worked through that point in time, so the absent delivery below is a statement and not a guess.
+            await Scheduler.ScheduleSend(Bus.Address, DateTime.UtcNow + BeyondDueTime, new Horizon());
 
             await Scheduler.CancelScheduledSend(scheduledMessage);
 
-            await Task.Delay(2000);
+            Assert.That(await InMemoryTestHarness.Consumed.Any<CancelScheduledMessage>(
+                    x => x.Exception == null && x.Context.Message.TokenId == scheduledMessage.TokenId, TestCancellationToken),
+                Is.True, "The cancel was not consumed successfully by the scheduler");
+
+            await AdvanceTime(BeyondDueTime);
+
+            await horizon.WaitAsync(TestCancellationToken);
+
+            Assert.That(handler.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                "The canceled event must not be delivered, not even after its due time has passed");
         }
 
         [Test]
@@ -99,9 +127,18 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         }
 
 
+        static readonly TimeSpan DueTime = TimeSpan.FromSeconds(120);
+        static readonly TimeSpan BeyondDueTime = TimeSpan.FromSeconds(180);
+
+
         class A
         {
             public string Name { get; set; }
+        }
+
+
+        public class Horizon
+        {
         }
     }
 

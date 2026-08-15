@@ -1,142 +1,395 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
     using Scheduling;
 
 
+    /// <summary>
+    /// The recurring schedule of this fixture starts three seconds after it is created and ends seven seconds
+    /// later, with a cron expression that fires every second. That is eight deliveries.
+    ///
+    /// Every step below moves the scheduler clock by one named functional step and then waits for a message
+    /// barrier. Nothing waits on the wall clock, nothing polls, and no step hopes for a Quartz misfire: a jump
+    /// over several due times may coalesce them, which is exactly why these cases used to be explicit.
+    /// </summary>
     [TestFixture]
     public class Specifying_a_recurring_event :
         QuartzInMemoryTestFixture
     {
+        const int ExpectedIntervals = 8;
+        static readonly TimeSpan ScheduleStart = TimeSpan.FromSeconds(3);
+        static readonly TimeSpan IntervalStep = TimeSpan.FromSeconds(1);
+        // The horizon deliberately lies between two due seconds, so the marker never shares its instant with a
+        // delivery.
+        static readonly TimeSpan BeyondScheduleEnd = TimeSpan.FromSeconds(10.5);
+
+        [SetUp]
+        public async Task Reset_the_scheduler_clock_and_the_counters()
+        {
+            await ResetTime();
+
+            _intervals.Reset();
+        }
+
+        [TearDown]
+        public async Task Cancel_the_schedule_and_put_the_clock_back()
+        {
+            if (_recurring != null)
+            {
+                await Bus.CancelScheduledRecurringSend(_recurring);
+
+                _recurring = null;
+            }
+
+            await ResetTime();
+        }
+
         [Test]
-        [Explicit]
         public async Task Should_cancel_recurring_schedule()
         {
-            var scheduleId = Guid.NewGuid().ToString();
+            var scheduleId = NewId.NextGuid().ToString();
 
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new Done { Name = "Joe" });
-            ScheduledRecurringMessage<Interval> scheduledRecurringMessage =
-                await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId), new Interval { Name = "Joe" });
+            Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
+            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
 
-            await _done;
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId),
+                new Interval { Name = "Joe" });
 
-            var countBeforeCancel = _count;
-            Assert.That(_count, Is.EqualTo(8), "Expected to see 8 interval messages");
+            // The baseline is built by waiting for deliveries, not by reading a counter: the clock stops one
+            // step before the next due time, so exactly these two deliveries exist at this point.
+            await Advance_to_the_first_delivery();
+            await Advance_by(IntervalStep);
+            await Await("the second delivery before the cancele", _intervals.Received(2));
 
-            await Bus.CancelScheduledRecurringSend(scheduledRecurringMessage);
+            var deliveredBeforeCancel = _intervals.Count;
 
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new DoneAgain { Name = "Joe" });
+            Assert.That(deliveredBeforeCancel, Is.EqualTo(2),
+                "The schedule has to deliver twice before it is canceled");
 
-            await _doneAgain;
+            await Bus.CancelScheduledRecurringSend(_recurring);
+            _recurring = null;
 
-            Assert.That(_count, Is.EqualTo(countBeforeCancel), "Expected to see the count matches.");
+            // The control command travels the same transport as the schedule. Waiting for its successful consume
+            // is what makes the following horizon a statement about a schedule that is really gone.
+            Assert.That(await InMemoryTestHarness.Consumed.Any<CancelScheduledRecurringMessage>(
+                    x => x.Exception == null && x.Context.Message.ScheduleId == scheduleId, TestCancellationToken),
+                Is.True, "The cancel command was not consumed successfully by the scheduler");
+
+            // A controlled horizon well past the end of the schedule. Its own message proves the scheduler has
+            // worked through everything up to that point, so an unchanged counter is a statement, not a guess.
+            await Advance_to(BeyondScheduleEnd);
+            await Await("the horizon message after the cancel", horizon);
+
+            Assert.That(_intervals.Count, Is.EqualTo(deliveredBeforeCancel),
+                "A canceled schedule must not deliver again, not even after its regular end time");
         }
 
         [Test]
-        [Explicit]
-        public async Task Should_contain_additional_headers_that_provide_schedule_key_context()
-        {
-            var scheduleId = Guid.NewGuid().ToString();
-
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new Done { Name = "Joe" });
-            ScheduledRecurringMessage<Interval> scheduledRecurringMessage =
-                await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
-
-            await _done;
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(_count, Is.GreaterThan(0), "Expected to see at least one interval");
-
-
-                Assert.That(_lastInterval.Headers.Get<string>(MessageHeaders.Quartz.ScheduleId), Is.Not.Null);
-                Assert.That(_lastInterval.Headers.Get<string>(MessageHeaders.Quartz.ScheduleGroup), Is.Not.Null);
-            });
-        }
-
-        [Test]
-        [Explicit]
-        public async Task Should_contain_additional_headers_that_provide_time_domain_context()
-        {
-            var scheduleId = Guid.NewGuid().ToString();
-
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new Done { Name = "Joe" });
-            ScheduledRecurringMessage<Interval> scheduledRecurringMessage =
-                await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
-
-            await _done;
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(_count, Is.GreaterThan(0), "Expected to see at least one interval");
-
-
-                Assert.That(_lastInterval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Scheduled), Is.Not.Null);
-                Assert.That(_lastInterval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Sent), Is.Not.Null);
-                Assert.That(_lastInterval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.NextScheduled), Is.Not.Null);
-                Assert.That(_lastInterval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.PreviousSent), Is.Not.Null);
-            });
-
-            Console.WriteLine("{0}", _lastInterval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.NextScheduled));
-        }
-
-        [Test]
-        [Explicit]
-        public async Task Should_handle_now_properly()
-        {
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(20), new Done { Name = "Joe" });
-            await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
-
-
-            await _done;
-
-            Assert.That(_count, Is.EqualTo(8), "Expected to see 8 interval messages");
-        }
-
-        [Test]
-        [Explicit]
         public async Task Should_pause_recurring_schedule()
         {
-            var scheduleId = Guid.NewGuid().ToString();
+            var scheduleId = NewId.NextGuid().ToString();
 
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new Done { Name = "Joe" });
-            ScheduledRecurringMessage<Interval> scheduledRecurringMessage =
-                await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId), new Interval { Name = "Joe" });
+            Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
+            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
 
-            await _done;
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MyCancelableSchedule(scheduleId),
+                new Interval { Name = "Joe" });
 
-            var countBeforeCancel = _count;
-            Assert.That(_count, Is.EqualTo(8), "Expected to see 8 interval messages");
+            // The baseline is built by waiting for deliveries, not by reading a counter: the clock stops one
+            // step before the next due time, so exactly these two deliveries exist at this point.
+            await Advance_to_the_first_delivery();
+            await Advance_by(IntervalStep);
+            await Await("the second delivery before the pause", _intervals.Received(2));
 
-            await Bus.PauseScheduledRecurringSend(scheduledRecurringMessage);
+            var deliveredBeforePause = _intervals.Count;
 
-            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + TimeSpan.FromSeconds(10), new DoneAgain { Name = "Joe" });
+            Assert.That(deliveredBeforePause, Is.EqualTo(2),
+                "The schedule has to deliver twice before it is paused");
 
-            await _doneAgain;
+            await Bus.PauseScheduledRecurringSend(_recurring);
 
-            Assert.That(_count, Is.EqualTo(countBeforeCancel), "Expected to see the count matches.");
+            Assert.That(await InMemoryTestHarness.Consumed.Any<PauseScheduledRecurringMessage>(
+                    x => x.Exception == null && x.Context.Message.ScheduleId == scheduleId, TestCancellationToken),
+                Is.True, "The pause command was not consumed successfully by the scheduler");
+
+            await Advance_to(BeyondScheduleEnd);
+            await Await("the horizon message after the pause", horizon);
+
+            Assert.That(_intervals.Count, Is.EqualTo(deliveredBeforePause),
+                "A paused schedule must not deliver again, not even after its regular end time");
         }
 
-        Task<ConsumeContext<Done>> _done;
-        Task<ConsumeContext<DoneAgain>> _doneAgain;
-        int _count;
-        ConsumeContext<Interval> _lastInterval;
+        [Test]
+        public async Task Should_handle_now_properly()
+        {
+            Task<ConsumeContext<Done>> horizon = _intervals.Marker(out var marker);
+            await Scheduler.ScheduleSend(InputQueueAddress, DateTime.UtcNow + BeyondScheduleEnd, new Done { Name = marker });
+
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+
+            // One step per due second. Each delivery is awaited before the clock moves again, so the count is
+            // reached by eight separate firings and not by one jump that coalesces them.
+            await Advance_to_the_first_delivery();
+
+            for (var delivered = 1; delivered < ExpectedIntervals; delivered++)
+            {
+                await Advance_by(IntervalStep);
+                await Await($"delivery {delivered + 1} of the recurring schedule", _intervals.Received(delivered + 1));
+            }
+
+            Assert.That(_intervals.Count, Is.EqualTo(ExpectedIntervals),
+                $"The schedule runs for seven seconds at one delivery per second and therefore delivers {ExpectedIntervals} times");
+
+            await Advance_to(BeyondScheduleEnd);
+            await Await("the horizon message after the end of the schedule", horizon);
+
+            Assert.That(_intervals.Count, Is.EqualTo(ExpectedIntervals),
+                "After its end time the schedule must not deliver again");
+        }
+
+        [Test]
+        public async Task Should_contain_additional_headers_that_provide_schedule_key_context()
+        {
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+
+            await Advance_to_the_first_delivery();
+
+            ConsumeContext<Interval> interval = _intervals.Last;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(interval.Headers.Get<string>(MessageHeaders.Quartz.ScheduleId),
+                    Is.EqualTo(_recurring.Schedule.ScheduleId),
+                    "The schedule id header has to carry the identity of the schedule that produced the message");
+                Assert.That(interval.Headers.Get<string>(MessageHeaders.Quartz.ScheduleGroup),
+                    Is.EqualTo(_recurring.Schedule.ScheduleGroup),
+                    "The schedule group header has to carry the group of the schedule that produced the message");
+            });
+        }
+
+        [Test]
+        public async Task Should_contain_additional_headers_that_provide_time_domain_context()
+        {
+            _recurring = await QuartzEndpoint.ScheduleRecurringSend(InputQueueAddress, new MySchedule(), new Interval { Name = "Joe" });
+
+            // The previous-sent header only carries a value once a delivery has a predecessor.
+            await Advance_to_the_first_delivery();
+            await Advance_by(IntervalStep);
+            await Await("the second delivery of the recurring schedule", _intervals.Received(2));
+
+            ConsumeContext<Interval> interval = _intervals.Last;
+
+            DateTimeOffset? scheduled = interval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Scheduled);
+            DateTimeOffset? sent = interval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Sent);
+            DateTimeOffset? previousSent = interval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.PreviousSent);
+            DateTimeOffset? nextScheduled = interval.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.NextScheduled);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(scheduled.HasValue, Is.True, "The scheduled header is missing");
+                Assert.That(sent.HasValue, Is.True, "The sent header is missing");
+                Assert.That(previousSent.HasValue, Is.True, "The previous sent header is missing");
+                Assert.That(nextScheduled.HasValue, Is.True, "The next scheduled header is missing");
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(sent.Value, Is.GreaterThanOrEqualTo(scheduled.Value),
+                    "A message cannot be sent before the time it was scheduled for");
+                Assert.That(previousSent.Value, Is.LessThan(sent.Value),
+                    "The previous delivery of the schedule has to lie before this one");
+                Assert.That(nextScheduled.Value, Is.GreaterThan(sent.Value),
+                    "The next due time of the schedule has to lie after this delivery");
+                Assert.That(nextScheduled.Value - scheduled.Value, Is.EqualTo(IntervalStep),
+                    "The schedule fires once per second, so the next due time is one second after this one");
+            });
+        }
+
+        Task Advance_to_the_first_delivery()
+        {
+            return Advance_to(ScheduleStart, "the first delivery of the recurring schedule", _intervals.Received(1));
+        }
+
+        async Task Advance_to(TimeSpan target, string what = null, Task barrier = null)
+        {
+            var remaining = target - AppliedTimeOffset;
+            if (remaining > TimeSpan.Zero)
+                await AdvanceTime(remaining);
+
+            if (barrier != null)
+                await Await(what, barrier);
+        }
+
+        Task Advance_by(TimeSpan step)
+        {
+            return AdvanceTime(step);
+        }
+
+        async Task Await(string what, Task barrier)
+        {
+            try
+            {
+                await barrier.WaitAsync(TestCancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                Assert.Fail($"The test never observed {what}: {_intervals.Diagnostics} offset={AppliedTimeOffset}");
+                throw;
+            }
+        }
+
+        readonly IntervalObserver _intervals = new();
+        ScheduledRecurringMessage<Interval> _recurring;
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
-            _count = 0;
-            configurator.Handler<Interval>(async context =>
+            // One message at a time. Otherwise the handler of a horizon marker can finish before the handler of
+            // an interval that was dispatched earlier, and a counter read would race a delivery in flight.
+            configurator.ConcurrentMessageLimit = 1;
+
+            configurator.Handler<Interval>(context =>
             {
-                Interlocked.Increment(ref _count);
-                _lastInterval = context;
+                _intervals.OnInterval(context);
+
+                return Task.CompletedTask;
             });
 
-            _done = Handled<Done>(configurator);
-            _doneAgain = Handled<DoneAgain>(configurator);
+            configurator.Handler<Done>(context =>
+            {
+                _intervals.OnMarker(context);
+
+                return Task.CompletedTask;
+            });
+        }
+
+
+        /// <summary>
+        /// Counts the deliveries of the schedule and turns them into barriers. A marker message scheduled beyond
+        /// the end of the schedule gives the test a horizon it can wait for instead of sleeping.
+        /// </summary>
+        class IntervalObserver
+        {
+            readonly object _lock = new();
+            readonly List<TaskCompletionSource<int>> _waiters = new();
+            readonly Dictionary<string, TaskCompletionSource<ConsumeContext<Done>>> _markers = new();
+            ConsumeContext<Interval> _last;
+            int _count;
+
+            public int Count
+            {
+                get
+                {
+                    lock (_lock)
+                        return _count;
+                }
+            }
+
+            public ConsumeContext<Interval> Last
+            {
+                get
+                {
+                    lock (_lock)
+                        return _last;
+                }
+            }
+
+            public string Diagnostics
+            {
+                get
+                {
+                    lock (_lock)
+                        return $"intervals={_count} markers={_markers.Count}";
+                }
+            }
+
+            public void Reset()
+            {
+                lock (_lock)
+                {
+                    _count = 0;
+                    _last = null;
+                    _waiters.Clear();
+                    _markers.Clear();
+                }
+            }
+
+            public Task<ConsumeContext<Done>> Marker(string marker)
+            {
+                lock (_lock)
+                    return _markers[marker].Task;
+            }
+
+            public Task<ConsumeContext<Done>> Marker(out string marker)
+            {
+                var name = NewId.NextGuid().ToString();
+                var source = new TaskCompletionSource<ConsumeContext<Done>>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                lock (_lock)
+                    _markers[name] = source;
+
+                marker = name;
+
+                return source.Task;
+            }
+
+            public Task Received(int count)
+            {
+                TaskCompletionSource<int> waiter;
+                lock (_lock)
+                {
+                    if (_count >= count)
+                        return Task.CompletedTask;
+
+                    waiter = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    _waiters.Add(waiter);
+                }
+
+                return WaitFor(waiter, count);
+
+                async Task WaitFor(TaskCompletionSource<int> current, int required)
+                {
+                    while (await current.Task.ConfigureAwait(false) < required)
+                    {
+                        lock (_lock)
+                        {
+                            if (_count >= required)
+                                return;
+
+                            current = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+                            _waiters.Add(current);
+                        }
+                    }
+                }
+            }
+
+            public void OnInterval(ConsumeContext<Interval> context)
+            {
+                List<TaskCompletionSource<int>> waiters;
+                int count;
+                lock (_lock)
+                {
+                    _last = context;
+                    count = ++_count;
+                    waiters = new List<TaskCompletionSource<int>>(_waiters);
+                    _waiters.Clear();
+                }
+
+                foreach (var waiter in waiters)
+                    waiter.TrySetResult(count);
+            }
+
+            public void OnMarker(ConsumeContext<Done> context)
+            {
+                TaskCompletionSource<ConsumeContext<Done>> source;
+                lock (_lock)
+                    _markers.TryGetValue(context.Message.Name ?? string.Empty, out source);
+
+                source?.TrySetResult(context);
+            }
         }
 
 
@@ -147,7 +400,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             {
                 CronExpression = "0/1 * * * * ?";
 
-                StartTime = DateTime.Now + TimeSpan.FromSeconds(3);
+                StartTime = DateTime.Now + ScheduleStart;
                 EndTime = StartTime + TimeSpan.FromSeconds(7);
 
                 Description = "my description";
@@ -163,7 +416,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                 ScheduleId = scheduleId;
                 CronExpression = "0/1 * * * * ?";
 
-                StartTime = DateTime.Now + TimeSpan.FromSeconds(3);
+                StartTime = DateTime.Now + ScheduleStart;
                 EndTime = StartTime + TimeSpan.FromSeconds(20);
             }
 
@@ -185,12 +438,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
 
         public class Done
-        {
-            public string Name { get; set; }
-        }
-
-
-        public class DoneAgain
         {
             public string Name { get; set; }
         }

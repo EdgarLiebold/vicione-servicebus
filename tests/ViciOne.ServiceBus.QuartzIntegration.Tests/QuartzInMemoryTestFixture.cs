@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
     {
         readonly Lazy<IMessageScheduler> _messageScheduler;
         QuartzTimeAdjustment _adjustment;
+        TimeSpan _appliedOffset;
         ISchedulerFactory _schedulerFactory;
 
         protected QuartzInMemoryTestFixture()
@@ -39,9 +40,31 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             base.ConfigureInMemoryBus(configurator);
         }
 
-        protected Task AdvanceTime(TimeSpan duration)
+        /// <summary>
+        /// The offset this fixture has applied to the scheduler clock so far.
+        /// </summary>
+        protected TimeSpan AppliedTimeOffset => _appliedOffset;
+
+        /// <summary>
+        /// Moves the scheduler clock by a named functional step and remembers the applied offset, so a test can
+        /// put the clock back before the next one starts.
+        /// </summary>
+        protected async Task AdvanceTime(TimeSpan duration)
         {
-            return _adjustment.AdvanceTime(duration);
+            await _adjustment.AdvanceTime(duration).ConfigureAwait(false);
+
+            _appliedOffset += duration;
+        }
+
+        /// <summary>
+        /// Puts the scheduler clock back to where this fixture found it. Safe to call more than once and from a
+        /// teardown that runs after a failed test.
+        /// </summary>
+        protected Task ResetTime()
+        {
+            return _appliedOffset == TimeSpan.Zero
+                ? Task.CompletedTask
+                : AdvanceTime(-_appliedOffset);
         }
 
         [OneTimeSetUp]
@@ -53,7 +76,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
         [OneTimeTearDown]
         public void Take_it_down()
         {
+            // Disposing restores the process wide Quartz time provider even when a test failed or was aborted.
             _adjustment?.Dispose();
+            _appliedOffset = TimeSpan.Zero;
         }
     }
 }

@@ -130,20 +130,21 @@ public class CronExpressionTest
     public void CanUse_DayOfMonth_And_DayOfWeek_Together(string cronExpression, int[] expectedDays, string scenario = "")
     {
         var expr = new CronExpression(cronExpression);
-        var templateDate = new DateTime(2010, 10, 1, 10, 15, 0).ToUniversalTime();
 
         foreach (var day in expectedDays)
-        {
-            var date = new DateTime(templateDate.Year, templateDate.Month, day, templateDate.Hour, templateDate.Minute, templateDate.Second, templateDate.Kind);
-            Assert.That(expr.IsSatisfiedBy(date), Is.True, $"expected day of {day}, {scenario}");
-        }
+            Assert.That(expr.IsSatisfiedBy(CronTimeOnDay(day)), Is.True, $"expected day of {day}, {scenario}");
 
         IEnumerable<int> invalidDays = CreateArrayOfDays(2010, 10).Except(expectedDays);
 
         foreach (var day in invalidDays)
+            Assert.That(expr.IsSatisfiedBy(CronTimeOnDay(day)), Is.False, $"invalid day of {day}, {scenario}");
+
+        // The cron expression names a local wall clock time. Converting one day and reusing its UTC hour breaks
+        // on 31 October 2010, when the local zone of the host leaves daylight saving time: the same UTC hour is
+        // then a different local time. Every day therefore gets its own conversion.
+        static DateTime CronTimeOnDay(int day)
         {
-            var date = new DateTime(templateDate.Year, templateDate.Month, day, templateDate.Hour, templateDate.Minute, templateDate.Second, templateDate.Kind);
-            Assert.That(expr.IsSatisfiedBy(date), Is.False, $"invalid day of {day}, {scenario}");
+            return new DateTime(2010, 10, day, 10, 15, 0, DateTimeKind.Local).ToUniversalTime();
         }
     }
 

@@ -453,7 +453,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
 
     [TestFixture]
-    [Category("Flaky")]
     public class Submitting_a_job_to_turnout_that_is_abandoned_and_retried :
         QuartzInMemoryTestFixture
     {
@@ -473,7 +472,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             Assert.That(response.Message.JobId, Is.EqualTo(_jobId));
 
-            await InMemoryTestHarness.Consumed.Any<ScheduleMessage>();
+            Assert.That(await InMemoryTestHarness.Consumed.Any<ScheduleMessage>(x => x.Exception == null, TestCancellationToken),
+                Is.True, "The job status check of the started attempt was not scheduled");
 
             // The worker starts the attempt and then goes silent: the fault it reports never reaches the sagas.
             // Every wait below is a barrier on an observed message, never a sleep and never a wall clock.
@@ -668,7 +668,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
 
     [TestFixture]
-    [Category("Flaky")]
     public class Submitting_a_job_whose_previous_attempt_reports_late :
         QuartzInMemoryTestFixture
     {
@@ -688,7 +687,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             Assert.That(response.Message.JobId, Is.EqualTo(_jobId));
 
-            await InMemoryTestHarness.Consumed.Any<ScheduleMessage>();
+            Assert.That(await InMemoryTestHarness.Consumed.Any<ScheduleMessage>(x => x.Exception == null, TestCancellationToken),
+                Is.True, "The job status check of the started attempt was not scheduled");
 
             SuppressedFault suppressed = await Await("suppression of the reported fault", _silentWorker.ReportedFaultSuppressed);
 
