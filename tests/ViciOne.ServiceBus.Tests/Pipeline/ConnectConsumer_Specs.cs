@@ -30,19 +30,6 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
         }
 
         [Test]
-        [Explicit]
-        public void Should_receive_a_message_pipeline_view()
-        {
-            var filter = CreateConsumePipe();
-
-            var consumer = GetOneMessageConsumer();
-
-            IConsumerFactory<OneMessageConsumer> factory = GetInstanceConsumerFactory(consumer);
-
-            filter.ConnectConsumer(factory);
-        }
-
-        [Test]
         public async Task Should_receive_a_message_via_object()
         {
             var filter = CreateConsumePipe();

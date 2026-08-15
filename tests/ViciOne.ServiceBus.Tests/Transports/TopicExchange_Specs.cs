@@ -21,15 +21,6 @@ namespace ViciOne.ServiceBus.Tests.Transports
         }
 
         [Test]
-        [Explicit]
-        public void Should_wonderful_display()
-        {
-            var result = Bus.GetProbeResult();
-
-            Console.WriteLine(result.ToJsonString());
-        }
-
-        [Test]
         public async Task Should_match_the_endpoint_binding()
         {
             var endpoint = await Bus.GetSendEndpoint(new Uri("exchange:test-exchange?type=topic"));
@@ -80,15 +71,6 @@ namespace ViciOne.ServiceBus.Tests.Transports
             ConsumeContext<A> handled = await _handled;
 
             Assert.That(handled.Message.Value, Is.EqualTo("Good"));
-        }
-
-        [Test]
-        [Explicit]
-        public void Should_wonderful_display()
-        {
-            var result = Bus.GetProbeResult();
-
-            Console.WriteLine(result.ToJsonString());
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

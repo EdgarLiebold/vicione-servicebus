@@ -80,13 +80,16 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
             await HoldScheduler();
 
             await Bus.CancelScheduledRecurringSend(_recurring);
-            _recurring = null;
 
             // The control command travels the same transport as the schedule. Waiting for its successful consume
             // is what makes the following horizon a statement about a schedule that is really gone.
             Assert.That(await InMemoryTestHarness.Consumed.Any<CancelScheduledRecurringMessage>(
                     x => x.Exception == null && x.Context.Message.ScheduleId == scheduleId, TestCancellationToken),
                 Is.True, "The cancel command was not consumed successfully by the scheduler");
+
+            // Only now the teardown may forget the handle. If the assertion above fails, the schedule is still
+            // known and gets cleaned up on the failure path as well.
+            _recurring = null;
 
             await ReleaseScheduler();
 

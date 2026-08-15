@@ -82,14 +82,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         }
 
         [Test]
-        [Explicit]
-        public void Show_me_the_message()
-        {
-            TestContext.Out.WriteLine(_body);
-            TestContext.Out.WriteLine(_xml.ToString());
-        }
-
-        [Test]
         public void Convert_using_json_deserializer()
         {
             using var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(_body), false);
@@ -194,44 +186,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
                 Assert.That(result.MessageType[2], Is.EqualTo(typeof(MessageB).ToMessageName()));
                 Assert.That(result.Headers, Has.Count.EqualTo(1));
             });
-        }
-
-        [Test]
-        [Explicit]
-        public void Serialization_speed()
-        {
-            //warm it up
-            for (var i = 0; i < 10; i++)
-            {
-                DoSerialize();
-                DoDeserialize();
-            }
-
-            var timer = Stopwatch.StartNew();
-
-            const int iterations = 50000;
-
-            for (var i = 0; i < iterations; i++)
-                DoSerialize();
-
-            timer.Stop();
-
-            var perSecond = iterations * 1000 / timer.ElapsedMilliseconds;
-
-            var msg = string.Format("Serialize: {0}ms, Rate: {1} m/s", timer.ElapsedMilliseconds, perSecond);
-            Trace.WriteLine(msg);
-
-            timer = Stopwatch.StartNew();
-
-            for (var i = 0; i < 50000; i++)
-                DoDeserialize();
-
-            timer.Stop();
-
-            perSecond = iterations * 1000 / timer.ElapsedMilliseconds;
-
-            msg = string.Format("Deserialize: {0}ms, Rate: {1} m/s", timer.ElapsedMilliseconds, perSecond);
-            Trace.WriteLine(msg);
         }
 
         void DoSerialize()

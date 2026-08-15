@@ -22,15 +22,6 @@ namespace ViciOne.ServiceBus.Tests
             Assert.That(receiveAddresses, Does.Contain(InputQueueAddress));
         }
 
-        [Test]
-        [Explicit]
-        public async Task Should_return_a_wonderful_breakdown_of_the_guts_inside_it()
-        {
-            await Bus.Publish(new PingMessage());
-
-            await _handled;
-        }
-
         #pragma warning disable NUnit1032
         Task<ConsumeContext<PingMessage>> _handled;
         #pragma warning restore NUnit1032
