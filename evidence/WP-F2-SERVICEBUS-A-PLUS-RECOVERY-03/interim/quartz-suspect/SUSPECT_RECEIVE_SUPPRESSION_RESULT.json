@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "RECOVERY_SUSPECT_RECEIVE_SUPPRESSION_RESULT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "sliceRevision": 3,
+  "decision": "PO-2026-08-15-03-SUSPECT-RECEIVE-SUPPRESSION, option OPT-CONSUME-SIDE-SUPPRESSION",
+  "recoveryItemIds": [
+    "REC-024"
+  ],
+  "requirementIds": [
+    "REQ-CLEAN-005",
+    "REQ-CLEAN-006"
+  ],
+  "mechanism": "Test local consume suppression in front of the job and job-attempt saga consumers. It loses the two deliveries of the one MessageId of the first worker reported JobAttemptFaulted, bound to AttemptId, RetryAttempt 0 and a missing RetryDelay. No product, runtime or public API file is touched.",
+  "provenProperties": [
+    {
+      "property": "exactly two suppressions of the same MessageId",
+      "measured": "suppressed=2",
+      "status": "PROVEN"
+    },
+    {
+      "property": "exactly the two expected saga endpoints",
+      "measured": "endpoints=[job,job-attempt]",
+      "status": "PROVEN"
+    },
+    {
+      "property": "no redelivery and no consumer retry of the suppressed message",
+      "measured": "redeliveries=0",
+      "status": "PROVEN"
+    },
+    {
+      "property": "no Fault<JobAttemptFaulted> from the injection",
+      "measured": "faultOfFault=0",
+      "status": "PROVEN"
+    },
+    {
+      "property": "the product escalates on its own: status checks are sent and stay unanswered",
+      "measured": "statusChecks=2",
+      "status": "PROVEN"
+    },
+    {
+      "property": "a suspect JobAttemptFaulted with a non empty RetryDelay is produced and passes the filter",
+      "measured": "the suspect fault barrier completed",
+      "status": "PROVEN"
+    },
+    {
+      "property": "the job service starts RetryAttempt 1 from that suspect fault",
+      "measured": "highestRetryAttempt=1",
+      "status": "PROVEN"
+    },
+    {
+      "property": "the job reaches Completed and no terminal JobFaulted is published",
+      "measured": "not reached",
+      "status": "BLOCKED_BY_PRODUCT"
+    }
+  ],
+  "blockingProductBehaviour": {
+    "id": "OBS-JOBSERVICE-STALE-SUSPECT-FAULT",
+    "statement": "After the suspect fault has moved JobSaga to WaitingToRetry and RetryAttempt 1 has started, a second stale JobAttemptFaulted reaches the job saga about two milliseconds after StartJobAttempt. JobSaga publishes JobFaulted and moves to Faulted. The JobAttemptCompleted of the successful retry is then rejected with NotAcceptedStateMachineException and redelivered until the test times out.",
+    "logTrace": [
+      "07.207 suspect JobAttemptFaulted with RetryDelay to /job",
+      "07.236 JobRetryDelayElapsed",
+      "07.240 StartJobAttempt for the retry",
+      "07.242 second JobAttemptFaulted to /job",
+      "07.251 JobFaulted",
+      "08.243 attempt 1 completes",
+      "08.255 R-RETRY with NotAcceptedStateMachineException, repeated until timeout"
+    ],
+    "notCausedByTheInjection": "The injection touches exactly one MessageId and is finished long before. Both the first suspect fault and the second stale fault pass the filter untouched.",
+    "disposition": "RECORDED_NOT_FIXED. Job service runtime semantics are not authorized for change in this slice."
+  },
+  "timingVariantsTried": [
+    {
+      "variant": "three controlled clock steps of 60 s, one per escalation stage",
+      "result": "same blocking behaviour"
+    },
+    {
+      "variant": "one controlled clock step of 60 s, the following checks are due on their own",
+      "result": "same blocking behaviour"
+    }
+  ],
+  "prohibitionsHeld": [
+    "no Task.Delay as test synchronisation",
+    "no polling",
+    "no wall clock oracle",
+    "no longer timeout",
+    "no filter or skip",
+    "no weaker assertion",
+    "no product, runtime or public API diff",
+    "the reported fault sibling fixture is untouched"
+  ],
+  "evidenceHashes": {
+    "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-suspect/suspect-effect.trx": "352b2dbbfaae2b93f43a7d6c5b44cac6807233f7fc730a82110cc99dc9b4aba6"
+  }
+}
