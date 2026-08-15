@@ -1,78 +1,37 @@
 {
-  "ancestryAssertionEvidence": {
-    "commands": [
-      "git rev-parse <baseline>^{tree}",
-      "git rev-list --ancestry-path <baseline>..HEAD",
-      "git rev-parse <firstCommitAfterBaseline>^",
-      "git merge-base --is-ancestor <baseline> HEAD",
-      "git merge-base --is-ancestor <oldBranch> HEAD"
-    ],
-    "commitsOnRecoveryBranchAboveBaseline": 1,
-    "firstCommitAfterBaseline": "547f98f41c267c94218f88c9079b38c0b3924712",
-    "firstCommitParent": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57"
-  },
-  "ancestryAssertions": {
+  "assertions": {
     "annotatedTagDereferencesToBaseline": true,
-    "baselineCommitCarriesBoundTree": true,
-    "baselineIsAncestorOfHead": true,
+    "headIsBaselineCommit": true,
+    "headTreeIsBaselineTree": true,
     "mainIsBaseline": true,
     "oldBranchIsNotAncestorOfRecoveryBranch": true,
     "oldBranchUnchangedAtAuditHead": true,
     "originMainIsBaseline": true,
-    "recoveryBranchRootIsBaseline": true
+    "recoveryBranchDescendsOnlyFromBaseline": true
   },
-  "boundBaseline": {
-    "commit": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
-    "tag": "baseline/servicebus-takeover-2026-08-13",
-    "tree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1"
-  },
-  "cleanlinessAssertions": {
-    "generationDirtinessIsExpectedAndModelled": {
-      "basis": "the single porcelain entry is this work package's own uncommitted evidence root",
-      "reMeasurableNow": false,
-      "scope": "EVIDENCE_GENERATION",
-      "value": true
-    },
-    "noUnrelatedDirtyPathAtAnyRecordedPhase": {
-      "basis": "the tracked diff against the baseline contains only this work package's evidence paths",
-      "reMeasurableNow": true,
-      "scope": "all phases",
-      "value": true
-    },
-    "workingTreeCleanAtCorrectionPhase": {
-      "basis": "live git status --porcelain=v1",
-      "reMeasurableNow": true,
-      "scope": "CORRECTION",
-      "value": true
-    },
-    "workingTreeCleanBeforeAnyEvidenceWrite": {
-      "basis": "recorded measurement of git status --porcelain=v1 at both phases",
-      "reMeasurableNow": false,
-      "scope": "BASELINE_VERIFICATION and BRANCH_CREATION",
-      "value": true
-    }
-  },
-  "correctionDirectiveId": "DIR-RECOVERY-FIRST-BLOCK-001",
+  "assertionsAllTrue": true,
   "kind": "RECOVERY_GIT_BASELINE_PROOF",
   "limits": [
-    "The pre-write cleanliness of the working tree is a recorded measurement of an earlier phase and is not re-derivable from the repository alone. Its corroboration is the tracked diff against the baseline, which contains only this work package's evidence paths.",
-    "Remote-tracking ref origin/main is a local mirror and does not prove the current server state. A remote statement requires a read-only git ls-remote with network access and is made only with the remote-state scan before release.",
-    "Three pre-existing stash entries and ignored build and evidence outputs of earlier work packages are present in the working repository, are not part of the baseline tree and are left untouched."
+    "Remote-tracking ref origin/main is a local mirror; it does not prove the current server state. A remote statement requires a read-only git ls-remote with network access.",
+    "Three pre-existing stash entries and ignored build/evidence outputs of earlier work packages are present in the working repository, are not part of the baseline tree and are left untouched."
   ],
-  "observedNow": {
+  "observed": {
+    "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
+    "headBranch": "cleanup/servicebus-net10-recovery",
+    "headTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
     "oldComparisonBranch": {
       "commitsAheadOfBaseline": 89,
       "head": "e5900afdddf5b8339fe00950c4a95a11bfba162b",
       "name": "cleanup/servicebus-net10"
     },
     "recoveryBranch": {
-      "commitsAheadOfBaseline": 1,
-      "head": "547f98f41c267c94218f88c9079b38c0b3924712",
+      "commitsAheadOfBaseline": 0,
+      "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
       "name": "cleanup/servicebus-net10-recovery"
     },
     "refs": {
       "refs/heads/cleanup/servicebus-net10": "e5900afdddf5b8339fe00950c4a95a11bfba162b",
-      "refs/heads/cleanup/servicebus-net10-recovery": "547f98f41c267c94218f88c9079b38c0b3924712",
+      "refs/heads/cleanup/servicebus-net10-recovery": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
       "refs/heads/main": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
       "refs/remotes/origin/main": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
       "refs/remotes/upstream/develop": "62ab339afa3bac2e9b3fe1769d0d35d7e44778e9",
@@ -86,85 +45,14 @@
       "name": "baseline/servicebus-takeover-2026-08-13",
       "objectId": "52b6faedaee10c03031fbca1f5d025d5b51f607f",
       "objectType": "tag"
-    }
+    },
+    "workingTreeCleanPorcelainLines": 1
   },
-  "phases": [
-    {
-      "corroborationAtCorrectionPhase": "git diff --name-status <baseline>..HEAD lists only this work package's evidence paths, so no unrelated modification ever entered the tracked tree between baseline verification and this correction.",
-      "description": "Measured on branch main before the recovery branch existed and before any file of this work package was written.",
-      "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
-      "headBranch": "main",
-      "headTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
-      "phase": "BASELINE_VERIFICATION",
-      "reMeasurableNow": false,
-      "recordedCommand": "git status --porcelain=v1",
-      "workingTreePorcelainEntries": [],
-      "workingTreePorcelainLines": 0
-    },
-    {
-      "description": "Recovery branch created directly from the bound baseline commit; still no file of this work package written.",
-      "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
-      "headBranch": "cleanup/servicebus-net10-recovery",
-      "headTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
-      "phase": "BRANCH_CREATION",
-      "reMeasurableNow": false,
-      "recordedCommand": "git status --porcelain=v1",
-      "workingTreePorcelainEntries": [],
-      "workingTreePorcelainLines": 0
-    },
-    {
-      "description": "State while revision 1 of this proof was generated. The single porcelain entry is the still uncommitted evidence output of this very proof and is expected, not an unrelated dirty path.",
-      "head": "1c6fe74b198ba5cfd93157c83e34e126a0c1da57",
-      "headBranch": "cleanup/servicebus-net10-recovery",
-      "headTree": "a73caf700559257d842f3d6ad4ad5008bd3e90d1",
-      "phase": "EVIDENCE_GENERATION",
-      "reMeasurableNow": false,
-      "recordedCommand": "git status --porcelain=v1",
-      "unrelatedDirtyPaths": 0,
-      "workingTreePorcelainEntries": [
-        "?? evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/"
-      ],
-      "workingTreePorcelainLines": 1
-    },
-    {
-      "changedPathsAgainstBaseline": [
-        {
-          "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json",
-          "status": "A"
-        },
-        {
-          "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json",
-          "status": "A"
-        }
-      ],
-      "description": "State at the time this revision 2 is generated, measured live.",
-      "head": "547f98f41c267c94218f88c9079b38c0b3924712",
-      "headBranch": "cleanup/servicebus-net10-recovery",
-      "headTree": "34e4601dfa9cdd6232eee62417818dbcbbcb6733",
-      "phase": "CORRECTION",
-      "reMeasurableNow": true,
-      "recordedCommand": "git status --porcelain=v1; git diff --name-status <baseline>..HEAD",
-      "workingTreePorcelainEntries": [],
-      "workingTreePorcelainLines": 0
-    }
-  ],
   "recoveryItemIds": [
     "REC-001",
-    "REC-002",
-    "REC-032"
+    "REC-002"
   ],
-  "revision": 2,
-  "revisionNote": "Revision 2 corrects revision 1 under lead directive DIR-RECOVERY-FIRST-BLOCK-001. Revision 1 reported a single working-tree cleanliness number that mixed the proven pre-write state with the expected generation-time state, and its combined assertionsAllTrue flag could be read as an unmodelled cleanliness claim. Cleanliness is now modelled per phase and separated from the ancestry assertions. Commit 547f98f4 is not rewritten.",
-  "schemaVersion": 2,
-  "scopedResults": {
-    "ancestryAssertionsAllTrue": true,
-    "cleanlinessAssertionsAllTrue": true,
-    "note": "There is deliberately no combined all-true flag. Ancestry and cleanliness are separate claims with different re-measurability, and a single flag would let the historical cleanliness record be read as a currently proven property."
-  },
-  "supersedes": {
-    "commit": "547f98f41c267c94218f88c9079b38c0b3924712",
-    "revision": 1,
-    "sha256": "7bac024950128e39a0ceca842749c69955ee5de8b1128278de3d64cc1a2cf2e7"
-  },
+  "schemaVersion": 1,
+  "stage": "BRANCH_CREATION",
   "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03"
 }

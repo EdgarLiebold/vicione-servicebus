@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "kind": "RECOVERY_CAUSAL_ANALYSIS_CORRECTION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "corrects": {
+    "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/CAUSAL_ANALYSIS.json",
+    "reason": "TRANSPORT_REJECTION 0004"
+  },
+  "acceptedFinding": "The claim that Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried was repaired without case loss or duplication is wrong. It is withdrawn.",
+  "whyTheClaimWasWrong": [
+    "The distinguishing property of the fixture is the suspect path, not the exception type. The withdrawn variant produced a run that contains neither GetJobAttemptStatus nor any Suspect transition.",
+    "SuspectJobRetryCount and SuspectJobRetryDelay stayed configured but had no effect on the outcome, so the configuration the fixture exists for was no longer load bearing.",
+    "What remained was the reported-fault retry through the job retry policy, which the sibling fixture Submitting_a_job_to_turnout_that_faults_with_retry already proves. The differing exception type does not make that a separate behavioural case."
+  ],
+  "action": "The change to Turnout/Faulted_Specs.cs is reverted to the baseline bytes of commit 1c6fe74b. The correction of SchedulerLoadInMemory_Specs.cs is unaffected by the finding and stays.",
+  "whatStaysProven": {
+    "rootCauseOfTheTurnoutFailure": "JobConsumerMessageFilter passes a retry delay to NotifyFaulted only when the job retry policy can retry the exception. JobOptions defaults to Retry.None, so the reported fault carries RetryDelay null and JobStateMachine takes the terminal fault branch. SuspectJobRetryCount is evaluated by GetRetryDelay on the JobAttemptSaga and reaches JobAttemptFaulted only through SendJobAttemptFaulted on the Suspect path and SendJobAttemptStartTimeout on the Starting path.",
+    "evidence": [
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/turnout-isolated.trx",
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/turnout-after-retry-policy.trx",
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/turnout-mutation-no-retry-policy.trx"
+    ],
+    "consequence": "The fixture asserts a retry after a fault the instance reports. That combination is unreachable in the baseline product, which is why the case is red rather than flaky."
+  },
+  "whyAFaithfulRepairLeavesTheTestBoundary": [
+    "SuspectJobRetryCount becomes load bearing only if the attempt reaches Suspect through three status checks, or times out in Starting.",
+    "SuperviseJobConsumer answers JobAttemptStatus Running for as long as the instance knows the job, and answers nothing only when TryGetJob fails. Reaching Suspect therefore requires an instance that no longer knows the running job.",
+    "The single-process InMemoryTestHarness keeps one live instance for the whole fixture, so no test-only construct makes that instance stop answering for one attempt."
+  ],
+  "currentMeasuredState": {
+    "command": "python3 tools/ci/run_test_category.py --category quartz --project tests/ViciOne.ServiceBus.QuartzIntegration.Tests --evidence-dir <corrected>",
+    "counters": {
+      "total": 93,
+      "executed": 87,
+      "passed": 85,
+      "failed": 2,
+      "explicitNotExecuted": 6
+    },
+    "failed": [
+      "Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_get_the_job_accepted",
+      "Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_completed_event"
+    ],
+    "comparedToInherited": "One of the three inherited red cases is solved and proven; the two turnout cases are red again after the withdrawal.",
+    "evidence": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-corrected/quartz.json"
+  },
+  "envelopeCorrection": {
+    "finding": "Files already bound by PROGRESS 0002 were changed at the same path.",
+    "restored": [
+      {
+        "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json",
+        "sha256": "7bac024950128e39a0ceca842749c69955ee5de8b1128278de3d64cc1a2cf2e7"
+      },
+      {
+        "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json",
+        "sha256": "b10701034dd687bc31a6b92fe3c9cd6c8d389b49a5a025bc2f88b5a230ba97b1"
+      }
+    ],
+    "newVersionedPaths": [
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/GIT_BASELINE_PROOF.json",
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/RECOVERY_STATUS.json"
+    ],
+    "historyNote": "Commit 05fd62d3 changed the bound paths and stays visible in history. It is not rewritten; the working tree carries the bound bytes again and every further correction uses a new versioned path."
+  }
+}
