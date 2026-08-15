@@ -375,6 +375,10 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
             ObservedFault suspectFault = await AwaitResult("suspect fault", _silentWorker.SuspectFaultObserved);
 
+            // The fault is still held in the filter, so the clock can be put back without racing the retry.
+            await AdvanceTime(-TimeSpan.FromSeconds(60));
+            _silentWorker.ReleaseSuspectFault();
+
             ConsumeContext<JobCompleted> completed = await AwaitResult("job completion", _completed);
 
             Assert.Multiple(() =>
@@ -548,6 +552,206 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
     }
 
 
+    [TestFixture]
+    [Category("Flaky")]
+    public class Submitting_a_job_whose_previous_attempt_reports_late :
+        QuartzInMemoryTestFixture
+    {
+        const int SuspectJobRetryCount = 1;
+
+        [Test]
+        [Order(1)]
+        public async Task Should_ignore_the_terminal_messages_of_the_previous_attempt()
+        {
+            IRequestClient<SubmitJob<GrindTheGears>> requestClient = Bus.CreateRequestClient<SubmitJob<GrindTheGears>>();
+
+            Response<JobSubmissionAccepted> response = await requestClient.GetResponse<JobSubmissionAccepted>(new
+            {
+                JobId = _jobId,
+                Job = new { Duration = TimeSpan.FromSeconds(1) }
+            });
+
+            Assert.That(response.Message.JobId, Is.EqualTo(_jobId));
+
+            await InMemoryTestHarness.Consumed.Any<ScheduleMessage>();
+
+            SuppressedFault suppressed = await Await("suppression of the reported fault", _silentWorker.ReportedFaultSuppressed);
+
+            await AdvanceTime(TimeSpan.FromSeconds(60));
+
+            await AwaitVoid("first status check", _silentWorker.StatusCheckObserved(1));
+            await AwaitVoid("second status check", _silentWorker.StatusCheckObserved(2));
+
+            await Await("suspect fault", _silentWorker.SuspectFaultObserved);
+
+            await AdvanceTime(-TimeSpan.FromSeconds(60));
+            _silentWorker.ReleaseSuspectFault();
+
+            // The retry is running. Only now the previous attempt reports, late and terminally, exactly as a
+            // worker would that was considered lost. None of these messages belongs to the running attempt.
+            Guid retryAttemptId = await Await("start of the retry attempt", _silentWorker.RetryAttemptStarted);
+
+            Assert.That(retryAttemptId, Is.Not.EqualTo(suppressed.AttemptId));
+
+            _silentWorker.LateAttemptId = suppressed.AttemptId;
+
+            ISendEndpoint jobSaga = await Bus.GetSendEndpoint(new Uri("loopback://localhost/job"));
+
+            await jobSaga.Send<JobAttemptCompleted>(new
+            {
+                JobId = _jobId,
+                AttemptId = suppressed.AttemptId,
+                RetryAttempt = 0,
+                Timestamp = DateTime.UtcNow,
+                Duration = TimeSpan.Zero
+            });
+
+            await jobSaga.Send<JobAttemptFaulted>(new
+            {
+                JobId = _jobId,
+                AttemptId = suppressed.AttemptId,
+                RetryAttempt = 0,
+                Timestamp = DateTime.UtcNow
+            });
+
+            await jobSaga.Send<JobAttemptCanceled>(new
+            {
+                JobId = _jobId,
+                AttemptId = suppressed.AttemptId,
+                Timestamp = DateTime.UtcNow,
+                Reason = "late report of the abandoned attempt"
+            });
+
+            // The retry is still inside its consumer, so all three late messages reached the job saga while the
+            // current attempt was running. Only then is it released.
+            await AwaitVoid("delivery of the late terminal messages", _silentWorker.LateTerminalMessagesObserved(3));
+
+            _silentWorker.ReleaseRetryAttempt();
+
+            ConsumeContext<JobCompleted> completed = await Await("job completion", _completed);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_silentWorker.ObservedLateTerminalMessages, Is.EqualTo("canceled,completed,faulted").Or.EqualTo("completed,faulted,canceled"),
+                    "All three terminal messages of the previous attempt have to reach the job saga");
+                Assert.That(completed.Message.JobId, Is.EqualTo(_jobId));
+                Assert.That(_faulted.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                    "A terminal message of the previous attempt must not fault the running job");
+                Assert.That(_canceled.Status, Is.EqualTo(TaskStatus.WaitingForActivation),
+                    "A terminal message of the previous attempt must not cancel the running job");
+                Assert.That(_silentWorker.HighestRetryAttempt, Is.EqualTo(1),
+                    "The job still has to complete on its retry attempt");
+            });
+
+            async Task AwaitCore(string what, Task step)
+            {
+                try
+                {
+                    await step.WaitAsync(TestCancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    Assert.Fail($"The {what} never happened: {_silentWorker.Diagnostics}");
+                    throw;
+                }
+            }
+
+            Task AwaitVoid(string what, Task step)
+            {
+                return AwaitCore(what, step);
+            }
+
+            async Task<TResult> Await<TResult>(string what, Task<TResult> step)
+            {
+                await AwaitCore(what, step);
+
+                return await step;
+            }
+        }
+
+        Guid _jobId;
+        SilentWorkerReceiveSuppression _silentWorker;
+        Task<ConsumeContext<JobCanceled>> _canceled;
+        Task<ConsumeContext<JobCompleted>> _completed;
+        Task<ConsumeContext<JobFaulted>> _faulted;
+
+        [OneTimeSetUp]
+        public async Task Arrange()
+        {
+            _jobId = NewId.NextGuid();
+        }
+
+        protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
+        {
+            base.ConfigureInMemoryBus(configurator);
+
+            _silentWorker = new SilentWorkerReceiveSuppression(() => _jobId);
+
+            configurator.UseFilter(_silentWorker.JobAttemptFaultedFilter);
+            configurator.UseFilter(_silentWorker.GetJobAttemptStatusObserver);
+            configurator.UseFilter(_silentWorker.FaultObserver);
+            configurator.UseFilter(_silentWorker.LateCompletedObserver);
+            configurator.UseFilter(_silentWorker.LateFaultedObserver);
+            configurator.UseFilter(_silentWorker.LateCanceledObserver);
+
+            var options = new ServiceInstanceOptions()
+                .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);
+
+            configurator.ServiceInstance(options, instance =>
+            {
+                instance.ConfigureJobServiceEndpoints(x =>
+                {
+                    x.SuspectJobRetryCount = SuspectJobRetryCount;
+                    x.SuspectJobRetryDelay = TimeSpan.FromSeconds(1);
+                });
+
+                instance.ReceiveEndpoint(instance.EndpointNameFormatter.Message<GrindTheGears>(), e =>
+                {
+                    e.Consumer(() => new GrindTheGearsConsumer(_silentWorker), cfg =>
+                    {
+                        cfg.Options<JobOptions<GrindTheGears>>(jobOptions => jobOptions.SetJobTimeout(TimeSpan.FromSeconds(90)));
+                    });
+                });
+            });
+        }
+
+        protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
+        {
+            _completed = Handled<JobCompleted>(configurator, context => context.Message.JobId == _jobId);
+            _faulted = Handled<JobFaulted>(configurator, context => context.Message.JobId == _jobId);
+            _canceled = Handled<JobCanceled>(configurator, context => context.Message.JobId == _jobId);
+        }
+
+
+        class GrindTheGearsConsumer :
+            IJobConsumer<GrindTheGears>
+        {
+            readonly SilentWorkerReceiveSuppression _silentWorker;
+
+            public GrindTheGearsConsumer(SilentWorkerReceiveSuppression silentWorker)
+            {
+                _silentWorker = silentWorker;
+            }
+
+            public async Task Run(JobContext<GrindTheGears> context)
+            {
+                _silentWorker.RecordAttempt(context.AttemptId, context.RetryAttempt);
+
+                if (context.RetryAttempt == 0)
+                {
+                    await Task.Delay(context.Job.Duration);
+
+                    throw new OperationCanceledException();
+                }
+
+                // The retry stays inside the consumer until the test has delivered the late messages of the
+                // previous attempt, so they provably arrive while this attempt is still running.
+                await _silentWorker.RetryAttemptGate;
+            }
+        }
+    }
+
+
     /// <summary>
     /// The single reported fault of the first attempt, as it was suppressed on its way to the sagas.
     /// </summary>
@@ -590,6 +794,14 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         readonly TaskCompletionSource<ObservedFault> _suspectFaultObserved =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource<bool> _suspectFaultReleased =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource<Guid> _retryAttemptStarted =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource<bool> _retryAttemptReleased =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly HashSet<string> _lateTerminalMessages = new();
+        readonly List<TaskCompletionSource<int>> _lateTerminalWaiters = new();
         Guid? _suppressedMessageId;
         Guid? _suppressedAttemptId;
         Guid _startedAttemptId;
@@ -605,6 +817,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             JobAttemptFaultedFilter = new SuppressReportedFaultFilter(this);
             GetJobAttemptStatusObserver = new StatusCheckObserver(this);
             FaultObserver = new FaultOfFaultObserver(this);
+            LateCompletedObserver = new LateTerminalObserver<JobAttemptCompleted>(this, "completed", m => m.AttemptId);
+            LateFaultedObserver = new LateTerminalObserver<JobAttemptFaulted>(this, "faulted", m => m.AttemptId);
+            LateCanceledObserver = new LateTerminalObserver<JobAttemptCanceled>(this, "canceled", m => m.AttemptId);
         }
 
         /// <summary>
@@ -622,9 +837,91 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         public IFilter<ConsumeContext<JobAttemptFaulted>> JobAttemptFaultedFilter { get; }
         public IFilter<ConsumeContext<GetJobAttemptStatus>> GetJobAttemptStatusObserver { get; }
         public IFilter<ConsumeContext<Fault<JobAttemptFaulted>>> FaultObserver { get; }
+        public IFilter<ConsumeContext<JobAttemptCompleted>> LateCompletedObserver { get; }
+        public IFilter<ConsumeContext<JobAttemptFaulted>> LateFaultedObserver { get; }
+        public IFilter<ConsumeContext<JobAttemptCanceled>> LateCanceledObserver { get; }
 
         public Task<SuppressedFault> ReportedFaultSuppressed => _reportedFaultSuppressed.Task;
         public Task<ObservedFault> SuspectFaultObserved => _suspectFaultObserved.Task;
+
+        /// <summary>
+        /// Completes with the attempt id of the retry as soon as the worker really runs it.
+        /// </summary>
+        public Task<Guid> RetryAttemptStarted => _retryAttemptStarted.Task;
+
+        /// <summary>
+        /// The retry attempt waits here until the test releases it, so a late message of the previous attempt
+        /// provably arrives while the retry is still running instead of racing its completion.
+        /// </summary>
+        public Task RetryAttemptGate => _retryAttemptReleased.Task;
+
+        public Guid LateAttemptId { get; set; }
+
+        public void ReleaseRetryAttempt()
+        {
+            _retryAttemptReleased.TrySetResult(true);
+        }
+
+        /// <summary>
+        /// Completes once the named terminal messages of the previous attempt have reached the job saga.
+        /// </summary>
+        public Task LateTerminalMessagesObserved(int count)
+        {
+            TaskCompletionSource<int> waiter;
+            lock (_lock)
+            {
+                if (_lateTerminalMessages.Count >= count)
+                    return Task.CompletedTask;
+
+                waiter = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _lateTerminalWaiters.Add(waiter);
+            }
+
+            return WaitFor(waiter, count);
+
+            async Task WaitFor(TaskCompletionSource<int> current, int required)
+            {
+                while (await current.Task.ConfigureAwait(false) < required)
+                {
+                    lock (_lock)
+                    {
+                        if (_lateTerminalMessages.Count >= required)
+                            return;
+
+                        current = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+                        _lateTerminalWaiters.Add(current);
+                    }
+                }
+            }
+        }
+
+        public string ObservedLateTerminalMessages
+        {
+            get
+            {
+                lock (_lock)
+                    return string.Join(",", _lateTerminalMessages);
+            }
+        }
+
+        internal void OnLateTerminal(string kind, Guid attemptId)
+        {
+            if (attemptId != LateAttemptId || LateAttemptId == Guid.Empty)
+                return;
+
+            List<TaskCompletionSource<int>> waiters;
+            int count;
+            lock (_lock)
+            {
+                _lateTerminalMessages.Add(kind);
+                count = _lateTerminalMessages.Count;
+                waiters = new List<TaskCompletionSource<int>>(_lateTerminalWaiters);
+                _lateTerminalWaiters.Clear();
+            }
+
+            foreach (var waiter in waiters)
+                waiter.TrySetResult(count);
+        }
 
         public int SuppressionCount => Volatile.Read(ref _suppressionCount);
         public int RedeliveryCount => Volatile.Read(ref _redeliveryCount);
@@ -656,6 +953,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
 
                 if (retryAttempt == 0)
                     _startedAttemptId = attemptId;
+                else
+                    _retryAttemptStarted.TrySetResult(attemptId);
             }
         }
 
@@ -761,19 +1060,31 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
             return expected;
         }
 
-        void OnPassedFault(ConsumeContext<JobAttemptFaulted> context)
+        Task OnPassedFault(ConsumeContext<JobAttemptFaulted> context)
         {
             var message = context.Message;
 
-            if (message.JobId == _jobId() && message.RetryDelay.HasValue)
+            if (message.JobId != _jobId() || !message.RetryDelay.HasValue)
+                return Task.CompletedTask;
+
+            var observed = _suspectFaultObserved.TrySetResult(new ObservedFault
             {
-                _suspectFaultObserved.TrySetResult(new ObservedFault
-                {
-                    MessageId = context.MessageId ?? Guid.Empty,
-                    AttemptId = message.AttemptId,
-                    RetryDelay = message.RetryDelay
-                });
-            }
+                MessageId = context.MessageId ?? Guid.Empty,
+                AttemptId = message.AttemptId,
+                RetryDelay = message.RetryDelay
+            });
+
+            // Only the first suspect fault is held, and only while the test still has to reset the clock.
+            return observed ? _suspectFaultReleased.Task : Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Lets the held suspect fault continue to the saga. The test calls this after the scheduler clock is
+        /// back, so the reset can never race with the forwarding.
+        /// </summary>
+        public void ReleaseSuspectFault()
+        {
+            _suspectFaultReleased.TrySetResult(true);
         }
 
         void OnStatusCheck()
@@ -792,6 +1103,36 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
         }
 
 
+        class LateTerminalObserver<TMessage> :
+            IFilter<ConsumeContext<TMessage>>
+            where TMessage : class
+        {
+            readonly Func<TMessage, Guid> _attemptId;
+            readonly string _kind;
+            readonly SilentWorkerReceiveSuppression _suppression;
+
+            public LateTerminalObserver(SilentWorkerReceiveSuppression suppression, string kind, Func<TMessage, Guid> attemptId)
+            {
+                _suppression = suppression;
+                _kind = kind;
+                _attemptId = attemptId;
+            }
+
+            public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+            {
+                if (EndpointName(context.ReceiveContext.InputAddress) == "job")
+                    _suppression.OnLateTerminal(_kind, _attemptId(context.Message));
+
+                return next.Send(context);
+            }
+
+            public void Probe(ProbeContext context)
+            {
+                context.CreateScope($"late-terminal-observer-{_kind}");
+            }
+        }
+
+
         class SuppressReportedFaultFilter :
             IFilter<ConsumeContext<JobAttemptFaulted>>
         {
@@ -802,16 +1143,20 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout
                 _suppression = suppression;
             }
 
-            public Task Send(ConsumeContext<JobAttemptFaulted> context, IPipe<ConsumeContext<JobAttemptFaulted>> next)
+            public async Task Send(ConsumeContext<JobAttemptFaulted> context, IPipe<ConsumeContext<JobAttemptFaulted>> next)
             {
                 var endpoint = EndpointName(context.ReceiveContext.InputAddress);
 
                 if (Array.IndexOf(SagaEndpoints, endpoint) >= 0 && _suppression.Suppress(context, endpoint))
-                    return Task.CompletedTask;
+                    return;
 
-                _suppression.OnPassedFault(context);
+                // The suspect fault is held here until the test has put the scheduler clock back. Forwarding it
+                // with a clock that still carries the offset would make the status check of the retry attempt
+                // due while that attempt is still starting, which the job service correctly treats as a start
+                // timeout of the new attempt.
+                await _suppression.OnPassedFault(context).ConfigureAwait(false);
 
-                return next.Send(context);
+                await next.Send(context).ConfigureAwait(false);
             }
 
             public void Probe(ProbeContext context)

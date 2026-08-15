@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="b46aa4b4-ff33-4251-b5c9-2c275ccb26fe" name="@Edgars-iMac-2 2026-08-15 07:19:35" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-15T07:19:35.4977910+00:00" queuing="2026-08-15T07:19:35.4977910+00:00" start="2026-08-15T07:19:30.4417970+00:00" finish="2026-08-15T07:20:04.1907720+00:00" />
+  <TestSettings name="default" id="7413e413-bf10-4f30-a328-7200d4b8a3e7">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-15_07_19_35" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ca1c677d-a546-4da0-86bf-a43adff24c31" testId="c517da82-7a18-0c26-3dbf-ed2cb2a686ab" testName="Should_ignore_the_terminal_messages_of_the_previous_attempt" computerName="Edgars-iMac-2" duration="00:00:02.3491280" startTime="2026-08-15T07:19:31.7762530+00:00" endTime="2026-08-15T07:19:34.1253890+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca1c677d-a546-4da0-86bf-a43adff24c31">
+      <Output>
+        <StdOut>07:19:31.791-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:31.806-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Created ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+07:19:31.812-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Added ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+07:19:31.833-D Job Service Instance Started: loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:31.834-D Concurrent Job Limit: 1 ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer:ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears:grind-the-gears
+07:19:31.842-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-b060-08defa9d8d14 ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit ViciOne.ServiceBus.JobTypeSaga(00:00:00.0414400)
+07:19:31.866-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-2dcc-08defa9d8d2b ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:31.876-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted
+07:19:31.883-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted f76e0000-6d6c-1461-9154-08defa9d8d30 ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.885-D Create send transport: loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83
+07:19:31.886-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Created ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.887-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Added ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.892-D SEND loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83 f76e0000-6d6c-1461-eb9e-08defa9d8d31 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted
+07:19:31.894-D RECEIVE loopback://localhost/grind-the-gears f76e0000-6d6c-1461-2dcc-08defa9d8d2b ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt; ViciOne.ServiceBus.JobService.SubmitJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0235814)
+07:19:31.895-D Create send transport: loopback://localhost/job-type
+07:19:31.897-D RECEIVE loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83 f76e0000-6d6c-1461-eb9e-08defa9d8d31 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted&gt;(00:00:00.0006319)
+07:19:31.899-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-9154-08defa9d8d30 ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.JobSaga(00:00:00.0128756)
+07:19:31.902-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-1036-08defa9d8d34 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:31.905-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:31.914-D Allocated Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (1): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 (1)
+07:19:31.914-D Create send transport: loopback://localhost/job
+07:19:31.915-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-1036-08defa9d8d34 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0107946)
+07:19:31.926-D SEND loopback://localhost/job f76e0000-6d6c-1461-7952-08defa9d8d36 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:31.928-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:31.929-D Create send transport: loopback://localhost/job-attempt
+07:19:31.930-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-7952-08defa9d8d36 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0023795)
+07:19:31.937-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-c64e-08defa9d8d38 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.940-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.941-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.951-D Create send transport: loopback://localhost/quartz
+07:19:31.958-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:31.959-D Create send transport: loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:31.961-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-c64e-08defa9d8d38 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0210456)
+07:19:31.964-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob
+07:19:31.971-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears f76e0000-6d6c-1461-3452-08defa9d8d21 (0)
+07:19:31.975-D Job Started: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-a890-08defa9d8d32 (0)
+07:19:31.976-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted
+07:19:31.979-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.980-D Scheduled: DEFAULT.f76e00006d6c1461c8f808defa9d8d3b 08/15/2026 07:20:31 +00:00
+07:19:31.981-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0176689)
+07:19:31.981-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:31.982-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.982-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.983-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0020205)
+07:19:31.984-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-90f4-08defa9d8d40 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:31.986-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted
+07:19:31.987-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0055980)
+07:19:31.987-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0213612)
+07:19:31.989-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted f76e0000-6d6c-1461-6efc-08defa9d8d41 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+07:19:32.988-D Job Faulted: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-a890-08defa9d8d32 (0)
+
+System.OperationCanceledException: The operation was canceled.
+   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late.GrindTheGearsConsumer.Run(JobContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 744
+   at ViciOne.ServiceBus.Middleware.JobConsumerMessageFilter`2.RunJob(PipeContext context, IJobConsumer`1 jobConsumer) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs:line 53
+07:19:33.009-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted
+07:19:33.025-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted f76e0000-6d6c-1461-6352-08defa9d8ddd ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.026-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer(00:00:01.0546802)
+07:19:33.027-D Removed job: f76e0000-6d6c-1461-3452-08defa9d8d21 (RanToCompletion)
+07:19:33.032-D SKIP loopback://localhost/job f76e0000-6d6c-1461-6352-08defa9d8ddd
+07:19:33.032-D SKIP loopback://localhost/job-attempt f76e0000-6d6c-1461-6352-08defa9d8ddd
+07:19:33.044-D Create send transport: loopback://localhost/job-attempt
+07:19:33.049-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.049-D Schedule Executed: DEFAULT.f76e00006d6c1461c8f808defa9d8d3b (null)
+07:19:33.052-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.057-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.057-D Scheduled: DEFAULT.f76e00006d6c146190be08defa9d8de4 08/15/2026 07:20:33 +00:00
+07:19:33.057-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0005412)
+07:19:33.058-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0062046)
+07:19:33.058-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.058-D Schedule Executed: DEFAULT.f76e00006d6c146190be08defa9d8de4 (null)
+07:19:33.060-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-d9d4-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus
+07:19:33.061-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.061-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.061-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0002708)
+07:19:33.061-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-56c0-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus
+07:19:33.061-D Scheduled: DEFAULT.f76e00006d6c14614e6e08defa9d8de5 08/15/2026 07:20:33 +00:00
+07:19:33.061-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001354)
+07:19:33.062-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.062-D Schedule Executed: DEFAULT.f76e00006d6c14614e6e08defa9d8de5 (null)
+07:19:33.062-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.062-D Create send transport: loopback://localhost/job
+07:19:33.062-D CheckJobStatus, job not found: f76e0000-6d6c-1461-3452-08defa9d8d21
+07:19:33.063-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-d9d4-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus ViciOne.ServiceBus.JobService.SuperviseJobConsumer(00:00:00.0008281)
+07:19:33.063-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0011868)
+07:19:33.063-D CheckJobStatus, job not found: f76e0000-6d6c-1461-3452-08defa9d8d21
+07:19:33.063-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-56c0-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus ViciOne.ServiceBus.JobService.SuperviseJobConsumer(00:00:00.0000330)
+07:19:33.064-D SEND loopback://localhost/job f76e0000-6d6c-1461-a0c6-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.067-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.069-D Create send transport: loopback://localhost/quartz
+07:19:33.070-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.071-D Scheduled: DEFAULT.f76e00006d6c1461882408defa9d8de6 08/15/2026 07:19:34 +00:00
+07:19:33.071-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001413)
+07:19:33.074-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-a0c6-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobSaga(00:00:00.0074043)
+07:19:33.090-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-4d5e-08defa9d8de7 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:33.092-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:33.094-D Released Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (0): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:33.094-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-4d5e-08defa9d8de7 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0025585)
+07:19:34.070-D Create send transport: loopback://localhost/job
+07:19:34.071-D SEND loopback://localhost/job f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:34.071-D Schedule Executed: DEFAULT.f76e00006d6c1461882408defa9d8de6 (null)
+07:19:34.074-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobRetryDelayElapsed
+07:19:34.076-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Contracts.JobService.JobRetryDelayElapsed ViciOne.ServiceBus.JobSaga(00:00:00.0022444)
+07:19:34.076-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-2d80-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:34.076-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:34.076-D Allocated Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (1): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 (1)
+07:19:34.077-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-2d80-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0003655)
+07:19:34.077-D SEND loopback://localhost/job f76e0000-6d6c-1461-4aa4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:34.077-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:34.077-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-4aa4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0001389)
+07:19:34.077-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-5a62-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.077-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.078-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.078-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-7402-08defa9d8e80 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:34.078-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-5a62-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0005665)
+07:19:34.078-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob
+07:19:34.078-D Scheduled: DEFAULT.f76e00006d6c146172c208defa9d8e80 08/15/2026 07:20:34 +00:00
+07:19:34.078-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-7402-08defa9d8e80 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001527)
+07:19:34.078-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears f76e0000-6d6c-1461-3452-08defa9d8d21 (1)
+07:19:34.078-D Job Started: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-0f26-08defa9d8e80 (1)
+07:19:34.078-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-92d4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:34.079-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0006311)
+07:19:34.079-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0000661)
+07:19:34.079-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0000959)
+07:19:34.079-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted f76e0000-6d6c-1461-a238-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+07:19:34.095-D SEND loopback://localhost/job f76e0000-6d6c-1461-a542-08defa9d8e82 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.097-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.098-D Create send transport: loopback://localhost/grind-the-gears
+07:19:34.100-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted
+07:19:34.101-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-a542-08defa9d8e82 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted ViciOne.ServiceBus.JobSaga(00:00:00.0038546)
+07:19:34.101-D SEND loopback://localhost/job f76e0000-6d6c-1461-edd0-08defa9d8e83 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:34.104-D SEND loopback://localhost/grind-the-gears f76e0000-6d6c-1461-09dc-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.CompleteJob
+07:19:34.108-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted f76e0000-6d6c-1461-910e-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobCompleted
+07:19:34.108-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-2164-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:34.109-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:34.109-D Released Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (0): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:34.109-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-2164-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0001303)
+07:19:34.109-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:34.109-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:34.109-D SEND loopback://localhost/job f76e0000-6d6c-1461-ee9c-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCanceled
+07:19:34.110-D RECEIVE loopback://localhost/input_queue f76e0000-6d6c-1461-910e-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobCompleted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobCompleted&gt;(00:00:00.0008995)
+07:19:34.112-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-3a8c-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobCompleted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:34.112-D RECEIVE loopback://localhost/grind-the-gears f76e0000-6d6c-1461-09dc-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.CompleteJob ViciOne.ServiceBus.JobService.FinalizeJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0061460)
+07:19:34.113-W R-RETRY loopback://localhost/job f76e0000-6d6c-1461-edd0-08defa9d8e83 ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext&lt;ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted&gt;
+
+ViciOne.ServiceBus.NotAcceptedStateMachineException: ViciOne.ServiceBus.JobSaga(f76e0000-6d6c-1461-3452-08defa9d8d21) Saga exception on receipt of ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted: Not accepted in state Completed
+ ---&gt; ViciOne.ServiceBus.UnhandledEventException: The AttemptFaulted event is not handled during the Completed state for the JobStateMachine state machine
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.DefaultUnhandledEventCallback(UnhandledEventContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 223
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.UnhandledEvent(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 1267
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.&lt;DeclareState&gt;b__112_0(BehaviorContext`1 c, State s) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 730
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.StateMachineState.ViciOne.ServiceBus.State&lt;TInstance&gt;.Raise[T](BehaviorContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/StateMachineState.cs:line 166
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.ViciOne.ServiceBus.StateMachine&lt;TInstance&gt;.RaiseEvent[T](BehaviorContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 136
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 67
+   --- End of inner exception stack trace ---
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 82
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 105
+   at ViciOne.ServiceBus.Middleware.SendSagaPipe`2.Send(SagaRepositoryContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/SendSagaPipe.cs:line 44
+   at ViciOne.ServiceBus.Middleware.SendSagaPipe`2.Send(SagaRepositoryContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/SendSagaPipe.cs:line 68
+   at ViciOne.ServiceBus.Saga.InMemorySagaRepositoryContextFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactory.cs:line 55
+   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CorrelatedSagaFilter.cs:line 46
+   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CorrelatedSagaFilter.cs:line 63
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 36
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 46
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter&lt;TContext&gt;.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 48
+07:19:34.121-D Job Completed: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-0f26-08defa9d8e80 (1)
+07:19:34.122-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptCompleted
+07:19:34.124-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptCompleted f76e0000-6d6c-1461-26ee-08defa9d8e87 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.124-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer(00:00:00.0454439)
+07:19:34.124-D Removed job: f76e0000-6d6c-1461-3452-08defa9d8d21 (RanToCompletion)
+07:19:34.124-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted</StdOut>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_ignore_the_terminal_messages_of_the_previous_attempt" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="c517da82-7a18-0c26-3dbf-ed2cb2a686ab">
+      <Execution id="ca1c677d-a546-4da0-86bf-a43adff24c31" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late" name="Should_ignore_the_terminal_messages_of_the_previous_attempt" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="c517da82-7a18-0c26-3dbf-ed2cb2a686ab" executionId="ca1c677d-a546-4da0-86bf-a43adff24c31" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll
+   NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+07:19:31.791-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:31.806-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Created ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+07:19:31.812-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Added ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+07:19:31.833-D Job Service Instance Started: loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:31.834-D Concurrent Job Limit: 1 ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer:ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears:grind-the-gears
+07:19:31.842-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-b060-08defa9d8d14 ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit ViciOne.ServiceBus.JobTypeSaga(00:00:00.0414400)
+07:19:31.866-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-2dcc-08defa9d8d2b ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:31.876-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted
+07:19:31.883-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted f76e0000-6d6c-1461-9154-08defa9d8d30 ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.885-D Create send transport: loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83
+07:19:31.886-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Created ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.887-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Added ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+07:19:31.892-D SEND loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83 f76e0000-6d6c-1461-eb9e-08defa9d8d31 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted
+07:19:31.894-D RECEIVE loopback://localhost/grind-the-gears f76e0000-6d6c-1461-2dcc-08defa9d8d2b ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt; ViciOne.ServiceBus.JobService.SubmitJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0235814)
+07:19:31.895-D Create send transport: loopback://localhost/job-type
+07:19:31.897-D RECEIVE loopback://localhost/EdgarsiMac2_testhost_bus_67zyyydppokgdd1hbdxxi8cc83 f76e0000-6d6c-1461-eb9e-08defa9d8d31 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted&gt;(00:00:00.0006319)
+07:19:31.899-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-9154-08defa9d8d30 ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.JobSaga(00:00:00.0128756)
+07:19:31.902-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-1036-08defa9d8d34 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:31.905-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:31.914-D Allocated Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (1): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 (1)
+07:19:31.914-D Create send transport: loopback://localhost/job
+07:19:31.915-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-1036-08defa9d8d34 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0107946)
+07:19:31.926-D SEND loopback://localhost/job f76e0000-6d6c-1461-7952-08defa9d8d36 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:31.928-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:31.929-D Create send transport: loopback://localhost/job-attempt
+07:19:31.930-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-7952-08defa9d8d36 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0023795)
+07:19:31.937-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-c64e-08defa9d8d38 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.940-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.941-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:31.951-D Create send transport: loopback://localhost/quartz
+07:19:31.958-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:31.959-D Create send transport: loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:31.961-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-c64e-08defa9d8d38 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0210456)
+07:19:31.964-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob
+07:19:31.971-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears f76e0000-6d6c-1461-3452-08defa9d8d21 (0)
+07:19:31.975-D Job Started: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-a890-08defa9d8d32 (0)
+07:19:31.976-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted
+07:19:31.979-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.980-D Scheduled: DEFAULT.f76e00006d6c1461c8f808defa9d8d3b 08/15/2026 07:20:31 +00:00
+07:19:31.981-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0176689)
+07:19:31.981-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:31.982-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.982-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:31.983-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0020205)
+07:19:31.984-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-90f4-08defa9d8d40 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:31.986-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted
+07:19:31.987-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-d826-08defa9d8d3f ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0055980)
+07:19:31.987-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0213612)
+07:19:31.989-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted f76e0000-6d6c-1461-6efc-08defa9d8d41 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+07:19:32.988-D Job Faulted: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-a890-08defa9d8d32 (0)
+
+System.OperationCanceledException: The operation was canceled.
+   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late.GrindTheGearsConsumer.Run(JobContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 744
+   at ViciOne.ServiceBus.Middleware.JobConsumerMessageFilter`2.RunJob(PipeContext context, IJobConsumer`1 jobConsumer) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs:line 53
+07:19:33.009-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted
+07:19:33.025-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted f76e0000-6d6c-1461-6352-08defa9d8ddd ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.026-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-78f6-08defa9d8d3d ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer(00:00:01.0546802)
+07:19:33.027-D Removed job: f76e0000-6d6c-1461-3452-08defa9d8d21 (RanToCompletion)
+07:19:33.032-D SKIP loopback://localhost/job f76e0000-6d6c-1461-6352-08defa9d8ddd
+07:19:33.032-D SKIP loopback://localhost/job-attempt f76e0000-6d6c-1461-6352-08defa9d8ddd
+07:19:33.044-D Create send transport: loopback://localhost/job-attempt
+07:19:33.049-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.049-D Schedule Executed: DEFAULT.f76e00006d6c1461c8f808defa9d8d3b (null)
+07:19:33.052-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.057-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.057-D Scheduled: DEFAULT.f76e00006d6c146190be08defa9d8de4 08/15/2026 07:20:33 +00:00
+07:19:33.057-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0005412)
+07:19:33.058-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-f8e6-08defa9d8d3b ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0062046)
+07:19:33.058-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.058-D Schedule Executed: DEFAULT.f76e00006d6c146190be08defa9d8de4 (null)
+07:19:33.060-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-d9d4-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus
+07:19:33.061-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.061-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.061-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-9aa0-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0002708)
+07:19:33.061-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-56c0-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus
+07:19:33.061-D Scheduled: DEFAULT.f76e00006d6c14614e6e08defa9d8de5 08/15/2026 07:20:33 +00:00
+07:19:33.061-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001354)
+07:19:33.062-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:33.062-D Schedule Executed: DEFAULT.f76e00006d6c14614e6e08defa9d8de5 (null)
+07:19:33.062-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-a890-08defa9d8d32 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+07:19:33.062-D Create send transport: loopback://localhost/job
+07:19:33.062-D CheckJobStatus, job not found: f76e0000-6d6c-1461-3452-08defa9d8d21
+07:19:33.063-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-d9d4-08defa9d8de4 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus ViciOne.ServiceBus.JobService.SuperviseJobConsumer(00:00:00.0008281)
+07:19:33.063-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-4fc2-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0011868)
+07:19:33.063-D CheckJobStatus, job not found: f76e0000-6d6c-1461-3452-08defa9d8d21
+07:19:33.063-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-56c0-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.GetJobAttemptStatus ViciOne.ServiceBus.JobService.SuperviseJobConsumer(00:00:00.0000330)
+07:19:33.064-D SEND loopback://localhost/job f76e0000-6d6c-1461-a0c6-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.067-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:33.069-D Create send transport: loopback://localhost/quartz
+07:19:33.070-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:33.071-D Scheduled: DEFAULT.f76e00006d6c1461882408defa9d8de6 08/15/2026 07:19:34 +00:00
+07:19:33.071-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001413)
+07:19:33.074-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-a0c6-08defa9d8de5 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobSaga(00:00:00.0074043)
+07:19:33.090-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-4d5e-08defa9d8de7 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:33.092-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:33.094-D Released Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (0): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:33.094-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-4d5e-08defa9d8de7 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0025585)
+07:19:34.070-D Create send transport: loopback://localhost/job
+07:19:34.071-D SEND loopback://localhost/job f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Serialization.SerializedMessageBody
+07:19:34.071-D Schedule Executed: DEFAULT.f76e00006d6c1461882408defa9d8de6 (null)
+07:19:34.074-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobRetryDelayElapsed
+07:19:34.076-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-8fcc-08defa9d8de6 ViciOne.ServiceBus.Contracts.JobService.JobRetryDelayElapsed ViciOne.ServiceBus.JobSaga(00:00:00.0022444)
+07:19:34.076-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-2d80-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:34.076-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+07:19:34.076-D Allocated Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (1): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 (1)
+07:19:34.077-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-2d80-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0003655)
+07:19:34.077-D SEND loopback://localhost/job f76e0000-6d6c-1461-4aa4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:34.077-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+07:19:34.077-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-4aa4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0001389)
+07:19:34.077-D SEND loopback://localhost/job-attempt f76e0000-6d6c-1461-5a62-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.077-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.078-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+07:19:34.078-D SEND loopback://localhost/quartz f76e0000-6d6c-1461-7402-08defa9d8e80 ViciOne.ServiceBus.Scheduling.ScheduleMessage
+07:19:34.078-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-5a62-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0005665)
+07:19:34.078-D SEND loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob
+07:19:34.078-D Scheduled: DEFAULT.f76e00006d6c146172c208defa9d8e80 08/15/2026 07:20:34 +00:00
+07:19:34.078-D RECEIVE loopback://localhost/quartz f76e0000-6d6c-1461-7402-08defa9d8e80 ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0001527)
+07:19:34.078-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears f76e0000-6d6c-1461-3452-08defa9d8d21 (1)
+07:19:34.078-D Job Started: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-0f26-08defa9d8e80 (1)
+07:19:34.078-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-92d4-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:34.079-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+07:19:34.079-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0006311)
+07:19:34.079-D RECEIVE loopback://localhost/job-attempt f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0000661)
+07:19:34.079-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-8f32-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0000959)
+07:19:34.079-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted f76e0000-6d6c-1461-a238-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+07:19:34.095-D SEND loopback://localhost/job f76e0000-6d6c-1461-a542-08defa9d8e82 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.097-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.098-D Create send transport: loopback://localhost/grind-the-gears
+07:19:34.100-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted
+07:19:34.101-D RECEIVE loopback://localhost/job f76e0000-6d6c-1461-a542-08defa9d8e82 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted ViciOne.ServiceBus.JobSaga(00:00:00.0038546)
+07:19:34.101-D SEND loopback://localhost/job f76e0000-6d6c-1461-edd0-08defa9d8e83 ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:34.104-D SEND loopback://localhost/grind-the-gears f76e0000-6d6c-1461-09dc-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.CompleteJob
+07:19:34.108-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted f76e0000-6d6c-1461-910e-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobCompleted
+07:19:34.108-D SEND loopback://localhost/job-type f76e0000-6d6c-1461-2164-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:34.109-D SAGA:ViciOne.ServiceBus.JobTypeSaga:3e7e47aa-3645-a2a8-3496-129995f5dbb0 Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+07:19:34.109-D Released Job Slot: f76e0000-6d6c-1461-3452-08defa9d8d21 (0): loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7
+07:19:34.109-D RECEIVE loopback://localhost/job-type f76e0000-6d6c-1461-2164-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0001303)
+07:19:34.109-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+07:19:34.109-D SAGA:ViciOne.ServiceBus.JobSaga:f76e0000-6d6c-1461-3452-08defa9d8d21 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+07:19:34.109-D SEND loopback://localhost/job f76e0000-6d6c-1461-ee9c-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCanceled
+07:19:34.110-D RECEIVE loopback://localhost/input_queue f76e0000-6d6c-1461-910e-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.JobCompleted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobCompleted&gt;(00:00:00.0008995)
+07:19:34.112-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobCompleted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] f76e0000-6d6c-1461-3a8c-08defa9d8e85 ViciOne.ServiceBus.Contracts.JobService.JobCompleted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+07:19:34.112-D RECEIVE loopback://localhost/grind-the-gears f76e0000-6d6c-1461-09dc-08defa9d8e84 ViciOne.ServiceBus.Contracts.JobService.CompleteJob ViciOne.ServiceBus.JobService.FinalizeJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0061460)
+07:19:34.113-W R-RETRY loopback://localhost/job f76e0000-6d6c-1461-edd0-08defa9d8e83 ViciOne.ServiceBus.RetryPolicies.RetryConsumeContext&lt;ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted&gt;
+
+ViciOne.ServiceBus.NotAcceptedStateMachineException: ViciOne.ServiceBus.JobSaga(f76e0000-6d6c-1461-3452-08defa9d8d21) Saga exception on receipt of ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted: Not accepted in state Completed
+ ---&gt; ViciOne.ServiceBus.UnhandledEventException: The AttemptFaulted event is not handled during the Completed state for the JobStateMachine state machine
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.DefaultUnhandledEventCallback(UnhandledEventContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 223
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.UnhandledEvent(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 1267
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.&lt;DeclareState&gt;b__112_0(BehaviorContext`1 c, State s) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 730
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.StateMachineState.ViciOne.ServiceBus.State&lt;TInstance&gt;.Raise[T](BehaviorContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/StateMachineState.cs:line 166
+   at ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.ViciOne.ServiceBus.StateMachine&lt;TInstance&gt;.RaiseEvent[T](BehaviorContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:line 136
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 67
+   --- End of inner exception stack trace ---
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 82
+   at ViciOne.ServiceBus.Middleware.StateMachineSagaMessageFilter`2.Send(SagaConsumeContext`2 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/StateMachineSagaMessageFilter.cs:line 105
+   at ViciOne.ServiceBus.Middleware.SendSagaPipe`2.Send(SagaRepositoryContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/SendSagaPipe.cs:line 44
+   at ViciOne.ServiceBus.Middleware.SendSagaPipe`2.Send(SagaRepositoryContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/SendSagaPipe.cs:line 68
+   at ViciOne.ServiceBus.Saga.InMemorySagaRepositoryContextFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactory.cs:line 55
+   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CorrelatedSagaFilter.cs:line 46
+   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CorrelatedSagaFilter.cs:line 63
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 36
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 46
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter&lt;TContext&gt;.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 48
+07:19:34.121-D Job Completed: f76e0000-6d6c-1461-3452-08defa9d8d21 f76e0000-6d6c-1461-0f26-08defa9d8e80 (1)
+07:19:34.122-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptCompleted
+07:19:34.124-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptCompleted f76e0000-6d6c-1461-26ee-08defa9d8e87 ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+07:19:34.124-D RECEIVE loopback://localhost/instance-67zyyydppokgd776bdxxi8ccg7 f76e0000-6d6c-1461-7cea-08defa9d8e80 ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late+GrindTheGearsConsumer(00:00:00.0454439)
+07:19:34.124-D Removed job: f76e0000-6d6c-1461-3452-08defa9d8d21 (RanToCompletion)
+07:19:34.124-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:f76e0000-6d6c-1461-0f26-08defa9d8e80 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptCompleted
+
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
