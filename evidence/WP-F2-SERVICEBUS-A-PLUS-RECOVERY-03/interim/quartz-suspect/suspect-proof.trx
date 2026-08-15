@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="0218d6b1-7f1e-405e-9c4e-9984d28161b3" name="@Edgars-iMac-2 2026-08-15 05:52:20" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-15T05:52:20.7977810+00:00" queuing="2026-08-15T05:52:20.7977810+00:00" start="2026-08-15T05:51:48.9348830+00:00" finish="2026-08-15T05:52:20.8599600+00:00" />
+  <TestSettings name="default" id="246bf5d7-6df8-4adc-955c-d8628d110b3a">
+    <Deployment runDeploymentRoot="_Edgars-iMac-2_2026-08-15_05_52_20" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b7c8fb72-365a-4a04-beaf-7ff5a6046471" testId="f9d67ed3-4c65-fba7-b4c4-4396f0654e5d" testName="Should_have_published_the_job_completed_event" computerName="Edgars-iMac-2" duration="00:00:00.0005360" startTime="2026-08-15T05:52:20.7472630+00:00" endTime="2026-08-15T05:52:20.7477990+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b7c8fb72-365a-4a04-beaf-7ff5a6046471">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Threading.Tasks.TaskCanceledException : A task was canceled.</Message>
+          <StackTrace>   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_completed_event() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 399
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+1)    at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_completed_event() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 399
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="59f3b7a4-c2db-480c-89ac-8a7c280c994c" testId="126bf279-ba29-4f10-192e-3b804fe2cc50" testName="Should_not_have_published_the_job_faulted_event" computerName="Edgars-iMac-2" duration="00:00:00.0005360" startTime="2026-08-15T05:52:20.7484110+00:00" endTime="2026-08-15T05:52:20.7489470+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="59f3b7a4-c2db-480c-89ac-8a7c280c994c">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Threading.Tasks.TaskCanceledException : A task was canceled.</Message>
+          <StackTrace>   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_not_have_published_the_job_faulted_event() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 416
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+1)    at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_not_have_published_the_job_faulted_event() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 416
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="21c98e62-8b41-484a-bc97-1fc12d58d7d9" testId="e82ec06a-fe38-ce1d-7b05-40ac636e78ea" testName="Should_have_published_the_job_submitted_event" computerName="Edgars-iMac-2" duration="00:00:00.0007150" startTime="2026-08-15T05:52:20.7461190+00:00" endTime="2026-08-15T05:52:20.7468340+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="21c98e62-8b41-484a-bc97-1fc12d58d7d9" />
+    <UnitTestResult executionId="f6e0e7e1-0943-45c1-9e71-f44487673cf1" testId="d99d9a0f-73b4-4119-0856-87a71d49e81c" testName="Should_have_published_the_job_started_event" computerName="Edgars-iMac-2" duration="00:00:00.0003540" startTime="2026-08-15T05:52:20.7468960+00:00" endTime="2026-08-15T05:52:20.7472500+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f6e0e7e1-0943-45c1-9e71-f44487673cf1" />
+    <UnitTestResult executionId="e6bd5012-a647-49e3-aada-7026a3de56bc" testId="628eb6fd-3849-2da8-b3be-0a6d5bff2caa" testName="Should_get_the_job_accepted" computerName="Edgars-iMac-2" duration="00:00:30.0076120" startTime="2026-08-15T05:51:50.7364080+00:00" endTime="2026-08-15T05:52:20.7447290+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6bd5012-a647-49e3-aada-7026a3de56bc">
+      <Output>
+        <StdOut>05:51:50.752-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:50.770-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Created ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+05:51:50.777-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Added ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+05:51:50.800-D Job Service Instance Started: loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:50.800-D Concurrent Job Limit: 1 ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried+GrindTheGearsConsumer:ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears:grind-the-gears
+05:51:50.809-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-c4ea-08defa914d3f ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit ViciOne.ServiceBus.JobTypeSaga(00:00:00.0451494)
+05:51:50.839-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-6e86-08defa914d59 ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:50.850-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted
+05:51:50.859-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.861-D Create send transport: loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9
+05:51:50.862-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Created ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.863-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Added ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.865-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmitted&gt;(00:00:00.0017289)
+05:51:50.870-D SEND loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9 322e0000-6d6c-1461-697e-08defa914d61 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted
+05:51:50.871-D RECEIVE loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6e86-08defa914d59 ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt; ViciOne.ServiceBus.JobService.SubmitJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0270180)
+05:51:50.872-D Create send transport: loopback://localhost/job-type
+05:51:50.873-D RECEIVE loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9 322e0000-6d6c-1461-697e-08defa914d61 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted&gt;(00:00:00.0002112)
+05:51:50.877-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.JobSaga(00:00:00.0155953)
+05:51:50.882-D SEND loopback://localhost/job-type 322e0000-6d6c-1461-f7e8-08defa914d63 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+05:51:50.885-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+05:51:50.895-D Allocated Job Slot: 322e0000-6d6c-1461-3a3e-08defa914d4e (1): loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h (1)
+05:51:50.896-D Create send transport: loopback://localhost/job
+05:51:50.906-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-f7e8-08defa914d63 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0223297)
+05:51:50.910-D SEND loopback://localhost/job 322e0000-6d6c-1461-478a-08defa914d68 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+05:51:50.912-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+05:51:50.913-D Create send transport: loopback://localhost/job-attempt
+05:51:50.915-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-478a-08defa914d68 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0026707)
+05:51:50.922-D SEND loopback://localhost/job-attempt 322e0000-6d6c-1461-8406-08defa914d69 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.926-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.927-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.937-D Create send transport: loopback://localhost/quartz
+05:51:50.946-D SEND loopback://localhost/quartz 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Scheduling.ScheduleMessage
+05:51:50.947-D Create send transport: loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:50.949-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-8406-08defa914d69 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0232680)
+05:51:50.953-D SEND loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob
+05:51:50.961-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears 322e0000-6d6c-1461-3a3e-08defa914d4e (0)
+05:51:50.965-D Job Started: 322e0000-6d6c-1461-3a3e-08defa914d4e 322e0000-6d6c-1461-5d7a-08defa914d62 (0)
+05:51:50.967-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted
+05:51:50.970-D Scheduled: DEFAULT.322e00006d6c1461d16008defa914d6c 08/15/2026 05:52:50 +00:00
+05:51:50.970-D RECEIVE loopback://localhost/quartz 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0193185)
+05:51:50.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.973-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:50.973-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.974-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.975-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0025663)
+05:51:50.977-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-703e-08defa914d72 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:50.978-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted
+05:51:50.978-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0053110)
+05:51:50.981-D RECEIVE loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0262220)
+05:51:50.981-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted 322e0000-6d6c-1461-3726-08defa914d73 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+05:51:50.983-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-3726-08defa914d73 ViciOne.ServiceBus.Contracts.JobService.JobStarted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobStarted&gt;(00:00:00.0002414)
+05:51:51.981-D Job Faulted: 322e0000-6d6c-1461-3a3e-08defa914d4e 322e0000-6d6c-1461-5d7a-08defa914d62 (0)
+
+System.OperationCanceledException: The operation was canceled.
+   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.GrindTheGearsConsumer.Run(JobContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 512
+   at ViciOne.ServiceBus.Middleware.JobConsumerMessageFilter`2.RunJob(PipeContext context, IJobConsumer`1 jobConsumer) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs:line 53
+05:51:52.003-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted
+05:51:52.011-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.012-D RECEIVE loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried+GrindTheGearsConsumer(00:00:01.0513888)
+05:51:52.013-D Removed job: 322e0000-6d6c-1461-3a3e-08defa914d4e (RanToCompletion)
+05:51:52.014-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.014-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.016-D Create send transport: loopback://localhost/grind-the-gears
+05:51:52.017-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobFaulted
+05:51:52.018-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0043541)
+05:51:52.021-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobSaga(00:00:00.0075954)
+05:51:52.027-D SEND loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6c60-08defa914e12 ViciOne.ServiceBus.Contracts.JobService.FaultJob
+05:51:52.030-D Create send transport: loopback://localhost/job-attempt
+05:51:52.031-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobFaulted 322e0000-6d6c-1461-40d6-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobFaulted
+05:51:52.033-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-40d6-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobFaulted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobFaulted&gt;(00:00:00.0002729)
+05:51:52.039-D SEND loopback://localhost/job-attempt 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Serialization.SerializedMessageBody
+05:51:52.039-D Schedule Executed: DEFAULT.322e00006d6c1461d16008defa914d6c (null)
+05:51:52.053-D SEND loopback://localhost/job-type 322e0000-6d6c-1461-de92-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+05:51:52.053-D SEND loopback://localhost/quartz 322e0000-6d6c-1461-e17a-08defa914e14 ViciOne.ServiceBus.Scheduling.CancelScheduledMessage
+05:51:52.053-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:52.056-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+05:51:52.056-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+05:51:52.057-D CancelScheduledMessage: no message found for DEFAULT.322e00006d6c1461d16008defa914d6c
+05:51:52.057-D RECEIVE loopback://localhost/quartz 322e0000-6d6c-1461-e17a-08defa914e14 ViciOne.ServiceBus.Scheduling.CancelScheduledMessage ViciOne.ServiceBus.QuartzIntegration.CancelScheduledMessageConsumer(00:00:00.0019408)
+05:51:52.058-D Released Job Slot: 322e0000-6d6c-1461-3a3e-08defa914d4e (0): loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:52.059-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-de92-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0035531)
+05:51:52.061-D SAGA: 322e0000-6d6c-1461-5d7a-08defa914d62 Scheduled message not current: 322e0000-6d6c-1461-d160-08defa914d6c
+05:51:52.061-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0053991)
+05:51:52.064-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-4af0-08defa914e17 ViciOne.ServiceBus.Fault&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:52.064-D RECEIVE loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6c60-08defa914e12 ViciOne.ServiceBus.Contracts.JobService.FaultJob ViciOne.ServiceBus.JobService.FinalizeJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0354988)</StdOut>
+        <ErrorInfo>
+          <Message>System.Threading.Tasks.TaskCanceledException : A task was canceled.</Message>
+          <StackTrace>   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_get_the_job_accepted() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 370
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.BlockUntilCompleted()
+   at NUnit.Framework.Internal.MessagePumpStrategy.NoMessagePumpStrategy.WaitForCompletion(AwaitAdapter awaiter)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+1)    at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_get_the_job_accepted() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 370
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.BlockUntilCompleted()
+   at NUnit.Framework.Internal.MessagePumpStrategy.NoMessagePumpStrategy.WaitForCompletion(AwaitAdapter awaiter)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6eedca8c-8958-4426-91d2-ce0599d2782c" testId="48e77344-3cad-d281-cacc-722e37564de9" testName="Should_have_retried_the_abandoned_attempt" computerName="Edgars-iMac-2" duration="00:00:00.0005900" startTime="2026-08-15T05:52:20.7478110+00:00" endTime="2026-08-15T05:52:20.7484010+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6eedca8c-8958-4426-91d2-ce0599d2782c">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Threading.Tasks.TaskCanceledException : A task was canceled.</Message>
+          <StackTrace>   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_retried_the_abandoned_attempt() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 406
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+1)    at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_retried_the_abandoned_attempt() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 406
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult()
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.&lt;&gt;c__DisplayClass1_0.&lt;Execute&gt;b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Should_have_retried_the_abandoned_attempt" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="48e77344-3cad-d281-cacc-722e37564de9">
+      <Execution id="6eedca8c-8958-4426-91d2-ce0599d2782c" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_have_retried_the_abandoned_attempt" />
+    </UnitTest>
+    <UnitTest name="Should_have_published_the_job_completed_event" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="f9d67ed3-4c65-fba7-b4c4-4396f0654e5d">
+      <Execution id="b7c8fb72-365a-4a04-beaf-7ff5a6046471" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_have_published_the_job_completed_event" />
+    </UnitTest>
+    <UnitTest name="Should_have_published_the_job_started_event" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="d99d9a0f-73b4-4119-0856-87a71d49e81c">
+      <Execution id="f6e0e7e1-0943-45c1-9e71-f44487673cf1" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_have_published_the_job_started_event" />
+    </UnitTest>
+    <UnitTest name="Should_get_the_job_accepted" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="628eb6fd-3849-2da8-b3be-0a6d5bff2caa">
+      <Execution id="e6bd5012-a647-49e3-aada-7026a3de56bc" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_get_the_job_accepted" />
+    </UnitTest>
+    <UnitTest name="Should_not_have_published_the_job_faulted_event" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="126bf279-ba29-4f10-192e-3b804fe2cc50">
+      <Execution id="59f3b7a4-c2db-480c-89ac-8a7c280c994c" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_not_have_published_the_job_faulted_event" />
+    </UnitTest>
+    <UnitTest name="Should_have_published_the_job_submitted_event" storage="/users/edgar.liebold/downloads/vicione suite 2.0/repositories/vicione-servicebus/tests/vicione.servicebus.quartzintegration.tests/bin/release/net9.0/vicione.servicebus.quartzintegration.tests.dll" id="e82ec06a-fe38-ce1d-7b05-40ac636e78ea">
+      <Execution id="21c98e62-8b41-484a-bc97-1fc12d58d7d9" />
+      <TestMethod codeBase="/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried" name="Should_have_published_the_job_submitted_event" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="f9d67ed3-4c65-fba7-b4c4-4396f0654e5d" executionId="b7c8fb72-365a-4a04-beaf-7ff5a6046471" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="126bf279-ba29-4f10-192e-3b804fe2cc50" executionId="59f3b7a4-c2db-480c-89ac-8a7c280c994c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e82ec06a-fe38-ce1d-7b05-40ac636e78ea" executionId="21c98e62-8b41-484a-bc97-1fc12d58d7d9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d99d9a0f-73b4-4119-0856-87a71d49e81c" executionId="f6e0e7e1-0943-45c1-9e71-f44487673cf1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="628eb6fd-3849-2da8-b3be-0a6d5bff2caa" executionId="e6bd5012-a647-49e3-aada-7026a3de56bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="48e77344-3cad-d281-cacc-722e37564de9" executionId="6eedca8c-8958-4426-91d2-ce0599d2782c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="6" executed="6" passed="2" failed="4" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 6.1.0.0: Test execution started
+Running selected tests in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/bin/Release/net9.0/ViciOne.ServiceBus.QuartzIntegration.Tests.dll
+   NUnit3TestExecutor discovered 6 of 6 NUnit test cases using Current Discovery mode, Non-Explicit run
+05:51:50.752-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:50.770-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Created ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+05:51:50.777-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Added ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit
+05:51:50.800-D Job Service Instance Started: loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:50.800-D Concurrent Job Limit: 1 ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried+GrindTheGearsConsumer:ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears:grind-the-gears
+05:51:50.809-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-c4ea-08defa914d3f ViciOne.ServiceBus.Contracts.JobService.SetConcurrentJobLimit ViciOne.ServiceBus.JobTypeSaga(00:00:00.0451494)
+05:51:50.839-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:SubmitJob[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-6e86-08defa914d59 ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:50.850-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted
+05:51:50.859-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobSubmitted 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.861-D Create send transport: loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9
+05:51:50.862-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Created ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.863-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Added ViciOne.ServiceBus.Contracts.JobService.JobSubmitted
+05:51:50.865-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmitted&gt;(00:00:00.0017289)
+05:51:50.870-D SEND loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9 322e0000-6d6c-1461-697e-08defa914d61 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted
+05:51:50.871-D RECEIVE loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6e86-08defa914d59 ViciOne.ServiceBus.Contracts.JobService.SubmitJob&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt; ViciOne.ServiceBus.JobService.SubmitJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0270180)
+05:51:50.872-D Create send transport: loopback://localhost/job-type
+05:51:50.873-D RECEIVE loopback://localhost/EdgarsiMac2_testhost_bus_gezyyydppokgnt6qbdxxirkpy9 322e0000-6d6c-1461-697e-08defa914d61 ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobSubmissionAccepted&gt;(00:00:00.0002112)
+05:51:50.877-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-cdf8-08defa914d5f ViciOne.ServiceBus.Contracts.JobService.JobSubmitted ViciOne.ServiceBus.JobSaga(00:00:00.0155953)
+05:51:50.882-D SEND loopback://localhost/job-type 322e0000-6d6c-1461-f7e8-08defa914d63 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+05:51:50.885-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Used ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot
+05:51:50.895-D Allocated Job Slot: 322e0000-6d6c-1461-3a3e-08defa914d4e (1): loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h (1)
+05:51:50.896-D Create send transport: loopback://localhost/job
+05:51:50.906-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-f7e8-08defa914d63 ViciOne.ServiceBus.Contracts.JobService.AllocateJobSlot ViciOne.ServiceBus.JobTypeSaga(00:00:00.0223297)
+05:51:50.910-D SEND loopback://localhost/job 322e0000-6d6c-1461-478a-08defa914d68 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+05:51:50.912-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated
+05:51:50.913-D Create send transport: loopback://localhost/job-attempt
+05:51:50.915-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-478a-08defa914d68 ViciOne.ServiceBus.Contracts.JobService.JobSlotAllocated ViciOne.ServiceBus.JobSaga(00:00:00.0026707)
+05:51:50.922-D SEND loopback://localhost/job-attempt 322e0000-6d6c-1461-8406-08defa914d69 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.926-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Created ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.927-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Added ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt
+05:51:50.937-D Create send transport: loopback://localhost/quartz
+05:51:50.946-D SEND loopback://localhost/quartz 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Scheduling.ScheduleMessage
+05:51:50.947-D Create send transport: loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:50.949-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-8406-08defa914d69 ViciOne.ServiceBus.Contracts.JobService.StartJobAttempt ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0232680)
+05:51:50.953-D SEND loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob
+05:51:50.961-D Executing job: ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears 322e0000-6d6c-1461-3a3e-08defa914d4e (0)
+05:51:50.965-D Job Started: 322e0000-6d6c-1461-3a3e-08defa914d4e 322e0000-6d6c-1461-5d7a-08defa914d62 (0)
+05:51:50.967-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted
+05:51:50.970-D Scheduled: DEFAULT.322e00006d6c1461d16008defa914d6c 08/15/2026 05:52:50 +00:00
+05:51:50.970-D RECEIVE loopback://localhost/quartz 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Scheduling.ScheduleMessage ViciOne.ServiceBus.QuartzIntegration.ScheduleMessageConsumer(00:00:00.0193185)
+05:51:50.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptStarted 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.973-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:50.973-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.974-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted
+05:51:50.975-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0025663)
+05:51:50.977-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-703e-08defa914d72 ViciOne.ServiceBus.Contracts.JobService.JobStarted&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:50.978-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted
+05:51:50.978-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-76fc-08defa914d71 ViciOne.ServiceBus.Contracts.JobService.JobAttemptStarted ViciOne.ServiceBus.JobSaga(00:00:00.0053110)
+05:51:50.981-D RECEIVE loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.JobService.StartJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0262220)
+05:51:50.981-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobStarted 322e0000-6d6c-1461-3726-08defa914d73 ViciOne.ServiceBus.Contracts.JobService.JobStarted
+05:51:50.983-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-3726-08defa914d73 ViciOne.ServiceBus.Contracts.JobService.JobStarted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobStarted&gt;(00:00:00.0002414)
+05:51:51.981-D Job Faulted: 322e0000-6d6c-1461-3a3e-08defa914d4e 322e0000-6d6c-1461-5d7a-08defa914d62 (0)
+
+System.OperationCanceledException: The operation was canceled.
+   at ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.GrindTheGearsConsumer.Run(JobContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs:line 512
+   at ViciOne.ServiceBus.Middleware.JobConsumerMessageFilter`2.RunJob(PipeContext context, IJobConsumer`1 jobConsumer) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs:line 53
+05:51:52.003-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted
+05:51:52.011-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobAttemptFaulted 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.012-D RECEIVE loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h 322e0000-6d6c-1461-c114-08defa914d6e ViciOne.ServiceBus.Contracts.JobService.StartJob ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried+GrindTheGearsConsumer(00:00:01.0513888)
+05:51:52.013-D Removed job: 322e0000-6d6c-1461-3a3e-08defa914d4e (RanToCompletion)
+05:51:52.014-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.014-D SAGA:ViciOne.ServiceBus.JobSaga:322e0000-6d6c-1461-3a3e-08defa914d4e Used ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted
+05:51:52.016-D Create send transport: loopback://localhost/grind-the-gears
+05:51:52.017-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobFaulted
+05:51:52.018-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0043541)
+05:51:52.021-D RECEIVE loopback://localhost/job 322e0000-6d6c-1461-95c6-08defa914e0f ViciOne.ServiceBus.Contracts.JobService.JobAttemptFaulted ViciOne.ServiceBus.JobSaga(00:00:00.0075954)
+05:51:52.027-D SEND loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6c60-08defa914e12 ViciOne.ServiceBus.Contracts.JobService.FaultJob
+05:51:52.030-D Create send transport: loopback://localhost/job-attempt
+05:51:52.031-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Contracts.JobService:JobFaulted 322e0000-6d6c-1461-40d6-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobFaulted
+05:51:52.033-D RECEIVE loopback://localhost/input_queue 322e0000-6d6c-1461-40d6-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobFaulted ViciOne.ServiceBus.MessageHandler&lt;ViciOne.ServiceBus.Contracts.JobService.JobFaulted&gt;(00:00:00.0002729)
+05:51:52.039-D SEND loopback://localhost/job-attempt 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Serialization.SerializedMessageBody
+05:51:52.039-D Schedule Executed: DEFAULT.322e00006d6c1461d16008defa914d6c (null)
+05:51:52.053-D SEND loopback://localhost/job-type 322e0000-6d6c-1461-de92-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+05:51:52.053-D SEND loopback://localhost/quartz 322e0000-6d6c-1461-e17a-08defa914e14 ViciOne.ServiceBus.Scheduling.CancelScheduledMessage
+05:51:52.053-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]]
+05:51:52.056-D SAGA:ViciOne.ServiceBus.JobTypeSaga:940f1094-51d5-c77a-c1cb-388c480f9d0f Used ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased
+05:51:52.056-D SAGA:ViciOne.ServiceBus.JobAttemptSaga:322e0000-6d6c-1461-5d7a-08defa914d62 Used ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested
+05:51:52.057-D CancelScheduledMessage: no message found for DEFAULT.322e00006d6c1461d16008defa914d6c
+05:51:52.057-D RECEIVE loopback://localhost/quartz 322e0000-6d6c-1461-e17a-08defa914e14 ViciOne.ServiceBus.Scheduling.CancelScheduledMessage ViciOne.ServiceBus.QuartzIntegration.CancelScheduledMessageConsumer(00:00:00.0019408)
+05:51:52.058-D Released Job Slot: 322e0000-6d6c-1461-3a3e-08defa914d4e (0): loopback://localhost/instance-gezyyydppokgnoj6bdxxirkc8h
+05:51:52.059-D RECEIVE loopback://localhost/job-type 322e0000-6d6c-1461-de92-08defa914e13 ViciOne.ServiceBus.Contracts.JobService.JobSlotReleased ViciOne.ServiceBus.JobTypeSaga(00:00:00.0035531)
+05:51:52.061-D SAGA: 322e0000-6d6c-1461-5d7a-08defa914d62 Scheduled message not current: 322e0000-6d6c-1461-d160-08defa914d6c
+05:51:52.061-D RECEIVE loopback://localhost/job-attempt 322e0000-6d6c-1461-0400-08defa914d6d ViciOne.ServiceBus.Contracts.JobService.JobStatusCheckRequested ViciOne.ServiceBus.JobAttemptSaga(00:00:00.0053991)
+05:51:52.064-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout:GrindTheGears]] 322e0000-6d6c-1461-4af0-08defa914e17 ViciOne.ServiceBus.Fault&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;
+05:51:52.064-D RECEIVE loopback://localhost/grind-the-gears 322e0000-6d6c-1461-6c60-08defa914e12 ViciOne.ServiceBus.Contracts.JobService.FaultJob ViciOne.ServiceBus.JobService.FinalizeJobConsumer&lt;ViciOne.ServiceBus.QuartzIntegration.Tests.Turnout.GrindTheGears&gt;(00:00:00.0354988)
+
+NUnit Adapter 6.1.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
