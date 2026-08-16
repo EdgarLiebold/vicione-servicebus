@@ -151,15 +151,6 @@ namespace ViciOneServiceBusBenchmark
 
                 transport = new ActiveMqMessageLatencyTransport(activeMqOptionSet, settings);
             }
-            else if (optionSet.Transport == ProgramOptionSet.TransportOptions.Kafka)
-            {
-                var kafkaOptionSet = new KafkaOptionSet();
-                kafkaOptionSet.Parse(_remaining);
-
-                kafkaOptionSet.ShowOptions();
-
-                transport = new KafkaMessageLatencyTransport(kafkaOptionSet, settings);
-            }
             else if (optionSet.Transport == ProgramOptionSet.TransportOptions.Sql)
             {
                 var options = new SqlOptionSet();

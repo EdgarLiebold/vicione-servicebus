@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOneServiceBusBenchmark
 {
     using System;
@@ -26,7 +26,6 @@ namespace ViciOneServiceBusBenchmark
             InMemory,
             AmazonSqs,
             ActiveMq,
-            Kafka,
             Sql
         }
 
@@ -42,7 +41,6 @@ namespace ViciOneServiceBusBenchmark
             Add<TransportOptions>("t|transport:", "Transport (RabbitMQ, AzureServiceBus, Mediator, AmazonSqs, InMemory)",
                 value => Transport = value);
             Add("rabbitmq", "Use RabbitMQ", x => Transport = TransportOptions.RabbitMq);
-            Add("kafka", "Use Kafka", x => Transport = TransportOptions.Kafka);
             Add("mediator", "Use Mediator", x => Transport = TransportOptions.Mediator);
             Add("inmemory", "Use InMemory", x => Transport = TransportOptions.InMemory);
             Add("sqs", "Use Amazon SQS", x => Transport = TransportOptions.AmazonSqs);
