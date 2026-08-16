@@ -50,12 +50,27 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
         self.assert_rejected("src/Header.cs", "m" + "T-hOsT-iNfO")
         self.assert_rejected("src/Header.cs", "vIcIoNe" + "-sErViCeBuS-hOsT-iNfO")
 
+    # The complete root contract, written out here and not read from the product. A test that iterates the
+    # product list shrinks with it: delete a root and the loop simply runs one case fewer, still green. This
+    # list is the independent side of the comparison, so any removal or rename shows up as a difference.
+    EXPECTED_HEADER_ROOTS = (
+        "activity", "fail", "fault", "forwarder", "hangfire", "host", "initiating", "initiator", "jobid",
+        "message", "original", "quartz", "reason", "redelivery", "request", "response", "routing", "scheduling",
+        "server", "source",
+    )
+
+    def test_the_product_detector_carries_exactly_the_expected_roots(self) -> None:
+        from identity_rules import _HEADER_ROOTS
+
+        self.assertEqual(sorted(self.EXPECTED_HEADER_ROOTS), sorted(_HEADER_ROOTS),
+                         "a root was added, removed or renamed in the product detector")
+
     def test_rejects_every_historic_root_under_both_old_prefixes(self) -> None:
         # Root removal must be visible as a detector that stops detecting, not only as a changed digest.
-        for root in ("Host-Info", "Fault-Message", "Redelivery-Count", "Scheduling-TokenId", "Request-ClientId"):
+        for root in self.EXPECTED_HEADER_ROOTS:
             with self.subTest(root=root):
-                self.assert_rejected("src/Header.cs", "M" + "T-" + root)
-                self.assert_rejected("src/Header.cs", "ViciOne" + "-ServiceBus-" + root)
+                self.assert_rejected("src/Header.cs", "M" + "T-" + root + "-Info")
+                self.assert_rejected("src/Header.cs", "ViciOne" + "-ServiceBus-" + root + "-Info")
 
     def test_accepts_the_active_wire_header(self) -> None:
         data = b"public const string Info = \"VSB-Host-Info\";"
