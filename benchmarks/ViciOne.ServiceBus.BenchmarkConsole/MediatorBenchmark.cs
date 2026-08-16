@@ -3,14 +3,10 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     using System.Threading;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Jobs;
-    using MediatR;
-    using Microsoft.Extensions.DependencyInjection;
     using Util;
 
 
-    public class ExampleCommand :
-        IRequest<Unit>
+    public class ExampleCommand
     {
         public ExampleCommand(string arg1, int arg2)
         {
@@ -24,40 +20,38 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     }
 
 
-    [SimpleJob(RuntimeMoniker.Net60)]
     [MemoryDiagnoser]
     public class MediatorBenchmark
     {
+        IBusControl _busControl;
         ExampleCommandHandler _handler;
         ViciOne.ServiceBus.Mediator.IMediator _mediator;
-        IMediator _mediatR;
         IRequestClient<ExampleRequest> _requestClient;
 
         [GlobalSetup]
         public void Setup()
         {
-            var services = new ServiceCollection();
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<MediatorBenchmark>());
-
             _mediator = Bus.Factory.CreateMediator(cfg =>
             {
                 cfg.Consumer<ExampleCommandHandler>();
             });
 
-            var provider = services.BuildServiceProvider();
-
-            _mediatR = provider.GetRequiredService<IMediator>();
-
-            var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
+            _busControl = Bus.Factory.CreateUsingInMemory(cfg =>
             {
                 cfg.ReceiveEndpoint("input-queue", x => x.Consumer<ExampleRequestConsumer>());
             });
 
-            TaskUtil.Await(() => busControl.StartAsync(CancellationToken.None));
+            TaskUtil.Await(() => _busControl.StartAsync(CancellationToken.None));
 
-            _requestClient = busControl.CreateRequestClient<ExampleRequest>();
+            _requestClient = _busControl.CreateRequestClient<ExampleRequest>();
 
             _handler = new ExampleCommandHandler();
+        }
+
+        [GlobalCleanup]
+        public Task Cleanup()
+        {
+            return _busControl.StopAsync(CancellationToken.None);
         }
 
         [Benchmark(Description = "Direct")]
@@ -65,13 +59,6 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
         {
             var command = new ExampleCommand("Example Arg", 2);
             await _handler.Handle(command, CancellationToken.None);
-        }
-
-        [Benchmark(Description = "MediatR")]
-        public async Task CallingHandler_WithMediator()
-        {
-            var command = new ExampleCommand("Example Arg", 2);
-            await _mediatR.Send(command, CancellationToken.None);
         }
 
         [Benchmark(Description = "ViciOne.ServiceBus")]
@@ -123,7 +110,6 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
 
 
     public class ExampleCommandHandler :
-        IRequestHandler<ExampleCommand, Unit>,
         IConsumer<ExampleCommand>
     {
         public Task Consume(ConsumeContext<ExampleCommand> context)
@@ -132,9 +118,9 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
         }
 
         /// <inheritdoc />
-        public Task<Unit> Handle(ExampleCommand request, CancellationToken cancellationToken)
+        public Task Handle(ExampleCommand request, CancellationToken cancellationToken)
         {
-            return Unit.Task;
+            return Task.CompletedTask;
         }
     }
 }

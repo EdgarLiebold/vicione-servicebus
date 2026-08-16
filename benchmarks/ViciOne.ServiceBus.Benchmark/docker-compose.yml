@@ -9,13 +9,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  mssql:
-    image: "mcr.microsoft.com/mssql/server:2017-latest"
-    environment:
-      - "ACCEPT_EULA=Y"
-      - "SA_PASSWORD=Password12!"
-    ports:
-      - "1433:1433"
 
   otel-collector:
     image: otel/opentelemetry-collector
@@ -25,4 +18,3 @@ services:
       - ./configs/otel-collector/otelcol-config.yml:/etc/otelcol-config.yml
     ports:
       - "4317:4317"   # OTLP gRPC receiver
-

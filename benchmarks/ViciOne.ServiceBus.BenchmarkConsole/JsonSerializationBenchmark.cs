@@ -2,18 +2,14 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
 {
     using System;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Jobs;
     using Context;
     using Serialization;
 
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31)]
-    [SimpleJob(RuntimeMoniker.Net50)]
     [MemoryDiagnoser]
     public class JsonSerializationBenchmark
     {
         readonly MessageSendContext<AverageMessage> _averageMessageSendContext;
-        readonly NewtonsoftJsonMessageSerializer _newtonsoftJsonMessageSerializer;
 
         public JsonSerializationBenchmark()
         {
@@ -34,26 +30,18 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
             };
 
             _averageMessageSendContext.Headers.Set("VSB-Activity-Id", NewId.NextGuid().ToString());
-
-            _newtonsoftJsonMessageSerializer = new NewtonsoftJsonMessageSerializer();
         }
 
         [Benchmark(Description = "System.Text.Json byte[]")]
-        public void SystemTextJson()
+        public byte[] SystemTextJson()
         {
-            var bytes = SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetBytes();
+            return SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetBytes();
         }
 
         [Benchmark(Description = "System.Text.Json string")]
-        public void SystemTextJsonString()
+        public string SystemTextJsonString()
         {
-            var text = SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetString();
-        }
-
-        [Benchmark(Description = "Newtonsoft.Json byte[]")]
-        public void NewtonsoftJson()
-        {
-            var bytes = _newtonsoftJsonMessageSerializer.GetMessageBody(_averageMessageSendContext).GetBytes();
+            return SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetString();
         }
     }
 

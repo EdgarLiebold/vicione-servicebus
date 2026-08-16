@@ -2,12 +2,9 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
 {
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Jobs;
     using Middleware;
 
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31)]
-    [SimpleJob(RuntimeMoniker.Net50)]
     [MemoryDiagnoser]
     public class SupervisorBenchmark
     {

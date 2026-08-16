@@ -38,7 +38,7 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
                 {
                     e.PrefetchCount = _settings.PrefetchCount;
                     if (_settings.ConcurrencyLimit > 0)
-                        e.MaxConcurrentCalls = _settings.ConcurrencyLimit;
+                        e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
 
                     callback(e);
 

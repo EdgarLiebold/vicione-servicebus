@@ -4,14 +4,11 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     using System;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Jobs;
     using Contracts;
     using Middleware;
     using Throughput;
 
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31)]
-    [SimpleJob(RuntimeMoniker.Net50)]
     [MemoryDiagnoser]
     public class SendBenchmark
     {

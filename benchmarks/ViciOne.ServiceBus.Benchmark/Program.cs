@@ -3,7 +3,6 @@ namespace ViciOneServiceBusBenchmark
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using BusOutbox;
@@ -22,7 +21,7 @@ namespace ViciOneServiceBusBenchmark
     {
         static List<string> _remaining;
 
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             Console.WriteLine("ViciOne.ServiceBus Benchmark");
             Console.WriteLine();
@@ -30,6 +29,7 @@ namespace ViciOneServiceBusBenchmark
             var optionSet = new ProgramOptionSet();
 
             var disposables = new List<IDisposable>();
+            var executedBenchmarks = 0;
             try
             {
                 _remaining = optionSet.Parse(args);
@@ -37,7 +37,7 @@ namespace ViciOneServiceBusBenchmark
                 if (optionSet.Help)
                 {
                     ShowHelp(optionSet);
-                    return;
+                    return 0;
                 }
 
                 if (optionSet.Verbose)
@@ -71,29 +71,45 @@ namespace ViciOneServiceBusBenchmark
                 }
 
                 if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.Latency))
+                {
                     await RunLatencyBenchmark(optionSet);
+                    executedBenchmarks++;
+                }
 
                 if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.Rpc))
+                {
                     RunRequestResponseBenchmark(optionSet);
+                    executedBenchmarks++;
+                }
 
                 if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.BusOutbox))
-                    await Task.Run(() => RunBusOutboxBenchmark(optionSet));
+                {
+                    await RunBusOutboxBenchmark(optionSet);
+                    executedBenchmarks++;
+                }
+
+                if (executedBenchmarks == 0)
+                    throw new OptionException("No benchmark was selected.", "run");
 
                 if (Debugger.IsAttached)
                 {
                     Console.Write("Press any key to continue...");
                     Console.ReadKey();
                 }
+
+                return 0;
             }
             catch (OptionException ex)
             {
                 Console.Write("vicione-servicebus-benchmark: ");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("Use 'vicione-servicebus-benchmark --help' for detailed usage information.");
+                return 2;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Crashed: {0}", ex.Message);
+                return 1;
             }
             finally
             {
@@ -117,9 +133,6 @@ namespace ViciOneServiceBusBenchmark
                 serviceBusOptionSet.Parse(_remaining);
 
                 serviceBusOptionSet.ShowOptions();
-
-                ServicePointManager.Expect100Continue = false;
-                ServicePointManager.UseNagleAlgorithm = false;
 
                 transport = new ServiceBusMessageLatencyTransport(serviceBusOptionSet, settings);
             }
@@ -193,9 +206,6 @@ namespace ViciOneServiceBusBenchmark
 
                 serviceBusOptionSet.ShowOptions();
 
-                ServicePointManager.Expect100Continue = false;
-                ServicePointManager.UseNagleAlgorithm = false;
-
                 transport = new ServiceBusRequestResponseTransport(serviceBusOptionSet, settings);
             }
             else if (optionSet.Transport == ProgramOptionSet.TransportOptions.RabbitMq)
@@ -248,9 +258,6 @@ namespace ViciOneServiceBusBenchmark
 
                 serviceBusOptionSet.ShowOptions();
 
-                ServicePointManager.Expect100Continue = false;
-                ServicePointManager.UseNagleAlgorithm = false;
-
                 transport = new ServiceBusConfigureBusOutboxTransport(serviceBusOptionSet, busOutboxBenchmarkOptions);
             }
             else
@@ -272,7 +279,7 @@ namespace ViciOneServiceBusBenchmark
         {
             Console.WriteLine("Usage: vicione-servicebus-benchmark [OPTIONS]+");
             Console.WriteLine("Executes the benchmark using the specified transport with the specified options.");
-            Console.WriteLine("If no benchmark is specified, all benchmarks are executed.");
+            Console.WriteLine("If no benchmark is specified, the latency and RPC benchmarks are executed.");
             Console.WriteLine();
             Console.WriteLine("Options:");
             p.WriteOptionDescriptions(Console.Out);
@@ -290,8 +297,28 @@ namespace ViciOneServiceBusBenchmark
             new AmazonSqsOptionSet().WriteOptionDescriptions(Console.Out);
 
             Console.WriteLine();
-            Console.WriteLine("Benchmark Options:");
+            Console.WriteLine("ActiveMQ Options:");
+            new ActiveMqOptionSet().WriteOptionDescriptions(Console.Out);
+
+            Console.WriteLine();
+            Console.WriteLine("PostgreSQL transport Options:");
+            new SqlOptionSet().WriteOptionDescriptions(Console.Out);
+
+            Console.WriteLine();
+            Console.WriteLine("In-memory Options:");
+            new InMemoryOptionSet().WriteOptionDescriptions(Console.Out);
+
+            Console.WriteLine();
+            Console.WriteLine("Latency benchmark Options:");
             new MessageLatencyOptionSet().WriteOptionDescriptions(Console.Out);
+
+            Console.WriteLine();
+            Console.WriteLine("RPC benchmark Options:");
+            new RequestResponseOptionSet().WriteOptionDescriptions(Console.Out);
+
+            Console.WriteLine();
+            Console.WriteLine("Bus-outbox benchmark Options:");
+            new BusOutboxBenchmarkOptions().WriteOptionDescriptions(Console.Out);
         }
     }
 }

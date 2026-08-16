@@ -1,6 +1,7 @@
 namespace ViciOneServiceBusBenchmark.Latency;
 
 using System;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using BusOutbox;
 using ViciOne.ServiceBus;
@@ -16,6 +17,7 @@ public class SqlMessageLatencyTransport :
     AsyncServiceScope _scope;
     Uri _targetAddress;
     ISendEndpoint _targetEndpoint;
+    readonly string _runPassword = Convert.ToHexString(RandomNumberGenerator.GetBytes(24));
 
     public SqlMessageLatencyTransport(SqlOptionSet options, IMessageLatencySettings settings)
     {
@@ -43,9 +45,9 @@ public class SqlMessageLatencyTransport :
                     options.Schema = _options.Schema;
                     options.Role = _options.Role;
                     options.Username = "benchmark";
-                    options.Password = "H4rd2Gu3ss!";
+                    options.Password = _runPassword;
                     options.AdminUsername = _options.Username;
-                    options.AdminPassword = _options.Password;
+                    options.AdminPassword = _options.ResolveAdminPassword();
                 });
 
                 x.AddConsumer<MessageLatencyConsumer>();

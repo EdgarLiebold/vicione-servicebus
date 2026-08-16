@@ -50,17 +50,17 @@ public class DeserializationBenchmark
     }
 
     [Benchmark]
-    public void MessagePack_Deserialize()
+    public bool MessagePack_Deserialize()
     {
         var serializerContext = _messagepackSerializer.Deserialize(_messagePackMessageBody, null, null);
-        _ = serializerContext.TryGetMessage<TypeToDeserialize>(out _);
+        return serializerContext.TryGetMessage<TypeToDeserialize>(out _);
     }
 
     [Benchmark(Baseline = true)]
-    public void SystemTextJson_Deserialize()
+    public bool SystemTextJson_Deserialize()
     {
         var serializerContext = _systemTextJsonSerializer.Deserialize(_systemTextJsonMessageBody, null, null);
-        _ = serializerContext.TryGetMessage<TypeToDeserialize>(out _);
+        return serializerContext.TryGetMessage<TypeToDeserialize>(out _);
     }
 
     class TypeToDeserialize

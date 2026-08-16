@@ -1,19 +1,21 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ["Directory.Build.props", "."]
+COPY ["Directory.Packages.props", "."]
 COPY ["signing.props", "."]
 COPY ["ViciOne.ServiceBus.snk", "."]
 COPY ["src/", "src/"]
 COPY ["benchmarks/ViciOne.ServiceBus.Benchmark/", "benchmarks/ViciOne.ServiceBus.Benchmark/"]
 
 WORKDIR "/src/benchmarks/ViciOne.ServiceBus.Benchmark"
-RUN dotnet build "ViciOne.ServiceBus.Benchmark.csproj" -c Release -o /app/build
+RUN dotnet restore "ViciOne.ServiceBus.Benchmark.csproj"
+RUN dotnet build "ViciOne.ServiceBus.Benchmark.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
 RUN dotnet publish "ViciOne.ServiceBus.Benchmark.csproj" -c Release -o /app/publish --no-restore

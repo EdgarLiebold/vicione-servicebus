@@ -2,35 +2,8 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
 {
     using System;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Configs;
-    using BenchmarkDotNet.Environments;
-    using BenchmarkDotNet.Jobs;
 
 
-    public class Config :
-        ManualConfig
-    {
-        public Config()
-        {
-            // Run with intrinsics disabled
-            AddJob(
-                Job.Default.WithEnvironmentVariable(new EnvironmentVariable("DOTNET_EnableSSE2", "0")).WithRuntime(CoreRuntime.Core60).AsDefault());
-
-            AddJob(
-                Job.Default.WithEnvironmentVariable(new EnvironmentVariable("DOTNET_EnableSSE2", "0")).WithRuntime(CoreRuntime.Core70));
-
-            // Run with intrinsics
-            AddJob(
-                Job.Default.WithRuntime(CoreRuntime.Core60));
-            AddJob(
-                Job.Default.WithRuntime(CoreRuntime.Core70));
-            AddJob(
-                Job.Default.WithRuntime(CoreRuntime.Core31));
-        }
-    }
-
-
-    [Config(typeof(Config))]
     [MemoryDiagnoser(false)]
     public class NewIdBenchmarks
     {

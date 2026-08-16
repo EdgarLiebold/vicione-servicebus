@@ -36,16 +36,14 @@ namespace ViciOneServiceBusBenchmark
             Add<bool>("split:", "Split into two bus instances to leverage separate connections", x => Split = x);
 
             Host = "localhost";
-            Username = "guest";
-            Password = "guest";
             Heartbeat = TimeSpan.Zero;
             VirtualHost = "/";
             Port = 5672;
 
             Ssl = false;
-            SslProtocol = SslProtocols.Tls12;
+            SslProtocol = SslProtocols.None;
             SslServerName = Host;
-            AcceptablePolicyErrors = SslPolicyErrors.RemoteCertificateNameMismatch;
+            AcceptablePolicyErrors = SslPolicyErrors.None;
             ClientCertificatePath = "";
             ClientCertificatePassphrase = "";
 
@@ -139,8 +137,8 @@ namespace ViciOneServiceBusBenchmark
 
         void EnableSsl(bool enabled)
         {
-            Ssl = true;
-            Port = 5671;
+            Ssl = enabled;
+            Port = enabled ? 5671 : 5672;
         }
 
         public void ShowOptions()
@@ -148,7 +146,7 @@ namespace ViciOneServiceBusBenchmark
             Console.WriteLine("Host: {0}", Host);
             Console.WriteLine("Virtual Host: {0}", VirtualHost);
             Console.WriteLine("Username: {0}", Username);
-            Console.WriteLine("Password: {0}", new string('*', (Password ?? "default").Length));
+            Console.WriteLine("Password configured: {0}", !string.IsNullOrEmpty(Password));
             Console.WriteLine("Heartbeat: {0}", Heartbeat);
             Console.WriteLine("Publisher Confirmation: {0}", PublisherConfirmation);
             Console.WriteLine("Split: {0}", Split);

@@ -37,7 +37,7 @@ namespace ViciOneServiceBusBenchmark
             Add<string>("traces", "Enable traces capturing to OTel exporter", x => EnableTraces = x != null);
             Add<string>("metrics", "Enable metrics capturing to OTel exporter", x => EnableMetrics = x != null);
 
-            Add<TransportOptions>("t|transport:", "Transport (RabbitMQ, AzureServiceBus, Mediator, AmazonSqs, InMemory)",
+            Add<TransportOptions>("t|transport:", "Transport (RabbitMq, AzureServiceBus, Mediator, InMemory, AmazonSqs, ActiveMq, Sql)",
                 value => Transport = value);
             Add("rabbitmq", "Use RabbitMQ", x => Transport = TransportOptions.RabbitMq);
             Add("mediator", "Use Mediator", x => Transport = TransportOptions.Mediator);
@@ -47,7 +47,7 @@ namespace ViciOneServiceBusBenchmark
             Add("activemq", "Use ActiveMQ", x => Transport = TransportOptions.ActiveMq);
             Add("sql", "Use SQL Transport", x => Transport = TransportOptions.Sql);
 
-            Add<BenchmarkOptions>("run:", "Run benchmark (All, Latency, RPC)", value => Benchmark = value);
+            Add<BenchmarkOptions>("run:", "Run benchmark (Latency, Rpc, BusOutbox; flags can be combined)", value => Benchmark = value);
             Add("rpc", "Run the RPC benchmark", x => Benchmark = BenchmarkOptions.Rpc);
             Add("latency", "Run the Latency benchmark", x => Benchmark = BenchmarkOptions.Latency);
             Add("busoutbox", "Run the Bus Outbox benchmark", x => Benchmark = BenchmarkOptions.BusOutbox);

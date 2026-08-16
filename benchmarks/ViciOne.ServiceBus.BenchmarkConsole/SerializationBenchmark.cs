@@ -42,11 +42,11 @@ public class SerializationBenchmark
     }
 
     [Benchmark]
-    public void MessagePack_SerializeObject()
+    public byte[] MessagePack_SerializeObject()
     {
         var messageBody = _messagepackSerializer.SerializeObject(_serializationSubject);
 
-        _ = messageBody.GetBytes();
+        return messageBody.GetBytes();
     }
 
     /// <summary>
@@ -54,27 +54,27 @@ public class SerializationBenchmark
     /// measured. SerializeObject above measures the object path and is not the same statement.
     /// </summary>
     [Benchmark]
-    public void MessagePack_GetMessageBody()
+    public byte[] MessagePack_GetMessageBody()
     {
         MessageBody messageBody = _messagepackSerializer.GetMessageBody(_sendContext);
 
-        _ = messageBody.GetBytes();
+        return messageBody.GetBytes();
     }
 
     [Benchmark]
-    public void SystemTextJson_GetMessageBody()
+    public byte[] SystemTextJson_GetMessageBody()
     {
         MessageBody messageBody = _systemTextJsonSerializer.GetMessageBody(_sendContext);
 
-        _ = messageBody.GetBytes();
+        return messageBody.GetBytes();
     }
 
     [Benchmark(Baseline = true)]
-    public void SystemTextJson_SerializeObject()
+    public byte[] SystemTextJson_SerializeObject()
     {
         var messageBody = _systemTextJsonSerializer.SerializeObject(_serializationSubject);
 
-        _ = messageBody.GetBytes();
+        return messageBody.GetBytes();
     }
 
 

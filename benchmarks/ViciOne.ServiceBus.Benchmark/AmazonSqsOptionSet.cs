@@ -31,9 +31,6 @@ namespace ViciOneServiceBusBenchmark
 
             Region = RegionEndpoint.APEast1;
 
-            SetAccessKey("admin");
-            SetSecretKey("admin");
-
             AmazonSqsConfig = new AmazonSQSConfig { ServiceURL = "http://localhost:4566" };
             AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = "http://localhost:4566" };
         }

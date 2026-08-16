@@ -57,7 +57,7 @@ namespace ViciOneServiceBusBenchmark.BusOutbox
 
                     x.AddDbContext<BusOutboxDbContext>(db =>
                     {
-                        db.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), options =>
+                        db.UseSqlServer(_options.ResolveDatabaseConnectionString(), options =>
                         {
                             options.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                             options.MigrationsHistoryTable($"__{nameof(BusOutboxDbContext)}");

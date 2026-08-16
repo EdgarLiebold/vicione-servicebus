@@ -5,11 +5,9 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Jobs;
 using Util;
 
 
-[SimpleJob(RuntimeMoniker.Net80)]
 [MemoryDiagnoser]
 [GcServer(true)]
 [GcForce]
@@ -53,7 +51,6 @@ public class ChannelBenchmark :
 }
 
 
-[SimpleJob(RuntimeMoniker.Net80)]
 [MemoryDiagnoser]
 [GcServer(true)]
 [GcForce]
