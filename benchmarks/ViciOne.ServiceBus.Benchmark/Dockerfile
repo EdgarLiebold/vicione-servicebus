@@ -11,9 +11,9 @@ COPY ["Directory.Build.props", "."]
 COPY ["signing.props", "."]
 COPY ["ViciOne.ServiceBus.snk", "."]
 COPY ["src/", "src/"]
-COPY ["tests/ViciOne.ServiceBus.Benchmark/", "tests/ViciOne.ServiceBus.Benchmark/"]
+COPY ["benchmarks/ViciOne.ServiceBus.Benchmark/", "benchmarks/ViciOne.ServiceBus.Benchmark/"]
 
-WORKDIR "/src/tests/ViciOne.ServiceBus.Benchmark"
+WORKDIR "/src/benchmarks/ViciOne.ServiceBus.Benchmark"
 RUN dotnet build "ViciOne.ServiceBus.Benchmark.csproj" -c Release -o /app/build
 
 FROM build AS publish
