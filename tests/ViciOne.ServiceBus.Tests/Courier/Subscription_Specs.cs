@@ -127,8 +127,6 @@ namespace ViciOne.ServiceBus.Tests.Courier
 
     [TestFixture(typeof(Json))]
     [TestFixture(typeof(RawJson))]
-    [TestFixture(typeof(NewtonsoftJson))]
-    [TestFixture(typeof(NewtonsoftRawJson))]
     public class Adding_a_custom_routing_slip_event_subscription<T>
         where T : new()
     {

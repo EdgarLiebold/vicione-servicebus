@@ -10,7 +10,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         using NUnit.Framework;
 
 
-        [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
         [TestFixture(typeof(SystemTextJsonMessageSerializer))]
         public class A_null_array :
             SerializationTest

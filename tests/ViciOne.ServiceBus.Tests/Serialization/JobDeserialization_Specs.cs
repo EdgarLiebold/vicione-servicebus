@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Tests.Serialization
 {
     using System;
@@ -36,7 +36,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     }
 
 
-    [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
     [TestFixture(typeof(SystemTextJsonMessageSerializer))]
     [TestFixture(typeof(MessagePackMessageSerializer))]
     public class JobDeserialization_Specs :

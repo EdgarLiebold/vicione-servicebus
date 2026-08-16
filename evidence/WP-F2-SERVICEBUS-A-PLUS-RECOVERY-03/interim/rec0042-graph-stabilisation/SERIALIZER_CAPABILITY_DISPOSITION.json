@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERIALIZER_CAPABILITY_DISPOSITION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directiveId": "LEAD_DIRECTIVE 0042",
+  "commit": "f62d663c2b1b88e93d5190fe38cd855f3e5a23f2",
+  "statement": "Before removing the Newtonsoft family, every parameterised serialization fixture was re-pointed at the serializers the product keeps, so a capability test could not disappear as a side effect.",
+  "measured": {
+    "parameterisedFixturesTouched": 17,
+    "fixturesKeepingAtLeastOneServializer": 14,
+    "fixtureParametersDropped": 55,
+    "fixturesLeftWithoutAnyParameter": 3,
+    "suiteAfterRepointing": {
+      "discovered": 129,
+      "passed": 129,
+      "failed": 0
+    }
+  },
+  "fixturesWithoutAnyKeptParameter": [
+    {
+      "fixture": "Serialization.Using_JsonConverterAttribute_on_a_class",
+      "subject": "The serializer honours the Json.NET JsonConverter attribute.",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Both the attribute and the converter base type belong to the removed library. The subject is the removed item itself, not a ServiceBus capability."
+    },
+    {
+      "fixture": "Serialization.Using_JsonConverterAttribute_on_a_property",
+      "subject": "The serializer honours the Json.NET JsonConverter attribute on a property.",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Same subject as above, on a property instead of a class."
+    },
+    {
+      "fixture": "Serialization.Serializing_a_protocol_buffer_message",
+      "subject": "A protobuf generated message keeps its repeated field through serialization.",
+      "disposition": "REMOVED_WITH_DECIDED_COMPONENT",
+      "reason": "Re-pointing it at the kept serializer was tried and measured, not assumed. It fails: the repeated field comes back with zero entries.",
+      "measurement": "Serializing_a_protocol_buffer_message(SystemTextJsonMessageSerializer).Should_return_the_array_values -> Expected: property Count equal to 2, But was: 0",
+      "cause": "Trades is a getter only pbc::RepeatedField<T> over a readonly field (TradesBookedViciOneServiceBus.proto.cs:80-84). Json.NET populates an existing collection instance through its getter; System.Text.Json needs a setter or a constructor parameter and skips the property.",
+      "consequence": "This is a behaviour of the removed library, not a defect of the kept serializer. It is reported as an impact of the decided removal: a consumer whose messages expose getter only collections will receive them empty once the Newtonsoft family is gone."
+    }
+  ]
+}

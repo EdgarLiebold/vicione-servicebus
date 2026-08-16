@@ -8,12 +8,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     using NUnit.Framework;
 
 
-    [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
     [TestFixture(typeof(SystemTextJsonMessageSerializer))]
-    [TestFixture(typeof(BsonMessageSerializer))]
-    [TestFixture(typeof(NewtonsoftXmlMessageSerializer))]
-    [TestFixture(typeof(EncryptedMessageSerializer))]
-    [TestFixture(typeof(EncryptedMessageSerializerV2))]
     [TestFixture(typeof(MessagePackMessageSerializer))]
     public class Serialization_a_message_data_property :
         SerializationTest
