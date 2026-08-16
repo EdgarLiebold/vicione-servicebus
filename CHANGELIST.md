@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 793 |
+| Added | 794 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -34,6 +34,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `MODIFICATIONS.md` | Added |  |
 | `NOTICE` | Modified | `NOTICE` |
 | `NuGet.README.md` | Modified | `NuGet.README.md` |
+| `NuGet.config` | Added |  |
 | `README.md` | Modified | `README.md` |
 | `SECURITY.md` | Modified | `SECURITY.md` |
 | `ViciOne.ServiceBus.Benchmarks.slnx` | Added |  |

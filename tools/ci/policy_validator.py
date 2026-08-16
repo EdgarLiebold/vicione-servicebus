@@ -19,6 +19,9 @@ Every rule exists because something actually went wrong, not because a rule seem
                      produces packages nobody has checked
   publication        this slice publishes nothing, to no registry
   analyzer tracking  a provenance comment in the wrong place breaks the Roslyn release parser
+  restore sources    without a repository-local NuGet.config a restore inherits whatever the machine
+                     has configured; here that was four sources, three of them internal, which made
+                     the build depend on host state and raised NU1507
 """
 
 from __future__ import annotations
@@ -28,6 +31,13 @@ import json
 import re
 import sys
 from pathlib import Path
+from xml.etree import ElementTree
+
+RESTORE_CONFIG = "NuGet.config"
+REQUIRED_SOURCE_KEY = "nuget.org"
+REQUIRED_SOURCE_VALUE = "https://api.nuget.org/v3/index.json"
+CREDENTIAL_ELEMENT = "packageSourceCredentials"
+CREDENTIAL_KEYS = ("Username", "Password", "ClearTextPassword")
 
 FORBIDDEN_IMAGES = ("vicione-servicebus/rabbitmq", "vicione-servicebus/activemq")
 REQUIRED_CATEGORIES = ("build", "analyzer", "core-unit", "rabbitmq", "entity-framework", "pack")
@@ -582,6 +592,69 @@ class Policy:
                           f"{relative}: {name} calls the broker without taking a lease, so the subject can be "
                           "disposed while it is still running")
 
+    def check_restore_sources(self) -> None:
+        """The repository names its own restore source, so a restore cannot inherit machine state.
+
+        Order matters: <clear /> has to stand before the source it keeps, otherwise it wipes it again.
+        The mapping has to claim every pattern, because an unclaimed pattern is exactly the case
+        NU1507 warns about and the case where a package could arrive from somewhere unnamed.
+        """
+        body = self.read(RESTORE_CONFIG)
+        if body is None:
+            self.fail("restore-sources", f"{RESTORE_CONFIG} is missing, so a restore inherits the machine's sources")
+            return
+
+        try:
+            root = ElementTree.fromstring(body)
+        except ElementTree.ParseError as error:
+            self.fail("restore-sources", f"{RESTORE_CONFIG} is not parsable: {error}")
+            return
+
+        sources = root.find("packageSources")
+        if sources is None:
+            self.fail("restore-sources", f"{RESTORE_CONFIG} declares no packageSources")
+            return
+
+        children = list(sources)
+        if not any(child.tag == "clear" for child in children):
+            self.fail("restore-sources", "packageSources does not clear the inherited sources")
+        else:
+            first_add = next((index for index, child in enumerate(children) if child.tag == "add"), len(children))
+            last_clear = max(index for index, child in enumerate(children) if child.tag == "clear")
+            if last_clear > first_add:
+                self.fail("restore-sources", "a clear stands after the source it should keep, which removes it again")
+
+        added = [child for child in children if child.tag == "add"]
+        if len(added) != 1:
+            self.fail("restore-sources",
+                      f"packageSources declares {len(added)} sources; exactly one is allowed")
+        else:
+            key, value = added[0].get("key"), added[0].get("value")
+            if key != REQUIRED_SOURCE_KEY or value != REQUIRED_SOURCE_VALUE:
+                self.fail("restore-sources", f"the only source must be {REQUIRED_SOURCE_KEY} at "
+                                             f"{REQUIRED_SOURCE_VALUE}, found '{key}' at '{value}'")
+
+        mapping = root.find("packageSourceMapping")
+        if mapping is None:
+            self.fail("restore-sources", "no packageSourceMapping, so central package management cannot "
+                                         "decide which source a package comes from")
+        else:
+            mapped = {entry.get("key"): [package.get("pattern") for package in entry.findall("package")]
+                      for entry in mapping.findall("packageSource")}
+            if set(mapped) != {REQUIRED_SOURCE_KEY}:
+                self.fail("restore-sources",
+                          f"the mapping must name exactly {REQUIRED_SOURCE_KEY}, found {sorted(mapped)}")
+            elif "*" not in mapped[REQUIRED_SOURCE_KEY]:
+                self.fail("restore-sources", "the mapping does not claim the pattern *, so some package "
+                                             "pattern stays unmapped")
+
+        if root.find(CREDENTIAL_ELEMENT) is not None:
+            self.fail("restore-sources", f"{RESTORE_CONFIG} carries {CREDENTIAL_ELEMENT}; the single source "
+                                         "is public and no credential belongs in the repository")
+        for element in root.iter("add"):
+            if element.get("key") in CREDENTIAL_KEYS:
+                self.fail("restore-sources", f"{RESTORE_CONFIG} carries a '{element.get('key')}' entry")
+
     def run(self) -> int:
         for rule in (self.check_no_forbidden_images, self.check_pinning, self.check_host_binding,
                      self.check_credentials, self.check_canonical_runner,
@@ -590,7 +663,8 @@ class Policy:
                      self.check_no_hardcoded_broker_endpoint_in_tests,
                      self.check_required_profile, self.check_pack,
                      self.check_no_publication, self.check_analyzer_release_tracking,
-                     self.check_transport_operations_take_a_lease):
+                     self.check_transport_operations_take_a_lease,
+                     self.check_restore_sources):
             rule()
 
         if self.failures:

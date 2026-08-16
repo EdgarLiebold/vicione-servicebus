@@ -23,6 +23,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from policy_validator import Policy  # noqa: E402
 
 
+NUGET_CONFIG = """\
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear />
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+  </packageSources>
+  <disabledPackageSources>
+    <clear />
+  </disabledPackageSources>
+  <packageSourceMapping>
+    <packageSource key="nuget.org">
+      <package pattern="*" />
+    </packageSource>
+  </packageSourceMapping>
+</configuration>
+"""
+
 COMPOSE = """\
 services:
   rabbitmq:
@@ -226,6 +244,8 @@ class PolicyTestCase(unittest.TestCase):
         workflows = self.root / ".github/workflows"
         workflows.mkdir(parents=True)
         (workflows / "build.yml").write_text(BUILD_WORKFLOW, encoding="utf-8")
+
+        (self.root / "NuGet.config").write_text(NUGET_CONFIG, encoding="utf-8")
 
         analyzers = self.root / "src/ViciOne.ServiceBus.Analyzers"
         analyzers.mkdir(parents=True)
@@ -673,6 +693,81 @@ class PolicyTestCase(unittest.TestCase):
         # this check accepted exactly that and would have accepted the defect it exists to catch.
         self.write_channel_context("            using var lease = NoLease();\n            return Task.CompletedTask;")
         self.assert_rejected("transport-lease")
+
+
+    # -- restore sources -----------------------------------------------------------------------
+
+    def nuget_config(self) -> Path:
+        return self.root / "NuGet.config"
+
+    def test_accepts_the_isolated_restore_configuration(self) -> None:
+        self.assertEqual([], self.failures())
+
+    def test_rejects_a_missing_configuration(self) -> None:
+        self.nuget_config().unlink()
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_configuration_that_does_not_clear_inherited_sources(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace("    <clear />\n", "", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_clear_that_stands_after_the_source(self) -> None:
+        # A clear below the add wipes the source it was meant to keep, so the restore falls back to
+        # nothing at all. The element is present either way, which is why position has to be checked.
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            '    <clear />\n    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />\n',
+            '    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />\n    <clear />\n',
+            1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_second_source(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  </packageSources>",
+            '    <add key="JFrogViciOne" value="https://jfrog.invalid/artifactory/api/nuget/v3/index.json" />\n'
+            "  </packageSources>", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_renamed_source(self) -> None:
+        self.nuget_config().write_text(
+            NUGET_CONFIG.replace('value="https://api.nuget.org/v3/index.json"',
+                                 'value="https://jfrog.invalid/artifactory/api/nuget/v3/index.json"', 1),
+            encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_missing_mapping(self) -> None:
+        body = NUGET_CONFIG.split("  <packageSourceMapping>")[0] + "</configuration>\n"
+        self.nuget_config().write_text(body, encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_mapping_that_leaves_patterns_unclaimed(self) -> None:
+        self.nuget_config().write_text(
+            NUGET_CONFIG.replace('<package pattern="*" />', '<package pattern="ViciOne.*" />', 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_mapping_for_an_undeclared_source(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "    </packageSource>",
+            "    </packageSource>\n"
+            '    <packageSource key="JFrogViciOne">\n'
+            '      <package pattern="ViciOne.*" />\n'
+            "    </packageSource>", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_credentials_in_the_repository(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "</configuration>",
+            "  <packageSourceCredentials>\n"
+            '    <nuget.org>\n'
+            '      <add key="Username" value="build" />\n'
+            '      <add key="ClearTextPassword" value="secret" />\n'
+            "    </nuget.org>\n"
+            "  </packageSourceCredentials>\n"
+            "</configuration>", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_an_unparsable_configuration(self) -> None:
+        self.nuget_config().write_text("<configuration><packageSources>", encoding="utf-8")
+        self.assert_rejected("restore-sources")
 
 
 if __name__ == "__main__":
