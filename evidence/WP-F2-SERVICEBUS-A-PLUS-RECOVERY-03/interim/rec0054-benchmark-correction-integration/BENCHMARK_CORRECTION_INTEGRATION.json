@@ -1,0 +1,136 @@
+{
+  "recordId": "REC-0054-BENCHMARK-CORRECTION-INTEGRATION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0054-lead-directive",
+  "repository": "repositories/vicione-servicebus",
+  "branch": "cleanup/servicebus-net10-recovery",
+  "integration": {
+    "cherryPickedCommit": "71da5625c3d54fd99551dc6bdcce274c5d3dc7b8",
+    "cherryPickedTree": "55413b4ae4b6b94881ae75f144f0c5c981447c0d",
+    "statedBase": "53a6664a2b2d41314f874832e3c31829fdf5d9ff",
+    "measuredParent": "53a6664a2b2d41314f874832e3c31829fdf5d9ff",
+    "integratedAs": "743edfd8172143c32e59525b180db6a1421f3da6",
+    "benchmarksSubtreeLead": "f35413805cbf24f72faf3d0d666f9640881ac911",
+    "benchmarksSubtreeIntegrated": "f35413805cbf24f72faf3d0d666f9640881ac911",
+    "benchmarksSubtreeIdentical": true,
+    "firstBenchmarkCommitReapplied": false,
+    "changedPathsOutsideBenchmarks": [],
+    "conflicts": 0,
+    "headAfterIntegration": "11e73956e89e66f4ba3b5a4587386345f6142138",
+    "treeAfterIntegration": "7bb591e6dc00d33fa67c460933d624ef1297b99a",
+    "workingTreeClean": true,
+    "pushed": false
+  },
+  "commitSequence": [
+    {"commit": "743edfd8172143c32e59525b180db6a1421f3da6", "subject": "Correct benchmark measurement semantics", "origin": "LEAD_CHERRY_PICK"},
+    {"commit": "90a596be", "subject": "Regenerate the change list for the integrated benchmark tree", "origin": "INTEGRATION_CONSEQUENCE"},
+    {"commit": "11e73956", "subject": "Stop tracking generated benchmark reports", "origin": "TEAM_1_CORRECTION"}
+  ],
+  "changeListEvidence": {
+    "generator": "tools/identity/change_list.py",
+    "gateRefusedBeforeRegeneration": true,
+    "gateMessageBeforeRegeneration": "FAIL change-list line 15 differs; expected Added 795, actual Added 791",
+    "addedBeforeIntegration": 791,
+    "addedAfterIntegration": 795,
+    "addedAfterUntrackingGeneratedReports": 792,
+    "entriesFinal": 6440,
+    "gateExitFinal": 0
+  },
+  "verification": {
+    "benchmarkTests": {"total": 32, "passed": 32, "failed": 0, "skipped": 0, "filter": null, "exitCode": 0},
+    "benchmarkDotNetDryJob": {
+      "command": "dotnet run --project benchmarks/ViciOne.ServiceBus.BenchmarkConsole -c Release --framework net10.0 -- --job dry --filter *",
+      "benchmarkClasses": 13,
+      "perClassExecutedSum": 50,
+      "globalExecuted": 50,
+      "failures": 0,
+      "exitCode": 0,
+      "performanceClaimDerived": false
+    },
+    "inMemoryLatency": {
+      "messageCount": 1000,
+      "sendCompletionLatencySamples": 1000,
+      "endToEndConsumeLatencySamples": 1000,
+      "histogramSum": 1000,
+      "histogramBuckets": 9,
+      "exitCode": 0
+    },
+    "inMemoryRequestResponse": {
+      "messageCount": 1000,
+      "requestResponseCompletionLatencySamples": 1000,
+      "consumerReportingLatencySamples": 1000,
+      "histogramSum": 1000,
+      "histogramBuckets": 2,
+      "exitCode": 0
+    },
+    "externalTransportRuns": "NOT_STARTED_BY_INSTRUCTION",
+    "sqlServerBusOutboxRun": "NOT_STARTED_BY_INSTRUCTION",
+    "toDoFileUnchanged": true
+  },
+  "independentMutationProbes": [
+    {"probe": "clamp-removed", "target": "Analytics.Histogram", "result": "RED", "redTests": ["Histogram_WithExtremeValues_DoesNotOverflow"]},
+    {"probe": "empty-buckets-kept-and-nonempty-dropped", "target": "Analytics.Histogram", "result": "RED", "redTests": ["Histogram_IncludesMaximumValueAndEverySample", "Histogram_WithExtremeValues_DoesNotOverflow"]},
+    {"probe": "latency-continuations-run-inline", "target": "Latency.MessageMetricCapture", "result": "RED", "redTests": ["MetricCompletionTasks_RunContinuationsAsynchronously"]},
+    {"probe": "maximum-branch-removed", "target": "Analytics.Histogram", "result": "GREEN", "redTests": []},
+    {"probe": "maximum-sample-discarded", "target": "Analytics.Histogram", "result": "RED", "redTests": ["Histogram_IncludesMaximumValueAndEverySample", "Histogram_WithExtremeValues_DoesNotOverflow"]},
+    {"probe": "r7-rank-replaced-by-nearest-rank", "target": "Analytics.Percentile", "result": "RED", "redTests": ["Median_UsesTheSameQuantileDefinition", "Percentile_UsesLinearInterpolationForSmallEvenSample"]},
+    {"probe": "request-boundary-moved-after-the-call", "target": "RequestResponse.MessageMetricCapture", "result": "RED", "redTests": ["RequestCapture_StartsBeforeTheRequestDelegateIsInvoked"]},
+    {"probe": "send-boundary-moved-after-the-call", "target": "Latency.MessageMetricCapture", "result": "RED", "redTests": ["LatencyCapture_StartsBeforeTheSendDelegateIsInvoked"]}
+  ],
+  "independentArithmeticCheck": {
+    "percentile95Of1234": 3.85,
+    "median50Of1234": 2.5,
+    "histogram0_5_10Segments2": [1, 2],
+    "reproducedTestExpectations": true
+  },
+  "findings": [
+    {
+      "id": "F-0054-1",
+      "severity": "OBSERVATION",
+      "area": "benchmarks/ViciOne.ServiceBus.Benchmark/Analytics.cs",
+      "statement": "The sample == maximum branch in Histogram is redundant because Math.Clamp already maps the computed index segmentCount to segmentCount - 1. Removing the branch keeps the whole suite green, so no test holds that branch on its own.",
+      "assuranceStillHeld": true,
+      "reason": "The conserved histogram sum is carried by Math.Clamp plus the Count > 0 filter, both of which are held by discriminating tests."
+    },
+    {
+      "id": "F-0054-2",
+      "severity": "CORRECTED_BY_TEAM_1",
+      "area": "artifacts/BenchmarkDotNet/results",
+      "statement": "Three generated SerializationBenchmark reports were tracked in the repository. They entered with team 1 commit db0481d8, not with any lead commit. The benchmark console writes to artifacts/BenchmarkDotNet, which the existing ignore rule **/BenchmarkDotNet.Artifacts/**/* does not match, so every benchmark run rewrote tracked files and left the working tree dirty.",
+      "correction": "11e73956",
+      "verified": "A full dry job now leaves git status empty."
+    },
+    {
+      "id": "F-0054-3",
+      "severity": "OBSERVATION",
+      "area": "benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs",
+      "statement": "In the postSend path, PostSend can reach a message id before Sent recorded it. The add branch then constructs SentMessage with SendTimestamp 0, so that message would be measured from benchmark start rather than from its own send. The InMemory paths do not use postSend, so no executed run is affected.",
+      "affectsExecutedRuns": false,
+      "relatesTo": "the still open external transport block in benchmarks/ToDo.md"
+    }
+  ],
+  "measurementDeviationsEncountered": [
+    {
+      "deviation": "A final test run reported 31 of 32 with MetricCompletionTasks_RunContinuationsAsynchronously red.",
+      "cause": "Team 1 measurement harness artifact, not a patch defect. The mutation script restored the source after its last probe but did not rebuild, and the confirming run used --no-build, so it exercised the still mutated binary.",
+      "resolution": "Rebuilt from the restored source and re-ran: 32 of 32, exit code 0. Both InMemory series and the dry job were then repeated on the final commit."
+    }
+  ],
+  "leadClaimsChecked": {
+    "benchmarkTests32of32": "CONFIRMED",
+    "dryJob50Executed": "CONFIRMED",
+    "inMemoryLatency1000of1000": "CONFIRMED",
+    "inMemoryRequestResponse1000of1000": "CONFIRMED",
+    "scopeBenchmarksOnly": "CONFIRMED",
+    "cleanDirectSuccessorOfStatedBase": "CONFIRMED",
+    "noProductOrCentralPackageChange": "CONFIRMED",
+    "measurementBoundaryBeforeProductiveCall": "CONFIRMED",
+    "measurementGroupSeparation": "CONFIRMED",
+    "fullHistogramCount": "CONFIRMED"
+  },
+  "openWarningsOnThisBase": {
+    "NU1507": "4 configured package sources, unmapped; team 1 restore isolation block",
+    "NU1902": ["OpenTelemetry.Api 1.9.0", "OpenTelemetry.Exporter.OpenTelemetryProtocol 1.9.0"],
+    "CS8604": "src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs(229,55)"
+  }
+}
