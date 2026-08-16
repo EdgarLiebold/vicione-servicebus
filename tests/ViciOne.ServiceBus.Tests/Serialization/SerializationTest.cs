@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Tests.Serialization
 {
     using System;
@@ -30,86 +30,30 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [OneTimeSetUp]
         public void SetupSerializationTest()
         {
-            if (_serializerType == typeof(NewtonsoftJsonMessageSerializer))
-            {
-                Serializer = new NewtonsoftJsonMessageSerializer();
-                Deserializer = new NewtonsoftJsonMessageDeserializer(NewtonsoftJsonMessageSerializer.Deserializer);
-            }
-            else if (_serializerType == typeof(SystemTextJsonMessageSerializer))
+            if (_serializerType == typeof(SystemTextJsonMessageSerializer))
             {
                 var serializer = new SystemTextJsonMessageSerializer();
                 Serializer = serializer;
                 Deserializer = serializer;
             }
-            else if (_serializerType == typeof(BsonMessageSerializer))
+            else if (_serializerType == typeof(SystemTextJsonRawMessageSerializer))
             {
-                Serializer = new BsonMessageSerializer();
-                Deserializer = new NewtonsoftBsonMessageDeserializer(BsonMessageSerializer.Deserializer);
-            }
-            else if (_serializerType == typeof(NewtonsoftXmlMessageSerializer))
-            {
-                Serializer = new NewtonsoftXmlMessageSerializer();
-                Deserializer = new NewtonsoftXmlMessageDeserializer(NewtonsoftXmlJsonMessageSerializer.Deserializer);
-            }
-            else if (_serializerType == typeof(EncryptedMessageSerializer))
-            {
-                ISymmetricKeyProvider keyProvider = new TestSymmetricKeyProvider();
-                var streamProvider = new AesCryptoStreamProvider(keyProvider, "default");
-
-                Serializer = new EncryptedMessageSerializer(streamProvider);
-                Deserializer = new EncryptedMessageDeserializer(BsonMessageSerializer.Deserializer, streamProvider);
-            }
-            else if (_serializerType == typeof(EncryptedMessageSerializerV2))
-            {
-                var key = new byte[]
-                {
-                    31,
-                    182,
-                    254,
-                    29,
-                    98,
-                    114,
-                    85,
-                    168,
-                    176,
-                    48,
-                    113,
-                    206,
-                    198,
-                    176,
-                    181,
-                    125,
-                    106,
-                    134,
-                    98,
-                    217,
-                    113,
-                    158,
-                    88,
-                    75,
-                    118,
-                    223,
-                    117,
-                    160,
-                    224,
-                    1,
-                    47,
-                    162
-                };
-                var keyProvider = new ConstantSecureKeyProvider(key);
-                var streamProvider = new AesCryptoStreamProviderV2(keyProvider);
-
-                Serializer = new EncryptedMessageSerializerV2(streamProvider);
-                Deserializer = new EncryptedMessageDeserializerV2(BsonMessageSerializer.Deserializer, streamProvider);
+                var serializer = new SystemTextJsonRawMessageSerializer();
+                Serializer = serializer;
+                Deserializer = serializer;
             }
             else if (_serializerType == typeof(MessagePackMessageSerializer))
             {
-                var messagePackSerializer = new MessagePackMessageSerializer();
-                Serializer = messagePackSerializer;
-                Deserializer = messagePackSerializer;
+                var serializer = new MessagePackMessageSerializer();
+                Serializer = serializer;
+                Deserializer = serializer;
             }
             else
-                throw new ArgumentException("The serializer type is unknown");
+            {
+                // A fixture that names a serializer this base does not build would otherwise run with a null
+                // serializer and fail somewhere far away from the cause.
+                throw new ArgumentException($"The serialization test does not build {_serializerType.Name}", nameof(_serializerType));
+            }
         }
 
         protected T SerializeAndReturn<T>(T obj)
