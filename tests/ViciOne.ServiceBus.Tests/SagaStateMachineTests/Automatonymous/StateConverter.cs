@@ -2,11 +2,21 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 {
     using System;
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
 
+    /// <summary>
+    /// Writes a state as its name and reads it back through the machine that owns it.
+    /// <para>
+    /// A state is not data: two machines can both have a state called "True" and they are not the same
+    /// object. So the name is the only thing worth writing, and reading it needs the machine to resolve
+    /// the name against. That is why the converter is constructed per machine rather than registered
+    /// once.
+    /// </para>
+    /// </summary>
     public class StateConverter<T> :
-        JsonConverter
+        JsonConverter<State>
         where T : StateMachine
     {
         readonly T _machine;
@@ -16,38 +26,30 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             _machine = machine;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override bool CanConvert(Type typeToConvert)
         {
-            var state = (State)value;
-            string text = state.Name;
-            if (string.IsNullOrEmpty(text))
-                text = "";
-
-            writer.WriteValue(text);
+            return typeof(State).IsAssignableFrom(typeToConvert);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, State value, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonToken.Null)
-                return default(State);
+            writer.WriteStringValue(value?.Name ?? "");
+        }
 
-            if (reader.TokenType == JsonToken.String)
+        public override State Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+                return null;
+
+            if (reader.TokenType == JsonTokenType.String)
             {
-                var text = (string)reader.Value;
-                if (string.IsNullOrWhiteSpace(text))
-                    return default(State);
+                var text = reader.GetString();
 
-                return _machine.GetState((string)reader.Value);
+                return string.IsNullOrWhiteSpace(text) ? null : _machine.GetState(text);
             }
 
-            throw new JsonReaderException(string.Format(CultureInfo.InvariantCulture,
-                "Error reading State. Expected a string but got {0}.", new object[] {reader.TokenType}));
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(State).IsAssignableFrom(objectType);
+            throw new JsonException(string.Format(CultureInfo.InvariantCulture,
+                "Error reading State. Expected a string but got {0}.", reader.TokenType));
         }
     }
 }

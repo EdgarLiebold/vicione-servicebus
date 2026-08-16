@@ -1,107 +1,45 @@
 namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using Newtonsoft.Json;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
 
+    /// <summary>
+    /// Round trips a saga state machine instance through JSON, so a specification can prove that the
+    /// current state survives being written and read back.
+    /// <para>
+    /// Only the two methods the specifications use are here. The stream overloads this helper carried
+    /// alongside them had no caller.
+    /// </para>
+    /// </summary>
     public class JsonStateSerializer<TStateMachine, TInstance>
         where TStateMachine : StateMachine<TInstance>
         where TInstance : class, SagaStateMachineInstance
     {
-        readonly TStateMachine _machine;
-
-        JsonSerializer _deserializer;
-
-        JsonSerializer _serializer;
+        readonly JsonSerializerOptions _options;
 
         public JsonStateSerializer(TStateMachine machine)
         {
-            _machine = machine;
-        }
-
-        public JsonSerializer Deserializer
-        {
-            get
+            _options = new JsonSerializerOptions
             {
-                return _deserializer ??= JsonSerializer.Create(new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    ObjectCreationHandling = ObjectCreationHandling.Auto,
-                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                    Converters = new List<JsonConverter>(new JsonConverter[]
-                    {
-                        new StateConverter<TStateMachine>(_machine),
-                    })
-                });
-            }
-        }
-
-        public JsonSerializer Serializer
-        {
-            get
-            {
-                return _serializer ??= JsonSerializer.Create(new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    ObjectCreationHandling = ObjectCreationHandling.Auto,
-                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                    Converters = new List<JsonConverter>(new JsonConverter[]
-                    {
-                        new StateConverter<TStateMachine>(_machine),
-                    }),
-                });
-            }
+                // Both of the settings this replaced ignored nulls and defaults on the way out, which
+                // is the single WhenWritingDefault condition here.
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                WriteIndented = true,
+                Converters = { new StateConverter<TStateMachine>(machine) }
+            };
         }
 
         public string Serialize<T>(T instance)
             where T : TInstance
         {
-            using (var ms = new MemoryStream())
-            {
-                Serialize(ms, instance);
-
-                return Encoding.UTF8.GetString(ms.ToArray());
-            }
-        }
-
-
-        public void Serialize<T>(Stream output, T instance)
-            where T : TInstance
-        {
-            using (var writer = new StreamWriter(output))
-            using (var jsonWriter = new JsonTextWriter(writer))
-            {
-                jsonWriter.Formatting = Formatting.Indented;
-
-                Serializer.Serialize(jsonWriter, instance);
-
-                jsonWriter.Flush();
-                writer.Flush();
-            }
+            return JsonSerializer.Serialize(instance, _options);
         }
 
         public T Deserialize<T>(string body)
             where T : TInstance
         {
-            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(body)))
-            {
-                return Deserialize<T>(ms);
-            }
-        }
-
-        public T Deserialize<T>(Stream input)
-            where T : TInstance
-
-        {
-            using (var reader = new StreamReader(input))
-            using (var jsonReader = new JsonTextReader(reader))
-                return Deserializer.Deserialize<T>(jsonReader);
+            return JsonSerializer.Deserialize<T>(body, _options);
         }
     }
 }
