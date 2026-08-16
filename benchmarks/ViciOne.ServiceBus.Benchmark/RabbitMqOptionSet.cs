@@ -20,10 +20,17 @@ namespace ViciOneServiceBusBenchmark
     {
         readonly Lazy<Uri> _hostAddress;
         BatchSettings _batchSettings;
+        bool _portWasGiven;
 
         public RabbitMqOptionSet()
         {
             Add<string>("h|host:", "The host name of the broker", x => Host = x);
+            // The address builder already had a Port, but nothing could set it, so the tool could only
+            // ever reach a broker on the default port. The repository's own pinned fixture publishes an
+            // ephemeral loopback port by design, and the policy gate requires exactly that, so the
+            // benchmark could not be pointed at the fixture it is meant to measure. Putting the port in
+            // the host instead breaks UriBuilder, which is what "the hostname could not be parsed" was.
+            Add<int>("port:", "The port the broker listens on", SetPort);
             Add<string>("vhost:", "The virtual host to use", value => VirtualHost = value);
             Add<string>("u|username:", "Username (if using basic credentials)", value => Username = value);
             Add<string>("p|password:", "Password (if using basic credentials)", value => Password = value);
@@ -135,10 +142,24 @@ namespace ViciOneServiceBusBenchmark
             };
         }
 
+        void SetPort(int port)
+        {
+            Port = port;
+            _portWasGiven = true;
+        }
+
+        /// <summary>
+        /// Switching TLS moves the default port, but only while nobody has named one. Overwriting a
+        /// given port here made the tool depend on the order of two independent options: --port before
+        /// --ssl was silently discarded, and the run then dialled 5672 while reporting the host it was
+        /// told about.
+        /// </summary>
         void EnableSsl(bool enabled)
         {
             Ssl = enabled;
-            Port = enabled ? 5671 : 5672;
+
+            if (!_portWasGiven)
+                Port = enabled ? 5671 : 5672;
         }
 
         public void ShowOptions()
