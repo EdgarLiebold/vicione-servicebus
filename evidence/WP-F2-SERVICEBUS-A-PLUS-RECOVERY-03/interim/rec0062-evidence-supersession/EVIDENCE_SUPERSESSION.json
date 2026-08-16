@@ -1,0 +1,61 @@
+{
+  "recordId": "REC-0062-EVIDENCE-SUPERSESSION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0062-lead-directive",
+  "rule": "An accepted hash chain is never repaired by rewriting its evidence input. A corrected value supersedes the earlier one in a new record; the bound bytes stay exactly as they were bound.",
+  "processFailure": {
+    "whatIDid": "I rewrote evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0058-newtonsoft-encryption/NEWTONSOFT_CAPABILITY_SURFACE.json in place at commit bdd4df80, although question record 0059 binds that path by SHA-256.",
+    "whyItWasWrong": "The content did need correcting after answer 0060, but the file is the bound input of an accepted question. Rewriting it broke the binding the orchestration validator checks.",
+    "detectedBy": "Lead review 0062 via the orchestration validator, not by me."
+  },
+  "boundEvidenceRestored": {
+    "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0058-newtonsoft-encryption/NEWTONSOFT_CAPABILITY_SURFACE.json",
+    "boundBy": "0059-question",
+    "originalSha256": "0381d2dd0a326c876067569bb925e5e9b27c8aac982bee8324c69163c6bc8ea0",
+    "originalProductCommit": "ee064a1eafc4a0766e35477aab7209dbd237ef07",
+    "restoredFrom": "ee064a1eafc4a0766e35477aab7209dbd237ef07",
+    "restoredSha256": "0381d2dd0a326c876067569bb925e5e9b27c8aac982bee8324c69163c6bc8ea0",
+    "byteIdentical": true
+  },
+  "supersedingContent": {
+    "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0062-evidence-supersession/NEWTONSOFT_CAPABILITY_SURFACE.corrected.json",
+    "sha256": "bf2c6f07df13133bca07a5b8c57618fbc6dd5af7c29be4884f6fd6948fc1e773",
+    "introducedAt": "bdd4df8044a857005c4e0315ed4078443f5d870e",
+    "whatItCorrects": "The two encryption rows move from BLOCKED_NEEDS_DECISION to COVERED_BY_PO-2026-08-13-04, and decisionsConsulted no longer claims the decision does not name encryption.",
+    "neitherVersionLost": true
+  },
+  "supersededCount": {
+    "claim": "core-unit 1707/1707",
+    "appearsIn": [
+      "0061-progress record",
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0058-mandatory-corrections/MANDATORY_CORRECTIONS.json",
+      "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0058-newtonsoft-encryption/NEWTONSOFT_CAPABILITY_SURFACE.json"
+    ],
+    "status": "STALE_SUPERSEDED",
+    "correctedResult": {
+      "category": "core-unit",
+      "total": 1705,
+      "passed": 1705,
+      "failed": 0,
+      "exitCode": 0,
+      "commit": "a264f0e30b9cef804662c13214084e109ad9c5ca",
+      "tree": "816150bd2f887b209380edc9b9379fe9a8cb64ac",
+      "measuredBy": "TEAM_1_INDEPENDENTLY",
+      "method": "git worktree detached at a264f0e3, canonical runner tools/ci/run_test_category.py, not a figure carried over from the review",
+      "rawArtifact": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0062-evidence-supersession/core-unit-a264f0e3.trx"
+    },
+    "deltaExplanation": "Exactly the two authorised Newtonsoft DateTime cases removed by commit d55b4cfa: Using_json_net and Using_json_net_date_time. Their subject was the removed library's own date handling and the System.Text.Json pair beside them holds the kept behaviour.",
+    "noEarlierFileWasEditedInPlace": true
+  },
+  "correction2_deterministicDirectMode": {
+    "test": "The_direct_mode_still_completes_its_own_measurement",
+    "removed": "Thread.Sleep(10) with a greater-than-five-millisecond wall clock threshold",
+    "nowUses": "a TaskCompletionSource barrier: signal entry, hold the delegate, assert SendCompleted is not complete, release, await, assert exactly one metric",
+    "remainingSleep": {
+      "test": "A_repeated_completion_keeps_the_first_timestamp",
+      "why": "The assertion is equality of two timestamps, not a duration. The sleep only guarantees that a wrong implementation would produce a different value; it sharpens the probe rather than carrying it.",
+      "offeredToRemove": true
+    },
+    "benchmarkTestProject": {"total": 57, "passed": 57, "failed": 0}
+  }
+}

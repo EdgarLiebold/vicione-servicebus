@@ -1,0 +1,163 @@
+{
+  "recordId": "REC-0058-NEWTONSOFT-ENCRYPTION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "repository": "repositories/vicione-servicebus",
+  "commit": "f51e0faf",
+  "method": "The public configuration surface of src/ViciOne.ServiceBus.Newtonsoft was enumerated from its Configuration folder and each method matched against the test tree. A name search for 'Newtonsoft' alone misses UseBsonSerializer, UseXmlSerializer, UseEncryptedSerializer and UseEncryption, which carry no such name and would have been removed unnoticed.",
+  "capabilitySurface": [
+    {
+      "api": "UseNewtonsoftJsonSerializer",
+      "testFiles": 5,
+      "keptEquivalent": "UseJsonSerializer",
+      "disposition": "DONE"
+    },
+    {
+      "api": "UseNewtonsoftJsonDeserializer",
+      "testFiles": 0,
+      "keptEquivalent": "UseJsonDeserializer",
+      "disposition": "DONE"
+    },
+    {
+      "api": "ConfigureNewtonsoftJsonSerializer",
+      "testFiles": 3,
+      "keptEquivalent": "ConfigureJsonSerializerOptions",
+      "disposition": "DONE"
+    },
+    {
+      "api": "ConfigureNewtonsoftJsonDeserializer",
+      "testFiles": 2,
+      "keptEquivalent": "ConfigureJsonSerializerOptions",
+      "disposition": "DONE"
+    },
+    {
+      "api": "UseNewtonsoftRawJsonSerializer",
+      "testFiles": 3,
+      "keptEquivalent": "UseRawJsonSerializer",
+      "disposition": "OPEN_MECHANICAL"
+    },
+    {
+      "api": "UseNewtonsoftRawJsonDeserializer",
+      "testFiles": 1,
+      "keptEquivalent": "UseRawJsonDeserializer",
+      "disposition": "OPEN_MECHANICAL"
+    },
+    {
+      "api": "UseBsonSerializer",
+      "testFiles": 2,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-13-04"
+    },
+    {
+      "api": "UseBsonDeserializer",
+      "testFiles": 1,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-13-04"
+    },
+    {
+      "api": "UseXmlSerializer",
+      "testFiles": 3,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-16-01_NR2"
+    },
+    {
+      "api": "UseRawXmlSerializer",
+      "testFiles": 2,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-16-01_NR2"
+    },
+    {
+      "api": "UseEncryptedSerializer",
+      "testFiles": 2,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-13-04"
+    },
+    {
+      "api": "UseEncryption",
+      "testFiles": 2,
+      "keptEquivalent": null,
+      "disposition": "COVERED_BY_PO-2026-08-13-04"
+    }
+  ],
+  "contentTypeEquivalence": [
+    {
+      "removed": "NewtonsoftJsonMessageSerializer.ContentTypeHeaderValue",
+      "kept": "SystemTextJsonMessageSerializer.JsonContentType",
+      "value": "application/vnd.vicione.servicebus+json",
+      "identical": true
+    },
+    {
+      "removed": "NewtonsoftRawJsonMessageSerializer.ContentTypeHeaderValue",
+      "kept": "SystemTextJsonRawMessageSerializer.JsonContentType",
+      "value": "application/json",
+      "identical": true
+    },
+    {
+      "removed": "NewtonsoftXmlMessageSerializer.ContentTypeHeaderValue",
+      "kept": null,
+      "value": "application/vnd.vicione.servicebus+xml",
+      "identical": false
+    }
+  ],
+  "encryption": {
+    "cryptoPrimitivesInKeptCore": [
+      "src/ViciOne.ServiceBus/Serialization/ICryptoStreamProvider.cs",
+      "src/ViciOne.ServiceBus/Serialization/ICryptoStreamProviderV2.cs",
+      "src/ViciOne.ServiceBus/Serialization/AesCryptoStreamProvider.cs",
+      "src/ViciOne.ServiceBus/Serialization/AesCryptoStreamProviderV2.cs",
+      "src/ViciOne.ServiceBus/MessageData/EncryptedMessageDataRepository.cs"
+    ],
+    "wireSerializersInNewtonsoftProject": [
+      "EncryptMessageBody.cs",
+      "EncryptMessageBodyV2.cs",
+      "EncryptedMessageSerializer.cs",
+      "EncryptedMessageSerializerV2.cs",
+      "EncryptedMessageDeserializer.cs",
+      "EncryptedMessageDeserializerV2.cs",
+      "EncryptedFallbackMessageDeserializerV2.cs",
+      "EncryptedFallbackSerializerFactoryV2.cs",
+      "NewtonsoftEncryptedBodyMessageSerializer.cs",
+      "NewtonsoftEncryptedSerializerContext.cs",
+      "NewtonsoftEncryptedSerializerFactory.cs",
+      "NewtonsoftEncryptedV2BodyMessageSerializer.cs",
+      "NewtonsoftEncryptedV2SerializerContext.cs",
+      "NewtonsoftEncryptedV2SerializerFactory.cs"
+    ],
+    "systemTextJsonEquivalentInTree": false,
+    "messageDataEncryptionSurvives": true,
+    "messageBodyEncryptionSurvives": false,
+    "affectedTestFiles": [
+      "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Encrypted_Specs.cs",
+      "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Publish_Specs.cs",
+      "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ScheduleMessage_Specs.cs",
+      "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Encrypted_Specs.cs",
+      "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Publish_Specs.cs"
+    ]
+  },
+  "decisionsConsulted": {
+    "PO-2026-08-13-04": "ViciOne.ServiceBus.Newtonsoft is removed in full. Number 1 names UseEncryptedSerializer*, the fallback deserializers and the whole coupled inherited message body encryption path explicitly, and the premise records that its AES CryptoStream providers prove no authenticated ciphertext. Number 4 mandates the follow-up slice on System.Security.Cryptography.AesGcm and forbids any CBC, PKCS7, compatibility, fallback or dual read path to the legacy format.",
+    "PO-2026-08-16-01_NR2": "Direct XML and raw XML bus serialisation stays removed; XML as ordinary payload over a kept serializer is allowed.",
+    "PO-2026-08-14-04_NR7": "ViciOne owned Newtonsoft use is forbidden; the package may remain only if another kept vendor dependency provably needs it."
+  },
+  "verification": {
+    "coreCategory": {
+      "total": 1707,
+      "passed": 1707,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "rabbitMqCategory": {
+      "total": 366,
+      "passed": 346,
+      "failed": 0,
+      "exitCode": 0,
+      "note": "PASS required-category rabbitmq; the difference to 366 is the authorised not-executed inventory."
+    },
+    "brokerEnvironment": "Docker on this machine is Colima. Its host agent had stopped forwarding newly published container ports, which made the RabbitMQ category fail in its SetUpFixture and the ActiveMQ category hang. Restored with colima restart and proven with a fresh container before the categories were run."
+  },
+  "correction": {
+    "record": "0060-answer",
+    "whatIGotWrong": "Report 0059 claimed the decision does not name body encryption and asked for a decision that already existed. I read the index row and the decision title instead of the decision body, which names UseEncryptedSerializer* in its first numbered point.",
+    "consequence": "The recommendation in 0059 was to rebuild against the existing CryptoStream providers. The same decision already records that those providers prove no authenticated ciphertext, so the recommendation was the path the decision had rejected.",
+    "resolution": "OPT-DROP-BODY-ENCRYPTION applies to this slice. F-SB-01 builds the AesGcm based mechanism as its own slice; nothing here is ported and no Newtonsoft remnant is kept for encryption."
+  }
+}

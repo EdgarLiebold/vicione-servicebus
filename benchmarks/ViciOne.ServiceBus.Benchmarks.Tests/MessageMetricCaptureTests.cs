@@ -239,18 +239,37 @@ public class MessageMetricCaptureTests
     [Test]
     public async Task The_direct_mode_still_completes_its_own_measurement()
     {
+        // Held at a barrier rather than measured against the clock. The earlier form slept and then
+        // required more than five milliseconds to have elapsed, which is a wall clock threshold: it
+        // could fail under scheduling noise without any defect, and it proved nothing the ordering
+        // below does not prove exactly.
         var capture = new MessageMetricCapture(1);
         var messageId = Guid.NewGuid();
 
-        await capture.Sent(messageId, async () =>
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        Task sending = capture.Sent(messageId, async () =>
         {
-            await Task.Yield();
-            Thread.Sleep(10);
+            entered.SetResult();
+
+            await release.Task;
         });
+
+        await entered.Task;
+
+        Assert.That(capture.SendCompleted.IsCompleted, Is.False,
+            "A send whose delegate has not returned is not a completed send");
+
+        release.SetResult();
+        await sending;
         await Consume(capture, messageId);
 
-        Assert.That(capture.SendCompleted.IsCompleted, Is.True);
-        Assert.That(SingleMetric(capture).SendCompletionLatency, Is.GreaterThan(Stopwatch.Frequency / 200));
+        Assert.Multiple(() =>
+        {
+            Assert.That(capture.SendCompleted.IsCompleted, Is.True);
+            Assert.That(capture.GetMessageMetrics(), Has.Length.EqualTo(1));
+        });
     }
 
     [Test]
