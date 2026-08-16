@@ -11,9 +11,15 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     [TestFixture]
     /// <summary>
     /// One bus, two serializers: the endpoint answers with a different one than the bus publishes
-    /// with. The pair used to be the envelope and BSON; BSON went with the removed library, so the
-    /// second serializer is now raw JSON. What is asserted is unchanged — the two content types have
-    /// to differ and each has to be the one its side configured.
+    /// with. The pair used to be the envelope and BSON.
+    /// <para>
+    /// BSON went with the removed library, and the replacement has to be an independent serializer
+    /// implementation rather than a second mode of the same one. Raw JSON would have been the easy
+    /// substitution and the wrong one: it is System.Text.Json in both halves, so the case would have
+    /// proved that the envelope and raw modes coexist, which is a narrower statement than the one it
+    /// carried. MessagePack is a separate implementation with its own wire format and content type,
+    /// so what is asserted stays what it was.
+    /// </para>
     /// </summary>
     public class SeparateSerializer_Specs :
         InMemoryTestFixture
@@ -32,7 +38,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
             ConsumeContext<PongMessage> pongContext = await ponged;
 
-            Assert.That(pongContext.ReceiveContext.ContentType, Is.EqualTo(SystemTextJsonRawMessageSerializer.JsonContentType),
+            Assert.That(pongContext.ReceiveContext.ContentType, Is.EqualTo(MessagePackMessageSerializer.MessagePackContentType),
                 $"actual type is {pongContext.ReceiveContext.ContentType}");
         }
 
@@ -42,14 +48,14 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            configurator.UseRawJsonDeserializer();
+            configurator.UseMessagePackDeserializer();
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
             base.ConfigureInMemoryReceiveEndpoint(configurator);
 
-            configurator.UseRawJsonSerializer();
+            configurator.UseMessagePackSerializer();
 
             _handled = Handler<PingMessage>(configurator, async context =>
             {
