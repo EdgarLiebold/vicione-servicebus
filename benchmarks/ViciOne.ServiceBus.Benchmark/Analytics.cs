@@ -74,10 +74,9 @@ namespace ViciOneServiceBusBenchmark
             var span = (double)maximum - minimum;
             foreach (var sample in samples)
             {
-                var calculatedIndex = sample == maximum
-                    ? segmentCount - 1
-                    : (int)(((double)sample - minimum) / span * segmentCount);
-                var index = Math.Clamp(calculatedIndex, 0, segmentCount - 1);
+                // The maximum computes an index of exactly segmentCount, which is one past the last
+                // bucket, and the clamp is what puts it back into that bucket. Nothing is dropped.
+                var index = Math.Clamp((int)(((double)sample - minimum) / span * segmentCount), 0, segmentCount - 1);
 
                 counts[index]++;
             }
