@@ -1,4 +1,3 @@
-﻿; ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 ; Rule id MTA0001 was renamed to ViciOneServiceBus0001. Table content is otherwise unchanged.
 ## Release 1.0
 
