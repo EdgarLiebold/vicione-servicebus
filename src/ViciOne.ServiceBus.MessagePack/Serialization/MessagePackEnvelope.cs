@@ -86,8 +86,24 @@ public class MessagePackEnvelope :
         FaultAddress = envelope.FaultAddress;
 
         MessageType = envelope.MessageType;
-        IsMessageNativeMessagePackSerialized = true;
-        Message = MessagePackSerializer.Serialize(envelope.Message, InternalMessagePackResolver.Options);
+
+        if (envelope is MessagePackEnvelope alreadyMessagePack)
+        {
+            // The payload of a MessagePack envelope is already MessagePack, whether it came off the wire
+            // or from an overlay. Serializing it again wrapped those bytes in a second encoding, and the
+            // receiver then found a byte array where it expected the message. Delayed redelivery and
+            // scheduling both clone an envelope, which is why a redelivered message was never consumed.
+            //
+            // The reference is shared rather than copied because a payload is only ever replaced as a
+            // whole, never mutated in place.
+            IsMessageNativeMessagePackSerialized = alreadyMessagePack.IsMessageNativeMessagePackSerialized;
+            Message = alreadyMessagePack.Message;
+        }
+        else
+        {
+            IsMessageNativeMessagePackSerialized = true;
+            Message = MessagePackSerializer.Serialize(envelope.Message, InternalMessagePackResolver.Options);
+        }
 
         ExpirationTime = envelope.ExpirationTime;
 

@@ -14,12 +14,12 @@ using TestFramework;
 
 [TestFixture(typeof(SystemTextJsonMessageSerializer))]
 [TestFixture(typeof(SystemTextJsonRawMessageSerializer))]
-// The MessagePack parameterisation is withdrawn until the open question is answered. It never tested
-// MessagePack: the dispatch below had no branch for it, so the fixture named the type and then ran on
-// the default serializer. Giving it its branch made it honest, and the case then fails - delayed
-// redelivery does not reach its final message under MessagePack while both JSON serializers pass it.
-// That is a product finding, not a test defect, and this slice may not change product behaviour
-// without a decision. The branch stays so the parameterisation is one attribute away from honest.
+// MessagePack is a retained serializer, so it owes the same redelivery contract as the default one.
+// This parameterisation existed but configured nothing, because the dispatch below had no branch for
+// it: the fixture named MessagePack and then ran on the default serializer, proving the default twice.
+// With its branch it failed, and the cause was a product defect rather than a test one - a cloned
+// envelope re-encoded a payload that was already MessagePack.
+[TestFixture(typeof(MessagePackMessageSerializer))]
 public class Redelivery_Specs
 {
     [Test]

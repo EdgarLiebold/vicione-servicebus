@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Signed for the same reason the RabbitMQ transport tests are: a signed product assembly can only
+       grant friendship to a signed one, and the hardened MessagePack option set has to be asserted
+       directly because its security mode cannot be told apart from the default by behaviour. -->
+  <Import Project="../../signing.props" />
+
   <PropertyGroup>
     <TargetFrameworks>net9.0</TargetFrameworks>
   </PropertyGroup>
