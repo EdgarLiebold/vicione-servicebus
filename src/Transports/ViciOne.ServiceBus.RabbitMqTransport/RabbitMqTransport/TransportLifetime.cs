@@ -178,7 +178,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             // Off the caller's thread on purpose: when this comes from the client's shutdown
             // notification, the notification has to return before anything disposes the subject it is
             // notifying about.
-            ThreadPool.QueueUserWorkItem(_ => DisposeSubject());
+            //
+            // The task is discarded explicitly rather than by accident. DisposeSubject catches every
+            // exception and reports the outcome through _disposed, which DisposeAsync awaits and
+            // rethrows from, so the discarded task carries no outcome that awaiting could recover.
+            ThreadPool.QueueUserWorkItem(state => { _ = DisposeSubject(); });
         }
 
         /// <summary>
