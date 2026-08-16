@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERIALIZER_CAPABILITY_DISPOSITION",
+  "revision": 3,
+  "appendOnlyPredecessor": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0045-serializer-and-saga/SERIALIZER_CAPABILITY_DISPOSITION_R2.json",
+  "directiveId": "LEAD_DIRECTIVE 0048 section 4",
+  "commit": "db0481d82b2cda8762fab42781d35ccf2b53daa8",
+  "correctionOfRevision2": "Revision 2 described the changes of commit 94038e2b but bound its commit field to the earlier 85146176. The field named the state I had measured before writing, not the state the description belongs to.",
+  "countDifferenceResolved": {
+    "statement": "Neither number was wrong; one of them was reported without the selector that produced it.",
+    "runs": [
+      {
+        "label": "lead selector",
+        "commandArguments": [
+          "dotnet",
+          "test",
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "-f",
+          "net9.0",
+          "--filter",
+          "FullyQualifiedName~Serialization"
+        ],
+        "discovered": 118,
+        "executed": 118,
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "trx": "serializer-runs/a.trx",
+        "trxSha256": "69dcb5d90d434be6c0e74550513be23efb1094a1ab27f2570c64344d0e45e90b"
+      },
+      {
+        "label": "the union I reported as 149",
+        "commandArguments": [
+          "dotnet",
+          "test",
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "-f",
+          "net9.0",
+          "--filter",
+          "FullyQualifiedName~Serialization|FullyQualifiedName~Courier.Subscription|FullyQualifiedName~MessageData"
+        ],
+        "discovered": 149,
+        "executed": 149,
+        "passed": 149,
+        "failed": 0,
+        "skipped": 0,
+        "trx": "serializer-runs/b.trx",
+        "trxSha256": "e86f72a81e27721a73652d9009d6b2b05c0684da49e975cd357ccf665913ce40"
+      }
+    ],
+    "difference": "31 cases, and they are the courier subscription and message data fixtures the union adds. Both runs reproduce today on the same tree.",
+    "canonicalScope": "The serializer scope is the lead selector, FullyQualifiedName~Serialization. The union was a working selection while re-pointing fixtures and is not a scope definition.",
+    "lesson": "A count without its selector is not a measurement. Every number in a future report carries the argument array that produced it."
+  },
+  "dispositionUnchangedFromRevision2": true
+}

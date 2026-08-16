@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "BENCHMARK_ASSESSMENT",
+  "revision": 2,
+  "appendOnlyPredecessor": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0042-graph-stabilisation/BENCHMARK_ASSESSMENT.json",
+  "directiveId": "LEAD_DIRECTIVE 0048 section 1",
+  "commit": "db0481d82b2cda8762fab42781d35ccf2b53daa8",
+  "correctionOfRevision1": "Revision 1 listed the bus outbox benchmark among the benchmarks that do not measure the product. That is refuted: it drives AddEntityFrameworkOutbox, which is a kept capability. I had folded two different faults into one bucket.",
+  "separatedCategories": {
+    "valuableProductScenarioWithAnOutdatedCounterpart": [
+      {
+        "benchmark": "BusOutboxBenchmark",
+        "measures": "insert through the EF Core bus outbox and the delivery that follows, a kept product capability",
+        "whatWasActuallyWrong": "its infrastructure: SQL Server over Windows LocalDB, hard coded credentials and search fallbacks, while the referenced SQL transport is PostgreSQL only",
+        "disposition": "kept, infrastructure replaced"
+      }
+    ],
+    "notAProductBenchmark": [
+      {
+        "benchmark": "ConcurrencyBenchmark",
+        "reason": "measures BCL Dictionary against ConcurrentDictionary and would stay green with the entire bus deleted"
+      },
+      {
+        "benchmark": "MediatorBenchmark comparison edge",
+        "reason": "compares against MediatR, a third party library rather than a capability of this product"
+      },
+      {
+        "benchmark": "JsonSerializationBenchmark.NewtonsoftJson",
+        "reason": "drives the serializer family that leaves"
+      }
+    ]
+  },
+  "note": "The distinction matters because the two faults have opposite remedies: a wrong counterpart is repaired, a benchmark that measures something else is removed. Treating them alike would have deleted a kept capability from the measurable surface."
+}
