@@ -246,8 +246,13 @@ namespace ViciOne.ServiceBus
             /// <summary>
             /// Whether waiting longer cannot change this failure. The cause is walked, because the
             /// endpoint reports what it caught and the transport's answer is often one level down.
+            /// <para>
+            /// The parameter is nullable because <see cref="ReceiveEndpointFaulted.Exception" /> is:
+            /// an endpoint may fault without handing over an exception. A missing exception is not
+            /// terminal, which is what the walk already returns for it.
+            /// </para>
             /// </summary>
-            static bool IsTerminal(Exception exception)
+            static bool IsTerminal(Exception? exception)
             {
                 for (var cause = exception; cause != null; cause = cause.InnerException)
                 {
