@@ -20,6 +20,9 @@ from identity_gate import (
 from identity_rules import COMMENTLESS_OR_BINARY_EXCEPTIONS, LEGAL_OR_PROVENANCE_PATHS
 
 
+# A record of which projects had no final result file in the evidence run this gate summarises. It
+# states what was true then, so an entry stays even after its project leaves the graph; editing it to
+# match today's tree would rewrite a past report rather than clean anything up.
 INCOMPLETE_PROJECTS = [
     "ViciOne.ServiceBus.RedisIntegration.Tests",
     "ViciOne.ServiceBus.MongoDbIntegration.Tests",

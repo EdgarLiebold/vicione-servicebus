@@ -90,6 +90,12 @@ def _literal_pattern(*values: str) -> str:
     return "(?:" + "|".join(re.escape(value.casefold()) for value in values) + ")"
 
 
+# Roots of the FORMER header prefix, used to build a scan pattern that finds leftovers of the old
+# identity. This is a detector, not a description of the headers the product sends today, and the two
+# read alike but pull in opposite directions: dropping a root because its product left the graph does
+# not remove legacy, it stops the detector from finding that legacy if it ever comes back. Entries
+# here are therefore kept even when the corresponding capability is gone. An exception list is the
+# mirror image: an entry naming a file that no longer exists permits nothing and belongs removed.
 _HEADER_ROOTS = (
     "host",
     "fault",
