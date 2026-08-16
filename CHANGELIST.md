@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 794 |
+| Added | 796 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -56,6 +56,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/InMemoryConfigureBusOutboxTransport.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/MigrationHostedService.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/RabbitMqConfigureBusOutboxTransport.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/SendMetricReporter.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/ServiceBusConfigureBusOutboxTransport.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/Dockerfile` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/Dockerfile.dockerignore` | Added |  |
@@ -125,6 +126,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/AnalyticsTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BenchmarkRunOutcomeTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BusOutboxDatabaseSettingsTests.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/MessageMetricCaptureTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/RabbitMqOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/SqlOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj` | Added |  |

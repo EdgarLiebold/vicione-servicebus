@@ -173,9 +173,7 @@ namespace ViciOneServiceBusBenchmark.BusOutbox
             public Task PostSend<T>(SendContext<T> context)
                 where T : class
             {
-                _metric.PostSend(context.MessageId.Value);
-
-                return Task.CompletedTask;
+                return SendMetricReporter.Report(_metric, context.MessageId);
             }
 
             public Task SendFault<T>(SendContext<T> context, Exception exception)
