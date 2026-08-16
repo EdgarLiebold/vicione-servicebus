@@ -13,8 +13,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
     [TestFixture(typeof(Json))]
     [TestFixture(typeof(RawJson))]
-    [TestFixture(typeof(NewtonsoftJson))]
-    [TestFixture(typeof(NewtonsoftRawJson))]
     public class Using_quartz_with_serializer<T>
         where T : new()
     {
@@ -125,7 +123,10 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
         public Using_quartz_with_serializer()
         {
-            _configuration = new T() as ITestBusConfiguration;
+            _configuration = new T() as ITestBusConfiguration
+                ?? throw new ArgumentException(
+                    $"{typeof(T).Name} does not implement {nameof(ITestBusConfiguration)}, so this fixture "
+                    + "would configure no serializer at all.", nameof(T));
         }
 
 

@@ -169,7 +169,10 @@ namespace ViciOne.ServiceBus.Tests.Courier
 
         public Adding_a_custom_routing_slip_event_subscription()
         {
-            _configuration = new T() as ITestBusConfiguration;
+            _configuration = new T() as ITestBusConfiguration
+                ?? throw new ArgumentException(
+                    $"{typeof(T).Name} does not implement {nameof(ITestBusConfiguration)}, so this fixture "
+                    + "would configure no serializer at all.", nameof(T));
         }
 
 
