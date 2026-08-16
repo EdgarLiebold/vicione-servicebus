@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 797 |
+| Added | 798 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -192,6 +192,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0048-corrections/serializer-runs/b.trx` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0054-benchmark-correction-integration/BENCHMARK_CORRECTION_INTEGRATION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0056-mandatory-follow-up/MANDATORY_FOLLOW_UP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0058-newtonsoft-encryption/NEWTONSOFT_CAPABILITY_SURFACE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
