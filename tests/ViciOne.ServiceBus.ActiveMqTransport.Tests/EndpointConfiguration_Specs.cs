@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json.Linq;
+    using System.Text.Json.Nodes;
     using NUnit.Framework;
     using TestFramework;
     using TestFramework.Messages;
@@ -40,7 +40,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var busControl = provider.GetRequiredService<IBusControl>();
 
             var jsonString = busControl.GetProbeResult().ToJsonString();
-            var probe = JObject.Parse(jsonString);
+            var probe = JsonNode.Parse(jsonString);
 
             Assert.Multiple(() =>
             {
@@ -74,7 +74,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var busControl = provider.GetRequiredService<IBusControl>();
 
             var jsonString = busControl.GetProbeResult().ToJsonString();
-            var probe = JObject.Parse(jsonString);
+            var probe = JsonNode.Parse(jsonString);
 
             Assert.Multiple(() =>
             {
@@ -108,7 +108,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var busControl = provider.GetRequiredService<IBusControl>();
 
             var jsonString = busControl.GetProbeResult().ToJsonString();
-            var probe = JObject.Parse(jsonString);
+            var probe = JsonNode.Parse(jsonString);
 
             Assert.Multiple(() =>
             {
@@ -142,7 +142,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var busControl = provider.GetRequiredService<IBusControl>();
 
             var jsonString = busControl.GetProbeResult().ToJsonString();
-            var probe = JObject.Parse(jsonString);
+            var probe = JsonNode.Parse(jsonString);
 
             Assert.Multiple(() =>
             {
@@ -167,7 +167,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             });
 
             var jsonString = busControl.GetProbeResult().ToJsonString();
-            var probe = JObject.Parse(jsonString);
+            var probe = JsonNode.Parse(jsonString);
 
             Assert.Multiple(() =>
             {
@@ -184,7 +184,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 cfg.PrefetchCount = 427;
             });
 
-            var probe = JObject.Parse(busControl.GetProbeResult().ToJsonString());
+            var probe = JsonNode.Parse(busControl.GetProbeResult().ToJsonString());
 
             var prefetchCount = GetPrefetchCount(probe, 0);
 
@@ -203,7 +203,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 });
             });
 
-            var probe = JObject.Parse(busControl.GetProbeResult().ToJsonString());
+            var probe = JsonNode.Parse(busControl.GetProbeResult().ToJsonString());
 
             Assert.Multiple(() =>
             {
@@ -270,52 +270,52 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         }
 
 
-        static int GetPrefetchCount(JObject jObject, int index)
+        static int GetPrefetchCount(JsonNode probe, int index)
         {
-            var receiveEndpoints = jObject["results"]["bus"]["host"]["receiveEndpoint"];
-            if (receiveEndpoints.Type == JTokenType.Array)
+            var receiveEndpoints = probe["results"]["bus"]["host"]["receiveEndpoint"];
+            if (receiveEndpoints is JsonArray receiveEndpointArray)
             {
-                if (index < receiveEndpoints.Count())
-                    return receiveEndpoints[index]["receiveTransport"]["prefetchCount"].ToObject<int>();
+                if (index < receiveEndpointArray.Count)
+                    return receiveEndpointArray[index]["receiveTransport"]["prefetchCount"].GetValue<int>();
             }
-            else if (receiveEndpoints.Type == JTokenType.Object)
+            else if (receiveEndpoints is JsonObject)
             {
                 if (index <= 0)
-                    return receiveEndpoints["receiveTransport"]["prefetchCount"].ToObject<int>();
+                    return receiveEndpoints["receiveTransport"]["prefetchCount"].GetValue<int>();
             }
 
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        static int GetConcurrentMessageLimit(JObject jObject, int index)
+        static int GetConcurrentMessageLimit(JsonNode probe, int index)
         {
-            var receiveEndpoints = jObject["results"]["bus"]["host"]["receiveEndpoint"];
-            if (receiveEndpoints.Type == JTokenType.Array)
+            var receiveEndpoints = probe["results"]["bus"]["host"]["receiveEndpoint"];
+            if (receiveEndpoints is JsonArray receiveEndpointArray)
             {
-                if (index < receiveEndpoints.Count())
-                    return receiveEndpoints[index]["receiveTransport"]["concurrentMessageLimit"].ToObject<int>();
+                if (index < receiveEndpointArray.Count)
+                    return receiveEndpointArray[index]["receiveTransport"]["concurrentMessageLimit"].GetValue<int>();
             }
-            else if (receiveEndpoints.Type == JTokenType.Object)
+            else if (receiveEndpoints is JsonObject)
             {
                 if (index <= 0)
-                    return receiveEndpoints["receiveTransport"]["concurrentMessageLimit"].ToObject<int>();
+                    return receiveEndpoints["receiveTransport"]["concurrentMessageLimit"].GetValue<int>();
             }
 
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        static int GetConcurrencyLimit(JObject jObject, int index)
+        static int GetConcurrencyLimit(JsonNode probe, int index)
         {
-            var receiveEndpoints = jObject["results"]["bus"]["host"]["receiveEndpoint"];
-            if (receiveEndpoints.Type == JTokenType.Array)
+            var receiveEndpoints = probe["results"]["bus"]["host"]["receiveEndpoint"];
+            if (receiveEndpoints is JsonArray receiveEndpointArray)
             {
-                if (index < receiveEndpoints.Count())
-                    return receiveEndpoints[index]["filters"][2]["consumePipe"]["filters"]["filters"]["limit"].ToObject<int>();
+                if (index < receiveEndpointArray.Count)
+                    return receiveEndpointArray[index]["filters"][2]["consumePipe"]["filters"]["filters"]["limit"].GetValue<int>();
             }
-            else if (receiveEndpoints.Type == JTokenType.Object)
+            else if (receiveEndpoints is JsonObject)
             {
                 if (index <= 0)
-                    return receiveEndpoints["filters"][2]["consumePipe"]["filters"]["filters"]["limit"].ToObject<int>();
+                    return receiveEndpoints["filters"][2]["consumePipe"]["filters"]["filters"]["limit"].GetValue<int>();
             }
 
             throw new ArgumentOutOfRangeException(nameof(index));
