@@ -4,15 +4,14 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     {
         using System.Collections.Generic;
         using System.Threading.Tasks;
-        using Newtonsoft.Json;
         using NUnit.Framework;
+        using System.Text.Json.Serialization;
         using TestFramework;
 
 
         // message interface
         public interface ITestMessage
         {
-            [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
             TestBaseClass Data { get; }
         }
 
@@ -26,7 +25,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
         public interface ITestArrayMessage
         {
-            [JsonProperty(ItemTypeNameHandling = TypeNameHandling.Auto)]
             TestBaseClass[] Data { get; }
         }
 
@@ -40,7 +38,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
         public interface ITestListMessage
         {
-            [JsonProperty(ItemTypeNameHandling = TypeNameHandling.Auto)]
             IList<TestBaseClass> Data { get; }
         }
 
@@ -52,6 +49,14 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         }
 
 
+        /// <summary>
+        /// The concrete type has to survive the round trip, and on the kept path that is stated on the
+        /// base type rather than on every property. Json.NET carried it per property through
+        /// TypeNameHandling, which emitted a $type marker; the product deliberately ignores such a
+        /// marker in a body it did not write, so the same assurance is expressed with the declared
+        /// polymorphism System.Text.Json offers.
+        /// </summary>
+        [JsonDerivedType(typeof(TestConcreteClass), "concrete")]
         public abstract class TestBaseClass
         {
         }
@@ -81,11 +86,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             #pragma warning disable NUnit1032
             Task<ConsumeContext<ITestMessage>> _handled;
             #pragma warning restore NUnit1032
-
-            protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
-            {
-                configurator.UseNewtonsoftJsonSerializer();
-            }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
             {
@@ -122,11 +122,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Task<ConsumeContext<ReceiveFault>> _faulted;
             #pragma warning restore NUnit1032
 
-            protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
-            {
-                configurator.UseNewtonsoftJsonSerializer();
-            }
-
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
             {
                 _handled = Handled<ITestArrayMessage>(configurator);
@@ -162,11 +157,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Task<ConsumeContext<ITestListMessage>> _handled;
             Task<ConsumeContext<ReceiveFault>> _faulted;
             #pragma warning restore NUnit1032
-
-            protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
-            {
-                configurator.UseNewtonsoftJsonSerializer();
-            }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
             {
