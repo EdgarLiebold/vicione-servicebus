@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
 #
 # The required ViciOne CI profile. Every job here must really run and must prove a positive test
 # count; a category that executes nothing is rejected by tools/ci/run_test_category.py rather than

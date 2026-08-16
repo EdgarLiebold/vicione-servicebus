@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 using System;
 
 #if !NET6_0_OR_GREATER && !NETSTANDARD2_1

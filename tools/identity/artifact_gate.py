@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Scan produced assemblies, PDBs, and NuGet packages fail-closed."""
 
 from __future__ import annotations

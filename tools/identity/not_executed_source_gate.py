@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Explain every NotExecuted TRX record from source declarations or an exact runtime reason."""
 
 from __future__ import annotations

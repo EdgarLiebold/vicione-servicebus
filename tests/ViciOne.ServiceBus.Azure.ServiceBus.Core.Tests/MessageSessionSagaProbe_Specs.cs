@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-16.
 namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
 {
     using System;

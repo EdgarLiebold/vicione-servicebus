@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Validate the frozen proof-contract shape and kill every mandatory mutant."""
 
 from __future__ import annotations

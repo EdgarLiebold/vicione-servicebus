@@ -1,4 +1,3 @@
-<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
 # AGENTS.md
 
 Dieses Repository ist der vollständige Apache‑2.0-Quellfork von ViciOne.ServiceBus

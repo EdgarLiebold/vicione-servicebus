@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 name: Bug Report
 description: Create a bug report for an issue found in ViciOne.ServiceBus. Should not be used for questions on the use of ViciOne.ServiceBus.
 body:

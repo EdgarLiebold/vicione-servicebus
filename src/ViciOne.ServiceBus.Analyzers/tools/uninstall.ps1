@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 param($installPath, $toolsPath, $package, $project)
 
 if($project.Object.SupportsPackageDependencyResolution)

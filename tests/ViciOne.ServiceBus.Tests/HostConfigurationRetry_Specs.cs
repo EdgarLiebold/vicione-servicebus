@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-10.
 #nullable enable
 namespace ViciOne.ServiceBus.Tests
 {

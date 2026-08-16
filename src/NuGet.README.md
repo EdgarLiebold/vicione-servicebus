@@ -1,4 +1,3 @@
-<!-- ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07. -->
 # ViciOne.ServiceBus
 
 ViciOne.ServiceBus provides a developer-focused, modern platform for creating distributed applications without complexity.

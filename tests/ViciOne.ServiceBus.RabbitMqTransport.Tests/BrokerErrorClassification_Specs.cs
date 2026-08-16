@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-11.
 // A sibling of the broker tests' namespace on purpose: NUnit applies the assembly's SetUpFixture to
 // its own namespace and below, and classifying an exception needs no broker, no Docker and no
 // management API. Living below it meant these specs could not reach an assertion without the very

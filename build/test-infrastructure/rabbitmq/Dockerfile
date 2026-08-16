@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
 #
 # RabbitMQ test fixture. Every input is immutably bound:
 #   - the base image by digest, never by a moving tag

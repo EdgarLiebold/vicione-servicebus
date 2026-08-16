@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Hostile unit fixtures for the generated-artifact gate."""
 
 from __future__ import annotations

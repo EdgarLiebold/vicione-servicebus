@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 docker run -d --name jaeger \
             -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
             -p 5775:5775/udp \

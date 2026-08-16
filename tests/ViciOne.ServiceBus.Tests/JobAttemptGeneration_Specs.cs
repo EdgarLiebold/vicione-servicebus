@@ -1,4 +1,3 @@
-// ViciOne modification: stale job-attempt generation fencing, 2026-08-15.
 namespace ViciOne.ServiceBus.Tests
 {
     using System;

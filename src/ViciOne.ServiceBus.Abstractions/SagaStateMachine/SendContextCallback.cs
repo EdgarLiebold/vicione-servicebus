@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus
 {
     public delegate void SendContextCallback<TSaga, in T>(BehaviorContext<TSaga> context, SendContext<T> sendContext)

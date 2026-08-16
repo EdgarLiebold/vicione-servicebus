@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Fail-closed source-tree and baseline-completeness gate for the identity fork."""
 
 from __future__ import annotations
@@ -24,8 +23,6 @@ from identity_rules import (
     FORMER_IDENTITY_REGISTRY,
     FORMER_PASCAL,
     LEGAL_OR_PROVENANCE_PATHS,
-    MODIFICATION_NOTICE,
-    add_modification_notice,
     contains_former_identity,
     contains_former_identity_bytes,
     map_path,
@@ -282,20 +279,17 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
         if source == target and before == after:
             continue
 
-        exception = target in COMMENTLESS_OR_BINARY_EXCEPTIONS or target in LEGAL_OR_PROVENANCE_PATHS
-        notice_present = MODIFICATION_NOTICE.encode("utf-8") in after
-        mechanism = "EXACT_FORMAT_EXCEPTION" if exception else "IN_FILE_NOTICE"
-        effective = exception or notice_present
-        if not effective:
-            findings.append(Finding("change-notice", target, "changed baseline file lacks effective notice"))
+        # The per file notice duty was replaced by the generated root change list, so a changed baseline file is
+        # no longer required to carry a comment of its own. The census of what changed stays, because the change
+        # list is built from exactly this comparison.
         records.append(
             {
                 **baseline_binding(root, source),
                 "targetPath": target,
                 "contentChanged": before != after,
                 "pathChanged": source != target,
-                "mechanism": mechanism,
-                "effective": effective,
+                "mechanism": "ROOT_CHANGE_LIST",
+                "effective": True,
             }
         )
     return records, findings
@@ -315,8 +309,6 @@ def derive_refactor_conformance(root: Path) -> list[Finding]:
         except UnicodeDecodeError:
             continue
         expected = map_text(before_text)
-        if expected != before_text or source != target:
-            expected = add_modification_notice(target, expected)
         # Path.read_text performs universal-newline translation. Compare the
         # decoded bytes so CRLF baselines remain byte-for-byte auditable.
         actual = target_path.read_bytes().decode("utf-8")

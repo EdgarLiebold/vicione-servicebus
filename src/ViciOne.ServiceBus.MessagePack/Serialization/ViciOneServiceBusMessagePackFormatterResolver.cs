@@ -1,4 +1,3 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 #define USE_CONCRETE_MAPPERS
 namespace ViciOne.ServiceBus.Serialization;
 

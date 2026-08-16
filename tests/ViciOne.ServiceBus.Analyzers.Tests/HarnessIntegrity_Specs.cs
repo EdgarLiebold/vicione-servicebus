@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-02, 2026-08-08.
 namespace ViciOne.ServiceBus.Analyzers.Tests
 {
     using System;

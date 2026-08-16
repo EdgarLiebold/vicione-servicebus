@@ -1,4 +1,3 @@
-# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
 #
 # ActiveMQ Classic test fixture, base image bound by digest.
 #

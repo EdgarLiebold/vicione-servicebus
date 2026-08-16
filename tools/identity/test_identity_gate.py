@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ViciOne modification: created for WP-F2-SERVICEBUS-IDENTITY on 2026-08-07.
 """Hostile-fixture and test-accounting tests for the identity gate."""
 
 from __future__ import annotations

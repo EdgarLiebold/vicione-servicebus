@@ -1,4 +1,3 @@
-﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 #if NET6_0_OR_GREATER
 namespace ViciOne.ServiceBus.NewIdFormatters
 {

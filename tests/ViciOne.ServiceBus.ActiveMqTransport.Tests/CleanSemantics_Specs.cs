@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-09.
 namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 {
     using System;

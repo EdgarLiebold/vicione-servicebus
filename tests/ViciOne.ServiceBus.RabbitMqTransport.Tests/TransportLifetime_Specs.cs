@@ -1,4 +1,3 @@
-// ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-12.
 
 // Deliberately a sibling of ViciOne.ServiceBus.RabbitMqTransport.Tests rather than a child of it.
 // NUnit applies a SetUpFixture to its own namespace and everything below, so living there made these

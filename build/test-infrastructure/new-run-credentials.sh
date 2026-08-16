@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
 #
 # Generates a fresh broker account for exactly one run and exports it.
 # Nothing is written to disk and nothing is echoed, so no credential can reach a log.
