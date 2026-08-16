@@ -91,7 +91,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     {
         using System;
         using System.Collections.Generic;
-        using Newtonsoft.Json;
 
 
         public interface MetaData
@@ -117,9 +116,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             Guid OrderId { get; }
             DateTime Timestamp { get; }
 
-            // this works
-            [JsonProperty("CustomerNumber", Required = Required.DisallowNull,
-                NullValueHandling = NullValueHandling.Ignore)]
             int CustomerNumber { get; }
 
             string PaymentCardNumber { get; }

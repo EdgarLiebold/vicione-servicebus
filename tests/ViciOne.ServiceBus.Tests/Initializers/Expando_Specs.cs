@@ -7,8 +7,7 @@ namespace ViciOne.ServiceBus.Tests.Initializers
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Initializers;
     using ViciOne.ServiceBus.Initializers.PropertyProviders;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using System.Text.Json.Nodes;
     using NUnit.Framework;
 
 
@@ -59,8 +58,8 @@ namespace ViciOne.ServiceBus.Tests.Initializers
                 {
                     ExpirationMonth = "12",
                     ExpirationYear = "2019",
-                    PublicKey = new JObject(new JProperty("key", "12345")),
-                    Token = new JObject(new JProperty("value", "Token123"))
+                    PublicKey = new JsonObject { ["key"] = "12345" },
+                    Token = new JsonObject { ["value"] = "Token123" }
                 }
             };
 
@@ -154,15 +153,45 @@ namespace ViciOne.ServiceBus.Tests.Initializers
                 }
             };
 
-            var expando = JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(dto));
+            // The expando is built here rather than materialised by a serializer. What this case is
+            // about is the initializer reading a nested list out of an expando, and the runtime types
+            // that reaches it with — a nested ExpandoObject, a List<object>, integers as long — used to
+            // be a by-product of Json.NET's expando materialisation. Stating them makes the shape the
+            // assertion depends on visible instead of hiding it behind a second serializer.
+            dynamic expandoProduct = new ExpandoObject();
+            expandoProduct.Name = dto.Product.Name;
+            expandoProduct.Category = dto.Product.Category;
+
+            dynamic expandoOrderProduct = new ExpandoObject();
+            expandoOrderProduct.Name = dto.Orders[0].Product.Name;
+            expandoOrderProduct.Category = dto.Orders[0].Product.Category;
+
+            dynamic expandoOrder = new ExpandoObject();
+            expandoOrder.Id = dto.Orders[0].Id.ToString();
+            expandoOrder.Product = expandoOrderProduct;
+            expandoOrder.Quantity = (long)dto.Orders[0].Quantity;
+            expandoOrder.Price = (double)dto.Orders[0].Price;
+
+            dynamic expando = new ExpandoObject();
+            expando.Id = (long)dto.Id;
+            expando.CustomerId = dto.CustomerId;
+            expando.Product = expandoProduct;
+            expando.Orders = new List<object> { expandoOrder };
 
             InitializeContext<MessageContract> message =
-                await MessageInitializerCache<MessageContract>.Initialize(expando); // doesn't work (orders not included)
+                await MessageInitializerCache<MessageContract>.Initialize((ExpandoObject)expando);
 
             Assert.Multiple(() =>
             {
                 Assert.That(message.Message.Id, Is.EqualTo(32));
-                Assert.That(message.Message.Orders, Is.Not.Null);
+
+                // Is.Not.Null alone let this case pass with an empty list, which is exactly the
+                // outcome the historical comment claimed it was catching. The nested order has to
+                // arrive, so the count and the values below it are asserted rather than its presence.
+                Assert.That(message.Message.Orders, Has.Count.EqualTo(1));
+                Assert.That(message.Message.Orders[0].Quantity, Is.EqualTo(10));
+                Assert.That(message.Message.Orders[0].Product, Is.Not.Null);
+                Assert.That(message.Message.Orders[0].Product.Name, Is.EqualTo("Product"));
             });
         }
 
@@ -267,8 +296,8 @@ namespace ViciOne.ServiceBus.Tests.Initializers
         {
             public string ExpirationMonth { get; set; }
             public string ExpirationYear { get; set; }
-            public JObject PublicKey { get; set; }
-            public JObject Token { get; set; }
+            public JsonObject PublicKey { get; set; }
+            public JsonObject Token { get; set; }
             public string SecurityCode { get; set; }
         }
 
