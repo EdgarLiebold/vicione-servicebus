@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus
     {
         /// <summary>
         /// Add a <see cref="IMessageScheduler" /> to the container that sends <see cref="ScheduleMessage" />
-        /// to an external message scheduler on the specified endpoint address, such as Quartz or Hangfire.
+        /// to an external message scheduler on the specified endpoint address, such as Quartz.
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running</param>
@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus
 
         /// <summary>
         /// Add a <see cref="IMessageScheduler" /> to the container that sends <see cref="ScheduleMessage" />
-        /// to an external message scheduler on the specified endpoint address, such as Quartz or Hangfire.
+        /// to an external message scheduler on the specified endpoint address, such as Quartz.
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running</param>
@@ -66,7 +66,7 @@ namespace ViciOne.ServiceBus
 
         /// <summary>
         /// Add a <see cref="IMessageScheduler" /> to the container that publishes <see cref="ScheduleMessage" />
-        /// to an external message scheduler, such as Quartz or Hangfire.
+        /// to an external message scheduler, such as Quartz.
         /// </summary>
         /// <param name="configurator"></param>
         public static void AddPublishMessageScheduler(this IBusRegistrationConfigurator configurator)
@@ -88,7 +88,7 @@ namespace ViciOne.ServiceBus
 
         /// <summary>
         /// Add a <see cref="IMessageScheduler" /> to the container that publishes <see cref="ScheduleMessage" />
-        /// to an external message scheduler, such as Quartz or Hangfire.
+        /// to an external message scheduler, such as Quartz.
         /// </summary>
         /// <param name="configurator"></param>
         public static void AddPublishMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)

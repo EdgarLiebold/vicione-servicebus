@@ -60,7 +60,6 @@ COMMENTLESS_OR_BINARY_EXCEPTIONS = frozenset(
         "src/vicione-servicebus-logo.png",
         "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt",
         "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json",
-        "tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc",
         "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12",
     }
 )

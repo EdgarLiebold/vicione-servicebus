@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus
     public static class MessageSchedulerBusExtensions
     {
         /// <summary>
-        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET or Hangfire, to
+        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET, to
         /// schedule messages. This should not be used with the broker-specific message schedulers.
         /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
         /// use the ScheduleSend extensions on ConsumeContext.
@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET or Hangfire, to
+        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET, to
         /// schedule messages. This should not be used with the broker-specific message schedulers.
         /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
         /// use the ScheduleSend extensions on ConsumeContext.
@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET or Hangfire, to
+        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET, to
         /// schedule messages. This should not be used with the broker-specific message schedulers. Scheduled messages
         /// are published to the external message scheduler, rather than uses a preconfigured endpoint address.
         /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
@@ -63,7 +63,7 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET or Hangfire, to
+        /// Create a message scheduler that uses an external message scheduler, such as Quartz.NET, to
         /// schedule messages. This should not be used with the broker-specific message schedulers. Scheduled messages
         /// are published to the external message scheduler, rather than uses a preconfigured endpoint address.
         /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should

@@ -21,16 +21,8 @@ on:
         options:
           - activemq
           - amazon-sqs
-          - kafka
-          - mongodb
-          - redis
-          - marten
-          - nhibernate
-          - dapper
           - quartz
-          - hangfire
           - sql-transport
-          - entity-framework-classic
   # Callable so a scheduled entry point can reuse this one definition instead of restating the
   # jobs. One definition, several triggers; no second copy that could drift.
   workflow_call:
