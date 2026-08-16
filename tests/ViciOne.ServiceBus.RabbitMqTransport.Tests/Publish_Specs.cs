@@ -92,48 +92,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
         [TestFixture]
-        public class WhenAMessageIsSendToTheEndpointEncrypted :
-            RabbitMqTestFixture
-        {
-            [Test]
-            public async Task Should_be_received()
-            {
-                var endpoint = await Bus.GetSendEndpoint(InputQueueAddress);
-
-                var message = new A { Id = Guid.NewGuid() };
-                await endpoint.Send(message);
-
-                ConsumeContext<A> received = await _receivedA;
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(received.Message.Id, Is.EqualTo(message.Id));
-
-                    Assert.That(received.ReceiveContext.ContentType, Is.EqualTo(EncryptedMessageSerializer.EncryptedContentType));
-                });
-            }
-
-            Task<ConsumeContext<A>> _receivedA;
-
-            protected override void ConfigureRabbitMqReceiveEndpoint(IRabbitMqReceiveEndpointConfigurator configurator)
-            {
-                base.ConfigureRabbitMqReceiveEndpoint(configurator);
-
-                _receivedA = Handled<A>(configurator);
-            }
-
-            protected override void ConfigureRabbitMqBus(IRabbitMqBusFactoryConfigurator configurator)
-            {
-                ISymmetricKeyProvider keyProvider = new TestSymmetricKeyProvider();
-                var streamProvider = new AesCryptoStreamProvider(keyProvider, "default");
-                configurator.UseEncryptedSerializer(streamProvider);
-
-                base.ConfigureRabbitMqBus(configurator);
-            }
-        }
-
-
-        [TestFixture]
         public class WhenAMessageIsPublishedToTheEndpoint :
             RabbitMqTestFixture
         {

@@ -18,7 +18,6 @@
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Newtonsoft\ViciOne.ServiceBus.Newtonsoft.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />

@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     public class OpenTelemetry_Specs
     {
         [Test]
-        public async Task Should_carry_the_baggage_with_newtonsoft()
+        public async Task Should_carry_the_baggage_with_the_configured_serializer()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "order-api");
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        public async Task Should_carry_excess_baggage_with_newtonsoft()
+        public async Task Should_carry_excess_baggage_with_the_configured_serializer()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "order-api");

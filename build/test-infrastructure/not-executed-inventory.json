@@ -152,17 +152,17 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage_with_newtonsoft",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage_with_the_configured_serializer",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_carry_excess_baggage_with_newtonsoft",
+          "test": "Should_carry_excess_baggage_with_the_configured_serializer",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_the_baggage_with_newtonsoft",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_the_baggage_with_the_configured_serializer",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_carry_the_baggage_with_newtonsoft",
+          "test": "Should_carry_the_baggage_with_the_configured_serializer",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."

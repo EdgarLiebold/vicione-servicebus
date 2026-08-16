@@ -65,7 +65,6 @@ The following NuGet packages are the currently supported.
 ### Interoperability
 
 * [ViciOne.ServiceBus.Interop.NServiceBus](https://nuget.org/packages/ViciOne.ServiceBus.Interop.NServiceBus/)
-* [ViciOne.ServiceBus.Newtonsoft](https://nuget.org/packages/ViciOne.ServiceBus.Newtonsoft/)
 
 ### Other
 

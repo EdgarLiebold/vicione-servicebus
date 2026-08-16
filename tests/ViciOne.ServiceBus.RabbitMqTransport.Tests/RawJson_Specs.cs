@@ -88,83 +88,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
     [TestFixture]
-    public class Sending_raw_xml_with_no_content_type :
-        RabbitMqTestFixture
-    {
-        [Test]
-        public async Task Should_deserialize()
-        {
-            var (message, _) = await MessageInitializerCache<RawContract>.InitializeMessage(new
-            {
-                Name = "Frank",
-                Value = 27,
-                InVar.Timestamp
-            });
-
-            using var ms = new MemoryStream(4000);
-            NewtonsoftXmlMessageSerializer.Serialize(ms, message, typeof(RawContract));
-
-            var body = ms.ToArray();
-
-            await SendRawMessage(body);
-
-            ConsumeContext<RawContract> received = await _receivedA;
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(received.Message.Name, Is.EqualTo(message.Name));
-                Assert.That(received.Message.Value, Is.EqualTo(message.Value));
-                Assert.That(received.Message.Timestamp, Is.EqualTo(message.Timestamp));
-            });
-        }
-
-        Task<ConsumeContext<RawContract>> _receivedA;
-
-        protected override void ConfigureRabbitMqReceiveEndpoint(IRabbitMqReceiveEndpointConfigurator configurator)
-        {
-            configurator.ClearSerialization();
-            configurator.UseRawXmlSerializer();
-
-            _receivedA = Handled<RawContract>(configurator);
-        }
-
-        async Task SendRawMessage(byte[] body)
-        {
-            try
-            {
-                await TestContext.Out.WriteLineAsync(Encoding.UTF8.GetString(body));
-
-                var settings = GetHostSettings();
-                var connectionFactory = settings.GetConnectionFactory();
-
-                await using var connection = settings.EndpointResolver != null
-                    ? await connectionFactory.CreateConnectionAsync(settings.EndpointResolver, settings.Host)
-                    : await connectionFactory.CreateConnectionAsync();
-
-                await using var channel = await connection.CreateChannelAsync();
-
-                var properties = new BasicProperties();
-                properties.SetHeader(MessageHeaders.MessageId, "Whiskey-Tango-Foxtrot 3-5-9er");
-
-                await channel.BasicPublishAsync(RabbitMqTestHarness.InputQueueName, "", false, properties, body);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
-
-
-        public interface RawContract
-        {
-            string Name { get; }
-            int Value { get; }
-            DateTime Timestamp { get; }
-        }
-    }
-
-
-    [TestFixture]
     public class Sending_and_consuming_raw_json_with_headers :
         RabbitMqTestFixture
     {
@@ -251,7 +174,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await InputQueueSendEndpoint.Send(message, x =>
             {
                 x.Headers.Set(headerName, headerValue);
-                x.Serializer = new NewtonsoftRawJsonMessageSerializer();
+                x.Serializer = new SystemTextJsonRawMessageSerializer();
             });
 
             ConsumeContext<Command> commandContext = await _handler;
@@ -285,7 +208,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
         protected override void ConfigureRabbitMqReceiveEndpoint(IRabbitMqReceiveEndpointConfigurator configurator)
         {
-            configurator.UseNewtonsoftRawJsonDeserializer(RawSerializerOptions.AnyMessageType);
+            configurator.UseRawJsonDeserializer(RawSerializerOptions.AnyMessageType);
 
             TaskCompletionSource<ConsumeContext<Command>> handler = GetTask<ConsumeContext<Command>>();
             _handler = handler.Task;

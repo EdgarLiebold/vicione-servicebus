@@ -34,7 +34,6 @@
     <PackageReference Include="OpenTelemetry.Exporter.Console"/>
     <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus.MessagePack\ViciOne.ServiceBus.MessagePack.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Newtonsoft\ViciOne.ServiceBus.Newtonsoft.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus.StateMachineVisualizer\ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
