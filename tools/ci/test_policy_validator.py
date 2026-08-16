@@ -753,6 +753,40 @@ class PolicyTestCase(unittest.TestCase):
             "    </packageSource>", 1), encoding="utf-8")
         self.assert_rejected("restore-sources")
 
+    def test_rejects_a_missing_disabled_sources_section(self) -> None:
+        # The real sabotage the review used: drop the block entirely. The single source can then be
+        # switched off by whatever the host has configured, and the restore has nothing left.
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n", "", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_disabled_sources_section_without_a_clear(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n",
+            "  <disabledPackageSources>\n  </disabledPackageSources>\n", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_clear_that_stands_after_a_disable(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n",
+            '  <disabledPackageSources>\n    <add key="other" value="true" />\n    <clear />\n'
+            "  </disabledPackageSources>\n", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_disabling_the_only_source(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n",
+            '  <disabledPackageSources>\n    <clear />\n    <add key="nuget.org" value="true" />\n'
+            "  </disabledPackageSources>\n", 1), encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
+    def test_rejects_a_second_disabled_sources_section(self) -> None:
+        self.nuget_config().write_text(NUGET_CONFIG.replace(
+            "  </disabledPackageSources>\n",
+            "  </disabledPackageSources>\n  <disabledPackageSources>\n  </disabledPackageSources>\n", 1),
+            encoding="utf-8")
+        self.assert_rejected("restore-sources")
+
     def test_rejects_credentials_in_the_repository(self) -> None:
         self.nuget_config().write_text(NUGET_CONFIG.replace(
             "</configuration>",

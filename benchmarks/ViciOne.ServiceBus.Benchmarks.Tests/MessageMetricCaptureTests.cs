@@ -49,24 +49,86 @@ public class MessageMetricCaptureTests
     }
 
     [Test]
-    public async Task A_completion_from_inside_the_send_never_measures_from_zero()
+    public async Task A_send_that_reports_completion_and_then_fails_is_not_counted()
     {
-        // The defect this file exists for: the completion arrived before the registration, the capture
-        // invented an entry whose send timestamp was zero, and the message was then reported as having
-        // taken everything since the capture was constructed.
+        // The observer fires from inside the send delegate, so a completion can be reported and the
+        // send can still throw afterwards. Counting on the observer alone let that failure finish the
+        // series, and a run reached its total before every message had been sent.
+        var capture = new MessageMetricCapture(2);
+        var failing = Guid.NewGuid();
+        var succeeding = Guid.NewGuid();
+
+        Assert.That(async () => await capture.Sent(failing, async () =>
+        {
+            await capture.PostSend(failing);
+            throw new InvalidOperationException("the send failed after the observer reported it");
+        }, true), Throws.TypeOf<InvalidOperationException>());
+
+        await capture.Sent(succeeding, () => capture.PostSend(succeeding), true);
+
+        Assert.That(capture.SendCompleted.IsCompleted, Is.False,
+            "One confirmed send out of two must not finish the series");
+    }
+
+    [Test]
+    public async Task A_completion_reported_before_the_delegate_returns_is_counted_once()
+    {
         var capture = new MessageMetricCapture(1);
         var messageId = Guid.NewGuid();
 
-        Thread.Sleep(20);
+        await capture.Sent(messageId, () => capture.PostSend(messageId), true);
+
+        Assert.That(capture.SendCompleted.IsCompleted, Is.True);
+    }
+
+    [Test]
+    public async Task A_completion_reported_after_the_delegate_returns_is_counted_once()
+    {
+        var capture = new MessageMetricCapture(1);
+        var messageId = Guid.NewGuid();
+
+        await capture.Sent(messageId, () => Task.CompletedTask, true);
+        Assert.That(capture.SendCompleted.IsCompleted, Is.False,
+            "The delegate returning alone is not a confirmed send");
+
+        await capture.PostSend(messageId);
+
+        Assert.That(capture.SendCompleted.IsCompleted, Is.True);
+    }
+
+    [Test]
+    public void A_failure_before_any_completion_is_terminal()
+    {
+        var capture = new MessageMetricCapture(1);
+        var messageId = Guid.NewGuid();
+
+        Assert.That(async () => await capture.Sent(messageId, () => throw new InvalidOperationException("no"), true),
+            Throws.TypeOf<InvalidOperationException>());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(capture.SendCompleted.IsCompleted, Is.False);
+            Assert.That(async () => await capture.PostSend(messageId), Throws.TypeOf<InvalidOperationException>(),
+                "A completion for a message whose send failed has nothing left to complete");
+        });
+    }
+
+    [Test]
+    public async Task A_message_id_can_be_used_again_after_a_failed_send()
+    {
+        var capture = new MessageMetricCapture(1);
+        var messageId = Guid.NewGuid();
+
+        Assert.That(async () => await capture.Sent(messageId, async () =>
+        {
+            await capture.PostSend(messageId);
+            throw new InvalidOperationException("first attempt failed");
+        }, true), Throws.TypeOf<InvalidOperationException>());
 
         await capture.Sent(messageId, () => capture.PostSend(messageId), true);
-        await Consume(capture, messageId);
 
-        var metric = SingleMetric(capture);
-
-        Assert.That(metric.SendCompletionLatency, Is.LessThan(Stopwatch.Frequency / 100),
-            "A completion measured from zero would report everything since the capture was created");
-        Assert.That(metric.ConsumeLatency, Is.LessThan(Stopwatch.Frequency / 100));
+        Assert.That(capture.SendCompleted.IsCompleted, Is.True,
+            "The retry carries no counter from the attempt that failed");
     }
 
     [Test]

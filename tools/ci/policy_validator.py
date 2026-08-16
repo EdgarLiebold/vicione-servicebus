@@ -648,6 +648,30 @@ class Policy:
                 self.fail("restore-sources", "the mapping does not claim the pattern *, so some package "
                                              "pattern stays unmapped")
 
+        # Clearing the inherited sources is only half of the host independence. A machine level
+        # disabledPackageSources entry can switch off the one source that is left, and the restore then
+        # has none at all. The file states that it clears them; the gate has to hold that statement.
+        disabled = root.findall("disabledPackageSources")
+        if len(disabled) != 1:
+            self.fail("restore-sources",
+                      f"{RESTORE_CONFIG} declares {len(disabled)} disabledPackageSources sections; "
+                      "exactly one is required so a host entry cannot disable the only source")
+        else:
+            children = list(disabled[0])
+            if not any(child.tag == "clear" for child in children):
+                self.fail("restore-sources", "disabledPackageSources does not clear what the host disabled")
+            else:
+                first_clear = next(index for index, child in enumerate(children) if child.tag == "clear")
+                if any(child.tag != "clear" for child in children[:first_clear]):
+                    self.fail("restore-sources",
+                              "an operation stands before the clear in disabledPackageSources, so it "
+                              "survives the clear")
+            for child in children:
+                if child.tag == "add" and child.get("key") == REQUIRED_SOURCE_KEY:
+                    self.fail("restore-sources",
+                              f"disabledPackageSources disables {REQUIRED_SOURCE_KEY}, which is the only "
+                              "source the restore has")
+
         if root.find(CREDENTIAL_ELEMENT) is not None:
             self.fail("restore-sources", f"{RESTORE_CONFIG} carries {CREDENTIAL_ELEMENT}; the single source "
                                          "is public and no credential belongs in the repository")

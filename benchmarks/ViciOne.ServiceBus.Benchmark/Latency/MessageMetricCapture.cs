@@ -73,7 +73,8 @@ namespace ViciOneServiceBusBenchmark.Latency
             if (send == null)
                 throw new ArgumentNullException(nameof(send));
 
-            if (!_sentMessages.TryAdd(messageId, new SentMessage(_stopwatch.ElapsedTicks)))
+            var message = new SentMessage(_stopwatch.ElapsedTicks);
+            if (!_sentMessages.TryAdd(messageId, message))
                 throw new InvalidOperationException($"The message {messageId} was already registered as sent.");
 
             try
@@ -82,20 +83,24 @@ namespace ViciOneServiceBusBenchmark.Latency
             }
             catch
             {
+                // Terminal. The state goes with the failure, and because a success is only ever
+                // published once both facts hold, a completion the observer already reported for this
+                // message never became a count that would now have to be taken back.
                 _sentMessages.TryRemove(messageId, out _);
 
                 throw;
             }
 
-            if (postSend)
-                return;
+            if (!postSend)
+                message.TryObserveCompletion(_stopwatch.ElapsedTicks);
 
-            Complete(messageId, _stopwatch.ElapsedTicks);
+            if (message.TrySendReturned())
+                PublishSend();
         }
 
         /// <summary>
-        /// Closes the measurement a transport send observer reports. Taken before anything else, so the
-        /// bookkeeping below cannot be mistaken for transport time.
+        /// Closes the measurement a transport send observer reports. The timestamp is taken before
+        /// anything else, so the bookkeeping below cannot be mistaken for transport time.
         /// </summary>
         public Task PostSend(Guid messageId)
         {
@@ -105,13 +110,14 @@ namespace ViciOneServiceBusBenchmark.Latency
         }
 
         /// <summary>
-        /// Closes exactly one registered send exactly once.
+        /// Records the completion a transport send observer reports.
         /// <para>
-        /// An unknown message is an error rather than a new entry: it means the completion belongs to a
-        /// send this capture never saw, and inventing a start for it would report a latency that was
-        /// never measured. A repeated completion is ignored instead, because a transport may legitimately
-        /// observe the same send twice, and counting it twice would end the run before every message had
-        /// actually been sent.
+        /// A send is successful only when both facts hold: the observer reported completion and the
+        /// send delegate returned without throwing. Counting on the observer alone was wrong, because
+        /// the observer fires from inside the delegate: a send that reported completion and then threw
+        /// was counted as delivered, and a run could reach its expected total before every message had
+        /// actually been sent. Whichever of the two facts arrives second publishes the success, exactly
+        /// once, so nothing has to be counted back afterwards.
         /// </para>
         /// </summary>
         void Complete(Guid messageId, long completionTimestamp)
@@ -120,9 +126,15 @@ namespace ViciOneServiceBusBenchmark.Latency
                 throw new InvalidOperationException(
                     $"The message {messageId} was completed without ever being registered as sent.");
 
-            if (!message.TryComplete(completionTimestamp))
-                return;
+            if (message.TryObserveCompletion(completionTimestamp))
+                PublishSend();
+        }
 
+        /// <summary>
+        /// Publishes one confirmed send. Only ever reached by the side that closed the pair.
+        /// </summary>
+        void PublishSend()
+        {
             var sent = Interlocked.Increment(ref _sent);
             if (sent == _messageCount)
                 _sendCompleted.TrySetResult(_stopwatch.Elapsed);
@@ -145,30 +157,53 @@ namespace ViciOneServiceBusBenchmark.Latency
         /// </summary>
         sealed class SentMessage
         {
-            /// <summary>
-            /// No stopwatch reading can be negative, so this cannot collide with a real timestamp.
-            /// </summary>
+            /// <summary>No stopwatch reading can be negative, so this cannot collide with a real one.</summary>
             const long NotCompleted = long.MinValue;
 
             public readonly long SendTimestamp;
             long _completionTimestamp = NotCompleted;
+            int _sendReturned;
+            int _counted;
 
             public SentMessage(long sendTimestamp)
             {
                 SendTimestamp = sendTimestamp;
             }
 
-            public bool IsCompleted => Volatile.Read(ref _completionTimestamp) != NotCompleted;
+            public bool IsCompleted =>
+                Volatile.Read(ref _completionTimestamp) != NotCompleted && Volatile.Read(ref _sendReturned) != 0;
+
             public long CompletionTimestamp => Volatile.Read(ref _completionTimestamp);
 
             /// <summary>
-            /// Completion is the timestamp itself, written by one compare and exchange, so a reader can
-            /// never see a message marked complete before the value it was completed with is there.
+            /// The observer reported completion. True only for the call that closes the pair, so a
+            /// repeated or concurrent report never counts twice.
             /// </summary>
-            public bool TryComplete(long completionTimestamp)
+            public bool TryObserveCompletion(long completionTimestamp)
             {
-                return Interlocked.CompareExchange(ref _completionTimestamp, completionTimestamp, NotCompleted)
-                    == NotCompleted;
+                if (Interlocked.CompareExchange(ref _completionTimestamp, completionTimestamp, NotCompleted)
+                    != NotCompleted)
+                    return false;
+
+                return Volatile.Read(ref _sendReturned) != 0 && TryClaim();
+            }
+
+            /// <summary>The send delegate returned without throwing. True only for the call that closes the pair.</summary>
+            public bool TrySendReturned()
+            {
+                if (Interlocked.Exchange(ref _sendReturned, 1) != 0)
+                    return false;
+
+                return Volatile.Read(ref _completionTimestamp) != NotCompleted && TryClaim();
+            }
+
+            /// <summary>
+            /// Both sides may observe the other's fact at once. The exchange decides which of them
+            /// publishes, so the pair is counted exactly once in either order.
+            /// </summary>
+            bool TryClaim()
+            {
+                return Interlocked.CompareExchange(ref _counted, 1, 0) == 0;
             }
         }
 

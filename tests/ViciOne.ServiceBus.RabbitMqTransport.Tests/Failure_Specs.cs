@@ -52,7 +52,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await harness1.Start();
 
             // Materialises the bus endpoint, so its exclusive queue is really held by this connection.
-            harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
+            _ = harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
 
             await WaitUntilExclusivelyHeld(harness1);
 
@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             try
             {
-                harness2.SubscribeHandler<TestFramework.Messages.PingMessage>();
+                _ = harness2.SubscribeHandler<TestFramework.Messages.PingMessage>();
             }
             catch (RabbitMqConnectionException specific)
             {
@@ -126,7 +126,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await holder.RecreateVirtualHost();
             await holder.Start();
 
-            holder.SubscribeHandler<TestFramework.Messages.PingMessage>();
+            _ = holder.SubscribeHandler<TestFramework.Messages.PingMessage>();
 
             await WaitUntilExclusivelyHeld(holder);
 
@@ -142,7 +142,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                 try
                 {
-                    refused.SubscribeHandler<TestFramework.Messages.PingMessage>();
+                    _ = refused.SubscribeHandler<TestFramework.Messages.PingMessage>();
                 }
                 catch (RabbitMqConnectionException specific)
                 {
@@ -188,7 +188,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await harness1.RecreateVirtualHost();
             await harness1.Start();
 
-            harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
+            _ = harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
 
             await WaitUntilExclusivelyHeld(harness1);
 
@@ -257,7 +257,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await harness1.RecreateVirtualHost();
             await harness1.Start();
 
-            harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
+            _ = harness1.SubscribeHandler<TestFramework.Messages.PingMessage>();
 
             await WaitUntilExclusivelyHeld(harness1);
 
@@ -317,7 +317,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await holder.RecreateVirtualHost();
             await holder.Start();
 
-            holder.SubscribeHandler<TestFramework.Messages.PingMessage>();
+            _ = holder.SubscribeHandler<TestFramework.Messages.PingMessage>();
 
             await WaitUntilExclusivelyHeld(holder);
 

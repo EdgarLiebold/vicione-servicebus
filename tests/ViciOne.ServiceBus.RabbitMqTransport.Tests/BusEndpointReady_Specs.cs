@@ -70,7 +70,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             await first.Start();
 
             // Materialises the bus endpoint, so its exclusive queue is really held by this connection.
-            first.SubscribeHandler<PingMessage>();
+            _ = first.SubscribeHandler<PingMessage>();
 
             // The broker is asked, not the clock. A sleep here claimed the queue was held and would
             // have gone on claiming it while the declare was still running, turning a broken
