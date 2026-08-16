@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "kind": "SAGA_PERSISTENCE_PROBE_DEFECT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "commit": "df2cceedaeb3f77bb5b5a94bb1dab98aa45009d6",
+  "statement": "One saga repository reports a persistence it never was, and the name it reports belongs to an integration this milestone removes.",
+  "site": {
+    "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureServiceBusTransport/MessageSessionSagaRepositoryContextFactory.cs",
+    "line": 22,
+    "code": "context.Add(\"persistence\", \"mongodb\");",
+    "whatItActuallyIs": "The saga repository of the Azure Service Bus message session. It stores saga state in the session state of the broker and never used MongoDB."
+  },
+  "siblingsForComparison": {
+    "src/ViciOne.ServiceBus/Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactory.cs": "memory",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContextFactory.cs": "azuretable",
+    "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryContextFactory.cs": "dynamodb",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs": "entity-framework"
+  },
+  "rule": "Every other saga repository names its own persistence. This one names a different product, so a probe reader is told the wrong store.",
+  "testCoverage": {
+    "assertionsOnThisValue": 0,
+    "onlyPersistenceAssertionInTheSuite": "SimpleConfiguration_Specs asserts \"memory\" for the in memory repository",
+    "consequence": "No test pins the wrong value, so correcting it breaks nothing that exists."
+  },
+  "whyThisIsNotJustAStaleReference": "Removing MongoDB from the graph does not make this line right. It was already wrong before the removal; the removal only made it visible.",
+  "scopeOfAChange": "Diagnostic probe output of one repository. No public signature, no message contract, no serialisation, no behaviour of the saga itself."
+}
