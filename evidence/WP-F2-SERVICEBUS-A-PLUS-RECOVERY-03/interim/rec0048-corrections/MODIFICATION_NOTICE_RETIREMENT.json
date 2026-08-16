@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "kind": "MODIFICATION_NOTICE_RETIREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "basis": "PO-2026-08-14-01 Nr. 3, confirmed by LEAD_DIRECTIVE 0048 section 2",
+  "commit": "845a07bf8a071dff015db98a83354c23941cffc0",
+  "removedFrom": {
+    "files": 5149,
+    "commits": [
+      "0a95ec45",
+      "845a07bf"
+    ]
+  },
+  "gateChange": "The duty and its expected-text injection are gone from the identity gate in both places: a changed baseline file no longer has to carry a notice, and the expected content of such a file is no longer computed with one inserted. The census of what changed stays, because the change list is built from exactly that comparison.",
+  "commentFormsCovered": [
+    "//",
+    "#",
+    "--",
+    "<!-- -->",
+    "; (found late, see below)"
+  ],
+  "missedAndCorrected": {
+    "file": "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md",
+    "form": "semicolon",
+    "note": "The first sweep pattern knew four comment forms. The analyzer release file marks comments with a semicolon, so its header survived while five thousand others went. Removed in 845a07bf. The line beneath it stays: it records a renamed rule identifier, which is a statement about the rules."
+  },
+  "remaining": [
+    {
+      "path": "NOTICE",
+      "line": 12,
+      "spelling": "exact",
+      "reason": "Legal document. PO-2026-08-14-01 Nr. 3 keeps foreign copyright, licence and notice content and requires LICENSE, NOTICE, COPYRIGHT, README and MODIFICATIONS to stay truthful.",
+      "action": "keep"
+    },
+    {
+      "path": "MODIFICATIONS.md",
+      "line": 3,
+      "spelling": "exact",
+      "reason": "Same. It explains origin and the form of the evidence.",
+      "action": "keep"
+    },
+    {
+      "path": "benchmarks/ViciOne.ServiceBus.Benchmark/README.md",
+      "line": 1,
+      "spelling": "exact",
+      "reason": "Outside the team write boundary since LEAD_DIRECTIVE 0049 placed benchmarks/** with the lead.",
+      "action": "left for the lead"
+    },
+    {
+      "path": "tools/identity/identity_rules.py",
+      "line": 25,
+      "spelling": "exact",
+      "reason": "MODIFICATION_NOTICE is a string constant in tooling code, not a file header. It is now unused by the gate; supports_modification_notice still references the concept.",
+      "action": "proposed for removal with the change list enforcer, so the tooling is changed once"
+    },
+    {
+      "path": "evidence/**",
+      "spelling": "both",
+      "reason": "Historic evidence is not rewritten.",
+      "action": "keep"
+    }
+  ],
+  "verification": {
+    "solutionBuild": "succeeded",
+    "identityRules": "OK",
+    "identityGate": "OK",
+    "analyzerBaselineGate": "OK",
+    "policyValidator": "PASS",
+    "policyTests": "65 OK",
+    "runnerTests": "14 OK"
+  },
+  "openDependency": "The root CHANGELIST.md does not exist yet, so neither mechanism currently carries the change evidence. PO-2026-08-14-01 requires it at the implementation freeze, which is still ahead, but it is now the critical path rather than a later tidy-up."
+}
