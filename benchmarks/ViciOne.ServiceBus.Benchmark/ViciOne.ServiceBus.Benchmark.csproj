@@ -2,6 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <IsPackable>False</IsPackable>
+    <IsTestProject>False</IsTestProject>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <AssemblyName>vicione-servicebus-benchmark</AssemblyName>
     <RootNamespace>ViciOneServiceBusBenchmark</RootNamespace>

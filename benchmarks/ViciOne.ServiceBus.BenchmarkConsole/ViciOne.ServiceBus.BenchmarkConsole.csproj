@@ -7,6 +7,7 @@
     <PackageId>ViciOne.ServiceBus.BenchmarkConsole</PackageId>
     <OutputType>Exe</OutputType>
     <IsPackable>False</IsPackable>
+    <IsTestProject>False</IsTestProject>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
