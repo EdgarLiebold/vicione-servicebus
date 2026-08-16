@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "BENCHMARK_ASSESSMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "commit": "75162651eda283a188bdd6fdf7628638460ddabe",
+  "statement": "The two benchmark programs cannot fail today, so they are a printout rather than a safeguard. Their scenario selection is worth keeping; their machinery is not.",
+  "measuredFindings": [
+    {
+      "finding": "A run reports success while measuring nothing",
+      "evidence": "dotnet run --filter *SupervisorBenchmark* -> NU1201 net5.0 incompatible, table row NA, 'executed benchmarks: 0', process exit code 0",
+      "cause": "Classes pin RuntimeMoniker.NetCoreApp31, Net50 and Net60; those runtimes are not installed.",
+      "sites": [
+        "Benchmarker.cs:9-10",
+        "JsonSerializationBenchmark.cs:11-12",
+        "SendBenchmark.cs:14-15",
+        "SupervisorBenchmark.cs:10-11",
+        "MediatorBenchmark.cs:28",
+        "NewIdBenchmarks.cs:18-29"
+      ]
+    },
+    {
+      "finding": "One of the two programs does not build",
+      "evidence": "NU1605 downgrade Microsoft.Extensions.DependencyInjection 9.0.1 -> 8.0.0",
+      "cause": "The project targets net8.0 and therefore hits two different conditional bands of Directory.Packages.props at once (line 39 gives EF Core SqlServer 9.0.1, line 43 gives DI 8.0.0).",
+      "resolution": "Retargeting to net10.0 resolves it by construction; no version guess is needed."
+    },
+    {
+      "finding": "Neither project is in the solution or in any workflow",
+      "consequence": "That is why the build break went unnoticed."
+    },
+    {
+      "finding": "Benchmarks that do not measure the product",
+      "items": [
+        "ConcurrencyBenchmark measures BCL Dictionary against ConcurrentDictionary and would stay green with the entire bus deleted",
+        "MediatorBenchmark compares against MediatR, a third party library rather than a capability",
+        "JsonSerializationBenchmark.NewtonsoftJson is the last non test consumer of the removed project",
+        "BusOutboxBenchmark uses SQL Server over Windows LocalDB while the referenced SQL transport is PostgreSQL only"
+      ]
+    },
+    {
+      "finding": "No result is retained",
+      "consequence": "Without a stored series there is nothing to compare, so a number carries no statement about regression."
+    }
+  ],
+  "alreadyCorrected": [
+    "The container files of the moved benchmark followed the move and no longer start a broker for a removed capability."
+  ],
+  "whatIsWorthKeeping": "The scenario selection: envelope against object serialization path, middleware pipe cost measured singly and combined, supervisor lifecycle, channel dispatch, mediator throughput.",
+  "minimumToBeWorthItsPlace": [
+    "Abort on zero executed benchmarks instead of exiting green.",
+    "One job definition instead of per class runtime pins.",
+    "Every benchmark constructs the product type directly, so removing the capability breaks the build instead of silently measuring nothing.",
+    "Both projects in the CI build; building is enough, running is not."
+  ],
+  "openDecision": "Whether the benchmarks stay developer tooling on demand, as PO-2026-08-13-04 number 5 keeps them, or become a regression safeguard with a stored baseline. Not decided here."
+}
