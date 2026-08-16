@@ -29,7 +29,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
         void ApplyStaticMessageToContext(SendContext<SubmitOrder> context, string body)
         {
-            context.Serializer = new CopyBodySerializer(NewtonsoftJsonMessageSerializer.JsonContentType, new StringMessageBody(body));
+            context.Serializer = new CopyBodySerializer(SystemTextJsonMessageSerializer.JsonContentType, new StringMessageBody(body));
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
@@ -92,7 +92,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     {
         using System;
         using System.Collections.Generic;
-        using Newtonsoft.Json;
 
 
         public interface MetaData
@@ -119,8 +118,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             DateTime Timestamp { get; }
 
             // this works
-            [JsonProperty("CustomerNumber", Required = Required.DisallowNull,
-                NullValueHandling = NullValueHandling.Ignore)]
             int CustomerNumber { get; }
 
             string PaymentCardNumber { get; }

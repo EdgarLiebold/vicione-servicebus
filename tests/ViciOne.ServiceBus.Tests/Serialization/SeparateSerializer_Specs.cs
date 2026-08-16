@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
             ConsumeContext<PingMessage> pingContext = await _handled;
 
-            Assert.That(pingContext.ReceiveContext.ContentType, Is.EqualTo(NewtonsoftJsonMessageSerializer.JsonContentType),
+            Assert.That(pingContext.ReceiveContext.ContentType, Is.EqualTo(SystemTextJsonMessageSerializer.JsonContentType),
                 $"actual ping type is {pingContext.ReceiveContext.ContentType}");
 
             ConsumeContext<PongMessage> pongContext = await ponged;
@@ -72,7 +72,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
             Assert.Multiple(() =>
             {
-                Assert.That(context.ReceiveContext.ContentType, Is.EqualTo(NewtonsoftRawJsonMessageSerializer.RawJsonContentType),
+                Assert.That(context.ReceiveContext.ContentType, Is.EqualTo(SystemTextJsonRawMessageSerializer.JsonContentType),
                     $"unexpected content-type {context.ReceiveContext.ContentType}");
 
                 Assert.That(context.Message.CommandId, Is.EqualTo(message.CommandId));

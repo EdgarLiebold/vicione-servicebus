@@ -256,14 +256,14 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
             ConsumeContext<Command> commandContext = await _handler;
 
-            Assert.That(commandContext.ReceiveContext.ContentType, Is.EqualTo(NewtonsoftRawJsonMessageSerializer.RawJsonContentType),
+            Assert.That(commandContext.ReceiveContext.ContentType, Is.EqualTo(SystemTextJsonRawMessageSerializer.JsonContentType),
                 $"unexpected content-type {commandContext.ReceiveContext.ContentType}");
 
             ConsumeContext<PingMessage> context = await _handled;
 
             Assert.Multiple(() =>
             {
-                Assert.That(context.ReceiveContext.ContentType, Is.EqualTo(NewtonsoftJsonMessageSerializer.JsonContentType),
+                Assert.That(context.ReceiveContext.ContentType, Is.EqualTo(SystemTextJsonMessageSerializer.JsonContentType),
                     $"unexpected content-type {context.ReceiveContext.ContentType}");
 
                 Assert.That(context.Message.CorrelationId, Is.EqualTo(message.CommandId));

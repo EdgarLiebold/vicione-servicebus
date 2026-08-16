@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.Tests.Testing
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Testing;
-    using Newtonsoft.Json;
     using NUnit.Framework;
     using TestFramework;
 
@@ -32,18 +31,6 @@ namespace ViciOne.ServiceBus.Tests.Testing
                 BusTestFixture.ConfigureBusDiagnostics(e);
 
                 e.UseJsonSerializer();
-                e.ConfigureNewtonsoftJsonDeserializer(x =>
-                {
-                    x.TypeNameHandling = TypeNameHandling.Auto;
-                    x.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
-                    return x;
-                });
-                e.ConfigureNewtonsoftJsonSerializer(x =>
-                {
-                    x.TypeNameHandling = TypeNameHandling.Auto;
-                    x.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
-                    return x;
-                });
             };
             _saga = _harness.Saga<TestSaga>();
 

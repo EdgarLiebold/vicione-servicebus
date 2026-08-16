@@ -3,13 +3,12 @@ namespace ViciOne.ServiceBus.Tests.MessageData
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.MessageData;
     using ViciOne.ServiceBus.Testing;
     using MessageDataComponents;
     using Microsoft.Extensions.DependencyInjection;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
     using NUnit.Framework;
 
 
@@ -34,14 +33,6 @@ namespace ViciOne.ServiceBus.Tests.MessageData
                         cfg.UseMessageData(context.GetRequiredService<IMessageDataRepository>());
 
                         cfg.UseJsonSerializer();
-                        cfg.ConfigureNewtonsoftJsonSerializer(settings =>
-                        {
-                            settings.DefaultValueHandling = DefaultValueHandling.Populate;
-                            settings.Converters.Add(new StringEnumConverter());
-
-                            return settings;
-                        });
-
                         cfg.ConfigureEndpoints(context);
                     });
                 })
