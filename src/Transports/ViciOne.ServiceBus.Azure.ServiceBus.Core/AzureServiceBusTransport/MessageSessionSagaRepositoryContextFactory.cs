@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
 
         public void Probe(ProbeContext context)
         {
-            context.Add("persistence", "mongodb");
+            context.Add("persistence", "azure-service-bus-message-session");
         }
 
         public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
