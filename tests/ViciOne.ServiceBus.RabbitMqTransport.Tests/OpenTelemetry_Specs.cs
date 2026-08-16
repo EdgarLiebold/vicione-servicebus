@@ -40,7 +40,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        cfg.UseNewtonsoftJsonSerializer();
 
                         cfg.ConfigureEndpoints(context);
                     });
@@ -95,7 +94,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        cfg.UseNewtonsoftJsonSerializer();
 
                         cfg.ConfigureEndpoints(context);
                     });

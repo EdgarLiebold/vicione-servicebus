@@ -122,7 +122,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
                 x.UsingInMemory((context, cfg) =>
                 {
                     cfg.UseDelayedMessageScheduler();
-                    cfg.UseNewtonsoftJsonSerializer();
 
                     cfg.ConfigureEndpoints(context);
                 });

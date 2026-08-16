@@ -78,15 +78,12 @@ public class ExtensionData_Specs
                             return options;
                         });
                     }
-                    else if (_serializerType == typeof(NewtonsoftJsonMessageSerializer))
+
+                    else
                     {
-                        cfg.ClearSerialization();
-                        cfg.UseNewtonsoftJsonSerializer();
-                    }
-                    else if (_serializerType == typeof(NewtonsoftRawJsonMessageSerializer))
-                    {
-                        cfg.ClearSerialization();
-                        cfg.UseNewtonsoftRawJsonSerializer();
+                        throw new ArgumentOutOfRangeException(nameof(_serializerType), _serializerType,
+                            "No serializer is configured for this parameterisation, so the fixture would "
+                            + "silently run on the default one and prove nothing about the named type.");
                     }
 
                     cfg.ConfigureEndpoints(context);
