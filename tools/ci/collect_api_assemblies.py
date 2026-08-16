@@ -1,7 +1,5 @@
 """Build one commit in a worktree this tool owns, and collect exactly the assemblies a census names.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-13.
-
 A public surface comparison is only worth its scope and its provenance, and each of those was learned
 the hard way, in that order:
 

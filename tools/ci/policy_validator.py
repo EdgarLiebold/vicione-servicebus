@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Repository-local CI policy validator.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
-
 Guards the invariants this work package established, so the known regressions cannot come back
 quietly. Standard library only: the validator must run before any restore and must never depend on
 the thing it validates.

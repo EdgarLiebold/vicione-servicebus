@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Canonical entry point for a broker-backed test category.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
-
 One run path for a developer machine and for GitHub Actions. It starts exactly the broker the
 category needs from the single pinned compose definition, asks Docker which loopback ports were
 actually bound, hands endpoints and the run-scoped account to the test process alone, and tears the

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Compare two public API surfaces and separate testing changes from messaging changes.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-09.
-
 The package hashes in the pack gate prove that an artifact did not change after it was built. They
 cannot show what it exposes, so a work package that touches types inside shipped assemblies can move
 the public surface without any gate noticing. This compares the surface of the baseline against the

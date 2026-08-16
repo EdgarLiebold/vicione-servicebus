@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Self-tests for the CI policy validator.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
-
 Each test builds a minimal repository that satisfies every rule, applies exactly one mutation, and
 asserts that the validator turns red for that mutation and only for it. A validator that cannot be
 made to fail proves nothing, so the negative cases carry the weight here.

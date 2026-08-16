@@ -32,7 +32,6 @@
         The <broker> element is used to configure the ActiveMQ broker.
     -->
     <!--
-        ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
         Derived from the unmodified conf/activemq.xml of apache/activemq-classic:6.2.0.
         Single delta: schedulerSupport="true". The ActiveMQ default is false, and DelayRetry_Specs
         requires scheduled delivery. Everything else is byte-identical to the official configuration.

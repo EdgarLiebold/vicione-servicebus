@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Run one required test category and prove it actually executed tests.
 
-ViciOne modification: WP-F2-SERVICEBUS-CI-BASELINE-03, 2026-08-08.
-
 A required CI category that silently runs zero tests looks exactly like a green one. This runner
 executes the category, reads the counters straight out of the TRX result file rather than from
 console prose, and fails when the category executed nothing or when anything failed. The counters

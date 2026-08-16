@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Focused tests for the identity contract of the required category runner.
 
-ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-16.
-
 The runner used to key a case as the last segment of its class name plus the method name and then
 removed duplicates. That made two different tests share one permission to stay unexecuted: a fixture
 in one namespace authorised a fixture of the same name in another, and seven parameterised cases
