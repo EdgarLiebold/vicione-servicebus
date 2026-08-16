@@ -172,14 +172,38 @@ class RunDurationTestCase(unittest.TestCase):
 
 
 class SelectorRejectionTestCase(unittest.TestCase):
-    def test_a_filter_is_refused(self):
-        for selector in ("--filter", "--filter=Category!=Slow", "/Tests:One", "--TestCaseFilter:Name~x"):
+    REFUSED = (
+        "--filter", "--filter=Category!=Slow", "-filter", "/filter:Name~x",
+        "--TestCaseFilter:Name~x", "/TestCaseFilter:Name~x", "-testcasefilter",
+        "--tests", "--tests=One", "/Tests:One", "-tests",
+        # A settings file carries a TestCaseFilter of its own, so it narrows the run without ever
+        # naming a filter on the command line.
+        "--settings", "--settings=run.runsettings", "/Settings:run.runsettings", "-s", "-s=run.runsettings",
+    )
+
+    def test_every_selector_spelling_is_refused(self):
+        for selector in self.REFUSED:
             with self.subTest(selector=selector):
                 with self.assertRaises(runner.CategoryError):
                     runner.reject_selectors([selector])
 
-    def test_ordinary_arguments_pass(self):
-        runner.reject_selectors(["--no-restore", "-v", "minimal"])
+    def test_a_selector_is_refused_wherever_it_stands(self):
+        with self.assertRaises(runner.CategoryError):
+            runner.reject_selectors(["--no-restore", "--settings", "run.runsettings"])
+
+    def test_ordinary_build_and_restore_options_pass(self):
+        # A blanket rejection would stop the category from running at all, which is the opposite of
+        # keeping it complete.
+        runner.reject_selectors([
+            "--no-restore", "--no-build", "-v", "minimal", "--verbosity", "detailed",
+            "-c", "Release", "--framework", "net9.0", "--nologo", "--results-directory", "artifacts",
+            "--logger", "trx;LogFileName=core.trx", "-p:ContinuousIntegrationBuild=true",
+        ])
+
+    def test_the_option_token_ignores_value_and_case(self):
+        self.assertEqual(runner.option_token("--Filter=Category!=Slow"), "--filter")
+        self.assertEqual(runner.option_token("/Tests:One"), "/tests")
+        self.assertEqual(runner.option_token("--no-restore"), "--no-restore")
 
 
 if __name__ == "__main__":

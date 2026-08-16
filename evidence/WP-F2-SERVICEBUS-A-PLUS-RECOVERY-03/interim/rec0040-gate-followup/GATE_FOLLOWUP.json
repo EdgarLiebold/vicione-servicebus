@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "kind": "GATE_FOLLOWUP_EVIDENCE",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directiveId": "LEAD_DIRECTIVE 0040",
+  "parentCommit": "c062a5898950d5c4fa6dfafeb22b6730d9cef7ed",
+  "appendOnly": "Supplements rec0032, rec0036 and rec0038. Nothing there is rewritten and c062a589 is untouched.",
+  "inventoryCountDerivation": {
+    "statement": "Directive 0038 named the stock of 35 entries at that time. The end state is 34, and the single missing entry is not a loss.",
+    "before": 35,
+    "removed": 1,
+    "removedEntry": "The old core daylight saving case. It is a required, executed behaviour test now, so it does not belong in an inventory of cases that do not run.",
+    "after": 34,
+    "distribution": {
+      "core": 0,
+      "abstractions": 5,
+      "rabbitmq": 20,
+      "entity-framework-core": 4,
+      "activemq": 5
+    },
+    "checkedSum": 34,
+    "inventoryChangedInThisCommit": false
+  },
+  "staticFullIdentityRule": {
+    "defectFound": "The first version asked whether the identity merely contained the fixture and the test name. The bare short form Fixture.Test passed as a full identity, and a name inserted between fixture and test passed as well. Both are the very collision the contract exists to prevent.",
+    "correctedContract": "A valid identity ends exactly on '.<fixture>.<test>' and carries a non empty namespace in front of it. Parameterised fixture arguments stay part of the fixture name.",
+    "targetedTests": [
+      "test_accepts_a_namespaced_full_identity",
+      "test_accepts_a_parameterised_fixture_identity",
+      "test_rejects_an_entry_without_a_full_identity",
+      "test_rejects_a_short_form_identity",
+      "test_rejects_an_identity_that_does_not_name_its_own_case"
+    ]
+  },
+  "indirectSelectorBoundary": {
+    "defectFound": "Only direct filters were refused. A runsettings file carries a TestCaseFilter of its own, so --settings narrowed the run without ever naming a filter on the command line.",
+    "refusedOptions": [
+      "--filter",
+      "--settings",
+      "--testcasefilter",
+      "--tests",
+      "-filter",
+      "-s",
+      "-settings",
+      "-testcasefilter",
+      "-tests",
+      "/filter",
+      "/settings",
+      "/testcasefilter",
+      "/tests"
+    ],
+    "valueFormsCovered": [
+      "--option",
+      "--option=value",
+      "/Option:value"
+    ],
+    "caseInsensitive": true,
+    "ordinaryOptionsStillPass": [
+      "--no-restore",
+      "--no-build",
+      "-v minimal",
+      "--verbosity detailed",
+      "-c Release",
+      "--framework net9.0",
+      "--nologo",
+      "--results-directory",
+      "--logger",
+      "-p:ContinuousIntegrationBuild=true"
+    ]
+  },
+  "positiveRuns": {
+    "policyValidatorOnTheRealRepository": {
+      "argumentArray": [
+        "python3",
+        "tools/ci/policy_validator.py"
+      ],
+      "command": "python3 tools/ci/policy_validator.py",
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exitCode": 0,
+      "processWallDurationSeconds": 1.268,
+      "summary": [
+        "PASS ci-policy all invariants hold"
+      ]
+    },
+    "policyValidatorTests": {
+      "argumentArray": [
+        "python3",
+        "tools/ci/test_policy_validator.py"
+      ],
+      "command": "python3 tools/ci/test_policy_validator.py",
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exitCode": 0,
+      "processWallDurationSeconds": 1.444,
+      "summary": [
+        "FAIL ci-policy publication: .github/workflows/build.yml addresses the nuget.org publish endpoint: pattern 'api\\.nuget\\.org'",
+        "FAIL ci-policy required-profile: an upstream repository or branch guard returned: ViciOne.ServiceBus/ViciOne.ServiceBus",
+        "Ran 65 tests in 1.350s",
+        "OK"
+      ]
+    },
+    "runnerTests": {
+      "argumentArray": [
+        "python3",
+        "test_run_test_category.py"
+      ],
+      "command": "python3 test_run_test_category.py",
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci",
+      "exitCode": 0,
+      "processWallDurationSeconds": 0.119,
+      "summary": [
+        "Ran 14 tests in 0.016s",
+        "OK"
+      ]
+    }
+  },
+  "mutations": [
+    {
+      "rule": "static full identity",
+      "file": "tools/ci/policy_validator.py",
+      "effect": {
+        "argumentArray": [
+          "python3",
+          "tools/ci/test_policy_validator.py"
+        ],
+        "command": "python3 tools/ci/test_policy_validator.py",
+        "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exitCode": 1,
+        "processWallDurationSeconds": 1.497,
+        "summary": [
+          "FAIL: test_rejects_a_short_form_identity (__main__.PolicyTestCase)",
+          "FAIL: test_rejects_an_identity_that_does_not_name_its_own_case (__main__.PolicyTestCase)",
+          "Ran 65 tests in 1.398s",
+          "FAILED (failures=2)"
+        ]
+      },
+      "pristineSha256": "6b879a95f4f353d88d7d5cee82c26b308ca4b83bb5411295283c75598fa05127",
+      "restoredSha256": "6b879a95f4f353d88d7d5cee82c26b308ca4b83bb5411295283c75598fa05127",
+      "rolledBackByteIdentical": true
+    },
+    {
+      "rule": "indirect selector via settings file",
+      "file": "tools/ci/run_test_category.py",
+      "effect": {
+        "argumentArray": [
+          "python3",
+          "test_run_test_category.py"
+        ],
+        "command": "python3 test_run_test_category.py",
+        "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci",
+        "exitCode": 1,
+        "processWallDurationSeconds": 0.16,
+        "summary": [
+          "FAIL: test_every_selector_spelling_is_refused (__main__.SelectorRejectionTestCase) (selector='-s')",
+          "FAIL: test_every_selector_spelling_is_refused (__main__.SelectorRejectionTestCase) (selector='-s=run.runsettings')",
+          "Ran 14 tests in 0.017s",
+          "FAILED (failures=6)"
+        ]
+      },
+      "pristineSha256": "8ff0ee40f76e90c1c1281f663cdecb435f8791c203105d2f88ee60310c2c78f4",
+      "restoredSha256": "8ff0ee40f76e90c1c1281f663cdecb435f8791c203105d2f88ee60310c2c78f4",
+      "rolledBackByteIdentical": true
+    }
+  ],
+  "testTemplateChange": {
+    "file": "tools/ci/test_policy_validator.py",
+    "what": "The positive NOT_EXECUTED_INVENTORY template of the fixture repository gained the identity field, and a with_case helper rewrites that single entry per case.",
+    "why": "A required field of the new contract has to be present in the template that is meant to be accepted. This is an adaptation to the stricter contract, not a weakening: the four rejections above are new and the mutation of the rule turns two of them red."
+  },
+  "dotnetInputsUnchanged": {
+    "statement": "This commit changes only the two Python gates, their focused tests and this evidence. The green core proof of the parent commit therefore still holds.",
+    "trees": {
+      "src": "9fc38fc3c204660e4bc7b1df3c4b1041f5921128",
+      "tests/ViciOne.ServiceBus.Tests": "3ce1d57327243619f05c2e54c76c979358f9fe34"
+    },
+    "notExecutedInventoryBlob": "7cf184040a452bac82ecb08942046d6e0978c918",
+    "worktreeChangesInThosePaths": 0,
+    "carriedForwardCoreRun": {
+      "commit": "c062a5898950d5c4fa6dfafeb22b6730d9cef7ed",
+      "counters": {
+        "total": 1909,
+        "executed": 1909,
+        "passed": 1909,
+        "failed": 0,
+        "notExecuted": 0
+      }
+    }
+  },
+  "changedFileSha256": {
+    "tools/ci/policy_validator.py": "6b879a95f4f353d88d7d5cee82c26b308ca4b83bb5411295283c75598fa05127",
+    "tools/ci/run_test_category.py": "8ff0ee40f76e90c1c1281f663cdecb435f8791c203105d2f88ee60310c2c78f4",
+    "tools/ci/test_policy_validator.py": "970ea2295dd27696741cd78af343168805f1510e07d315ae2e1038d68d6ee637",
+    "tools/ci/test_run_test_category.py": "ac8808709012dfea932af72deaf4532b2eecfc59dc819368ae5fc9f0479d22b2"
+  },
+  "notRun": [
+    "core",
+    "quartz",
+    "cloud",
+    "restore",
+    "build",
+    "pack",
+    "full gate"
+  ]
+}

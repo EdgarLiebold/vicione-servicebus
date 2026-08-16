@@ -336,10 +336,18 @@ class Policy:
                 # case that happens to share it, which is how two fixtures of the same name in
                 # different namespaces once shared a single permission.
                 identity = str(case.get("identity", ""))
-                if not identity.endswith(f".{case.get('test')}") or f".{case.get('fixture')}." not in f".{identity}":
+                suffix = f".{case.get('fixture')}.{case.get('test')}"
+                # Ends exactly on .fixture.test, and something has to stand in front of it. The first
+                # version of this rule asked whether the identity merely contained the two names, so
+                # the bare short form Fixture.Test passed as a full identity and a name inserted
+                # between fixture and test passed as well. Both are the collision this contract
+                # exists to prevent, so the check is a suffix and a non empty namespace.
+                namespace = identity[:-len(suffix)] if identity.endswith(suffix) else ""
+                if not namespace:
                     self.fail("test-exclusion",
                               f"category '{name}' names the case {case.get('fixture')}.{case.get('test')} with the "
-                              f"identity '{identity}', which does not contain it")
+                              f"identity '{identity}', which is not a namespaced identity ending on "
+                              f"'{suffix}'")
                 if str(case.get("dueness", "")).startswith("DUE"):
                     self.fail("test-exclusion",
                               f"category '{name}' lists a due case as not executed: "

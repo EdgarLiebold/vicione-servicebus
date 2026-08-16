@@ -39,9 +39,25 @@ ZERO_COUNTERS = {"total": 0, "executed": 0, "passed": 0, "failed": 0, "notExecut
 REPO_ROOT = Path(__file__).resolve().parents[2]
 NOT_EXECUTED_INVENTORY = REPO_ROOT / "build/test-infrastructure/not-executed-inventory.json"
 
-# Arguments that would narrow the run. A required category is only a proof when it is complete, so
-# the controller refuses them itself instead of trusting the workflow text that calls it.
-SELECTOR_ARGUMENTS = ("--filter", "-filter", "/tests:", "--tests", "-t:", "--testcasefilter", "/testcasefilter")
+# Options that narrow the run. A required category is only a proof when it is complete, so the
+# controller refuses them itself instead of trusting the workflow text that calls it. A settings file
+# belongs here as well: it carries a TestCaseFilter of its own, so it narrows the run without ever
+# naming a filter on the command line.
+SELECTOR_OPTIONS = frozenset({
+    "--filter", "-filter", "/filter",
+    "--testcasefilter", "-testcasefilter", "/testcasefilter",
+    "--tests", "-tests", "/tests",
+    "--settings", "-settings", "/settings", "-s",
+})
+
+
+def option_token(argument: str) -> str:
+    """The option part of an argument, without its value and without case.
+
+    A selector reaches the command line as '--filter X', '--filter=X' or '/Tests:X', so the value has
+    to be cut off before the option can be recognised at all.
+    """
+    return argument.split("=", 1)[0].split(":", 1)[0].lower()
 
 
 def type_name(class_name: str) -> str:
@@ -217,10 +233,13 @@ def parse_trx_time(value: str | None) -> datetime | None:
 
 
 def reject_selectors(extra: list[str]) -> None:
-    """A required category runs unfiltered, and the controller enforces that itself."""
+    """A required category runs unfiltered, and the controller enforces that itself.
+
+    Only the selector options are refused. Ordinary build and restore options pass, because a blanket
+    rejection would stop the category from running at all instead of keeping it complete.
+    """
     for argument in extra:
-        lowered = argument.lower()
-        if any(lowered == selector or lowered.startswith(selector) for selector in SELECTOR_ARGUMENTS):
+        if option_token(argument) in SELECTOR_OPTIONS:
             raise CategoryError(
                 f"Required category refuses the selector '{argument}'. A required category runs unfiltered; "
                 "a narrowed run is not a proof of the category."

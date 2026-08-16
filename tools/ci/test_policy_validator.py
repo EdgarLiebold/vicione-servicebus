@@ -447,6 +447,46 @@ class PolicyTestCase(unittest.TestCase):
         self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
         self.assert_rejected("test-exclusion")
 
+    def with_case(self, **changes: object) -> None:
+        """Rewrite the single inventoried case of the fixture repository."""
+        inventory = json.loads(json.dumps(NOT_EXECUTED_INVENTORY))
+        case = inventory["categories"]["rabbitmq"]["cases"][0]
+        for key, value in changes.items():
+            if value is None:
+                case.pop(key, None)
+            else:
+                case[key] = value
+        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+
+    def test_accepts_a_namespaced_full_identity(self) -> None:
+        # The baseline entry already carries one; stating it as its own case keeps the positive side
+        # of the rule visible next to the four rejections.
+        self.assertEqual([], self.failures())
+
+    def test_accepts_a_parameterised_fixture_identity(self) -> None:
+        # Parameterised fixture arguments are part of the fixture name and have to survive the rule.
+        self.with_case(
+            fixture='Reconnecting_Specs("rabbitmq")',
+            test="Should_fault_nicely",
+            identity='ViciOne.ServiceBus.RabbitMqTransport.Tests.Reconnecting_Specs("rabbitmq").Should_fault_nicely',
+        )
+        self.assertEqual([], self.failures())
+
+    def test_rejects_an_entry_without_a_full_identity(self) -> None:
+        self.with_case(identity=None)
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_a_short_form_identity(self) -> None:
+        # Fixture.Test names no namespace, so it would authorise a fixture of that name anywhere.
+        self.with_case(identity="Watching_by_hand.Should_be_watched_by_a_human")
+        self.assert_rejected("test-exclusion")
+
+    def test_rejects_an_identity_that_does_not_name_its_own_case(self) -> None:
+        self.with_case(
+            identity="ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand.Elsewhere"
+                     ".Should_be_watched_by_a_human")
+        self.assert_rejected("test-exclusion")
+
     def test_rejects_a_missing_not_executed_inventory(self) -> None:
         self.inventory().unlink()
         self.assert_rejected("test-exclusion")
