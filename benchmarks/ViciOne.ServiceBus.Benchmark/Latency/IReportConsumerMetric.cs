@@ -9,7 +9,7 @@ namespace ViciOneServiceBusBenchmark.Latency
         Task Consumed<T>(Guid messageId)
             where T : class;
 
-        Task Sent(Guid messageId, Task sendTask, bool postSend = false);
+        Task Sent(Guid messageId, Func<Task> send, bool postSend = false);
         Task PostSend(Guid messageId);
     }
 }

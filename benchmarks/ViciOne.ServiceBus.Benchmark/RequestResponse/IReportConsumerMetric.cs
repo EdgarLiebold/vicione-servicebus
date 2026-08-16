@@ -9,7 +9,7 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
         Task Consumed<T>(Guid messageId)
             where T : class;
 
-        Task<T> ResponseReceived<T>(Guid messageId, Task<T> requestTask)
+        Task<T> ResponseReceived<T>(Guid messageId, Func<Task<T>> request)
             where T : class;
     }
 }

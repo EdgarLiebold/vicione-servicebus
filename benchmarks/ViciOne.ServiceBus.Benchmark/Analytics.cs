@@ -15,7 +15,7 @@ namespace ViciOneServiceBusBenchmark
         }
 
         public static double? Percentile<TColl, TValue>(this IEnumerable<TColl> source,
-            Func<TColl, TValue> selector, int percentile = 95)
+            Func<TColl, TValue> selector, double percentile = 95)
             where TValue : struct
         {
             return source.Select(selector).Percentile(percentile);
@@ -24,39 +24,81 @@ namespace ViciOneServiceBusBenchmark
         public static double? Median<T>(this IEnumerable<T> source)
             where T : struct
         {
-            var count = source.Count();
-            if (count == 0)
-                return null;
-
-            source = source.OrderBy(n => n);
-
-            var midpoint = count / 2;
-            if (count % 2 == 0)
-            {
-                return (Convert.ToDouble(source.ElementAt(midpoint - 1)) + Convert.ToDouble(source.ElementAt(midpoint)))
-                    / 2.0;
-            }
-
-            return Convert.ToDouble(source.ElementAt(midpoint));
+            return source.Percentile(50);
         }
 
-        public static double? Percentile<T>(this IEnumerable<T> source, int percentile)
+        /// <summary>
+        /// Calculates a linearly interpolated sample percentile using the same rank definition as the R-7
+        /// quantile estimator: <c>(sampleCount - 1) * percentile / 100</c>.
+        /// </summary>
+        public static double? Percentile<T>(this IEnumerable<T> source, double percentile)
             where T : struct
         {
-            var count = source.Count();
-            if (count == 0)
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (percentile is < 0 or > 100)
+                throw new ArgumentOutOfRangeException(nameof(percentile), percentile, "Percentile must be between 0 and 100.");
+
+            double[] samples = source.Select(value => Convert.ToDouble(value)).OrderBy(value => value).ToArray();
+            if (samples.Length == 0)
                 return null;
 
-            source = source.OrderBy(n => n);
+            var rank = (samples.Length - 1) * percentile / 100;
+            var lowerIndex = (int)Math.Floor(rank);
+            var upperIndex = (int)Math.Ceiling(rank);
+            if (lowerIndex == upperIndex)
+                return samples[lowerIndex];
 
-            var point = count * percentile / 100;
-            if (count % 2 == 0)
+            var fraction = rank - lowerIndex;
+
+            return samples[lowerIndex] + (samples[upperIndex] - samples[lowerIndex]) * fraction;
+        }
+
+        public static IReadOnlyList<HistogramBucket> Histogram(this IEnumerable<long> source, int segmentCount = 10)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (segmentCount <= 0)
+                throw new ArgumentOutOfRangeException(nameof(segmentCount), segmentCount, "Segment count must be positive.");
+
+            long[] samples = source.ToArray();
+            if (samples.Length == 0)
+                return Array.Empty<HistogramBucket>();
+
+            var minimum = samples.Min();
+            var maximum = samples.Max();
+            if (minimum == maximum)
+                return new[] { new HistogramBucket(minimum, samples.Length) };
+
+            var counts = new int[segmentCount];
+            var span = (double)maximum - minimum;
+            foreach (var sample in samples)
             {
-                return (Convert.ToDouble(source.ElementAt(point - 1)) + Convert.ToDouble(source.ElementAt(point)))
-                    / 2.0;
+                var calculatedIndex = sample == maximum
+                    ? segmentCount - 1
+                    : (int)(((double)sample - minimum) / span * segmentCount);
+                var index = Math.Clamp(calculatedIndex, 0, segmentCount - 1);
+
+                counts[index]++;
             }
 
-            return Convert.ToDouble(source.ElementAt(point));
+            return counts
+                .Select((count, index) => new HistogramBucket(minimum + span * index / segmentCount, count))
+                .Where(bucket => bucket.Count > 0)
+                .ToArray();
+        }
+
+
+        public readonly struct HistogramBucket
+        {
+            public HistogramBucket(double lowerBoundTicks, int count)
+            {
+                LowerBoundTicks = lowerBoundTicks;
+                Count = count;
+            }
+
+            public double LowerBoundTicks { get; }
+            public int Count { get; }
         }
     }
 }

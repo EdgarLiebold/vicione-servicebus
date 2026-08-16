@@ -2,6 +2,8 @@
 
 This on-demand developer tool measures retained ViciOne.ServiceBus transports and the Entity Framework bus outbox. It is not a test project, package, target-device dependency, or automatic performance gate.
 
+Environment-dependent runs that have not yet been executed are tracked once in [`../ToDo.md`](../ToDo.md). An unchecked item is never a performance or functional pass.
+
 Build from the repository root:
 
 ```sh

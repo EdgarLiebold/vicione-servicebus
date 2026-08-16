@@ -27,14 +27,15 @@ public class SerializationBenchmark
     public void Setup()
     {
         var bufferContent = new byte[MessageBufferSize];
-        Random.Shared.NextBytes(bufferContent);
+        var random = new Random(42);
+        random.NextBytes(bufferContent);
 
         _serializationSubject = new TypeToSerialize
         {
             StringValue = "Hello, World!",
             IntValue = 42,
-            GuidValue = Guid.NewGuid(),
-            DateTimeValue = DateTime.UtcNow,
+            GuidValue = Guid.Parse("45f32062-cda1-4bf7-b9bd-9e89ce77012f"),
+            DateTimeValue = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             ByteArrayValue = bufferContent
         };
 

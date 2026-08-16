@@ -1,15 +1,13 @@
 namespace ViciOneServiceBusBenchmark.Latency
 {
     using System;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus;
 
 
     /// <summary>
-    /// Benchmark that determines the latency of messages between the time the message is published
-    /// to the broker until it is acked by RabbitMQ. And then consumed by the message consumer.
+    /// Measures elapsed time from local send initiation to transport-specific send-task completion and consumer
+    /// observation. Send-task completion does not universally mean that a broker durably acknowledged a message.
     /// </summary>
     public class MessageLatencyBenchmark
     {
@@ -61,67 +59,17 @@ namespace ViciOneServiceBusBenchmark.Latency
 
                 MessageMetric[] messageMetrics = _capture.GetMessageMetrics();
 
-                Console.WriteLine("Avg Ack Time: {0:F0}ms",
-                    messageMetrics.Average(x => x.AckLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Min Ack Time: {0:F0}ms",
-                    messageMetrics.Min(x => x.AckLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Max Ack Time: {0:F0}ms",
-                    messageMetrics.Max(x => x.AckLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Med Ack Time: {0:F0}ms",
-                    messageMetrics.Median(x => x.AckLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("95t Ack Time: {0:F0}ms",
-                    messageMetrics.Percentile(x => x.AckLatency) * 1000 / Stopwatch.Frequency);
-
-                Console.WriteLine("Avg Consume Time: {0:F0}ms",
-                    messageMetrics.Average(x => x.ConsumeLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Min Consume Time: {0:F0}ms",
-                    messageMetrics.Min(x => x.ConsumeLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Max Consume Time: {0:F0}ms",
-                    messageMetrics.Max(x => x.ConsumeLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("Med Consume Time: {0:F0}ms",
-                    messageMetrics.Median(x => x.ConsumeLatency) * 1000 / Stopwatch.Frequency);
-                Console.WriteLine("95t Consume Time: {0:F0}ms",
-                    messageMetrics.Percentile(x => x.ConsumeLatency) * 1000 / Stopwatch.Frequency);
+                BenchmarkReporting.WriteLatencySummary("send completion latency", messageMetrics,
+                    x => x.SendCompletionLatency);
+                BenchmarkReporting.WriteLatencySummary("end-to-end consume latency", messageMetrics,
+                    x => x.ConsumeLatency);
 
                 Console.WriteLine();
-                DrawResponseTimeGraph(messageMetrics, x => x.ConsumeLatency);
+                BenchmarkReporting.WriteHistogram("end-to-end consume latency", messageMetrics, x => x.ConsumeLatency);
             }
             finally
             {
                 await _transport.DisposeAsync();
-            }
-        }
-
-        void DrawResponseTimeGraph(MessageMetric[] metrics, Func<MessageMetric, long> selector)
-        {
-            var maxTime = metrics.Max(selector);
-            var minTime = metrics.Min(selector);
-
-            const int segments = 10;
-
-            var span = maxTime - minTime;
-            var increment = span / segments;
-
-            var histogram = (from x in metrics.Select(selector)
-                let key = (x - minTime) * segments / span
-                where key >= 0 && key < segments
-                let groupKey = key
-                group x by groupKey
-                into segment
-                orderby segment.Key
-                select new
-                {
-                    Value = segment.Key,
-                    Count = segment.Count()
-                }).ToList();
-
-            var maxCount = histogram.Max(x => x.Count);
-
-            foreach (var item in histogram)
-            {
-                var barLength = item.Count * 60 / maxCount;
-                Console.WriteLine("{0,5}ms {2,-60} ({1,7})", (minTime + increment * item.Value) * 1000 / Stopwatch.Frequency, item.Count,
-                    new string('*', barLength));
             }
         }
 
@@ -155,9 +103,8 @@ namespace ViciOneServiceBusBenchmark.Latency
             for (long i = 0; i < messageCount; i++)
             {
                 var messageId = ids[i].ToGuid();
-                var task = _transport.Send(new LatencyTestMessage(messageId, _payload));
-
-                await _capture.Sent(messageId, task).ConfigureAwait(false);
+                await _capture.Sent(messageId, () => _transport.Send(new LatencyTestMessage(messageId, _payload)))
+                    .ConfigureAwait(false);
             }
         }
 

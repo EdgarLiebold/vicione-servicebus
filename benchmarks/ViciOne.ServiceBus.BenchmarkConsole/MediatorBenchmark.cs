@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     using System.Threading;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
-    using Util;
 
 
     public class ExampleCommand
@@ -23,10 +22,9 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     [MemoryDiagnoser]
     public class MediatorBenchmark
     {
-        IBusControl _busControl;
+        ExampleCommand _command;
         ExampleCommandHandler _handler;
         ViciOne.ServiceBus.Mediator.IMediator _mediator;
-        IRequestClient<ExampleRequest> _requestClient;
 
         [GlobalSetup]
         public void Setup()
@@ -36,76 +34,15 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
                 cfg.Consumer<ExampleCommandHandler>();
             });
 
-            _busControl = Bus.Factory.CreateUsingInMemory(cfg =>
-            {
-                cfg.ReceiveEndpoint("input-queue", x => x.Consumer<ExampleRequestConsumer>());
-            });
-
-            TaskUtil.Await(() => _busControl.StartAsync(CancellationToken.None));
-
-            _requestClient = _busControl.CreateRequestClient<ExampleRequest>();
-
+            _command = new ExampleCommand("Example Arg", 2);
             _handler = new ExampleCommandHandler();
         }
 
-        [GlobalCleanup]
-        public Task Cleanup()
-        {
-            return _busControl.StopAsync(CancellationToken.None);
-        }
+        [Benchmark(Baseline = true, Description = "Direct handler call")]
+        public Task CallingHandlerDirectly() => _handler.Handle(_command, CancellationToken.None);
 
-        [Benchmark(Description = "Direct")]
-        public async Task CallingHandler_Directly()
-        {
-            var command = new ExampleCommand("Example Arg", 2);
-            await _handler.Handle(command, CancellationToken.None);
-        }
-
-        [Benchmark(Description = "ViciOne.ServiceBus")]
-        public async Task CallingHandler_WithViciOneServiceBusMediator()
-        {
-            var command = new ExampleCommand("Example Arg", 2);
-            await _mediator.Send(command, CancellationToken.None);
-        }
-
-        [Benchmark(Description = "InMemoryBus")]
-        public async Task CallingHandler_WithViciOneServiceBusInMemoryBus()
-        {
-            var request = new ExampleRequest
-            {
-                Name = "Frank",
-                Amount = 123.45m
-            };
-            await _requestClient.GetResponse<ExampleResponse>(request);
-        }
-    }
-
-
-    public class ExampleRequestConsumer :
-        IConsumer<ExampleRequest>
-    {
-        public Task Consume(ConsumeContext<ExampleRequest> context)
-        {
-            return context.RespondAsync(new ExampleResponse
-            {
-                Name = context.Message.Name,
-                Amount = context.Message.Amount
-            });
-        }
-    }
-
-
-    public class ExampleRequest
-    {
-        public string Name { get; set; }
-        public decimal Amount { get; set; }
-    }
-
-
-    public class ExampleResponse
-    {
-        public string Name { get; set; }
-        public decimal Amount { get; set; }
+        [Benchmark(Description = "ViciOne.ServiceBus mediator call")]
+        public Task CallingHandlerWithViciOneServiceBusMediator() => _mediator.Send(_command, CancellationToken.None);
     }
 
 

@@ -8,24 +8,20 @@ using Mediator;
 
 
 /// <summary>
-/// The throughput of the mediator of this product, moved here from two NUnit cases that pushed two hundred thousand
-/// messages through it with a stopwatch and wrote messages per second to the console.
-///
-/// Both scenarios use this product only. They deliberately do not reference the external mediator package that the
-/// component contract removes, so the retained benchmark identity does not depend on a decided removal.
+/// Measures completion time and allocation cost for a concurrently submitted mediator batch. BenchmarkDotNet reports
+/// one complete batch as one operation; the result is not a per-message throughput figure.
 /// </summary>
 [MemoryDiagnoser]
-public class MediatorThroughputBenchmark
+public class MediatorBatchBenchmark
 {
+    BenchmarkCommand _command;
     IRequestClient<BenchmarkRequest> _client;
     IMediator _mediator;
+    BenchmarkRequest _request;
     IMediator _responder;
 
-    /// <summary>
-    /// The number of messages that are in flight at the same time, which is what the NUnit cases called the split.
-    /// </summary>
     [Params(1, 20)]
-    public int Concurrency { get; set; }
+    public int BatchSize { get; set; }
 
     [GlobalSetup]
     public void Setup()
@@ -41,23 +37,21 @@ public class MediatorThroughputBenchmark
         });
 
         _client = _responder.CreateRequestClient<BenchmarkRequest>();
+        _command = new BenchmarkCommand();
+        _request = new BenchmarkRequest();
     }
 
-    [Benchmark(Description = "Mediator send")]
-    public Task Send()
+    [Benchmark(Description = "Mediator send batch completion")]
+    public Task SendBatch()
     {
-        var message = new BenchmarkCommand();
-
-        return Task.WhenAll(Enumerable.Range(0, Concurrency).Select(_ => _mediator.Send(message)));
+        return Task.WhenAll(Enumerable.Range(0, BatchSize).Select(_ => _mediator.Send(_command)));
     }
 
-    [Benchmark(Description = "Mediator request client")]
-    public Task RequestClient()
+    [Benchmark(Description = "Mediator request batch completion")]
+    public Task RequestBatch()
     {
-        var message = new BenchmarkRequest();
-
-        return Task.WhenAll(Enumerable.Range(0, Concurrency)
-            .Select(_ => _client.GetResponse<BenchmarkResponse>(message)));
+        return Task.WhenAll(Enumerable.Range(0, BatchSize)
+            .Select(_ => _client.GetResponse<BenchmarkResponse>(_request)));
     }
 
 

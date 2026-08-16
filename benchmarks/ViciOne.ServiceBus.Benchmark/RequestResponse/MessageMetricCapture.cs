@@ -27,8 +27,8 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
 
             _consumedMessages = new ConcurrentBag<ConsumedMessage>();
             _sentMessages = new ConcurrentBag<RequestResponseMessage>();
-            _requestCompleted = new TaskCompletionSource<TimeSpan>();
-            _consumeCompleted = new TaskCompletionSource<TimeSpan>();
+            _requestCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _consumeCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _stopwatch = Stopwatch.StartNew();
         }
@@ -47,12 +47,15 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
             return TaskUtil.Completed;
         }
 
-        public async Task<T> ResponseReceived<T>(Guid messageId, Task<T> requestTask)
+        public async Task<T> ResponseReceived<T>(Guid messageId, Func<Task<T>> request)
             where T : class
         {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
             var sendTimestamp = _stopwatch.ElapsedTicks;
 
-            var response = await requestTask.ConfigureAwait(false);
+            var response = await request().ConfigureAwait(false);
 
             var responseTimestamp = _stopwatch.ElapsedTicks;
 

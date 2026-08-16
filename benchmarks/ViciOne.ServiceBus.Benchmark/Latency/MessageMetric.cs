@@ -5,15 +5,15 @@ namespace ViciOneServiceBusBenchmark.Latency
 
     public class MessageMetric
     {
-        public MessageMetric(Guid messageId, long ackLatency, long consumeLatency)
+        public MessageMetric(Guid messageId, long sendCompletionLatency, long consumeLatency)
         {
             MessageId = messageId;
-            AckLatency = ackLatency;
+            SendCompletionLatency = sendCompletionLatency;
             ConsumeLatency = consumeLatency;
         }
 
         public Guid MessageId { get; }
-        public long AckLatency { get; set; }
+        public long SendCompletionLatency { get; set; }
         public long ConsumeLatency { get; set; }
     }
 }

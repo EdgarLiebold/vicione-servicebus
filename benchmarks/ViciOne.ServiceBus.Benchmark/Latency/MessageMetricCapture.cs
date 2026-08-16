@@ -47,15 +47,18 @@ namespace ViciOneServiceBusBenchmark.Latency
             return TaskUtil.Completed;
         }
 
-        public async Task Sent(Guid messageId, Task sendTask, bool postSend = false)
+        public async Task Sent(Guid messageId, Func<Task> send, bool postSend = false)
         {
+            if (send == null)
+                throw new ArgumentNullException(nameof(send));
+
             var sendTimestamp = _stopwatch.ElapsedTicks;
 
-            await sendTask.ConfigureAwait(false);
+            await send().ConfigureAwait(false);
 
-            var ackTimestamp = _stopwatch.ElapsedTicks;
+            var sendCompletionTimestamp = _stopwatch.ElapsedTicks;
 
-            _sentMessages.TryAdd(messageId, new SentMessage(sendTimestamp, ackTimestamp));
+            _sentMessages.TryAdd(messageId, new SentMessage(sendTimestamp, sendCompletionTimestamp));
 
             if (postSend)
                 return;
@@ -67,10 +70,10 @@ namespace ViciOneServiceBusBenchmark.Latency
 
         public async Task PostSend(Guid messageId)
         {
-            var ackTimestamp = _stopwatch.ElapsedTicks;
+            var sendCompletionTimestamp = _stopwatch.ElapsedTicks;
 
-            _sentMessages.AddOrUpdate(messageId, _ => new SentMessage().UpdateAck(ackTimestamp),
-                (_, existing) => new SentMessage(existing.SendTimestamp, ackTimestamp));
+            _sentMessages.AddOrUpdate(messageId, _ => new SentMessage().UpdateCompletion(sendCompletionTimestamp),
+                (_, existing) => new SentMessage(existing.SendTimestamp, sendCompletionTimestamp));
 
             var sent = Interlocked.Increment(ref _sent);
             if (sent == _messageCount)
@@ -80,7 +83,8 @@ namespace ViciOneServiceBusBenchmark.Latency
         public MessageMetric[] GetMessageMetrics()
         {
             return _sentMessages.Join(_consumedMessages, x => x.Key, x => x.MessageId, (sent, consumed) =>
-                    new MessageMetric(sent.Key, sent.Value.AckTimestamp - sent.Value.SendTimestamp, consumed.Timestamp - sent.Value.SendTimestamp))
+                    new MessageMetric(sent.Key, sent.Value.SendCompletionTimestamp - sent.Value.SendTimestamp,
+                        consumed.Timestamp - sent.Value.SendTimestamp))
                 .ToArray();
         }
 
@@ -88,17 +92,17 @@ namespace ViciOneServiceBusBenchmark.Latency
         struct SentMessage
         {
             public readonly long SendTimestamp;
-            public long AckTimestamp;
+            public long SendCompletionTimestamp;
 
-            public SentMessage(long sendTimestamp, long ackTimestamp)
+            public SentMessage(long sendTimestamp, long sendCompletionTimestamp)
             {
                 SendTimestamp = sendTimestamp;
-                AckTimestamp = ackTimestamp;
+                SendCompletionTimestamp = sendCompletionTimestamp;
             }
 
-            public SentMessage UpdateAck(long ackTimestamp)
+            public SentMessage UpdateCompletion(long sendCompletionTimestamp)
             {
-                AckTimestamp = Math.Max(ackTimestamp, AckTimestamp);
+                SendCompletionTimestamp = Math.Max(sendCompletionTimestamp, SendCompletionTimestamp);
 
                 return this;
             }
