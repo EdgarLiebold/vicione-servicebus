@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Tests
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Newtonsoft.Json.Linq;
+    using System.Text.Json.Nodes;
     using NUnit.Framework;
     using Saga;
     using TestFramework;
@@ -63,7 +63,7 @@ namespace ViciOne.ServiceBus.Tests
                 });
             });
 
-            JObject probe = await StartAndProbe(busControl);
+            JsonNode probe = await StartAndProbe(busControl);
 
             IReadOnlyCollection<string> filters = FilterTypes(probe);
 
@@ -103,7 +103,7 @@ namespace ViciOne.ServiceBus.Tests
                 });
             });
 
-            JObject probe = await StartAndProbe(busControl);
+            JsonNode probe = await StartAndProbe(busControl);
 
             // The endpoint concurrency limit is applied per configured message type. An instance registers its
             // message types like any other consumer, so the limit has to reach the pipeline of the instance as well.
@@ -129,14 +129,14 @@ namespace ViciOne.ServiceBus.Tests
         /// Starts the bus, takes the probe of the built pipeline and stops the bus again. The bus is stopped on
         /// every path, so a failing assertion cannot leave a running bus behind.
         /// </summary>
-        static async Task<JObject> StartAndProbe(IBusControl busControl)
+        static async Task<JsonNode> StartAndProbe(IBusControl busControl)
         {
             using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
             await busControl.StartAsync(cancellation.Token);
             try
             {
-                return JObject.Parse(busControl.GetProbeResult().ToJsonString());
+                return JsonNode.Parse(busControl.GetProbeResult().ToJsonString());
             }
             finally
             {
@@ -147,11 +147,10 @@ namespace ViciOne.ServiceBus.Tests
         /// <summary>
         /// Every filter the built pipeline reports, by the kind it names itself.
         /// </summary>
-        static IReadOnlyCollection<string> FilterTypes(JObject probe)
+        static IReadOnlyCollection<string> FilterTypes(JsonNode probe)
         {
-            return probe.Descendants()
-                .OfType<JProperty>()
-                .Where(x => x.Name == "filterType")
+            return PropertiesIn(probe)
+                .Where(x => x.Key == "filterType")
                 .Select(x => x.Value.ToString())
                 .ToArray();
         }
@@ -159,31 +158,74 @@ namespace ViciOne.ServiceBus.Tests
         /// <summary>
         /// The limit every filter of the given kind reports, which is the value the configuration asked for.
         /// </summary>
-        static IReadOnlyCollection<int> LimitsOf(JObject probe, string filterType)
+        static IReadOnlyCollection<int> LimitsOf(JsonNode probe, string filterType)
         {
-            return probe.Descendants()
-                .OfType<JObject>()
-                .Where(x => (string)x["filterType"] == filterType && x["limit"] != null)
-                .Select(x => x["limit"].ToObject<int>())
+            return NodesIn(probe)
+                .OfType<JsonObject>()
+                .Where(x => x["filterType"]?.ToString() == filterType && x["limit"] != null)
+                .Select(x => x["limit"].GetValue<int>())
                 .ToArray();
         }
 
-        static IReadOnlyCollection<string> TextOf(JObject probe, string scope, string key)
+        static IReadOnlyCollection<string> TextOf(JsonNode probe, string scope, string key)
         {
             return Below(probe, scope)
-                .Where(x => string.Equals(x.Name, key, StringComparison.OrdinalIgnoreCase))
+                .Where(x => string.Equals(x.Key, key, StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Value.ToString())
                 .ToArray();
         }
 
-        static IEnumerable<JProperty> Below(JObject probe, string scope)
+        static IEnumerable<KeyValuePair<string, JsonNode>> Below(JsonNode probe, string scope)
         {
-            return probe.Descendants()
-                .OfType<JProperty>()
-                .Where(x => string.Equals(x.Name, scope, StringComparison.Ordinal))
+            return PropertiesIn(probe)
+                .Where(x => string.Equals(x.Key, scope, StringComparison.Ordinal))
                 .Select(x => x.Value)
-                .OfType<JContainer>()
-                .SelectMany(x => x.DescendantsAndSelf().OfType<JProperty>());
+                .Where(value => value is JsonObject or JsonArray)
+                .SelectMany(PropertiesIn);
+        }
+
+        /// <summary>
+        /// The node itself and everything under it. JsonNode has no descendant walk of its own, and this
+        /// walk is the only thing Json.NET was still carrying for these specifications.
+        /// </summary>
+        static IEnumerable<JsonNode> NodesIn(JsonNode node)
+        {
+            yield return node;
+
+            switch (node)
+            {
+                case JsonObject o:
+                    foreach (var property in o)
+                    {
+                        if (property.Value == null)
+                            continue;
+
+                        foreach (var nested in NodesIn(property.Value))
+                            yield return nested;
+                    }
+
+                    break;
+                case JsonArray a:
+                    foreach (var item in a)
+                    {
+                        if (item == null)
+                            continue;
+
+                        foreach (var nested in NodesIn(item))
+                            yield return nested;
+                    }
+
+                    break;
+            }
+        }
+
+        /// <summary>Every property at any depth, with the name it was written under.</summary>
+        static IEnumerable<KeyValuePair<string, JsonNode>> PropertiesIn(JsonNode node)
+        {
+            return NodesIn(node)
+                .OfType<JsonObject>()
+                .SelectMany(o => o)
+                .Where(property => property.Value != null);
         }
 
 
