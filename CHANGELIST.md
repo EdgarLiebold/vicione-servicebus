@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 791 |
+| Added | 795 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -43,9 +43,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report-github.md` | Added |  |
 | `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report.csv` | Added |  |
 | `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report.html` | Added |  |
+| `benchmarks/ToDo.md` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/ActiveMqOptionSet.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/Analytics.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmark/BenchmarkReporting.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/BusOutboxBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/BusOutboxBenchmarkOptions.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/BusOutboxDatabaseSettings.cs` | Added |  |
@@ -108,9 +110,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ChannelBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/CronExpressionBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/InMemoryRequestResponseBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/JsonSerializationBenchmark.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBenchmark.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorThroughputBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/NewIdBenchmarks.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Program.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/SendBenchmark.cs` | Added |  |
@@ -121,6 +124,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Throughput/TestContext.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Throughput/ThroughputTestContext.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/AnalyticsTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BenchmarkRunOutcomeTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BusOutboxDatabaseSettingsTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/RabbitMqOptionSetTests.cs` | Added |  |
