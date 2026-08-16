@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 795 |
+| Added | 792 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -40,9 +40,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `ViciOne.ServiceBus.sln` | Modified | `MassTransit.sln` |
 | `ViciOne.ServiceBus.sln.DotSettings` | Modified | `MassTransit.sln.DotSettings` |
 | `ViciOne.ServiceBus.snk` | Renamed | `MassTransit.snk` |
-| `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report-github.md` | Added |  |
-| `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report.csv` | Added |  |
-| `artifacts/BenchmarkDotNet/results/ViciOne.ServiceBus.BenchmarkConsole.SerializationBenchmark-report.html` | Added |  |
 | `benchmarks/ToDo.md` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/ActiveMqOptionSet.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs` | Added |  |

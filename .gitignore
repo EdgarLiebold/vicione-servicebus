@@ -20,6 +20,10 @@ _ReSharper*
 
 **/BenchmarkDotNet.Artifacts/**/*
 
+# Generated output. The benchmark console writes its reports to artifacts/BenchmarkDotNet, which the
+# rule above does not match, so three generated reports were tracked once by accident.
+/artifacts/
+
 # osx noise
 .DS_Store
 *.DS_Store
