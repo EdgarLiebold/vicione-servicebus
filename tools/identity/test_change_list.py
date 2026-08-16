@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Focused tests for the change list gate.
+
+Deliberately small. The generator is licence evidence tooling, not product code, so what has to hold
+is narrow: the document it writes must be accepted, and a document that no longer matches it must be
+refused with a non zero exit. The three ways it can stop matching are covered once each.
+"""
+
+from __future__ import annotations
+
+import shutil
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import change_list  # noqa: E402
+
+REPOSITORY = Path(__file__).resolve().parents[2]
+
+
+class ChangeListGateTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        self.document = REPOSITORY / change_list.CHANGE_LIST
+        self.backup = Path(tempfile.mkdtemp()) / "CHANGELIST.md"
+        shutil.copy2(self.document, self.backup)
+        self.addCleanup(shutil.copy2, self.backup, self.document)
+
+    def check(self) -> int:
+        return change_list.main(["--repository", str(REPOSITORY)])
+
+    def test_accepts_the_generated_document(self) -> None:
+        self.assertEqual(0, self.check())
+
+    def test_rejects_a_removed_entry(self) -> None:
+        lines = self.document.read_text(encoding="utf-8").splitlines(keepends=True)
+        self.document.write_text("".join(lines[:30] + lines[31:]), encoding="utf-8")
+
+        self.assertEqual(1, self.check())
+
+    def test_rejects_a_changed_status(self) -> None:
+        text = self.document.read_text(encoding="utf-8")
+        self.document.write_text(text.replace("| Modified |", "| Renamed |", 1), encoding="utf-8")
+
+        self.assertEqual(1, self.check())
+
+    def test_rejects_a_missing_document(self) -> None:
+        self.document.unlink()
+
+        self.assertEqual(1, self.check())
+
+
+if __name__ == "__main__":
+    unittest.main()

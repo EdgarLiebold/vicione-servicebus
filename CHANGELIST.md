@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 790 |
+| Added | 791 |
 | Modified | 5011 |
 | Deleted | 616 |
 | Renamed | 20 |
@@ -6446,6 +6446,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/identity/proof_contract_gate.py` | Added |  |
 | `tools/identity/test_analyzer_baseline_gate.py` | Added |  |
 | `tools/identity/test_artifact_gate.py` | Added |  |
+| `tools/identity/test_change_list.py` | Added |  |
 | `tools/identity/test_failure_partition_gate.py` | Added |  |
 | `tools/identity/test_freeze_manifest.py` | Added |  |
 | `tools/identity/test_identity_gate.py` | Added |  |
