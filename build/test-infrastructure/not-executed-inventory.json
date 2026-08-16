@@ -19,21 +19,14 @@
     "core": {
       "project": "tests/ViciOne.ServiceBus.Tests",
       "explicitAttributeCount": 0,
-      "cases": [
-        {
-          "fixture": "CronExpressionTest",
-          "test": "TestDaylightSaving_QRTZNETZ186",
-          "mechanism": "PLATFORM",
-          "dueness": "NOT_DUE_ENVIRONMENT_DEPENDENT",
-          "reason": "Carries [Platform(\"WIN\")] and asserts the daylight saving rules of a Windows host, so any other platform reports it as not executed. It never carried [Explicit]; the earlier entry named the wrong mechanism."
-        }
-      ]
+      "cases": []
     },
     "abstractions": {
       "project": "tests/ViciOne.ServiceBus.Abstractions.Tests",
       "explicitAttributeCount": 5,
       "cases": [
         {
+          "identity": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator.Should_be_able_to_extract_timestamp",
           "fixture": "Using_the_newid_generator",
           "test": "Should_be_able_to_extract_timestamp",
           "mechanism": "EXPLICIT",
@@ -41,6 +34,7 @@
           "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator.Should_be_able_to_extract_timestamp_with_process_id",
           "fixture": "Using_the_newid_generator",
           "test": "Should_be_able_to_extract_timestamp_with_process_id",
           "mechanism": "EXPLICIT",
@@ -48,6 +42,7 @@
           "reason": "Produces output for a human to read and asserts nothing that a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator.Should_be_completely_thread_safe_to_avoid_duplicates",
           "fixture": "Using_the_newid_generator",
           "test": "Should_be_completely_thread_safe_to_avoid_duplicates",
           "mechanism": "EXPLICIT",
@@ -55,6 +50,7 @@
           "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
         },
         {
+          "identity": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator.Should_be_fast_and_friendly",
           "fixture": "Using_the_newid_generator",
           "test": "Should_be_fast_and_friendly",
           "mechanism": "EXPLICIT",
@@ -62,6 +58,7 @@
           "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
         },
         {
+          "identity": "ViciOne.ServiceBus.Abstractions.Tests.Using_the_newid_generator.Should_generate_unique_identifiers_with_each_invocation",
           "fixture": "Using_the_newid_generator",
           "test": "Should_generate_unique_identifiers_with_each_invocation",
           "mechanism": "EXPLICIT",
@@ -75,6 +72,7 @@
       "explicitAttributeCount": 13,
       "cases": [
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.BusLifecycleAccumulation_Probe.Measure_round_trip_across_bus_lifecycles",
           "fixture": "BusLifecycleAccumulation_Probe",
           "test": "Measure_round_trip_across_bus_lifecycles",
           "mechanism": "EXPLICIT",
@@ -82,6 +80,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
           "fixture": "Configuring_the_publish_topology_at_startup",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
@@ -89,6 +88,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
           "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
@@ -96,6 +96,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect",
           "fixture": "Connecting_to_RabbitMQ_via_Amazon",
           "test": "Should_connect",
           "mechanism": "EXPLICIT",
@@ -103,6 +104,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_recover_from_a_crashed_server",
           "fixture": "Failing_to_connect_to_rabbitmq",
           "test": "Should_recover_from_a_crashed_server",
           "mechanism": "EXPLICIT",
@@ -110,6 +112,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_start_without_any_configuration",
           "fixture": "Failing_to_connect_to_rabbitmq",
           "test": "Should_start_without_any_configuration",
           "mechanism": "EXPLICIT",
@@ -117,6 +120,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly",
           "fixture": "Failing_to_connect_to_rabbitmq",
           "test": "Should_startup_and_shut_down_cleanly",
           "mechanism": "EXPLICIT",
@@ -124,6 +128,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_an_endpoint",
           "fixture": "Failing_to_connect_to_rabbitmq",
           "test": "Should_startup_and_shut_down_cleanly_with_an_endpoint",
           "mechanism": "EXPLICIT",
@@ -131,6 +136,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_publish",
           "fixture": "Failing_to_connect_to_rabbitmq",
           "test": "Should_startup_and_shut_down_cleanly_with_publish",
           "mechanism": "EXPLICIT",
@@ -138,6 +144,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_carry_excess_baggage",
           "mechanism": "EXPLICIT",
@@ -145,6 +152,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage_with_newtonsoft",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_carry_excess_baggage_with_newtonsoft",
           "mechanism": "EXPLICIT",
@@ -152,6 +160,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_the_baggage_with_newtonsoft",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_carry_the_baggage_with_newtonsoft",
           "mechanism": "EXPLICIT",
@@ -159,6 +168,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_report_telemetry_to_jaeger",
           "mechanism": "EXPLICIT",
@@ -166,6 +176,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_for_batch_consumer",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_report_telemetry_to_jaeger_for_batch_consumer",
           "mechanism": "EXPLICIT",
@@ -173,6 +184,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_for_routing_slip",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_report_telemetry_to_jaeger_for_routing_slip",
           "mechanism": "EXPLICIT",
@@ -180,6 +192,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_from_mediator",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_report_telemetry_to_jaeger_from_mediator",
           "mechanism": "EXPLICIT",
@@ -187,6 +200,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_support_the_saga_harness",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_support_the_saga_harness",
           "mechanism": "EXPLICIT",
@@ -194,6 +208,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Pounding_the_crap_out_of_the_send_endpoint.Should_end_well",
           "fixture": "Pounding_the_crap_out_of_the_send_endpoint",
           "test": "Should_end_well",
           "mechanism": "EXPLICIT",
@@ -201,6 +216,7 @@
           "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Send_Specs.WhenAMessageIsPublishedToTheEndpointFaulting.Should_take_time_to_watch_channel_use",
           "fixture": "WhenAMessageIsPublishedToTheEndpointFaulting",
           "test": "Should_take_time_to_watch_channel_use",
           "mechanism": "EXPLICIT",
@@ -208,6 +224,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Send_Specs.WhenAMessageIsPublishedToTheEndpointSuccessfully.Should_take_time_to_watch_channel_use",
           "fixture": "WhenAMessageIsPublishedToTheEndpointSuccessfully",
           "test": "Should_take_time_to_watch_channel_use",
           "mechanism": "EXPLICIT",
@@ -221,6 +238,7 @@
       "explicitAttributeCount": 4,
       "cases": [
         {
+          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Responding_through_the_outbox.Should_start_with_delay_successfully",
           "fixture": "Responding_through_the_outbox",
           "test": "Should_start_with_delay_successfully",
           "mechanism": "EXPLICIT",
@@ -228,6 +246,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Fill_up_the_outbox",
           "fixture": "Using_the_bus_outbox",
           "test": "Fill_up_the_outbox",
           "mechanism": "EXPLICIT",
@@ -235,6 +254,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Should_support_delayed_message_scheduler",
           "fixture": "Using_the_bus_outbox",
           "test": "Should_support_delayed_message_scheduler",
           "mechanism": "EXPLICIT",
@@ -242,6 +262,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Should_work_without_starting_the_bus",
           "fixture": "Using_the_bus_outbox",
           "test": "Should_work_without_starting_the_bus",
           "mechanism": "EXPLICIT",
@@ -255,6 +276,7 @@
       "explicitAttributeCount": 4,
       "cases": [
         {
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
           "fixture": "Configuring_the_publish_topology_at_startup",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
@@ -262,6 +284,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
           "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
@@ -269,6 +292,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger",
           "fixture": "OpenTelemetry_Specs",
           "test": "Should_report_telemetry_to_jaeger",
           "mechanism": "EXPLICIT",
@@ -276,6 +300,7 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"activemq\").Should_fault_nicely",
           "fixture": "Reconnecting_Specs(\"activemq\")",
           "test": "Should_fault_nicely",
           "mechanism": "EXPLICIT",
@@ -283,6 +308,7 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"amqp\").Should_fault_nicely",
           "fixture": "Reconnecting_Specs(\"amqp\")",
           "test": "Should_fault_nicely",
           "mechanism": "EXPLICIT",

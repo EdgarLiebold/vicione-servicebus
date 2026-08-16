@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "kind": "REQUIRED_CATEGORY_RESULT",
+  "category": "core",
+  "project": "tests/ViciOne.ServiceBus.Tests",
+  "commandArguments": [
+    "dotnet",
+    "test",
+    "tests/ViciOne.ServiceBus.Tests",
+    "-c",
+    "Release",
+    "--logger",
+    "trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0038-phaseB-corrections/closing-core/core.trx"
+  ],
+  "command": "dotnet test tests/ViciOne.ServiceBus.Tests -c Release --logger 'trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0038-phaseB-corrections/closing-core/core.trx'",
+  "environment": {
+    "TZ": "UTC"
+  },
+  "timezone": "UTC",
+  "exitCode": 0,
+  "counters": {
+    "total": 1909,
+    "executed": 1909,
+    "passed": 1909,
+    "failed": 0,
+    "notExecuted": 0
+  },
+  "processWallDurationSeconds": 471.776,
+  "trxRunDurationSeconds": 457.517,
+  "trxProduced": true,
+  "notExecuted": [],
+  "notExecutedUnlisted": []
+}

@@ -607,20 +607,49 @@ public class CronExpressionTest
         }
     }
 
+    /// <summary>
+    /// The spring daylight saving jump removes a whole local hour. A daily occurrence inside that hour has no local
+    /// time on the day of the jump, and the expression carries it into the hour the clock jumped to rather than
+    /// losing the day. The zone is built here with a fixed contract instead of read from the host, so the case
+    /// states the same behaviour on every platform and needs neither a platform guard nor an operating system branch.
+    /// </summary>
     [Test]
-    [Platform("WIN")]
-    public void TestDaylightSaving_QRTZNETZ186()
+    public void Should_carry_a_daily_time_across_the_spring_daylight_saving_jump()
     {
-        var expression = new CronExpression("0 15 * * * ?");
-        if (!TimeZoneInfo.Local.SupportsDaylightSavingTime)
-            return;
+        var expression = new CronExpression("0 15 2 * * ?") { TimeZone = ZoneWithASpringGapAtTwo };
 
-        var daylightChange = TimeZone.CurrentTimeZone.GetDaylightChanges(2012);
-        DateTimeOffset before = daylightChange.Start.ToUniversalTime().AddMinutes(-5); // keep outside the potentially undefined interval
+        // Five minutes before the jump: 01:55 in the standard offset of that zone, on the day it loses 02:00-02:59.
+        var before = new DateTimeOffset(2012, 3, 11, 6, 55, 0, TimeSpan.Zero);
+
         DateTimeOffset? after = expression.GetNextValidTimeAfter(before);
-        Assert.That(after.HasValue, Is.True);
-        DateTimeOffset expected = daylightChange.Start.Add(daylightChange.Delta).AddMinutes(15).ToUniversalTime();
-        Assert.That(after.Value, Is.EqualTo(expected));
+
+        Assert.That(after.HasValue, Is.True, "The expression must still have an occurrence after the jump");
+
+        // 02:15 has no local time on 11 March in this zone. The occurrence lands at 03:15 in the daylight offset of
+        // the same day, which is one hour after the instant the clock jumped.
+        Assert.That(after.Value, Is.EqualTo(new DateTimeOffset(2012, 3, 11, 7, 15, 0, TimeSpan.Zero)),
+            "The occurrence in the removed hour must be carried into the hour the clock jumped to, on the same day");
+    }
+
+    /// <summary>
+    /// Five hours behind UTC, one hour of daylight saving from the second Sunday in March at two in the morning
+    /// until the first Sunday in November. Created in the test, so no time zone database of the host takes part.
+    /// </summary>
+    static readonly TimeZoneInfo ZoneWithASpringGapAtTwo = CreateZoneWithASpringGapAtTwo();
+
+    static TimeZoneInfo CreateZoneWithASpringGapAtTwo()
+    {
+        TimeZoneInfo.TransitionTime start = TimeZoneInfo.TransitionTime
+            .CreateFloatingDateRule(new DateTime(1, 1, 1, 2, 0, 0), 3, 2, DayOfWeek.Sunday);
+        TimeZoneInfo.TransitionTime end = TimeZoneInfo.TransitionTime
+            .CreateFloatingDateRule(new DateTime(1, 1, 1, 2, 0, 0), 11, 1, DayOfWeek.Sunday);
+
+        TimeZoneInfo.AdjustmentRule rule = TimeZoneInfo.AdjustmentRule
+            .CreateAdjustmentRule(DateTime.MinValue.Date, DateTime.MaxValue.Date, TimeSpan.FromHours(1), start, end);
+
+        return TimeZoneInfo.CreateCustomTimeZone("ViciOne Spring Gap Zone", TimeSpan.FromHours(-5),
+            "ViciOne Spring Gap Zone", "ViciOne Spring Gap Standard Time", "ViciOne Spring Gap Daylight Time",
+            new[] { rule });
     }
 
     [Test]

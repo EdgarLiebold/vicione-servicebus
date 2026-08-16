@@ -328,9 +328,18 @@ class Policy:
                 self.fail("test-exclusion", f"category '{name}' has no case list")
                 continue
             for case in cases:
-                if not isinstance(case, dict) or not {"fixture", "test", "mechanism", "dueness", "reason"} <= set(case):
+                if not isinstance(case, dict) or not {"identity", "fixture", "test", "mechanism", "dueness", "reason"} <= set(case):
                     self.fail("test-exclusion", f"category '{name}' has an incomplete case entry: {case}")
                     continue
+                # The identity carries the namespace, the class including parameterised fixture
+                # arguments and the case name. A short form would let one entry authorise every
+                # case that happens to share it, which is how two fixtures of the same name in
+                # different namespaces once shared a single permission.
+                identity = str(case.get("identity", ""))
+                if not identity.endswith(f".{case.get('test')}") or f".{case.get('fixture')}." not in f".{identity}":
+                    self.fail("test-exclusion",
+                              f"category '{name}' names the case {case.get('fixture')}.{case.get('test')} with the "
+                              f"identity '{identity}', which does not contain it")
                 if str(case.get("dueness", "")).startswith("DUE"):
                     self.fail("test-exclusion",
                               f"category '{name}' lists a due case as not executed: "

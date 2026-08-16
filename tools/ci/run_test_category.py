@@ -16,9 +16,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shlex
 import subprocess
 import sys
+import time
 import xml.etree.ElementTree as ElementTree
+from collections import Counter
+from datetime import datetime
 from pathlib import Path
 
 TRX_NAMESPACE = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
@@ -34,12 +39,47 @@ ZERO_COUNTERS = {"total": 0, "executed": 0, "passed": 0, "failed": 0, "notExecut
 REPO_ROOT = Path(__file__).resolve().parents[2]
 NOT_EXECUTED_INVENTORY = REPO_ROOT / "build/test-infrastructure/not-executed-inventory.json"
 
+# Arguments that would narrow the run. A required category is only a proof when it is complete, so
+# the controller refuses them itself instead of trusting the workflow text that calls it.
+SELECTOR_ARGUMENTS = ("--filter", "-filter", "/tests:", "--tests", "-t:", "--testcasefilter", "/testcasefilter")
+
+
+def type_name(class_name: str) -> str:
+    """The full type name of a TRX class attribute, with a trailing assembly qualification removed.
+
+    The NUnit adapter writes the plain type name including parameterised fixture arguments, but an
+    adapter that appends ', Assembly' must not corrupt an argument list that itself contains a comma.
+    The tail is only dropped when it cannot be part of an argument list.
+    """
+    if ", " not in class_name:
+        return class_name
+
+    head, _, tail = class_name.rpartition(", ")
+    if "(" in tail or ")" in tail:
+        return class_name
+    if head.count("(") != head.count(")"):
+        return class_name
+
+    return head
+
+
+def identity_of(method: ElementTree.Element) -> str:
+    """The stable identity of one case.
+
+    Full namespace and class name including parameterised fixture arguments, plus the complete case
+    name the adapter reported. Two different tests must never share one identity: shortening this to
+    the last class segment made a fixture in one namespace authorise a fixture of the same name in
+    another, and collapsed parameterised cases into a single permission.
+    """
+    return f"{type_name(method.attrib.get('className', ''))}.{method.attrib.get('name', '')}"
+
 
 def read_not_executed(trx_path: Path) -> list[str]:
-    """Every case the run did not execute, as 'Fixture.Test'.
+    """Every case the run did not execute, as a full identity, with duplicates preserved.
 
     The TRX summary is no help here: its notExecuted counter reads 0 even when total and executed
-    differ by twenty-five, so the only reliable source is the result list itself.
+    differ by twenty-five, so the only reliable source is the result list itself. The list is not
+    deduplicated either, because two results are two cases even when they look alike.
     """
     if not trx_path.is_file():
         return []
@@ -53,10 +93,7 @@ def read_not_executed(trx_path: Path) -> list[str]:
         method = definition.find("t:TestMethod", TRX_NAMESPACE)
         if method is None:
             continue
-        class_name = method.attrib.get("className", "").split(",")[0]
-        definitions[definition.attrib.get("id")] = (
-            f"{class_name.split('.')[-1]}.{method.attrib.get('name', '')}"
-        )
+        definitions[definition.attrib.get("id")] = identity_of(method)
 
     names = []
     for result in root.findall("t:Results/t:UnitTestResult", TRX_NAMESPACE):
@@ -66,16 +103,18 @@ def read_not_executed(trx_path: Path) -> list[str]:
         if result.attrib.get("outcome") != "NotExecuted":
             continue
         name = definitions.get(result.attrib.get("testId"))
-        if name and name not in names:
+        if name:
             names.append(name)
     return sorted(names)
 
 
-def inventoried_cases(category: str) -> set[str] | None:
-    """The cases the inventory permits this category to leave unexecuted.
+def inventoried_cases(category: str) -> list[str] | None:
+    """The cases the inventory permits this category to leave unexecuted, as full identities.
 
     None means the inventory could not be read at all, which is itself a failure: without it there
     is no statement about what the category skips, and a required category may not skip silently.
+    An entry without a full identity is not a permission either; naming a case by its short form
+    would authorise every case that happens to share that form.
     """
     if not NOT_EXECUTED_INVENTORY.is_file():
         return None
@@ -86,8 +125,23 @@ def inventoried_cases(category: str) -> set[str] | None:
     entry = data.get("categories", {}).get(category)
     if entry is None:
         # A category the inventory does not mention is a category that skips nothing.
-        return set()
-    return {f"{case.get('fixture')}.{case.get('test')}" for case in entry.get("cases", [])}
+        return []
+    permitted = []
+    for case in entry.get("cases", []):
+        identity = case.get("identity") if isinstance(case, dict) else None
+        if isinstance(identity, str) and identity:
+            permitted.append(identity)
+    return permitted
+
+
+def unauthorised_not_executed(skipped: list[str], permitted: list[str]) -> list[str]:
+    """What the run skipped beyond its permissions, compared as a multiset.
+
+    Two cases that share an inventory entry are not both authorised by it. Subtracting counts rather
+    than sets keeps the second one visible.
+    """
+    remaining = Counter(skipped) - Counter(permitted)
+    return sorted(remaining.elements())
 
 
 def read_counters(trx_path: Path) -> dict[str, int]:
@@ -120,9 +174,62 @@ def read_counters(trx_path: Path) -> dict[str, int]:
     }
 
 
+def read_run_duration(trx_path: Path) -> float | None:
+    """The duration the run itself reported, which is not the wall time of the process.
+
+    The process also restores, builds and writes evidence. Keeping the two apart stops a report from
+    presenting one as the other.
+    """
+    if not trx_path.is_file():
+        return None
+    try:
+        times = ElementTree.parse(trx_path).getroot().find("t:Times", TRX_NAMESPACE)
+    except ElementTree.ParseError:
+        return None
+    if times is None:
+        return None
+
+    start, finish = parse_trx_time(times.attrib.get("start")), parse_trx_time(times.attrib.get("finish"))
+    if start is None or finish is None:
+        return None
+    return round((finish - start).total_seconds(), 3)
+
+
+def parse_trx_time(value: str | None) -> datetime | None:
+    """A TRX timestamp, whose fractional part carries more digits than fromisoformat accepts.
+
+    The writer emits seven fractional digits. Feeding that straight into fromisoformat returns None on
+    every run, which silently turned the recorded run duration into null instead of a number.
+    """
+    if not value:
+        return None
+
+    match = re.match(r"^(?P<head>.*?\.\d{1,9})(?P<tail>.*)$", value)
+    if match:
+        head, tail = match.group("head"), match.group("tail")
+        whole, _, fraction = head.rpartition(".")
+        value = f"{whole}.{fraction[:6].ljust(6, '0')}{tail}"
+
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def reject_selectors(extra: list[str]) -> None:
+    """A required category runs unfiltered, and the controller enforces that itself."""
+    for argument in extra:
+        lowered = argument.lower()
+        if any(lowered == selector or lowered.startswith(selector) for selector in SELECTOR_ARGUMENTS):
+            raise CategoryError(
+                f"Required category refuses the selector '{argument}'. A required category runs unfiltered; "
+                "a narrowed run is not a proof of the category."
+            )
 
 
 def run_category(category: str, project: str, evidence_dir: Path, extra: list[str]) -> dict[str, object]:
+    reject_selectors(extra)
+
     evidence_dir.mkdir(parents=True, exist_ok=True)
     trx_path = evidence_dir / f"{category}.trx"
     if trx_path.exists():
@@ -141,21 +248,30 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
     environment = dict(os.environ)
     environment.setdefault("TZ", TEST_TIMEZONE)
 
+    started = time.monotonic()
     completed = subprocess.run(command, text=True, capture_output=True, env=environment)
+    process_seconds = round(time.monotonic() - started, 3)
+
     counters = read_counters(trx_path)
     skipped = read_not_executed(trx_path)
     permitted = inventoried_cases(category)
-    unlisted = sorted(set(skipped) - permitted) if permitted is not None else skipped
+    unlisted = unauthorised_not_executed(skipped, permitted) if permitted is not None else skipped
 
     record = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "kind": "REQUIRED_CATEGORY_RESULT",
         "category": category,
         "project": project,
-        "command": " ".join(command),
+        # The argument array is the truth. The joined line is for humans and is quoted so that the
+        # semicolon of the logger argument and the spaces of an absolute path survive a shell.
+        "commandArguments": command,
+        "command": shlex.join(command),
+        "environment": {"TZ": environment["TZ"]},
         "timezone": environment["TZ"],
         "exitCode": completed.returncode,
         "counters": counters,
+        "processWallDurationSeconds": process_seconds,
+        "trxRunDurationSeconds": read_run_duration(trx_path),
         "trxProduced": trx_path.is_file(),
         "notExecuted": skipped,
         "notExecutedUnlisted": unlisted,

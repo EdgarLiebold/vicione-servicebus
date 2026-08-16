@@ -190,6 +190,7 @@ NOT_EXECUTED_INVENTORY = {
             "explicitAttributeCount": 1,
             "cases": [
                 {
+                    "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand.Should_be_watched_by_a_human",
                     "fixture": "Watching_by_hand",
                     "test": "Should_be_watched_by_a_human",
                     "mechanism": "EXPLICIT",
