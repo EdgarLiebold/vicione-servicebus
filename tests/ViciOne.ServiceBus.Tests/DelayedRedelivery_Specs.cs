@@ -43,7 +43,7 @@ public class Using_delayed_redelivery :
 
     protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
     {
-        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseJsonSerializer();
 
         _count = 0;
         _received = new[]

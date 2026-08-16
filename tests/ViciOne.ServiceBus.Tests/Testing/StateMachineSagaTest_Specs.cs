@@ -35,7 +35,7 @@ namespace ViciOne.ServiceBus.Tests.Testing
             {
                 BusTestFixture.ConfigureBusDiagnostics(e);
 
-                e.UseNewtonsoftJsonSerializer();
+                e.UseJsonSerializer();
                 e.ConfigureNewtonsoftJsonDeserializer(x =>
                 {
                     x.TypeNameHandling = TypeNameHandling.Auto;

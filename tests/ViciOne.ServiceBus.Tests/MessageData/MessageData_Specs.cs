@@ -34,7 +34,7 @@ namespace ViciOne.ServiceBus.Tests.MessageData
                     {
                         cfg.UseMessageData(context.GetRequiredService<IMessageDataRepository>());
 
-                        cfg.UseNewtonsoftJsonSerializer();
+                        cfg.UseJsonSerializer();
                         cfg.ConfigureNewtonsoftJsonSerializer(settings =>
                         {
                             settings.DefaultValueHandling = DefaultValueHandling.Populate;
