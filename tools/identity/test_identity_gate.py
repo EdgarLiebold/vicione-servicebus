@@ -42,6 +42,30 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
     def test_rejects_old_wire_header(self) -> None:
         self.assert_rejected("src/Header.cs", "M" + "T-Host-Info")
 
+    def test_rejects_the_superseded_wire_header(self) -> None:
+        # Never released, so it is not a compatibility alias. It is a second forbidden prefix.
+        self.assert_rejected("src/Header.cs", "ViciOne" + "-ServiceBus-Host-Info")
+
+    def test_rejects_either_old_wire_header_in_mixed_case(self) -> None:
+        self.assert_rejected("src/Header.cs", "m" + "T-hOsT-iNfO")
+        self.assert_rejected("src/Header.cs", "vIcIoNe" + "-sErViCeBuS-hOsT-iNfO")
+
+    def test_rejects_every_historic_root_under_both_old_prefixes(self) -> None:
+        # Root removal must be visible as a detector that stops detecting, not only as a changed digest.
+        for root in ("Host-Info", "Fault-Message", "Redelivery-Count", "Scheduling-TokenId", "Request-ClientId"):
+            with self.subTest(root=root):
+                self.assert_rejected("src/Header.cs", "M" + "T-" + root)
+                self.assert_rejected("src/Header.cs", "ViciOne" + "-ServiceBus-" + root)
+
+    def test_accepts_the_active_wire_header(self) -> None:
+        data = b"public const string Info = \"VSB-Host-Info\";"
+        self.assertFalse(scan_entry("src/Header.cs", data), "the active prefix must pass")
+
+    def test_accepts_words_that_only_happen_to_contain_the_letters(self) -> None:
+        # A detector that fires on "amount", "format" or "vsbuild" would be unusable.
+        for word in (b"amount", b"format", b"empty", b"vsbuild", b"observable"):
+            self.assertFalse(scan_entry("src/Words.cs", word), f"harmless word rejected: {word!r}")
+
     def test_rejects_old_activity_source(self) -> None:
         self.assert_rejected("src/Telemetry.cs", f'new ActivitySource("{OLD}")')
 

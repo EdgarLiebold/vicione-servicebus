@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Serialization
 {
     using System;
@@ -98,7 +98,7 @@ namespace ViciOne.ServiceBus.Serialization
                 {
                     foreach (KeyValuePair<string, object> header in _headers.GetAll())
                     {
-                        if (header.Key.StartsWith("ViciOne-ServiceBus-"))
+                        if (header.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal))
                             continue;
 
                         switch (header.Key)

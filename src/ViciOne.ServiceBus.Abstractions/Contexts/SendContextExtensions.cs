@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus
 {
     using System;
@@ -126,7 +126,7 @@ namespace ViciOne.ServiceBus
 
             foreach (KeyValuePair<string, object> header in consumeContext.Headers.GetAll())
             {
-                if (header.Key.StartsWith("ViciOne-ServiceBus-"))
+                if (header.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal))
                     continue;
 
                 sendHeaders.Set(header.Key, header.Value, false);
@@ -173,7 +173,7 @@ namespace ViciOne.ServiceBus
 
         /// <summary>
         /// Sets the ConversationId to a new value, starting a new conversation. If a message was being consumed, and the
-        /// ConversationId was present, that value is stored in an ViciOne-ServiceBus-InitiatingConversationId header.
+        /// ConversationId was present, that value is stored in a VSB-InitiatingConversationId header.
         /// </summary>
         /// <param name="context">The send context</param>
         /// <returns></returns>
@@ -184,7 +184,7 @@ namespace ViciOne.ServiceBus
 
         /// <summary>
         /// Sets the ConversationId to a new value, starting a new conversation. If a message was being consumed, and the
-        /// ConversationId was present, that value is stored in an ViciOne-ServiceBus-InitiatingConversationId header.
+        /// ConversationId was present, that value is stored in a VSB-InitiatingConversationId header.
         /// </summary>
         /// <param name="context">The send context</param>
         /// <param name="conversationId">The new ConversationId</param>

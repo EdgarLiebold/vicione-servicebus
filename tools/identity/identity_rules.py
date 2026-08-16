@@ -17,11 +17,15 @@ BASELINE_TREE = "2b09d4e2b2e14289f06ba112ce1ae52e326a0307"
 PRODUCT = "ViciOne.ServiceBus"
 CLR_TOKEN = "ViciOneServiceBus"
 SLUG = "vicione-servicebus"
-HEADER_PREFIX = "ViciOne-ServiceBus-"
+HEADER_PREFIX = "VSB-"
+
+# The intermediate identity between the MassTransit prefix and the active one. It was never released,
+# so it is not a compatibility alias: it is a second forbidden prefix and is detected like the first.
+SUPERSEDED_HEADER_PREFIX = "ViciOne-ServiceBus-"
 MIME_VENDOR = "vnd.vicione.servicebus"
 MODIFICATION_NOTICE = "ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07."
 DEVELOPER_REGISTRY_QUICKCHECK_SCHEMA_VERSION = 1
-DEVELOPER_REGISTRY_QUICKCHECK_SHA256 = "992c1fea0b89c5cc4a4e7d9202d479f8522e436031e06da350822575862e6cf3"
+DEVELOPER_REGISTRY_QUICKCHECK_SHA256 = "d1c43d05b2da39375a906daf97c03116e37cb459c5086d6b0657701a9a91e87a"
 DEVELOPER_REGISTRY_QUICKCHECK_AUTHORITY = "NON_AUTHORITATIVE_LOCAL_DEVELOPER_CHECK"
 
 LEGAL_OR_PROVENANCE_PATHS = frozenset({"README.md", "LICENSE", "NOTICE", "COPYRIGHT", "MODIFICATIONS.md"})
@@ -251,6 +255,20 @@ FORMER_IDENTITY_REGISTRY = (
                 FORMER_HEADER_PREFIX,
                 HEADER_PREFIX,
                 scan_example=FORMER_HEADER_PREFIX + "Host-Info",
+            ),
+        ),
+    ),
+    FormerIdentityFamily(
+        key="superseded-header-prefix",
+        scan_pattern=rf"(?<![a-z0-9])vicione-servicebus-(?:{'|'.join(_HEADER_ROOTS)})(?=[^a-z0-9]|$)",
+        scan_examples=(SUPERSEDED_HEADER_PREFIX + "Host-Info",),
+        mapping_rules=(
+            IdentityMappingRule(
+                "text",
+                40,
+                SUPERSEDED_HEADER_PREFIX,
+                HEADER_PREFIX,
+                scan_example=SUPERSEDED_HEADER_PREFIX + "Host-Info",
             ),
         ),
     ),

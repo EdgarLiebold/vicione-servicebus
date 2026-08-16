@@ -73,7 +73,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     },
     ""sentTime"": ""2020-04-22T21:16:51.9778323Z"",
     ""headers"": {
-        ""ViciOne-ServiceBus-Activity-Id"": ""00-1e03f9b1b84f3d40b7087f2633fadd4a-38ac2fc84b035447-00""
+        ""VSB-Activity-Id"": ""00-1e03f9b1b84f3d40b7087f2633fadd4a-38ac2fc84b035447-00""
     },
     ""host"": {
         ""machineName"": ""ULPC15S12C"",

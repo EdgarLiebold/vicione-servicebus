@@ -77,16 +77,16 @@ class IdentityRulesTests(unittest.TestCase):
 
     def test_developer_registry_quickcheck_matches_non_authoritative_local_snapshot(self) -> None:
         document = developer_registry_quickcheck_document()
-        self.assertEqual(18, len(document["families"]))
+        self.assertEqual(19, len(document["families"]))
         self.assertEqual(
-            40,
+            41,
             sum(len(family["mappingRules"]) for family in document["families"]),
         )
         self.assertEqual("NON_AUTHORITATIVE_LOCAL_DEVELOPER_CHECK", DEVELOPER_REGISTRY_QUICKCHECK_AUTHORITY)
         self.assertEqual(DEVELOPER_REGISTRY_QUICKCHECK_SHA256, developer_registry_quickcheck_sha256())
         self.assertEqual(DEVELOPER_REGISTRY_QUICKCHECK_SHA256, require_developer_registry_quickcheck())
 
-    def test_each_of_40_original_mapping_rules_has_non_equivalent_isolated_effect_mutant(self) -> None:
+    def test_each_of_41_original_mapping_rules_has_non_equivalent_isolated_effect_mutant(self) -> None:
         tested = 0
         for family in FORMER_IDENTITY_REGISTRY:
             for rule in family.mapping_rules:
@@ -108,9 +108,9 @@ class IdentityRulesTests(unittest.TestCase):
                     self.assertEqual(probe, mutant_actual, "disabled isolated rule still changes its probe")
                     self.assertNotEqual(expected, mutant_actual, "isolated mapping-rule mutant is equivalent")
                 tested += 1
-        self.assertEqual(40, tested)
+        self.assertEqual(41, tested)
 
-    def test_developer_quickcheck_rejects_each_of_40_mapping_rule_removals(self) -> None:
+    def test_developer_quickcheck_rejects_each_of_41_mapping_rule_removals(self) -> None:
         tested = 0
         for family_index, family in enumerate(FORMER_IDENTITY_REGISTRY):
             for rule_index, rule in enumerate(family.mapping_rules):
@@ -124,7 +124,7 @@ class IdentityRulesTests(unittest.TestCase):
                         self.registry_without_rule(family_index, rule_index)
                     )
                 tested += 1
-        self.assertEqual(40, tested)
+        self.assertEqual(41, tested)
 
     def test_developer_quickcheck_rejects_family_and_mapping_rule_drift(self) -> None:
         first_family = FORMER_IDENTITY_REGISTRY[0]
@@ -306,7 +306,7 @@ class IdentityRulesTests(unittest.TestCase):
         mapped = map_text(source)
 
         self.assertEqual(
-            "ViciOne-ServiceBus-Host-Info VICIONE_SERVICEBUS_RABBITMQ "
+            "VSB-Host-Info VICIONE_SERVICEBUS_RABBITMQ "
             "application/vnd.vicione.servicebus+json "
             "TradeBookedViciOneServiceBus TradesBookedViciOneServiceBus",
             mapped,

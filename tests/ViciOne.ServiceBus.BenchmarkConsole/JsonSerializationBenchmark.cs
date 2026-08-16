@@ -34,7 +34,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
                 ConversationId = NewId.NextGuid(),
             };
 
-            _averageMessageSendContext.Headers.Set("ViciOne-ServiceBus-Activity-Id", NewId.NextGuid().ToString());
+            _averageMessageSendContext.Headers.Set("VSB-Activity-Id", NewId.NextGuid().ToString());
 
             _newtonsoftJsonMessageSerializer = new NewtonsoftJsonMessageSerializer();
         }

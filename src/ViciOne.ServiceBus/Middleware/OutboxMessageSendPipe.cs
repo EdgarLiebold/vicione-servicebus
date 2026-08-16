@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware
 {
@@ -54,7 +54,7 @@ namespace ViciOne.ServiceBus.Middleware
 
             foreach (var headerValue in headers)
             {
-                if (headerValue.Key.StartsWith("ViciOne-ServiceBus-"))
+                if (headerValue.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal))
                     context.Headers.Set(headerValue.Key, headerValue.Value);
             }
 

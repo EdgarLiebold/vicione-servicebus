@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
                 When(CreateState)
                     .TransitionTo(Created)
                     .Send(context => context.ReceiveContext.InputAddress, context => new StateVerified() { CorrelationId = context.Saga.CorrelationId },
-                        (x, sendContext) => sendContext.Headers.Set("ViciOne-ServiceBus-Fail-Delivery", x.Message.FailMessageDelivery && x.GetRetryAttempt() == 0))
+                        (x, sendContext) => sendContext.Headers.Set("VSB-Fail-Delivery", x.Message.FailMessageDelivery && x.GetRetryAttempt() == 0))
                     .If(context => context.Message.FailOnFirstAttempt && context.GetRetryAttempt() == 0,
                         fail => fail.Then(context => throw new IntentionalTestException()))
             );

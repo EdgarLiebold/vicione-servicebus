@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
             public async Task Consume(ConsumeContext<IMyMessage> context)
             {
-                if (context.Headers.TryGetHeader("ViciOne-ServiceBus-Redelivery-Count", out var value))
+                if (context.Headers.TryGetHeader("VSB-Redelivery-Count", out var value))
                 {
                     if (context.Headers.TryGetHeader("#text", out _))
                     {

@@ -31,7 +31,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Host-MachineName", (string)null), Is.EqualTo(HostMetadataCache.Host.MachineName));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Host-MachineName", (string)null), Is.EqualTo(HostMetadataCache.Host.MachineName));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Reason", (string)null), Is.EqualTo("fault"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Reason", (string)null), Is.EqualTo("fault"));
         }
 
         [Test]

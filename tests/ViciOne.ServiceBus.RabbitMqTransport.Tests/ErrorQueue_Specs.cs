@@ -37,7 +37,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Host-MachineName", (string)null), Is.EqualTo(HostMetadataCache.Host.MachineName));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Host-MachineName", (string)null), Is.EqualTo(HostMetadataCache.Host.MachineName));
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         [Test]
         public async Task Should_have_the_host_machine_name()
         {
-            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["ViciOne-ServiceBus-Host-MachineName"]);
+            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["VSB-Host-MachineName"]);
             Assert.That(header, Is.EqualTo(HostMetadataCache.Host.MachineName));
         }
 
@@ -146,7 +146,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         [Test]
         public async Task Should_have_the_reason()
         {
-            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["ViciOne-ServiceBus-Reason"]);
+            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["VSB-Reason"]);
 
             Assert.That(header, Is.EqualTo("fault"));
         }
@@ -189,7 +189,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         [Test]
         public async Task Should_have_the_host_machine_name()
         {
-            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["ViciOne-ServiceBus-Host-MachineName"]);
+            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["VSB-Host-MachineName"]);
             Assert.That(header, Is.EqualTo(HostMetadataCache.Host.MachineName));
         }
 
@@ -202,7 +202,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         [Test]
         public async Task Should_have_the_reason()
         {
-            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["ViciOne-ServiceBus-Reason"]);
+            var header = Encoding.UTF8.GetString((byte[])_basicGetResult.BasicProperties.Headers["VSB-Reason"]);
 
             Assert.That(header, Is.EqualTo("fault"));
         }
@@ -254,7 +254,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Fault-Message", (string)null), Is.EqualTo("Request is so bad, I'm dying here!"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Fault-Message", (string)null), Is.EqualTo("Request is so bad, I'm dying here!"));
         }
 
         [Test]
@@ -286,7 +286,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Reason", (string)null), Is.EqualTo("fault"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Reason", (string)null), Is.EqualTo("fault"));
         }
 
         [Test]
@@ -347,7 +347,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
 
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Fault-Message", (string)null), Is.EqualTo("Request is so bad, I'm dying here!"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Fault-Message", (string)null), Is.EqualTo("Request is so bad, I'm dying here!"));
         }
 
         [Test]

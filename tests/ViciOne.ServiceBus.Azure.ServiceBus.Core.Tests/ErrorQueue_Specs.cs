@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
         public async Task Should_have_the_exception()
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Fault-Message", (string)null), Is.EqualTo("This is fine, forcing death"));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
         public async Task Should_have_the_reason()
         {
             ConsumeContext<PingMessage> context = await _errorHandler;
-            Assert.That(context.ReceiveContext.TransportHeaders.Get("ViciOne-ServiceBus-Reason", (string)null), Is.EqualTo("fault"));
+            Assert.That(context.ReceiveContext.TransportHeaders.Get("VSB-Reason", (string)null), Is.EqualTo("fault"));
         }
 
         [Test]

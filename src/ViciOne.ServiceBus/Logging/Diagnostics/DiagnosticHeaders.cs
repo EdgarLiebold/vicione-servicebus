@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 #nullable enable
 namespace ViciOne.ServiceBus.Logging
 {
@@ -7,9 +7,9 @@ namespace ViciOne.ServiceBus.Logging
         public const string DefaultListenerName = "ViciOne.ServiceBus";
 
         public const string DiagnosticId = "Diagnostic-Id";
-        public const string ActivityId = "ViciOne-ServiceBus-Activity-Id";
-        public const string ActivityCorrelationContext = "ViciOne-ServiceBus-Activity-Correlation-Context";
-        public const string ActivityPropagation = "ViciOne-ServiceBus-Activity-Propagation";
+        public const string ActivityId = MessageHeaders.Prefix + "Activity-Id";
+        public const string ActivityCorrelationContext = MessageHeaders.Prefix + "Activity-Correlation-Context";
+        public const string ActivityPropagation = MessageHeaders.Prefix + "Activity-Propagation";
 
         public const string MessageId = "messaging.vicione-servicebus.message_id";
         public const string CorrelationId = "messaging.vicione-servicebus.correlation_id";

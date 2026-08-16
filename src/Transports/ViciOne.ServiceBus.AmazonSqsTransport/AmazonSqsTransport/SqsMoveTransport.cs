@@ -69,7 +69,7 @@ public class SqsMoveTransport<TSettings>
 
     static void CopyReceivedMessageHeaders(AmazonSqsMessageContext context, IDictionary<string, MessageAttributeValue> attributes)
     {
-        foreach (var key in context.Attributes.Keys.Where(key => !key.StartsWith("ViciOne-ServiceBus-")))
+        foreach (var key in context.Attributes.Keys.Where(key => !key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal)))
             attributes[key] = context.Attributes[key];
     }
 }

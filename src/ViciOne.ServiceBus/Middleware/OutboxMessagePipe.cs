@@ -1,4 +1,4 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware
 {
@@ -108,7 +108,7 @@ namespace ViciOne.ServiceBus.Middleware
 
                     var endpoint = await context.CapturedContext.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
 
-                    var failDelivery = context.GetRetryAttempt() == 0 && (message.Headers.Get<bool>("ViciOne-ServiceBus-Fail-Delivery") ?? false);
+                    var failDelivery = context.GetRetryAttempt() == 0 && (message.Headers.Get<bool>(MessageHeaders.FailDelivery) ?? false);
                     if (failDelivery)
                         throw new ApplicationException("Simulated Delivery Failure Requested");
 

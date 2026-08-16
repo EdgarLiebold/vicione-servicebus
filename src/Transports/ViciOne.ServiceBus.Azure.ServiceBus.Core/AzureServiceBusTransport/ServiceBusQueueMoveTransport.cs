@@ -45,7 +45,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
                 if (!string.IsNullOrWhiteSpace(messageContext.ReplyToSessionId))
                     message.ReplyToSessionId = messageContext.ReplyToSessionId;
 
-                foreach (KeyValuePair<string, object> property in messageContext.Properties.Where(x => !x.Key.StartsWith("ViciOne-ServiceBus-")))
+                foreach (KeyValuePair<string, object> property in messageContext.Properties.Where(x => !x.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal)))
                     message.ApplicationProperties.Set(new HeaderValue(property.Key, property.Value));
 
                 var sendHeaders = new DictionarySendHeaders(message.ApplicationProperties, true);

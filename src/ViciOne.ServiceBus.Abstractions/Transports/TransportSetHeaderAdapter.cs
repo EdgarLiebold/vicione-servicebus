@@ -1,6 +1,7 @@
-// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
+﻿// ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 namespace ViciOne.ServiceBus.Transports
 {
+    using System;
     using System.Collections.Generic;
 
 
@@ -51,13 +52,13 @@ namespace ViciOne.ServiceBus.Transports
 
         bool IsHeaderIncluded(string key)
         {
-            if (key.StartsWith("ViciOne-ServiceBus-Host-"))
+            if (key.StartsWith(MessageHeaders.Host.Prefix, StringComparison.Ordinal))
                 return _options.HasFlag(TransportHeaderOptions.IncludeHost);
 
             if (key.Equals(MessageHeaders.FaultInputAddress))
                 return true;
 
-            if (key.StartsWith("ViciOne-ServiceBus-Fault-"))
+            if (key.StartsWith(MessageHeaders.FaultPrefix, StringComparison.Ordinal))
             {
                 if (_options.HasFlag(TransportHeaderOptions.IncludeFaultDetail))
                     return true;
