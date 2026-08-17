@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 816 |
+| Added | 818 |
 | Modified | 4927 |
 | Deleted | 701 |
 | Renamed | 19 |
@@ -201,9 +201,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0064-serializer-blockers/core-unit.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0064-serializer-blockers/core-unit.trx` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/BLOCKER_CORRECTIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/CORE_UNIT_CENSUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/RABBITMQ_BENCHMARK.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/core-unit.json` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/core-unit.trx` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
@@ -5588,6 +5588,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Filter_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/Filter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/InMemoryOutboxRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/LongConsumer_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/LongConsumer_Specs.cs` |
+| `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MessageBodyLength_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MessageBody_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/MessageBody_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MultiBus_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/MultiBus_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/OpenTelemetry_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/OpenTelemetry_Specs.cs` |
@@ -5641,6 +5642,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/LazyMessageType_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LazyMessageType_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/LockTimeout_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LockTimeout_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ManyReceiveEndpoints_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/ManyReceiveEndpoints_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/MessageBodyLength_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/MessageData_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MessageData_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/MessageSessionSagaProbe_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/PublishDynamicType_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/PublishDynamicType_Specs.cs` |

@@ -34,24 +34,23 @@ sealed class ConcreteFormatterAccess<TInterface>
 /// The compiled invokers of one closed interface formatter, one entry per concrete type that has
 /// travelled through it.
 /// <para>
-/// The previous version was a static <c>ConcurrentDictionary&lt;Type, Delegate&gt;</c> justified by the
-/// claim that concrete types are a closed set. That is not a bound on this platform: modules can
-/// introduce contract types at runtime, and a strong key would then hold every such type, and the
-/// assembly behind it, alive for the life of the process. The entries are held against weak keys
-/// instead, so an entry can never outlive the type it describes. That is a lifecycle bound rather than
-/// a number, which is why no capacity is invented here: a capacity would only decide which live type to
-/// recompile next.
+/// The operational bound is the admitted contract set: one entry per concrete message type this
+/// process actually sends through this interface, which is finite because the deployed model is finite,
+/// and reset by process restart. That is why no numeric capacity is invented here — a capacity would
+/// only decide which live contract to recompile next.
 /// </para>
 /// <para>
-/// This bounds what the cache itself holds; it does not make a runtime generated contract type
-/// collectible again. Asking a resolver for that type's formatter already roots it, and so does
-/// compiling any delegate over it, both before this cache stores anything. That is measured in the
-/// specs and reported, not claimed away.
+/// The entries are additionally held against weak keys, so this table cannot be the thing that keeps a
+/// type alive. That is a statement about this table and nothing more: it is not a promise that a module
+/// becomes collectible, because asking a resolver for a type's formatter and compiling any delegate
+/// over it both root that type before this cache stores anything. The architecture does not promise
+/// in-process unload either; activation changes take effect through controlled restart.
 /// </para>
 /// <para>
-/// Compilation happens exactly once per type even when many threads arrive together. The entry is a
-/// <see cref="Lazy{T}" /> published under the table's own lock and executed on the instance that won,
-/// so a losing thread waits for that one compilation rather than starting a second.
+/// Compilation happens exactly once per type even when many threads arrive together. The table may run
+/// the creation callback on more than one thread, but only one returned <see cref="Lazy{T}" /> is
+/// installed, and the expensive build runs on the installed instance, so a losing thread waits for that
+/// one compilation instead of starting a second.
 /// </para>
 /// <para>
 /// The cache is an instance rather than a static member of the formatter, so a first use can be a first
@@ -74,8 +73,8 @@ sealed class ConcreteFormatterCache<TInterface>
     /// <summary>
     /// The build step is a parameter so that what this table holds can be observed without compiling
     /// for it. Compiling a delegate over a runtime generated type roots that type in the runtime's own
-    /// tables, and so does asking a resolver for its formatter, so a test that did either could never
-    /// see whether this table itself lets go of a key.
+    /// tables, and so does asking a resolver for its formatter, so a test that did either would be
+    /// measuring those rather than this table.
     /// </summary>
     internal ConcreteFormatterCache(Func<Type, ConcreteFormatterAccess<TInterface>> build)
     {

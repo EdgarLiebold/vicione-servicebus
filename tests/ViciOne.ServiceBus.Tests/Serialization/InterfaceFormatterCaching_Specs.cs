@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     using System.Runtime.CompilerServices;
     using System.Threading;
     using MessagePack;
-    using MessagePack.Formatters;
     using NUnit.Framework;
     using ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
@@ -25,6 +24,13 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     /// Each case builds its own cache. My previous version asserted a static counter, so a first use was
     /// only a first use if no earlier test in the run had already warmed the same static state, and the
     /// concurrency case could measure a cache that was already full.
+    /// </para>
+    /// <para>
+    /// The weak key cases below say that this table does not hold its own key. They are not an unload
+    /// statement: the architecture does not promise in-process module unload, and the dependency roots a
+    /// runtime generated type on its own. That observation is recorded in the evidence rather than as a
+    /// required test, because a required test asserting a dependency defect would fail the build the day
+    /// the dependency improves.
     /// </para>
     /// </summary>
     [TestFixture]
@@ -91,14 +97,12 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [Test]
         public void Should_not_hold_the_type_of_an_entry_it_stores()
         {
-            // The old cache was a static dictionary with strong keys, justified by the claim that
-            // concrete types are a closed set. That is not a bound: a module can introduce a contract
-            // type at runtime, and a strong key would then hold that type, and the assembly behind it,
-            // for the life of the process. The entries are held against weak keys instead.
-            //
-            // Nothing is compiled here, because compiling for a runtime generated type roots it in the
-            // runtime's own tables; the case below measures that. What is asserted here is the one
-            // thing this table decides on its own: whether it lets go of a key nobody else holds.
+            // What this asserts is narrow and deliberately so: this table does not hold its own key. It
+            // is not a statement that a module becomes collectible — asking a resolver for a type's
+            // formatter and compiling a delegate over it both root that type before this cache stores
+            // anything, which is why nothing is compiled here. The operational bound is the finite
+            // admitted contract set plus process restart, and the weak key only means this table can
+            // never be the thing that holds a type.
             var cache = new ConcreteFormatterCache<ICached>(_ => Nothing);
 
             var stored = StoreWithoutCompiling(cache);
@@ -120,27 +124,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Collect(untouched);
 
             Assert.That(untouched.IsAlive, Is.False);
-        }
-
-        [Test]
-        public void Should_record_that_the_serializer_itself_retains_a_runtime_generated_type()
-        {
-            // Measured, and the reason the case above deliberately compiles nothing: asking the resolver
-            // for the formatter of a runtime generated type is already enough to root that type, and so
-            // is compiling any delegate over it. Both happen before this cache stores anything, so no
-            // storage design in this module can deliver release while contractless formatters are
-            // generated at runtime.
-            //
-            // This is a characterisation of the dependency, not of our code. If a later MessagePack
-            // version stops rooting the type, this turns red and the entry cache should be revisited
-            // together with the versioned formatter work.
-            var resolved = ResolveFormatterFor(EmitCollectibleImplementationType());
-
-            Collect(resolved);
-
-            Assert.That(resolved.IsAlive, Is.True,
-                "the serializer no longer retains a runtime generated type; the cache can now be held to "
-                + "the stronger release statement");
         }
 
         [Test]
@@ -204,17 +187,6 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             var collectible = EmitCollectibleImplementationType();
 
             cache.Get(collectible);
-
-            return new WeakReference(collectible);
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        static WeakReference ResolveFormatterFor(Type collectible)
-        {
-            typeof(IFormatterResolver)
-                .GetMethod(nameof(IFormatterResolver.GetFormatter))
-                .MakeGenericMethod(collectible)
-                .Invoke(MessagePack.Resolvers.ContractlessStandardResolver.Instance, null);
 
             return new WeakReference(collectible);
         }

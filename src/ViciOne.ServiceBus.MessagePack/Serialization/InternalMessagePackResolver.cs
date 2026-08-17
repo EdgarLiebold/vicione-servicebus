@@ -22,9 +22,14 @@ static class InternalMessagePackResolver
 
     /// <summary>
     /// Everything arriving from a broker crosses a trust boundary, even over authenticated TLS: a
-    /// credential or an authorised node can be compromised. UntrustedData bounds what a hostile payload
-    /// can make the deserializer allocate or construct. It sits on the one option set so that no call
-    /// site can end up hardened while another is not.
+    /// credential or an authorised node can be compromised.
+    /// <para>
+    /// UntrustedData is defense in depth against selected attacks, chiefly forced hash collisions in
+    /// keyed collections. It is not authentication, and it is not a general bound on what a hostile
+    /// payload can make the deserializer allocate or construct; it and the default both stop at the
+    /// same object graph depth. It sits on the one option set so that no call site can end up hardened
+    /// while another is not.
+    /// </para>
     /// </summary>
     public static MessagePackSerializerOptions Options { get; } = MessagePackSerializerOptions.Standard
         .WithResolver(InternalResolverInstance)

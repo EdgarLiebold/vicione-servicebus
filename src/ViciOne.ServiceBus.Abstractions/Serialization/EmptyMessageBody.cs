@@ -11,8 +11,8 @@ namespace ViciOne.ServiceBus
         public long? Length => 0;
 
         /// <summary>
-        /// Read-only and not expandable, like every other message body. The default constructor hands
-        /// out a growable buffer, so a caller could write a body into what is by definition empty.
+        /// Read-only and not expandable. The default constructor hands out a growable buffer, so a
+        /// caller could have written a body into what is by definition empty.
         /// </summary>
         public Stream GetStream()
         {

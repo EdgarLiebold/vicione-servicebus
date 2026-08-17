@@ -87,7 +87,10 @@ def classify(root: Path) -> list[tuple[str, str, str]]:
 
 
 def render(root: Path) -> str:
-    rows = classify(root)
+    return render_rows(classify(root))
+
+
+def render_rows(rows: list[tuple[str, str, str]]) -> str:
     counts = {status: sum(1 for _, s, _ in rows if s == status)
               for status in ("Added", "Modified", "Deleted", "Renamed")}
 
@@ -105,7 +108,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--write", action="store_true", help="Write the change list instead of checking it.")
     args = parser.parse_args(argv)
 
-    expected = render(args.repository)
+    rows = classify(args.repository)
+    expected = render_rows(rows)
     target = args.repository / CHANGE_LIST
 
     if args.write:
@@ -128,7 +132,10 @@ def main(argv: list[str] | None = None) -> int:
               f"{'few' if len(actual_lines) < len(expected_lines) else 'many'}", file=sys.stderr)
         return 1
 
-    print(f"PASS change-list matches the generated evidence ({len(expected.splitlines()) - 20} entries)")
+    # The number of classified rows, not a line count with a header offset subtracted from it. The
+    # offset was one too high for the header this file actually has, so the gate reported one entry
+    # more than the document lists and every count taken from its console output was wrong.
+    print(f"PASS change-list matches the generated evidence ({len(rows)} entries)")
     return 0
 
 

@@ -18,8 +18,10 @@ namespace ViciOne.ServiceBus
         public long? Length => _bytes.Length;
 
         /// <summary>
-        /// Read-only, like every other message body: the body is immutable, so a caller may not write
-        /// back through the stream it is handed and change what everyone else reads.
+        /// Read-only, like every other message body: writing back through the stream a caller is handed
+        /// cannot change what everybody else reads. That closes one route, not all of them — the
+        /// constructor takes a caller's array and <see cref="GetBytes" /> hands it straight back, so
+        /// this body is not immutable and is not claimed to be.
         /// </summary>
         public Stream GetStream()
         {

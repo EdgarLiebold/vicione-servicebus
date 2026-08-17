@@ -5,9 +5,13 @@ namespace ViciOne.ServiceBus
 
 
     /// <summary>
-    /// Converts a binary-only message body to Base64 so that it can be used with non-binary message transports.
-    /// Only the <see cref="GetString" /> method performs the conversion, <see cref="GetBytes" /> and <see cref="GetStream" />
-    /// are pass-through methods.
+    /// Carries a binary message body that arrived as Base64 text, so a transport that cannot carry bytes
+    /// can still deliver one.
+    /// <para>
+    /// <see cref="GetString" /> returns the text as it was given. <see cref="GetBytes" /> and
+    /// <see cref="GetStream" /> decode it; they are not pass-through, and the summary that said so
+    /// described neither this code nor the length it reports.
+    /// </para>
     /// </summary>
     public class Base64MessageBody :
         MessageBody

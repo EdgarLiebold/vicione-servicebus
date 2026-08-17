@@ -22,6 +22,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         public long? Length => GetBytes().LongLength;
 
+        /// <summary>
+        /// Read-only: writing back through this stream cannot change what everybody else reads. The
+        /// array from <see cref="GetBytes" /> is still a caller's to write into, so this is one closed
+        /// route rather than immutability.
+        /// </summary>
         public Stream GetStream()
         {
             return new MemoryStream(GetBytes(), false);
