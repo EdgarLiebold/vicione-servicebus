@@ -10,10 +10,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>ViciOne.ServiceBus.Azure.Cosmos.Table</PackageId>
-    <Title>ViciOne.ServiceBus.Azure.Cosmos.Table</Title>
-    <PackageTags>ViciOne.ServiceBus;Azure;Cosmos;Table</PackageTags>
-    <Description>ViciOne.ServiceBus Azure Cosmos persistence support; $(Description)</Description>
+    <!--
+      The capability is Azure Table storage, and the project, the assembly and the namespace already
+      said so while the package identity still carried the old Azure.Cosmos.Table name. Cosmos DB for
+      Table is a supported counterpart that speaks this API, which the description names as such; it
+      is not the product identity.
+    -->
+    <PackageId>ViciOne.ServiceBus.Azure.Table</PackageId>
+    <Title>ViciOne.ServiceBus.Azure.Table</Title>
+    <PackageTags>ViciOne.ServiceBus;Azure;Table</PackageTags>
+    <Description>ViciOne.ServiceBus saga and audit persistence on Azure Table storage, including Cosmos DB for Table as a supported endpoint of that API; $(Description)</Description>
   </PropertyGroup>
 
     <ItemGroup>

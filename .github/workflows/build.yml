@@ -93,13 +93,13 @@ jobs:
           python3 tools/ci/run_test_category.py \
             --category core \
             --project tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj \
-            --evidence-dir artifacts/required/core -- -f net9.0
+            --evidence-dir artifacts/required/core
       - name: Abstractions tests
         run: |
           python3 tools/ci/run_test_category.py \
             --category abstractions \
             --project tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj \
-            --evidence-dir artifacts/required/core -- -f net9.0
+            --evidence-dir artifacts/required/core
       - uses: actions/upload-artifact@v4
         if: always()
         with:

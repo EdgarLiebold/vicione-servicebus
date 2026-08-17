@@ -32,9 +32,6 @@ namespace ViciOne.ServiceBus.Analyzers
             Category, DiagnosticSeverity.Info, true,
             "Context.CancellationToken can be passed in method with overload.");
 
-        readonly ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>> _membersByType =
-            new ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>>(SymbolEqualityComparer.Default);
-
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(CancellationTokenOverloadMethodRule);
 
         public override void Initialize(AnalysisContext context)
@@ -57,6 +54,12 @@ namespace ViciOne.ServiceBus.Analyzers
 
             var consumeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.ConsumeContext");
 
+            // The member cache holds ISymbol instances, which belong to one compilation. It used to
+            // be a field of the analyzer, and an analyzer instance is reused across compilations, so
+            // it both kept every symbol of every compilation alive and could answer a later
+            // compilation with symbols of an earlier one. It lives inside the compilation now.
+            var membersByType = new ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>>(SymbolEqualityComparer.Default);
+
             context.RegisterOperationAction(analysisContext =>
             {
                 var invocation = (IInvocationOperation)analysisContext.Operation;
@@ -71,7 +74,8 @@ namespace ViciOne.ServiceBus.Analyzers
                         out var newParameterName))
                     return;
 
-                var availableCancellationTokens = FindCancellationTokens(invocation, cancellationTokenSymbol, pipeContextTypeSymbol, context.CancellationToken);
+                var availableCancellationTokens = FindCancellationTokens(invocation, cancellationTokenSymbol, pipeContextTypeSymbol,
+                    context.CancellationToken, membersByType);
 
                 if (!availableCancellationTokens.Any())
                     return;
@@ -322,15 +326,15 @@ namespace ViciOne.ServiceBus.Analyzers
             return visibility;
         }
 
-        string[] FindCancellationTokens(IOperation operation, INamedTypeSymbol cancellationTokenSymbol, INamedTypeSymbol pipeContextSymbol,
-            CancellationToken cancellationToken)
+        static string[] FindCancellationTokens(IOperation operation, INamedTypeSymbol cancellationTokenSymbol, INamedTypeSymbol pipeContextSymbol,
+            CancellationToken cancellationToken, ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>> membersByType)
         {
             var isStatic = operation.IsStaticMember(cancellationToken);
             var paths = new HashSet<string>(StringComparer.Ordinal);
 
             foreach (var availableSymbol in operation.GetParameters(cancellationToken))
             {
-                foreach (var member in GetMembers(availableSymbol.TypeSymbol, cancellationTokenSymbol, pipeContextSymbol))
+                foreach (var member in GetMembers(availableSymbol.TypeSymbol, cancellationTokenSymbol, pipeContextSymbol, membersByType))
                 {
                     if (!IsSymbolAccessibleFromOperation(member, operation))
                         continue;
@@ -364,9 +368,10 @@ namespace ViciOne.ServiceBus.Analyzers
             }
         }
 
-        IEnumerable<ISymbol> GetMembers(ITypeSymbol symbol, ISymbol cancellationTokenSymbol, ISymbol pipeContextSymbol)
+        static IEnumerable<ISymbol> GetMembers(ITypeSymbol symbol, ISymbol cancellationTokenSymbol, ISymbol pipeContextSymbol,
+            ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>> membersByType)
         {
-            return _membersByType.GetOrAdd(symbol, _ =>
+            return membersByType.GetOrAdd(symbol, _ =>
             {
                 // quickly skips some basic types that are known to not contain CancellationToken
                 if ((int)symbol.SpecialType >= 1 && (int)symbol.SpecialType <= 45)

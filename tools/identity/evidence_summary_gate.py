@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""Derive the final machine-readable gate summaries from primary proof artifacts."""
+"""Reproduce the frozen gate summaries of WP-F2-SERVICEBUS-IDENTITY correction 02.
+
+HISTORICAL. This is not an active gate and nothing in the current tool graph invokes it. It restates
+what one past commit looked like, and the constants below are part of that statement rather than a
+description of the tree you are standing in: DOTNET_ROOT_INPUTS names ViciOne.ServiceBus.sln and
+Directory.Build.targets, neither of which exists any more, and CORRECTION_02_DOTNET_INPUT_BINDING is
+a hash over exactly that list. Rewriting them to match today would falsify the record they bind.
+
+It refuses to run without --historical-reproduction, so it cannot be mistaken for a check of the
+current tree by anyone who finds it in tools/.
+"""
 
 from __future__ import annotations
 
@@ -416,7 +426,20 @@ def main() -> int:
     parser.add_argument("--evidence", required=True, type=Path)
     parser.add_argument("--build-binlog", required=True, type=Path)
     parser.add_argument("--tool-tests", required=True, type=int)
+    parser.add_argument(
+        "--historical-reproduction",
+        action="store_true",
+        help="Required. Acknowledges that this reproduces a frozen past record and checks nothing about the current tree.",
+    )
     args = parser.parse_args()
+    if not args.historical_reproduction:
+        print(
+            "REFUSED evidence-summary: this tool reproduces the frozen record of "
+            "WP-F2-SERVICEBUS-IDENTITY correction 02 and states nothing about the current tree. "
+            "Pass --historical-reproduction if that is what you want.",
+            file=sys.stderr,
+        )
+        return 2
     root = args.root.resolve(strict=True)
     evidence = args.evidence.resolve(strict=True)
     build_binlog = args.build_binlog.resolve(strict=True)

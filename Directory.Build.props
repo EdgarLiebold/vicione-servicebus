@@ -24,6 +24,19 @@
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!--
+      One output root instead of a bin and an obj beside every project. The SDK writes compilation
+      output under artifacts/sdk and packages go to artifacts/packages, so there is exactly one place
+      a build result can come from and no parallel output truth to mistake it for. Both live under
+      artifacts/, which .gitignore already covers, together with artifacts/BenchmarkDotNet that the
+      benchmark console writes to.
+    -->
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts/sdk</ArtifactsPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/packages</PackageOutputPath>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
   </PropertyGroup>

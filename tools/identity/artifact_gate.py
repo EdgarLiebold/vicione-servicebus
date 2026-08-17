@@ -50,7 +50,14 @@ def collect_artifacts(root: Path) -> list[tuple[Path, bool]]:
             and Path(element.attrib.get("Project", "")).name == "signing.props"
             for element in project_xml.iter()
         )
-        for candidate in project.parent.glob("bin/Release/**/*"):
+        # The SDK writes every compilation result under artifacts/sdk/bin/<project> and packages
+        # under artifacts/packages. Globbing bin/Release beside the project was the old layout and
+        # would now find nothing at all, which this gate would have reported as zero artifacts.
+        search_roots = [
+            root / "artifacts" / "sdk" / "bin" / assembly,
+            root / "artifacts" / "packages",
+        ]
+        for candidate in (c for search in search_roots for c in search.glob("**/*")):
             if not candidate.is_file() or candidate.suffix.casefold() not in ARTIFACT_SUFFIXES:
                 continue
             if candidate.suffix.casefold() == ".nupkg" or candidate.stem == assembly:
@@ -227,7 +234,7 @@ def scan_artifacts(root: Path) -> dict[str, object]:
             }
         )
     if not paths:
-        findings.append(ArtifactFinding("null-artifact", "bin/Release", "zero artifacts discovered"))
+        findings.append(ArtifactFinding("null-artifact", "artifacts/sdk", "zero artifacts discovered"))
     return {
         "status": "PASS" if not findings else "FAIL",
         "counts": {
