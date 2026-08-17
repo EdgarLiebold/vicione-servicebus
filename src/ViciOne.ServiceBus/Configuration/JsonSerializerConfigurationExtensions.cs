@@ -67,8 +67,16 @@ namespace ViciOne.ServiceBus
         public static void ConfigureJsonSerializerOptions(this IBusFactoryConfigurator configurator,
             Func<JsonSerializerOptions, JsonSerializerOptions>? configure = null)
         {
-            if (configure != null)
-                SystemTextJsonMessageSerializer.Options = configure(new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options));
+            if (configure == null)
+                return;
+
+            // A callback that returns nothing used to null the options every serializer reads from, and
+            // the failure then surfaced on the first message rather than at configuration time.
+            SystemTextJsonMessageSerializer.Options =
+                configure(new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options))
+                ?? throw new ConfigurationException(
+                    "The ConfigureJsonSerializerOptions callback returned null. It has to return the options "
+                    + "to use, either the instance it was given or another one.");
         }
 
         /// <summary>
@@ -86,7 +94,17 @@ namespace ViciOne.ServiceBus
                 options.Converters.Remove(existingConverter);
 
             var messageSerializerOptions = new JsonSerializerOptions();
-            configure?.Invoke(messageSerializerOptions);
+
+            // The signature promises that the callback returns the options to use, but the result was
+            // discarded: a caller that returned a new instance instead of mutating the given one had its
+            // configuration silently dropped, and only mutation happened to work.
+            if (configure != null)
+            {
+                messageSerializerOptions = configure(messageSerializerOptions)
+                    ?? throw new ConfigurationException(
+                        "The SetMessageSerializerOptions callback returned null. It has to return the options "
+                        + "to use, either the instance it was given or another one.");
+            }
 
             options.Converters.Insert(0, new CustomMessageTypeJsonConverter<T>(messageSerializerOptions));
         }

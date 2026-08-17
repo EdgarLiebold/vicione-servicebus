@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 804 |
+| Added | 805 |
 | Modified | 4927 |
 | Deleted | 701 |
 | Renamed | 19 |
@@ -6395,6 +6395,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Redelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Redelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SeparateSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationValidation_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationTest.cs` | Modified | `tests/MassTransit.Tests/Serialization/SerializationTest.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto` | Modified | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto.cs` | Modified | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` |

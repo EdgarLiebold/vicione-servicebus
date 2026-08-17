@@ -119,14 +119,16 @@ namespace ViciOne.ServiceBus.Configuration
                 ?? (mediaTypes.Length == 1 ? mediaTypes[0] : default)
                 ?? throw new ConfigurationException("No serializer content type specified and more than one serializer was configured");
 
+            // The matching check used to sit inside the empty branch, so it only ever compared against an
+            // empty media type. A content type that was named but never registered therefore validated
+            // clean and failed much later, when the collection was created.
             if (string.IsNullOrWhiteSpace(serializerMediaType))
             {
                 if (mediaTypes.Length > 1)
                     yield return this.Failure("SerializerContentType", "must be specified when more than one serializer is supported");
-
-                if (!mediaTypes.Any(x => x.Equals(serializerMediaType, StringComparison.OrdinalIgnoreCase)))
-                    yield return this.Failure("SerializerContentType", "matching serializer was not added");
             }
+            else if (!mediaTypes.Any(x => x.Equals(serializerMediaType, StringComparison.OrdinalIgnoreCase)))
+                yield return this.Failure("SerializerContentType", "matching serializer was not added");
 
             IEnumerable<ISerializerFactory> deserializers = _deserializers.Values;
             if (_source != null)
@@ -147,10 +149,9 @@ namespace ViciOne.ServiceBus.Configuration
             {
                 if (mediaTypes.Length > 1)
                     yield return this.Failure("DefaultContentType", "must be specified when more than one deserializer is supported");
-
-                if (!mediaTypes.Any(x => x.Equals(defaultMediaType, StringComparison.OrdinalIgnoreCase)))
-                    yield return this.Failure("DefaultContentType", "matching deserializer was not added");
             }
+            else if (!mediaTypes.Any(x => x.Equals(defaultMediaType, StringComparison.OrdinalIgnoreCase)))
+                yield return this.Failure("DefaultContentType", "matching deserializer was not added");
         }
 
         ISerialization CreateCollection()
