@@ -188,7 +188,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        public async Task Should_report_telemetry_to_jaeger()
+        public async Task Should_report_telemetry_for_a_consumer()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "order-api");
@@ -241,7 +241,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        public async Task Should_report_telemetry_to_jaeger_for_batch_consumer()
+        public async Task Should_report_telemetry_for_a_batch_consumer()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "order-api");
@@ -289,7 +289,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        public async Task Should_report_telemetry_to_jaeger_for_routing_slip()
+        public async Task Should_report_telemetry_for_a_routing_slip()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "routing-api");
@@ -334,7 +334,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         [Test]
-        public async Task Should_report_telemetry_to_jaeger_from_mediator()
+        public async Task Should_report_telemetry_from_the_mediator()
         {
             var services = new ServiceCollection();
             AddTraceListener(services, "mediator");

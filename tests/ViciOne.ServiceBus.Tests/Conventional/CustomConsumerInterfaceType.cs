@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Tests.Conventional
 
 
     /// <summary>
-    /// A legacy message-only consumer
+    /// A consumer interface whose consume method takes the message alone, without a consume context
     /// </summary>
     public class CustomConsumerInterfaceType :
         IMessageInterfaceType

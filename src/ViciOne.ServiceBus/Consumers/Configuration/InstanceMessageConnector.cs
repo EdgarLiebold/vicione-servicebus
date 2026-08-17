@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Configuration
 
     /// <summary>
     /// Connects a consumer instance to the inbound pipeline for the specified message type. The actual
-    /// filter that invokes the consume method is passed to allow different types of message bindings,
-    /// including the legacy bindings from v2.x
+    /// filter that invokes the consume method is passed in, so that a consumer interface with a
+    /// different consume signature can be bound through the same connector.
     /// </summary>
     /// <typeparam name="TConsumer">The consumer type</typeparam>
     /// <typeparam name="TMessage">The message type</typeparam>

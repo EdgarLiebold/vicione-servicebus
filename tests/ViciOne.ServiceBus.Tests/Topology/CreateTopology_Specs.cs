@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.Tests.Topology
         [Test]
         public async Task Should_have_a_familiar_syntax()
         {
-            MessageCorrelation.UseCorrelationId<LegacyMessage>(x => x.TransactionId);
+            MessageCorrelation.UseCorrelationId<ExplicitCorrelationMessage>(x => x.TransactionId);
 
             var harness = new InMemoryTestHarness();
             harness.OnConfigureInMemoryBus += configurator =>
@@ -25,12 +25,12 @@ namespace ViciOne.ServiceBus.Tests.Topology
 
             Task<ConsumeContext<INewUserEvent>> handled = null;
             Task<ConsumeContext<OtherMessage>> otherHandled = null;
-            Task<ConsumeContext<LegacyMessage>> legacyHandled = null;
+            Task<ConsumeContext<ExplicitCorrelationMessage>> explicitCorrelationHandled = null;
             harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             {
                 handled = harness.Handled<INewUserEvent>(configurator);
                 otherHandled = harness.Handled<OtherMessage>(configurator);
-                legacyHandled = harness.Handled<LegacyMessage>(configurator);
+                explicitCorrelationHandled = harness.Handled<ExplicitCorrelationMessage>(configurator);
             };
 
 
@@ -59,14 +59,14 @@ namespace ViciOne.ServiceBus.Tests.Topology
                     Assert.That(otherContext.CorrelationId.Value, Is.EqualTo(transactionId));
                 });
 
-                await harness.InputQueueSendEndpoint.Send<LegacyMessage>(new { TransactionId = transactionId });
+                await harness.InputQueueSendEndpoint.Send<ExplicitCorrelationMessage>(new { TransactionId = transactionId });
 
-                ConsumeContext<LegacyMessage> legacyContext = await legacyHandled;
+                ConsumeContext<ExplicitCorrelationMessage> explicitCorrelationContext = await explicitCorrelationHandled;
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(legacyContext.CorrelationId.HasValue, Is.True);
-                    Assert.That(legacyContext.CorrelationId.Value, Is.EqualTo(transactionId));
+                    Assert.That(explicitCorrelationContext.CorrelationId.HasValue, Is.True);
+                    Assert.That(explicitCorrelationContext.CorrelationId.Value, Is.EqualTo(transactionId));
                 });
             }
             finally
@@ -94,7 +94,7 @@ namespace ViciOne.ServiceBus.Tests.Topology
         }
 
 
-        public class LegacyMessage
+        public class ExplicitCorrelationMessage
         {
             public Guid TransactionId { get; set; }
         }

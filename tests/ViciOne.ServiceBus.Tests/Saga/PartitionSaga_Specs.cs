@@ -36,13 +36,13 @@ namespace ViciOne.ServiceBus.Tests.Saga
             Console.WriteLine("Total time: {0}", timer.Elapsed);
         }
 
-        ISagaRepository<LegacySaga> _repository;
+        ISagaRepository<PartitionedSaga> _repository;
 
         const int Limit = 100;
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
-            _repository = new InMemorySagaRepository<LegacySaga>();
+            _repository = new InMemorySagaRepository<PartitionedSaga>();
 
             configurator.Saga(_repository, x =>
             {
@@ -51,7 +51,7 @@ namespace ViciOne.ServiceBus.Tests.Saga
         }
 
 
-        class LegacySaga :
+        class PartitionedSaga :
             ISaga,
             InitiatedBy<CreateSaga>
         {

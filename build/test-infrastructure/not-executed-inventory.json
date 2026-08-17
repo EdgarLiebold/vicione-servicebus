@@ -168,33 +168,33 @@
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_consumer",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_to_jaeger",
+          "test": "Should_report_telemetry_for_a_consumer",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_for_batch_consumer",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_batch_consumer",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_to_jaeger_for_batch_consumer",
+          "test": "Should_report_telemetry_for_a_batch_consumer",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_for_routing_slip",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_routing_slip",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_to_jaeger_for_routing_slip",
+          "test": "Should_report_telemetry_for_a_routing_slip",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger_from_mediator",
+          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_from_the_mediator",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_to_jaeger_from_mediator",
+          "test": "Should_report_telemetry_from_the_mediator",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
@@ -292,9 +292,9 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
-          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_to_jaeger",
+          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_consumer",
           "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_to_jaeger",
+          "test": "Should_report_telemetry_for_a_consumer",
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
           "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."

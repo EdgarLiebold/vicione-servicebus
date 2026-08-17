@@ -12,10 +12,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 830 |
-| Modified | 4916 |
-| Deleted | 712 |
-| Renamed | 19 |
+| Added | 831 |
+| Modified | 4915 |
+| Deleted | 714 |
+| Renamed | 18 |
 
 | Path | Status | Baseline path |
 |---|---|---|
@@ -5517,6 +5517,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.NHibernateIntegration.Tests/Vanilla_Specs.cs` | Deleted | `tests/MassTransit.NHibernateIntegration.Tests/Vanilla_Specs.cs` |
 | `tests/MassTransit.QuartzIntegration.Tests/XmlHeaderBug_Specs.cs` | Deleted | `tests/MassTransit.QuartzIntegration.Tests/XmlHeaderBug_Specs.cs` |
 | `tests/MassTransit.RabbitMqTransport.Tests/Encrypted_Specs.cs` | Deleted | `tests/MassTransit.RabbitMqTransport.Tests/Encrypted_Specs.cs` |
+| `tests/MassTransit.RabbitMqTransport.Tests/run-jaeger.sh` | Deleted | `tests/MassTransit.RabbitMqTransport.Tests/run-jaeger.sh` |
 | `tests/MassTransit.RedisIntegration.Tests/Container_Specs.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/Container_Specs.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/JobConsumer_Specs.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/JobConsumer_Specs.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/MassTransit.RedisIntegration.Tests.csproj` | Deleted | `tests/MassTransit.RedisIntegration.Tests/MassTransit.RedisIntegration.Tests.csproj` |
@@ -5524,6 +5525,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` |
+| `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
 | `tests/MassTransit.Tests/Encryption/TestMessage.cs` | Deleted | `tests/MassTransit.Tests/Encryption/TestMessage.cs` |
@@ -5923,7 +5925,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/When_a_message_consumer_throws_an_exception.cs` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/When_a_message_consumer_throws_an_exception.cs` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Renamed | `tests/MassTransit.RabbitMqTransport.Tests/client.p12` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/docker-compose.yml` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/docker-compose.yml` |
-| `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/run-jaeger.sh` | Renamed | `tests/MassTransit.RabbitMqTransport.Tests/run-jaeger.sh` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/HubLifeTimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |
@@ -5983,8 +5984,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
 | `tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Caching/CacheRecovery_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Caching/Cache_Specs.cs` | Modified | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Modified | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Cancellation_Specs.cs` | Modified | `tests/MassTransit.Tests/Cancellation_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/CircuitBreaker_Specs.cs` | Modified | `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |

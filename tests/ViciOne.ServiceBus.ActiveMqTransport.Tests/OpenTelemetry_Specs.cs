@@ -37,7 +37,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     public class OpenTelemetry_Specs
     {
         [Test]
-        public async Task Should_report_telemetry_to_jaeger()
+        public async Task Should_report_telemetry_for_a_consumer()
         {
             var services = new ServiceCollection();
             services.AddOpenTelemetry()

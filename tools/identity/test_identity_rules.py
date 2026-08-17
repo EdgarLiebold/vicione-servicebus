@@ -320,7 +320,7 @@ class IdentityRulesTests(unittest.TestCase):
             map_text(source),
         )
 
-    def test_maps_legacy_analyzer_benchmark_and_local_tokens(self) -> None:
+    def test_maps_forbidden_upstream_analyzer_benchmark_and_local_tokens(self) -> None:
         source = " ".join(
             (
                 FORMER_ANALYZER_ID,
