@@ -7,6 +7,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
         using Microsoft.Extensions.DependencyInjection;
         using NUnit.Framework;
         using TestFramework.Sagas;
+        using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
         public class Using_the_container_integration :
@@ -58,7 +59,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
                 configurator.AddSagaStateMachine<TestStateMachineSaga, TestInstance>()
                     .MessageSessionRepository();
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureServiceBusReceiveEndpoint(IServiceBusReceiveEndpointConfigurator configurator)

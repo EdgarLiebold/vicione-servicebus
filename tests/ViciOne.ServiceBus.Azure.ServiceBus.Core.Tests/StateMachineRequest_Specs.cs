@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
+    using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
     [TestFixture]
@@ -45,7 +46,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
                 .MessageSessionRepository()
                 .Endpoint(e => e.AddServiceBusConfigureEndpointCallback((_,cfg) => cfg.RequiresSession = true));
 
-            configurator.AddBus(provider => BusControl);
+            configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
         }
 
         protected override void ConfigureServiceBusBus(IServiceBusBusFactoryConfigurator configurator)

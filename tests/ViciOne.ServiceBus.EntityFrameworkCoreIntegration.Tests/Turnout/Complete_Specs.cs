@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Turnout
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using Shared;
+    using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
     public interface CrunchTheNumbers
@@ -240,7 +241,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Turnout
                             r.LockStatementProvider = RawSqlLockStatements;
                         });
 
-                    x.AddBus(provider => BusControl);
+                    x.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
                 })
                 .BuildServiceProvider();
         }

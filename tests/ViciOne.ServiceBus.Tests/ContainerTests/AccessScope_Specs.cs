@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
     using NUnit.Framework;
     using TestFramework;
     using TestFramework.Messages;
+    using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
     public class Accessing_a_scope_from_middleware :
@@ -18,7 +19,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
                 .AddViciOneServiceBus(x =>
                 {
                     x.AddConsumer<Consumer>();
-                    x.AddBus(provider => BusControl);
+                    x.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
                 })
                 .BuildServiceProvider(true);
         }

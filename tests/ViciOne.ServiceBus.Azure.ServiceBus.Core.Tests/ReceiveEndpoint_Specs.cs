@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TestFramework.Messages;
+    using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
     [TestFixture]
@@ -149,7 +150,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
 
         void ConfigureRegistration(IBusRegistrationConfigurator configurator)
         {
-            configurator.AddBus(provider => BusControl);
+            configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
         }
 
         protected override void ConfigureServiceBusReceiveEndpoint(IServiceBusReceiveEndpointConfigurator configurator)

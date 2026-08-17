@@ -7,6 +7,7 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
         using Microsoft.Extensions.DependencyInjection;
         using NUnit.Framework;
         using TestFramework.Sagas;
+        using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
         public class Using_optimistic_concurrency :
@@ -57,7 +58,7 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
                         cfg.ConnectionFactory(() => TestCloudTable);
                     });
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

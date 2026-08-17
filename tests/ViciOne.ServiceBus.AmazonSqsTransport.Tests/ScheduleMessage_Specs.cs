@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests
 
         protected override void ConfigureAmazonSqsBus(IAmazonSqsBusFactoryConfigurator configurator)
         {
-            configurator.UseAmazonSqsMessageScheduler();
+            configurator.UseDelayedMessageScheduler();
         }
 
         protected override void ConfigureAmazonSqsReceiveEndpoint(IAmazonSqsReceiveEndpointConfigurator configurator)
@@ -71,7 +71,7 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests
 
         protected override void ConfigureAmazonSqsBus(IAmazonSqsBusFactoryConfigurator configurator)
         {
-            configurator.UseAmazonSqsMessageScheduler();
+            configurator.UseDelayedMessageScheduler();
         }
 
         protected override void ConfigureAmazonSqsReceiveEndpoint(IAmazonSqsReceiveEndpointConfigurator configurator)
@@ -117,7 +117,7 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests
 
         protected override void ConfigureAmazonSqsBus(IAmazonSqsBusFactoryConfigurator configurator)
         {
-            configurator.UseAmazonSqsMessageScheduler();
+            configurator.UseDelayedMessageScheduler();
         }
 
         protected override void ConfigureAmazonSqsReceiveEndpoint(IAmazonSqsReceiveEndpointConfigurator configurator)
@@ -169,7 +169,7 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests
 
         protected override void ConfigureAmazonSqsBus(IAmazonSqsBusFactoryConfigurator configurator)
         {
-            configurator.UseAmazonSqsMessageScheduler();
+            configurator.UseDelayedMessageScheduler();
         }
 
         protected override void ConfigureAmazonSqsReceiveEndpoint(IAmazonSqsReceiveEndpointConfigurator configurator)

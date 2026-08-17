@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
         using NUnit.Framework;
         using Shared;
         using TestFramework.Sagas;
+        using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
         [TestFixture(typeof(SqlServerTestDbParameters))]
@@ -91,7 +92,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
                         r.AddDbContext<DbContext, TestInstanceDbContext>(ApplyBuilderOptions);
                     });
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
@@ -179,7 +180,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
                             r.LockStatementProvider = new SqlServerLockStatementProvider(false);
                     });
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

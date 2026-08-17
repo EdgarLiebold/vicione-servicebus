@@ -108,7 +108,7 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests
         public LocatingAnExistingSaga()
         {
             DynamoDbClient = new AmazonDynamoDBClient(new AmazonDynamoDBConfig { ServiceURL = "http://localhost:4566" });
-            DynamoDbContext = new DynamoDBContext(DynamoDbClient);
+            DynamoDbContext = new DynamoDBContextBuilder().WithDynamoDBClient(() => DynamoDbClient).Build();
             _sagaRepository = DynamoDbSagaRepository<SimpleSaga>.Create(() => DynamoDbContext, nameof(LocatingAnExistingSaga));
         }
 

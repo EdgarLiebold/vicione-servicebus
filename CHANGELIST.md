@@ -13,8 +13,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | Status | Count |
 |---|---|
 | Added | 832 |
-| Modified | 4910 |
-| Deleted | 720 |
+| Modified | 4909 |
+| Deleted | 721 |
 | Renamed | 18 |
 
 | Path | Status | Baseline path |
@@ -1288,6 +1288,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj.DotSettings` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj.DotSettings` |
 | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
+| `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFetchConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFetchConfigurator.cs` |
@@ -1710,7 +1711,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsConfigureEndpointCallbackExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsConfigureEndpointCallbackExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsConfigureEndpointsCallback.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsConfigureEndpointsCallback.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsHostConfigurationExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsHostConfigurationExtensions.cs` |
-| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsTransportOptions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsTransportOptions.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsBusFactoryConfigurator.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/IAmazonSqsBusFactoryConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs` |

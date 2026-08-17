@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests
         using TestFramework;
         using TestFramework.Sagas.ChoirConcurrency;
         using Testing;
+        using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
         public class When_testing_concurrency_with_the_choir :
@@ -125,12 +126,12 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests
                 configurator.AddSagaStateMachine<ChoirStateMachine, ChoirState>()
                     .DynamoDbRepository(r =>
                     {
-                        r.ContextFactory(provider => new DynamoDBContext(DynamoDbClient));
+                        r.ContextFactory(provider => new DynamoDBContextBuilder().WithDynamoDBClient(() => DynamoDbClient).Build());
 
                         r.TableName = nameof(ChoirState);
                     });
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

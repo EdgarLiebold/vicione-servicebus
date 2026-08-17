@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests
         using NUnit.Framework;
         using TestFramework;
         using TestFramework.Sagas;
+        using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 
         public class Using_optimistic_concurrency :
@@ -110,12 +111,12 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests
                 configurator.AddSagaStateMachine<TestStateMachineSaga, TestInstance>()
                     .DynamoDbRepository(r =>
                     {
-                        r.ContextFactory(provider => new DynamoDBContext(DynamoDbClient));
+                        r.ContextFactory(provider => new DynamoDBContextBuilder().WithDynamoDBClient(() => DynamoDbClient).Build());
 
                         r.TableName = nameof(TestInstance);
                     });
 
-                configurator.AddBus(provider => BusControl);
+                configurator.SetBusFactory(new RegistrationBusFactory(provider => BusControl));
             }
 
             protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
