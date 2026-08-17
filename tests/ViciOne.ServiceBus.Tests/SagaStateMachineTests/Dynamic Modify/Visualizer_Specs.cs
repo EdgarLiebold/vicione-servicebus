@@ -71,7 +71,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .During(Suspended)
                     .When(Resume, b => b.TransitionTo(Running))
                     .During(Failed)
-                    .When(Restart, context => context.Data.Name != null, b => b.TransitionTo(Running))
+                    .When(Restart, context => context.Message.Name != null, b => b.TransitionTo(Running))
                 );
 
             _graph = _machine.GetGraph();

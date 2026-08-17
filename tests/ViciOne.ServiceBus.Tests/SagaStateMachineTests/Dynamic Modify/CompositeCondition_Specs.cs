@@ -79,22 +79,22 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .During(Waiting)
                     .When(First, b => b.Then(context =>
                     {
-                        context.Instance.First = true;
-                        context.Instance.CalledAfterAll = false;
+                        context.Saga.First = true;
+                        context.Saga.CalledAfterAll = false;
                     }))
                     .When(Second, b => b.Then(context =>
                     {
-                        context.Instance.SecondFirst = !context.Instance.First;
-                        context.Instance.Second = true;
-                        context.Instance.CalledAfterAll = false;
+                        context.Saga.SecondFirst = !context.Saga.First;
+                        context.Saga.Second = true;
+                        context.Saga.CalledAfterAll = false;
                     }))
                     .CompositeEvent("Third", out Third, b => b.CompositeStatus, First, Second)
                     .During(Waiting)
-                    .When(Third, context => context.Instance.SecondFirst, b => b
+                    .When(Third, context => context.Saga.SecondFirst, b => b
                         .Then(context =>
                         {
-                            context.Instance.Called = true;
-                            context.Instance.CalledAfterAll = true;
+                            context.Saga.Called = true;
+                            context.Saga.CalledAfterAll = true;
                         })
                         .Finalize()
                     )

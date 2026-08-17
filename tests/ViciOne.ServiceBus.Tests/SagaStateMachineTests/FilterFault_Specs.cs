@@ -78,7 +78,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(Started)
                         .Then(context =>
                         {
-                            context.Instance.StartAttempts++;
+                            context.Saga.StartAttempts++;
                             throw new NotSupportedException("This is expected, but nonetheless exceptional");
                         })
                         .TransitionTo(Running),
@@ -89,7 +89,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(Started)
                         .Then(instance =>
                         {
-                            instance.Instance.StartAttempts++;
+                            instance.Saga.StartAttempts++;
                             throw new NotSupportedException("This is expected, but nonetheless exceptional");
                         })
                         .TransitionTo(Running));

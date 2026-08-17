@@ -103,7 +103,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Waiting,
                     When(Third)
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize());
             }
 
@@ -235,9 +235,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Waiting,
                     When(First)
-                        .Then(context => context.Instance.CalledFirst = true),
+                        .Then(context => context.Saga.CalledFirst = true),
                     When(Third)
-                        .Then(context => context.Instance.Called = context.Instance.CalledFirst)
+                        .Then(context => context.Saga.Called = context.Saga.CalledFirst)
                         .Finalize());
             }
 

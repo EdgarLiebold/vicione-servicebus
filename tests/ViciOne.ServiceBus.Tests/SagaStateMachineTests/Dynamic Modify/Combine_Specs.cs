@@ -78,7 +78,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Start, b => b.TransitionTo(Waiting))
                     .During(Waiting)
                     .When(Third, b => b
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize()
                     )
                 );
@@ -177,7 +177,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .CompositeEvent("Third", out Third, b => b.CompositeStatus, First, Second)
                     .During(Waiting)
                     .When(Third, b => b
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize()
                     )
                 );

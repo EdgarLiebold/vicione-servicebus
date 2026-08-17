@@ -134,8 +134,8 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
 
         protected override IServiceCollection ConfigureServices(IServiceCollection collection)
         {
-            return base.ConfigureServices(collection)
-                .AddGenericRequestClient();
+            // the generic request client is registered by AddViciOneServiceBus itself
+            return base.ConfigureServices(collection);
         }
 
 

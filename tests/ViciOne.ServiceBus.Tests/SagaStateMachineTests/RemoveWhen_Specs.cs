@@ -171,7 +171,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Asked)
-                        .Respond(context => new Answer { CorrelationId = context.Data.CorrelationId })
+                        .Respond(context => new Answer { CorrelationId = context.Message.CorrelationId })
                         .Finalize());
 
                 SetCompletedWhenFinalized();

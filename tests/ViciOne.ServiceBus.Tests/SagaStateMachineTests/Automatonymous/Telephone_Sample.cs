@@ -162,7 +162,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 Initially(
                     When(ServiceEstablished)
-                        .Then(context => context.Instance.Number = context.Data.Digits)
+                        .Then(context => context.Saga.Number = context.Message.Digits)
                         .TransitionTo(OffHook));
 
                 During(OffHook,
@@ -186,9 +186,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 DuringAny(
                     When(Connected.Enter)
-                        .Then(context => StartCallTimer(context.Instance)),
+                        .Then(context => StartCallTimer(context.Saga)),
                     When(Connected.Leave)
-                        .Then(context => StopCallTimer(context.Instance)));
+                        .Then(context => StopCallTimer(context.Saga)));
             }
 
             public State OffHook { get; set; }

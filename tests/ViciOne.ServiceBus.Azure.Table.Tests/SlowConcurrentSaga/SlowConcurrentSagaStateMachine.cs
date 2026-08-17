@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.SlowConcurrentSaga
 
             Initially(
                 When(Begin)
-                    .Then(context => context.Instance.Counter = 1)
+                    .Then(context => context.Saga.Counter = 1)
                     .TransitionTo(Started));
 
             During(Started,
@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.SlowConcurrentSaga
                     .ThenAsync(async context =>
                     {
                         await Task.Delay(3000);
-                        context.Instance.Counter++;
+                        context.Saga.Counter++;
 
                         LogContext.Debug?.Log("Incremented Counter: {0}", context.Saga.Counter);
                     }));

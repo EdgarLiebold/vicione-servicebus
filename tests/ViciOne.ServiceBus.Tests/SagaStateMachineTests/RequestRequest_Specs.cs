@@ -133,14 +133,14 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 During(Initial,
                     When(CreateRequested)
-                        .Then(context => context.Instance.Link = context.Data.Link)
-                        .Request(LinkRequest, x => x.Init<RequestShortLink>(new { x.Data.Link }))
+                        .Then(context => context.Saga.Link = context.Message.Link)
+                        .Request(LinkRequest, x => x.Init<RequestShortLink>(new { x.Message.Link }))
                         .RequestStarted()
                         .TransitionTo(LinkRequest.Pending));
 
                 During(LinkRequest.Pending,
                     When(LinkRequest.Completed)
-                        .Then(context => context.Instance.ShortLink = context.Data.Link)
+                        .Then(context => context.Saga.ShortLink = context.Message.Link)
                         .RequestCompleted()
                         .TransitionTo(Valid),
                     When(LinkRequest.Faulted)
@@ -151,8 +151,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(CreateRequested)
                         .RespondAsync(x => x.Init<ShortLinkCreated>(new
                         {
-                            x.Instance.Link,
-                            x.Instance.ShortLink
+                            x.Saga.Link,
+                            x.Saga.ShortLink
                         })));
             }
 

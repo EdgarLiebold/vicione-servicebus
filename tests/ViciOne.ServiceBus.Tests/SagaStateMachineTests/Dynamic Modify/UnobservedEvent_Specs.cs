@@ -85,7 +85,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Start, b => b.TransitionTo(Running))
                     .During(Running)
                     .Ignore(Start)
-                    .Ignore(Charge, x => x.Data.Volts == 9)
+                    .Ignore(Charge, x => x.Message.Volts == 9)
                 );
         }
 

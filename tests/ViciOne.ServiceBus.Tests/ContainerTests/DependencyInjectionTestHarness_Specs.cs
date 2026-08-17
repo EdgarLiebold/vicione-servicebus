@@ -299,7 +299,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
 
             public async Task Execute(BehaviorContext<Instance, Start> context, IBehavior<Instance, Start> next)
             {
-                await _publishEndpoint.Publish(new Started { CorrelationId = context.Instance.CorrelationId });
+                await _publishEndpoint.Publish(new Started { CorrelationId = context.Saga.CorrelationId });
 
                 await next.Execute(context);
             }

@@ -73,17 +73,17 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(Complete)
                         .ThenAsync(async context =>
                         {
-                            await Console.Out.WriteLineAsync($"Completing: {context.Instance.CorrelationId}");
+                            await Console.Out.WriteLineAsync($"Completing: {context.Saga.CorrelationId}");
                             await Task.Delay(1000);
-                            await Console.Out.WriteLineAsync($"Completed: {context.Instance.CorrelationId}");
+                            await Console.Out.WriteLineAsync($"Completed: {context.Saga.CorrelationId}");
                         })
                         .Finalize(),
                     When(Cancel)
                         .ThenAsync(async context =>
                         {
-                            await Console.Out.WriteLineAsync($"Canceling: {context.Instance.CorrelationId}");
+                            await Console.Out.WriteLineAsync($"Canceling: {context.Saga.CorrelationId}");
                             await Task.Delay(1000);
-                            await Console.Out.WriteLineAsync($"Canceled: {context.Instance.CorrelationId}");
+                            await Console.Out.WriteLineAsync($"Canceled: {context.Saga.CorrelationId}");
                         })
                         .Finalize());
 

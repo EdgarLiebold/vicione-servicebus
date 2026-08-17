@@ -13,7 +13,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | Status | Count |
 |---|---|
 | Added | 832 |
-| Modified | 4909 |
+| Modified | 4910 |
 | Deleted | 720 |
 | Renamed | 18 |
 
@@ -5290,6 +5290,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs` | Modified | `src/MassTransit/MassTransitBus.cs` |
 | `src/ViciOne.ServiceBus/ViciOneServiceBusHostedService.cs` | Modified | `src/MassTransit/MassTransitHostedService.cs` |
 | `src/vicione-servicebus-logo.png` | Modified | `src/mt-logo-small.png` |
+| `tests/Directory.Build.props` | Modified | `tests/Directory.Build.props` |
 | `tests/MassTransit.AmazonSqsTransport.Tests/Encrypted_Specs.cs` | Deleted | `tests/MassTransit.AmazonSqsTransport.Tests/Encrypted_Specs.cs` |
 | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosFutureTestFixtureConfigurator.cs` | Deleted | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosFutureTestFixtureConfigurator.cs` |
 | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestAccountKeyConfigurator.cs` | Deleted | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestAccountKeyConfigurator.cs` |

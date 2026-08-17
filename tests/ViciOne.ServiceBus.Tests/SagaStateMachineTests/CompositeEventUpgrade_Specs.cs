@@ -227,11 +227,11 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                 Initially(When(Register)
                     .Then(context =>
                     {
-                        context.Instance.Name = context.Data.Name;
-                        context.Instance.Surname = context.Data.Surname;
+                        context.Saga.Name = context.Message.Name;
+                        context.Saga.Surname = context.Message.Surname;
                     })
-                    .Request(ValidateName, x => x.Init<ValidateName>(new { x.Instance.Name }))
-                    .Request(ValidateSurname, x => x.Init<ValidateSurname>(new { x.Instance.Surname }))
+                    .Request(ValidateName, x => x.Init<ValidateName>(new { x.Saga.Name }))
+                    .Request(ValidateSurname, x => x.Init<ValidateSurname>(new { x.Saga.Surname }))
                     .TransitionTo(Registering));
 
                 DuringAny(
@@ -239,23 +239,23 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                         .Then(context =>
                         {
                             TestContext.Out.WriteLine("ValidateName Completed");
-                            context.Instance.Name = context.Data.Name;
+                            context.Saga.Name = context.Message.Name;
                         }),
                     When(ValidateSurname.Completed)
                         .Then(context =>
                         {
                             TestContext.Out.WriteLine("ValidateSurname Completed");
-                            context.Instance.Surname = context.Data.Surname;
+                            context.Saga.Surname = context.Message.Surname;
                         }),
                     When(ValidateName.Faulted)
                         .Then(context =>
                         {
-                            context.Instance.Name = "REJECTED!";
+                            context.Saga.Name = "REJECTED!";
                         }),
                     When(ValidateSurname.Faulted)
                         .Then(context =>
                         {
-                            context.Instance.Surname = "REJECTED!";
+                            context.Saga.Surname = "REJECTED!";
                         })
                 );
 
@@ -265,9 +265,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                         .Then(context =>
                         {
                             TestContext.Out.WriteLine("Completed with Success");
-                            context.Instance.Result = "Success";
+                            context.Saga.Result = "Success";
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Registered)
                     ,
 
@@ -275,23 +275,23 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(InvalidId)
                         .Then(context =>
                         {
-                            context.Instance.Result = "Invalid ID";
+                            context.Saga.Result = "Invalid ID";
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Rejected),
                     When(InvalidName)
                         .Then(context =>
                         {
-                            context.Instance.Result = "Invalid Name";
+                            context.Saga.Result = "Invalid Name";
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Rejected),
                     When(InvalidSurname)
                         .Then(context =>
                         {
-                            context.Instance.Result = "Invalid Surname";
+                            context.Saga.Result = "Invalid Surname";
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Rejected)
                 );
             }

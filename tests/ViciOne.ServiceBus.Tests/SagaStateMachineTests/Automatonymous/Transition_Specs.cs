@@ -80,7 +80,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(Finish)
                         .Finalize());
 
-                WhenEnter(Running, x => x.Then(context => context.Instance.EnterCalled = true));
+                WhenEnter(Running, x => x.Then(context => context.Saga.EnterCalled = true));
             }
 
             public State Running { get; private set; }
@@ -186,8 +186,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(Finish)
                         .Finalize());
 
-                BeforeEnter(Final, x => x.Then(context => context.Instance.FinalEntered = true));
-                WhenEnter(Running, x => x.Then(context => context.Instance.EnterCalled = true));
+                BeforeEnter(Final, x => x.Then(context => context.Saga.FinalEntered = true));
+                WhenEnter(Running, x => x.Then(context => context.Saga.EnterCalled = true));
             }
 
             public State Running { get; private set; }

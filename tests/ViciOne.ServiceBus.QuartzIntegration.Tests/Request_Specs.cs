@@ -227,15 +227,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                 Initially(When(Register)
                     .Then(context =>
                     {
-                        Console.WriteLine("Registration received: {0}", context.Data.MemberNumber);
+                        Console.WriteLine("Registration received: {0}", context.Message.MemberNumber);
 
-                        Console.WriteLine("TestState ID: {0}", context.Instance.CorrelationId);
+                        Console.WriteLine("TestState ID: {0}", context.Saga.CorrelationId);
 
-                        context.Instance.Name = context.Data.Name;
-                        context.Instance.Address = context.Data.Address;
-                        context.Instance.MemberNumber = context.Data.MemberNumber;
+                        context.Saga.Name = context.Message.Name;
+                        context.Saga.Address = context.Message.Address;
+                        context.Saga.MemberNumber = context.Message.MemberNumber;
                     })
-                    .Request(ValidateAddress, x => ValidateAddress.Settings.ServiceAddress, x => x.Init<ValidateAddress>(x.Instance))
+                    .Request(ValidateAddress, x => ValidateAddress.Settings.ServiceAddress, x => x.Init<ValidateAddress>(x.Saga))
                     .TransitionTo(ValidateAddress.Pending));
 
                 During(ValidateAddress.Pending,
@@ -244,9 +244,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                         {
                             await Console.Out.WriteLineAsync("Request Completed!");
 
-                            context.Instance.Address = context.Data.Address;
+                            context.Saga.Address = context.Message.Address;
                         })
-                        .Request(ValidateName, context => context.Init<ValidateName>(context.Instance))
+                        .Request(ValidateName, context => context.Init<ValidateName>(context.Saga))
                         .TransitionTo(ValidateName.Pending),
                     When(ValidateAddress.Faulted)
                         .ThenAsync(async context => await Console.Out.WriteLineAsync("Request Faulted"))
@@ -261,9 +261,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                         {
                             await Console.Out.WriteLineAsync("Request Completed!");
 
-                            context.Instance.Name = context.Data.Name;
+                            context.Saga.Name = context.Message.Name;
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Registered),
                     When(ValidateName.Faulted)
                         .ThenAsync(async context => await Console.Out.WriteLineAsync("Request Faulted"))

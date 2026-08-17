@@ -60,9 +60,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
             public TestStateMachine()
             {
                 Initially(
-                    When(Started, x => x.Data.FailToStart)
+                    When(Started, x => x.Message.FailToStart)
                         .Then(context => throw new IntentionalTestException()),
-                    When(Started, x => x.Data.FailToStart == false)
+                    When(Started, x => x.Message.FailToStart == false)
                         .Respond(new StartupComplete())
                         .TransitionTo(Running));
             }
@@ -153,9 +153,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
             public TestStateMachine()
             {
                 Initially(
-                    When(Started, x => x.Data.FailToStart)
+                    When(Started, x => x.Message.FailToStart)
                         .Then(context => throw new IntentionalTestException()),
-                    When(Started, x => x.Data.FailToStart == false)
+                    When(Started, x => x.Message.FailToStart == false)
                         .Respond(new StartupComplete())
                         .TransitionTo(Running));
             }

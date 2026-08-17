@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             public async Task Execute(BehaviorContext<ClaimAdjustmentInstance, CreateClaim> context,
                 IBehavior<ClaimAdjustmentInstance, CreateClaim> next)
             {
-                context.Instance.Value = _calculator.Add(context.Data.X, context.Data.Y);
+                context.Saga.Value = _calculator.Add(context.Message.X, context.Message.Y);
             }
 
             public Task Faulted<TException>(BehaviorExceptionContext<ClaimAdjustmentInstance, CreateClaim, TException> context,

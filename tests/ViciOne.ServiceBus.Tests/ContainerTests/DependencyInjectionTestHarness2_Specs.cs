@@ -106,7 +106,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
                         .TransitionTo(Started)
                         .RespondAsync(ctx => ctx.Init<StartCommandResponse>(new
                         {
-                            ctx.Instance.CorrelationId,
+                            ctx.Saga.CorrelationId,
                         })));
             }
 

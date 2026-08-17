@@ -80,7 +80,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Started)
-                        .Send(sendAddress, context => new StartupComplete { TransactionId = context.Data.CorrelationId })
+                        .Send(sendAddress, context => new StartupComplete { TransactionId = context.Message.CorrelationId })
                         .TransitionTo(Running));
             }
 

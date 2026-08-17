@@ -78,16 +78,16 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(First)
                         .Then(ctx =>
                         {
-                            ctx.Instance.ReceivedFirst = true;
+                            ctx.Saga.ReceivedFirst = true;
                         }).TransitionTo(OtherState)
                 );
 
                 WhenEnter(OtherState, x => x
                     .ThenAsync(async ctx =>
                     {
-                        ctx.Instance.TruthProvided = await truthProvider;
+                        ctx.Saga.TruthProvided = await truthProvider;
                     })
-                    .If(ctx => ctx.Instance.ReceivedFirst && ctx.Instance.TruthProvided,
+                    .If(ctx => ctx.Saga.ReceivedFirst && ctx.Saga.TruthProvided,
                         ctx => ctx.Finalize())
                 );
             }

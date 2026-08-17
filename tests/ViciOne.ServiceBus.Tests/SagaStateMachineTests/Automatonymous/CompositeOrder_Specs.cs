@@ -86,12 +86,12 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(First)
                         .Then(context =>
                         {
-                            context.Instance.CalledAfterAll = false;
+                            context.Saga.CalledAfterAll = false;
                         }),
                     When(Second)
                         .Then(context =>
                         {
-                            context.Instance.CalledAfterAll = false;
+                            context.Saga.CalledAfterAll = false;
                         }));
 
                 CompositeEvent(() => Third, x => x.CompositeStatus, First, Second);
@@ -100,8 +100,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(Third)
                         .Then(context =>
                         {
-                            context.Instance.Called = true;
-                            context.Instance.CalledAfterAll = true;
+                            context.Saga.Called = true;
+                            context.Saga.CalledAfterAll = true;
                         })
                         .Finalize());
             }

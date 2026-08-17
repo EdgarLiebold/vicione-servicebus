@@ -139,7 +139,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .InstanceState(b => b.CurrentState)
                     .During(builder.Initial)
                     .When(Initialized, b => b.Finalize())
-                    .Finally(b => b.Then(context => context.Instance.Value = Finalized))
+                    .Finally(b => b.Then(context => context.Saga.Value = Finalized))
                 );
 
             _machine.RaiseEvent(_instance, Initialized)
@@ -205,10 +205,10 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Initialized, b => b.TransitionTo(Running))
                     .DuringAny()
                     .When(builder.Initial.Enter, b => b.TransitionTo(Initializing))
-                    .When(builder.Initial.AfterLeave, b => b.Then(context => context.Instance.LeftState = context.Data))
-                    .When(Initializing.BeforeEnter, b => b.Then(context => context.Instance.EnteredState = context.Data))
+                    .When(builder.Initial.AfterLeave, b => b.Then(context => context.Saga.LeftState = context.Message))
+                    .When(Initializing.BeforeEnter, b => b.Then(context => context.Saga.EnteredState = context.Message))
                     .When(Running.Enter, b => b.Finalize())
-                    .When(builder.Final.BeforeEnter, b => b.Then(context => context.Instance.FinalState = context.Instance.CurrentState))
+                    .When(builder.Final.BeforeEnter, b => b.Then(context => context.Saga.FinalState = context.Saga.CurrentState))
                 );
 
             _machine.RaiseEvent(_instance, Initialized)

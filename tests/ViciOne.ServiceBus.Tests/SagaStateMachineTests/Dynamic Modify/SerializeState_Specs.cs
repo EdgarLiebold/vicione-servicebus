@@ -23,8 +23,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .State("False", out False)
                     .Event("Thing", out Thing)
                     .During(builder.Initial)
-                    .When(Thing, context => context.Data.Condition, b => b.TransitionTo(True))
-                    .When(Thing, context => !context.Data.Condition, b => b.TransitionTo(False))
+                    .When(Thing, context => context.Message.Condition, b => b.TransitionTo(True))
+                    .When(Thing, context => !context.Message.Condition, b => b.TransitionTo(False))
                 );
 
             await machine.RaiseEvent(instance, Thing, new Data { Condition = true });
@@ -55,9 +55,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
             public InstanceStateMachine()
             {
                 During(Initial,
-                    When(Thing, context => context.Data.Condition)
+                    When(Thing, context => context.Message.Condition)
                         .TransitionTo(True),
-                    When(Thing, context => !context.Data.Condition)
+                    When(Thing, context => !context.Message.Condition)
                         .TransitionTo(False));
             }
 

@@ -98,8 +98,8 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
                     When(Started)
                         .Then(context =>
                         {
-                            context.Instance.Key = context.Data.TestKey;
-                            context.Instance.TestState = TestEnum.Initialized;
+                            context.Saga.Key = context.Message.TestKey;
+                            context.Saga.TestState = TestEnum.Initialized;
                         })
                         .Activity(x => x.OfInstanceType<PublishTestStartedActivity>())
                         .TransitionTo(Active));
@@ -108,9 +108,9 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
                     When(Updated)
                         .Publish(context => new TestUpdated
                         {
-                            CorrelationId = context.Instance.CorrelationId,
-                            TestKey = context.Instance.Key,
-                            TestState = context.Instance.TestState,
+                            CorrelationId = context.Saga.CorrelationId,
+                            TestKey = context.Saga.Key,
+                            TestState = context.Saga.TestState,
                         })
                         .TransitionTo(Done)
                         .Finalize());
@@ -167,8 +167,8 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
             {
                 await _context.Publish(new TestStarted
                 {
-                    CorrelationId = context.Instance.CorrelationId,
-                    TestKey = context.Instance.Key
+                    CorrelationId = context.Saga.CorrelationId,
+                    TestKey = context.Saga.Key
                 }).ConfigureAwait(false);
 
                 await next.Execute(context).ConfigureAwait(false);
@@ -179,8 +179,8 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
             {
                 await _context.Publish(new TestStarted
                 {
-                    CorrelationId = context.Instance.CorrelationId,
-                    TestKey = context.Instance.Key
+                    CorrelationId = context.Saga.CorrelationId,
+                    TestKey = context.Saga.Key
                 }).ConfigureAwait(false);
 
                 await next.Execute(context).ConfigureAwait(false);

@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>$(NoWarn),CS0618</NoWarn>
+    <NoWarn>$(NoWarn)</NoWarn>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

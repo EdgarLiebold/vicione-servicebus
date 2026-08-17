@@ -231,19 +231,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
                 Schedule(() => DelayStart, x => x.DelayStartTokenId, x => x.Received = e => e.CorrelateById(m => m.Message.CorrelationId));
 
                 Initially(
-                    When(Started, x => x.Data.FailToStart)
+                    When(Started, x => x.Message.FailToStart)
                         .Then(context => throw new IntentionalTestException()),
-                    When(Started, x => !x.Data.FailToStart && !x.Data.Delay.HasValue)
+                    When(Started, x => !x.Message.FailToStart && !x.Message.Delay.HasValue)
                         .Respond(new StartupComplete())
                         .Activity(x => x.OfType<ReliableStateMachineActivity>())
                         .TransitionTo(Running),
-                    When(Started, x => !x.Data.FailToStart && x.Data.Delay.HasValue)
+                    When(Started, x => !x.Message.FailToStart && x.Message.Delay.HasValue)
                         .Then(context =>
                         {
                             context.Saga.RequestId = context.RequestId;
                             context.Saga.ResponseAddress = context.ResponseAddress;
                         })
-                        .Schedule(DelayStart, x => new DelayStart { CorrelationId = x.Saga.CorrelationId }, x => x.Data.Delay.Value)
+                        .Schedule(DelayStart, x => new DelayStart { CorrelationId = x.Saga.CorrelationId }, x => x.Message.Delay.Value)
                         .TransitionTo(Delayed));
 
                 During(Delayed,

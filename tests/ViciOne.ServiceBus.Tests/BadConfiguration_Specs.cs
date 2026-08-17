@@ -35,7 +35,7 @@ namespace ViciOne.ServiceBus.Tests
                 {
                     e.Consumer<Consumer>(cc =>
                     {
-                        cc.Message<PingMessage>(m => m.UseRetry(r =>
+                        cc.Message<PingMessage>(m => m.UseMessageRetry(r =>
                         {
                         }));
                     });

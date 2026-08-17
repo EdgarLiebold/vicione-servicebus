@@ -72,11 +72,11 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Init, b => b.TransitionTo(Ready))
                     .DuringAny()
                     .When(Hello, b => b
-                        .Then(context => context.Instance.HelloCalled = true)
+                        .Then(context => context.Saga.HelloCalled = true)
                         .Finalize()
                     )
                     .When(EventA, b => b
-                        .Then(context => context.Instance.AValue = context.Data.Value)
+                        .Then(context => context.Saga.AValue = context.Message.Value)
                         .Finalize()
                     )
                 );

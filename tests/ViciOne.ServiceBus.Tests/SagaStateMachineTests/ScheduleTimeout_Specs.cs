@@ -106,18 +106,18 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
             Initially(When(ItemAdded)
                 .ThenAsync(context =>
                 {
-                    context.Instance.MemberNumber = context.Data.MemberNumber;
-                    context.Instance.ExpiresAfterSeconds = 1;
-                    return Console.Out.WriteLineAsync($"Cart {context.Instance.CorrelationId} Created: {context.Data.MemberNumber}");
+                    context.Saga.MemberNumber = context.Message.MemberNumber;
+                    context.Saga.ExpiresAfterSeconds = 1;
+                    return Console.Out.WriteLineAsync($"Cart {context.Saga.CorrelationId} Created: {context.Message.MemberNumber}");
                 })
-                .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Instance),
-                    context => TimeSpan.FromSeconds(context.Instance.ExpiresAfterSeconds))
+                .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Saga),
+                    context => TimeSpan.FromSeconds(context.Saga.ExpiresAfterSeconds))
                 .TransitionTo(Active));
 
             During(Active,
                 When(CartTimeout.Received)
-                    .ThenAsync(context => Console.Out.WriteLineAsync($"Cart Expired: {context.Data.MemberNumber}"))
-                    .PublishAsync(context => context.Init<CartRemoved>(context.Instance))
+                    .ThenAsync(context => Console.Out.WriteLineAsync($"Cart Expired: {context.Message.MemberNumber}"))
+                    .PublishAsync(context => context.Init<CartRemoved>(context.Saga))
                     .Finalize());
 
             SetCompletedWhenFinalized();

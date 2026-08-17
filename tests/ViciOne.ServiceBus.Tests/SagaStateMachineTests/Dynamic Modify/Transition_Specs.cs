@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Initialized, b => b.TransitionTo(Running))
                     .During(Running)
                     .When(Finish, b => b.Finalize())
-                    .WhenEnter(Running, x => x.Then(context => context.Instance.EnterCalled = true))
+                    .WhenEnter(Running, x => x.Then(context => context.Saga.EnterCalled = true))
                 );
             _observer = new StateChangeObserver<Instance>();
 
@@ -151,8 +151,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Initialized, b => b.TransitionTo(Running))
                     .During(Running)
                     .When(Finish, b => b.Finalize())
-                    .BeforeEnter(builder.Final, x => x.Then(context => context.Instance.FinalEntered = true))
-                    .WhenEnter(Running, x => x.Then(context => context.Instance.EnterCalled = true))
+                    .BeforeEnter(builder.Final, x => x.Then(context => context.Saga.FinalEntered = true))
+                    .WhenEnter(Running, x => x.Then(context => context.Saga.EnterCalled = true))
                 );
             _observer = new StateChangeObserver<Instance>();
 

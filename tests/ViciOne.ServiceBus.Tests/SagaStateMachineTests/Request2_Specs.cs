@@ -137,21 +137,21 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                 Initially(When(Register)
                     .Then(context =>
                     {
-                        context.Instance.Name = context.Data.Name;
+                        context.Saga.Name = context.Message.Name;
                     })
-                    .Request(ValidateName, x => x.Init<ValidateName>(new { x.Instance.Name }))
+                    .Request(ValidateName, x => x.Init<ValidateName>(new { x.Saga.Name }))
                     .TransitionTo(ValidateName.Pending));
 
                 During(ValidateName.Pending,
                     When(ValidateName.Completed)
                         .ThenAsync(async context =>
                         {
-                            context.Instance.Name = context.Data.Name;
+                            context.Saga.Name = context.Message.Name;
                         })
-                        .PublishAsync(context => context.Init<MemberRegistered>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistered>(context.Saga))
                         .TransitionTo(Registered),
                     When(ValidateName.Completed2)
-                        .PublishAsync(context => context.Init<MemberRegistrationFailed>(context.Instance))
+                        .PublishAsync(context => context.Init<MemberRegistrationFailed>(context.Saga))
                         .TransitionTo(Registered),
                     When(ValidateName.Faulted)
                         .TransitionTo(NameValidationFaulted),

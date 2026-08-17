@@ -115,25 +115,25 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
                 Initially(
                     When(Opened)
-                        .Schedule(GracePeriod, context => context.Init<GracePeriodElapsed>(new { AccountId = context.Instance.CorrelationId }))
-                        .Schedule(PaymentTimeFrame, context => context.Init<PaymentTimeFrameElapsed>(new { AccountId = context.Instance.CorrelationId }))
-                        .PublishAsync(context => context.Init<AccountOpened>(new { AccountId = context.Instance.CorrelationId }))
-                        .Then(context => Console.WriteLine("PaymentTimeFrame: {0}, GracePeriod: {1}", context.Instance.PaymentTimeFrameToken, context
-                            .Instance.GracePeriodToken))
+                        .Schedule(GracePeriod, context => context.Init<GracePeriodElapsed>(new { AccountId = context.Saga.CorrelationId }))
+                        .Schedule(PaymentTimeFrame, context => context.Init<PaymentTimeFrameElapsed>(new { AccountId = context.Saga.CorrelationId }))
+                        .PublishAsync(context => context.Init<AccountOpened>(new { AccountId = context.Saga.CorrelationId }))
+                        .Then(context => Console.WriteLine("PaymentTimeFrame: {0}, GracePeriod: {1}", context.Saga.PaymentTimeFrameToken, context
+                            .Saga.GracePeriodToken))
                         .TransitionTo(Open));
 
                 During(Open,
                     When(GracePeriod.Received)
-                        .PublishAsync(context => context.Init<AccountDefaulted>(new { AccountId = context.Instance.CorrelationId }))
+                        .PublishAsync(context => context.Init<AccountDefaulted>(new { AccountId = context.Saga.CorrelationId }))
                         .TransitionTo(Defaulted),
                     When(PaymentTimeFrame.Received)
-                        .PublishAsync(context => context.Init<AccountClosed>(new { AccountId = context.Instance.CorrelationId }))
+                        .PublishAsync(context => context.Init<AccountClosed>(new { AccountId = context.Saga.CorrelationId }))
                         .Unschedule(GracePeriod)
                         .TransitionTo(Closed));
 
                 During(Defaulted,
                     When(PaymentTimeFrame.Received)
-                        .PublishAsync(context => context.Init<AccountClosed>(new { AccountId = context.Instance.CorrelationId }))
+                        .PublishAsync(context => context.Init<AccountClosed>(new { AccountId = context.Saga.CorrelationId }))
                         .TransitionTo(Closed));
             }
 

@@ -55,7 +55,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             {
                 During(Initial,
                     When(Initialized)
-                        .Then(context => context.Instance.Value = context.Data.Value)
+                        .Then(context => context.Saga.Value = context.Message.Value)
                         .TransitionTo(Running));
             }
 

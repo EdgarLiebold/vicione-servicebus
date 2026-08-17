@@ -76,7 +76,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                         .Then(context =>
                         {
                             Console.WriteLine("Started:Then");
-                            context.Instance.Counter = 1;
+                            context.Saga.Counter = 1;
                         })
                         .TransitionTo(Running));
 
@@ -87,7 +87,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                 WhenEnter(Running, x => x.Then(context =>
                 {
                     Console.WriteLine("Running.Enter:Then");
-                    context.Instance.OnEnter = context.Instance.Counter;
+                    context.Saga.OnEnter = context.Saga.Counter;
                 }).TransitionTo(RunningFaster));
             }
 

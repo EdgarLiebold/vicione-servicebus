@@ -225,7 +225,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                         .SubState("OnHold", Connected, out OnHold)
                         .Initially()
                         .When(ServiceEstablished, b => b
-                            .Then(context => context.Instance.Number = context.Data.Digits)
+                            .Then(context => context.Saga.Number = context.Message.Digits)
                             .TransitionTo(OffHook))
                         .During(OffHook)
                         .When(CallDialed, b => b.TransitionTo(Ringing))
@@ -240,8 +240,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                         .When(TakenOffHold, b => b.TransitionTo(Connected))
                         .When(PhoneHurledAgainstWall, b => b.TransitionTo(PhoneDestroyed))
                         .DuringAny()
-                        .When(Connected.Enter, b => b.Then(context => StartCallTimer(context.Instance)))
-                        .When(Connected.Leave, b => b.Then(context => StopCallTimer(context.Instance)))
+                        .When(Connected.Enter, b => b.Then(context => StartCallTimer(context.Saga)))
+                        .When(Connected.Leave, b => b.Then(context => StopCallTimer(context.Saga)))
                     );
             }
         }

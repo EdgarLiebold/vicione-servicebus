@@ -65,8 +65,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(Finish)
                         .Finalize());
 
-                BeforeEnterAny(x => x.Then(context => context.Instance.LastEntered = context.Data));
-                AfterLeaveAny(x => x.Then(context => context.Instance.LastLeft = context.Data));
+                BeforeEnterAny(x => x.Then(context => context.Saga.LastEntered = context.Message));
+                AfterLeaveAny(x => x.Then(context => context.Saga.LastLeft = context.Message));
             }
 
             public State Running { get; private set; }

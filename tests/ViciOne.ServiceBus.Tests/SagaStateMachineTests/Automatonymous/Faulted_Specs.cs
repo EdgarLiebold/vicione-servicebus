@@ -57,16 +57,16 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             public async Task Execute(BehaviorContext<ClaimAdjustmentInstance, CreateClaim> context,
                 IBehavior<ClaimAdjustmentInstance, CreateClaim> next)
             {
-                var originalValue = context.Instance.Value;
+                var originalValue = context.Saga.Value;
                 try
                 {
-                    context.Instance.Value = _calculator.Add(context.Data.X, context.Data.Y);
+                    context.Saga.Value = _calculator.Add(context.Message.X, context.Message.Y);
 
                     await next.Execute(context);
                 }
                 catch (Exception)
                 {
-                    context.Instance.Value = originalValue;
+                    context.Saga.Value = originalValue;
 
                     throw;
                 }

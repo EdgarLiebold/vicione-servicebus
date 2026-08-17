@@ -101,41 +101,41 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .Event("Initialized", out Initialized)
                     .During(builder.Initial)
                     .When(Initialized, b => b
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Then(_ =>
                         {
                             throw new ApplicationException("Boom!");
                         })
-                        .Then(context => context.Instance.NotCalled = false)
+                        .Then(context => context.Saga.NotCalled = false)
                         .Catch<ApplicationException>(ex => ex
                             .If(context => true, c => c
-                                .Then(context => context.Instance.CalledThenClause = true)
+                                .Then(context => context.Saga.CalledThenClause = true)
                             )
                             .IfAsync(context => Task.FromResult(true), c => c
-                                .Then(context => context.Instance.CalledThenClauseAsync = true)
+                                .Then(context => context.Saga.CalledThenClauseAsync = true)
                             )
                             .IfElse(context => false,
-                                c => c.Then(context => context.Instance.ThenShouldNotBeCalled = true),
-                                c => c.Then(context => context.Instance.ElseShouldBeCalled = true)
+                                c => c.Then(context => context.Saga.ThenShouldNotBeCalled = true),
+                                c => c.Then(context => context.Saga.ElseShouldBeCalled = true)
                             )
                             .IfElseAsync(context => Task.FromResult(false),
-                                c => c.Then(context => context.Instance.ThenAsyncShouldNotBeCalled = true),
-                                c => c.Then(context => context.Instance.ElseAsyncShouldBeCalled = true)
+                                c => c.Then(context => context.Saga.ThenAsyncShouldNotBeCalled = true),
+                                c => c.Then(context => context.Saga.ElseAsyncShouldBeCalled = true)
                             )
                             .Then(context =>
                             {
-                                context.Instance.ExceptionMessage = context.Exception.Message;
-                                context.Instance.ExceptionType = context.Exception.GetType();
+                                context.Saga.ExceptionMessage = context.Exception.Message;
+                                context.Saga.ExceptionType = context.Exception.GetType();
                             })
                             .ThenAsync(context =>
                             {
-                                context.Instance.ThenAsyncShouldBeCalled = true;
+                                context.Saga.ThenAsyncShouldBeCalled = true;
                                 return Task.CompletedTask;
                             })
                             .TransitionTo(Failed)
                         )
                         .Catch<Exception>(ex => ex
-                            .Then(context => context.Instance.ShouldNotBeCalled = true)
+                            .Then(context => context.Saga.ShouldNotBeCalled = true)
                         )
                     )
                 );
@@ -223,17 +223,17 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .InstanceState(b => b.CurrentState)
                     .During(builder.Initial)
                     .When(Initialized, b => b
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Then(_ =>
                         {
                             throw new ApplicationException("Boom!");
                         })
-                        .Then(context => context.Instance.NotCalled = false)
+                        .Then(context => context.Saga.NotCalled = false)
                         .Catch<Exception>(ex => ex
                             .Then(context =>
                             {
-                                context.Instance.ExceptionMessage = context.Exception.Message;
-                                context.Instance.ExceptionType = context.Exception.GetType();
+                                context.Saga.ExceptionMessage = context.Exception.Message;
+                                context.Saga.ExceptionType = context.Exception.GetType();
                             })
                             .TransitionTo(Failed)
                         )
@@ -292,7 +292,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                             throw new ApplicationException("Boom!");
                         })
                         .Catch<Exception>(ex => ex)
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                     )
                 );
 
@@ -395,31 +395,31 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .InstanceState(b => b.CurrentState)
                     .During(builder.Initial)
                     .When(Initialized, b => b
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Then(_ =>
                         {
                             throw new ApplicationException("Boom!");
                         })
-                        .Then(context => context.Instance.NotCalled = false)
+                        .Then(context => context.Saga.NotCalled = false)
                         .Catch<Exception>(ex => ex
                             .If(context => true, b => b
-                                .Then(context => context.Instance.CalledThenClause = true)
+                                .Then(context => context.Saga.CalledThenClause = true)
                             )
                             .IfAsync(context => Task.FromResult(true), b => b
-                                .Then(context => context.Instance.CalledSecondThenClause = true)
+                                .Then(context => context.Saga.CalledSecondThenClause = true)
                             )
                             .IfElse(context => false,
-                                b => b.Then(context => context.Instance.ThenShouldNotBeCalled = true),
-                                b => b.Then(context => context.Instance.ElseShouldBeCalled = true)
+                                b => b.Then(context => context.Saga.ThenShouldNotBeCalled = true),
+                                b => b.Then(context => context.Saga.ElseShouldBeCalled = true)
                             )
                             .IfElseAsync(context => Task.FromResult(false),
-                                b => b.Then(context => context.Instance.ThenAsyncShouldNotBeCalled = true),
-                                b => b.Then(context => context.Instance.ElseAsyncShouldBeCalled = true)
+                                b => b.Then(context => context.Saga.ThenAsyncShouldNotBeCalled = true),
+                                b => b.Then(context => context.Saga.ElseAsyncShouldBeCalled = true)
                             )
                             .Then(context =>
                             {
-                                context.Instance.ExceptionMessage = context.Exception.Message;
-                                context.Instance.ExceptionType = context.Exception.GetType();
+                                context.Saga.ExceptionMessage = context.Exception.Message;
+                                context.Saga.ExceptionType = context.Exception.GetType();
                             })
                             .TransitionTo(Failed)
                         )

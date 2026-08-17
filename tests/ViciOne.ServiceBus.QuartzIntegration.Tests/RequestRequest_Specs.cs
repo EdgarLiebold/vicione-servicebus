@@ -123,17 +123,17 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
                 During(Initial,
                     When(CreateRequested)
-                        .Then(context => context.Instance.Link = context.Data.Link)
-                        .Request(LinkRequest, x => x.Init<RequestShortLink>(new { x.Data.Link }))
+                        .Then(context => context.Saga.Link = context.Message.Link)
+                        .Request(LinkRequest, x => x.Init<RequestShortLink>(new { x.Message.Link }))
                         .RequestStarted()
                         .TransitionTo(LinkRequest.Pending));
 
                 During(LinkRequest.Pending,
                     When(LinkRequest.Completed)
-                        .Then(context => context.Instance.ShortLink = context.Data.Link)
+                        .Then(context => context.Saga.ShortLink = context.Message.Link)
                         .RequestCompleted(x => Task.FromResult<ShortLinkCreated>(new ShortLinkCreatedCls
                         {
-                            Link = x.Instance.Link,
+                            Link = x.Saga.Link,
                             ShortLink = new Uri("https://vicione-servicebus.invalid")
                         })).TransitionTo(Valid),
                     When(LinkRequest.Faulted)
@@ -144,8 +144,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                     When(CreateRequested)
                         .RespondAsync(x => x.Init<ShortLinkCreated>(new
                         {
-                            x.Instance.Link,
-                            x.Instance.ShortLink
+                            x.Saga.Link,
+                            x.Saga.ShortLink
                         })));
             }
 

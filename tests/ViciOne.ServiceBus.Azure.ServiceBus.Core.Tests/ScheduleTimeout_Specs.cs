@@ -186,29 +186,29 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
                 Initially(When(ItemAdded)
                     .Then(context =>
                     {
-                        context.Instance.MemberNumber = context.Data.MemberNumber;
-                        context.Instance.ExpiresAfterSeconds = 3;
+                        context.Saga.MemberNumber = context.Message.MemberNumber;
+                        context.Saga.ExpiresAfterSeconds = 3;
 
-                        LogContext.Debug?.Log("Cart {CartId} Created: {MemberNumber}", context.Instance.CorrelationId, context.Data.MemberNumber);
+                        LogContext.Debug?.Log("Cart {CartId} Created: {MemberNumber}", context.Saga.CorrelationId, context.Message.MemberNumber);
                     })
-                    .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Instance),
-                        context => TimeSpan.FromSeconds(context.Instance.ExpiresAfterSeconds))
+                    .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Saga),
+                        context => TimeSpan.FromSeconds(context.Saga.ExpiresAfterSeconds))
                     .TransitionTo(Active));
 
                 During(Active,
                     When(CartTimeout.Received)
-                        .Then(context => LogContext.Debug?.Log("Cart Expired: {MemberNumber}", context.Data.MemberNumber))
-                        .PublishAsync(context => context.Init<CartRemoved>(context.Instance))
+                        .Then(context => LogContext.Debug?.Log("Cart Expired: {MemberNumber}", context.Message.MemberNumber))
+                        .PublishAsync(context => context.Init<CartRemoved>(context.Saga))
                         .Finalize(),
                     When(Submitted)
-                        .Then(context => LogContext.Debug?.Log("Cart Submitted: {MemberNumber}", context.Data.MemberNumber))
+                        .Then(context => LogContext.Debug?.Log("Cart Submitted: {MemberNumber}", context.Message.MemberNumber))
                         .Unschedule(CartTimeout)
-                        .PublishAsync(context => context.Init<CartRemoved>(context.Instance))
+                        .PublishAsync(context => context.Init<CartRemoved>(context.Saga))
                         .Finalize(),
                     When(ItemAdded)
-                        .Then(context => LogContext.Debug?.Log("Cart Item Added: {MemberNumber}", context.Data.MemberNumber))
-                        .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Instance),
-                            context => TimeSpan.FromSeconds(context.Instance.ExpiresAfterSeconds)));
+                        .Then(context => LogContext.Debug?.Log("Cart Item Added: {MemberNumber}", context.Message.MemberNumber))
+                        .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Saga),
+                            context => TimeSpan.FromSeconds(context.Saga.ExpiresAfterSeconds)));
 
                 SetCompletedWhenFinalized();
             }
@@ -242,30 +242,30 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
                 Initially(When(ItemAdded)
                     .Then(context =>
                     {
-                        context.Instance.MemberNumber = context.Data.MemberNumber;
-                        context.Instance.ExpiresAfterSeconds = 3;
+                        context.Saga.MemberNumber = context.Message.MemberNumber;
+                        context.Saga.ExpiresAfterSeconds = 3;
 
-                        LogContext.Debug?.Log("Cart {CartId} Created: {MemberNumber}", context.Instance.CorrelationId, context.Data.MemberNumber);
+                        LogContext.Debug?.Log("Cart {CartId} Created: {MemberNumber}", context.Saga.CorrelationId, context.Message.MemberNumber);
                     })
                     .Activity(x => x.OfType<SetScopedValueActivity>())
-                    .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Instance),
-                        context => TimeSpan.FromSeconds(context.Instance.ExpiresAfterSeconds))
+                    .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Saga),
+                        context => TimeSpan.FromSeconds(context.Saga.ExpiresAfterSeconds))
                     .TransitionTo(Active));
 
                 During(Active,
                     When(CartTimeout.Received)
-                        .Then(context => LogContext.Debug?.Log("Cart Expired: {MemberNumber}", context.Data.MemberNumber))
-                        .PublishAsync(context => context.Init<CartRemoved>(context.Instance))
+                        .Then(context => LogContext.Debug?.Log("Cart Expired: {MemberNumber}", context.Message.MemberNumber))
+                        .PublishAsync(context => context.Init<CartRemoved>(context.Saga))
                         .Finalize(),
                     When(Submitted)
-                        .Then(context => LogContext.Debug?.Log("Cart Submitted: {MemberNumber}", context.Data.MemberNumber))
+                        .Then(context => LogContext.Debug?.Log("Cart Submitted: {MemberNumber}", context.Message.MemberNumber))
                         .Unschedule(CartTimeout)
-                        .PublishAsync(context => context.Init<CartRemoved>(context.Instance))
+                        .PublishAsync(context => context.Init<CartRemoved>(context.Saga))
                         .Finalize(),
                     When(ItemAdded)
-                        .Then(context => LogContext.Debug?.Log("Cart Item Added: {MemberNumber}", context.Data.MemberNumber))
-                        .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Instance),
-                            context => TimeSpan.FromSeconds(context.Instance.ExpiresAfterSeconds)));
+                        .Then(context => LogContext.Debug?.Log("Cart Item Added: {MemberNumber}", context.Message.MemberNumber))
+                        .Schedule(CartTimeout, context => context.Init<CartExpired>(context.Saga),
+                            context => TimeSpan.FromSeconds(context.Saga.ExpiresAfterSeconds)));
 
                 SetCompletedWhenFinalized();
             }

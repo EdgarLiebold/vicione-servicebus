@@ -53,7 +53,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Firsted)
-                        .Then(context => Console.WriteLine("Started: {0}", context.Instance.CorrelationId))
+                        .Then(context => Console.WriteLine("Started: {0}", context.Saga.CorrelationId))
                         .TransitionTo(Running));
 
                 During(Running,

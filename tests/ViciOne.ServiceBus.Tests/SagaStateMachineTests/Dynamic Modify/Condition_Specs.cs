@@ -55,8 +55,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .Event("Finish", out Finish)
                     .During(builder.Initial)
                         .When(Started, b => b
-                            .Then(context => context.Instance.InitializeOnly = context.Data.InitializeOnly)
-                            .If(context => context.Data.InitializeOnly, x => x.Then(context => Console.WriteLine("Initializing Only!")))
+                            .Then(context => context.Saga.InitializeOnly = context.Message.InitializeOnly)
+                            .If(context => context.Message.InitializeOnly, x => x.Then(context => Console.WriteLine("Initializing Only!")))
                             .TransitionTo(Initialized)
                         )
                     .During(builder.Initial)
@@ -66,12 +66,12 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                                     .Then(context => Console.WriteLine("Should not be here!"))
                                     .TransitionTo(ShouldNotBeHere),
                                 binder => binder
-                                    .Then(context => context.Instance.ShouldBeCalled = true)
+                                    .Then(context => context.Saga.ShouldBeCalled = true)
                                     .Then(context => Console.WriteLine("Initializing Only!")))
                         )
                     .During(Running)
                         .When(Finish, b => b.Finalize())
-                    .WhenEnter(Initialized, b => b.If(context => !context.Instance.InitializeOnly, b => b.TransitionTo(Running)))
+                    .WhenEnter(Initialized, b => b.If(context => !context.Saga.InitializeOnly, b => b.TransitionTo(Running)))
                 );
         }
 
@@ -172,8 +172,8 @@ SagaStateMachineInstance
                     .Event("Finish", out Finish)
                     .During(builder.Initial)
                         .When(Started, b => b
-                            .Then(context => context.Instance.InitializeOnly = context.Data.InitializeOnly)
-                            .IfAsync(context => Task.FromResult(context.Data.InitializeOnly),
+                            .Then(context => context.Saga.InitializeOnly = context.Message.InitializeOnly)
+                            .IfAsync(context => Task.FromResult(context.Message.InitializeOnly),
                                 x => x.Then(context => Console.WriteLine("Initializing Only!")))
                             .TransitionTo(Initialized)
                         )
@@ -184,12 +184,12 @@ SagaStateMachineInstance
                                     .Then(context => Console.WriteLine("Should not be here!"))
                                     .TransitionTo(ShouldNotBeHere),
                                 binder => binder
-                                    .Then(context => context.Instance.ShouldBeCalled = true)
+                                    .Then(context => context.Saga.ShouldBeCalled = true)
                                     .Then(context => Console.WriteLine("Initializing Only!")))
                         )
                     .During(Running)
                         .When(Finish, b => b.Finalize())
-                    .WhenEnter(Initialized, b => b.IfAsync(context => Task.FromResult(!context.Instance.InitializeOnly), b => b.TransitionTo(Running)))
+                    .WhenEnter(Initialized, b => b.IfAsync(context => Task.FromResult(!context.Saga.InitializeOnly), b => b.TransitionTo(Running)))
                 );
         }
 

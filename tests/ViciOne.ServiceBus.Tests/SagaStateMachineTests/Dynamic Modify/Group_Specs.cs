@@ -42,8 +42,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(VehicleArrived, b => b
                         .Then(context =>
                         {
-                            context.Instance.VehicleMake = context.Data.Make;
-                            context.Instance.VehicleModel = context.Data.Model;
+                            context.Saga.VehicleMake = context.Message.Make;
+                            context.Saga.VehicleModel = context.Message.Model;
                         })
                         .TransitionTo(BeingServiced))
                 );
@@ -124,9 +124,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     When(Full)
                         .Then(context =>
                         {
-                            context.Instance.FuelGallons = context.Data.Gallons;
-                            context.Instance.FuelPricePerGallon = context.Data.PricePerGallon;
-                            context.Instance.FuelCost = context.Data.Gallons * context.Data.PricePerGallon;
+                            context.Saga.FuelGallons = context.Message.Gallons;
+                            context.Saga.FuelPricePerGallon = context.Message.PricePerGallon;
+                            context.Saga.FuelCost = context.Message.Gallons * context.Message.PricePerGallon;
                         })
                         .Finalize());
             }
@@ -152,9 +152,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     When(Done)
                         .Then(context =>
                         {
-                            context.Instance.OilQuarts = context.Data.Quarts;
-                            context.Instance.OilPricePerQuart = context.Data.PricePerQuart;
-                            context.Instance.OilCost = Math.Ceiling(context.Data.Quarts) * context.Data.PricePerQuart;
+                            context.Saga.OilQuarts = context.Message.Quarts;
+                            context.Saga.OilPricePerQuart = context.Message.PricePerQuart;
+                            context.Saga.OilCost = Math.Ceiling(context.Message.Quarts) * context.Message.PricePerQuart;
                         })
                         .Finalize());
             }

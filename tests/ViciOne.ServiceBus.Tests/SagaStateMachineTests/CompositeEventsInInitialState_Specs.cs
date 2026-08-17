@@ -79,12 +79,12 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(First)
                         .Then(ctx =>
                         {
-                            ctx.Instance.ReceivedFirst = true;
+                            ctx.Saga.ReceivedFirst = true;
                         }),
                     When(Second)
                         .Then(ctx =>
                         {
-                            ctx.Instance.ReceivedSecond = true;
+                            ctx.Saga.ReceivedSecond = true;
                         }));
 
                 CompositeEvent(
@@ -95,7 +95,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Third)
-                        .Publish(ctx => new CompleteMessage(ctx.Instance.CorrelationId))
+                        .Publish(ctx => new CompleteMessage(ctx.Saga.CorrelationId))
                 );
             }
 

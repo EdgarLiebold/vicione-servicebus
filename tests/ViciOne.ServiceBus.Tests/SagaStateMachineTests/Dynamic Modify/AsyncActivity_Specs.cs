@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
             public async Task Execute(BehaviorContext<TestInstance, CreateInstance> context,
                 IBehavior<TestInstance, CreateInstance> next)
             {
-                context.Instance.Value = "ExecuteAsync";
+                context.Saga.Value = "ExecuteAsync";
             }
 
             public Task Faulted<TException>(BehaviorExceptionContext<TestInstance, CreateInstance, TException> context,

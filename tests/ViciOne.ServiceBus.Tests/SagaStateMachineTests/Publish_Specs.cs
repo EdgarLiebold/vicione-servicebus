@@ -67,7 +67,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Started)
-                        .Publish(context => new StartupComplete { TransactionId = context.Data.CorrelationId })
+                        .Publish(context => new StartupComplete { TransactionId = context.Message.CorrelationId })
                         .TransitionTo(Running));
             }
 

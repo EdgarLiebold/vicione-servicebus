@@ -147,7 +147,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                         .TransitionTo(Running));
 
                 During(Failed,
-                    When(Restart, context => context.Data.Name != null)
+                    When(Restart, context => context.Message.Name != null)
                         .TransitionTo(Running));
             }
 
@@ -199,21 +199,21 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(First)
                         .Then(context =>
                         {
-                            context.Instance.First = true;
-                            context.Instance.CalledAfterAll = false;
+                            context.Saga.First = true;
+                            context.Saga.CalledAfterAll = false;
                         }),
                     When(Second)
                         .Then(context =>
                         {
-                            context.Instance.SecondFirst = !context.Instance.First;
-                            context.Instance.Second = true;
-                            context.Instance.CalledAfterAll = false;
+                            context.Saga.SecondFirst = !context.Saga.First;
+                            context.Saga.Second = true;
+                            context.Saga.CalledAfterAll = false;
                         }),
-                    When(Third, context => context.Instance.SecondFirst)
+                    When(Third, context => context.Saga.SecondFirst)
                         .Then(context =>
                         {
-                            context.Instance.Called = true;
-                            context.Instance.CalledAfterAll = true;
+                            context.Saga.Called = true;
+                            context.Saga.CalledAfterAll = true;
                         })
                         .Finalize()
                 );

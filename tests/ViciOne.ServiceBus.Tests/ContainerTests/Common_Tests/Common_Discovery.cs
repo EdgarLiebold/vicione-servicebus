@@ -125,7 +125,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
 
                 During(Pinged,
                     When(Acknowledged)
-                        .Publish(context => new PingCompleted { CorrelationId = context.Data.CorrelationId })
+                        .Publish(context => new PingCompleted { CorrelationId = context.Message.CorrelationId })
                         .TransitionTo(Ponged));
             }
 

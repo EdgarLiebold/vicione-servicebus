@@ -42,9 +42,9 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             public InstanceStateMachine()
             {
                 During(Initial,
-                    When(Thing, context => context.Data.Condition)
+                    When(Thing, context => context.Message.Condition)
                         .TransitionTo(True),
-                    When(Thing, context => !context.Data.Condition)
+                    When(Thing, context => !context.Message.Condition)
                         .TransitionTo(False));
             }
 

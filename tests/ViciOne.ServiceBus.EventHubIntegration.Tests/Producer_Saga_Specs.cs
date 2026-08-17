@@ -123,8 +123,8 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Tests
 
                 Initially(
                     When(Started)
-                        .Then(context => context.Instance.Key = context.Data.TestKey)
-                        .Produce(x => EventHubName, x => x.Init<EventHubMessage>(new { Text = $"Key: {x.Data.TestKey}" }))
+                        .Then(context => context.Saga.Key = context.Message.TestKey)
+                        .Produce(x => EventHubName, x => x.Init<EventHubMessage>(new { Text = $"Key: {x.Message.TestKey}" }))
                         .TransitionTo(Active));
 
                 SetCompletedWhenFinalized();

@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
             var count = 0;
             IPipe<ConsumeContext<A>> pipe = Pipe.New<ConsumeContext<A>>(x =>
             {
-                x.UseRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
+                x.UseMessageRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
                 x.UseExecute(payload =>
                 {
                     count++;
@@ -36,8 +36,8 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
             var count = 0;
             IPipe<ConsumeContext<A>> pipe = Pipe.New<ConsumeContext<A>>(x =>
             {
-                x.UseRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
-                x.UseRetry(r => r.None());
+                x.UseMessageRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
+                x.UseMessageRetry(r => r.None());
                 x.UseExecute(payload =>
                 {
                     count++;
@@ -58,8 +58,8 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
             var count = 0;
             IPipe<ConsumeContext<A>> pipe = Pipe.New<ConsumeContext<A>>(x =>
             {
-                x.UseRetry(r => r.None());
-                x.UseRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
+                x.UseMessageRetry(r => r.None());
+                x.UseMessageRetry(r => r.Interval(4, TimeSpan.FromMilliseconds(2)));
                 x.UseExecute(payload =>
                 {
                     count++;

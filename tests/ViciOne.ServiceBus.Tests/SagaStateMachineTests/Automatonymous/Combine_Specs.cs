@@ -72,7 +72,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Waiting,
                     When(Third)
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize());
             }
 
@@ -173,7 +173,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Waiting,
                     When(Third)
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize());
             }
 
@@ -273,7 +273,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Waiting,
                     When(Third)
-                        .Then(context => context.Instance.TriggerCount++));
+                        .Then(context => context.Saga.TriggerCount++));
             } // ReSharper disable UnassignedGetOnlyAutoProperty
             // ReSharper disable MemberCanBePrivate.Local
             public State Waiting { get; }

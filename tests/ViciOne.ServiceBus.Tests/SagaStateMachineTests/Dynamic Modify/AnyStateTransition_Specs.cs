@@ -46,8 +46,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .When(Initialized, b => b.TransitionTo(Running))
                     .During(Running)
                     .When(Finish, b => b.Finalize())
-                    .BeforeEnterAny(b => b.Then(context => context.Instance.LastEntered = context.Data))
-                    .AfterLeaveAny(b => b.Then(context => context.Instance.LastLeft = context.Data))
+                    .BeforeEnterAny(b => b.Then(context => context.Saga.LastEntered = context.Message))
+                    .AfterLeaveAny(b => b.Then(context => context.Saga.LastLeft = context.Message))
                 );
 
             _machine.RaiseEvent(_instance, Initialized)

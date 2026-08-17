@@ -74,8 +74,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
                 Initially(
                     When(Started)
-                        .Schedule(StopSchedule, context => new Stop { CorrelationId = context.Instance.CorrelationId })
-                        .Then(context => Console.WriteLine($"Started: {context.Instance.CorrelationId}"))
+                        .Schedule(StopSchedule, context => new Stop { CorrelationId = context.Saga.CorrelationId })
+                        .Then(context => Console.WriteLine($"Started: {context.Saga.CorrelationId}"))
                         .TransitionTo(Running));
 
                 // The scheduled Stop message is received through the schedule itself. A separate Event<Stop> would be a
@@ -83,8 +83,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
                 // duplicate key while the state machine is being configured.
                 During(Running,
                     When(StopSchedule.Received)
-                        .Publish(context => new Stopped { CorrelationId = context.Instance.CorrelationId })
-                        .Then(context => Console.WriteLine($"Stopped: {context.Instance.CorrelationId}"))
+                        .Publish(context => new Stopped { CorrelationId = context.Saga.CorrelationId })
+                        .Then(context => Console.WriteLine($"Stopped: {context.Saga.CorrelationId}"))
                         .Finalize());
 
                 SetCompletedWhenFinalized();

@@ -86,7 +86,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 During(WaitingForSecond,
                     When(Third)
-                        .Publish(context => new CompleteMessage(context.Instance.CorrelationId))
+                        .Publish(context => new CompleteMessage(context.Saga.CorrelationId))
                         .Finalize());
             }
 

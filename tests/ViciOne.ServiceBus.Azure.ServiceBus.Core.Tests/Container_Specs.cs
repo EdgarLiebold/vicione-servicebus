@@ -93,7 +93,7 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
 
                 Initially(
                     When(Started)
-                        .Then(context => context.Instance.Key = context.Data.TestKey)
+                        .Then(context => context.Saga.Key = context.Message.TestKey)
                         .Activity(x => x.OfInstanceType<PublishTestStartedActivity>())
                         .TransitionTo(Active));
 
@@ -101,8 +101,8 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
                     When(Updated)
                         .Publish(context => new TestUpdated
                         {
-                            CorrelationId = context.Instance.CorrelationId,
-                            TestKey = context.Instance.Key
+                            CorrelationId = context.Saga.CorrelationId,
+                            TestKey = context.Saga.Key
                         })
                         .TransitionTo(Done)
                         .Finalize());
@@ -149,8 +149,8 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
             {
                 await _context.Publish(new TestStarted
                 {
-                    CorrelationId = context.Instance.CorrelationId,
-                    TestKey = context.Instance.Key
+                    CorrelationId = context.Saga.CorrelationId,
+                    TestKey = context.Saga.Key
                 }).ConfigureAwait(false);
 
                 await next.Execute(context).ConfigureAwait(false);
@@ -161,8 +161,8 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
             {
                 await _context.Publish(new TestStarted
                 {
-                    CorrelationId = context.Instance.CorrelationId,
-                    TestKey = context.Instance.Key
+                    CorrelationId = context.Saga.CorrelationId,
+                    TestKey = context.Saga.Key
                 }).ConfigureAwait(false);
 
                 await next.Execute(context).ConfigureAwait(false);

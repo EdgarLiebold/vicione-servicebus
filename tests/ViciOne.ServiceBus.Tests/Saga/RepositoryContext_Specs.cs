@@ -98,7 +98,7 @@ namespace ViciOne.ServiceBus.Tests.Saga
 
                 Initially(
                     When(Created)
-                        .PublishAsync(x => x.Init<CreateCompleted>(x.Instance))
+                        .PublishAsync(x => x.Init<CreateCompleted>(x.Saga))
                         .TransitionTo(Active)
                         .ThenAsync(x => x.Raise(Destroyed)));
 
@@ -106,7 +106,7 @@ namespace ViciOne.ServiceBus.Tests.Saga
                     When(Destroyed)
                         .Finalize());
 
-                Finally(binder => binder.PublishAsync(x => x.Init<FinallyCompleted>(x.Instance)));
+                Finally(binder => binder.PublishAsync(x => x.Init<FinallyCompleted>(x.Saga)));
             }
 
             public State Active { get; private set; }
@@ -202,12 +202,12 @@ namespace ViciOne.ServiceBus.Tests.Saga
 
                 Initially(
                     When(Created)
-                        .PublishAsync(x => x.Init<CreateCompleted>(x.Instance))
+                        .PublishAsync(x => x.Init<CreateCompleted>(x.Saga))
                         .TransitionTo(Active));
 
                 During(Active,
                     When(Destroyed)
-                        .PublishAsync(x => x.Init<DestroyCompleted>(x.Instance))
+                        .PublishAsync(x => x.Init<DestroyCompleted>(x.Saga))
                         .Finalize());
             }
 

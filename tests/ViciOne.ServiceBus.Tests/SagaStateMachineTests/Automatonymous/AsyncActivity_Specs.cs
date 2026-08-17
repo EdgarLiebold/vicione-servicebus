@@ -35,7 +35,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             async Task IStateMachineActivity<TestInstance, CreateInstance>.Execute(BehaviorContext<TestInstance, CreateInstance> context,
                 IBehavior<TestInstance, CreateInstance> next)
             {
-                context.Instance.Value = "ExecuteAsync";
+                context.Saga.Value = "ExecuteAsync";
             }
 
             Task IStateMachineActivity<TestInstance, CreateInstance>.Faulted<TException>(

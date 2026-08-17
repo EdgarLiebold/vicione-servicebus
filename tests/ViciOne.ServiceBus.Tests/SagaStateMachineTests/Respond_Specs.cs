@@ -90,8 +90,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                     When(Requested)
                         .RespondAsync(x => x.Init<StatusReport>(new
                         {
-                            x.Instance.CorrelationId,
-                            Status = x.Instance.CurrentState
+                            x.Saga.CorrelationId,
+                            Status = x.Saga.CurrentState
                         })));
             }
 

@@ -227,13 +227,13 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
                     When(Initial.Enter)
                         .TransitionTo(Initializing),
                     When(Initial.AfterLeave)
-                        .Then(context => context.Instance.LeftState = context.Data),
+                        .Then(context => context.Saga.LeftState = context.Message),
                     When(Initializing.BeforeEnter)
-                        .Then(context => context.Instance.EnteredState = context.Data),
+                        .Then(context => context.Saga.EnteredState = context.Message),
                     When(Running.Enter)
                         .Finalize(),
                     When(Final.BeforeEnter)
-                        .Then(context => context.Instance.FinalState = context.Instance.CurrentState));
+                        .Then(context => context.Saga.FinalState = context.Saga.CurrentState));
             }
 
             public State Running { get; private set; }

@@ -161,19 +161,19 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
 
                 Initially(
                     When(Started)
-                        .Then(context => context.Instance.ServiceName = context.Data.ServiceName)
+                        .Then(context => context.Saga.ServiceName = context.Message.ServiceName)
                         .Respond(context => new StartupComplete
                         {
-                            ServiceId = context.Instance.CorrelationId,
-                            ServiceName = context.Instance.ServiceName
+                            ServiceId = context.Saga.CorrelationId,
+                            ServiceName = context.Saga.ServiceName
                         })
-                        .Then(context => Console.WriteLine("Started: {0} - {1}", context.Instance.CorrelationId, context.Instance.ServiceName))
+                        .Then(context => Console.WriteLine("Started: {0} - {1}", context.Saga.CorrelationId, context.Saga.ServiceName))
                         .TransitionTo(Running));
 
                 During(Running,
                     When(CheckStatus)
                         .Then(context => Console.WriteLine("Status check!"))
-                        .Respond(context => new Status("Running", context.Instance.ServiceName)));
+                        .Respond(context => new Status("Running", context.Saga.ServiceName)));
             }
 
             public State Running { get; private set; }

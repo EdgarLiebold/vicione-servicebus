@@ -72,8 +72,8 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
 
                 Initially(
                     When(Started)
-                        .Then(context => context.Instance.StatusText = "Started")
-                        .Respond(context => new StartupComplete { CorrelationId = context.Instance.CorrelationId })
+                        .Then(context => context.Saga.StatusText = "Started")
+                        .Respond(context => new StartupComplete { CorrelationId = context.Saga.CorrelationId })
                         .TransitionTo(Running)
                 );
 
@@ -81,10 +81,10 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga
                     When(StatusCheckRequested)
                         .Respond(context => new Status
                         {
-                            CorrelationId = context.Instance.CorrelationId,
-                            StatusText = context.Instance.StatusText
+                            CorrelationId = context.Saga.CorrelationId,
+                            StatusText = context.Saga.StatusText
                         })
-                        .Then(context => context.Instance.StatusText = "Running")
+                        .Then(context => context.Saga.StatusText = "Running")
                 );
             }
 

@@ -98,7 +98,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(Running,
                     Ignore(Start),
-                    Ignore(Charge, x => x.Data.Volts == 9));
+                    Ignore(Charge, x => x.Message.Volts == 9));
             }
 
             public Event Start { get; private set; }

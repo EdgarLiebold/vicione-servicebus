@@ -125,16 +125,16 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
 
                 Initially(
                     When(StartCommand)
-                        .Then(x => x.Instance.CorrelationId = x.Data.CorrelationId)
+                        .Then(x => x.Saga.CorrelationId = x.Message.CorrelationId)
                         .TransitionTo(Active));
 
                 WhenEnter(Active, binder => binder
-                    .Schedule(ScheduledMessage, x => new Check(x.Instance.CorrelationId)));
+                    .Schedule(ScheduledMessage, x => new Check(x.Saga.CorrelationId)));
 
                 During(Active,
                     When(ScheduledMessage.Received)
-                        .Schedule(ScheduledMessage, x => new Check(x.Instance.CorrelationId))
-                        .Publish(x => new MessageRescheduled(x.Instance.CorrelationId, x.Instance.ScheduleId)),
+                        .Schedule(ScheduledMessage, x => new Check(x.Saga.CorrelationId))
+                        .Publish(x => new MessageRescheduled(x.Saga.CorrelationId, x.Saga.ScheduleId)),
                     When(StopCommand)
                         .Unschedule(ScheduledMessage)
                         .Finalize());

@@ -62,7 +62,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 During(WaitingForSecond,
                     When(Third)
-                        .Then(context => context.Instance.Called = true)
+                        .Then(context => context.Saga.Called = true)
                         .Finalize());
             }
 

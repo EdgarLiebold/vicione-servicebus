@@ -49,8 +49,8 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 Initially(When(Start).TransitionTo(s1));
 
-                WhenEnterAny(x => x.Then(context => Console.WriteLine($"Enter {context.Instance.CurrentSate} ({context.Event.Name}).")));
-                WhenLeaveAny(x => x.Then(context => Console.WriteLine($"Leave {context.Instance.CurrentSate} ({context.Event.Name}).")));
+                WhenEnterAny(x => x.Then(context => Console.WriteLine($"Enter {context.Saga.CurrentSate} ({context.Event.Name}).")));
+                WhenLeaveAny(x => x.Then(context => Console.WriteLine($"Leave {context.Saga.CurrentSate} ({context.Event.Name}).")));
 
                 During(s1,
                     When(Boom).TransitionTo(s2),
@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 Finally(x => x.Then(context => Console.WriteLine("We're done.")));
 
-                OnUnhandledEvent(context => Console.Out.WriteLineAsync($"{context.Instance.CurrentSate} does not handle {context.Event}!"));
+                OnUnhandledEvent(context => Console.Out.WriteLineAsync($"{context.Saga.CurrentSate} does not handle {context.Event}!"));
             }
 
             public State s1 { get; private set; }

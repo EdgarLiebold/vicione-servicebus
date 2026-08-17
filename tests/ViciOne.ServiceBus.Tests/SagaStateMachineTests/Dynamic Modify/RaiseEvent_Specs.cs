@@ -22,14 +22,14 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .Event("Thing", out Thing)
                     .Event("Initialize", out Event Initialize)
                     .During(builder.Initial)
-                    .When(Thing, context => context.Data.Condition, b => b
+                    .When(Thing, context => context.Message.Condition, b => b
                         .TransitionTo(True)
                         .Then(context => context.Raise(Initialize)))
-                    .When(Thing, context => !context.Data.Condition, b => b
+                    .When(Thing, context => !context.Message.Condition, b => b
                         .TransitionTo(False))
                     .DuringAny()
                     .When(Initialize, b => b
-                        .Then(context => context.Instance.Initialized = DateTime.Now))
+                        .Then(context => context.Saga.Initialized = DateTime.Now))
                 );
 
             await machine.RaiseEvent(instance, Thing, new Data { Condition = true });
@@ -56,15 +56,15 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
             public InstanceStateMachine()
             {
                 During(Initial,
-                    When(Thing, context => context.Data.Condition)
+                    When(Thing, context => context.Message.Condition)
                         .TransitionTo(True)
                         .Then(context => context.Raise(Initialize)),
-                    When(Thing, context => !context.Data.Condition)
+                    When(Thing, context => !context.Message.Condition)
                         .TransitionTo(False));
 
                 DuringAny(
                     When(Initialize)
-                        .Then(context => context.Instance.Initialized = DateTime.Now));
+                        .Then(context => context.Saga.Initialized = DateTime.Now));
             }
 
             public State True { get; private set; }

@@ -35,7 +35,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify
                     .Event("Initialized", out Initialized)
                     .During(builder.Initial)
                     .When(Initialized, b => b
-                        .Then(context => context.Instance.Value = context.Data.Value)
+                        .Then(context => context.Saga.Value = context.Message.Value)
                         .TransitionTo(Running)
                     )
                 );

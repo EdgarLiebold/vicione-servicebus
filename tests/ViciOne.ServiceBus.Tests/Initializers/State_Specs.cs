@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.Tests.Initializers
                         .TransitionTo(Running)
                         .PublishAsync(context => context.Init<StateUpdated>(new
                         {
-                            context.Instance.CorrelationId,
+                            context.Saga.CorrelationId,
                             CurrentState = this.GetState(context),
                             __Header_Custom_Header_Value = "Frankie Say Relax",
                         }))

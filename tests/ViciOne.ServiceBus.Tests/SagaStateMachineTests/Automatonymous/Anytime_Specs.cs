@@ -88,10 +88,10 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
 
                 DuringAny(
                     When(Hello)
-                        .Then(context => context.Instance.HelloCalled = true)
+                        .Then(context => context.Saga.HelloCalled = true)
                         .Finalize(),
                     When(EventA)
-                        .Then(context => context.Instance.AValue = context.Data.Value)
+                        .Then(context => context.Saga.AValue = context.Message.Value)
                         .Finalize());
             }
 

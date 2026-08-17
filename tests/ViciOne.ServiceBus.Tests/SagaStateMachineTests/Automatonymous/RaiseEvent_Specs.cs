@@ -38,15 +38,15 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous
             public InstanceStateMachine()
             {
                 During(Initial,
-                    When(Thing, context => context.Data.Condition)
+                    When(Thing, context => context.Message.Condition)
                         .TransitionTo(True)
                         .Then(context => context.Raise(Initialize)),
-                    When(Thing, context => !context.Data.Condition)
+                    When(Thing, context => !context.Message.Condition)
                         .TransitionTo(False));
 
                 DuringAny(
                     When(Initialize)
-                        .Then(context => context.Instance.Initialized = DateTime.Now));
+                        .Then(context => context.Saga.Initialized = DateTime.Now));
             }
 
             public State True { get; private set; }

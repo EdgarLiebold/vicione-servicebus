@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 x.Message<TestCommand>(m =>
                 {
                     m.UseDelayedRedelivery(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
-                    m.UseRetry(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
+                    m.UseMessageRetry(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
                     m.UseInMemoryOutbox();
                 });
             });
@@ -120,7 +120,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 x.Message<TestCommand>(m =>
                 {
                     m.UseDelayedRedelivery(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
-                    m.UseRetry(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
+                    m.UseMessageRetry(r => r.Interval(1, TimeSpan.FromMilliseconds(100)));
                     m.UseInMemoryOutbox();
                 });
             });

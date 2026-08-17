@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.SlowConcurrent
 
             Initially(
                 When(Begin)
-                    .Then(context => context.Instance.Counter = 1)
+                    .Then(context => context.Saga.Counter = 1)
                     .TransitionTo(Started));
 
             During(Started,
@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.SlowConcurrent
                     .ThenAsync(async context =>
                     {
                         await Task.Delay(5000);
-                        context.Instance.Counter++;
+                        context.Saga.Counter++;
                     })
                     .TransitionTo(DidIncrement));
         }

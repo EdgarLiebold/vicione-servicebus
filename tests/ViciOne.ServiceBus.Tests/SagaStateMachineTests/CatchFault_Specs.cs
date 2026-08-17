@@ -146,11 +146,11 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                 Initially(
                     When(Started)
                         .Then(context => throw new NotSupportedException("This is expected, but nonetheless exceptional"))
-                        .Publish(context => new Started(context.Instance.CorrelationId))
+                        .Publish(context => new Started(context.Saga.CorrelationId))
                         .TransitionTo(Running)
                         .Catch<NotSupportedException>(ex => ex
-                            .Respond(context => new StartFaulted(context.Instance.CorrelationId))
-                            .Publish(context => new ServiceFaulted(context.Instance.CorrelationId))
+                            .Respond(context => new StartFaulted(context.Saga.CorrelationId))
+                            .Publish(context => new ServiceFaulted(context.Saga.CorrelationId))
                             .TransitionTo(FailedToStart)));
             }
 
@@ -227,11 +227,11 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
                 Initially(
                     When(Started)
                         .Then(context => throw new NotSupportedException("This is expected, but nonetheless exceptional"))
-                        .Publish(context => new Started(context.Instance.CorrelationId))
+                        .Publish(context => new Started(context.Saga.CorrelationId))
                         .TransitionTo(Running)
                         .Catch<NotSupportedException>(ex => ex
-                            .Respond(context => new StartFaulted(context.Instance.CorrelationId))
-                            .Publish(context => new ServiceFaulted(context.Instance.CorrelationId))
+                            .Respond(context => new StartFaulted(context.Saga.CorrelationId))
+                            .Publish(context => new ServiceFaulted(context.Saga.CorrelationId))
                             .Finalize()));
 
                 SetCompletedWhenFinalized();
