@@ -15,7 +15,11 @@ namespace ViciOne.ServiceBus
             _body = body;
         }
 
-        public long? Length => _body?.Length;
+        /// <summary>
+        /// The length of what is transmitted, which is UTF-8 bytes. The character count understates
+        /// every body carrying a character outside ASCII, because those cost more than one byte each.
+        /// </summary>
+        public long? Length => _body != null ? Encoding.UTF8.GetByteCount(_body) : null;
 
         public Stream GetStream()
         {

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 805 |
+| Added | 807 |
 | Modified | 4927 |
 | Deleted | 701 |
 | Renamed | 19 |
@@ -6381,9 +6381,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Forward_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs` | Modified | `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/JobDeserialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/JobDeserialization_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessageDataSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/MessageDataSerialization_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs` | Added |  |

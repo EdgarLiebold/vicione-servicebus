@@ -23,7 +23,12 @@ namespace ViciOne.ServiceBus.Serialization
             _message = message ?? context.Message;
         }
 
-        public long? Length => _bytes?.Length ?? _string?.Length;
+        /// <summary>
+        /// The length of what is transmitted, which is UTF-8 bytes. Reporting the string's character
+        /// count made the value depend on which accessor ran first and understated every body carrying
+        /// a character outside ASCII, because those cost more than one byte each.
+        /// </summary>
+        public long? Length => _bytes?.Length ?? (_string != null ? Encoding.UTF8.GetByteCount(_string) : null);
 
         public Stream GetStream()
         {

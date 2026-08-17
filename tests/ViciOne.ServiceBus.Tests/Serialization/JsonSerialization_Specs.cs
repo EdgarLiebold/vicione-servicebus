@@ -40,11 +40,23 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [Test]
         public void Should_write_a_decimal_in_the_string_form_a_reader_can_keep()
         {
+            // Parsed rather than searched. Does.Contain stays green if the camel casing is dropped, if
+            // a second property appears, or if the value is written twice; the document says exactly
+            // one property, written as a string, under the name the wire carries.
             var body = System.Text.Json.JsonSerializer.Serialize(
                 new MessageA { Decimal = decimal.MaxValue }, SystemTextJsonMessageSerializer.Options);
 
-            Assert.That(body, Does.Contain("\"79228162514264337593543950335\""),
-                "A bare JSON number would be widened by readers that have no decimal type");
+            using var document = System.Text.Json.JsonDocument.Parse(body);
+            System.Text.Json.JsonProperty[] properties = document.RootElement.EnumerateObject().ToArray();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(properties, Has.Length.EqualTo(1));
+                Assert.That(properties[0].Name, Is.EqualTo("decimal"));
+                Assert.That(properties[0].Value.ValueKind, Is.EqualTo(System.Text.Json.JsonValueKind.String),
+                    "A bare JSON number would be widened by readers that have no decimal type");
+                Assert.That(properties[0].Value.GetString(), Is.EqualTo("79228162514264337593543950335"));
+            });
         }
 
         class MessageA

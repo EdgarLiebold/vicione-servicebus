@@ -33,7 +33,9 @@ namespace ViciOne.ServiceBus.Serialization
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 ReadCommentHandling = JsonCommentHandling.Skip,
-                WriteIndented = true,
+                // Broker wire data, not something a person reads. Indenting padded every message with
+                // whitespace that costs transfer and storage on every hop and is never looked at.
+                WriteIndented = false,
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 
             #if NET8_0_OR_GREATER
