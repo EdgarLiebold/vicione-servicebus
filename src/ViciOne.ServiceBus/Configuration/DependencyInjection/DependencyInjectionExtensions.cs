@@ -80,16 +80,5 @@ namespace ViciOne.ServiceBus
         {
             return provider.GetRequiredService<IClientFactory>().CreateRequestClient<T>(destinationAddress, timeout);
         }
-
-        /// <summary>
-        /// Registers a generic request client provider in the container, which will be used for any
-        /// client that is not explicitly registered using AddRequestClient.
-        /// </summary>
-        /// <param name="collection"></param>
-        [Obsolete("Remove, the generic request client is automatically registered. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static IServiceCollection AddGenericRequestClient(this IServiceCollection collection)
-        {
-            return collection;
-        }
     }
 }

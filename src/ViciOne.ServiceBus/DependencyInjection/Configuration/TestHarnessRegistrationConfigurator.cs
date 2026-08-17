@@ -252,14 +252,6 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IContainerRegistrar Registrar => _configurator.Registrar;
 
-        [Obsolete("Use 'Using[TransportName]' instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)
-        {
-            _configurator.AddBus(busFactory);
-
-            UseDefaultBusFactory = false;
-        }
-
         public void SetBusFactory<T>(T busFactory)
             where T : class, IRegistrationBusFactory
         {

@@ -69,12 +69,6 @@ namespace ViciOne.ServiceBus.Configuration
 
         protected Func<IBus, RequestTimeout, IClientFactory> CreateClientFactory { get; private set; } = DefaultClientFactory;
 
-        [Obsolete("Use 'Using[TransportName]' instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.", true)]
-        public virtual void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)
-        {
-            SetBusFactory(new RegistrationBusFactory(busFactory));
-        }
-
         public virtual void SetBusFactory<T>(T busFactory)
             where T : class, IRegistrationBusFactory
         {
@@ -199,12 +193,6 @@ namespace ViciOne.ServiceBus.Configuration
                 provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint)));
 
             collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
-        }
-
-        [Obsolete("This method is deprecated, please use 'Using[TransportName]' instead", true)]
-        public override void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)
-        {
-            SetBusFactory(new RegistrationBusFactory(busFactory));
         }
 
         public override void SetBusFactory<T>(T busFactory)

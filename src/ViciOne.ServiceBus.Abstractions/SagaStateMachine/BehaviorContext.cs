@@ -16,9 +16,6 @@ namespace ViciOne.ServiceBus
 
         Event Event { get; }
 
-        [Obsolete("Use Saga instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        TSaga Instance { get; }
-
         /// <summary>
         /// Raise an event on the current instance, pushing the current event on the stack
         /// </summary>
@@ -69,9 +66,6 @@ namespace ViciOne.ServiceBus
         where TMessage : class
     {
         new Event<TMessage> Event { get; }
-
-        [Obsolete("Use Message instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        TMessage Data { get; }
 
         new Task<SendTuple<T>> Init<T>(object values)
             where T : class;

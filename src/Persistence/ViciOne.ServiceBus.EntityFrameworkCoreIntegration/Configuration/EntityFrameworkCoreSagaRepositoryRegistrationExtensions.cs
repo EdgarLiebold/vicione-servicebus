@@ -301,24 +301,6 @@ namespace ViciOne.ServiceBus
             return configurator;
         }
 
-        /// <summary>
-        /// Create EntityFramework saga repository
-        /// </summary>
-        /// <param name="registrationConfigurator"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        [Obsolete("This will be removed in a future release")]
-        public static IEntityFrameworkSagaRepository CreateEntityFrameworkSagaRepository(this IRegistrationConfigurator registrationConfigurator,
-            Action<DbContextOptionsBuilder> configure)
-        {
-            if (configure == null)
-                throw new ArgumentNullException(nameof(configure));
-            var optionsBuilder = EntityFrameworkSagaRepository.CreateOptionsBuilder();
-            configure(optionsBuilder);
-            return new EntityFrameworkSagaRepository(optionsBuilder.Options);
-        }
-
 
         class ActionSagaClassMap<T> : SagaClassMap<T>
             where T : class, ISaga

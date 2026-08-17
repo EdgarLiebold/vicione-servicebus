@@ -328,53 +328,6 @@ namespace ViciOne.ServiceBus
                 provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
         }
 
-        /// <summary>
-        /// Add a consumer test harness for the specified consumer to the container
-        /// </summary>
-        [Obsolete("Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void AddConsumerTestHarness<T>(this IBusRegistrationConfigurator configurator)
-            where T : class, IConsumer
-        {
-            configurator.AddSingleton<ConsumerTestHarnessRegistration<T>>();
-            configurator.AddSingleton<IConsumerFactoryDecoratorRegistration<T>>(provider => provider.GetRequiredService<ConsumerTestHarnessRegistration<T>>());
-            configurator.AddSingleton<IConsumerTestHarness<T>, RegistrationConsumerTestHarness<T>>();
-        }
-
-        /// <summary>
-        /// Add a saga test harness for the specified saga to the container. The saga must be added separately, including
-        /// a valid saga repository.
-        /// </summary>
-        [Obsolete("Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void AddSagaTestHarness<T>(this IBusRegistrationConfigurator configurator)
-            where T : class, ISaga
-        {
-            configurator.AddSingleton<SagaTestHarnessRegistration<T>>();
-            configurator.AddSingleton<ISagaRepositoryDecoratorRegistration<T>>(provider => provider.GetRequiredService<SagaTestHarnessRegistration<T>>());
-            configurator.AddSingleton<ISagaTestHarness<T>, RegistrationSagaTestHarness<T>>();
-        }
-
-        /// <summary>
-        /// Add a saga test harness for the specified saga to the container. The saga must be added separately, including
-        /// a valid saga repository.
-        /// </summary>
-        [Obsolete("Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void AddSagaStateMachineTestHarness<TStateMachine, TSaga>(this IBusRegistrationConfigurator configurator)
-            where TSaga : class, SagaStateMachineInstance
-            where TStateMachine : SagaStateMachine<TSaga>
-        {
-            configurator.AddSingleton<SagaTestHarnessRegistration<TSaga>>();
-            configurator.AddSingleton<ISagaRepositoryDecoratorRegistration<TSaga>>(provider =>
-                provider.GetRequiredService<SagaTestHarnessRegistration<TSaga>>());
-
-            configurator.AddSingleton<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>();
-            configurator.AddSingleton<ISagaStateMachineTestHarness<TStateMachine, TSaga>>(provider =>
-                provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>());
-            #pragma warning disable CS0618
-            configurator.AddSingleton<IStateMachineSagaTestHarness<TSaga, TStateMachine>>(provider =>
-                #pragma warning restore CS0618
-                provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, TSaga>>());
-        }
-
 
         interface IRegisterTestHarness
         {

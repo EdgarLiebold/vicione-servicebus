@@ -13,13 +13,6 @@ namespace ViciOne.ServiceBus
         IContainerRegistrar Registrar { get; }
 
         /// <summary>
-        /// This method is being deprecated. Use the transport-specific UsingRabbitMq, UsingActiveMq, etc. methods instead.
-        /// </summary>
-        /// <param name="busFactory"></param>
-        [Obsolete("Use 'Using[TransportName]' instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory);
-
-        /// <summary>
         /// Sets the bus factory. This is used by the transport extension methods (such as UsingRabbitMq, UsingActiveMq, etc.) to
         /// specify the bus factory. The extension method approach is preferred (since v7) over the AddBus method.
         /// </summary>
