@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 825 |
-| Modified | 4921 |
-| Deleted | 707 |
+| Added | 830 |
+| Modified | 4916 |
+| Deleted | 712 |
 | Renamed | 19 |
 
 | Path | Status | Baseline path |
@@ -884,6 +884,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` |
 | `src/MassTransit/LegacyObsolete/Activity.cs` | Deleted | `src/MassTransit/LegacyObsolete/Activity.cs` |
 | `src/MassTransit/LegacyObsolete/Behavior.cs` | Deleted | `src/MassTransit/LegacyObsolete/Behavior.cs` |
 | `src/MassTransit/LegacyObsolete/EventObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/EventObserver.cs` |
@@ -3865,11 +3870,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerConsumer.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerConsumer.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerConsumerDefinition.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerConsumerDefinition.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerMethod.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerMethod.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activities/ActivityRegistration.cs` | Added |  |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activities/ActivityRegistrationConfigurator.cs` | Added |  |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activities/ExecuteActivityRegistration.cs` | Added |  |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activities/ExecuteActivityRegistrationConfigurator.cs` | Added |  |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Activities/JobServiceRegistration.cs` | Added |  |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/CachedRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/CachedRegistration.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Registration/Consumers/ConsumerRegistrationConfigurator.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Consumers/ConsumerRegistrationConfigurator.cs` |

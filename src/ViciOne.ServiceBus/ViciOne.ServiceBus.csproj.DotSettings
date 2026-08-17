@@ -33,7 +33,7 @@
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=contexts/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dependencyinjection/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
-        x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dependencyinjection_005Cdependencyinjection_005Cregistration_005Cactivites/@EntryIndexedValue">True</s:Boolean>
+        x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dependencyinjection_005Cdependencyinjection_005Cregistration_005Cactivities/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
         x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dependencyinjection_005Cdependencyinjection_005Cregistration_005Cconsumers/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
