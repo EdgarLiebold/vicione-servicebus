@@ -21,10 +21,13 @@ namespace ViciOneServiceBusBenchmark
         readonly Lazy<Uri> _hostAddress;
         BatchSettings _batchSettings;
         bool _portWasGiven;
+        string? _sslServerName;
 
         public RabbitMqOptionSet()
         {
-            Add<string>("h|host:", "The host name of the broker", x => Host = x);
+            Add<string>("h|host:", "The host name of the broker", SetHost);
+            Add<string>("sni|ssl-server-name:", "The name presented for TLS, when it differs from the host",
+                value => _sslServerName = value);
             // The address builder already had a Port, but nothing could set it, so the tool could only
             // ever reach a broker on the default port. The repository's own pinned fixture publishes an
             // ephemeral loopback port by design, and the policy gate requires exactly that, so the
@@ -49,7 +52,6 @@ namespace ViciOneServiceBusBenchmark
 
             Ssl = false;
             SslProtocol = SslProtocols.None;
-            SslServerName = Host;
             AcceptablePolicyErrors = SslPolicyErrors.None;
             ClientCertificatePath = "";
             ClientCertificatePassphrase = "";
@@ -81,7 +83,13 @@ namespace ViciOneServiceBusBenchmark
         public bool Ssl { get; private set; }
 
         public SslProtocols SslProtocol { get; }
-        public string SslServerName { get; }
+        /// <summary>
+        /// The name presented for TLS. It used to be captured in the constructor, where the host is
+        /// still the default, so it stayed "localhost" no matter which broker was addressed and a
+        /// certificate would have been validated against the wrong name. It follows the effective host
+        /// unless one is named deliberately, which a host given as an IP address needs.
+        /// </summary>
+        public string SslServerName => string.IsNullOrWhiteSpace(_sslServerName) ? Host : _sslServerName!;
         public SslPolicyErrors AcceptablePolicyErrors { get; }
         public string ClientCertificatePath { get; }
         public string ClientCertificatePassphrase { get; }
@@ -142,8 +150,29 @@ namespace ViciOneServiceBusBenchmark
             };
         }
 
+        /// <summary>
+        /// A port belongs in the port option. Written into the host it reached UriBuilder, which failed
+        /// with a message about a hostname far from the line that caused it, so it is refused here with
+        /// the option that should have carried it. A bracketed IPv6 literal is a host, not a host and a
+        /// port, and stays accepted.
+        /// </summary>
+        void SetHost(string host)
+        {
+            if (!string.IsNullOrWhiteSpace(host) && !host.StartsWith("[", StringComparison.Ordinal)
+                && host.Contains(':'))
+            {
+                throw new OptionException(
+                    $"The host '{host}' carries a port. Give the host alone and use --port for the port.", "host");
+            }
+
+            Host = host;
+        }
+
         void SetPort(int port)
         {
+            if (port is < 1 or > 65535)
+                throw new OptionException($"The port {port} is outside 1..65535.", "port");
+
             Port = port;
             _portWasGiven = true;
         }
@@ -165,9 +194,12 @@ namespace ViciOneServiceBusBenchmark
         public void ShowOptions()
         {
             Console.WriteLine("Host: {0}", Host);
+            Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Virtual Host: {0}", VirtualHost);
             Console.WriteLine("Username: {0}", Username);
+            // The secret itself never appears here; only whether one was given.
             Console.WriteLine("Password configured: {0}", !string.IsNullOrEmpty(Password));
+            Console.WriteLine("TLS: enabled={0}, protocol={1}, server name={2}", Ssl, SslProtocol, SslServerName);
             Console.WriteLine("Heartbeat: {0}", Heartbeat);
             Console.WriteLine("Publisher Confirmation: {0}", PublisherConfirmation);
             Console.WriteLine("Split: {0}", Split);

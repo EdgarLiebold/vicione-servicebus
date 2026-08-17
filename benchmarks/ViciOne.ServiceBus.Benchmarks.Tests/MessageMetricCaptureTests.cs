@@ -256,12 +256,20 @@ public class MessageMetricCaptureTests
             await release.Task;
         });
 
-        await entered.Task;
+        try
+        {
+            await entered.Task;
 
-        Assert.That(capture.SendCompleted.IsCompleted, Is.False,
-            "A send whose delegate has not returned is not a completed send");
+            Assert.That(capture.SendCompleted.IsCompleted, Is.False,
+                "A send whose delegate has not returned is not a completed send");
+        }
+        finally
+        {
+            // Released here so a failing assertion above ends the test instead of leaving the delegate
+            // parked at the barrier for the whole run.
+            release.TrySetResult();
+        }
 
-        release.SetResult();
         await sending;
         await Consume(capture, messageId);
 
@@ -269,6 +277,11 @@ public class MessageMetricCaptureTests
         {
             Assert.That(capture.SendCompleted.IsCompleted, Is.True);
             Assert.That(capture.GetMessageMetrics(), Has.Length.EqualTo(1));
+
+            // Positive, not above some number of milliseconds. A latency recorded as zero would mean
+            // the boundary collapsed onto itself, and that is a statement about ordering rather than
+            // about how long the machine took.
+            Assert.That(SingleMetric(capture).SendCompletionLatency, Is.GreaterThan(0));
         });
     }
 
