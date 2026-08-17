@@ -21,14 +21,4 @@ public static class AmazonSqsMessageSchedulerExtensions
 
         configurator.AddPipeSpecification(specification);
     }
-
-    /// <summary>
-    /// Add a <see cref="IMessageScheduler" /> to the container that uses the SQS message delay to schedule messages.
-    /// </summary>
-    /// <param name="configurator"></param>
-    [Obsolete("Use the transport independent AddDelayedMessageScheduler")]
-    public static void AddAmazonSqsMessageScheduler(this IBusRegistrationConfigurator configurator)
-    {
-        configurator.AddDelayedMessageScheduler();
-    }
 }

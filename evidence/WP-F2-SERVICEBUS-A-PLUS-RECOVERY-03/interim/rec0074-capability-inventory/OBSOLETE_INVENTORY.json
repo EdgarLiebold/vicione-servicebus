@@ -1,7 +1,7 @@
 {
   "record": "rec0074-capability-inventory",
   "directive": "0073 section 1",
-  "state": "obsolete markings clustered; project, package and test-group rows written from a measured census",
+  "state": "obsolete markings clustered and being dispositioned; project, package and test-group rows written from a measured census",
   "scope": "every [Obsolete] marking in src/**, plus every project, package declaration and test group in the tree",
   "totals": {
     "markings": 141,
@@ -703,9 +703,9 @@
       "publicMembers": 3,
       "types": 1,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "visiting a state machine structure; naming the publish metrics",
+      "modernPath": "IVisitable, which Visitable only re-declared without adding a member; for the two metric names there is none, see the note",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -726,6 +726,11 @@
           "member": "public string PublishFaultTotal { get; set; }",
           "public": true
         }
+      ],
+      "negativeRemovalProof": "Visitable removed, no implementer or reference outside its own file. PublishTotal and PublishFaultTotal are NOT removed here: they are read by nothing, so setting them already configures nothing, and the directive forbids deleting an item whose modern replacement is not unambiguous. They stay open as a QUESTION.",
+      "stillOpen": [
+        "InstrumentationOptions.PublishTotal",
+        "InstrumentationOptions.PublishFaultTotal"
       ]
     },
     {
@@ -734,9 +739,9 @@
       "publicMembers": 3,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "hosting the bus as an IHostedService",
+      "modernPath": "AddViciOneServiceBus registers the hosted service itself, at DependencyInjectionRegistrationExtensions lines 37 and 105",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -757,7 +762,8 @@
           "member": "public static IServiceCollection AddViciOneServiceBusHostedService(this IServiceCollection services, bool waitUntilStarted, TimeSpan? startTimeout,",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "removed; the whole class held nothing but the three obsolete overloads and no call site existed; clean full solution build afterwards reported 0 errors and 0 warnings"
     },
     {
       "reason": "The Event Hubs service does not guarantee a numeric offset for all resource configurations.  Please use 'OffsetString' instead.",
@@ -939,9 +945,9 @@
       "publicMembers": 2,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "waiting until a bus has gone quiet in a test",
+      "modernPath": "InactivityTask on the test harness, present in seven source files",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -956,7 +962,8 @@
           "member": "public static IBusActivityMonitor CreateBusActivityMonitor(this IBus bus, TimeSpan inactivityTimeout)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "removed with its closure: IBusActivityMonitor and BusActivityMonitor had no other user; clean full solution build afterwards reported 0 errors and 0 warnings"
     },
     {
       "reason": "Obsolete, use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -1059,9 +1066,9 @@
       "publicMembers": 1,
       "types": 1,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "reporting an ActiveMQ connection failure as a typed exception",
+      "modernPath": "ActiveMQConnectionException",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1070,7 +1077,8 @@
           "member": "public class ActiveMqConnectException :",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "removed; nothing threw, caught or derived from the old type; clean full solution build afterwards reported 0 errors and 0 warnings"
     },
     {
       "reason": "Use ISagaStateMachineTestHarness<TStateMachine, TInstance> instead",
@@ -1192,9 +1200,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "scheduling messages through the SQL transport",
+      "modernPath": "UseSqlMessageScheduler, in the same class",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1203,7 +1211,8 @@
           "member": "public static void UseDbMessageScheduler(this IBusFactoryConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "removed; no call site; clean full solution build afterwards reported 0 errors and 0 warnings"
     },
     {
       "reason": "Use the transport independent AddDelayedMessageScheduler",
@@ -1211,9 +1220,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "registering a message scheduler for the SQS transport",
+      "modernPath": "AddDelayedMessageScheduler, transport independent, present in three source files",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1222,7 +1231,8 @@
           "member": "public static void AddAmazonSqsMessageScheduler(this IBusRegistrationConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "removed; no call site; clean full solution build afterwards reported 0 errors and 0 warnings"
     },
     {
       "reason": "Use the transport independent UseDelayedMessageScheduler",

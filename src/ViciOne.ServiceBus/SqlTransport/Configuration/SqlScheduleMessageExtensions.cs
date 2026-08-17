@@ -11,15 +11,6 @@ namespace ViciOne.ServiceBus
 
     public static class SqlScheduleMessageExtensions
     {
-        /// <summary>
-        /// Uses the SQL transport's built-in message scheduler
-        /// </summary>
-        /// <param name="configurator"></param>
-        [Obsolete("Use the renamed UseSqlMessageScheduler instead")]
-        public static void UseDbMessageScheduler(this IBusFactoryConfigurator configurator)
-        {
-            UseSqlMessageScheduler(configurator);
-        }
 
         /// <summary>
         /// Uses the SQL transport's built-in message scheduler
