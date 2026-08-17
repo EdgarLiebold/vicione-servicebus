@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
     using System.Threading;
 
 
@@ -20,12 +19,6 @@ namespace ViciOne.ServiceBus
 
         public RequestCanceledException(string requestId, Exception innerException, CancellationToken cancellationToken)
             : base(FormatMessage(requestId), innerException, cancellationToken)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected RequestCanceledException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
 

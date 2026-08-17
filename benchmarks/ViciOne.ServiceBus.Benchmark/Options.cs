@@ -15,7 +15,6 @@ namespace NDesk.Options
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -478,24 +477,10 @@ namespace NDesk.Options
         }
 
 #if NET8_0_OR_GREATER
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-#endif
-        protected OptionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            option = info.GetString("OptionName");
-        }
 
         public string OptionName => option;
 
 #if NET8_0_OR_GREATER
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-#endif
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("OptionName", option);
-        }
     }
 
 

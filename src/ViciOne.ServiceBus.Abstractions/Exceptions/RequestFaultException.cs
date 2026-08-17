@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus
 {
     using System;
     using System.Linq;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -20,24 +19,7 @@ namespace ViciOne.ServiceBus
         {
         }
 
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected RequestFaultException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            RequestType = info.GetString("RequestType");
-            Fault = info.GetValue("Fault", typeof(Fault)) as Fault;
-        }
-
         public string? RequestType { get; private set; }
         public Fault? Fault { get; private set; }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            info.AddValue("RequestType", RequestType);
-            info.AddValue("Fault", Fault);
-        }
     }
 }

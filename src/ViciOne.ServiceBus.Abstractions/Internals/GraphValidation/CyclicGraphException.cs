@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.Internals.GraphValidation
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -19,12 +18,6 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
 
         public CyclicGraphException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected CyclicGraphException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

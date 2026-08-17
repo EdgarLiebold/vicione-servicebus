@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -27,12 +26,6 @@ namespace ViciOne.ServiceBus
             : base(message, innerException)
         {
             IsTransient = isTransient;
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected ConnectionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
         }
 
         public bool IsTransient { get; }

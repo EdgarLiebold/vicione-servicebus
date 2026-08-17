@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -9,12 +8,6 @@ namespace ViciOne.ServiceBus
         TransportException
     {
         public MessageNotConsumedException()
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected MessageNotConsumedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
 

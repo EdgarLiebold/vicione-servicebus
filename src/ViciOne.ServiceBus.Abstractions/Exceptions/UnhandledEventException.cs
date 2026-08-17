@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -14,12 +13,6 @@ namespace ViciOne.ServiceBus
 
         public UnhandledEventException(string machineType, string eventName, string stateName)
             : base($"The {eventName} event is not handled during the {stateName} state for the {machineType} state machine")
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected UnhandledEventException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

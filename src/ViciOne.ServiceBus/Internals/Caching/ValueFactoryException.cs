@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.Internals.Caching
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -14,12 +13,6 @@ namespace ViciOne.ServiceBus.Internals.Caching
 
         public ValueFactoryException(string message)
             : base(message)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected ValueFactoryException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
 

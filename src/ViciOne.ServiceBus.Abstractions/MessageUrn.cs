@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus
     using System;
     using System.Collections.Concurrent;
     using System.Reflection;
-    using System.Runtime.Serialization;
     using System.Text;
     using Metadata;
 
@@ -18,12 +17,6 @@ namespace ViciOne.ServiceBus
 
         MessageUrn(string uriString)
             : base(uriString)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected MessageUrn(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
         {
         }
 

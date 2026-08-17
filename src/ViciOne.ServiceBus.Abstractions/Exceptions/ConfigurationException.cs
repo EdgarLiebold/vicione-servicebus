@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -32,12 +31,6 @@ namespace ViciOne.ServiceBus
 
         public ConfigurationException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected ConfigurationException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
 

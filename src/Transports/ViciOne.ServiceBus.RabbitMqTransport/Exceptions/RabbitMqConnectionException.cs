@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
     using RabbitMQ.Client.Exceptions;
     using RabbitMqTransport;
 
@@ -50,12 +49,6 @@ namespace ViciOne.ServiceBus
 
         public RabbitMqConnectionException(string message, Exception innerException)
             : base(message, innerException, IsExceptionTransient(innerException))
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected RabbitMqConnectionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
 

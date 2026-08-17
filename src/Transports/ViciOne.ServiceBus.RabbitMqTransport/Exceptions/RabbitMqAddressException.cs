@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     [Serializable]
@@ -25,12 +24,6 @@ namespace ViciOne.ServiceBus
             : base(message, innerException)
         {
             HelpLink = DefaultHelpLink;
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        public RabbitMqAddressException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
         }
     }
 }

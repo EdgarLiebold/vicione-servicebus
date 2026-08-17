@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.TestFramework
 {
     using System;
-    using System.Runtime.Serialization;
 
 
     /// <summary>
@@ -23,12 +22,6 @@ namespace ViciOne.ServiceBus.TestFramework
 
         public IntentionalTestException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-        protected IntentionalTestException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }
