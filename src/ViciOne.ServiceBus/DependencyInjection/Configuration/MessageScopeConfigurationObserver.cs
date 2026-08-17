@@ -12,8 +12,16 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IServiceProvider _serviceProvider;
         readonly ISetScopedConsumeContext _setScopedConsumeContext;
 
-        public MessageScopeConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, IServiceProvider serviceProvider)
-            : this(receiveEndpointConfigurator, serviceProvider, LegacySetScopedConsumeContext.Instance)
+        /// <summary>
+        /// A registration context carries the setter that belongs to its own bus, so it is passed on
+        /// rather than replaced by the process default. Routing this overload through the default meant
+        /// the retained IRegistrationContext path pushed the consume context into whatever provider the
+        /// scope happened to resolve, which is the wrong one as soon as more than one bus is registered.
+        /// </summary>
+        public MessageScopeConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, IRegistrationContext context)
+            : this(receiveEndpointConfigurator, context,
+                context as ISetScopedConsumeContext ?? throw new ArgumentException(
+                    "The registration context does not carry a scoped consume context setter", nameof(context)))
         {
         }
 

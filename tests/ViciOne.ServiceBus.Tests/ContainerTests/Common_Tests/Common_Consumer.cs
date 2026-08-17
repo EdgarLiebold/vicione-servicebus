@@ -103,7 +103,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
-            configurator.UseServiceScope(ServiceProvider);
+            configurator.UseServiceScope(BusRegistrationContext);
 
             configurator.ConfigureConsumer<SimpleConsumer>(BusRegistrationContext);
             configurator.ConfigureConsumer<SimplerConsumer>(BusRegistrationContext);
@@ -172,7 +172,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
             configurator.UseMessageRetry(r => r.Immediate(5));
-            configurator.UseMessageScope(ServiceProvider);
+            configurator.UseMessageScope(BusRegistrationContext);
             configurator.UseInMemoryOutbox(BusRegistrationContext);
 
             configurator.ConfigureConsumer<PingConsumer>(BusRegistrationContext);

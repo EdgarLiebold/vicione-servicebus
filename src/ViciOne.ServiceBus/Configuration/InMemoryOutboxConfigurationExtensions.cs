@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var specification = new InMemoryOutboxSpecification<T>(LegacySetScopedConsumeContext.Instance);
+            var specification = new InMemoryOutboxSpecification<T>(DefaultSetScopedConsumeContext.Instance);
 
             configure?.Invoke(specification);
 
@@ -84,7 +84,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var observer = new InMemoryOutboxConfigurationObserver(LegacySetScopedConsumeContext.Instance, configurator, configure);
+            var observer = new InMemoryOutboxConfigurationObserver(DefaultSetScopedConsumeContext.Instance, configurator, configure);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var observer = new InMemoryOutboxConsumerConfigurationObserver<TConsumer>(LegacySetScopedConsumeContext.Instance, configurator, configure);
+            var observer = new InMemoryOutboxConsumerConfigurationObserver<TConsumer>(DefaultSetScopedConsumeContext.Instance, configurator, configure);
             configurator.ConnectConsumerConfigurationObserver(observer);
         }
 
@@ -157,7 +157,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>(LegacySetScopedConsumeContext.Instance, configurator, configure);
+            var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>(DefaultSetScopedConsumeContext.Instance, configurator, configure);
             configurator.ConnectSagaConfigurationObserver(observer);
         }
 
@@ -194,7 +194,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var observer = new InMemoryOutboxHandlerConfigurationObserver(LegacySetScopedConsumeContext.Instance, configure);
+            var observer = new InMemoryOutboxHandlerConfigurationObserver(DefaultSetScopedConsumeContext.Instance, configure);
             configurator.ConnectHandlerConfigurationObserver(observer);
         }
 
@@ -246,7 +246,7 @@ namespace ViciOne.ServiceBus
                 throw new ArgumentNullException(nameof(provider));
 
             var observer = new OutboxConsumePipeSpecificationObserver<InMemoryOutboxMessageRepository>(configurator, provider,
-                LegacySetScopedConsumeContext.Instance);
+                DefaultSetScopedConsumeContext.Instance);
 
             configurator.ConnectConsumerConfigurationObserver(observer);
             configurator.ConnectSagaConfigurationObserver(observer);

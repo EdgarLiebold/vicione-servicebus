@@ -279,7 +279,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
-            configurator.UseMessageScope(ServiceProvider);
+            configurator.UseMessageScope(BusRegistrationContext);
             configurator.UseInMemoryOutbox(BusRegistrationContext);
             configurator.ConfigureConsumer<ProducingConsumer>(BusRegistrationContext);
         }

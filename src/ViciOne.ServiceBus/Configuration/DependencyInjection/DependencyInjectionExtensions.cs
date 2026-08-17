@@ -24,19 +24,6 @@ namespace ViciOne.ServiceBus
             configurator.AddPrePipeSpecification(specification);
         }
 
-        /// <summary>
-        /// Creates a single scope for the receive endpoint that is used by all consumers, sagas, messages, etc.
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="serviceProvider"></param>
-        [Obsolete("Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseServiceScope(this IConsumePipeConfigurator configurator, IServiceProvider serviceProvider)
-        {
-            var scopeProvider = new ConsumeScopeProvider(serviceProvider, LegacySetScopedConsumeContext.Instance);
-            var specification = new FilterPipeSpecification<ConsumeContext>(new ScopeConsumeFilter(scopeProvider));
-
-            configurator.AddPrePipeSpecification(specification);
-        }
 
         /// <summary>
         /// Creates a scope for each message type, compatible with UseMessageRetry and UseInMemoryOutbox
@@ -51,22 +38,6 @@ namespace ViciOne.ServiceBus
                 throw new ArgumentNullException(nameof(context));
 
             var observer = new MessageScopeConfigurationObserver(configurator, context);
-        }
-
-        /// <summary>
-        /// Creates a scope for each message type, compatible with UseMessageRetry and UseInMemoryOutbox
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="serviceProvider"></param>
-        [Obsolete("Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseMessageScope(this IConsumePipeConfigurator configurator, IServiceProvider serviceProvider)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-            if (serviceProvider == null)
-                throw new ArgumentNullException(nameof(serviceProvider));
-
-            var observer = new MessageScopeConfigurationObserver(configurator, serviceProvider);
         }
 
         /// <summary>
