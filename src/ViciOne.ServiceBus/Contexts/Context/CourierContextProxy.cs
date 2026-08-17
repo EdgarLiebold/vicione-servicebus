@@ -21,17 +21,5 @@ namespace ViciOne.ServiceBus.Context
         Guid CourierContext.TrackingNumber => _courierContext.TrackingNumber;
         Guid CourierContext.ExecutionId => _courierContext.ExecutionId;
         string CourierContext.ActivityName => _courierContext.ActivityName;
-
-        public void Method4()
-        {
-        }
-
-        public void Method5()
-        {
-        }
-
-        public void Method6()
-        {
-        }
     }
 }

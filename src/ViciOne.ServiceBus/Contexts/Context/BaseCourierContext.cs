@@ -43,17 +43,5 @@ namespace ViciOne.ServiceBus.Context
         RoutingSlip ConsumeContext<RoutingSlip>.Message => RoutingSlip;
 
         public abstract string ActivityName { get; }
-
-        public void Method4()
-        {
-        }
-
-        public void Method5()
-        {
-        }
-
-        public void Method6()
-        {
-        }
     }
 }

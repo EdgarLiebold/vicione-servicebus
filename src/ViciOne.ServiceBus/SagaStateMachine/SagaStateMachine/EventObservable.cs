@@ -44,18 +44,6 @@ namespace ViciOne.ServiceBus
             {
                 return ForEachAsync(x => x.ExecuteFault(context, exception));
             }
-
-            public void Method4()
-            {
-            }
-
-            public void Method5()
-            {
-            }
-
-            public void Method6()
-            {
-            }
         }
     }
 }

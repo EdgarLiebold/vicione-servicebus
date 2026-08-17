@@ -15,18 +15,6 @@ namespace ViciOne.ServiceBus
             {
                 return ForEachAsync(x => x.StateChanged(context, currentState, previousState));
             }
-
-            public void Method4()
-            {
-            }
-
-            public void Method5()
-            {
-            }
-
-            public void Method6()
-            {
-            }
         }
     }
 }

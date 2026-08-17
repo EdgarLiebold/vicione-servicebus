@@ -156,18 +156,6 @@ namespace ViciOne.ServiceBus.Util
             }
         }
 
-        public void Method1()
-        {
-        }
-
-        public void Method2()
-        {
-        }
-
-        public void Method3()
-        {
-        }
-
 
         class Handle :
             ConnectHandle
@@ -189,14 +177,6 @@ namespace ViciOne.ServiceBus.Util
             public void Dispose()
             {
                 Disconnect();
-            }
-
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
             }
         }
     }

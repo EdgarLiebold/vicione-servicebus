@@ -48,13 +48,5 @@ namespace ViciOne.ServiceBus.Configuration
 
             return builder.Build();
         }
-
-        public void Method1()
-        {
-        }
-
-        public void Method2()
-        {
-        }
     }
 }

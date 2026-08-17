@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 823 |
+| Added | 825 |
 | Modified | 4921 |
 | Deleted | 707 |
 | Renamed | 19 |
@@ -3833,7 +3833,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DefaultSetScopedConsumeContext.cs` | Added |  |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` |
@@ -6036,6 +6035,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/MediatorFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/ContainerTests/MultiBusScopeIsolation_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/RedeliveryHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/RedeliveryHeader_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` |
@@ -6116,6 +6116,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ImplementedTypeCache_Specs.cs` | Modified | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryDuo_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxDirectPath_Specs.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryTest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Initializers/Class_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` |

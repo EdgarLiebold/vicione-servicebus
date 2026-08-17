@@ -26,18 +26,6 @@ namespace ViciOne.ServiceBus.Observables
         {
             return ForEachAsync(x => x.SendFault(context, exception));
         }
-
-        public void Method4()
-        {
-        }
-
-        public void Method5()
-        {
-        }
-
-        public void Method6()
-        {
-        }
     }
 
 
@@ -59,18 +47,6 @@ namespace ViciOne.ServiceBus.Observables
         public Task SendFault(TContext context, Exception exception)
         {
             return ForEachAsync(x => x.SendFault(context, exception));
-        }
-
-        public void Method4()
-        {
-        }
-
-        public void Method5()
-        {
-        }
-
-        public void Method6()
-        {
         }
     }
 }

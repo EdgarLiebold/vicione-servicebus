@@ -28,14 +28,6 @@ namespace ViciOne.ServiceBus.Configuration
                 _filters.Add(filter);
             }
 
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
-            }
-
             public IPipe<TContext> Build()
             {
                 if (_filters.Count == 0)

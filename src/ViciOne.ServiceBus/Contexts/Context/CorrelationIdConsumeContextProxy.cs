@@ -20,17 +20,5 @@ namespace ViciOne.ServiceBus.Context
         }
 
         public override Guid? CorrelationId => _correlationId;
-
-        public void Method4()
-        {
-        }
-
-        public void Method5()
-        {
-        }
-
-        public void Method6()
-        {
-        }
     }
 }

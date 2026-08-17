@@ -85,14 +85,6 @@ namespace ViciOne.ServiceBus
             public string[] MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
 
             public IEnumerable<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
-
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
-            }
         }
     }
 

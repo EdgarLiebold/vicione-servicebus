@@ -111,18 +111,6 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
             return NotifyFaulted(this, duration, consumerType, exception);
         }
 
-        public void Method1()
-        {
-        }
-
-        public void Method2()
-        {
-        }
-
-        public void Method3()
-        {
-        }
-
 
         public class Batch :
             InMemoryOutboxConsumeContext,

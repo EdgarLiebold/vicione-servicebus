@@ -30,18 +30,6 @@ namespace ViciOne.ServiceBus.Metadata
             }
         }
 
-        public void Method1()
-        {
-        }
-
-        public void Method2()
-        {
-        }
-
-        public void Method3()
-        {
-        }
-
         /// <summary>
         /// Enumerate the implemented message types
         /// </summary>
@@ -173,18 +161,6 @@ namespace ViciOne.ServiceBus.Metadata
             public void ImplementsType(IImplementedMessageType implementedMessageType)
             {
                 implementedMessageType.ImplementsMessageType<TAdapter>(Direct);
-            }
-
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
-            }
-
-            public void Method3()
-            {
             }
         }
     }

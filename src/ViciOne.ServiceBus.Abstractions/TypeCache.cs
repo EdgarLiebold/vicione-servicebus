@@ -63,14 +63,6 @@ namespace ViciOne.ServiceBus
             }
 
             public string ShortName => _shortName ??= TypeCache<T>.ShortName;
-
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
-            }
         }
     }
 
@@ -99,14 +91,6 @@ namespace ViciOne.ServiceBus
         IReadOnlyPropertyCache<T> ITypeCache<T>.ReadOnlyPropertyCache => _readPropertyCache.Value;
         IReadWritePropertyCache<T> ITypeCache<T>.ReadWritePropertyCache => _writePropertyCache.Value;
         string ITypeCache<T>.ShortName => _shortName;
-
-        public void Method1()
-        {
-        }
-
-        public void Method2()
-        {
-        }
 
 
         static class Cached

@@ -115,14 +115,6 @@ namespace ViciOne.ServiceBus
             public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings { get; }
 
             public Event<TResponse2> Completed2 { get; set; }
-
-            public void Method1()
-            {
-            }
-
-            public void Method2()
-            {
-            }
         }
 
 
@@ -146,14 +138,6 @@ namespace ViciOne.ServiceBus
             public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings { get; }
 
             public Event<TResponse3> Completed3 { get; set; }
-
-            public void Method12()
-            {
-            }
-
-            public void Method22()
-            {
-            }
         }
     }
 }
