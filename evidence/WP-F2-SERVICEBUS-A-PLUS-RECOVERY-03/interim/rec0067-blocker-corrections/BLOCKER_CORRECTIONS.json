@@ -1,0 +1,269 @@
+{
+  "record": "rec0067-blocker-corrections",
+  "directive": "0066",
+  "claim": "The seven bounded blockers from lead directive 0066 are corrected, each with its own mutation or regression proof on the production line the claim names.",
+  "blockers": [
+    {
+      "id": 1,
+      "statement": "MessageBody.Length equals GetBytes().LongLength in every accessor order, for every implementation of the interface.",
+      "production": [
+        "src/ViciOne.ServiceBus.Abstractions/Serialization/StringMessageBody.cs",
+        "src/ViciOne.ServiceBus.Abstractions/Serialization/Base64MessageBody.cs",
+        "src/ViciOne.ServiceBus.Abstractions/Serialization/BytesMessageBody.cs",
+        "src/ViciOne.ServiceBus.Abstractions/Serialization/EmptyMessageBody.cs",
+        "src/ViciOne.ServiceBus/Serialization/SystemTextJsonMessageBody.cs",
+        "src/ViciOne.ServiceBus/Serialization/SystemTextJsonObjectMessageBody.cs",
+        "src/ViciOne.ServiceBus/Serialization/SystemTextJsonRawMessageBody.cs",
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ActiveMqMessageBody.cs"
+      ],
+      "tests": [
+        "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/MessageBodyLength_Specs.cs"
+      ],
+      "cases": {
+        "core": 83,
+        "activemq": 6
+      },
+      "probes": [
+        {
+          "mutation": "StringMessageBody.Length back to the character count",
+          "red": 5
+        },
+        {
+          "mutation": "StringMessageBody.GetBytes discards whitespace again",
+          "red": 1
+        },
+        {
+          "mutation": "Base64MessageBody.Length back to the Base64 text length",
+          "red": 6
+        },
+        {
+          "mutation": "all three System.Text.Json bodies back to the order dependent length",
+          "red": 6
+        },
+        {
+          "mutation": "the three writable streams back",
+          "red": 7
+        },
+        {
+          "mutation": "ActiveMqMessageBody.Length back to the reported cached-array form",
+          "red": 5
+        }
+      ],
+      "selfFound": [
+        "ActiveMqMessageBody was not in the directive's list and carried the same defect",
+        "BytesMessageBody and EmptyMessageBody handed out writable streams",
+        "the cross-order case compared two envelopes with different SentTime stamps and was green by accident"
+      ]
+    },
+    {
+      "id": 2,
+      "statement": "Every option order produces one effective RabbitMQ configuration, and the reported options are the effective ones.",
+      "production": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark/RabbitMqOptionSet.cs"
+      ],
+      "tests": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/RabbitMqOptionSetTests.cs"
+      ],
+      "cases": {
+        "benchmarkTests": 75
+      },
+      "probes": [
+        {
+          "mutation": "effective batch settings frozen at the constructor values again",
+          "red": 6
+        },
+        {
+          "mutation": "the address stops carrying the port",
+          "red": 2
+        },
+        {
+          "mutation": "the reported options print the secret",
+          "red": 2
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "statement": "Exactly one type may name MessagePackSerializer, so no call site can be handed the wrong option set.",
+      "production": [
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/InternalMessagePackResolver.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageBodySerializer.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageBody.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageSerializer.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackMessageSerializerContext.cs"
+      ],
+      "tests": [
+        "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs"
+      ],
+      "measured": {
+        "trustedDataGraphDepth": 500,
+        "untrustedDataGraphDepth": 500,
+        "discriminatingProperty": "HashCollisionResistant",
+        "conclusion": "no behavioural assertion can separate the two option sets, so the boundary is asserted in the compiled assembly"
+      },
+      "probes": [
+        {
+          "mutation": "the exact bypass from the directive: direct MessagePackSerializer.Deserialize in OverrideMessage",
+          "red": 1,
+          "note": "the six behavioural hardening tests stay green under this mutation, which is the finding the directive reported"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "statement": "ConfigureJsonSerializerOptions honours the returned options, refuses a callback that returns nothing and never leaves the shared options empty.",
+      "production": [],
+      "tests": [
+        "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationValidation_Specs.cs"
+      ],
+      "cases": {
+        "configuration": 14
+      },
+      "probes": [
+        {
+          "mutation": "the old body that assigns null",
+          "red": 1
+        },
+        {
+          "mutation": "the return value discarded and the shared instance mutated",
+          "red": 3
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "statement": "The formatter cache compiles once per concrete type under concurrency, needs no per-call reflection, no capturing factory and no unsafe delegate cast, and holds its keys weakly.",
+      "production": [
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/ConcreteFormatterCache.cs",
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/InterfaceMessagePackFormatter.cs"
+      ],
+      "tests": [
+        "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs"
+      ],
+      "cases": {
+        "cache": 9
+      },
+      "probes": [
+        {
+          "mutation": "strong keys instead of weak",
+          "red": 1
+        },
+        {
+          "mutation": "compile outside the table lock and add afterwards",
+          "red": 1
+        }
+      ],
+      "notAchieved": {
+        "requirement": "entries must not keep collectible module types alive, end to end",
+        "measurement": [
+          {
+            "step": "emit a RunAndCollect type only",
+            "typeAfterTenCollections": "released"
+          },
+          {
+            "step": "MakeGenericType and MakeGenericMethod over it",
+            "typeAfterTenCollections": "released"
+          },
+          {
+            "step": "compile one expression tree delegate over it, result discarded",
+            "typeAfterTenCollections": "retained"
+          },
+          {
+            "step": "same with Expression.Compile instead of CompileFast",
+            "typeAfterTenCollections": "retained"
+          },
+          {
+            "step": "ask ContractlessStandardResolver for its formatter",
+            "typeAfterTenCollections": "retained"
+          }
+        ],
+        "conclusion": "the retention happens before and independently of this cache, so no storage design in this module can deliver release while contractless formatters are generated at runtime",
+        "provenInstead": "the cache's own table releases a key nobody else holds, with a control case showing the same type is released when the cache never sees it",
+        "belongsTo": "lead architecture decision 2, versioned source generated formatters"
+      }
+    },
+    {
+      "id": 6,
+      "statement": "A cloned envelope carries the payload bytes without re-encoding and without sharing the array.",
+      "production": [
+        "src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs"
+      ],
+      "tests": [
+        "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs"
+      ],
+      "cases": {
+        "clone": 6
+      },
+      "probes": [
+        {
+          "mutation": "share the payload array again instead of copying",
+          "red": 1
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "statement": "A clean no-incremental Release build of both solutions emits no warning introduced by this change.",
+      "measured": {
+        "beforeCorrection": {
+          "CS8632": 32,
+          "CS8603": 8
+        },
+        "afterCorrection": {
+          "solution": {
+            "errors": 0,
+            "NU1902": 20,
+            "other": 0
+          },
+          "benchmarkSolution": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        "note": "the 20 NU1902 are OpenTelemetry.Exporter.Jaeger and fall with the telemetry block"
+      }
+    }
+  ],
+  "gates": {
+    "coreUnitCategory": {
+      "result": "PASS",
+      "total": 1815,
+      "passed": 1815,
+      "failed": 0
+    },
+    "policyValidator": {
+      "result": "PASS",
+      "cases": 81
+    },
+    "changeList": {
+      "result": "PASS",
+      "entries": 6460
+    },
+    "cleanReleaseBuild": {
+      "solution": "exit 0",
+      "benchmarks": "exit 0",
+      "incremental": false
+    },
+    "gitDiffCheck": "exit 0",
+    "runningContainersAfterTheWork": 0
+  },
+  "brokerProof": {
+    "fixture": "build/test-infrastructure/compose.yaml, pinned digest, ephemeral loopback port",
+    "optionOrder": "--ssl=false before --port, the order that used to be discarded",
+    "reportedPort": 32785,
+    "reportedBatch": "enabled=True, limit=7, timeout=23ms",
+    "latencySamples": 1000,
+    "requestResponseSamples": 1000,
+    "exitCode": 0,
+    "log": "RABBITMQ_BENCHMARK.txt"
+  },
+  "stillOpen": [
+    "external transports",
+    "SQL Server bus outbox",
+    "the ActiveMQ category has still never run successfully"
+  ],
+  "noPush": true,
+  "noTag": true
+}

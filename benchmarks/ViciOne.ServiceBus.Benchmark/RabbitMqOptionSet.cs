@@ -18,10 +18,8 @@ namespace ViciOneServiceBusBenchmark
         OptionSet,
         RabbitMqHostSettings
     {
-        readonly Lazy<Uri> _hostAddress;
-        BatchSettings _batchSettings;
         bool _portWasGiven;
-        string? _sslServerName;
+        string _sslServerName;
 
         public RabbitMqOptionSet()
         {
@@ -39,7 +37,7 @@ namespace ViciOneServiceBusBenchmark
             Add<string>("p|password:", "Password (if using basic credentials)", value => Password = value);
             Add<TimeSpan>("heartbeat:", "Heartbeat (for RabbitMQ)", value => Heartbeat = value);
             Add<bool>("confirm:", "Publisher Confirmation", value => PublisherConfirmation = value);
-            Add<bool>("batch:", "Batch Publish", EnableBatch);
+            Add<bool>("batch:", "Batch Publish", value => BatchEnabled = value);
             Add<int>("batch-limit:", "Batch message limit", value => BatchLimit = value);
             Add<int>("batch-timeout:", "Batch Publish", value => BatchTimeout = value);
             Add<bool>("ssl:", "Use SSL", EnableSsl);
@@ -60,9 +58,7 @@ namespace ViciOneServiceBusBenchmark
             MessageNameFormatter = new RabbitMqMessageNameFormatter();
 
             PublisherConfirmation = false;
-            EnableBatch(true);
-
-            _hostAddress = new Lazy<Uri>(FormatHostAddress);
+            BatchEnabled = true;
         }
 
         public IMessageNameFormatter MessageNameFormatter { get; }
@@ -70,8 +66,10 @@ namespace ViciOneServiceBusBenchmark
         public string[] ClusterMembers => null;
         public bool Split { get; set; }
 
+        public bool BatchEnabled { get; set; }
         public int BatchLimit { get; set; } = 100;
         public int BatchTimeout { get; set; } = 1;
+        public int BatchSizeLimit { get; set; } = 200000;
 
         public string Host { get; set; }
         public int Port { get; set; }
@@ -89,7 +87,7 @@ namespace ViciOneServiceBusBenchmark
         /// certificate would have been validated against the wrong name. It follows the effective host
         /// unless one is named deliberately, which a host given as an IP address needs.
         /// </summary>
-        public string SslServerName => string.IsNullOrWhiteSpace(_sslServerName) ? Host : _sslServerName!;
+        public string SslServerName => string.IsNullOrWhiteSpace(_sslServerName) ? Host : _sslServerName;
         public SslPolicyErrors AcceptablePolicyErrors { get; }
         public string ClientCertificatePath { get; }
         public string ClientCertificatePassphrase { get; }
@@ -104,7 +102,12 @@ namespace ViciOneServiceBusBenchmark
 
         public string ClientProvidedName => "vicione-servicebus-benchmark";
 
-        public Uri HostAddress => _hostAddress.Value;
+        /// <summary>
+        /// Built from the current values rather than captured once. Holding the first answer meant an
+        /// option parsed afterwards no longer reached the address, and which options those were
+        /// depended on when something first happened to read this.
+        /// </summary>
+        public Uri HostAddress => FormatHostAddress();
 
         public bool PublisherConfirmation { get; set; }
 
@@ -112,7 +115,19 @@ namespace ViciOneServiceBusBenchmark
 
         public TimeSpan RequestedConnectionTimeout { get; }
 
-        public BatchSettings BatchSettings => _batchSettings;
+        /// <summary>
+        /// Projected from the current values, so every option order ends in one effective
+        /// configuration. This used to be materialized once in the constructor while --batch-limit and
+        /// --batch-timeout wrote to two properties nobody read again: the tool reported the limit it
+        /// had been given and published with 100 and one millisecond.
+        /// </summary>
+        public BatchSettings BatchSettings => new ConfigurationBatchSettings
+        {
+            Enabled = BatchEnabled,
+            MessageLimit = BatchLimit,
+            SizeLimit = BatchSizeLimit,
+            Timeout = TimeSpan.FromMilliseconds(BatchTimeout)
+        };
 
         public TimeSpan ContinuationTimeout => TimeSpan.FromSeconds(20);
         public uint? MaxMessageSize { get; set; }
@@ -137,17 +152,6 @@ namespace ViciOneServiceBusBenchmark
             };
 
             return builder.Uri;
-        }
-
-        void EnableBatch(bool enabled)
-        {
-            _batchSettings = new ConfigurationBatchSettings
-            {
-                Enabled = enabled,
-                MessageLimit = BatchLimit,
-                SizeLimit = 200000,
-                Timeout = TimeSpan.FromMilliseconds(BatchTimeout)
-            };
         }
 
         /// <summary>
@@ -203,8 +207,9 @@ namespace ViciOneServiceBusBenchmark
             Console.WriteLine("Heartbeat: {0}", Heartbeat);
             Console.WriteLine("Publisher Confirmation: {0}", PublisherConfirmation);
             Console.WriteLine("Split: {0}", Split);
-            Console.WriteLine("Batch: enabled={0}, limit={1}, timeout={2}", _batchSettings.Enabled, _batchSettings.MessageLimit,
-                _batchSettings.Timeout.ToFriendlyString());
+            var batch = BatchSettings;
+            Console.WriteLine("Batch: enabled={0}, limit={1}, timeout={2}", batch.Enabled, batch.MessageLimit,
+                batch.Timeout.ToFriendlyString());
         }
     }
 

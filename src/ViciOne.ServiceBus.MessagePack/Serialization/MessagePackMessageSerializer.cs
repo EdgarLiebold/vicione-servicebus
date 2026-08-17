@@ -63,7 +63,7 @@ public class MessagePackMessageSerializer :
         {
             string base64EncodedMessagePackBody => Convert.FromBase64String(base64EncodedMessagePackBody),
             byte[] messagePackBody => messagePackBody,
-            _ => MessagePackSerializer.Serialize(serializedObjectAsUnknownFormat, InternalMessagePackResolver.Options)
+            _ => InternalMessagePackResolver.Serialize(serializedObjectAsUnknownFormat)
         };
     }
 
@@ -115,6 +115,6 @@ public class MessagePackMessageSerializer :
 
     static T DeserializeMessageBuffer<T>(byte[] messageBuffer)
     {
-        return MessagePackSerializer.Deserialize<T>(messageBuffer, InternalMessagePackResolver.Options);
+        return InternalMessagePackResolver.Deserialize<T>(messageBuffer);
     }
 }

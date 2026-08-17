@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 810 |
+| Added | 816 |
 | Modified | 4927 |
 | Deleted | 701 |
 | Renamed | 19 |
@@ -200,6 +200,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0064-serializer-blockers/SERIALIZER_BLOCKERS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0064-serializer-blockers/core-unit.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0064-serializer-blockers/core-unit.trx` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/BLOCKER_CORRECTIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/RABBITMQ_BENCHMARK.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/core-unit.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0067-blocker-corrections/core-unit.trx` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
@@ -3082,6 +3086,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.MessagePack/NullableAttributes.cs` | Renamed | `src/MassTransit.MessagePack/NullableAttributes.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/InternalMessagePackResolver.cs` | Modified | `src/MassTransit.MessagePack/Serialization/InternalMessagePackResolver.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackEnvelope.cs` |
+| `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/ConcreteFormatterCache.cs` | Added |  |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/InterfaceConcreteMapFormatter.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackFormatters/InterfaceConcreteMapFormatter.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/InterfaceMessagePackFormatter.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackFormatters/InterfaceMessagePackFormatter.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/MessageDataFormatter.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackFormatters/MessageDataFormatter.cs` |
@@ -5556,6 +5561,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/InvalidMessage_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/InvalidMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/JobConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/KillSwitch_Specs.cs` |
+| `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/MessageBodyLength_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/OpenTelemetry_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/OpenTelemetry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/PublishMessage_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/PublishMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/PublishTopology_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/PublishTopology_Specs.cs` |

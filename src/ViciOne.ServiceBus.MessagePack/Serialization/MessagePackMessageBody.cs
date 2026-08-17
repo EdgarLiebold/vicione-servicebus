@@ -19,13 +19,13 @@ public class MessagePackMessageBody<TMessage> :
         {
             var envelopeToSerialize = envelope ?? new MessagePackEnvelope(context, context.Message);
 
-            return MessagePackSerializer.Serialize(envelopeToSerialize, InternalMessagePackResolver.Options);
+            return InternalMessagePackResolver.Serialize(envelopeToSerialize);
         });
     }
 
     public MessagePackMessageBody(TMessage message)
     {
-        _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => MessagePackSerializer.Serialize(message, InternalMessagePackResolver.Options));
+        _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => InternalMessagePackResolver.Serialize(message));
     }
 
     public Stream GetStream()

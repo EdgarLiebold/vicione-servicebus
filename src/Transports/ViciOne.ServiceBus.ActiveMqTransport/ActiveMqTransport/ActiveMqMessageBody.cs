@@ -16,7 +16,18 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             _message = message;
         }
 
-        public long? Length => _bytes?.Length;
+        /// <summary>
+        /// The number of bytes this body transmits, which is by definition the length of what
+        /// <see cref="GetBytes" /> returns, whichever accessor ran first. Reporting only the cached
+        /// array meant the length was nothing at all until somebody had already read the body, so the
+        /// same message answered differently depending on the order of two independent calls.
+        /// <para>
+        /// Answering it from the message a second time instead of from <see cref="GetBytes" /> would
+        /// let the two drift apart and would touch a provider property that is not always readable, so
+        /// it delegates: whatever the body is, and whatever refuses it, both members agree.
+        /// </para>
+        /// </summary>
+        public long? Length => GetBytes().LongLength;
 
         public Stream GetStream()
         {

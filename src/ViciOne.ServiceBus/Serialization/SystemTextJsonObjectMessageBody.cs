@@ -23,11 +23,12 @@ namespace ViciOne.ServiceBus.Serialization
         }
 
         /// <summary>
-        /// The length of what is transmitted, which is UTF-8 bytes. Reporting the string's character
-        /// count made the value depend on which accessor ran first and understated every body carrying
-        /// a character outside ASCII, because those cost more than one byte each.
+        /// The number of bytes this body transmits, which is by definition the length of what
+        /// <see cref="GetBytes" /> returns, whichever accessor ran first. Answering from whichever
+        /// representation happened to exist reported a character count after a string read and nothing
+        /// at all before the first read, so the same body gave three different answers.
         /// </summary>
-        public long? Length => _bytes?.Length ?? (_string != null ? Encoding.UTF8.GetByteCount(_string) : null);
+        public long? Length => GetBytes().LongLength;
 
         public Stream GetStream()
         {

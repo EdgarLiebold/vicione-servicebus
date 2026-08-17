@@ -32,8 +32,30 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Assert.Multiple(() =>
             {
                 Assert.That(clone.IsMessageNativeMessagePackSerialized, Is.True);
-                Assert.That(clone.Message, Is.SameAs(payload),
+                Assert.That(clone.Message, Is.EqualTo(payload),
                     "A payload that is already MessagePack must be carried over, not encoded a second time");
+            });
+        }
+
+        [Test]
+        public void Should_not_share_the_payload_array_with_the_source()
+        {
+            // Byte identity is the contract, not reference identity. Message is public and settable and
+            // holds a mutable array, so asserting that the clone is the very same array would have made
+            // an aliasing defect part of the specification instead of catching it.
+            var native = new MessagePackEnvelope(Foreign(new Order { Id = 27, Customer = "Frank" }));
+
+            var clone = new MessagePackEnvelope(native);
+            var carried = (byte[])((byte[])clone.Message).Clone();
+
+            ((byte[])native.Message)[0] ^= 0xFF;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(clone.Message, Is.Not.SameAs(native.Message), "the two envelopes share one array");
+                Assert.That(clone.Message, Is.EqualTo(carried), "writing into the source changed what the clone sends");
+                Assert.That(MessagePackSerializer.Deserialize<Order>((byte[])clone.Message, ContractlessOptions).Customer,
+                    Is.EqualTo("Frank"), "and the clone no longer reads back");
             });
         }
 
@@ -45,7 +67,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             var order = new Order { Id = 27, Customer = "Frank" };
             var clone = new MessagePackEnvelope(new MessagePackEnvelope(new MessagePackEnvelope(Foreign(order))));
 
-            var round = MessagePackSerializer.Deserialize<Order>((byte[])clone.Message!, ContractlessOptions);
+            var round = MessagePackSerializer.Deserialize<Order>((byte[])clone.Message, ContractlessOptions);
 
             Assert.Multiple(() =>
             {
@@ -70,7 +92,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Assert.Multiple(() =>
             {
                 Assert.That(clone.IsMessageNativeMessagePackSerialized, Is.False);
-                Assert.That(clone.Message, Is.SameAs(payload));
+                Assert.That(clone.Message, Is.EqualTo(payload));
             });
         }
 
@@ -123,28 +145,28 @@ namespace ViciOne.ServiceBus.Tests.Serialization
                 Message = message;
             }
 
-            public string? MessageId { get; } = Guid.NewGuid().ToString();
-            public string? RequestId => null;
-            public string? CorrelationId => null;
-            public string? ConversationId => null;
-            public string? InitiatorId => null;
-            public string? SourceAddress => null;
-            public string? DestinationAddress => null;
-            public string? ResponseAddress => null;
-            public string? FaultAddress => null;
-            public string[]? MessageType { get; } = { "urn:message:Order" };
-            public object? Message { get; }
+            public string MessageId { get; } = Guid.NewGuid().ToString();
+            public string RequestId => null;
+            public string CorrelationId => null;
+            public string ConversationId => null;
+            public string InitiatorId => null;
+            public string SourceAddress => null;
+            public string DestinationAddress => null;
+            public string ResponseAddress => null;
+            public string FaultAddress => null;
+            public string[] MessageType { get; } = { "urn:message:Order" };
+            public object Message { get; }
             public DateTime? ExpirationTime => null;
             public DateTime? SentTime { get; } = DateTime.UtcNow;
-            public Dictionary<string, object?>? Headers { get; } = new();
-            public HostInfo? Host => null;
+            public Dictionary<string, object> Headers { get; } = new();
+            public HostInfo Host => null;
         }
 
 
         public class Order
         {
             public int Id { get; set; }
-            public string? Customer { get; set; }
+            public string Customer { get; set; }
         }
     }
 }

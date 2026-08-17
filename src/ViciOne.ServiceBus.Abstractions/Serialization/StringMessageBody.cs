@@ -16,21 +16,27 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// The length of what is transmitted, which is UTF-8 bytes. The character count understates
-        /// every body carrying a character outside ASCII, because those cost more than one byte each.
+        /// The number of bytes this body transmits, which is by definition the length of what
+        /// <see cref="GetBytes" /> returns, whichever accessor ran first. Counting characters instead
+        /// understated every body carrying a character outside ASCII.
         /// </summary>
-        public long? Length => _body != null ? Encoding.UTF8.GetByteCount(_body) : null;
+        public long? Length => GetBytes().LongLength;
 
         public Stream GetStream()
         {
-            return new MemoryStream(GetBytes());
+            return new MemoryStream(GetBytes(), false);
         }
 
+        /// <summary>
+        /// A body made only of whitespace is a body. Discarding it here returned an empty array while
+        /// <see cref="GetString" /> still returned the whitespace, so the two accessors disagreed about
+        /// the same body and the reported length belonged to neither.
+        /// </summary>
         public byte[] GetBytes()
         {
-            return _bytes ??= string.IsNullOrWhiteSpace(_body)
-                ? []
-                : Encoding.UTF8.GetBytes(_body);
+            return _bytes ??= _body != null
+                ? Encoding.UTF8.GetBytes(_body)
+                : [];
         }
 
         public string GetString()

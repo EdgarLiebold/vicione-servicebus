@@ -20,7 +20,12 @@ namespace ViciOne.ServiceBus
             _text = text;
         }
 
-        public long? Length => _text.Length;
+        /// <summary>
+        /// The number of bytes this body transmits, which is the decoded binary, not the Base64 text
+        /// that carries it. The text is roughly a third longer than the body it encodes, so reporting
+        /// its character count overstated every body of this kind.
+        /// </summary>
+        public long? Length => GetBytes().LongLength;
 
         public Stream GetStream()
         {

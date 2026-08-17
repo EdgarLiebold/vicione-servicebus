@@ -48,13 +48,13 @@ public class MessagePackMessageSerializerContext :
             var messagePackSerializedObjectBuffer = MessagePackMessageSerializer.EnsureObjectBufferFormatIsByteArray(_envelope.Message!);
 
             if (_envelope.IsMessageNativeMessagePackSerialized)
-                message = MessagePackSerializer.Deserialize(messageType, messagePackSerializedObjectBuffer, InternalMessagePackResolver.Options);
+                message = InternalMessagePackResolver.Deserialize(messageType, messagePackSerializedObjectBuffer);
             else
             {
                 // If a message is serialized as dictionary of string-object pairs, we need to deserialize using a different approach.
 
-                var messageAsDictionary = MessagePackSerializer
-                    .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer, InternalMessagePackResolver.Options);
+                var messageAsDictionary = InternalMessagePackResolver
+                    .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
 
                 message = messageAsDictionary.Transform(messageType, SystemTextJsonMessageSerializer.Options);
             }

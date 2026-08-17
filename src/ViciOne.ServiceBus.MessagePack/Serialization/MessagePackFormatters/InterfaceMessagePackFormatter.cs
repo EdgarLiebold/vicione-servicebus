@@ -1,159 +1,62 @@
 namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
 using System;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using Internals;
 using MessagePack;
 using MessagePack.Formatters;
 using Metadata;
 
 
-delegate void SerializeDelegate<in TConcrete>(object formatter, ref MessagePackWriter writer, TConcrete value,
+delegate void SerializeDelegate<TInterface>(object formatter, ref MessagePackWriter writer, TInterface value,
     MessagePackSerializerOptions options);
 
 
-delegate TConcrete DeserializeDelegate<out TConcrete>(object formatter, ref MessagePackReader reader,
+delegate TInterface DeserializeDelegate<out TInterface>(object formatter, ref MessagePackReader reader,
     MessagePackSerializerOptions options);
 
 
 /// <summary>
 /// Serializes an interface typed message through the formatter of its concrete type.
 /// <para>
-/// The invoker used to be built and compiled on every single serialize and deserialize call, so every
-/// message of every type paid for an expression tree and a compilation. The invokers are cached now,
-/// keyed by the concrete type alone: the formatter instance is passed in as an argument rather than
-/// captured as a constant, so one compiled invoker serves every resolver and the cache cannot grow
-/// with the number of option sets.
+/// Both the invoker and the lookup of the concrete formatter used to be built on every single serialize
+/// and deserialize call: an expression tree was compiled per message, the generic resolver method was
+/// closed per message, and the formatter was fetched through a reflection invocation. All of it is
+/// compiled once per concrete type now and reached through delegates; see
+/// <see cref="ConcreteFormatterCache{TInterface}" /> for how the entries are bounded and why.
 /// </para>
 /// </summary>
 public class InterfaceMessagePackFormatter<TInterface> :
     IMessagePackFormatter<TInterface>
 {
-    static readonly FormatterProxyInfo _formatterProxyInfo;
-    static readonly Lazy<DeserializeDelegate<TInterface>> _deserializeInvoker;
+    static readonly Type _declaredConcreteType = TypeMetadataCache.GetImplementationType(typeof(TInterface));
 
-    // One entry per concrete type ever serialized through this interface. Concrete types are a closed
-    // set at runtime, so this is bounded by the model rather than by traffic.
-    static readonly ConcurrentDictionary<Type, Delegate> _serializeInvokers = new();
-
-    static InterfaceMessagePackFormatter()
-    {
-        var proxyType = TypeMetadataCache.GetImplementationType(typeof(TInterface));
-        _formatterProxyInfo = GetFormatterProxyInfoFromType(proxyType);
-        _deserializeInvoker = new Lazy<DeserializeDelegate<TInterface>>(
-            () => BuildDeserializeInvoker(_formatterProxyInfo), true);
-    }
-
-    static int _compiledInvokerCount;
+    // One cache per closed interface type rather than per formatter instance: a compiled invoker is
+    // valid for the whole process, and the resolver is free to hand out more than one formatter. The
+    // entries are bounded by the lifetime of their key, not by this being static.
+    static readonly ConcreteFormatterCache<TInterface> _cache = new();
 
     /// <summary>
-    /// How many invokers this closed formatter has actually compiled. Counting cache entries instead
-    /// would prove nothing: a version that rebuilt on every call and overwrote the same key would leave
-    /// the entry count at one and keep such a test green.
+    /// How many entries this closed formatter has actually compiled.
     /// </summary>
-    internal static int CompiledInvokerCount => Volatile.Read(ref _compiledInvokerCount);
+    internal static int CompiledInvokerCount => _cache.CompiledCount;
 
     public void Serialize(ref MessagePackWriter writer, TInterface value, MessagePackSerializerOptions options)
     {
-        var typeOfValue = value?.GetType();
+        // A value that is still typed as an interface has no formatter of its own; the type declared for
+        // the contract is the one that can be written.
+        var runtimeType = value?.GetType();
+        var concreteType = runtimeType != null && !runtimeType.IsInterface
+            ? runtimeType
+            : _declaredConcreteType;
 
-        // If the value is not null and not an interface, use the formatter for the concrete type.
-        var formatterProxyInfoToUse = typeOfValue != null && !typeOfValue.IsInterface
-            ? GetFormatterProxyInfoFromType(typeOfValue)
-            : _formatterProxyInfo;
+        var access = _cache.Get(concreteType);
 
-        // IMessagePackFormatter of unknown type
-        var formatter = formatterProxyInfoToUse.GetFormatterMethodInfo.Invoke(options.Resolver, BindingFlags.Default, null, null, null);
-
-        var invoker = _serializeInvokers.GetOrAdd(formatterProxyInfoToUse.TargetType,
-            _ => BuildSerializeInvoker(formatterProxyInfoToUse));
-
-        var proxyFunc = Unsafe.As<SerializeDelegate<TInterface>>(invoker);
-
-        proxyFunc(formatter!, ref writer, value!, options);
+        access.Serialize(access.GetFormatter(options.Resolver), ref writer, value, options);
     }
 
     public TInterface Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
-        var formatter = _formatterProxyInfo.GetFormatterMethodInfo.Invoke(options.Resolver, BindingFlags.Default, null, null, null);
+        var access = _cache.Get(_declaredConcreteType);
 
-        return _deserializeInvoker.Value(formatter!, ref reader, options);
-    }
-
-    static Delegate BuildSerializeInvoker(FormatterProxyInfo proxyInfo)
-    {
-        Interlocked.Increment(ref _compiledInvokerCount);
-
-        var formatterParameter = Expression.Parameter(typeof(object), "formatter");
-        var writerParameter = Expression.Parameter(typeof(MessagePackWriter).MakeByRefType(), "writer");
-        var valueParameter = Expression.Parameter(proxyInfo.TargetType, "value");
-        var optionsParameter = Expression.Parameter(typeof(MessagePackSerializerOptions), "options");
-
-        var call = Expression.Call(Expression.Convert(formatterParameter, proxyInfo.FormatterType),
-            proxyInfo.SerializeMethodInfo, writerParameter, valueParameter, optionsParameter);
-
-        var delegateType = typeof(SerializeDelegate<>).MakeGenericType(proxyInfo.TargetType);
-
-        return Expression
-            .Lambda(delegateType, call, formatterParameter, writerParameter, valueParameter, optionsParameter)
-            .CompileFast();
-    }
-
-    static DeserializeDelegate<TInterface> BuildDeserializeInvoker(FormatterProxyInfo proxyInfo)
-    {
-        Interlocked.Increment(ref _compiledInvokerCount);
-
-        var formatterParameter = Expression.Parameter(typeof(object), "formatter");
-        var readerParameter = Expression.Parameter(typeof(MessagePackReader).MakeByRefType(), "reader");
-        var optionsParameter = Expression.Parameter(typeof(MessagePackSerializerOptions), "options");
-
-        var call = Expression.Call(Expression.Convert(formatterParameter, proxyInfo.FormatterType),
-            proxyInfo.DeserializeMethodInfo, readerParameter, optionsParameter);
-
-        return Expression
-            .Lambda<DeserializeDelegate<TInterface>>(call, formatterParameter, readerParameter, optionsParameter)
-            .CompileFast();
-    }
-
-    static FormatterProxyInfo GetFormatterProxyInfoFromType(Type targetType)
-    {
-        // The null-forgiving operator (!) is used because the methods are guaranteed to exist,
-        // during normal operation. In case it doesn't, we likely won't even get here.
-
-        var getFormatterMethodInfo = typeof(IFormatterResolver)
-            .GetMethod(nameof(IFormatterResolver.GetFormatter))!
-            .MakeGenericMethod(targetType);
-
-        var formatterType = typeof(IMessagePackFormatter<>)
-            .MakeGenericType(targetType);
-
-        var serializeMethodInfo = formatterType
-            .GetMethod(nameof(IMessagePackFormatter<object>.Serialize))!;
-
-        var deserializeMethodInfo = formatterType
-            .GetMethod(nameof(IMessagePackFormatter<object>.Deserialize))!;
-
-        return new FormatterProxyInfo
-        {
-            TargetType = targetType,
-            FormatterType = formatterType,
-            GetFormatterMethodInfo = getFormatterMethodInfo,
-            SerializeMethodInfo = serializeMethodInfo,
-            DeserializeMethodInfo = deserializeMethodInfo
-        };
-    }
-
-
-    struct FormatterProxyInfo
-    {
-        public Type TargetType { get; set; }
-        public Type FormatterType { get; set; }
-        public MethodInfo GetFormatterMethodInfo { get; set; }
-        public MethodInfo SerializeMethodInfo { get; set; }
-        public MethodInfo DeserializeMethodInfo { get; set; }
+        return access.Deserialize(access.GetFormatter(options.Resolver), ref reader, options);
     }
 }

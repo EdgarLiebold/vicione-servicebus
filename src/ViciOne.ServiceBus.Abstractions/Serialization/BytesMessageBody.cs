@@ -17,9 +17,13 @@ namespace ViciOne.ServiceBus
 
         public long? Length => _bytes.Length;
 
+        /// <summary>
+        /// Read-only, like every other message body: the body is immutable, so a caller may not write
+        /// back through the stream it is handed and change what everyone else reads.
+        /// </summary>
         public Stream GetStream()
         {
-            return new MemoryStream(_bytes);
+            return new MemoryStream(_bytes, false);
         }
 
         public byte[] GetBytes()

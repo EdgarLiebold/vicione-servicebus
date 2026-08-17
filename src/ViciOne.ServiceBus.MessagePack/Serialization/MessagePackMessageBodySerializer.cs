@@ -39,8 +39,8 @@ class MessagePackMessageBodySerializer :
         {
             // Without the internal option set this read used the global default resolver and none of the
             // hardening, so the one path that reads a payload back was the one path that was not bounded.
-            currentMessage = MessagePackSerializer
-                .Deserialize<Dictionary<string, object>>((byte[])_envelope.Message, InternalMessagePackResolver.Options);
+            currentMessage = InternalMessagePackResolver
+                .Deserialize<Dictionary<string, object>>((byte[])_envelope.Message);
         }
         else
             currentMessage = new Dictionary<string, object>(0);
@@ -61,7 +61,6 @@ class MessagePackMessageBodySerializer :
 
 
         _envelope.IsMessageNativeMessagePackSerialized = false;
-        _envelope.Message = MessagePackSerializer
-            .Serialize(currentMessage, InternalMessagePackResolver.Options);
+        _envelope.Message = InternalMessagePackResolver.Serialize(currentMessage);
     }
 }

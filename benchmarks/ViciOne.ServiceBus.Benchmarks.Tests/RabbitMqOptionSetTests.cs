@@ -1,5 +1,7 @@
 namespace ViciOne.ServiceBus.Benchmarks.Tests;
 
+using System;
+using System.IO;
 using System.Net.Security;
 using System.Security.Authentication;
 using NDesk.Options;
@@ -152,5 +154,131 @@ public class RabbitMqOptionSetTests
         options.Parse(new[] { "--ssl=true" });
 
         Assert.That(options.Port, Is.EqualTo(5671));
+    }
+
+    // The settings the bus is actually built from are BatchSettings, not the two input properties.
+    // They were materialized once in the constructor, so --batch-limit and --batch-timeout wrote to
+    // properties nobody read again and the run published with 100 and one millisecond while reporting
+    // the numbers it had been given. Asserting the inputs would have stayed green through all of it,
+    // which is exactly what my previous version did.
+    [Test]
+    public void The_parsed_batch_limit_reaches_the_effective_settings()
+    {
+        var options = new RabbitMqOptionSet();
+
+        options.Parse(new[] { "--batch-limit=7" });
+
+        Assert.That(options.BatchSettings.MessageLimit, Is.EqualTo(7));
+    }
+
+    [Test]
+    public void The_parsed_batch_timeout_reaches_the_effective_settings()
+    {
+        var options = new RabbitMqOptionSet();
+
+        options.Parse(new[] { "--batch-timeout=23" });
+
+        Assert.That(options.BatchSettings.Timeout, Is.EqualTo(TimeSpan.FromMilliseconds(23)));
+    }
+
+    [TestCase("--batch=true", "--batch-limit=7", "--batch-timeout=23")]
+    [TestCase("--batch-limit=7", "--batch-timeout=23", "--batch=true")]
+    [TestCase("--batch-limit=7", "--batch=true", "--batch-timeout=23")]
+    public void Every_batch_option_order_ends_in_one_effective_configuration(string first, string second, string third)
+    {
+        var options = new RabbitMqOptionSet();
+
+        options.Parse(new[] { first, second, third });
+
+        var settings = options.BatchSettings;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(settings.Enabled, Is.True);
+            Assert.That(settings.MessageLimit, Is.EqualTo(7));
+            Assert.That(settings.Timeout, Is.EqualTo(TimeSpan.FromMilliseconds(23)));
+        });
+    }
+
+    [Test]
+    public void Switching_batching_off_reaches_the_effective_settings()
+    {
+        var options = new RabbitMqOptionSet();
+
+        options.Parse(new[] { "--batch=false" });
+
+        Assert.That(options.BatchSettings.Enabled, Is.False);
+    }
+
+    [Test]
+    public void A_bracketed_ipv6_host_reaches_the_address_with_its_port()
+    {
+        // Accepting the spelling is not the same as reaching the broker: the address is what the bus
+        // dials, and my earlier case only asserted the parsed string.
+        var options = new RabbitMqOptionSet();
+
+        options.Parse(new[] { "--host=[::1]", "--port=32774" });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.HostAddress.Host, Is.EqualTo("[::1]"));
+            Assert.That(options.HostAddress.Port, Is.EqualTo(32774));
+        });
+    }
+
+    [Test]
+    public void The_reported_options_are_the_effective_ones()
+    {
+        // ShowOptions is the only account anybody gets of a run, so it is worth an assertion of its
+        // own rather than trusting that it reads the same fields the bus does.
+        var options = new RabbitMqOptionSet();
+        options.Parse(new[]
+        {
+            "--host=rabbit.example.invalid", "--ssl=true", "--port=32774", "--sni=front.example.invalid",
+            "--username=benchmark", "--password=" + Secret, "--batch-limit=7", "--batch-timeout=23"
+        });
+
+        var printed = Capture(options.ShowOptions);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(printed, Does.Contain("Port: 32774"));
+            Assert.That(printed, Does.Contain("TLS: enabled=True"));
+            Assert.That(printed, Does.Contain("protocol=None"));
+            Assert.That(printed, Does.Contain("server name=front.example.invalid"));
+            Assert.That(printed, Does.Contain("limit=7"));
+            Assert.That(printed, Does.Contain("Password configured: True"));
+            Assert.That(printed, Does.Not.Contain(Secret), "the secret itself never belongs in the output");
+        });
+    }
+
+    [Test]
+    public void The_reported_options_say_when_no_password_was_given()
+    {
+        var options = new RabbitMqOptionSet();
+        options.Parse(new[] { "--host=rabbit.example.invalid" });
+
+        var printed = Capture(options.ShowOptions);
+
+        Assert.That(printed, Does.Contain("Password configured: False"));
+    }
+
+    const string Secret = "not-a-real-secret-0d6f2a";
+
+    static string Capture(Action write)
+    {
+        var original = Console.Out;
+        using var writer = new StringWriter();
+        Console.SetOut(writer);
+        try
+        {
+            write();
+        }
+        finally
+        {
+            Console.SetOut(original);
+        }
+
+        return writer.ToString();
     }
 }

@@ -58,7 +58,7 @@ public class MessagePackEnvelope :
         MessageType = context.SupportedMessageTypes;
 
         IsMessageNativeMessagePackSerialized = true;
-        Message = MessagePackSerializer.Serialize(message, InternalMessagePackResolver.Options);
+        Message = InternalMessagePackResolver.Serialize(message);
 
         if (context.TimeToLive.HasValue)
             ExpirationTime = DateTime.UtcNow + context.TimeToLive;
@@ -94,15 +94,17 @@ public class MessagePackEnvelope :
             // receiver then found a byte array where it expected the message. Delayed redelivery and
             // scheduling both clone an envelope, which is why a redelivered message was never consumed.
             //
-            // The reference is shared rather than copied because a payload is only ever replaced as a
-            // whole, never mutated in place.
+            // What has to be carried over is the bytes, not the array. Message is public and settable and
+            // holds a mutable array, so two envelopes sharing one would let either of them write into
+            // what the other sends; the payload is copied at the boundary instead. That is a memory copy
+            // against an encoding, which is the trade the defect above was about.
             IsMessageNativeMessagePackSerialized = alreadyMessagePack.IsMessageNativeMessagePackSerialized;
-            Message = alreadyMessagePack.Message;
+            Message = CopyPayload(alreadyMessagePack.Message);
         }
         else
         {
             IsMessageNativeMessagePackSerialized = true;
-            Message = MessagePackSerializer.Serialize(envelope.Message, InternalMessagePackResolver.Options);
+            Message = InternalMessagePackResolver.Serialize(envelope.Message);
         }
 
         ExpirationTime = envelope.ExpirationTime;
@@ -148,7 +150,7 @@ public class MessagePackEnvelope :
         MessageType = messageTypesNames;
 
         IsMessageNativeMessagePackSerialized = true;
-        Message = MessagePackSerializer.Serialize(message, InternalMessagePackResolver.Options);
+        Message = InternalMessagePackResolver.Serialize(message);
 
         ExpirationTime = context.ExpirationTime;
 
@@ -208,5 +210,15 @@ public class MessagePackEnvelope :
 
         if (MessageType != null)
             context.SupportedMessageTypes = MessageType;
+    }
+
+    /// <summary>
+    /// The payload of an envelope that is already MessagePack travels as bytes. It is copied rather than
+    /// aliased because <see cref="Message" /> is public and mutable; a payload that is not a byte array
+    /// is carried as it is, because there is nothing defined to copy.
+    /// </summary>
+    static object? CopyPayload(object? message)
+    {
+        return message is byte[] bytes ? bytes.Clone() : message;
     }
 }

@@ -1,0 +1,91 @@
+Run-scoped broker credentials generated (values are not printed).
+health=healthy
+port=32785
+ViciOne.ServiceBus Benchmark
+
+Transport: RabbitMq
+Operating System: Unix 15.7.7
+Processor Count: 16
+ViciOne.ServiceBus Version: 1.0.0.0
+Host: 127.0.0.1
+Port: 32785
+Virtual Host: /
+Username: vicione_ci
+Password configured: True
+TLS: enabled=False, protocol=None, server name=127.0.0.1
+Heartbeat: 00:00:00
+Publisher Confirmation: False
+Split: False
+Batch: enabled=True, limit=7, timeout=23ms
+Running Message Latency Benchmark
+Message Count: 1000
+Clients: 10
+Durable: False
+Payload Length: 0
+Prefetch Count: 100
+Concurrency Limit: 0
+Total send duration: 0:00:00,6469529
+Send message rate: 1545,71 (msg/s)
+Total consume duration: 0:00:00,7159935
+Consume message rate: 1396,66 (msg/s)
+Concurrent Consumer Count: 16
+send completion latency sample count: 1000
+Average send completion latency: 1.750 ms
+Minimum send completion latency: 51.494 us
+Maximum send completion latency: 96.303 ms
+Median send completion latency: 257.149 us
+P95 send completion latency: 1.909 ms
+end-to-end consume latency sample count: 1000
+Average end-to-end consume latency: 62.867 ms
+Minimum end-to-end consume latency: 32.929 ms
+Maximum end-to-end consume latency: 129.561 ms
+Median end-to-end consume latency: 65.769 ms
+P95 end-to-end consume latency: 77.743 ms
+
+end-to-end consume latency distribution (samples: 1000)
+     32.929 ms *****                                                        (     49)
+     42.593 ms ************                                                 (    115)
+     52.256 ms ************************                                     (    222)
+     61.919 ms ************************************************************ (    538)
+     71.582 ms *******                                                      (     66)
+    119.898 ms *                                                            (     10)
+Host: 127.0.0.1
+Port: 32785
+Virtual Host: /
+Username: vicione_ci
+Password configured: True
+TLS: enabled=False, protocol=None, server name=127.0.0.1
+Heartbeat: 00:00:00
+Publisher Confirmation: False
+Split: False
+Batch: enabled=True, limit=7, timeout=23ms
+Running Request Response Benchmark
+Message Count: 1000
+Clients: 10
+Durable: False
+Prefetch Count: 100
+Concurrency Limit: 0
+Total consume duration: 0:00:00,6087639
+Consume message rate: 1642,67 (msg/s)
+Total request duration: 0:00:00,6103758
+Request rate: 1638,33 (msg/s)
+Concurrent Consumer Count: 10
+request/response completion latency sample count: 1000
+Average request/response completion latency: 5.679 ms
+Minimum request/response completion latency: 3.319 ms
+Maximum request/response completion latency: 64.686 ms
+Median request/response completion latency: 4.929 ms
+P95 request/response completion latency: 6.374 ms
+consumer-reporting latency sample count: 1000
+Average consumer-reporting latency: 3.334 ms
+Minimum consumer-reporting latency: 1.415 ms
+Maximum consumer-reporting latency: 55.161 ms
+Median consumer-reporting latency: 2.720 ms
+P95 consumer-reporting latency: 3.754 ms
+
+request/response completion latency distribution (samples: 1000)
+      3.319 ms ************************************************************ (    970)
+      9.455 ms *                                                            (     17)
+     15.592 ms                                                              (      3)
+     58.549 ms                                                              (     10)
+BENCHMARK_EXIT=0
