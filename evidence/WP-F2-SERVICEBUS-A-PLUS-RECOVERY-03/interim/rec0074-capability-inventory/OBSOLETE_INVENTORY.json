@@ -1,0 +1,1246 @@
+{
+  "record": "rec0074-capability-inventory",
+  "directive": "0073 section 1",
+  "state": "raw scan complete and clustered; dispositions decided only where directive 0073 decides them",
+  "scope": "every [Obsolete] marking in src/**",
+  "totals": {
+    "markings": 141,
+    "files": 105,
+    "publicMembers": 64,
+    "types": 3,
+    "declaredCompileErrors": 5,
+    "distinctReasons": 29
+  },
+  "method": "Clustered by the reason the marking states, because that is where the author named the modern path. A cluster is not a disposition: rows marked OPEN still need capability, every call site including reflection, dependency injection and pack, the one modern path and its coverage.",
+  "notAnInventoryOf": [
+    "packages",
+    "integrations",
+    "test groups"
+  ],
+  "openWork": "this file covers the obsolete markings only; the package, integration and test-group rows of the inventory are not written yet",
+  "clusters": [
+    {
+      "reason": "Formatter-based serialization is obsolete and should not be used.",
+      "count": 72,
+      "publicMembers": 0,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "BinaryFormatter serialization constructors on exception types",
+      "modernPath": "none: the exception type, its normal constructors and its error semantics are the capability and stay",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
+      "note": "directive 0073 section 3 decides this cluster: remove the constructors entirely",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqConnectionException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportConfigurationException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsConnectException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsConnectionException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportConfigurationException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Exceptions/MessageLockExpiredException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Exceptions/MessageTimeToLiveExpiredException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Exceptions/ServiceBusConnectionException.cs",
+          "line": 25,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/Exceptions/EventHubConnectionException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageNotAcknowledgedException.cs",
+          "line": 24,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageReturnedException.cs",
+          "line": 29,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs",
+          "line": 57,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/AbstractUriException.cs",
+          "line": 33,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityCompensationException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityExecutionException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityExecutionFaultedException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/CommandException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "line": 39,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConnectionException.cs",
+          "line": 33,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConsumeContextNotAvailableException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConsumerCanceledException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConsumerException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConsumerMessageException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConventionException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/CourierException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/DuplicateKeyPipeConfigurationException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/EndpointException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/EndpointNotFoundException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/EventExecutionException.cs",
+          "line": 22,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/FutureNotFoundException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/InvalidCompensationAddressException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/JobAlreadyExistsException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/JobServiceStoppingException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/MessageDataException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/MessageInitializerException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/MessageNotConsumedException.cs",
+          "line": 16,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/MessageRetryLimitExceededException.cs",
+          "line": 16,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/NotImplementedByDesignException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PayloadException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PayloadFactoryException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PayloadNotFoundException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PipeBuilderException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PipeConfigurationException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PipelineException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ProduceException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/PublishException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RequestCanceledException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RequestException.cs",
+          "line": 32,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RequestFaultException.cs",
+          "line": 24,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RequestFaultException.cs",
+          "line": 37,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RequestTimeoutException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RoutingSlipArgumentException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/RoutingSlipException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/SagaStateMachineException.cs",
+          "line": 36,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/SendException.cs",
+          "line": 34,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/TransportException.cs",
+          "line": 31,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/TransportUnavailableException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/UnhandledEventException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/UnknownEventException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/UnknownStateException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ValueFactoryException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/CyclicGraphException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/MessageUrn.cs",
+          "line": 25,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.TestFramework/IntentionalTestException.cs",
+          "line": 30,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Internals/Caching/ValueFactoryException.cs",
+          "line": 21,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/SqlTransport/Exceptions/SqlEndpointAddressException.cs",
+          "line": 26,
+          "member": "#endif",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/SqlTransport/Exceptions/SqlTopologyException.cs",
+          "line": 27,
+          "member": "#endif",
+          "public": false
+        }
+      ]
+    },
+    {
+      "reason": "Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 10,
+      "publicMembers": 10,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 12,
+          "member": "public static void UseRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 25,
+          "member": "public static void UseRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 52,
+          "member": "public static void UseRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 72,
+          "member": "public static void UseRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 94,
+          "member": "public static void UseRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 127,
+          "member": "public static void UseRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 144,
+          "member": "public static void UseRetry(this IBusFactoryConfigurator configurator, Action<IRetryConfigurator> configure)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 160,
+          "member": "public static void UseRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 178,
+          "member": "public static void UseRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RetryConfigurationExtensions.cs",
+          "line": 197,
+          "member": "public static void UseRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 10,
+      "publicMembers": 10,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "scope and outbox configuration from a bare IServiceProvider",
+      "modernPath": "the IRegistrationContext overload of the same member",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
+      "note": "partly done in 728cdfa8; the remaining rows and the behavioural proofs belong to the outbox and scope block",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ActivityDefinition.cs",
+          "line": 69,
+          "member": "protected virtual void ConfigureCompensateActivity(IReceiveEndpointConfigurator endpointConfigurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ConsumerDefinition.cs",
+          "line": 85,
+          "member": "protected virtual void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ExecuteActivityDefinition.cs",
+          "line": 82,
+          "member": "protected virtual void ConfigureExecuteActivity(IReceiveEndpointConfigurator endpointConfigurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/FutureDefinition.cs",
+          "line": 73,
+          "member": "protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/SagaDefinition.cs",
+          "line": 73,
+          "member": "protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 43,
+          "member": "public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator> configure = default)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 81,
+          "member": "public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator> configure = default)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 116,
+          "member": "public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator> configure = default)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 153,
+          "member": "public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator> configure = default)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 190,
+          "member": "public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator> configure = default)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Job Consumers no longer require a service instance. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 6,
+      "publicMembers": 6,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs",
+          "line": 110,
+          "member": "public static IServiceInstanceConfigurator<T> ConfigureJobService<T>(this IServiceInstanceConfigurator<T> configurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs",
+          "line": 133,
+          "member": "public static IServiceInstanceConfigurator<T> ConfigureJobService<T>(this IServiceInstanceConfigurator<T> configurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RegistrationContextExtensions.cs",
+          "line": 54,
+          "member": "public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RegistrationContextExtensions.cs",
+          "line": 73,
+          "member": "public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RegistrationContextExtensions.cs",
+          "line": 89,
+          "member": "public static void ConfigureServiceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/RegistrationContextExtensions.cs",
+          "line": 118,
+          "member": "public static void ConfigureServiceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 4,
+      "publicMembers": 4,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+          "line": 227,
+          "member": "public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+          "line": 334,
+          "member": "public static void AddConsumerTestHarness<T>(this IBusRegistrationConfigurator configurator)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+          "line": 347,
+          "member": "public static void AddSagaTestHarness<T>(this IBusRegistrationConfigurator configurator)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+          "line": 360,
+          "member": "public static void AddSagaStateMachineTestHarness<TStateMachine, TSaga>(this IBusRegistrationConfigurator configurator)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "<no reason stated>",
+      "count": 3,
+      "publicMembers": 3,
+      "types": 1,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/SagaStateMachine/Visitable.cs",
+          "line": 9,
+          "member": "public interface Visitable :",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Monitoring/InstrumentationOptions.cs",
+          "line": 38,
+          "member": "public string PublishTotal { get; set; }",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Monitoring/InstrumentationOptions.cs",
+          "line": 41,
+          "member": "public string PublishFaultTotal { get; set; }",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Remove, the hosted service is automatically registered. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 3,
+      "publicMembers": 3,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/HostedServiceConfigurationExtensions.cs",
+          "line": 16,
+          "member": "public static IServiceCollection AddViciOneServiceBusHostedService(this IServiceCollection services)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/HostedServiceConfigurationExtensions.cs",
+          "line": 29,
+          "member": "public static IServiceCollection AddViciOneServiceBusHostedService(this IServiceCollection services, bool waitUntilStarted)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/HostedServiceConfigurationExtensions.cs",
+          "line": 56,
+          "member": "public static IServiceCollection AddViciOneServiceBusHostedService(this IServiceCollection services, bool waitUntilStarted, TimeSpan? startTimeout,",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "The Event Hubs service does not guarantee a numeric offset for all resource configurations.  Please use 'OffsetString' instead.",
+      "count": 3,
+      "publicMembers": 2,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubConsumeContext.cs",
+          "line": 12,
+          "member": "long Offset { get; }",
+          "public": false
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubConsumeContextExtensions.cs",
+          "line": 9,
+          "member": "public static long? Offset(this ConsumeContext context)",
+          "public": true
+        },
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubIntegration/EventHubReceiveContext.cs",
+          "line": 33,
+          "member": "public long Offset => _eventData.Offset;",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use 'Using[TransportName]' instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 3,
+      "publicMembers": 2,
+      "types": 0,
+      "declaredCompileErrors": 1,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+          "line": 19,
+          "member": "void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory);",
+          "public": false
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/ServiceCollectionBusConfigurator.cs",
+          "line": 72,
+          "member": "public virtual void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/TestHarnessRegistrationConfigurator.cs",
+          "line": 255,
+          "member": "public void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use AddJobSagaStateMachines instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 3,
+      "publicMembers": 3,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs",
+          "line": 18,
+          "member": "public static IServiceInstanceConfigurator<T> ConfigureJobServiceEndpoints<T>(this IServiceInstanceConfigurator<T> configurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs",
+          "line": 63,
+          "member": "public static IServiceInstanceConfigurator<T> ConfigureJobServiceEndpoints<T>(this IServiceInstanceConfigurator<T> configurator,",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs",
+          "line": 86,
+          "member": "public static IServiceInstanceConfigurator<T> ConfigureJobServiceEndpoints<T>(this IServiceInstanceConfigurator<T> configurator,",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use MinimalFailureStatus instead.",
+      "count": 3,
+      "publicMembers": 3,
+      "types": 0,
+      "declaredCompileErrors": 3,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IHealthCheckOptionsConfigurator.cs",
+          "line": 19,
+          "member": "public HealthStatus? FailureStatus { set; }",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/IHealthCheckOptions.cs",
+          "line": 20,
+          "member": "public HealthStatus? FailureStatus { get; }",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/ViciOneServiceBusHealthCheckOptions.cs",
+          "line": 28,
+          "member": "public HealthStatus? FailureStatus { get; set; }",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Removed with change to exception headers",
+      "count": 2,
+      "publicMembers": 2,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Transports/TransportSetHeaderAdapterExtensions.cs",
+          "line": 109,
+          "member": "public static void SetExceptionHeaders(this IDictionary<string, object> dictionary, ExceptionReceiveContext exceptionContext)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Transports/TransportSetHeaderAdapterExtensions.cs",
+          "line": 115,
+          "member": "public static void SetHostHeaders(this IDictionary<string, object> dictionary)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "This method is obsolete and will be removed in a future version.",
+      "count": 2,
+      "publicMembers": 2,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Util/ExceptionUtil.cs",
+          "line": 56,
+          "member": "public static IDictionary<string, object> GetExceptionHeaderDictionary(Exception exception)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/Util/ExceptionUtil.cs",
+          "line": 64,
+          "member": "public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the InactivityTask on the test harness instead",
+      "count": 2,
+      "publicMembers": 2,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Testing/ExtensionMethodsForBuses.cs",
+          "line": 14,
+          "member": "public static IBusActivityMonitor CreateBusActivityMonitor(this IBus bus)",
+          "public": true
+        },
+        {
+          "file": "src/ViciOne.ServiceBus/Testing/ExtensionMethodsForBuses.cs",
+          "line": 31,
+          "member": "public static IBusActivityMonitor CreateBusActivityMonitor(this IBus bus, TimeSpan inactivityTimeout)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Obsolete, use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/InMemoryOutboxConfigurationExtensions.cs",
+          "line": 240,
+          "member": "public static void UseInMemoryInboxOutbox(this IReceiveEndpointConfigurator configurator, IServiceProvider provider)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Remove, the generic request client is automatically registered. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionExtensions.cs",
+          "line": 89,
+          "member": "public static IServiceCollection AddGenericRequestClient(this IServiceCollection collection)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Set ConcurrentMessageLimit instead (which is exactly what setting this property does)",
+      "count": 1,
+      "publicMembers": 0,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Configuration/IServiceBusEndpointConfigurator.cs",
+          "line": 11,
+          "member": "int MaxConcurrentCalls { set; }",
+          "public": false
+        }
+      ]
+    },
+    {
+      "reason": "This method is deprecated, please use 'Using[TransportName]' instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 1,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/ServiceCollectionBusConfigurator.cs",
+          "line": 204,
+          "member": "public override void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "This will be removed in a future release",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkCoreSagaRepositoryRegistrationExtensions.cs",
+          "line": 311,
+          "member": "public static IEntityFrameworkSagaRepository CreateEntityFrameworkSagaRepository(this IRegistrationConfigurator registrationConfigurator,",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use ActiveMQConnectionException instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 1,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs",
+          "line": 7,
+          "member": "public class ActiveMqConnectException :",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use ISagaStateMachineTestHarness<TStateMachine, TInstance> instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 1,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Testing/IStateMachineSagaTestHarness.cs",
+          "line": 54,
+          "member": "public interface IStateMachineSagaTestHarness<TInstance, out TStateMachine> :",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use Message instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 1,
+      "publicMembers": 0,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/SagaStateMachine/BehaviorContext.cs",
+          "line": 73,
+          "member": "TMessage Data { get; }",
+          "public": false
+        }
+      ]
+    },
+    {
+      "reason": "Use Saga instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 1,
+      "publicMembers": 0,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus.Abstractions/SagaStateMachine/BehaviorContext.cs",
+          "line": 19,
+          "member": "TSaga Instance { get; }",
+          "public": false
+        }
+      ]
+    },
+    {
+      "reason": "Use UseServiceBusMessageScheduler instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Configuration/ServiceBusScheduleMessageExtensions.cs",
+          "line": 29,
+          "member": "public static void UseDelayedMessageScheduler(this IServiceBusBusFactoryConfigurator configurator)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use UseSqlMessageScheduler instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/SqlTransport/Configuration/SqlScheduleMessageExtensions.cs",
+          "line": 42,
+          "member": "public static void UseDelayedMessageScheduler(this ISqlBusFactoryConfigurator configurator)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the new .AddQuartzConsumers() method, combined with AddQuartz(), to configure the Quartz scheduler",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/QuartzIntegrationExtensions.cs",
+          "line": 16,
+          "member": "public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, IBusRegistrationContext context, string queueName = \"quartz\")",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the renamed UseSqlMessageScheduler instead",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/SqlTransport/Configuration/SqlScheduleMessageExtensions.cs",
+          "line": 18,
+          "member": "public static void UseDbMessageScheduler(this IBusFactoryConfigurator configurator)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the transport independent AddDelayedMessageScheduler",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs",
+          "line": 29,
+          "member": "public static void AddAmazonSqsMessageScheduler(this IBusRegistrationConfigurator configurator)",
+          "public": true
+        }
+      ]
+    },
+    {
+      "reason": "Use the transport independent UseDelayedMessageScheduler",
+      "count": 1,
+      "publicMembers": 1,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "",
+      "modernPath": "",
+      "disposition": "OPEN",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs",
+          "line": 14,
+          "member": "public static void UseAmazonSqsMessageScheduler(this IBusFactoryConfigurator configurator)",
+          "public": true
+        }
+      ]
+    }
+  ]
+}
