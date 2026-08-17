@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 833 |
+| Added | 834 |
 | Modified | 4909 |
 | Deleted | 721 |
 | Renamed | 18 |
@@ -6442,6 +6442,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/TaskExecutor_Specs.cs` | Modified | `tests/MassTransit.Tests/TaskExecutor_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/TaskExtension_Specs.cs` | Modified | `tests/MassTransit.Tests/TaskExtension_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/TelemetryMonitor_Specs.cs` | Modified | `tests/MassTransit.Tests/TelemetryMonitor_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Telemetry_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Testing/AsyncMessageList_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/AsyncMessageList_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Testing/BusPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/BusPublish_Specs.cs` |
