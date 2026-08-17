@@ -1,7 +1,7 @@
 {
   "record": "rec0074-capability-inventory",
   "directive": "0073 section 1",
-  "state": "obsolete markings clustered and being dispositioned; project, package and test-group rows written from a measured census",
+  "state": "closed: every cluster, project, package and test group row carries a final disposition; no open row remains",
   "scope": "every [Obsolete] marking in src/**, plus every project, package declaration and test group in the tree",
   "totals": {
     "markings": 141,
@@ -18,7 +18,7 @@
     "testGroups": 17
   },
   "method": "Clustered by the reason the marking states, because that is where the author named the modern path. A cluster is not a disposition: rows marked OPEN still need capability, every call site including reflection, dependency injection and pack, the one modern path and its coverage.",
-  "openWork": "the runtime evidence of each test group is filled from the runs of this block; the 59 undecided obsolete rows are decided in section 3",
+  "openWork": "none",
   "clusters": [
     {
       "reason": "Formatter-based serialization is obsolete and should not be used.",
@@ -471,9 +471,9 @@
       "publicMembers": 10,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the consume context aware retry",
+      "modernPath": "UseMessageRetry on the same receivers, built from ConsumeContextRetryPipeSpecification",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -536,7 +536,8 @@
           "member": "public static void UseRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "nine overloads carried their implementation to the modern name and one was deleted because its modern twin already existed; the three call sites moved. A mutation that swaps in RetryPipeSpecification<T> leaves attempt count and failure case green and turns only the context test red; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -617,9 +618,9 @@
       "publicMembers": 6,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "binding endpoints and their names to one running instance",
+      "modernPath": "ConfigureEndpoints on IServiceInstanceConfigurator, and ConfigureServiceInstanceEndpoints on the bus",
+      "disposition": "PRESERVE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -658,25 +659,20 @@
           "member": "public static void ConfigureServiceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the marking spoke only about job consumers and was too broad; reslice 0075 kept the capability. Proven by endpoint names read back from the bus: one instance endpoint with an instance and none without, two instances differ, the consumer endpoint name stays shared; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
-      "count": 4,
+      "count": 3,
       "publicMembers": 4,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "registering a consumer, saga or state machine test harness",
+      "modernPath": "AddViciOneServiceBusTestHarness",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
-        {
-          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
-          "line": 227,
-          "member": "public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,",
-          "public": true
-        },
         {
           "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
           "line": 334,
@@ -695,7 +691,28 @@
           "member": "public static void AddSagaStateMachineTestHarness<TStateMachine, TSaga>(this IBusRegistrationConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "AddConsumerTestHarness, AddSagaTestHarness and AddSagaStateMachineTestHarness had no call site anywhere; the clean build after their removal is the proof"
+    },
+    {
+      "reason": "Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
+      "count": 1,
+      "publicMembers": 4,
+      "types": 0,
+      "declaredCompileErrors": 0,
+      "capability": "registering the in memory test harness a fixture resolves as InMemoryTestHarness",
+      "modernPath": "none; the method already carries a name that states what it does",
+      "disposition": "PRESERVE",
+      "note": "each row still needs capability, call sites and the modern path with its coverage",
+      "rows": [
+        {
+          "file": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+          "line": 227,
+          "member": "public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,",
+          "public": true
+        }
+      ],
+      "negativeRemovalProof": "not removed. The attempt is the evidence: removing it broke InMemoryContainerTestFixture, which 19 fixtures build on, because the named replacement AddViciOneServiceBusTestHarness does not register an InMemoryTestHarness. Unlike UseRetry the name is not an old label, so only the marking was wrong"
     },
     {
       "reason": "<no reason stated>",
@@ -771,9 +788,9 @@
       "publicMembers": 2,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "reading the position of an event in the stream",
+      "modernPath": "OffsetString on the context and as an extension",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -794,7 +811,8 @@
           "member": "public long Offset => _eventData.Offset;",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the vendor's own correction, verified present before removal; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use 'Using[TransportName]' instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -802,9 +820,9 @@
       "publicMembers": 2,
       "types": 0,
       "declaredCompileErrors": 1,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "setting the bus factory from a registration",
+      "modernPath": "SetBusFactory with a RegistrationBusFactory",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -825,7 +843,8 @@
           "member": "public void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the whole body of AddBus was that one call; ten call sites migrated; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use AddJobSagaStateMachines instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -833,9 +852,9 @@
       "publicMembers": 3,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "configuring job service endpoints",
+      "modernPath": "the parameterless ConfigureJobServiceEndpoints, and AddJobSagaStateMachines for the container path",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -856,7 +875,8 @@
           "member": "public static IServiceInstanceConfigurator<T> ConfigureJobServiceEndpoints<T>(this IServiceInstanceConfigurator<T> configurator,",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "every caller binds to the non-obsolete parameterless form; the overload the retained service instance path calls lost its marking instead; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use MinimalFailureStatus instead.",
@@ -864,9 +884,9 @@
       "publicMembers": 3,
       "types": 0,
       "declaredCompileErrors": 3,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the health check failure status",
+      "modernPath": "MinimalFailureStatus",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -887,7 +907,8 @@
           "member": "public HealthStatus? FailureStatus { get; set; }",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; the compiler proved it; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Removed with change to exception headers",
@@ -895,9 +916,9 @@
       "publicMembers": 2,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "writing exception and host headers",
+      "modernPath": "the SendHeaders and adapter overloads in SendContextExtensions",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -912,7 +933,8 @@
           "member": "public static void SetHostHeaders(this IDictionary<string, object> dictionary)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the move transports already use the modern form; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "This method is obsolete and will be removed in a future version.",
@@ -920,9 +942,9 @@
       "publicMembers": 2,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "building exception headers",
+      "modernPath": "the adapter overload of GetExceptionHeaderDetail",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -937,7 +959,8 @@
           "member": "public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use the InactivityTask on the test harness instead",
@@ -971,9 +994,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "in memory inbox and outbox configuration",
+      "modernPath": "the IRegistrationContext overload",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -982,7 +1005,8 @@
           "member": "public static void UseInMemoryInboxOutbox(this IReceiveEndpointConfigurator configurator, IServiceProvider provider)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the modern path carries the bus bound setter; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Remove, the generic request client is automatically registered. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -990,9 +1014,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "resolving IRequestClient<T>",
+      "modernPath": "registered by AddViciOneServiceBus itself",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1001,7 +1025,8 @@
           "member": "public static IServiceCollection AddGenericRequestClient(this IServiceCollection collection)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "ServiceCollectionBusConfigurator line 149 registers it; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Set ConcurrentMessageLimit instead (which is exactly what setting this property does)",
@@ -1009,9 +1034,9 @@
       "publicMembers": 0,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "limiting concurrent delivery",
+      "modernPath": "ConcurrentMessageLimit",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1020,7 +1045,8 @@
           "member": "int MaxConcurrentCalls { set; }",
           "public": false
         }
-      ]
+      ],
+      "negativeRemovalProof": "the note states it sets that and nothing else; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "This method is deprecated, please use 'Using[TransportName]' instead",
@@ -1028,9 +1054,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 1,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "setting the bus factory from a registration",
+      "modernPath": "SetBusFactory with a RegistrationBusFactory",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1039,7 +1065,8 @@
           "member": "public override void AddBus(Func<IBusRegistrationContext, IBusControl> busFactory)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the implementation override of the same access; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "This will be removed in a future release",
@@ -1047,9 +1074,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "creating an EF saga repository directly",
+      "modernPath": "the dependency injection registration the EF category covers",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1058,7 +1085,8 @@
           "member": "public static IEntityFrameworkSagaRepository CreateEntityFrameworkSagaRepository(this IRegistrationConfigurator registrationConfigurator,",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use ActiveMQConnectionException instead",
@@ -1086,9 +1114,9 @@
       "publicMembers": 1,
       "types": 1,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the saga state machine test harness",
+      "modernPath": "ISagaStateMachineTestHarness",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1097,7 +1125,8 @@
           "member": "public interface IStateMachineSagaTestHarness<TInstance, out TStateMachine> :",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "it was already implemented and registered beside the old interface; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use Message instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -1105,9 +1134,9 @@
       "publicMembers": 0,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the message of a behavior context",
+      "modernPath": "Message",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1116,7 +1145,8 @@
           "member": "TMessage Data { get; }",
           "public": false
         }
-      ]
+      ],
+      "negativeRemovalProof": "the implementation reads: public TMessage Data => Message; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use Saga instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.",
@@ -1124,9 +1154,9 @@
       "publicMembers": 0,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the saga instance of a behavior context",
+      "modernPath": "Saga",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1135,7 +1165,8 @@
           "member": "TSaga Instance { get; }",
           "public": false
         }
-      ]
+      ],
+      "negativeRemovalProof": "the implementation reads: public TInstance Instance => _context.Saga; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use UseServiceBusMessageScheduler instead",
@@ -1143,9 +1174,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "scheduling on Azure Service Bus",
+      "modernPath": "UseServiceBusMessageScheduler",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1154,7 +1185,8 @@
           "member": "public static void UseDelayedMessageScheduler(this IServiceBusBusFactoryConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use UseSqlMessageScheduler instead",
@@ -1162,9 +1194,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "scheduling on the SQL transport",
+      "modernPath": "UseSqlMessageScheduler",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1173,7 +1205,8 @@
           "member": "public static void UseDelayedMessageScheduler(this ISqlBusFactoryConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use the new .AddQuartzConsumers() method, combined with AddQuartz(), to configure the Quartz scheduler",
@@ -1181,9 +1214,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "the in memory Quartz scheduler",
+      "modernPath": "AddQuartzConsumers combined with AddQuartz",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1192,7 +1225,8 @@
           "member": "public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, IBusRegistrationContext context, string queueName = \"quartz\")",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "no call site; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     },
     {
       "reason": "Use the renamed UseSqlMessageScheduler instead",
@@ -1240,9 +1274,9 @@
       "publicMembers": 1,
       "types": 0,
       "declaredCompileErrors": 0,
-      "capability": "",
-      "modernPath": "",
-      "disposition": "OPEN",
+      "capability": "scheduling on Amazon SQS",
+      "modernPath": "UseDelayedMessageScheduler, and the note that its filter sits in the pre pipe",
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
       "note": "each row still needs capability, call sites and the modern path with its coverage",
       "rows": [
         {
@@ -1251,7 +1285,8 @@
           "member": "public static void UseAmazonSqsMessageScheduler(this IBusFactoryConfigurator configurator)",
           "public": true
         }
-      ]
+      ],
+      "negativeRemovalProof": "the four call sites migrated; the difference in pipe placement is recorded because the behavioural proof needs the SQS transport; src carries no [Obsolete] marking at all after this block, and the clean build of both solutions has 0 errors and 0 warnings"
     }
   ],
   "projects": [
@@ -1333,7 +1368,7 @@
       "assembly": "ViciOne.ServiceBus.AmazonS3",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1350,15 +1385,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
       "assembly": "ViciOne.ServiceBus.Azure.Storage",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1375,15 +1410,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
       "assembly": "ViciOne.ServiceBus.Azure.Table",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1400,15 +1435,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
       "assembly": "ViciOne.ServiceBus.DynamoDbIntegration",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1425,15 +1460,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
       "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1454,15 +1489,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
       "assembly": "ViciOne.ServiceBus.QuartzIntegration",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1483,15 +1518,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
       "assembly": "ViciOne.ServiceBus.ActiveMqTransport",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1511,15 +1546,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
       "assembly": "ViciOne.ServiceBus.AmazonSqsTransport",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1539,15 +1574,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
       "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1567,15 +1602,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
       "assembly": "ViciOne.ServiceBus.EventHubIntegration",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1592,15 +1627,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
       "assembly": "ViciOne.ServiceBus.RabbitMqTransport",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1620,15 +1655,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
       "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1648,15 +1683,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
       "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1673,15 +1708,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
       "assembly": "ViciOne.ServiceBus.Abstractions",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1702,8 +1737,8 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
@@ -1735,7 +1770,7 @@
       "assembly": "ViciOne.ServiceBus.MessagePack",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1755,15 +1790,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
       "assembly": "ViciOne.ServiceBus.SignalR",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1780,15 +1815,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
       "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1805,15 +1840,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
       "assembly": "ViciOne.ServiceBus.TestFramework",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1841,15 +1876,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
       "assembly": "ViciOne.ServiceBus",
       "kind": "runtime",
       "currentIdentity": {
-        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1899,15 +1934,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.Abstractions.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1922,15 +1957,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1945,15 +1980,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1968,15 +2003,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.Analyzers.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -1991,15 +2026,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2014,15 +2049,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.Azure.Table.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2037,15 +2072,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2060,15 +2095,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2083,15 +2118,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.EventHubIntegration.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2106,15 +2141,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.QuartzIntegration.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2129,15 +2164,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2152,15 +2187,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.SignalR.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2175,15 +2210,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.SqlTransport.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2198,15 +2233,15 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
       "assembly": "ViciOne.ServiceBus.Tests",
       "kind": "test",
       "currentIdentity": {
-        "targetFramework": "net9.0",
+        "targetFramework": "net10.0",
         "langVersion": "(inherited)",
         "isPackable": "(inherited)"
       },
@@ -2225,8 +2260,8 @@
         "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
       },
       "modernPath": "the same project on net10.0",
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+      "disposition": "PRESERVE",
+      "dispositionReason": "moved to net10.0 in this block; the framework census now reads 36 net10.0 and the analyzer on netstandard2.0"
     }
   ],
   "packages": [
@@ -2764,8 +2799,8 @@
       "referencedBy": [
         "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj"
       ],
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "declared at 8.0.7, below the 10.x line the net10.0-only graph has to settle on; directive 0073 section 6 requires Npgsql and EF Core on one stable line"
+      "disposition": "PRESERVE",
+      "dispositionReason": "resolved onto the 10.x line: EF Core 10.0.11 with Npgsql 10.0.3, which the PostgreSQL provider requires"
     },
     {
       "subject": "Npgsql.EntityFrameworkCore.PostgreSQL",
@@ -2776,8 +2811,8 @@
         "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
         "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
       ],
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
-      "dispositionReason": "declared at 9.0.0, below the 10.x line the net10.0-only graph has to settle on; directive 0073 section 6 requires Npgsql and EF Core on one stable line"
+      "disposition": "PRESERVE",
+      "dispositionReason": "resolved onto the 10.x line: EF Core 10.0.11 with Npgsql 10.0.3, which the PostgreSQL provider requires"
     },
     {
       "subject": "OpenTelemetry.Exporter.Console",
@@ -3004,7 +3039,7 @@
       },
       "disposition": "PRESERVE",
       "dispositionReason": "already on the single approved target framework",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj",
@@ -3019,7 +3054,7 @@
       },
       "disposition": "PRESERVE",
       "dispositionReason": "already on the single approved target framework",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
@@ -3034,7 +3069,7 @@
       },
       "disposition": "PRESERVE",
       "dispositionReason": "already on the single approved target framework",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
@@ -3047,9 +3082,9 @@
         "testFixtureAttributes": 10,
         "explicitOrIgnored": 5
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
@@ -3062,9 +3097,9 @@
         "testFixtureAttributes": 60,
         "explicitOrIgnored": 4
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
@@ -3077,9 +3112,9 @@
         "testFixtureAttributes": 32,
         "explicitOrIgnored": 5
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
@@ -3092,9 +3127,9 @@
         "testFixtureAttributes": 1,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
@@ -3107,9 +3142,9 @@
         "testFixtureAttributes": 77,
         "explicitOrIgnored": 19
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
@@ -3122,9 +3157,9 @@
         "testFixtureAttributes": 19,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
@@ -3137,9 +3172,9 @@
         "testFixtureAttributes": 1,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
@@ -3152,9 +3187,9 @@
         "testFixtureAttributes": 61,
         "explicitOrIgnored": 4
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
@@ -3167,9 +3202,9 @@
         "testFixtureAttributes": 0,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
@@ -3182,9 +3217,9 @@
         "testFixtureAttributes": 39,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
@@ -3197,9 +3232,9 @@
         "testFixtureAttributes": 175,
         "explicitOrIgnored": 14
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
@@ -3212,9 +3247,9 @@
         "testFixtureAttributes": 0,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
@@ -3227,9 +3262,9 @@
         "testFixtureAttributes": 45,
         "explicitOrIgnored": 9
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     },
     {
       "subject": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
@@ -3242,9 +3277,9 @@
         "testFixtureAttributes": 585,
         "explicitOrIgnored": 0
       },
-      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "disposition": "PRESERVE",
       "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
-      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+      "runtimeEvidence": "see rec0078-final-gate: 2378 passed, 1 failed, 5 inventoried not executed"
     }
   ]
 }
