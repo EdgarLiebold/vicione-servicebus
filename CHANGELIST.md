@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 831 |
+| Added | 832 |
 | Modified | 4915 |
 | Deleted | 714 |
 | Renamed | 18 |
@@ -6141,6 +6141,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/JobAttemptGeneration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumer_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/JobServiceEndpointConfiguration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobServiceLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JsonToken_Specs.cs` | Modified | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
