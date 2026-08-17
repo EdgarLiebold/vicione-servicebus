@@ -8,6 +8,8 @@
   <PropertyGroup>
     <RootNamespace>ViciOne.ServiceBus</RootNamespace>
     <Nullable>enable</Nullable>
+    <!-- The four NewId formatters pin their buffers; without this they report CS0227. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -2,19 +2,34 @@
   <!-- These properties will be shared for all projects -->
 
   <PropertyGroup>
-    <WarningLevel>4</WarningLevel>
+    <!--
+      CS1591 stays for now and is the one open disposition here: it is a documentation policy and is
+      decided against the package and documentation truth, not silenced as a convenient close.
+
+      What used to stand beside it was removed because it repeated or cut what the SDK already
+      states, measured rather than assumed against an empty net10.0 project:
+
+        WarningLevel 4      the SDK evaluates 10, so the repository was cutting six levels of
+                            compiler warnings for every project. Removing the cap costs eight
+                            warnings, all CS8981 in one generated protobuf file of the core test
+                            project, and none in any product project.
+        Optimize true       already the SDK default in Release.
+        DEBUG;TRACE         already the SDK default in Debug, and TRACE in Release. Repeating it
+                            evaluated to TRACE;;TRACE;RELEASE, with the duplicate and the empty
+                            entry that the prepend produced.
+
+      DebugType is not an SDK default and stays: the SDK ships portable, this repository wants full
+      symbols while debugging and embedded ones in the shipped assemblies.
+    -->
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>true</Optimize>
     <DebugType>embedded</DebugType>
-    <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
 </Project>

@@ -23,8 +23,10 @@ public static class BenchmarkConfiguration
 
         for (var directory = new DirectoryInfo(Environment.CurrentDirectory); directory != null; directory = directory.Parent)
         {
-            if (File.Exists(Path.Combine(directory.FullName, "ViciOne.ServiceBus.sln"))
-                || File.Exists(Path.Combine(directory.FullName, "ViciOne.ServiceBus.slnx")))
+            // The canonical solution is the marker. The classic .sln it used to accept as well was
+            // deleted with the migration, so that half of the condition could never match again and
+            // only kept a second build truth alive.
+            if (File.Exists(Path.Combine(directory.FullName, "ViciOne.ServiceBus.slnx")))
                 return Path.Combine(directory.FullName, "artifacts", "BenchmarkDotNet");
         }
 

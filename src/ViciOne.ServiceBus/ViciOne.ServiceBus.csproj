@@ -8,6 +8,8 @@
   <PropertyGroup>
     <PackageTags>ViciOne.ServiceBus</PackageTags>
     <Description>$(Description)</Description>
+    <!-- Murmur3UnsafeHashGenerator pins its buffers; without this it reports CS0227. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
