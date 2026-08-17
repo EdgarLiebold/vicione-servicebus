@@ -5,10 +5,6 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
-    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <RootNamespace>ViciOne.ServiceBus</RootNamespace>
   </PropertyGroup>

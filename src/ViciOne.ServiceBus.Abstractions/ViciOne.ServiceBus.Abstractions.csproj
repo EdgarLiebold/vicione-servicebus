@@ -5,10 +5,6 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
-    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <RootNamespace>ViciOne.ServiceBus</RootNamespace>
     <Nullable>enable</Nullable>
@@ -18,10 +14,6 @@
     <PackageTags>ViciOne.ServiceBus</PackageTags>
     <Description>$(Description)</Description>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <PackageReference Include="System.ValueTuple"/>
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Futures\Futures"/>

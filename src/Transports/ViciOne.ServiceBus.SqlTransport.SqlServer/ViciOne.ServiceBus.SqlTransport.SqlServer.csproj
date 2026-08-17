@@ -6,10 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
-    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <PackageId>ViciOne.ServiceBus.SqlTransport.SqlServer</PackageId>
     <Title>ViciOne.ServiceBus.SqlTransport.SQL Server</Title>

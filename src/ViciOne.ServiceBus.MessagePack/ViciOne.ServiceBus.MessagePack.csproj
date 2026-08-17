@@ -7,10 +7,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
-    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <PackageId>ViciOne.ServiceBus.MessagePack</PackageId>
     <Title>ViciOne.ServiceBus.MessagePack</Title>

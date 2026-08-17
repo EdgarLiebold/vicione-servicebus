@@ -3,10 +3,6 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsWindows)' == 'true' ">
-    <TargetFrameworks>$(TargetFrameworks);net472</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <RootNamespace>ViciOne.ServiceBus</RootNamespace>
   </PropertyGroup>
@@ -21,7 +17,6 @@
   <ItemGroup>
     <PackageReference Include="Apache.NMS.AMQP" />
     <PackageReference Include="Apache.NMS.ActiveMQ" />
-    <PackageReference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'"/>
   </ItemGroup>
 
   <ItemGroup>

@@ -13,8 +13,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | Status | Count |
 |---|---|
 | Added | 842 |
-| Modified | 4917 |
-| Deleted | 722 |
+| Modified | 4911 |
+| Deleted | 728 |
 | Renamed | 10 |
 
 | Path | Status | Baseline path |
@@ -812,6 +812,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlMessageDeserializer.cs` | Deleted | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlMessageDeserializer.cs` |
 | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlMessageSerializer.cs` |
 | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Interop.NServiceBus/Serialization/NServiceBusXmlSerializerFactory.cs` |
+| `src/MassTransit.MessagePack/NullableAttributes.cs` | Deleted | `src/MassTransit.MessagePack/NullableAttributes.cs` |
 | `src/MassTransit.Newtonsoft/Configuration/EncryptedSerializerConfigurationExtensions.cs` | Deleted | `src/MassTransit.Newtonsoft/Configuration/EncryptedSerializerConfigurationExtensions.cs` |
 | `src/MassTransit.Newtonsoft/Configuration/NewtonsoftBsonConfigurationExtensions.cs` | Deleted | `src/MassTransit.Newtonsoft/Configuration/NewtonsoftBsonConfigurationExtensions.cs` |
 | `src/MassTransit.Newtonsoft/Configuration/NewtonsoftJsonConfigurationExtensions.cs` | Deleted | `src/MassTransit.Newtonsoft/Configuration/NewtonsoftJsonConfigurationExtensions.cs` |
@@ -1272,6 +1273,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj` |
 | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj.DotSettings` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj.DotSettings` |
 | `src/Scheduling/MassTransit.HangfireIntegration/NullableAttributes.cs` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/NullableAttributes.cs` |
+| `src/Scheduling/MassTransit.QuartzIntegration/NullableAttributes.cs` | Deleted | `src/Scheduling/MassTransit.QuartzIntegration/NullableAttributes.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/CancelScheduledMessageConsumerDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/CancelScheduledMessageConsumerDefinition.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/PauseScheduledMessageConsumerDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/PauseScheduledMessageConsumerDefinition.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/QuartzEndpointDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/QuartzEndpointDefinition.cs` |
@@ -1280,7 +1282,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/QuartzEndpointOptions.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/QuartzEndpointOptions.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/QuartzIntegrationExtensions.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/QuartzIntegrationExtensions.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/QuartzRegistrationExtensions.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/QuartzRegistrationExtensions.cs` |
-| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/NullableAttributes.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/NullableAttributes.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/CancelScheduledMessageConsumer.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/CancelScheduledMessageConsumer.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/JobDataMessageContext.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/JobDataMessageContext.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/PauseScheduledMessageConsumer.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/PauseScheduledMessageConsumer.cs` |
@@ -1296,7 +1297,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj.DotSettings` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj.DotSettings` |
 | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
+| `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
+| `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
+| `src/Transports/MassTransit.Azure.ServiceBus.Core/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.Azure.ServiceBus.Core/NullableAttributes.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFetchConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFetchConfigurator.cs` |
@@ -1417,6 +1421,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/MassTransit.KafkaIntegration/ProduceExtensions.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/ProduceExtensions.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Testing/KafkaTestHarnessHostedService.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Testing/KafkaTestHarnessHostedService.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/TopicEndpointConnectorExtensions.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/TopicEndpointConnectorExtensions.cs` |
+| `src/Transports/MassTransit.RabbitMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.RabbitMqTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/Configuration/AzureFunctionsBusConfigurationExtensions.cs` | Deleted | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/Configuration/AzureFunctionsBusConfigurationExtensions.cs` |
 | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/EventDataContext.cs` | Deleted | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/EventDataContext.cs` |
 | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/EventHubIntegration/Configuration/EventDataReceiverConfiguration.cs` | Deleted | `src/Transports/MassTransit.WebJobs.EventHubsIntegration/EventHubIntegration/Configuration/EventDataReceiverConfiguration.cs` |
@@ -1574,7 +1579,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqConnectionException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectionException.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportConfigurationException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqTransportConfigurationException.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqTransportException.cs` |
-| `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/NullableAttributes.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqBusTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqBusTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqConsumeTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqConsumeTopology.cs` |
@@ -1739,7 +1743,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsConnectionException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsConnectionException.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportConfigurationException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsTransportConfigurationException.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsTransportException.cs` |
-| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/NullableAttributes.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsBusTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsBusTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsConsumeTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsConsumeTopology.cs` |
@@ -1949,7 +1952,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Exceptions/ServiceBusConnectionException.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/Exceptions/ServiceBusConnectionException.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/IMessageReceiver.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/IMessageReceiver.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ISubscriptionEndpointConnector.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/ISubscriptionEndpointConnector.cs` |
-| `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/NullableAttributes.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/NullableAttributes.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Scheduling/ServiceBusScheduleMessageProvider.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/Scheduling/ServiceBusScheduleMessageProvider.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ServiceBusBusTopologyExtensions.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/ServiceBusBusTopologyExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ServiceBusEndpointAddress.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/ServiceBusEndpointAddress.cs` |
@@ -2095,7 +2097,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageReturnedException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/MessageReturnedException.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs` |
-| `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/NullableAttributes.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/NullableAttributes.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqBasicConsumeContext.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqBasicConsumeContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqBusFactory.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqBusFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqConsumeContextExtensions.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqConsumeContextExtensions.cs` |
@@ -3110,7 +3111,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Analyzers/tools/install.ps1` | Renamed | `src/MassTransit.Analyzers/tools/install.ps1` |
 | `src/ViciOne.ServiceBus.Analyzers/tools/uninstall.ps1` | Renamed | `src/MassTransit.Analyzers/tools/uninstall.ps1` |
 | `src/ViciOne.ServiceBus.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` | Modified | `src/MassTransit.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` |
-| `src/ViciOne.ServiceBus.MessagePack/NullableAttributes.cs` | Modified | `src/MassTransit.MessagePack/NullableAttributes.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/InternalMessagePackResolver.cs` | Modified | `src/MassTransit.MessagePack/Serialization/InternalMessagePackResolver.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackEnvelope.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackFormatters/ConcreteFormatterCache.cs` | Added |  |
