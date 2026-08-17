@@ -1,0 +1,105 @@
+{
+  "record": "rec0072-cleanup-block-state",
+  "directive": "0071",
+  "state": "sub-blocks 1 and 2 integrated, sub-block 3 blocked on one decision, sub-block 4 not started",
+  "head": "730af6b7",
+  "commits": [
+    {
+      "sha": "edb9dc32",
+      "subject": "Remove the LegacyObsolete compatibility aliases",
+      "closure": "proven by the compiler: with the folder gone the whole solution builds with zero errors",
+      "removedPublicSurface": [
+        "ViciOne.ServiceBus.Activity",
+        "ViciOne.ServiceBus.Activity<TSaga>",
+        "ViciOne.ServiceBus.Activity<TSaga,TMessage>",
+        "ViciOne.ServiceBus.Behavior<TSaga>",
+        "ViciOne.ServiceBus.Behavior<TSaga,TMessage>",
+        "ViciOne.ServiceBus.EventObserver<TSaga>",
+        "ViciOne.ServiceBus.LegacySerializationExtensions.ClearMessageDeserializers x2",
+        "ViciOne.ServiceBus.StateObserver<TSaga>"
+      ]
+    },
+    {
+      "sha": "728cdfa8",
+      "subject": "Remove the obsolete service-provider scope overloads",
+      "removedMembers": 19,
+      "files": 5,
+      "keptWithReason": {
+        "member": "the parameterless UseInMemoryOutbox family",
+        "reason": "it is the container-less API, not compatibility scaffolding: a bus configured without a container has no registration context and therefore no bus-specific setter. The retained non-obsolete ConfigureJobServiceEndpoints(configure) overload and roughly one hundred call sites in the retained transport test suites depend on it, so removing it would remove a capability rather than scaffolding.",
+        "evidence": "removing it produced 74 compile errors in the retained test suites plus one in the job service"
+      },
+      "renamed": "LegacySetScopedConsumeContext to DefaultSetScopedConsumeContext, now internal",
+      "productDefectFound": "UseMessageScope(IRegistrationContext) built its observer through the two-argument constructor and substituted the process default for the setter the registration context carries; with more than one bus registered the consume context went into the wrong provider. The observer now takes the registration context.",
+      "focusedTests": {
+        "filter": "ContainerTests, InMemoryOutbox, JobService, Turnout, MessageScope, ServiceScope",
+        "result": "192/192"
+      }
+    },
+    {
+      "sha": "895cd3d2",
+      "subject": "Remove the Jaeger exporter and its vulnerable package",
+      "detail": "four test helpers lost the exporter sink only; the tracer provider, the resource and the ViciOne activity source registration stay",
+      "packagesRemoved": [
+        "OpenTelemetry.Exporter.Jaeger 1.5.1, advisory GHSA-38h3-2333-qx47"
+      ],
+      "projectsTouched": 5
+    },
+    {
+      "sha": "580a660f",
+      "subject": "Revert the Jaeger removal until it is verified from a clean build",
+      "note": "my error, see selfReported"
+    },
+    {
+      "sha": "730af6b7",
+      "subject": "Restore the Jaeger removal, which was never the cause",
+      "note": "verified from a clean tree and a clean build"
+    }
+  ],
+  "selfReported": {
+    "what": "I reported zero errors and zero warnings for the Jaeger commit while one test project still carried object files from an unfinished target-framework experiment. Built from clean the solution failed with eight errors, so the claim was false.",
+    "thenWhat": "I reverted the Jaeger commit before I knew the cause. The cause was an uncommitted csproj edit still sitting in my working tree, not the commit. I reverted a correct commit on a wrong reading and had to undo that.",
+    "bothCommitsKept": "no history was rewritten; the mistake and its correction are two ordinary commits",
+    "rule": "measure from clean before acting, and find the cause before reverting"
+  },
+  "cleanBuildAtHead": {
+    "incremental": false,
+    "errors": 0,
+    "warnings": 0,
+    "note": "the twenty NU1902 that the previous checkpoint reported are gone with the package"
+  },
+  "subBlock3": {
+    "state": "measured, not integrated; every change reverted, tree clean",
+    "measured": [
+      {
+        "item": "target frameworks",
+        "finding": "33 projects move to net10.0 mechanically; the analyzer stays netstandard2.0 as the approved exception"
+      },
+      {
+        "item": "PostgreSQL",
+        "finding": "Npgsql.EntityFrameworkCore.PostgreSQL 9.0.0 requires EntityFrameworkCore < 10.0.0 and conflicts with the net10 line; PostgreSQL is PO-kept, so the provider has to move to the 10 line"
+      },
+      {
+        "item": "System.Linq.Async",
+        "finding": ".NET 10 ships System.Linq.AsyncEnumerable in the base library, which makes the package ambiguous: 84 CS0121 and 8 CS1061. It is a package that exists only for older frameworks and is a removal candidate under this sub-block"
+      },
+      {
+        "item": "LangVersion",
+        "finding": "removing the repository-wide pin drops the analyzer to the netstandard2.0 default of C# 7.3, which fails on two files that begin with #nullable enable: CancellationTokenOverloadMethodAnalyzer.cs with 17 annotations and Helpers/OperationExtensions.cs with 5"
+      }
+    ],
+    "blockedOn": "the LangVersion question below"
+  },
+  "subBlock4": {
+    "state": "not started",
+    "note": "independent of the decision and can proceed"
+  },
+  "stillOpen": [
+    "external transports",
+    "real Azure profiles",
+    "SQL Server bus outbox",
+    "the ActiveMQ category has still never run successfully"
+  ],
+  "noPush": true,
+  "noTag": true
+}

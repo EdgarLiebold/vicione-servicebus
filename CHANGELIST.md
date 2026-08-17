@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 820 |
-| Modified | 4927 |
-| Deleted | 701 |
+| Added | 822 |
+| Modified | 4921 |
+| Deleted | 707 |
 | Renamed | 19 |
 
 | Path | Status | Baseline path |
@@ -206,6 +206,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0069-review-corrections/CORE_UNIT_CENSUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0069-review-corrections/REVIEW_CORRECTIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0069-review-corrections/core-unit.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0072-cleanup-block-state/CLEANUP_BLOCK_STATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
@@ -881,6 +882,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
+| `src/MassTransit/LegacyObsolete/Activity.cs` | Deleted | `src/MassTransit/LegacyObsolete/Activity.cs` |
+| `src/MassTransit/LegacyObsolete/Behavior.cs` | Deleted | `src/MassTransit/LegacyObsolete/Behavior.cs` |
+| `src/MassTransit/LegacyObsolete/EventObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/EventObserver.cs` |
+| `src/MassTransit/LegacyObsolete/LegacySerializationExtensions.cs` | Deleted | `src/MassTransit/LegacyObsolete/LegacySerializationExtensions.cs` |
+| `src/MassTransit/LegacyObsolete/StateObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/StateObserver.cs` |
 | `src/NuGet.README.md` | Modified | `src/NuGet.README.md` |
 | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/AzureCosmosSerializerExtensions.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/AzureCosmosSerializerExtensions.cs` |
 | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosAuthSettings.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosAuthSettings.cs` |
@@ -3825,6 +3832,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DefaultSetScopedConsumeContext.cs` | Added |  |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` |
@@ -3854,7 +3862,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/IRegistrationRiderFactory.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/IRegistrationRiderFactory.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/IScopedBusContextProvider.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/IScopedBusContextProvider.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/IScopedConsumeContextProvider.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/IScopedConsumeContextProvider.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerConsumer.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerConsumer.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerConsumerDefinition.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerConsumerDefinition.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/MessageHandlerMethod.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/MessageHandlerMethod.cs` |
@@ -4236,11 +4243,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/JobService/RecurringJobScheduleConfiguratorExtensions.cs` | Modified | `src/MassTransit/JobService/RecurringJobScheduleConfiguratorExtensions.cs` |
 | `src/ViciOne.ServiceBus/JobServiceEventExtensions.cs` | Modified | `src/MassTransit/JobServiceEventExtensions.cs` |
 | `src/ViciOne.ServiceBus/JsonMessageBody.cs` | Modified | `src/MassTransit/JsonMessageBody.cs` |
-| `src/ViciOne.ServiceBus/LegacyObsolete/Activity.cs` | Modified | `src/MassTransit/LegacyObsolete/Activity.cs` |
-| `src/ViciOne.ServiceBus/LegacyObsolete/Behavior.cs` | Modified | `src/MassTransit/LegacyObsolete/Behavior.cs` |
-| `src/ViciOne.ServiceBus/LegacyObsolete/EventObserver.cs` | Modified | `src/MassTransit/LegacyObsolete/EventObserver.cs` |
-| `src/ViciOne.ServiceBus/LegacyObsolete/LegacySerializationExtensions.cs` | Modified | `src/MassTransit/LegacyObsolete/LegacySerializationExtensions.cs` |
-| `src/ViciOne.ServiceBus/LegacyObsolete/StateObserver.cs` | Modified | `src/MassTransit/LegacyObsolete/StateObserver.cs` |
 | `src/ViciOne.ServiceBus/Licensing/LicenseFile.cs` | Modified | `src/MassTransit/Licensing/LicenseFile.cs` |
 | `src/ViciOne.ServiceBus/Licensing/LicenseReader.cs` | Modified | `src/MassTransit/Licensing/LicenseReader.cs` |
 | `src/ViciOne.ServiceBus/Licensing/LicenseSettings.cs` | Modified | `src/MassTransit/Licensing/LicenseSettings.cs` |
