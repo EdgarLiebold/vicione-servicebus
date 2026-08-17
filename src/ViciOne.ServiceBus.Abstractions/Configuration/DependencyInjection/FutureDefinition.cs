@@ -48,10 +48,6 @@ namespace ViciOne.ServiceBus
         {
             if (_concurrentMessageLimit.HasValue)
                 sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
-
-            #pragma warning disable CS0618
-            ConfigureSaga(endpointConfigurator, sagaConfigurator);
-            #pragma warning restore CS0618
             ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
         }
 
@@ -62,17 +58,6 @@ namespace ViciOne.ServiceBus
             return string.IsNullOrWhiteSpace(_endpointName)
                 ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Message<TFuture>()
                 : _endpointName!;
-        }
-
-        /// <summary>
-        /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
-        /// the endpoint.
-        /// </summary>
-        /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-        /// <param name="sagaConfigurator">The saga configurator</param>
-        [Obsolete("Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator)
-        {
         }
 
         /// <summary>

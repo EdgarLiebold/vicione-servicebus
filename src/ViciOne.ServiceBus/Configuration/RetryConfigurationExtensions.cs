@@ -7,6 +7,17 @@ namespace ViciOne.ServiceBus
     using RetryPolicies;
 
 
+    /// <summary>
+    /// The pipe level retry, which puts a ConsumeContextRetryPipeSpecification on the pipe it is given.
+    /// <para>
+    /// There is deliberately no overload here for IBusFactoryConfigurator. A bus factory configurator is
+    /// also an IConsumePipeConfigurator, and that receiver already has UseMessageRetry in
+    /// MessageRetryConfigurationExtensions, which drives a MessageRetryConfigurationObserver per message
+    /// type. An overload on the more specific IBusFactoryConfigurator would win overload resolution and
+    /// silently move every existing bus level call to the other mechanism. It did: the courier fixtures
+    /// When_using_retry_middleware_for_courier and the Quartz Courier_Specs went red on exactly that.
+    /// </para>
+    /// </summary>
     public static class RetryConfigurationExtensions
     {
                 public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
@@ -114,21 +125,6 @@ namespace ViciOne.ServiceBus
 
             var observer = new RetryBusObserver();
             connector.ConnectBusObserver(observer);
-
-            var specification = new ConsumeContextRetryPipeSpecification(observer.Stopping);
-
-            configure?.Invoke(specification);
-
-            configurator.AddPipeSpecification(specification);
-        }
-
-                public static void UseMessageRetry(this IBusFactoryConfigurator configurator, Action<IRetryConfigurator> configure)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var observer = new RetryBusObserver();
-            configurator.ConnectBusObserver(observer);
 
             var specification = new ConsumeContextRetryPipeSpecification(observer.Stopping);
 

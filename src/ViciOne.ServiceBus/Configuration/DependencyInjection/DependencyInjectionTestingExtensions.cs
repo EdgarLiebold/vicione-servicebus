@@ -224,7 +224,6 @@ namespace ViciOne.ServiceBus
         /// <summary>
         /// Add the In-Memory test harness to the container, and configure it using the callback specified.
         /// </summary>
-        [Obsolete("Use AddViciOneServiceBusTestHarness instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
         public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,
             Action<IBusRegistrationConfigurator>? configure = null)
         {

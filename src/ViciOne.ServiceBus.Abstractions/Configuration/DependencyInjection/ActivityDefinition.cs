@@ -32,10 +32,6 @@ namespace ViciOne.ServiceBus
         {
             if (ConcurrentMessageLimit.HasValue)
                 compensateActivityConfigurator.ConcurrentMessageLimit = ConcurrentMessageLimit;
-
-            #pragma warning disable CS0618
-            ConfigureCompensateActivity(endpointConfigurator, compensateActivityConfigurator);
-            #pragma warning restore CS0618
             ConfigureCompensateActivity(endpointConfigurator, compensateActivityConfigurator, context);
         }
 
@@ -59,17 +55,6 @@ namespace ViciOne.ServiceBus
             configure?.Invoke(configurator);
 
             CompensateEndpointDefinition = new CompensateActivityEndpointDefinition<TActivity, TLog>(configurator.Settings);
-        }
-
-        /// <summary>
-        /// Called when the compensate activity is being configured on the endpoint.
-        /// </summary>
-        /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-        /// <param name="compensateActivityConfigurator"></param>
-        [Obsolete("Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        protected virtual void ConfigureCompensateActivity(IReceiveEndpointConfigurator endpointConfigurator,
-            ICompensateActivityConfigurator<TActivity, TLog> compensateActivityConfigurator)
-        {
         }
 
         /// <summary>

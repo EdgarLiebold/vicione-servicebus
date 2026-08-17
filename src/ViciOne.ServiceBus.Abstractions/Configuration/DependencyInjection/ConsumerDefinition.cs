@@ -47,10 +47,6 @@ namespace ViciOne.ServiceBus
         {
             if (_concurrentMessageLimit.HasValue)
                 consumerConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
-
-            #pragma warning disable CS0618
-            ConfigureConsumer(endpointConfigurator, consumerConfigurator);
-            #pragma warning restore CS0618
             ConfigureConsumer(endpointConfigurator, consumerConfigurator, context);
         }
 
@@ -74,17 +70,6 @@ namespace ViciOne.ServiceBus
             configure?.Invoke(configurator);
 
             EndpointDefinition = new ConsumerEndpointDefinition<TConsumer>(configurator.Settings);
-        }
-
-        /// <summary>
-        /// Called when the consumer is being configured on the endpoint. Configuration only applies to this consumer, and does not apply to
-        /// the endpoint.
-        /// </summary>
-        /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-        /// <param name="consumerConfigurator">The consumer configurator</param>
-        [Obsolete("Use the IRegistrationContext overload instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        protected virtual void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator)
-        {
         }
 
         /// <summary>
