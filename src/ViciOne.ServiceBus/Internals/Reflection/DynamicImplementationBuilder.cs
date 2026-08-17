@@ -52,10 +52,13 @@ namespace ViciOne.ServiceBus.Internals
                     : TypeCache.GetShortName(interfaceType));
             try
             {
+                // The emitted proxy used to carry TypeAttributes.Serializable behind a SYSLIB0050
+                // suppression. Only the retired formatter based serializers ever read that flag, and
+                // this fork ships none: the retained set is System.Text.Json in its normal and raw
+                // shapes and MessagePack. DynamicProxySerialization_Specs carries the proxy through
+                // all three and is green with the flag and without it, so the flag and the
+                // suppression it needed are both gone.
                 var typeBuilder = builder.DefineType(typeName,
-                    #pragma warning disable SYSLIB0050 // Formatter-based serialization is obsolete and should not be used.
-                    TypeAttributes.Serializable |
-                    #pragma warning restore SYSLIB0050
                     TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed,
                     typeof(object), new[] { interfaceType });
 
