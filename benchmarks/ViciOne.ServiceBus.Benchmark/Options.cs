@@ -476,11 +476,9 @@ namespace NDesk.Options
             option = optionName;
         }
 
-#if NET8_0_OR_GREATER
 
         public string OptionName => option;
 
-#if NET8_0_OR_GREATER
     }
 
 
