@@ -14,7 +14,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 |---|---|
 | Added | 834 |
 | Modified | 4909 |
-| Deleted | 721 |
+| Deleted | 722 |
 | Renamed | 18 |
 
 | Path | Status | Baseline path |
@@ -30,6 +30,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `AGENTS.md` | Modified | `AGENTS.md` |
 | `CHANGELIST.md` | Added |  |
 | `COPYRIGHT` | Modified | `COPYRIGHT` |
+| `Directory.Build.props` | Modified | `Directory.Build.props` |
 | `Directory.Packages.props` | Modified | `Directory.Packages.props` |
 | `MODIFICATIONS.md` | Added |  |
 | `NOTICE` | Modified | `NOTICE` |
@@ -892,6 +893,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` |
+| `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` | Deleted | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` |
 | `src/MassTransit/LegacyObsolete/Activity.cs` | Deleted | `src/MassTransit/LegacyObsolete/Activity.cs` |
 | `src/MassTransit/LegacyObsolete/Behavior.cs` | Deleted | `src/MassTransit/LegacyObsolete/Behavior.cs` |
 | `src/MassTransit/LegacyObsolete/EventObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/EventObserver.cs` |
@@ -4149,7 +4151,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Internals/Caching/ValueFactoryException.cs` | Modified | `src/MassTransit/Internals/Caching/ValueFactoryException.cs` |
 | `src/ViciOne.ServiceBus/Internals/Caching/ValueTracker.cs` | Modified | `src/MassTransit/Internals/Caching/ValueTracker.cs` |
 | `src/ViciOne.ServiceBus/Internals/Caching/ViciOneServiceBusCache.cs` | Modified | `src/MassTransit/Internals/Caching/MassTransitCache.cs` |
-| `src/ViciOne.ServiceBus/Internals/Extensions/AsyncEnumerableExtensions.cs` | Modified | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` |
 | `src/ViciOne.ServiceBus/Internals/Extensions/StringExtensions.cs` | Modified | `src/MassTransit/Internals/Extensions/StringExtensions.cs` |
 | `src/ViciOne.ServiceBus/Internals/Reflection/DynamicImplementationBuilder.cs` | Modified | `src/MassTransit/Internals/Reflection/DynamicImplementationBuilder.cs` |
 | `src/ViciOne.ServiceBus/Internals/Reflection/ExpressionCompiler.cs` | Modified | `src/MassTransit/Internals/Reflection/ExpressionCompiler.cs` |

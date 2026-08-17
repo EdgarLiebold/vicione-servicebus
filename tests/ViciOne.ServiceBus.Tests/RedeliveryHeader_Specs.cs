@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Tests
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Testing;
     using Microsoft.Extensions.DependencyInjection;

@@ -3,6 +3,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- The compiler that loads an analyzer is not a net10.0 process, so this project keeps
+         netstandard2.0 and names its language version itself; that framework would otherwise
+         default to C# 7.3 once the repository wide pin is gone. -->
+    <LangVersion>14.0</LangVersion>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

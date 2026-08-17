@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>12</LangVersion>
     <WarningLevel>4</WarningLevel>
     <NoWarn>CS1591,CS1998</NoWarn>
   </PropertyGroup>

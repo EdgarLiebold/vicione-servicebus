@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using Internals;
 using Microsoft.Extensions.DependencyInjection;
