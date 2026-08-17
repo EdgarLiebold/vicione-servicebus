@@ -11,9 +11,7 @@ namespace ViciOne.ServiceBus.Metadata
         static bool? _isRunningInContainer;
         static bool? _isRunningInKubernetes;
 
-    #if !NETFRAMEWORK
         static bool? _isNetFramework;
-    #endif
         public static HostInfo Host => Cached.HostInfo;
         public static HostInfo Empty => Cached.EmptyHostInfo;
 
@@ -24,11 +22,7 @@ namespace ViciOne.ServiceBus.Metadata
             _isRunningInKubernetes ??= Environment.GetEnvironmentVariable("KUBERNETES_SERVICE_HOST") != null
                 || Directory.Exists("/var/run/secrets/kubernetes.io");
 
-    #if NETFRAMEWORK
-        public static bool IsNetFramework => true;
-    #else
         public static bool IsNetFramework => _isNetFramework ??= RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
-    #endif
 
         public static string? GetCommitHash()
         {

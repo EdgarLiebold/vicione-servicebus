@@ -1,12 +1,10 @@
 namespace ViciOne.ServiceBus.NewIdFormatters
 {
     using System;
-#if NET6_0_OR_GREATER
     using System.Runtime.InteropServices;
     using System.Runtime.CompilerServices;
     using System.Runtime.Intrinsics;
     using System.Runtime.Intrinsics.X86;
-#endif
 
 
 // We need to target netstandard2.0, so keep using ref parameter.
@@ -38,7 +36,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
 
         public unsafe string Format(in byte[] bytes)
         {
-#if NET6_0_OR_GREATER
             if (Avx2.IsSupported && BitConverter.IsLittleEndian)
             {
                 var isUpperCase = _alpha != LowerCaseUInt;
@@ -47,7 +44,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                     EncodeVector256(span, state);
                 });
             }
-#endif
             var result = stackalloc char[_length];
 
             var i = 0;
@@ -99,7 +95,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
             return new string(result, 0, _length);
         }
 
-#if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void EncodeVector256(Span<char> span, (byte[] bytes, bool, char _prefix, char _suffix) state)
         {
@@ -141,7 +136,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
         {
             uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;

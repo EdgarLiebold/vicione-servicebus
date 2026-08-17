@@ -5,11 +5,9 @@ namespace ViciOne.ServiceBus
     using System.Threading;
     using NewIdFormatters;
     using NewIdProviders;
-#if NET6_0_OR_GREATER
     using System.Runtime.Intrinsics.X86;
     using System.Runtime.Intrinsics;
     using System.Runtime.InteropServices;
-#endif
 
     // We need to target netstandard2.0, so keep using ref parameter.
     // CS9191: The 'ref' modifier for argument 2 corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
@@ -170,7 +168,6 @@ namespace ViciOne.ServiceBus
         {
             var bytes = _formatterArray.Value!;
 
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
@@ -179,7 +176,6 @@ namespace ViciOne.ServiceBus
                 MemoryMarshal.TryWrite(bytes, ref result);
                 return bytes;
             }
-        #endif
 
             bytes[15] = (byte)(_b >> 16);
             bytes[14] = (byte)(_b >> 24);
@@ -205,7 +201,6 @@ namespace ViciOne.ServiceBus
         {
             var bytes = _formatterArray.Value!;
 
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
@@ -214,7 +209,6 @@ namespace ViciOne.ServiceBus
                 MemoryMarshal.TryWrite(bytes, ref result);
                 return bytes;
             }
-        #endif
 
             bytes[15] = (byte)_d;
             bytes[14] = (byte)(_d >> 8);
@@ -238,14 +232,12 @@ namespace ViciOne.ServiceBus
 
         public Guid ToGuid()
         {
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 Vector128<byte> bytes = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
                 Vector128<byte> shuffled = Ssse3.Shuffle(bytes, Vector128.Create((byte)13, 12, 14, 15, 8, 9, 10, 11, 5, 4, 3, 2, 1, 0, 7, 6));
                 return Unsafe.As<Vector128<byte>, Guid>(ref shuffled);
             }
-        #endif
 
             var a = (int)(_d & 0xFFFF0000) | ((_d >> 8) & 0x00FF) | ((_d << 8) & 0xFF00);
             var b = (short)_c;
@@ -264,14 +256,12 @@ namespace ViciOne.ServiceBus
 
         public Guid ToSequentialGuid()
         {
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 Vector128<byte> bytes = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
                 Vector128<byte> shuffled = Ssse3.Shuffle(bytes, Vector128.Create((byte)0, 1, 2, 3, 6, 7, 4, 5, 11, 10, 9, 8, 15, 14, 13, 12));
                 return Unsafe.As<Vector128<byte>, Guid>(ref shuffled);
             }
-        #endif
 
             var a = _a;
             var b = (short)(_b >> 16);
@@ -304,7 +294,6 @@ namespace ViciOne.ServiceBus
         {
             var bytes = new byte[16];
 
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
@@ -313,7 +302,6 @@ namespace ViciOne.ServiceBus
                 MemoryMarshal.TryWrite(bytes, ref result);
                 return bytes;
             }
-        #endif
 
             bytes[15] = (byte)(_b >> 16);
             bytes[14] = (byte)(_b >> 24);
@@ -535,7 +523,6 @@ namespace ViciOne.ServiceBus
             return _getGenerator().NextSequentialGuid(ids, index, count);
         }
 
-    #if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void FromGuid(in Guid guid, out NewId newId)
         {
@@ -547,7 +534,6 @@ namespace ViciOne.ServiceBus
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void FromByteArray(ReadOnlySpan<byte> bytes, out NewId newId)
         {
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 var vector = MemoryMarshal.Read<Vector128<byte>>(bytes);
@@ -556,7 +542,6 @@ namespace ViciOne.ServiceBus
                 newId = Unsafe.As<Vector128<byte>, NewId>(ref result);
                 return;
             }
-        #endif
             var a = (bytes[10] << 24) | (bytes[11] << 16) | (bytes[12] << 8) | bytes[13];
             var b = (bytes[14] << 24) | (bytes[15] << 16) | (bytes[8] << 8) | bytes[9];
             var c = (bytes[7] << 24) | (bytes[6] << 16) | (bytes[5] << 8) | bytes[4];
@@ -570,7 +555,6 @@ namespace ViciOne.ServiceBus
         {
             Span<byte> bytes = stackalloc byte[16];
             guid.TryWriteBytes(bytes);
-        #if NET6_0_OR_GREATER
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
             {
                 var vector = MemoryMarshal.Read<Vector128<byte>>(bytes);
@@ -579,7 +563,6 @@ namespace ViciOne.ServiceBus
                 newId = Unsafe.As<Vector128<byte>, NewId>(ref result);
                 return;
             }
-        #endif
             var a = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
             var b = (bytes[5] << 24) | (bytes[4] << 16) | (bytes[7] << 8) | bytes[6];
             var c = (bytes[8] << 24) | (bytes[9] << 16) | (bytes[10] << 8) | bytes[11];
@@ -587,35 +570,5 @@ namespace ViciOne.ServiceBus
 
             newId = new NewId(a, b, c, d);
         }
-    #else
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static void FromGuid(in Guid guid, out NewId newId)
-        {
-            FromByteArray(guid.ToByteArray(), out newId);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static void FromByteArray(in byte[] bytes, out NewId newId)
-        {
-            var a = (bytes[10] << 24) | (bytes[11] << 16) | (bytes[12] << 8) | bytes[13];
-            var b = (bytes[14] << 24) | (bytes[15] << 16) | (bytes[8] << 8) | bytes[9];
-            var c = (bytes[7] << 24) | (bytes[6] << 16) | (bytes[5] << 8) | bytes[4];
-            var d = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[0] << 8) | bytes[1];
-
-            newId = new NewId(a, b, c, d);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static void FromSequentialByteArray(in Guid guid, out NewId newId)
-        {
-            var bytes = guid.ToByteArray();
-            var a = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
-            var b = (bytes[5] << 24) | (bytes[4] << 16) | (bytes[7] << 8) | bytes[6];
-            var c = (bytes[8] << 24) | (bytes[9] << 16) | (bytes[10] << 8) | bytes[11];
-            var d = (bytes[12] << 24) | (bytes[13] << 16) | (bytes[14] << 8) | bytes[15];
-
-            newId = new NewId(a, b, c, d);
-        }
-    #endif
     }
 }

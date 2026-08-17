@@ -2,10 +2,8 @@ namespace ViciOne.ServiceBus.NewIdFormatters
 {
     using System.Runtime.CompilerServices;
     using System;
-#if NET6_0_OR_GREATER
     using System.Runtime.Intrinsics.X86;
     using System.Runtime.Intrinsics;
-#endif
 
 
     public class ZBase32Formatter : INewIdFormatter
@@ -27,7 +25,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
 
         public unsafe string Format(in byte[] bytes)
         {
-#if NET6_0_OR_GREATER
             if (Avx2.IsSupported)
             {
                 return string.Create(26, (bytes, _isUpper), (span, state) =>
@@ -37,7 +34,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                     EncodeKnownCase(bytes, span, isUpperCase);
                 });
             }
-#endif
             var result = stackalloc char[26];
 
             var offset = 0;
@@ -70,7 +66,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
             }
         }
 
-#if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void EncodeKnownCase(ReadOnlySpan<byte> source, Span<char> destination, bool isUpperCase)
         {
@@ -93,6 +88,5 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                 IntrinsicsHelper.EncodeBase32(source, destination, lowerCaseLow, lowerCaseHigh);
             }
         }
-#endif
     }
 }

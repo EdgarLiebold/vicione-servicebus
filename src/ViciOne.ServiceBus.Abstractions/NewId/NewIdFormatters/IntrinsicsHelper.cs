@@ -1,4 +1,3 @@
-#if NET6_0_OR_GREATER
 namespace ViciOne.ServiceBus.NewIdFormatters
 {
     using System.Diagnostics;
@@ -115,4 +114,3 @@ namespace ViciOne.ServiceBus.NewIdFormatters
         }
     }
 }
-#endif

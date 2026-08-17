@@ -29,9 +29,7 @@ namespace ViciOne.ServiceBus
             IsTransient = isTransient;
         }
 
-#if NET8_0_OR_GREATER
         [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-#endif
         protected ConnectionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

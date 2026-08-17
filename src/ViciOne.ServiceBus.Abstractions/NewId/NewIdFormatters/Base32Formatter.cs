@@ -1,12 +1,10 @@
 namespace ViciOne.ServiceBus.NewIdFormatters
 {
     using System;
-#if NET6_0_OR_GREATER
     using System.Runtime.InteropServices;
     using System.Runtime.Intrinsics;
     using System.Runtime.Intrinsics.X86;
     using System.Runtime.CompilerServices;
-#endif
 
 
     public class Base32Formatter :
@@ -17,11 +15,9 @@ namespace ViciOne.ServiceBus.NewIdFormatters
 
         readonly string _chars;
         readonly bool _isUpperCase;
-#if NET6_0_OR_GREATER
         readonly bool _isCustom;
         readonly Vector256<byte> _lower;
         readonly Vector256<byte> _upper;
-#endif
         public Base32Formatter(bool upperCase = false)
         {
             _chars = upperCase ? UpperCaseChars : LowerCaseChars;
@@ -35,7 +31,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
 
             _chars = chars;
 
-#if NET6_0_OR_GREATER
             if (Avx2.IsSupported && BitConverter.IsLittleEndian)
             {
                 _isCustom = true;
@@ -46,12 +41,10 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                 _lower = IntrinsicsHelper.GetByteLutFromChar(lower);
                 _upper = IntrinsicsHelper.GetByteLutFromChar(upper);
             }
-#endif
         }
 
         public unsafe string Format(in byte[] bytes)
         {
-#if NET6_0_OR_GREATER
             if (Avx2.IsSupported)
             {
                 if (_isCustom)
@@ -68,7 +61,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                     EncodeKnown(bytes, span, isUpperCase);
                 });
             }
-#endif
             var result = stackalloc char[26];
 
             var offset = 0;
@@ -102,7 +94,6 @@ namespace ViciOne.ServiceBus.NewIdFormatters
             }
         }
 
-#if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void EncodeKnown(ReadOnlySpan<byte> source, Span<char> destination, bool isUpperCase)
         {
@@ -125,6 +116,5 @@ namespace ViciOne.ServiceBus.NewIdFormatters
                 IntrinsicsHelper.EncodeBase32(source, destination, lowerCaseLow, lowerCaseHigh);
             }
         }
-#endif
     }
 }

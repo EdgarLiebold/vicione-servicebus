@@ -22,9 +22,7 @@ public class AmazonSqsConnectionException :
     {
     }
 
-#if NET8_0_OR_GREATER
     [Obsolete("Formatter-based serialization is obsolete and should not be used.")]
-#endif
     protected AmazonSqsConnectionException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {

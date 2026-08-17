@@ -432,7 +432,6 @@ namespace ViciOne.ServiceBus.Logging
         public static void TryConfigure(IServiceProvider provider)
         {
             var instrumentationOptions = provider.GetRequiredService<IOptions<InstrumentationOptions>>().Value;
-        #if NET8_0_OR_GREATER
             var meterFactory = provider.GetService<IMeterFactory>();
             if (meterFactory == null)
             {
@@ -461,9 +460,6 @@ namespace ViciOne.ServiceBus.Logging
             // Activates the scope of this provider. The root context belongs to this scope, so no instance another
             // provider already uses is rebound here.
             LogContext.Current = instrumentation.RootLogContext;
-        #else
-            TryConfigure(instrumentationOptions);
-        #endif
         }
 
         public static void TryConfigure(InstrumentationOptions options)

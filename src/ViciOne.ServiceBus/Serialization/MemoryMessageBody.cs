@@ -30,11 +30,7 @@ namespace ViciOne.ServiceBus.Serialization
 
         public string GetString()
         {
-        #if !NET6_0_OR_GREATER && !NETSTANDARD2_1
-            return _string ??= MessageDefaults.Encoding.GetString(GetBytes());
-        #else
             return _string ??= MessageDefaults.Encoding.GetString(_memory.Span);
-        #endif
         }
     }
 }

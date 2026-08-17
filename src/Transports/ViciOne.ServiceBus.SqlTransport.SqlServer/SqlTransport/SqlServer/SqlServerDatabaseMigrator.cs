@@ -2009,21 +2009,13 @@ END
                 var builder = new SqlConnectionStringBuilder(connection.Connection.ConnectionString);
                 if (builder.IntegratedSecurity)
                 {
-                #if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     await using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection.Connection);
-                #else
-                    using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection.Connection);
-                #endif
 
                     username = (await command.ExecuteScalarAsync())?.ToString();
                 }
                 else if (builder.Authentication == SqlAuthenticationMethod.ActiveDirectoryManagedIdentity)
                 {
-                #if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     await using SqlCommand command = new("SELECT CURRENT_USER", connection.Connection);
-                #else
-                    using SqlCommand command = new("SELECT CURRENT_USER", connection.Connection);
-                #endif
                     username = (await command.ExecuteScalarAsync())?.ToString();
                 }
             }

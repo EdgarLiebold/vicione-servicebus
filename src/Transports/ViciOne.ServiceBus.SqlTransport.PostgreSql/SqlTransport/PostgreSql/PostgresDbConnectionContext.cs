@@ -84,12 +84,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                 {
                     await using var connection = await CreateConnection(cancellationToken).ConfigureAwait(false);
 
-                #if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     await using var transaction = await connection.Connection.BeginTransactionAsync(_hostSettings.IsolationLevel, cancellationToken)
                         .ConfigureAwait(false);
-                #else
-                    await using var transaction = connection.Connection.BeginTransaction(_hostSettings.IsolationLevel);
-                #endif
 
                     var result = await callback(connection.Connection, transaction).ConfigureAwait(false);
 

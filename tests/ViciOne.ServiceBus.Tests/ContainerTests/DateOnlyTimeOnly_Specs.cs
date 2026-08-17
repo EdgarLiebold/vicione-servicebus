@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
 
-#if NET8_0_OR_GREATER
 
 
     public class Using_the_date_only_time_only_property_types
@@ -101,5 +100,4 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests
             writer.WriteStringValue(isoDate);
         }
     }
-#endif
 }

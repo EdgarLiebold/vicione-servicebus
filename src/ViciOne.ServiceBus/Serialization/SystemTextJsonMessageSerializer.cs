@@ -38,7 +38,6 @@ namespace ViciOne.ServiceBus.Serialization
                 WriteIndented = false,
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 
-            #if NET8_0_OR_GREATER
                 // Set the TypeInfoResolver property based on whether reflection-based is enabled.
                 // If reflection is enabled, combine the default resolver (reflection-based) context with the custom serializer context
                 // Otherwise, use only the custom serializer context.
@@ -46,7 +45,6 @@ namespace ViciOne.ServiceBus.Serialization
                 TypeInfoResolver = JsonSerializer.IsReflectionEnabledByDefault
                     ? JsonTypeInfoResolver.Combine(SystemTextJsonSerializationContext.Default, new DefaultJsonTypeInfoResolver())
                     : SystemTextJsonSerializationContext.Default
-            #endif
             };
 
             Options.Converters.Add(new StringDecimalJsonConverter());

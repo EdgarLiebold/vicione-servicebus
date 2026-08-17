@@ -1,4 +1,3 @@
-#if NET8_0_OR_GREATER
     namespace ViciOne.ServiceBus.Serialization
     {
         using System.Text.Json;
@@ -74,4 +73,3 @@
         {
         }
     }
-#endif

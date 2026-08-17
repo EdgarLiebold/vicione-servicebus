@@ -189,10 +189,8 @@ namespace ViciOne.ServiceBus.Internals
         {
             Type[] returnTypeCustomModifiers = null;
 
-            #if NET5_0_OR_GREATER
                 var hasInitSetter = propertyInfo.SetMethod?.ReturnParameter?.GetRequiredCustomModifiers()?.Contains(typeof(IsExternalInit)) ?? false;
                 returnTypeCustomModifiers = hasInitSetter ? new[] { typeof(IsExternalInit) } : null;
-            #endif
 
             return returnTypeCustomModifiers;
         }

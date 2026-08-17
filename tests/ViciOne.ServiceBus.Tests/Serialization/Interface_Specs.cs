@@ -62,14 +62,10 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
     public interface ComplaintAdded
     {
-        #if NET5_0_OR_GREATER
             /// <summary>
             /// Explicit init declaration to test init properties are dynamically created correctly in > .NET 5.
             /// </summary>
             int Id { get; init; }
-        #else
-            int Id { get; set; }
-        #endif
 
         User AddedBy { get; }
 
@@ -166,11 +162,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         {
         }
 
-        #if NET5_0_OR_GREATER
             public int Id { get; init; }
-        #else
-            public int Id { get; set; }
-        #endif
 
         public User AddedBy { get; set; }
 

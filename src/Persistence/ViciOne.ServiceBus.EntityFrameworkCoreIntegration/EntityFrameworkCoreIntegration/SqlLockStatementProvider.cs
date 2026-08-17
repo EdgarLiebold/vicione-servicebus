@@ -87,12 +87,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 var property = entityType.GetProperties().Single(x => x.Name.Equals(propertyNames[i], StringComparison.OrdinalIgnoreCase));
 
-            #if NETSTANDARD2_0
-                var columnName = property.GetColumnName();
-            #else
                 var storeObjectIdentifier = StoreObjectIdentifier.Table(tableName, schema);
                 var columnName = property.GetColumnName(storeObjectIdentifier);
-            #endif
 
                 columnNames.Add(columnName);
             }
