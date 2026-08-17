@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            configurator.ConfigureServiceEndpoints(BusRegistrationContext, Options);
+            configurator.ConfigureServiceInstanceEndpoints(BusRegistrationContext, Options);
         }
     }
 

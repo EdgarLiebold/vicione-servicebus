@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus.Tests.ContainerTests.Common_Tests
             var options = new ServiceInstanceOptions()
                 .EnableJobServiceEndpoints();
 
-            configurator.ConfigureServiceEndpoints(BusRegistrationContext, options);
+            configurator.ConfigureServiceInstanceEndpoints(BusRegistrationContext, options);
         }
 
         protected override void ConfigureViciOneServiceBus(IBusRegistrationConfigurator configurator)

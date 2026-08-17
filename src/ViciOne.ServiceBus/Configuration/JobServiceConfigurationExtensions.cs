@@ -60,7 +60,6 @@ namespace ViciOne.ServiceBus
         /// <param name="options"></param>
         /// <param name="context"></param>
         /// <param name="configure"></param>
-        [Obsolete("Use AddJobSagaStateMachines instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
         public static IServiceInstanceConfigurator<T> ConfigureJobServiceEndpoints<T>(this IServiceInstanceConfigurator<T> configurator,
             JobServiceOptions options, IRegistrationContext context, Action<IJobServiceConfigurator> configure = default)
             where T : IReceiveEndpointConfigurator

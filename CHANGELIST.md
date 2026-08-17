@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 837 |
+| Added | 838 |
 | Modified | 4917 |
 | Deleted | 722 |
 | Renamed | 10 |
@@ -6439,6 +6439,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SerializationFault_Specs.cs` | Modified | `tests/MassTransit.Tests/SerializationFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
+| `tests/ViciOne.ServiceBus.Tests/ServiceInstanceEndpoints_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ServiceProviderExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/StartStop_Specs.cs` | Modified | `tests/MassTransit.Tests/StartStop_Specs.cs` |

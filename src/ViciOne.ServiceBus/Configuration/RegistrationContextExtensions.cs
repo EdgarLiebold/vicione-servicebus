@@ -51,7 +51,6 @@ namespace ViciOne.ServiceBus
         /// <param name="registration">The registration for this bus instance</param>
         /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
         /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
-        [Obsolete("Job Consumers no longer require a service instance. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
         public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
             IEndpointNameFormatter endpointNameFormatter = null)
             where T : IReceiveEndpointConfigurator
@@ -70,7 +69,6 @@ namespace ViciOne.ServiceBus
         /// <param name="configureFilter">Filter the configured consumers, sagas, and activities</param>
         /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
         /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
-        [Obsolete("Job Consumers no longer require a service instance. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
         public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
             Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter endpointNameFormatter = null)
             where T : IReceiveEndpointConfigurator
@@ -79,15 +77,15 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Configure a service instance for use with the job service
+        /// Create a service instance and configure the endpoints of every defined consumer, saga and
+        /// activity inside it, so their names are bound to this instance.
         /// </summary>
         /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
         /// <param name="registration">The registration for this bus instance</param>
         /// <param name="configureFilter">Filter the configured consumers, sagas, and activities</param>
         /// <param name="options">Optional service instance options to start</param>
         /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
-        [Obsolete("Job Consumers no longer require a service instance. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void ConfigureServiceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
+        public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
             Action<IRegistrationFilterConfigurator> configureFilter, ServiceInstanceOptions options = null)
             where T : IReceiveEndpointConfigurator
         {
@@ -109,18 +107,18 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Configure a service instance for use with the job service
+        /// Create a service instance and configure the endpoints of every defined consumer, saga and
+        /// activity inside it, so their names are bound to this instance.
         /// </summary>
         /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
         /// <param name="registration">The registration for this bus instance</param>
         /// <param name="options">Optional service instance options to start</param>
         /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
-        [Obsolete("Job Consumers no longer require a service instance. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void ConfigureServiceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
+        public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
             ServiceInstanceOptions options = null)
             where T : IReceiveEndpointConfigurator
         {
-            ConfigureServiceEndpoints(configurator, registration, null, options);
+            ConfigureServiceInstanceEndpoints(configurator, registration, null, options);
         }
 
         /// <summary>
