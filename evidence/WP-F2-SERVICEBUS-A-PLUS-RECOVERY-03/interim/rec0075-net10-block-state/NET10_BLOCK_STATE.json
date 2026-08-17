@@ -1,0 +1,130 @@
+{
+  "record": "rec0075-net10-block-state",
+  "directive": "0073 sections 1 to 6",
+  "state": "sections 1, 2, 4, 5 and 6 are complete; section 3 is complete except for the members question 0074 asks about",
+  "commit": "a3526a42b16845212ad5c823b0d0700612146c51",
+  "tree": "f8f292b8b0d3dbc5f1adc85103752c42dedcdf7a",
+  "workingTree": "clean",
+  "commits": [
+    "116a6b2b Move the product to net10.0 and C# 14",
+    "2a77b5f2 Name the remaining active names after today's function",
+    "3ba8ed06 Prove the telemetry with an in-process listener",
+    "3f67bf2d Migrate the obsolete call sites that have an unambiguous modern form",
+    "5caa0958 Correct the misspelled Activities registration folder",
+    "659ab98f Stop suppressing CS0618 and migrate the aliases it was hiding",
+    "797ea083 Run the four EF outbox tests that were excluded from every run",
+    "7de0d57c Remove the formatter based serialization members",
+    "851c2dcf Remove the obsolete members this block already migrated away from",
+    "9468f3a7 Prove that two buses keep separate scoped consume contexts",
+    "a3526a42 Remove the obsolete paths whose replacement was verified to exist",
+    "a3b387b6 Remove the framework branches that net10.0 decided",
+    "af4b9f5f Prove what the in-memory outbox promises about ordering",
+    "b1cb13e6 Add the project, package and test-group rows of the inventory",
+    "b2d26e1f Remove the dead placeholder methods from the product source",
+    "be6157fa Record the three obsolete items whose replacement is not unambiguous",
+    "c2c825e9 Prove that the job service endpoints carry the outbox",
+    "d63e5a08 Remove the obsolete access paths that nothing calls"
+  ],
+  "frameworkCensus": {
+    "projects": 37,
+    "net10.0": 36,
+    "netstandard2.0": 1,
+    "netstandard2.0Project": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+    "movedInThisBlock": 33,
+    "languageVersion": {
+      "method": "evaluated MSBuild properties, not a claim",
+      "src/ViciOne.ServiceBus.csproj": "LangVersion 14.0 on net10.0, from the SDK default",
+      "src/ViciOne.ServiceBus.Analyzers.csproj": "LangVersion 14.0 on netstandard2.0, from the one explicit setting",
+      "tests/ViciOne.ServiceBus.Tests.csproj": "LangVersion 14.0 on net10.0, from the SDK default",
+      "centralPin": "removed"
+    }
+  },
+  "packageLine": {
+    "distinctPackages": 58,
+    "conditionsLeftInCentralFile": 0,
+    "entriesDroppedAsUnreachable": 24,
+    "resolution": "the PostgreSQL provider 10.0.3 requires EF Core [10.0.4, 11.0.0) and exactly Npgsql 10.0.3; EF Core Relational 10.0.11 then requires Microsoft.Extensions.Caching.Memory 10.0.11",
+    "pinned": {
+      "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+      "Microsoft.EntityFrameworkCore.Relational": "10.0.11",
+      "Microsoft.EntityFrameworkCore.SqlServer": "10.0.11",
+      "Npgsql": "10.0.3",
+      "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3"
+    },
+    "extensionsAndSystemPackagesRaised": 11
+  },
+  "compilerAmbiguities": {
+    "CS0121": {
+      "count": 84,
+      "firstSymbol": "System.Linq.AsyncEnumerable.Take<TSource>(IAsyncEnumerable<TSource>, int), .NET 10 base class library",
+      "secondSymbol": "ViciOne.ServiceBus.Testing.AsyncElementListExtensions.Take<TElement>(IAsyncEnumerable<TElement>, int), product",
+      "equivalence": "identical for a quantity of one or more; the base class library one is more correct at zero, because the product version compares after it has already yielded",
+      "callSiteArguments": "every call site passes a positive constant, so the difference is unobservable in this tree",
+      "resolution": "the product Take is removed"
+    },
+    "CS1061": {
+      "count": 8,
+      "cause": "the product's own ToListAsync is already wrapped in #if !NET10_0_OR_GREATER, so it is gone on net10.0, and five test files never imported System.Linq where the base class library replacement lives",
+      "resolution": "those files import System.Linq; the file whose entire body was inside that guard is deleted"
+    },
+    "systemLinqAsync": "not the cause. The System.Linq.AsyncEnumerable assembly is part of the net10.0 reference pack, verified in the pack itself. No package was removed on the assumption that it was old."
+  },
+  "obsoleteMarkings": {
+    "atBlockStart": 141,
+    "now": 27,
+    "remaining": {
+      "Use UseMessageRetry instead": 10,
+      "Job Consumers no longer require a service instance": 6,
+      "Use the IRegistrationContext overload instead": 5,
+      "Use AddJobSagaStateMachines instead": 3,
+      "no message, the two publish metric names": 2,
+      "Use AddViciOneServiceBusTestHarness instead": 1
+    },
+    "callSitesInTheTree": {
+      "atSuppressionLift": 547,
+      "now": 7,
+      "note": "547 was invisible until the blanket CS0618 suppression in tests/Directory.Build.props was lifted"
+    },
+    "keptDeliberately": [
+      "the five definition hooks: each definition calls the obsolete and the modern hook through a targeted pragma, so a derived definition that overrides the old one is still invoked",
+      "ConfigureJobServiceEndpoints: the product itself calls it when a service instance carries job service options",
+      "AddViciOneServiceBusInMemoryTestHarness: it backs InMemoryContainerTestFixture and registers an InMemoryTestHarness that the named replacement does not provide"
+    ]
+  },
+  "measuredRuns": [
+    {
+      "what": "core category on net10.0",
+      "total": 1838,
+      "passed": 1837,
+      "failed": 1,
+      "failure": "Using_a_batch_consumer.Should_not_deliver_duplicate_messages",
+      "repeatedIdentically": "before and after each of the six removal blocks"
+    },
+    {
+      "what": "EF outbox category against run-scoped SQL Server and PostgreSQL",
+      "total": 160,
+      "passed": 160,
+      "failed": 0,
+      "note": "156 before the four [Explicit] cases were brought into the run"
+    },
+    {
+      "what": "clean full solution build, no incremental",
+      "errors": 0,
+      "warnings": "14 CS0618, from the seven call sites question 0074 asks about"
+    }
+  ],
+  "newProofs": [
+    {"fixture": "Registering_two_buses_with_different_scope_providers", "tests": 4, "mutations": 2},
+    {"fixture": "The_in_memory_outbox_lifecycle", "tests": 4, "mutations": 3},
+    {"fixture": "Configuring_the_job_service_endpoints", "tests": 2, "mutations": 2},
+    {"fixture": "The_telemetry_the_bus_produces", "tests": 4, "mutations": 4}
+  ],
+  "observationsWithoutADecisionRequest": [
+    "DynamicImplementationBuilder emits TypeAttributes.Serializable and wraps that one flag in a targeted SYSLIB0050 pragma. Whether an emitted message implementation should still carry the flag is a runtime question no local evidence answers.",
+    "Six framework conditionals remain, all inside the two vendored third party sources ExpressionCompiler.cs and the benchmark Options.cs. Rewriting a vendor's portability layer would only make its next update harder."
+  ],
+  "notDone": [
+    "section 7: root and build structure, the machine generated public API diff of the whole block, the final complete run and the single closing record",
+    "the members question 0074 asks about"
+  ]
+}

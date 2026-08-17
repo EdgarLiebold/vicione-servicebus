@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 834 |
+| Added | 835 |
 | Modified | 4917 |
 | Deleted | 722 |
 | Renamed | 10 |
@@ -210,6 +210,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0072-cleanup-block-state/CLEANUP_BLOCK_STATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0074-capability-inventory/OBSOLETE_INVENTORY.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0074-open-obsolete-items/OPEN_OBSOLETE_ITEMS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0075-net10-block-state/NET10_BLOCK_STATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
