@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 836 |
+| Added | 837 |
 | Modified | 4917 |
 | Deleted | 722 |
 | Renamed | 10 |
@@ -6228,6 +6228,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectHandler_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectHandler_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectObserver_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/ContentFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ContentFilter_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/Pipeline/MessageRetryPipe_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/MessageTestFixture.cs` | Modified | `tests/MassTransit.Tests/Pipeline/MessageTestFixture.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Message_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/OneMessageConsumer.cs` | Modified | `tests/MassTransit.Tests/Pipeline/OneMessageConsumer.cs` |

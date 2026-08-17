@@ -80,12 +80,12 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
             var count = 0;
             IPipe<ConsumeContext> pipe = Pipe.New<ConsumeContext>(x =>
             {
-                x.UseRetry(r =>
+                x.UseMessageRetry(r =>
                 {
                     r.Handle<IntentionalTestException>();
                     r.Interval(4, TimeSpan.FromMilliseconds(2));
                 });
-                x.UseRetry(r =>
+                x.UseMessageRetry(r =>
                 {
                     r.Handle<IntentionalTestException>();
                     r.None();

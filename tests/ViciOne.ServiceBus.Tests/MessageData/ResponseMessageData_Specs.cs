@@ -46,7 +46,7 @@ namespace ViciOne.ServiceBus.Tests.MessageData
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            configurator.UseRetry<Response>(r => r.Immediate(1));
+            configurator.UseMessageRetry<Response>(r => r.Immediate(1));
 
             configurator.UseMessageData(x => x.InMemory());
         }

@@ -9,27 +9,12 @@ namespace ViciOne.ServiceBus
 
     public static class RetryConfigurationExtensions
     {
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
+                public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
             var specification = new ConsumeContextRetryPipeSpecification();
-
-            configure?.Invoke(specification);
-
-            configurator.AddPipeSpecification(specification);
-        }
-
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRetryConfigurator> configure)
-            where T : class
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory);
 
             configure?.Invoke(specification);
 
@@ -49,8 +34,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
+                public static void UseMessageRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
             where T : class
         {
             if (configurator == null)
@@ -69,8 +53,7 @@ namespace ViciOne.ServiceBus
             return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
+                public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
             where TConsumer : class
         {
             if (configurator == null)
@@ -91,8 +74,7 @@ namespace ViciOne.ServiceBus
             return new RetryConsumerConsumeContext<TConsumer>(context, retryPolicy, retryContext);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
+                public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
             where TSaga : class, ISaga
         {
             if (configurator == null)
@@ -124,8 +106,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
+                public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
         {
             if (configurator == null)
@@ -141,8 +122,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry(this IBusFactoryConfigurator configurator, Action<IRetryConfigurator> configure)
+                public static void UseMessageRetry(this IBusFactoryConfigurator configurator, Action<IRetryConfigurator> configure)
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
@@ -157,8 +137,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
+                public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where T : class
         {
@@ -175,8 +154,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
+                public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where TConsumer : class
         {
@@ -194,8 +172,7 @@ namespace ViciOne.ServiceBus
             configurator.AddPipeSpecification(specification);
         }
 
-        [Obsolete("Use UseMessageRetry instead. Visit https://github.com/EdgarLiebold/vicione-servicebus/obsolete for details.")]
-        public static void UseRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
+                public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where TSaga : class, ISaga
         {
