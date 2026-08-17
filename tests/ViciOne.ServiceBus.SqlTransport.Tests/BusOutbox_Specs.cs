@@ -196,7 +196,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
         public static void Apply(DbContextOptionsBuilder builder)
         {
-            builder.UseNpgsql("host=localhost;user id=postgres;password=Password12!;database=ViciOneServiceBus_transport_tests;", options =>
+            builder.UseNpgsql(RunScopedTransportEndpoint.PostgresConnectionString("ViciOneServiceBus_transport_tests"), options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 options.MigrationsHistoryTable("reliable_db_context_ef");

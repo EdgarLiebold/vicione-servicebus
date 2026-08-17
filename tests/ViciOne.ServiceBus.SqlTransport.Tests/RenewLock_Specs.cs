@@ -8,7 +8,6 @@ using Testing;
 using UnitTests;
 
 
-[Explicit]
 [TestFixture(typeof(PostgresDatabaseTestConfiguration))]
 [TestFixture(typeof(SqlServerDatabaseTestConfiguration))]
 public class Using_a_slow_consumer<T>

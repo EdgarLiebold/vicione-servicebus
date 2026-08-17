@@ -77,8 +77,6 @@ namespace ViciOne.ServiceBus
 
                 harnessConfigurator.SetInMemorySagaRepositoryProvider();
 
-                harnessConfigurator.AddSingleton<IConfigureOptions<UsageTelemetryOptions>, ConfigureTestHarnessUsageTelemetryOptions>();
-
                 configure?.Invoke(harnessConfigurator);
 
                 var addScheduler = false;
@@ -99,16 +97,6 @@ namespace ViciOne.ServiceBus
                     });
                 }
             });
-        }
-
-
-        class ConfigureTestHarnessUsageTelemetryOptions :
-            IConfigureOptions<UsageTelemetryOptions>
-        {
-            public void Configure(UsageTelemetryOptions options)
-            {
-                options.Enabled = false;
-            }
         }
 
 

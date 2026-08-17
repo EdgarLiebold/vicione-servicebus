@@ -16,7 +16,8 @@ public class Migration_Specs
     [Test]
     public async Task Should_work_with_data_source()
     {
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder("host=localhost;user id=postgres;password=Password12!;database=ViciOneServiceBusUnitTests;");
+        var connectionStringBuilder =
+            new NpgsqlConnectionStringBuilder(RunScopedTransportEndpoint.PostgresConnectionString("ViciOneServiceBusUnitTests"));
 
         await using var provider = new ServiceCollection()
             .AddPostgresMigrationHostedService()

@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
         public async Task Should_create_the_required_schema_tables_and_indices()
         {
             await using var provider = new ServiceCollection()
-                .ConfigureSqlServerTransport()
+                .ConfigureSqlServerTransport(database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 
@@ -33,11 +33,10 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
 
         [Test]
         [Order(2)]
-        [Explicit]
         public async Task Should_drop_the_database_on_shutdown()
         {
             await using var provider = new ServiceCollection()
-                .ConfigureSqlServerTransport(delete: true)
+                .ConfigureSqlServerTransport(delete: true, database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 
@@ -57,18 +56,17 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
 
     public static class TestConfigurationExtensions
     {
-        public static IServiceCollection ConfigureSqlServerTransport(this IServiceCollection services, bool create = true, bool delete = false)
+        public static IServiceCollection ConfigureSqlServerTransport(this IServiceCollection services, bool create = true, bool delete = false,
+            string database = RunScopedTransportEndpoint.SharedDatabase)
         {
             services.AddOptions<SqlTransportOptions>().Configure(options =>
             {
-                options.Host = "localhost";
-                options.Database = "ViciOneServiceBus_transport_tests";
+                options.UseRunScopedSqlServer();
+                options.Database = database;
                 options.Schema = "transport";
                 options.Role = "transport";
                 options.Username = "unit_tests";
                 options.Password = "H4rd2Gu3ss!";
-                options.AdminUsername = "sa";
-                options.AdminPassword = "Password12!";
             });
 
             services.AddSqlServerMigrationHostedService(create, delete);

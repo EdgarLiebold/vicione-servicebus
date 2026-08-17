@@ -9,7 +9,6 @@ using UnitTests;
 
 [TestFixture(typeof(PostgresDatabaseTestConfiguration))]
 [TestFixture(typeof(SqlServerDatabaseTestConfiguration))]
-[Explicit]
 public class Purging_a_queue_on_startup<T>
     where T : IDatabaseTestConfiguration, new()
 {

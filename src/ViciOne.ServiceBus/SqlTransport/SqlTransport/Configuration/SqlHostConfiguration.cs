@@ -4,7 +4,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using Licensing;
     using ViciOne.ServiceBus.Configuration;
     using Topology;
     using Transports;
@@ -19,7 +18,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
         readonly Recycle<IConnectionContextSupervisor> _connectionContext;
         readonly ISqlBusTopology _topology;
         SqlHostSettings? _hostSettings;
-        LicenseInfo? _licenseInfo;
 
         public SqlHostConfiguration(ISqlBusConfiguration busConfiguration, ISqlTopologyConfiguration topologyConfiguration)
             : base(busConfiguration)
@@ -118,33 +116,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
                 foreach (var result in _hostSettings.Validate())
                     yield return result;
 
-                _licenseInfo = _hostSettings.GetLicenseInfo();
-                if (_licenseInfo == null)
-                {
-                    yield return this.Warning("License",
-                        "must be specified with UseLicense/UseLicenseFile or by setting the VICIONE_SERVICEBUS_LICENSE/VICIONE_SERVICEBUS_LICENSE_PATH environment variables");
-                }
-                else
-                {
-                    if (DateTime.UtcNow > _licenseInfo.Expires)
-                        yield return this.Warning("License", $"has expired as of  {_licenseInfo.Expires:D}");
-                    else
-                    {
-                        var expiresIn = _licenseInfo.Expires - DateTime.UtcNow;
-
-                        if (expiresIn < TimeSpan.FromDays(30))
-                        {
-                            ViciOne.ServiceBus.LogContext.Warning?.Log("Licensed to {Customer} - Expires on {Expires} (in {Days} days)", _licenseInfo.Customer?.Name,
-                                _licenseInfo.Expires.ToString("D"),
-                                (int)expiresIn.TotalDays);
-                        }
-                        else
-                        {
-                            ViciOne.ServiceBus.LogContext.Info?.Log("Licensed to {Customer} - Expires on {Expires}", _licenseInfo.Customer?.Name,
-                                _licenseInfo.Expires.ToString("D"));
-                        }
-                    }
-                }
             }
 
             foreach (var result in base.Validate())

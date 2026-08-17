@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus
 {
     using System;
     using System.Data;
-    using Licensing;
     using SqlTransport;
     using SqlTransport.Configuration;
 
@@ -32,6 +31,5 @@ namespace ViciOne.ServiceBus
 
         ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 
-        LicenseInfo? GetLicenseInfo();
     }
 }

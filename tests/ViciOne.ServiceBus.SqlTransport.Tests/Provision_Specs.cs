@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
         public async Task Should_create_the_required_schema_tables_and_indices()
         {
             await using var provider = new ServiceCollection()
-                .ConfigurePostgresTransport()
+                .ConfigurePostgresTransport(database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 
@@ -30,11 +30,10 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
         [Test]
         [Order(2)]
-        [Explicit]
         public async Task Should_drop_the_database_on_shutdown()
         {
             await using var provider = new ServiceCollection()
-                .ConfigurePostgresTransport(delete: true)
+                .ConfigurePostgresTransport(delete: true, database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 

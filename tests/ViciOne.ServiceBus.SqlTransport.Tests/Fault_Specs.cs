@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
     [TestFixture]
     public class When_a_consumer_throws_an_exception
     {
-        [Test, Explicit]
+        [Test]
         public async Task Should_dead_letter_skipped_messages()
         {
             await using var provider = new ServiceCollection()
@@ -41,7 +41,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             await Task.Delay(2000);
         }
 
-        [Test, Explicit]
+        [Test]
         public async Task Should_publish_fault_and_move_to_the_error_queue()
         {
             await using var provider = new ServiceCollection()
@@ -75,7 +75,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             await harness.Stop();
         }
 
-        [Test, Explicit]
+        [Test]
         public async Task Should_use_built_in_redelivery_to_redeliver_faulted_messages()
         {
             await using var provider = new ServiceCollection()

@@ -51,6 +51,27 @@ namespace ViciOne.ServiceBus.Tests
             !string.IsNullOrWhiteSpace(Value(PostgresHostVariable)) && Port(PostgresPortVariable) > 0
             && !string.IsNullOrWhiteSpace(Value(PostgresPasswordVariable));
 
+        /// <summary>Host of the run-scoped SQL Server, or null when the runner started no fixture.</summary>
+        public static string SqlServerHost => Value(SqlServerHostVariable);
+
+        /// <summary>Port of the run-scoped SQL Server, or 0 when the runner started no fixture.</summary>
+        public static int SqlServerPort => Port(SqlServerPortVariable);
+
+        /// <summary>Secret of the run-scoped SQL Server, or null when the runner started no fixture.</summary>
+        public static string SqlServerPassword => Value(SqlServerPasswordVariable);
+
+        /// <summary>Host of the run-scoped PostgreSQL, or null when the runner started no fixture.</summary>
+        public static string PostgresHost => Value(PostgresHostVariable);
+
+        /// <summary>Port of the run-scoped PostgreSQL, or 0 when the runner started no fixture.</summary>
+        public static int PostgresPort => Port(PostgresPortVariable);
+
+        /// <summary>Administrative account of the run-scoped PostgreSQL, or null when there is no fixture.</summary>
+        public static string PostgresUsername => Value(PostgresUsernameVariable);
+
+        /// <summary>Secret of the run-scoped PostgreSQL, or null when the runner started no fixture.</summary>
+        public static string PostgresPassword => Value(PostgresPasswordVariable);
+
         /// <summary>Connection string of the run-scoped SQL Server, without a database name.</summary>
         public static string SqlServerConnectionStringPrefix =>
             $"Server=tcp:{Value(SqlServerHostVariable)},{Port(SqlServerPortVariable)};"

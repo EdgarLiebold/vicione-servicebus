@@ -8,7 +8,8 @@
     "NOT_DUE_BENCHMARK": "Measures throughput or timing instead of behaviour.",
     "NOT_DUE_TIMING_SENSITIVE": "Asserts against a wall clock interval and is not stable in a loaded full run.",
     "NOT_DUE_MANUAL_OBSERVATION": "Produces output for a human; asserts nothing a gate could evaluate.",
-    "NOT_DUE_ENVIRONMENT_DEPENDENT": "Depends on host environment the run deliberately pins."
+    "NOT_DUE_ENVIRONMENT_DEPENDENT": "Depends on host environment the run deliberately pins.",
+    "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE": "Asserts an outcome its own configuration never engages. Measured against both engines, and kept out with the measurement written down until the intended mechanism is decided. The other five classes state why a sound case cannot run here; none of them can state that the case itself is unsound, and forcing it into one of them would be false."
   },
   "openDefectsNotInventoried": {
     "statement": "Empty. All five cases record 0025 raised as F-1 are closed by product corrections and by two adjustments the product owner authorised on 2026-08-10, which are to be reported to the lead architect. Every one of them now runs in the required category. A case leaves this list by being fixed and executed, never by being reclassified.",
@@ -235,41 +236,9 @@
     },
     "entity-framework-core": {
       "project": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-      "explicitAttributeCount": 4,
-      "cases": [
-        {
-          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Responding_through_the_outbox.Should_start_with_delay_successfully",
-          "fixture": "Responding_through_the_outbox",
-          "test": "Should_start_with_delay_successfully",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Fill_up_the_outbox",
-          "fixture": "Using_the_bus_outbox",
-          "test": "Fill_up_the_outbox",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Should_support_delayed_message_scheduler",
-          "fixture": "Using_the_bus_outbox",
-          "test": "Should_support_delayed_message_scheduler",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging.Using_the_bus_outbox.Should_work_without_starting_the_bus",
-          "fixture": "Using_the_bus_outbox",
-          "test": "Should_work_without_starting_the_bus",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        }
-      ]
+      "explicitAttributeCount": 0,
+      "comment": "Empty because the four outbox cases this category used to exclude are closed the only way a case may leave this list: they were fixed and they execute. Commit 797ea083 removed their markers and the category runs them against both engines; that commit failed to carry the closure into this file, which left the declared count at 4 against a project holding 0 until it was corrected here.",
+      "cases": []
     },
     "activemq": {
       "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
@@ -314,6 +283,60 @@
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_MANUAL_OBSERVATION",
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+        }
+      ]
+    },
+    "sql-transport": {
+      "project": "tests/ViciOne.ServiceBus.SqlTransport.Tests",
+      "explicitAttributeCount": 5,
+      "cases": [
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_consume_a_lot_of_messages",
+          "fixture": "Configuring_the_postgresql_bus",
+          "test": "Should_consume_a_lot_of_messages",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_consume_a_lot_of_published_messages",
+          "fixture": "Configuring_the_postgresql_bus",
+          "test": "Should_consume_a_lot_of_published_messages",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_give_me_so_much_of_the_datas",
+          "fixture": "Configuring_the_postgresql_bus",
+          "test": "Should_give_me_so_much_of_the_datas",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.SqlServer.Using_publish.Should_consume_a_lot_of_published_messages",
+          "fixture": "Using_publish",
+          "test": "Should_consume_a_lot_of_published_messages",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_BENCHMARK",
+          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
+        },
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<PostgresDatabaseTestConfiguration>.Should_not_consume_the_message_after_the_limit",
+          "fixture": "Using_message_delivery_count_limit<PostgresDatabaseTestConfiguration>",
+          "test": "Should_not_consume_the_message_after_the_limit",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+          "reason": "Asserts that the message is not consumed, but never engages the delivery count limit it is named after: MaxDeliveryCount is public on ISqlQueueConfigurator, which ISqlReceiveEndpointConfigurator inherits, and the fixture sets it nowhere, so the queue keeps the migrator default of 10. The consumer succeeds, so exactly one delivery is correct. Run with the marker removed against the run-scoped fixtures: expected 0, but was 1. Open point for the assurance rework, not a pass."
+        },
+        {
+          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<SqlServerDatabaseTestConfiguration>.Should_not_consume_the_message_after_the_limit",
+          "fixture": "Using_message_delivery_count_limit<SqlServerDatabaseTestConfiguration>",
+          "test": "Should_not_consume_the_message_after_the_limit",
+          "mechanism": "EXPLICIT",
+          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+          "reason": "Same defect as the PostgreSQL fixture of this class and measured the same way on SQL Server: expected 0, but was 1. Open point for the assurance rework, not a pass."
         }
       ]
     }

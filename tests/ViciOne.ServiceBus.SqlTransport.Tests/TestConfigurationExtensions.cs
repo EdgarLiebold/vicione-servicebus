@@ -8,18 +8,17 @@ using SqlTransport.PostgreSql;
 
 public static class TestConfigurationExtensions
 {
-    public static IServiceCollection ConfigurePostgresTransport(this IServiceCollection services, bool create = true, bool delete = false)
+    public static IServiceCollection ConfigurePostgresTransport(this IServiceCollection services, bool create = true, bool delete = false,
+        string database = RunScopedTransportEndpoint.SharedDatabase)
     {
         services.AddOptions<SqlTransportOptions>().Configure(options =>
         {
-            options.Host = "localhost";
-            options.Database = "ViciOneServiceBus_transport_tests";
+            options.UseRunScopedPostgres();
+            options.Database = database;
             options.Schema = "transport";
             options.Role = "transport";
             options.Username = "unit_tests";
             options.Password = "H4rd2Gu3ss!";
-            options.AdminUsername = "postgres";
-            options.AdminPassword = "Password12!";
         });
 
         services.AddPostgresMigrationHostedService(create, delete);

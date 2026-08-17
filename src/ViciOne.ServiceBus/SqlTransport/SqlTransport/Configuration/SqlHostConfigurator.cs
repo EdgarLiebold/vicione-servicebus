@@ -13,16 +13,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
         protected SqlHostConfigurator(ConfigurationSqlHostSettings settings)
         {
             _settings = settings;
-
-            var licensePath = Environment.GetEnvironmentVariable("VICIONE_SERVICEBUS_LICENSE_PATH");
-            if (!string.IsNullOrWhiteSpace(licensePath))
-                UseLicenseFile(licensePath);
-            else
-            {
-                var license = Environment.GetEnvironmentVariable("VICIONE_SERVICEBUS_LICENSE");
-                if (!string.IsNullOrWhiteSpace(license))
-                    UseLicense(license);
-            }
         }
 
         public abstract string? ConnectionString { set; }
@@ -105,16 +95,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
         public int MaintenanceBatchSize
         {
             set => _settings.MaintenanceBatchSize = value;
-        }
-
-        public void UseLicense(string license)
-        {
-            _settings.License = license;
-        }
-
-        public void UseLicenseFile(string path)
-        {
-            _settings.LicenseFile = path;
         }
     }
 }

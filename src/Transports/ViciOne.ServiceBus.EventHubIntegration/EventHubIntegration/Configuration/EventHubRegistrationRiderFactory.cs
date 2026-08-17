@@ -4,7 +4,6 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Configuration
     using DependencyInjection;
     using ViciOne.ServiceBus.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using UsageTracking;
 
 
     public class EventHubRegistrationRiderFactory :
@@ -20,9 +19,6 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Configuration
         public IBusInstanceSpecification CreateRider(IRiderRegistrationContext context)
         {
             var configurator = new EventHubFactoryConfigurator();
-
-            var usageTracker = context.GetService<IUsageTracker>();
-            usageTracker?.PreConfigureRider(configurator);
 
             _configure?.Invoke(context, configurator);
 

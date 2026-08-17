@@ -12,8 +12,7 @@ namespace ViciOne.ServiceBus
     using Microsoft.Extensions.Options;
     using Monitoring;
     using Transports;
-    using UsageTracking;
-
+    
 
     /// <summary>
     /// Standard registration extensions, which are used to configure consumers, sagas, and activities on receive endpoints from a
@@ -36,7 +35,6 @@ namespace ViciOne.ServiceBus
 
             AddHostedService(collection);
             AddInstrumentation(collection);
-            AddUsageTracker(collection);
 
             var configurator = new ServiceCollectionBusConfigurator(collection);
 
@@ -181,12 +179,6 @@ namespace ViciOne.ServiceBus
 
             collection.AddOptions<InstrumentationOptions>();
             collection.AddSingleton<IConfigureOptions<InstrumentationOptions>, ConfigureDefaultInstrumentationOptions>();
-        }
-
-        static void AddUsageTracker(IServiceCollection collection)
-        {
-            collection.AddOptions<UsageTelemetryOptions>();
-            collection.TryAddSingleton<IUsageTracker, UsageTracker>();
         }
 
         static void AddHostedService(IServiceCollection collection)

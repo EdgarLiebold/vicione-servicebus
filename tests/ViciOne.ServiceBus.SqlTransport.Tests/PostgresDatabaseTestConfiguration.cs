@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests;
 using System;
 using System.Reflection;
 using EntityFrameworkCoreIntegration;
+using ViciOne.ServiceBus.Tests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 public class PostgresDatabaseTestConfiguration :
     IDatabaseTestConfiguration
 {
+    /// <summary>
+    /// The run-scoped fixture the runner published. See <see cref="RunScopedTransportEndpoint"/> for
+    /// why the literal endpoint that stood here could not be measured reliably.
+    /// </summary>
+    static string ConnectionString => RunScopedTransportEndpoint.PostgresConnectionString("ViciOneServiceBusUnitTests");
+
     public IServiceCollection Create()
     {
         return new ServiceCollection()
@@ -21,7 +28,7 @@ public class PostgresDatabaseTestConfiguration :
     public void Apply<TDbContext>(DbContextOptionsBuilder builder)
         where TDbContext : DbContext
     {
-        builder.UseNpgsql("host=localhost;user id=postgres;password=Password12!;database=ViciOneServiceBusUnitTests;", m =>
+        builder.UseNpgsql(ConnectionString, m =>
         {
             m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
             m.MigrationsHistoryTable($"__{typeof(TDbContext).Name}");

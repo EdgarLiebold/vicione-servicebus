@@ -86,15 +86,5 @@ public interface ISqlHostConfigurator
     /// </summary>
     TimeSpan QueueCleanupInterval { set; }
 
-    /// <summary>
-    /// Specify the license text to use
-    /// </summary>
-    /// <param name="license">The license text</param>
-    void UseLicense(string license);
 
-    /// <summary>
-    /// Specify the path to the file containing the license text
-    /// </summary>
-    /// <param name="path">The path to the file</param>
-    void UseLicenseFile(string path);
 }
