@@ -147,9 +147,7 @@ namespace ViciOne.ServiceBus.Configuration
             void UseInMemoryOutbox(IReceiveEndpointConfigurator configurator)
             {
                 if (context == null)
-                    #pragma warning disable CS0618
                     configurator.UseInMemoryOutbox();
-                #pragma warning restore CS0618
                 else
                 {
                     configurator.UseMessageScope(context);

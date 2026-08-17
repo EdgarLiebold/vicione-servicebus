@@ -13,6 +13,11 @@ namespace ViciOne.ServiceBus.Middleware
     {
         readonly bool _concurrentMessageDelivery;
         readonly Func<TContext, TResult> _contextFactory;
+        /// <summary>
+        /// The bus-bound setter, or nothing at all. The direct configuration has no container, so there
+        /// is no bus-bound scoped context to rebind and this stays absent; the filter then leaves the
+        /// consume context exactly as it found it instead of reaching into some other provider for one.
+        /// </summary>
         readonly ISetScopedConsumeContext _setter;
 
         public InMemoryOutboxFilter(ISetScopedConsumeContext setter, Func<TContext, TResult> contextFactory, bool concurrentMessageDelivery)
@@ -27,7 +32,7 @@ namespace ViciOne.ServiceBus.Middleware
             var outboxContext = _contextFactory(context);
 
             IDisposable pop = null;
-            if (context.TryGetPayload(out IServiceScope scope))
+            if (_setter != null && context.TryGetPayload(out IServiceScope scope))
                 pop = _setter.PushContext(scope, outboxContext);
 
             try
