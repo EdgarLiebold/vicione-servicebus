@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 835 |
+| Added | 836 |
 | Modified | 4917 |
 | Deleted | 722 |
 | Renamed | 10 |
@@ -6109,6 +6109,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/DelayedRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/Trace_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/EmittedMetrics_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` | Modified | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ErrorQueue_Specs.cs` | Modified | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` |

@@ -35,12 +35,6 @@ namespace ViciOne.ServiceBus.Monitoring
         public string HandlerFaultTotal { get; set; }
         public string HandlerDuration { get; set; }
 
-        [Obsolete]
-        public string PublishTotal { get; set; }
-
-        [Obsolete]
-        public string PublishFaultTotal { get; set; }
-
         public string SendTotal { get; set; }
         public string SendFaultTotal { get; set; }
         public string ActivityExecuteTotal { get; set; }
