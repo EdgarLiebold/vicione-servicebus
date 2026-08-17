@@ -1,23 +1,24 @@
 {
   "record": "rec0074-capability-inventory",
   "directive": "0073 section 1",
-  "state": "raw scan complete and clustered; dispositions decided only where directive 0073 decides them",
-  "scope": "every [Obsolete] marking in src/**",
+  "state": "obsolete markings clustered; project, package and test-group rows written from a measured census",
+  "scope": "every [Obsolete] marking in src/**, plus every project, package declaration and test group in the tree",
   "totals": {
     "markings": 141,
     "files": 105,
     "publicMembers": 64,
     "types": 3,
     "declaredCompileErrors": 5,
-    "distinctReasons": 29
+    "distinctReasons": 29,
+    "projects": 37,
+    "projectsToMoveToNet10": 33,
+    "packagesDeclared": 59,
+    "packagesToRemove": 1,
+    "packagesToModernize": 2,
+    "testGroups": 17
   },
   "method": "Clustered by the reason the marking states, because that is where the author named the modern path. A cluster is not a disposition: rows marked OPEN still need capability, every call site including reflection, dependency injection and pack, the one modern path and its coverage.",
-  "notAnInventoryOf": [
-    "packages",
-    "integrations",
-    "test groups"
-  ],
-  "openWork": "this file covers the obsolete markings only; the package, integration and test-group rows of the inventory are not written yet",
+  "openWork": "the runtime evidence of each test group is filled from the runs of this block; the 59 undecided obsolete rows are decided in section 3",
   "clusters": [
     {
       "reason": "Formatter-based serialization is obsolete and should not be used.",
@@ -1241,6 +1242,1999 @@
           "public": true
         }
       ]
+    }
+  ],
+  "projects": [
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+      "assembly": "ViciOne.ServiceBus.Benchmark",
+      "kind": "benchmark",
+      "currentIdentity": {
+        "targetFramework": "net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "False"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "unchanged",
+      "disposition": "PRESERVE",
+      "dispositionReason": "already the single approved target framework, so there is nothing to replace"
+    },
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj",
+      "assembly": "ViciOne.ServiceBus.BenchmarkConsole",
+      "kind": "benchmark",
+      "currentIdentity": {
+        "targetFramework": "net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "False"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "unchanged",
+      "disposition": "PRESERVE",
+      "dispositionReason": "already the single approved target framework, so there is nothing to replace"
+    },
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Benchmarks.Tests",
+      "kind": "benchmark",
+      "currentIdentity": {
+        "targetFramework": "net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "false"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "unchanged",
+      "disposition": "PRESERVE",
+      "dispositionReason": "already the single approved target framework, so there is nothing to replace"
+    },
+    {
+      "subject": "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+      "assembly": "ViciOne.ServiceBus.AmazonS3",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "message body storage in Amazon S3 for payloads above the transport limit",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+      "assembly": "ViciOne.ServiceBus.Azure.Storage",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "message body storage in Azure Blob Storage for payloads above the transport limit",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+      "assembly": "ViciOne.ServiceBus.Azure.Table",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "saga state persistence in Azure Table Storage",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+      "assembly": "ViciOne.ServiceBus.DynamoDbIntegration",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "saga state and job persistence in Amazon DynamoDB",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "saga state, job state and the transactional outbox/inbox on EF Core",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+      "assembly": "ViciOne.ServiceBus.QuartzIntegration",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "message scheduling and recurring schedules backed by Quartz",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+      "assembly": "ViciOne.ServiceBus.ActiveMqTransport",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging over ActiveMQ and Artemis",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+      "assembly": "ViciOne.ServiceBus.AmazonSqsTransport",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging over Amazon SQS and SNS",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+      "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging over Azure Service Bus",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+      "assembly": "ViciOne.ServiceBus.EventHubIntegration",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "event streaming over Azure Event Hubs",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+      "assembly": "ViciOne.ServiceBus.RabbitMqTransport",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging over RabbitMQ",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging with PostgreSQL itself as the transport",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "messaging with SQL Server itself as the transport",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "the contracts a consumer application compiles against without taking the runtime",
+      "callSites": {
+        "product": [
+          "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+        ],
+        "test": [
+          "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+      "assembly": "ViciOne.ServiceBus.Analyzers",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "compile-time diagnostics for consumer code in the IDE and in the build",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "unchanged",
+      "disposition": "PRESERVE",
+      "dispositionReason": "directive 0073 section 6 names the Roslyn analyzer as the single approved netstandard2.0 compiler-host exception, because the compiler that loads it is not a net10.0 process"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+      "assembly": "ViciOne.ServiceBus.MessagePack",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "MessagePack message serialization",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "assembly": "ViciOne.ServiceBus.SignalR",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "backplane so SignalR hubs scale across processes",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+      "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "rendering a state machine as a graph for review and documentation",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+      "assembly": "ViciOne.ServiceBus.TestFramework",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "the harness consumer applications use to test their own consumers",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+          "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "assembly": "ViciOne.ServiceBus",
+      "kind": "runtime",
+      "currentIdentity": {
+        "targetFramework": "netstandard2.0;net8.0;net9.0;net10.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "the message bus itself: topology, endpoints, middleware, sagas, courier, jobs, outbox",
+      "callSites": {
+        "product": [
+          "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+          "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+          "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+          "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+          "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+          "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+          "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+          "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+          "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+          "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+          "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+          "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+          "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+          "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+          "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+          "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+          "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj"
+        ],
+        "test": [
+          "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+          "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+        ],
+        "benchmark": [
+          "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+          "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj"
+        ],
+        "solutions": [
+          "ViciOne.ServiceBus.Benchmarks.slnx",
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries netstandard2.0;net8.0;net9.0;net10.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Abstractions.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Analyzers.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Azure.Table.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.EventHubIntegration.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.SignalR.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "assembly": "ViciOne.ServiceBus.Tests",
+      "kind": "test",
+      "currentIdentity": {
+        "targetFramework": "net9.0",
+        "langVersion": "(inherited)",
+        "isPackable": "(inherited)"
+      },
+      "capability": "test group: see the testGroups section for what it measures",
+      "callSites": {
+        "product": [],
+        "test": [
+          "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+          "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+        ],
+        "benchmark": [],
+        "solutions": [
+          "ViciOne.ServiceBus.sln"
+        ],
+        "externalConsumer": "not measurable inside this repository; the pack surface is the contract"
+      },
+      "modernPath": "the same project on net10.0",
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the project identity still carries net9.0; directive 0073 section 6 requires net10.0 only, and the capability itself is untouched by that change"
+    }
+  ],
+  "packages": [
+    {
+      "subject": "AWSSDK.DynamoDBv2",
+      "declaredVersions": [
+        "4.0.17.7"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "AWSSDK.S3",
+      "declaredVersions": [
+        "4.0.20.4"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "AWSSDK.SQS",
+      "declaredVersions": [
+        "4.0.2.24"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "AWSSDK.SimpleNotificationService",
+      "declaredVersions": [
+        "4.0.2.26"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Apache.NMS.AMQP",
+      "declaredVersions": [
+        "2.4.0"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Apache.NMS.ActiveMQ",
+      "declaredVersions": [
+        "2.2.0"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Azure.Data.Tables",
+      "declaredVersions": [
+        "12.11.0"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Azure.Identity",
+      "declaredVersions": [
+        "1.21.0"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+        "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Azure.Messaging.EventHubs.Processor",
+      "declaredVersions": [
+        "5.12.2"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Azure.Messaging.ServiceBus",
+      "declaredVersions": [
+        "7.20.1"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Azure.Storage.Blobs",
+      "declaredVersions": [
+        "12.28.0"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+        "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "BenchmarkDotNet",
+      "declaredVersions": [
+        "0.15.8"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Dapper",
+      "declaredVersions": [
+        "2.1.79"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Google.Protobuf",
+      "declaredVersions": [
+        "3.34.1"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Ionic.Zlib.Core",
+      "declaredVersions": [
+        "1.0.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "MathNet.Numerics",
+      "declaredVersions": [
+        "5.0.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "MediatR",
+      "declaredVersions": [
+        "12.2.0"
+      ],
+      "referencedBy": [],
+      "capability": "in-process request/response dispatch without a transport",
+      "modernPath": "the product's own mediator: AddMediator, IScopedMediator, ViciOne.ServiceBus.Mediator",
+      "modernPathCoverage": [
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ScopedMediator.cs",
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/MediatorFilter_Specs.cs",
+        "tests/ViciOne.ServiceBus.Tests/MediatorRequest_Specs.cs"
+      ],
+      "disposition": "REMOVE_OLD_ACCESS_PATH_AFTER_EQUIVALENCE",
+      "dispositionReason": "a central version declaration with no reference in any project",
+      "negativeRemovalProof": {
+        "method": "resolved dependency graphs, not a text scan",
+        "measured": "MediatR occurs in the 38 project.assets.json files only under project/frameworks/<tfm>/centralPackageVersions, never in libraries, targets or dependencies",
+        "meaning": "no project restores it, so removing the central version line removes a declaration and not a dependency"
+      }
+    },
+    {
+      "subject": "MessagePack",
+      "declaredVersions": [
+        "3.1.8"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.AspNetCore.SignalR.Core",
+      "declaredVersions": [
+        "1.1.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.AspNetCore.SignalR.Protocols.MessagePack",
+      "declaredVersions": [
+        "9.0.19"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Bcl.AsyncInterfaces",
+      "declaredVersions": [
+        "8.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.CodeAnalysis.CSharp.Workspaces",
+      "declaredVersions": [
+        "4.11.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+        "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Data.SqlClient",
+      "declaredVersions": [
+        "5.2.3"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.EntityFrameworkCore.Design",
+      "declaredVersions": [
+        "10.0.5",
+        "9.0.15"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.EntityFrameworkCore.Relational",
+      "declaredVersions": [
+        "10.0.0",
+        "9.0.1"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.EntityFrameworkCore.SqlServer",
+      "declaredVersions": [
+        "10.0.0",
+        "9.0.1"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Caching.Memory",
+      "declaredVersions": [
+        "10.0.0",
+        "9.0.1"
+      ],
+      "referencedBy": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.DependencyInjection",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+        "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Diagnostics",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Diagnostics.HealthChecks",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Diagnostics.Testing",
+      "declaredVersions": [
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Hosting.Abstractions",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Logging.Abstractions",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.Extensions.Options",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Microsoft.NET.Test.Sdk",
+      "declaredVersions": [
+        "18.5.1"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+        "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "NUnit",
+      "declaredVersions": [
+        "4.4.0"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+        "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+        "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "NUnit.Analyzers",
+      "declaredVersions": [
+        "4.11.2"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+        "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+        "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "NUnit3TestAdapter",
+      "declaredVersions": [
+        "6.1.0"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+        "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Npgsql",
+      "declaredVersions": [
+        "8.0.7"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj"
+      ],
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "declared at 8.0.7, below the 10.x line the net10.0-only graph has to settle on; directive 0073 section 6 requires Npgsql and EF Core on one stable line"
+    },
+    {
+      "subject": "Npgsql.EntityFrameworkCore.PostgreSQL",
+      "declaredVersions": [
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+        "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj"
+      ],
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "declared at 9.0.0, below the 10.x line the net10.0-only graph has to settle on; directive 0073 section 6 requires Npgsql and EF Core on one stable line"
+    },
+    {
+      "subject": "OpenTelemetry.Exporter.Console",
+      "declaredVersions": [
+        "1.17.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "declaredVersions": [
+        "1.17.0"
+      ],
+      "referencedBy": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "OpenTelemetry.Extensions.Hosting",
+      "declaredVersions": [
+        "1.17.0"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Quartz",
+      "declaredVersions": [
+        "3.18.1"
+      ],
+      "referencedBy": [
+        "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "Quartz.Extensions.Hosting",
+      "declaredVersions": [
+        "3.18.1"
+      ],
+      "referencedBy": [
+        "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "QuikGraph",
+      "declaredVersions": [
+        "2.5.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "QuikGraph.Graphviz",
+      "declaredVersions": [
+        "2.5.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "RabbitMQ.Client",
+      "declaredVersions": [
+        "7.2.1"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "SharpZipLib",
+      "declaredVersions": [
+        "1.4.2"
+      ],
+      "referencedBy": [
+        "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Diagnostics.DiagnosticSource",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.1",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Memory",
+      "declaredVersions": [
+        "4.6.3"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Net.Http",
+      "declaredVersions": [
+        "4.3.4"
+      ],
+      "referencedBy": [
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Reflection.Emit",
+      "declaredVersions": [
+        "4.7.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Reflection.Emit.Lightweight",
+      "declaredVersions": [
+        "4.7.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Text.Json",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.6",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Threading.Channels",
+      "declaredVersions": [
+        "10.0.0",
+        "8.0.0",
+        "9.0.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.Threading.Tasks.Extensions",
+      "declaredVersions": [
+        "4.6.3"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    },
+    {
+      "subject": "System.ValueTuple",
+      "declaredVersions": [
+        "4.5.0"
+      ],
+      "referencedBy": [
+        "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
+      ],
+      "disposition": "PRESERVE",
+      "dispositionReason": "carries a retained capability and is already declared per target framework"
+    }
+  ],
+  "testGroups": [
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+      "currentIdentity": {
+        "targetFramework": "net10.0"
+      },
+      "measuredFromSource": {
+        "files": 54,
+        "testAttributes": 0,
+        "testFixtureAttributes": 0,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "PRESERVE",
+      "dispositionReason": "already on the single approved target framework",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj",
+      "currentIdentity": {
+        "targetFramework": "net10.0"
+      },
+      "measuredFromSource": {
+        "files": 19,
+        "testAttributes": 0,
+        "testFixtureAttributes": 0,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "PRESERVE",
+      "dispositionReason": "already on the single approved target framework",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net10.0"
+      },
+      "measuredFromSource": {
+        "files": 6,
+        "testAttributes": 75,
+        "testFixtureAttributes": 0,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "PRESERVE",
+      "dispositionReason": "already on the single approved target framework",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 19,
+        "testAttributes": 80,
+        "testFixtureAttributes": 10,
+        "explicitOrIgnored": 5
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 29,
+        "testAttributes": 111,
+        "testFixtureAttributes": 60,
+        "explicitOrIgnored": 4
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 28,
+        "testAttributes": 89,
+        "testFixtureAttributes": 32,
+        "explicitOrIgnored": 5
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 12,
+        "testAttributes": 111,
+        "testFixtureAttributes": 1,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 55,
+        "testAttributes": 139,
+        "testFixtureAttributes": 77,
+        "explicitOrIgnored": 19
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 22,
+        "testAttributes": 15,
+        "testFixtureAttributes": 19,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 5,
+        "testAttributes": 4,
+        "testFixtureAttributes": 1,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 58,
+        "testAttributes": 76,
+        "testFixtureAttributes": 61,
+        "explicitOrIgnored": 4
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 18,
+        "testAttributes": 18,
+        "testFixtureAttributes": 0,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 26,
+        "testAttributes": 87,
+        "testFixtureAttributes": 39,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 98,
+        "testAttributes": 352,
+        "testFixtureAttributes": 175,
+        "explicitOrIgnored": 14
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 16,
+        "testAttributes": 28,
+        "testFixtureAttributes": 0,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 35,
+        "testAttributes": 80,
+        "testFixtureAttributes": 45,
+        "explicitOrIgnored": 9
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
+    },
+    {
+      "subject": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "currentIdentity": {
+        "targetFramework": "net9.0"
+      },
+      "measuredFromSource": {
+        "files": 481,
+        "testAttributes": 1697,
+        "testFixtureAttributes": 585,
+        "explicitOrIgnored": 0
+      },
+      "disposition": "MODERNIZE_WITH_EQUIVALENCE",
+      "dispositionReason": "the group still targets net9.0 and has to move to net10.0",
+      "runtimeEvidence": "PENDING: filled from the runs recorded in this block"
     }
   ]
 }
