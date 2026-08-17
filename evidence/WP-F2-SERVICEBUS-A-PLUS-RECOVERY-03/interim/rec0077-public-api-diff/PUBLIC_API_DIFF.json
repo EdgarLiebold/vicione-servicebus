@@ -1,0 +1,552 @@
+{
+  "record": "rec0077-public-api-diff",
+  "directive": "0073 section 7 and reslice 0075",
+  "method": "the public surface of both trees is read from the built assemblies by tools/ci/api_surface.cs, metadata only, and compared by tools/ci/compare_api_surface.py. Every difference is then placed in a bucket by what the member is; a line matching no bucket would be reported as unclassified.",
+  "baseline": {
+    "commit": "a92eab64",
+    "targetFramework": "net10.0 for every assembly, netstandard2.0 for the analyzer"
+  },
+  "current": {
+    "commit": "347e1cc4ea32ae6273dd6282692b216d266d7d0b"
+  },
+  "totals": {
+    "baselineMembers": 24829,
+    "currentMembers": 24532,
+    "added": 10,
+    "removed": 307,
+    "messagingChanges": 305,
+    "testingChanges": 12,
+    "unclassified": 0
+  },
+  "removedByReason": [
+    {
+      "reason": "empty placeholder methods",
+      "count": 136,
+      "capability": "functionless surface, removed as a deliberate cleanup; they had no caller and no interface obligation",
+      "members": [
+        "method ViciOne.ServiceBus.Configuration.ActivityConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ActivityConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ActivityConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumePipeSpecificationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumePipeSpecificationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumePipeSpecificationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumeTopologyConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumeTopologyConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumeTopologyConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumerConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumerConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ConsumerConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.Method7(0)",
+        "method ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.Method8(0)",
+        "method ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.Method9(0)",
+        "method ViciOne.ServiceBus.Configuration.EndpointConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.EndpointConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.EndpointConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.HandlerConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.HandlerConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.HandlerConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageRetryConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageRetryConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageRetryConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageScopeConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageTopologyConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageTopologyConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.MessageTopologyConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.PartitionMessageConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.PartitionMessageConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.PartitionMessageConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.PipeConfigurator`1+PipeBuilder.Method1(0)",
+        "method ViciOne.ServiceBus.Configuration.PipeConfigurator`1+PipeBuilder.Method2(0)",
+        "method ViciOne.ServiceBus.Configuration.PipeConfigurator`1.Method1(0)",
+        "method ViciOne.ServiceBus.Configuration.PipeConfigurator`1.Method2(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishPipeSpecificationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishPipeSpecificationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishPipeSpecificationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishTopologyConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishTopologyConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.PublishTopologyConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.SagaConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.SagaConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.SagaConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.SendPipeSpecificationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.SendPipeSpecificationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.SendPipeSpecificationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.SendTopologyConfigurationObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.SendTopologyConfigurationObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.SendTopologyConfigurationObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Configuration.TimeoutConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.Configuration.TimeoutConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.Configuration.TimeoutConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Context.BaseCourierContext.Method4(0)",
+        "method ViciOne.ServiceBus.Context.BaseCourierContext.Method5(0)",
+        "method ViciOne.ServiceBus.Context.BaseCourierContext.Method6(0)",
+        "method ViciOne.ServiceBus.Context.BatchConsumeContext`1.Method4(0)",
+        "method ViciOne.ServiceBus.Context.BatchConsumeContext`1.Method5(0)",
+        "method ViciOne.ServiceBus.Context.BatchConsumeContext`1.Method6(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextProxy`1.Method1(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextProxy`1.Method2(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextProxy`1.Method3(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextScope`1.Method1(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextScope`1.Method2(0)",
+        "method ViciOne.ServiceBus.Context.ConsumeContextScope`1.Method3(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextProxy`2.Method4(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextProxy`2.Method5(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextProxy`2.Method6(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextScope`2.Method4(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextScope`2.Method5(0)",
+        "method ViciOne.ServiceBus.Context.ConsumerConsumeContextScope`2.Method6(0)",
+        "method ViciOne.ServiceBus.Context.CorrelationIdConsumeContextProxy`1.Method4(0)",
+        "method ViciOne.ServiceBus.Context.CorrelationIdConsumeContextProxy`1.Method5(0)",
+        "method ViciOne.ServiceBus.Context.CorrelationIdConsumeContextProxy`1.Method6(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextProxy.Method4(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextProxy.Method5(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextProxy.Method6(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextScope.Method4(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextScope.Method5(0)",
+        "method ViciOne.ServiceBus.Context.CourierContextScope.Method6(0)",
+        "method ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.Method4(0)",
+        "method ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.Method5(0)",
+        "method ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.Method6(0)",
+        "method ViciOne.ServiceBus.Context.HostCompensateActivityContext`2.Method7(0)",
+        "method ViciOne.ServiceBus.Context.HostCompensateActivityContext`2.Method8(0)",
+        "method ViciOne.ServiceBus.Context.HostCompensateActivityContext`2.Method9(0)",
+        "method ViciOne.ServiceBus.Context.HostExecuteActivityContext`2.Method7(0)",
+        "method ViciOne.ServiceBus.Context.HostExecuteActivityContext`2.Method8(0)",
+        "method ViciOne.ServiceBus.Context.HostExecuteActivityContext`2.Method9(0)",
+        "method ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.Method4(0)",
+        "method ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.Method5(0)",
+        "method ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.Method6(0)",
+        "method ViciOne.ServiceBus.MessageData.Configuration.CourierMessageDataConfigurationObserver.Method4(0)",
+        "method ViciOne.ServiceBus.MessageData.Configuration.CourierMessageDataConfigurationObserver.Method5(0)",
+        "method ViciOne.ServiceBus.MessageData.Configuration.CourierMessageDataConfigurationObserver.Method6(0)",
+        "method ViciOne.ServiceBus.Metadata.ImplementedMessageTypeCache`1.Method1(0)",
+        "method ViciOne.ServiceBus.Metadata.ImplementedMessageTypeCache`1.Method2(0)",
+        "method ViciOne.ServiceBus.Metadata.ImplementedMessageTypeCache`1.Method3(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext`1.Method1(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext`1.Method2(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext`1.Method3(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Method1(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Method2(0)",
+        "method ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Method3(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable.Method4(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable.Method5(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable.Method6(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable`1.Method4(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable`1.Method5(0)",
+        "method ViciOne.ServiceBus.Observables.FilterObservable`1.Method6(0)",
+        "method ViciOne.ServiceBus.TypeCache`1.Method1(0)",
+        "method ViciOne.ServiceBus.TypeCache`1.Method2(0)",
+        "method ViciOne.ServiceBus.Util.Connectable`1.Method1(0)",
+        "method ViciOne.ServiceBus.Util.Connectable`1.Method2(0)",
+        "method ViciOne.ServiceBus.Util.Connectable`1.Method3(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+EventObservable.Method4(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+EventObservable.Method5(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+EventObservable.Method6(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateMachineRequest`3.Method1(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateMachineRequest`3.Method2(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateMachineRequest`4.Method12(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateMachineRequest`4.Method22(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateObservable.Method4(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateObservable.Method5(0)",
+        "method ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1+StateObservable.Method6(0)"
+      ]
+    },
+    {
+      "reason": "formatter based serialization",
+      "count": 73,
+      "capability": "BinaryFormatter constructors and GetObjectData; the exception types, their normal constructors and their error semantics stay",
+      "members": [
+        "method ViciOne.ServiceBus.AbstractUriException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActiveMqConnectException..ctor(2)",
+        "method ViciOne.ServiceBus.ActiveMqConnectException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActiveMqConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActiveMqTransportConfigurationException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActiveMqTransportException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActivityCompensationException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActivityExecutionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ActivityExecutionFaultedException..ctor(2) #2",
+        "method ViciOne.ServiceBus.AmazonSqsConnectException..ctor(2) #2",
+        "method ViciOne.ServiceBus.AmazonSqsConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.AmazonSqsTransportConfigurationException..ctor(2) #2",
+        "method ViciOne.ServiceBus.AmazonSqsTransportException..ctor(2) #2",
+        "method ViciOne.ServiceBus.CommandException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConfigurationException..ctor(2) #3",
+        "method ViciOne.ServiceBus.ConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConsumeContextNotAvailableException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConsumerCanceledException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConsumerException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConsumerMessageException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ConventionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.CourierException..ctor(2) #2",
+        "method ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException..ctor(2) #2",
+        "method ViciOne.ServiceBus.EndpointException..ctor(2) #2",
+        "method ViciOne.ServiceBus.EndpointNotFoundException..ctor(2) #2",
+        "method ViciOne.ServiceBus.EventExecutionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.EventHubConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.FutureNotFoundException..ctor(2) #3",
+        "method ViciOne.ServiceBus.Internals.Caching.ValueFactoryException..ctor(2) #2",
+        "method ViciOne.ServiceBus.Internals.GraphValidation.CyclicGraphException..ctor(2) #2",
+        "method ViciOne.ServiceBus.InvalidCompensationAddressException..ctor(2) #2",
+        "method ViciOne.ServiceBus.JobAlreadyExistsException..ctor(2)",
+        "method ViciOne.ServiceBus.JobServiceStoppingException..ctor(2)",
+        "method ViciOne.ServiceBus.MessageDataException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageInitializerException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageLockExpiredException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageNotAcknowledgedException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageNotConsumedException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageRetryLimitExceededException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageReturnedException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageTimeToLiveExpiredException..ctor(2) #2",
+        "method ViciOne.ServiceBus.MessageUrn..ctor(2)",
+        "method ViciOne.ServiceBus.NotImplementedByDesignException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PayloadException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PayloadFactoryException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PayloadNotFoundException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PipeConfigurationException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PipeFactoryException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PipelineException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ProduceException..ctor(2) #2",
+        "method ViciOne.ServiceBus.PublishException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RabbitMqAddressException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RabbitMqConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RequestCanceledException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RequestException..ctor(2) #3",
+        "method ViciOne.ServiceBus.RequestFaultException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RequestFaultException.GetObjectData(2)",
+        "method ViciOne.ServiceBus.RequestTimeoutException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RoutingSlipArgumentException..ctor(2) #2",
+        "method ViciOne.ServiceBus.RoutingSlipException..ctor(2) #2",
+        "method ViciOne.ServiceBus.SagaStateMachineException..ctor(2) #3",
+        "method ViciOne.ServiceBus.SendException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ServiceBusConnectionException..ctor(2) #2",
+        "method ViciOne.ServiceBus.SqlEndpointAddressException..ctor(2) #2",
+        "method ViciOne.ServiceBus.SqlTopologyException..ctor(2) #2",
+        "method ViciOne.ServiceBus.TestFramework.IntentionalTestException..ctor(2) #2",
+        "method ViciOne.ServiceBus.TransportException..ctor(2) #2",
+        "method ViciOne.ServiceBus.TransportUnavailableException..ctor(2) #2",
+        "method ViciOne.ServiceBus.UnhandledEventException..ctor(2)",
+        "method ViciOne.ServiceBus.UnknownEventException..ctor(2) #2",
+        "method ViciOne.ServiceBus.UnknownStateException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ValueFactoryException..ctor(2) #2",
+        "method ViciOne.ServiceBus.ViciOneServiceBusException..ctor(2) #2"
+      ]
+    },
+    {
+      "reason": "retry access renamed to UseMessageRetry",
+      "count": 10,
+      "capability": "the consume context retry stays and is reached under the modern name",
+      "members": [
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #2",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #3",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #4",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #5",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #6",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(2) #7",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(3)",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(3) #2",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(3) #3",
+        "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseRetry(3) #4"
+      ]
+    },
+    {
+      "reason": "service instance access renamed",
+      "count": 2,
+      "capability": "the capability stays; ConfigureServiceInstanceEndpoints is the single modern access",
+      "members": [
+        "method ViciOne.ServiceBus.RegistrationContextExtensions.ConfigureServiceEndpoints(3)",
+        "method ViciOne.ServiceBus.RegistrationContextExtensions.ConfigureServiceEndpoints(4)"
+      ]
+    },
+    {
+      "reason": "definition hooks without a registration context",
+      "count": 5,
+      "capability": "the three parameter hook is the modern one; 50 definitions in the tree already override it and none overrode this",
+      "members": [
+        "method ViciOne.ServiceBus.ActivityDefinition`3.ConfigureCompensateActivity(2)",
+        "method ViciOne.ServiceBus.ConsumerDefinition`1.ConfigureConsumer(2)",
+        "method ViciOne.ServiceBus.ExecuteActivityDefinition`2.ConfigureExecuteActivity(2)",
+        "method ViciOne.ServiceBus.FutureDefinition`1.ConfigureSaga(2)",
+        "method ViciOne.ServiceBus.SagaDefinition`1.ConfigureSaga(2)"
+      ]
+    },
+    {
+      "reason": "job service on a service instance",
+      "count": 4,
+      "capability": "the retained path keeps the overload it needs; these had no caller",
+      "members": [
+        "method ViciOne.ServiceBus.JobServiceConfigurationExtensions.ConfigureJobService(2)",
+        "method ViciOne.ServiceBus.JobServiceConfigurationExtensions.ConfigureJobService(3)",
+        "method ViciOne.ServiceBus.JobServiceConfigurationExtensions.ConfigureJobServiceEndpoints(3)",
+        "method ViciOne.ServiceBus.JobServiceConfigurationExtensions.ConfigureJobServiceEndpoints(3) #2"
+      ]
+    },
+    {
+      "reason": "bus factory registration",
+      "count": 4,
+      "capability": "AddBus, replaced by SetBusFactory with a RegistrationBusFactory",
+      "members": [
+        "method ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.AddBus(1)",
+        "method ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.AddBus(1)",
+        "method ViciOne.ServiceBus.Configuration.TestHarnessRegistrationConfigurator.AddBus(1)",
+        "method ViciOne.ServiceBus.IBusRegistrationConfigurator.AddBus(1)"
+      ]
+    },
+    {
+      "reason": "test harness helpers",
+      "count": 3,
+      "capability": "replaced by AddViciOneServiceBusTestHarness; the in memory harness registration is kept",
+      "members": [
+        "method ViciOne.ServiceBus.DependencyInjectionTestingExtensions.AddConsumerTestHarness(1)",
+        "method ViciOne.ServiceBus.DependencyInjectionTestingExtensions.AddSagaStateMachineTestHarness(1)",
+        "method ViciOne.ServiceBus.DependencyInjectionTestingExtensions.AddSagaTestHarness(1)"
+      ]
+    },
+    {
+      "reason": "bus activity monitor",
+      "count": 8,
+      "capability": "replaced by the test harness InactivityTask; the interface and its implementation went with the factory",
+      "members": [
+        "method ViciOne.ServiceBus.Testing.ExtensionMethodsForBuses.CreateBusActivityMonitor(1)",
+        "method ViciOne.ServiceBus.Testing.ExtensionMethodsForBuses.CreateBusActivityMonitor(2)",
+        "method ViciOne.ServiceBus.Testing.Implementations.BusActivityMonitor..ctor(0)",
+        "method ViciOne.ServiceBus.Testing.Implementations.IBusActivityMonitor.AwaitBusInactivity(0)",
+        "method ViciOne.ServiceBus.Testing.Implementations.IBusActivityMonitor.AwaitBusInactivity(1)",
+        "method ViciOne.ServiceBus.Testing.Implementations.IBusActivityMonitor.AwaitBusInactivity(1) #2",
+        "type class ViciOne.ServiceBus.Testing.Implementations.BusActivityMonitor",
+        "type interface ViciOne.ServiceBus.Testing.Implementations.IBusActivityMonitor"
+      ]
+    },
+    {
+      "reason": "hosted service registration",
+      "count": 3,
+      "capability": "AddViciOneServiceBus registers the hosted service itself",
+      "members": [
+        "method ViciOne.ServiceBus.HostedServiceConfigurationExtensions.AddViciOneServiceBusHostedService(1)",
+        "method ViciOne.ServiceBus.HostedServiceConfigurationExtensions.AddViciOneServiceBusHostedService(2)",
+        "method ViciOne.ServiceBus.HostedServiceConfigurationExtensions.AddViciOneServiceBusHostedService(4)"
+      ]
+    },
+    {
+      "reason": "event hub numeric offset",
+      "count": 3,
+      "capability": "the service does not guarantee it; OffsetString is the vendor's replacement",
+      "members": [
+        "method ViciOne.ServiceBus.EventHubConsumeContextExtensions.Offset(1)",
+        "property ViciOne.ServiceBus.EventHubConsumeContext.Offset [get]",
+        "property ViciOne.ServiceBus.EventHubIntegration.EventHubReceiveContext.Offset [get]"
+      ]
+    },
+    {
+      "reason": "exception header helpers",
+      "count": 4,
+      "capability": "replaced by the SendHeaders and adapter overloads the move transports use",
+      "members": [
+        "method ViciOne.ServiceBus.Transports.TransportSetHeaderAdapterExtensions.SetExceptionHeaders(2)",
+        "method ViciOne.ServiceBus.Transports.TransportSetHeaderAdapterExtensions.SetHostHeaders(1)",
+        "method ViciOne.ServiceBus.Util.ExceptionUtil.GetExceptionHeaderDetail(2)",
+        "method ViciOne.ServiceBus.Util.ExceptionUtil.GetExceptionHeaderDictionary(1)"
+      ]
+    },
+    {
+      "reason": "health check failure status",
+      "count": 3,
+      "capability": "replaced by MinimalFailureStatus",
+      "members": [
+        "property ViciOne.ServiceBus.Configuration.IHealthCheckOptions.FailureStatus [get]",
+        "property ViciOne.ServiceBus.Configuration.ViciOneServiceBusHealthCheckOptions`1.FailureStatus [getset]",
+        "property ViciOne.ServiceBus.IHealthCheckOptionsConfigurator.FailureStatus [set]"
+      ]
+    },
+    {
+      "reason": "scheduler access",
+      "count": 6,
+      "capability": "replaced by UseSqlMessageScheduler, UseServiceBusMessageScheduler, AddDelayedMessageScheduler and AddQuartzConsumers",
+      "members": [
+        "method ViciOne.ServiceBus.AmazonSqsMessageSchedulerExtensions.AddAmazonSqsMessageScheduler(1)",
+        "method ViciOne.ServiceBus.AmazonSqsMessageSchedulerExtensions.UseAmazonSqsMessageScheduler(1)",
+        "method ViciOne.ServiceBus.QuartzIntegrationExtensions.UseInMemoryScheduler(3) #3",
+        "method ViciOne.ServiceBus.ServiceBusScheduleMessageExtensions.UseDelayedMessageScheduler(1)",
+        "method ViciOne.ServiceBus.SqlScheduleMessageExtensions.UseDbMessageScheduler(1)",
+        "method ViciOne.ServiceBus.SqlScheduleMessageExtensions.UseDelayedMessageScheduler(1)"
+      ]
+    },
+    {
+      "reason": "state machine test harness interface",
+      "count": 1,
+      "capability": "ISagaStateMachineTestHarness was already implemented and registered beside it",
+      "members": [
+        "type interface ViciOne.ServiceBus.Testing.IStateMachineSagaTestHarness`2"
+      ]
+    },
+    {
+      "reason": "async LINQ that the base class library now provides",
+      "count": 1,
+      "capability": "System.Linq.AsyncEnumerable Take and ToListAsync on net10.0",
+      "members": [
+        "method ViciOne.ServiceBus.Testing.AsyncElementListExtensions.Take(2)"
+      ]
+    },
+    {
+      "reason": "publish metric name options",
+      "count": 2,
+      "capability": "no counter was ever created from them; a publish is counted on the send instrument",
+      "members": [
+        "property ViciOne.ServiceBus.Monitoring.InstrumentationOptions.PublishFaultTotal [getset]",
+        "property ViciOne.ServiceBus.Monitoring.InstrumentationOptions.PublishTotal [getset]"
+      ]
+    },
+    {
+      "reason": "visitable alias",
+      "count": 1,
+      "capability": "IVisitable is the capability; this interface only re-declared it",
+      "members": [
+        "type interface ViciOne.ServiceBus.Visitable"
+      ]
+    },
+    {
+      "reason": "obsolete generic request client registration",
+      "count": 1,
+      "capability": "the generic request client is registered automatically",
+      "members": [
+        "method ViciOne.ServiceBus.DependencyInjectionExtensions.AddGenericRequestClient(1)"
+      ]
+    },
+    {
+      "reason": "entity framework saga repository factory",
+      "count": 1,
+      "capability": "the repository is registered through dependency injection",
+      "members": [
+        "method ViciOne.ServiceBus.EntityFrameworkCoreSagaRepositoryRegistrationExtensions.CreateEntityFrameworkSagaRepository(2)"
+      ]
+    },
+    {
+      "reason": "active mq connect exception",
+      "count": 3,
+      "capability": "ActiveMQConnectionException is the retained type",
+      "members": [
+        "method ViciOne.ServiceBus.ActiveMqConnectException..ctor(0)",
+        "method ViciOne.ServiceBus.ActiveMqConnectException..ctor(1)",
+        "type class ViciOne.ServiceBus.ActiveMqConnectException"
+      ]
+    },
+    {
+      "reason": "max concurrent calls",
+      "count": 1,
+      "capability": "it set ConcurrentMessageLimit and nothing else",
+      "members": [
+        "property ViciOne.ServiceBus.IServiceBusEndpointConfigurator.MaxConcurrentCalls [set]"
+      ]
+    },
+    {
+      "reason": "in memory outbox provider overload",
+      "count": 1,
+      "capability": "the registration context path is the modern configuration",
+      "members": [
+        "method ViciOne.ServiceBus.InMemoryOutboxConfigurationExtensions.UseInMemoryInboxOutbox(2) #2"
+      ]
+    },
+    {
+      "reason": "upstream Automatonymous aliases",
+      "count": 7,
+      "capability": "the state machine contracts are ViciOne's own; these re-declared the imported library's names",
+      "members": [
+        "type interface Automatonymous.Activity",
+        "type interface Automatonymous.Activity`1",
+        "type interface Automatonymous.Activity`2",
+        "type interface Automatonymous.Behavior`1",
+        "type interface Automatonymous.Behavior`2",
+        "type interface Automatonymous.EventObserver`1",
+        "type interface Automatonymous.StateObserver`1"
+      ]
+    },
+    {
+      "reason": "scoped consume context setter without a bus",
+      "count": 3,
+      "capability": "removed with the outbox and scope correction; the bus bound setter is the only path",
+      "members": [
+        "field ViciOne.ServiceBus.DependencyInjection.LegacySetScopedConsumeContext.Instance",
+        "method ViciOne.ServiceBus.DependencyInjection.LegacySetScopedConsumeContext.PushContext(2)",
+        "type class ViciOne.ServiceBus.DependencyInjection.LegacySetScopedConsumeContext"
+      ]
+    },
+    {
+      "reason": "service provider overloads where a registration context belongs",
+      "count": 13,
+      "capability": "the IRegistrationContext overload is the modern configuration and carries the bus bound setter",
+      "members": [
+        "method ViciOne.ServiceBus.DependencyInjectionExtensions.UseMessageScope(2) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionExtensions.UseServiceScope(2) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.CompensateActivityHost(3) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.ConnectConsumer(3) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.Consumer(3) #3",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.Consumer(3) #4",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.ExecuteActivityHost(3) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.ExecuteActivityHost(4) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.Saga(3) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.StateMachineSaga(3) #2",
+        "method ViciOne.ServiceBus.DependencyInjectionReceiveEndpointExtensions.StateMachineSaga(4) #2",
+        "method ViciOne.ServiceBus.EntityFrameworkOutboxConfigurationExtensions.UseEntityFrameworkOutbox(3) #2",
+        "method ViciOne.ServiceBus.JobServiceContainerConfigurationExtensions.ConfigureSagaRepositories(2) #2"
+      ]
+    },
+    {
+      "reason": "legacy serialization aliases",
+      "count": 3,
+      "capability": "removed with the LegacyObsolete folder; the serializer configuration keeps its own names",
+      "members": [
+        "method ViciOne.ServiceBus.LegacySerializationExtensions.ClearMessageDeserializers(1)",
+        "method ViciOne.ServiceBus.LegacySerializationExtensions.ClearMessageDeserializers(1) #2",
+        "type static ViciOne.ServiceBus.LegacySerializationExtensions"
+      ]
+    },
+    {
+      "reason": "behavior context aliases",
+      "count": 2,
+      "capability": "Instance and Data were exact aliases of Saga and Message, which the implementation shows",
+      "members": [
+        "property ViciOne.ServiceBus.BehaviorContext`1.Instance [get]",
+        "property ViciOne.ServiceBus.BehaviorContext`2.Data [get]"
+      ]
+    },
+    {
+      "reason": "classes that held nothing but a removed access",
+      "count": 3,
+      "capability": "the type went with its only members",
+      "members": [
+        "type static ViciOne.ServiceBus.AmazonSqsMessageSchedulerExtensions",
+        "type static ViciOne.ServiceBus.HostedServiceConfigurationExtensions",
+        "type static ViciOne.ServiceBus.Testing.ExtensionMethodsForBuses"
+      ]
+    }
+  ],
+  "added": [
+    "method ViciOne.ServiceBus.RegistrationContextExtensions.ConfigureServiceInstanceEndpoints(3)",
+    "method ViciOne.ServiceBus.RegistrationContextExtensions.ConfigureServiceInstanceEndpoints(4)",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(2) #2",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(2) #3",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(2) #4",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(2) #5",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(3)",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(3) #2",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(3) #3",
+    "method ViciOne.ServiceBus.RetryConfigurationExtensions.UseMessageRetry(3) #4"
+  ],
+  "emptyMethodReconciliation": {
+    "removedInSource": 145,
+    "inThePublicSurface": 136,
+    "difference": 9,
+    "explanation": "every one of the 145 was declared public, but nine sit on nested types that are not public, so they never were part of the surface: two on CachedType in MessageTypeCache, three on TypeAdapter in ImplementedMessageTypeCache, two on CachedType in TypeCache and two on Handle in Connectable",
+    "note": "this is the deliberate, functionless surface cleanup the reslice asks to be listed; none of them had a caller or an interface obligation, which the clean build after their removal proved"
+  }
+}

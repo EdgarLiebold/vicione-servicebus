@@ -1,0 +1,96 @@
+{
+  "record": "rec0077-root-and-structure",
+  "directive": "0071 section 4 and 0073 section 7",
+  "state": "measured; the items that are still missing are named rather than invented",
+  "commit": "347e1cc4ea32ae6273dd6282692b216d266d7d0b",
+  "rootFiles": [
+    ".cs",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    "AGENTS.md",
+    "CHANGELIST.md",
+    "COPYRIGHT",
+    "Directory.Build.props",
+    "Directory.Packages.props",
+    "LICENSE",
+    "MODIFICATIONS.md",
+    "NOTICE",
+    "NuGet.README.md",
+    "NuGet.config",
+    "README.md",
+    "SECURITY.md",
+    "ViciOne.ServiceBus.Benchmarks.slnx",
+    "ViciOne.ServiceBus.sln",
+    "ViciOne.ServiceBus.sln.DotSettings",
+    "ViciOne.ServiceBus.snk",
+    "signing.props",
+    "vicione-servicebus-logo.png"
+  ],
+  "buildControl": {
+    "Directory.Build.props": {
+      "present": true,
+      "note": "holds the shared properties; the repository wide C# 12 pin was removed, so net10.0 projects take C# 14 from the SDK"
+    },
+    "Directory.Packages.props": {
+      "present": true,
+      "note": "central package management, no condition left in the file after the framework collapse"
+    },
+    "NuGet.config": {
+      "present": true,
+      "note": "restore configuration for the development environment"
+    },
+    "global.json": {
+      "present": false,
+      "note": "MISSING. 0071 section 4 asks for a repository local global.json. The SDK in use is 10.0.302; which version to pin and which rollForward policy to allow is a build policy decision, so it is reported rather than guessed."
+    },
+    ".config/dotnet-tools.json": {
+      "present": false,
+      "note": "MISSING. 0071 section 4 asks for a local tool manifest. This repository drives its gates from Python tools under tools/, and no dotnet tool is used, so an empty manifest would state a dependency that does not exist. Reported for decision."
+    },
+    "Directory.Build.targets": {
+      "present": false,
+      "note": "MISSING. No shared target is currently needed; the required build targets of 0071 section 4 are not yet specified."
+    }
+  },
+  "solutions": {
+    "ViciOne.ServiceBus.sln": {
+      "present": true,
+      "form": "classic sln"
+    },
+    "ViciOne.ServiceBus.Benchmarks.slnx": {
+      "present": true,
+      "form": "slnx"
+    },
+    "note": "two solution forms coexist. Which one is the approved form is a decision 0071 section 4 left open, so both are reported."
+  },
+  "rootDocumentation": {
+    "correctedInThisRecord": [
+      {
+        "file": "README.md",
+        "was": "a German provenance section beside the English one, and a scope sentence claiming the fork retains the complete upstream source scope",
+        "now": "English only, and a scope section naming the capabilities actually kept, with the removals pointed at MODIFICATIONS.md",
+        "reason": "0073 section 4 requires the root markdown in English, and the old scope sentence had become untrue after the product decisions"
+      },
+      {
+        "file": "AGENTS.md",
+        "was": "German, and it called the repository a source fork of ViciOne.ServiceBus 8.5.10",
+        "now": "English, and it names MassTransit 8.5.10 as the origin again",
+        "reason": "the global rename had overwritten the provenance sentence itself, which turned an honest origin statement into a circular one. The stale rule that nothing may be removed from the start tree was replaced by a pointer to the development slice, which is where scope is decided, rather than by a rule of my own."
+      }
+    ],
+    "legalDocumentsUntouched": [
+      "LICENSE",
+      "NOTICE",
+      "COPYRIGHT",
+      "MODIFICATIONS.md",
+      "CHANGELIST.md"
+    ]
+  },
+  "openForDecision": [
+    "global.json: which SDK version and which rollForward policy",
+    "local tool manifest: whether one is wanted at all when no dotnet tool is used",
+    "the approved solution form, since a classic sln and an slnx coexist",
+    "which shared build targets 0071 section 4 means"
+  ]
+}
