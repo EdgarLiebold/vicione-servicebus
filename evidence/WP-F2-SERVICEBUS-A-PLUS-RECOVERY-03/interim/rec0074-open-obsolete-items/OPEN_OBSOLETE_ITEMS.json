@@ -1,0 +1,96 @@
+{
+  "record": "rec0074-open-obsolete-items",
+  "directive": "0073 sections 1 and 3",
+  "state": "three obsolete items whose modern replacement is not unambiguous, plus two findings that need no decision from me",
+  "method": "the compiler names every still-used obsolete member; src never suppressed CS0618, so a marking the compiler does not report has no call site in the tree",
+  "measuredAt": {
+    "commit": "3f67bf2d",
+    "obsoleteLocationsAtBlockStart": 547,
+    "obsoleteLocationsNow": 7,
+    "note": "547 was invisible until the blanket CS0618 suppression in tests/Directory.Build.props was lifted"
+  },
+  "blocking": [
+    {
+      "id": "SERVICE-INSTANCE-ENDPOINTS",
+      "subject": "every overload that configures receive endpoints inside a service instance",
+      "members": [
+        "RegistrationContextExtensions.ConfigureEndpoints<T>(IServiceInstanceConfigurator<T>, IBusRegistrationContext, Action<IEndpointNameFormatter>, IEndpointNameFormatter)",
+        "RegistrationContextExtensions.ConfigureEndpoints<T>(IServiceInstanceConfigurator<T>, IBusRegistrationContext, IEndpointNameFormatter)",
+        "RegistrationContextExtensions.ConfigureServiceEndpoints<T>(IBusFactoryConfigurator<T>, IBusRegistrationContext, ServiceInstanceOptions)",
+        "RegistrationContextExtensions.ConfigureServiceEndpoints<T>(IBusFactoryConfigurator<T>, IBusRegistrationContext, ServiceInstanceOptions, Action<IEndpointNameFormatter>)"
+      ],
+      "obsoleteReason": "Job Consumers no longer require a service instance.",
+      "measuredContradiction": [
+        "IServiceInstanceConfigurator carries no obsolete marking",
+        "ServiceInstanceConfigurationExtensions.ServiceInstance carries no obsolete marking in either overload",
+        "every ConfigureEndpoints overload taking IServiceInstanceConfigurator is marked obsolete",
+        "every ConfigureServiceEndpoints overload is marked obsolete"
+      ],
+      "callSites": [
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs:50",
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Consumer.cs:630",
+        "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_JobConsumer.cs:31",
+        "tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs:142"
+      ],
+      "whyIDidNotDecide": "the reason names job consumers only, while a service instance also scopes endpoint names for competing instances. Dropping it from the four tests would remove that shape from the suite, and marking the entry point obsolete instead would remove a capability. Which of the two is intended is a scope decision, not a repair."
+    },
+    {
+      "id": "RETRY-ON-A-RAW-CONSUME-CONTEXT-PIPE",
+      "subject": "the retry overloads for a pipe built directly over ConsumeContext",
+      "members": [
+        "RetryConfigurationExtensions.UseRetry(IPipeConfigurator<ConsumeContext>, Action<IRetryConfigurator>)",
+        "RetryConfigurationExtensions.UseRetry<T>(IConsumePipeConfigurator, Action<IRetryConfigurator>)"
+      ],
+      "obsoleteReason": "Use UseMessageRetry instead.",
+      "measuredContradiction": [
+        "no UseMessageRetry overload exists for IPipeConfigurator<ConsumeContext>",
+        "the current non-obsolete UseRetry<T>(IPipeConfigurator<T>) builds RetryPipeSpecification<T>",
+        "the obsolete overloads build ConsumeContextRetryPipeSpecification, which is the consume context aware retry"
+      ],
+      "callSites": [
+        "tests/ViciOne.ServiceBus.Tests/MessageData/ResponseMessageData_Specs.cs:49",
+        "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs:83",
+        "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs:88"
+      ],
+      "whyIDidNotDecide": "the named replacement does not exist for this receiver, and the overload that would bind instead has a different specification, so the migration would silently change what the retry does. Adding a UseMessageRetry for this receiver is a public API addition."
+    },
+    {
+      "id": "PUBLISH-METRIC-NAMES",
+      "subject": "InstrumentationOptions.PublishTotal and InstrumentationOptions.PublishFaultTotal",
+      "members": [
+        "InstrumentationOptions.PublishFaultTotal",
+        "InstrumentationOptions.PublishTotal"
+      ],
+      "obsoleteReason": "(the attribute carries no message)",
+      "measuredContradiction": [
+        "no modern replacement is named anywhere",
+        "nothing in src, tests or benchmarks reads either property, so setting them configures nothing today",
+        "the sibling properties SendTotal and SendFaultTotal are not marked"
+      ],
+      "callSites": [],
+      "whyIDidNotDecide": "directive 0073 section 1 forbids deleting an item whose modern replacement is not unambiguous. That a publish is counted as a send would be my inference, not a measurement."
+    }
+  ],
+  "reportedWithoutADecisionRequest": [
+    {
+      "id": "BATCH-THROUGHPUT-BUDGET",
+      "subject": "ViciOne.ServiceBus.Tests Using_a_batch_consumer.Should_not_deliver_duplicate_messages",
+      "measured": [
+        "it fails identically at 7a8c40cf, the commit the Lead replayed as 1822 of 1822",
+        "the fixture sets itself a two minute budget and sends 15000 messages whose consumer burns 50 million loop iterations per batch",
+        "with the budget raised it passes in 2 minutes 9 seconds with no duplicate and no lost message"
+      ],
+      "conclusion": "a machine speed matter on this host, not a product defect and not caused by this block. Raising the fixture's own budget is a test change I did not make on my own."
+    },
+    {
+      "id": "EVENT-HUB-UNTYPED-PROVIDER",
+      "subject": "EventHubIntegrationExtensions.GetCurrentProducerProvider",
+      "measured": [
+        "it resolves the untyped IScopedConsumeContextProvider while the result is delivered bus bound as Bind<TBus, IEventHubProducerProvider>",
+        "the six other untyped resolutions in the tree wrap the provider per bus and were proven to isolate",
+        "the EventHub MultiBus spec is marked Category(Flaky) and needs an Azure Event Hubs namespace"
+      ],
+      "conclusion": "a candidate, not a finding. It is not decidable locally, and cloud features need the PO's agreement first."
+    }
+  ]
+}
