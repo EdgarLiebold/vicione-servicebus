@@ -53,30 +53,6 @@ namespace ViciOne.ServiceBus.Util
             return stackTrace;
         }
 
-        [Obsolete("This method is obsolete and will be removed in a future version.")]
-        public static IDictionary<string, object> GetExceptionHeaderDictionary(Exception exception)
-        {
-            (Dictionary<string, object>? dictionary, var message) = GetExceptionHeaderDetail(exception);
-
-            return dictionary;
-        }
-
-        [Obsolete("This method is obsolete and will be removed in a future version.")]
-        public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception)
-        {
-            exception = exception.GetBaseException() ?? exception;
-
-            var exceptionMessage = GetMessage(exception);
-
-            return (new Dictionary<string, object>
-            {
-                { MessageHeaders.Reason, "fault" },
-                { MessageHeaders.FaultExceptionType, TypeCache.GetShortName(exception.GetType()) },
-                { MessageHeaders.FaultMessage, exceptionMessage },
-                { MessageHeaders.FaultStackTrace, GetStackTrace(exception) }
-            }, exceptionMessage);
-        }
-
         public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception, ITransportSetHeaderAdapter<object> adapter)
         {
             exception = exception.GetBaseException() ?? exception;

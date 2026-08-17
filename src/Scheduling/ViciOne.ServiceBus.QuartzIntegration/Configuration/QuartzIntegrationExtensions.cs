@@ -13,21 +13,6 @@ namespace ViciOne.ServiceBus
 
     public static class QuartzIntegrationExtensions
     {
-        [Obsolete("Use the new .AddQuartzConsumers() method, combined with AddQuartz(), to configure the Quartz scheduler")]
-        public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, IBusRegistrationContext context, string queueName = "quartz")
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            return configurator.UseInMemoryScheduler(options =>
-            {
-                options.SchedulerFactory = context.GetService<ISchedulerFactory>() ?? new StdSchedulerFactory();
-                options.QueueName = queueName;
-            });
-        }
 
         public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, string queueName = "quartz")
         {

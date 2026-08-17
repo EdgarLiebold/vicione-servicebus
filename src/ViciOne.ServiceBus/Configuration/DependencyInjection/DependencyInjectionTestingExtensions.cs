@@ -322,10 +322,6 @@ namespace ViciOne.ServiceBus
             services.TryAddSingleton<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>();
             services.TryAddSingleton<ISagaStateMachineTestHarness<TStateMachine, T>>(provider =>
                 provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
-            #pragma warning disable CS0618
-            services.TryAddSingleton<IStateMachineSagaTestHarness<T, TStateMachine>>(provider =>
-                #pragma warning restore CS0618
-                provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
         }
 
 

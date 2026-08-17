@@ -10,10 +10,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
 
     public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
         BaseSagaTestHarness<TInstance>,
-        ISagaStateMachineTestHarness<TStateMachine, TInstance>,
-        #pragma warning disable CS0618
-        IStateMachineSagaTestHarness<TInstance, TStateMachine>
-    #pragma warning restore CS0618
+        ISagaStateMachineTestHarness<TStateMachine, TInstance>
         where TInstance : class, SagaStateMachineInstance
         where TStateMachine : SagaStateMachine<TInstance>
     {

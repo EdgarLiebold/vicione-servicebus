@@ -5,11 +5,6 @@ namespace ViciOne.ServiceBus
 
     public interface IServiceBusEndpointConfigurator
     {
-        /// <summary>
-        /// Specify the number of concurrent consumers (separate from prefetch count)
-        /// </summary>
-        [Obsolete("Set ConcurrentMessageLimit instead (which is exactly what setting this property does)")]
-        int MaxConcurrentCalls { set; }
 
         /// <summary>
         /// If specified, the queue/subscription will be automatically removed after no consumer activity within the specific idle period
