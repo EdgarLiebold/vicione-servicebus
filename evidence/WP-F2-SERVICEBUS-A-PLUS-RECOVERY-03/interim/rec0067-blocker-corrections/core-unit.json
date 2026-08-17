@@ -19,14 +19,14 @@
   "timezone": "UTC",
   "exitCode": 0,
   "counters": {
-    "total": 1816,
-    "executed": 1816,
-    "passed": 1816,
+    "total": 1815,
+    "executed": 1815,
+    "passed": 1815,
     "failed": 0,
     "notExecuted": 0
   },
-  "processWallDurationSeconds": 466.665,
-  "trxRunDurationSeconds": 451.202,
+  "processWallDurationSeconds": 457.821,
+  "trxRunDurationSeconds": 445.428,
   "trxProduced": true,
   "notExecuted": [],
   "notExecutedUnlisted": []

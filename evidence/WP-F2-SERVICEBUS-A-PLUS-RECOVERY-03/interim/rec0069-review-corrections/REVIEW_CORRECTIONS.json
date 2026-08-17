@@ -1,0 +1,237 @@
+{
+  "record": "rec0069-review-corrections",
+  "directive": "0068, plus the transport rejection of record 0069",
+  "supersedes": null,
+  "bindingNote": "This record owns its own evidence path. rec0067-blocker-corrections is bound by the accepted record 0067 and its bytes are restored unchanged; correcting a record does not mean rewriting the evidence an earlier record already bound.",
+  "corrections": [
+    {
+      "id": "0068-1",
+      "subject": "the MessagePack ownership gate was bypassable",
+      "cause": "the owner was excluded by simple type name and the instruction stream was scanned byte by byte",
+      "correction": [
+        "the owner is bound by namespace and name together, including its nested types",
+        "the instruction stream is decoded with the runtime opcode table, every operand length skipped correctly",
+        "every token that names the serializer is examined: call, method group and function pointer, field access, type and member tokens",
+        "the claim that the scan could only over-report is removed; the method group case is an under-report"
+      ],
+      "guardedBy": "permanent behavioural self tests: each bypass shape is emitted into a throwaway assembly with PersistedAssemblyBuilder and the rule is run against it, so the rule cannot be narrowed back to a name comparison or to call instructions without turning them red",
+      "selfTests": [
+        {
+          "shape": "direct call from a foreign type",
+          "expected": "reported"
+        },
+        {
+          "shape": "type of the owner simple name in another namespace",
+          "expected": "reported"
+        },
+        {
+          "shape": "method group, ldftn, never called",
+          "expected": "reported"
+        },
+        {
+          "shape": "type token, ldtoken, on its way to reflection",
+          "expected": "reported"
+        },
+        {
+          "shape": "the fully qualified owner itself",
+          "expected": "not reported"
+        },
+        {
+          "shape": "the fully qualified owner with the exclusion lifted",
+          "expected": "reported, control"
+        },
+        {
+          "shape": "an assembly that never names the serializer",
+          "expected": "not reported"
+        }
+      ],
+      "productProbes": [
+        {
+          "mutation": "direct bypass in MessagePackMessageBodySerializer.OverrideMessage",
+          "red": 1
+        },
+        {
+          "mutation": "a second type of the same simple name in another namespace",
+          "red": 1
+        },
+        {
+          "mutation": "a method group bypass",
+          "red": 1
+        },
+        {
+          "control": "without the owner exclusion the product rule reports the owner",
+          "result": "green, reports it"
+        }
+      ],
+      "removed": "the tautological case that asserted the owner constant contains a dot"
+    },
+    {
+      "id": "0068-2",
+      "subject": "the message body census was incomplete",
+      "cause": "thirteen TestCaseData rows were reported as thirteen types; they are value variants and covered eleven types",
+      "census": {
+        "directImplementations": 13,
+        "derivedImplementations": 1,
+        "coveredByTheCoreFixture": [
+          "ArrayMessageBody",
+          "Base64MessageBody",
+          "BytesMessageBody",
+          "EmptyMessageBody",
+          "StringMessageBody",
+          "MemoryMessageBody",
+          "NotSupportedMessageBody",
+          "SystemTextJsonMessageBody<T>",
+          "SystemTextJsonObjectMessageBody",
+          "SystemTextJsonRawMessageBody<T>",
+          "MessagePackMessageBody<T>"
+        ],
+        "coveredInTheirOwnProject": [
+          "ActiveMqMessageBody",
+          "ServiceBusMessageBody",
+          "SqsMessageBody"
+        ],
+        "heldBy": "a case comparing the body types the referenced assemblies declare with the types the fixture constructs"
+      },
+      "probes": [
+        {
+          "mutation": "remove one constructed type from the fixture",
+          "red": 1
+        },
+        {
+          "mutation": "ServiceBusMessageBody reports characters instead of bytes",
+          "red": 3
+        },
+        {
+          "mutation": "SqsMessageBody declares its own Length",
+          "red": 4,
+          "note": "including the inheritance disposition"
+        }
+      ],
+      "documentation": [
+        "a read-only stream is not immutability while the constructor and GetBytes expose mutable arrays",
+        "the stale Base64MessageBody summary claimed pass-through where the byte path decodes",
+        "MessagePackSecurity.UntrustedData is defense in depth against selected attacks, not authentication and not a general bound"
+      ]
+    },
+    {
+      "id": "0068-3",
+      "subject": "bound evidence contradicted the report",
+      "cause": "the previous record measured git diff --check on a range the committed TRX was not yet part of",
+      "correction": [
+        "the generated interim TRX is not committed",
+        "a compact command, counter and per-fixture census record replaces it, in this record's own path",
+        "a range-scoped check is no longer described as repository wide"
+      ],
+      "unaskedFinding": "140 TRX files from earlier records are already tracked; left untouched because they are bound into accepted evidence chains"
+    },
+    {
+      "id": "0068-4",
+      "subject": "the change list count was inconsistent",
+      "cause": "the console count was len(lines) - 20 and the offset did not match the actual header",
+      "correction": "the generator reports the length of the classified row collection",
+      "test": "a case comparing the reported count with both the four status totals and the number of table rows",
+      "probe": {
+        "mutation": "the old line offset back",
+        "red": 1,
+        "message": "6463 != 6464"
+      }
+    },
+    {
+      "id": "0069-transport",
+      "subject": "the record bound an already accepted evidence path with different bytes",
+      "cause": "I rewrote BLOCKER_CORRECTIONS.json in place instead of giving the correction its own record path, and running the update twice appended the three body mutations a second time",
+      "correction": [
+        "rec0067-blocker-corrections is restored byte identically, sha256 820cabd104b0d310aa2eef977f3de453ac2ebd4b326ae2df81b1373742390fe0",
+        "this record owns rec0069-review-corrections and is written in one pass, so no entry can be appended twice",
+        "the focused core number is bound to an exact filter and a per fixture breakdown",
+        "build warnings are reported by kind, package and project instead of a raw occurrence count"
+      ]
+    }
+  ],
+  "focused": {
+    "coreFilter": "--filter \"FullyQualifiedName~Serialization.<fixture>\" for the ten fixtures below, which is the exact command; the previous report used a filter containing FullyQualifiedName~MessagePack and quoted a number the named fixtures could not account for",
+    "coreBreakdown": {
+      "The_length_a_message_body_reports": 84,
+      "Caching_the_interface_formatter_invokers": 8,
+      "The_rule_that_guards_the_option_set": 7,
+      "Cloning_a_message_pack_envelope": 6,
+      "Validating_a_serialization_configuration": 6,
+      "Configuring_the_shared_json_options": 5,
+      "Hardening_the_message_pack_reader": 3,
+      "Writing_the_transport_json": 3,
+      "Configuring_json_serializer_options": 3,
+      "Owning_the_message_pack_option_set": 2
+    },
+    "coreTotal": 127,
+    "activeMqBody": 6,
+    "azureServiceBusBody": 6,
+    "sqsBody": 6,
+    "benchmarkTests": 75,
+    "changeListCases": 5,
+    "policyCases": 81
+  },
+  "cleanBuild": {
+    "incremental": false,
+    "solution": {
+      "exit": 0,
+      "errors": 0
+    },
+    "benchmarkSolution": {
+      "exit": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "warnings": [
+      {
+        "kind": "NU1902",
+        "package": "OpenTelemetry.Exporter.Jaeger",
+        "advisory": "GHSA-38h3-2333-qx47",
+        "projects": [
+          "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+          "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+          "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+          "ViciOne.ServiceBus.RabbitMqTransport.Tests",
+          "ViciOne.ServiceBus.SqlTransport.Tests"
+        ],
+        "occurrencesPerProject": 4,
+        "rawOccurrences": 20,
+        "disposition": "falls with the telemetry block that removes Jaeger"
+      }
+    ],
+    "otherWarningKinds": []
+  },
+  "gates": {
+    "coreUnitCategory": {
+      "result": "PASS",
+      "total": 1822,
+      "executed": 1822,
+      "passed": 1822,
+      "failed": 0,
+      "fixturesExecuted": 700,
+      "focusedFixturesInsideThisRun": 127,
+      "note": "the ten focused fixtures account for 127 cases inside the full run as well, so the focused number is checked against this run and not only against its own"
+    },
+    "policyValidator": {
+      "result": "PASS",
+      "cases": 81
+    },
+    "changeList": {
+      "result": "PASS",
+      "entries": 6467,
+      "cases": 5
+    },
+    "orchestrationValidator": {
+      "result": "PASS",
+      "teams": 1,
+      "records": 69
+    }
+  },
+  "stillOpen": [
+    "external transports",
+    "real Azure profiles",
+    "SQL Server bus outbox",
+    "the ActiveMQ category has still never run successfully"
+  ],
+  "noPush": true,
+  "noTag": true
+}

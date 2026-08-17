@@ -2,12 +2,12 @@
   "command": "python3 tools/ci/run_test_category.py --category core-unit --project tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --evidence-dir <this directory>",
   "result": "PASS required-category core-unit",
   "counters": {
-    "total": 1816,
-    "executed": 1816,
-    "passed": 1816,
+    "total": 1822,
+    "executed": 1822,
+    "passed": 1822,
     "failed": 0
   },
-  "fixturesExecuted": 699,
+  "fixturesExecuted": 700,
   "changedFixtures": {
     "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports": {
       "passed": 84,
@@ -25,7 +25,12 @@
       "other": 0
     },
     "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set": {
-      "passed": 3,
+      "passed": 2,
+      "failed": 0,
+      "other": 0
+    },
+    "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set": {
+      "passed": 7,
       "failed": 0,
       "other": 0
     },
@@ -55,5 +60,6 @@
       "other": 0
     }
   },
-  "note": "The generated TRX is not committed. It is roughly 22 MiB of machine output whose trailing spaces made the whole range fail git diff --check, and the previous record's claim of a clean check was measured on a range the file was not yet part of. The counters file the gate itself reads and this census carry the same numbers."
+  "changedFixturesTotal": 127,
+  "note": "The generated TRX is not committed. The counters file the gate reads and this census carry the same numbers, and the per fixture counts here are the same ten fixtures the focused filter selects, so the focused number can be checked against this run without rerunning anything."
 }

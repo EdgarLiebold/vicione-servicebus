@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     using System.Reflection.Metadata;
     using System.Reflection.Metadata.Ecma335;
     using System.Reflection.PortableExecutable;
+    using System.Threading;
     using MessagePack;
     using NUnit.Framework;
     using ViciOne.ServiceBus.Serialization;
@@ -98,8 +99,8 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     [TestFixture]
     public class Owning_the_message_pack_option_set
     {
-        const string Owner = "ViciOne.ServiceBus.Serialization.InternalMessagePackResolver";
-        const string Serializer = "MessagePack.MessagePackSerializer";
+        internal const string Owner = "ViciOne.ServiceBus.Serialization.InternalMessagePackResolver";
+        internal const string Serializer = "MessagePack.MessagePackSerializer";
 
         [Test]
         public void Should_name_the_serializer_only_in_the_type_that_owns_the_options()
@@ -120,26 +121,22 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             Assert.That(references, Has.Some.StartsWith(Owner + "."));
         }
 
-        [Test]
-        public void Should_bind_the_owner_by_namespace_and_not_by_simple_name()
-        {
-            // The Lead's mutation put a second InternalMessagePackResolver in another namespace and the
-            // simple name exclusion let it through. The exclusion is a full type name, and this states
-            // it so the intent survives a later edit of the constant.
-            Assert.That(Owner, Does.Contain("."));
-            Assert.That(Owner.Split('.')[^1], Is.EqualTo(nameof(InternalMessagePackResolver)));
-        }
-
         /// <summary>
         /// Every method in the assembly whose body carries a token naming the serializer, reported as
         /// "declaring type.method".
         /// </summary>
         static List<string> SerializerReferencesIn(string assemblyPath, bool excludeOwner = true)
         {
+            using var stream = File.OpenRead(assemblyPath);
+
+            return SerializerReferencesIn(stream, excludeOwner);
+        }
+
+        internal static List<string> SerializerReferencesIn(Stream assembly, bool excludeOwner = true)
+        {
             var offenders = new List<string>();
 
-            using var stream = File.OpenRead(assemblyPath);
-            using var reader = new PEReader(stream);
+            using var reader = new PEReader(assembly);
             var metadata = reader.GetMetadataReader();
 
             foreach (var handle in metadata.MethodDefinitions)
@@ -315,6 +312,153 @@ namespace ViciOne.ServiceBus.Tests.Serialization
             var row = MetadataTokens.GetRowNumber(handle);
 
             return row >= 1 && row <= metadata.GetTableRowCount(table);
+        }
+    }
+
+
+    /// <summary>
+    /// The rule that guards the option set is itself guarded, permanently and by behaviour rather than
+    /// by a statement about its own constants.
+    /// <para>
+    /// The previous version asserted that the owner constant contains a dot, which is true of the
+    /// constant and says nothing about the rule. What matters is what the rule does when it meets each
+    /// shape of bypass, so each shape is emitted into a throwaway assembly here and the rule is run
+    /// against it. These cases stay red if the rule is ever narrowed back to a name comparison or to a
+    /// scan that only looks at call instructions.
+    /// </para>
+    /// </summary>
+    [TestFixture]
+    public class The_rule_that_guards_the_option_set
+    {
+        const string Elsewhere = "Some.Other.Namespace";
+
+        [Test]
+        public void Should_report_a_direct_call_from_a_foreign_type()
+        {
+            using var assembly = Emit(Elsewhere, "Sender", DirectCall);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
+                Has.One.EqualTo($"{Elsewhere}.Sender.Run"));
+        }
+
+        [Test]
+        public void Should_report_a_type_of_the_owner_simple_name_in_another_namespace()
+        {
+            // The bypass the review found: the exclusion used to be a simple name, so this walked past
+            // the rule and the assembly reported nothing at all.
+            using var assembly = Emit(Elsewhere, "InternalMessagePackResolver", DirectCall);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
+                Has.One.EqualTo($"{Elsewhere}.InternalMessagePackResolver.Run"));
+        }
+
+        [Test]
+        public void Should_report_a_method_group_that_never_calls()
+        {
+            // ldftn, not call. A scan that only looked for call instructions reported nothing here,
+            // which is the under-reporting I had claimed was impossible.
+            using var assembly = Emit(Elsewhere, "Deferred", MethodGroup);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
+                Has.One.EqualTo($"{Elsewhere}.Deferred.Run"));
+        }
+
+        [Test]
+        public void Should_report_a_type_token_handed_to_reflection()
+        {
+            // ldtoken, the shape of typeof(MessagePackSerializer) on its way into a reflective call.
+            using var assembly = Emit(Elsewhere, "Reflective", TypeToken);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
+                Has.One.EqualTo($"{Elsewhere}.Reflective.Run"));
+        }
+
+        [Test]
+        public void Should_not_report_the_owner_itself()
+        {
+            var owner = Owning_the_message_pack_option_set.Owner;
+            var separator = owner.LastIndexOf('.');
+
+            using var assembly = Emit(owner[..separator], owner[(separator + 1)..], DirectCall);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly), Is.Empty);
+        }
+
+        [Test]
+        public void Should_report_the_owner_when_the_exclusion_is_lifted()
+        {
+            // The control for the case above: without it, an exclusion that swallowed everything would
+            // look exactly like a clean assembly.
+            var owner = Owning_the_message_pack_option_set.Owner;
+            var separator = owner.LastIndexOf('.');
+
+            using var assembly = Emit(owner[..separator], owner[(separator + 1)..], DirectCall);
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly, excludeOwner: false),
+                Has.One.EqualTo(owner + ".Run"));
+        }
+
+        [Test]
+        public void Should_report_nothing_for_an_assembly_that_never_names_the_serializer()
+        {
+            using var assembly = Emit(Elsewhere, "Innocent", il => il.Emit(OpCodes.Ret));
+
+            Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly), Is.Empty);
+        }
+
+        static void DirectCall(ILGenerator il)
+        {
+            var cancellation = il.DeclareLocal(typeof(CancellationToken));
+            il.Emit(OpCodes.Ldloca_S, cancellation);
+            il.Emit(OpCodes.Initobj, typeof(CancellationToken));
+            il.Emit(OpCodes.Ldnull);
+            il.Emit(OpCodes.Ldnull);
+            il.Emit(OpCodes.Ldloc, cancellation);
+            il.Emit(OpCodes.Call, Serialize);
+            il.Emit(OpCodes.Pop);
+            il.Emit(OpCodes.Ret);
+        }
+
+        static void MethodGroup(ILGenerator il)
+        {
+            il.Emit(OpCodes.Ldftn, Serialize);
+            il.Emit(OpCodes.Pop);
+            il.Emit(OpCodes.Ret);
+        }
+
+        static void TypeToken(ILGenerator il)
+        {
+            il.Emit(OpCodes.Ldtoken, typeof(MessagePackSerializer));
+            il.Emit(OpCodes.Pop);
+            il.Emit(OpCodes.Ret);
+        }
+
+        static MethodInfo Serialize => typeof(MessagePackSerializer)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .Single(method => method.Name == nameof(MessagePackSerializer.Serialize)
+                && method.IsGenericMethodDefinition
+                && method.GetParameters().Length == 3
+                && method.GetParameters()[1].ParameterType == typeof(MessagePackSerializerOptions))
+            .MakeGenericMethod(typeof(object));
+
+        static MemoryStream Emit(string typeNamespace, string typeName, Action<ILGenerator> body)
+        {
+            var builder = new PersistedAssemblyBuilder(new AssemblyName("GateProbe"), typeof(object).Assembly);
+
+            var type = builder
+                .DefineDynamicModule("main")
+                .DefineType($"{typeNamespace}.{typeName}", TypeAttributes.Public);
+
+            body(type.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Static, typeof(void),
+                Type.EmptyTypes).GetILGenerator());
+
+            type.CreateType();
+
+            var stream = new MemoryStream();
+            builder.Save(stream);
+            stream.Position = 0;
+
+            return stream;
         }
     }
 }

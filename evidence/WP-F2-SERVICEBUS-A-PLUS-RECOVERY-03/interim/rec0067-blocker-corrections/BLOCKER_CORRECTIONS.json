@@ -1,7 +1,7 @@
 {
   "record": "rec0067-blocker-corrections",
-  "directive": "0066 and 0068",
-  "claim": "The seven bounded blockers from directive 0066 and the four proof and evidence defects from directive 0068 are corrected, each with its own mutation or regression proof.",
+  "directive": "0066",
+  "claim": "The seven bounded blockers from lead directive 0066 are corrected, each with its own mutation or regression proof on the production line the claim names.",
   "blockers": [
     {
       "id": 1,
@@ -48,65 +48,13 @@
         {
           "mutation": "ActiveMqMessageBody.Length back to the reported cached-array form",
           "red": 5
-        },
-        {
-          "mutation": "remove one constructed type from the fixture",
-          "red": 1,
-          "note": "the census case"
-        },
-        {
-          "mutation": "ServiceBusMessageBody reports characters instead of bytes",
-          "red": 3
-        },
-        {
-          "mutation": "SqsMessageBody declares its own Length",
-          "red": 4,
-          "note": "including the inheritance disposition"
-        },
-        {
-          "mutation": "remove one constructed type from the fixture",
-          "red": 1,
-          "note": "the census case"
-        },
-        {
-          "mutation": "ServiceBusMessageBody reports characters instead of bytes",
-          "red": 3
-        },
-        {
-          "mutation": "SqsMessageBody declares its own Length",
-          "red": 4,
-          "note": "including the inheritance disposition"
         }
       ],
       "selfFound": [
         "ActiveMqMessageBody was not in the directive's list and carried the same defect",
         "BytesMessageBody and EmptyMessageBody handed out writable streams",
         "the cross-order case compared two envelopes with different SentTime stamps and was green by accident"
-      ],
-      "census": {
-        "directImplementations": 13,
-        "derivedImplementations": 1,
-        "coveredByTheCoreFixture": [
-          "ArrayMessageBody",
-          "Base64MessageBody",
-          "BytesMessageBody",
-          "EmptyMessageBody",
-          "StringMessageBody",
-          "MemoryMessageBody",
-          "NotSupportedMessageBody",
-          "SystemTextJsonMessageBody<T>",
-          "SystemTextJsonObjectMessageBody",
-          "SystemTextJsonRawMessageBody<T>",
-          "MessagePackMessageBody<T>"
-        ],
-        "coveredInTheirOwnProject": [
-          "ActiveMqMessageBody",
-          "ServiceBusMessageBody",
-          "SqsMessageBody"
-        ],
-        "heldBy": "a case that compares the types the three referenced assemblies declare with the types the fixture actually constructs, so a body type added later without a case turns red",
-        "correction": "the previous record called thirteen TestCaseData rows thirteen implementations; those rows are value variants, and eleven types were covered, not thirteen"
-      }
+      ]
     },
     {
       "id": 2,
@@ -157,29 +105,11 @@
       },
       "probes": [
         {
-          "mutation": "direct bypass in MessagePackMessageBodySerializer.OverrideMessage",
-          "red": 1
-        },
-        {
-          "mutation": "a second type of the same simple name in another namespace",
-          "red": 1
-        },
-        {
-          "mutation": "a method group bypass, ldftn",
-          "red": 1
-        },
-        {
-          "control": "without the owner exclusion the rule reports the owner itself",
-          "result": "green, reports it"
+          "mutation": "the exact bypass from the directive: direct MessagePackSerializer.Deserialize in OverrideMessage",
+          "red": 1,
+          "note": "the six behavioural hardening tests stay green under this mutation, which is the finding the directive reported"
         }
-      ],
-      "gate": {
-        "guarantee": "Within ViciOne.ServiceBus.MessagePack no method outside the type ViciOne.ServiceBus.Serialization.InternalMessagePackResolver and its nested types carries a metadata token naming MessagePack.MessagePackSerializer: not as a call, not as a method group or function pointer, not as a field access, and not as a type or member token handed to reflection.",
-        "ownerBoundBy": "namespace and name together",
-        "instructionStream": "decoded with the runtime opcode table, every operand length skipped correctly",
-        "notCovered": "a call reached through a name computed at run time",
-        "supersedes": "the earlier byte scan, which excluded the owner by simple name and could both over-report and under-report; the method group probe is the under-report case"
-      }
+      ]
     },
     {
       "id": 4,
@@ -251,14 +181,7 @@
         ],
         "conclusion": "the retention happens before and independently of this cache, so no storage design in this module can deliver release while contractless formatters are generated at runtime",
         "provenInstead": "the cache's own table releases a key nobody else holds, with a control case showing the same type is released when the cache never sees it",
-        "belongsTo": "lead architecture decision 2, versioned source generated formatters",
-        "leadDisposition": "directive 0068: in-process unload is not promised by the architecture and is not a cleanup requirement; option (a) accepted for this checkpoint, option (c) remains the target of the dedicated serializer slice",
-        "correctedClaims": [
-          "the ConditionalWeakTable callback is not claimed to run under the table lock",
-          "the operational bound is the finite admitted contract set plus process restart",
-          "the test demanding that the dependency retain a generated type is removed from the required set",
-          "the weak key cases assert only that this table does not hold its own key"
-        ]
+        "belongsTo": "lead architecture decision 2, versioned source generated formatters"
       }
     },
     {
@@ -306,9 +229,8 @@
   "gates": {
     "coreUnitCategory": {
       "result": "PASS",
-      "total": 1816,
-      "executed": 1816,
-      "passed": 1816,
+      "total": 1815,
+      "passed": 1815,
       "failed": 0
     },
     "policyValidator": {
@@ -317,19 +239,14 @@
     },
     "changeList": {
       "result": "PASS",
-      "entries": 6465,
-      "cases": 5
+      "entries": 6460
     },
     "cleanReleaseBuild": {
       "solution": "exit 0",
       "benchmarks": "exit 0",
       "incremental": false
     },
-    "gitDiffCheck": {
-      "scope": "repository wide, no path filter",
-      "b5fc515a..HEAD": "exit 0",
-      "64420681..HEAD": "exit 0"
-    },
+    "gitDiffCheck": "exit 0",
     "runningContainersAfterTheWork": 0
   },
   "brokerProof": {
@@ -348,25 +265,5 @@
     "the ActiveMQ category has still never run successfully"
   ],
   "noPush": true,
-  "noTag": true,
-  "directive0068": {
-    "gate": "see blocker 3",
-    "census": "see blocker 1",
-    "boundEvidence": {
-      "finding": "the range 64420681..b5fc515a fails repository-wide git diff --check with exit 2 and 236 reports, all from the committed core-unit.trx",
-      "cause": "the previous record measured the range before the file was part of it",
-      "correction": "the generated TRX is not committed; the counters file and CORE_UNIT_CENSUS.json carry the numbers",
-      "unaskedFinding": "140 TRX files from earlier records are already tracked in this repository; left untouched because they are bound into accepted evidence chains"
-    },
-    "changeList": {
-      "finding": "the console count came from len(lines) - 20 and was one too high for the actual header",
-      "correction": "the generator reports the length of the classified row collection",
-      "test": "a case comparing the reported count with both the four status totals and the number of table rows",
-      "probe": {
-        "mutation": "the old line offset back",
-        "red": 1,
-        "message": "6463 != 6464"
-      }
-    }
-  }
+  "noTag": true
 }
