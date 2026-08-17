@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 842 |
-| Modified | 4911 |
-| Deleted | 728 |
+| Added | 844 |
+| Modified | 4909 |
+| Deleted | 730 |
 | Renamed | 10 |
 
 | Path | Status | Baseline path |
@@ -33,14 +33,15 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `Directory.Build.props` | Modified | `Directory.Build.props` |
 | `Directory.Packages.props` | Modified | `Directory.Packages.props` |
 | `MODIFICATIONS.md` | Added |  |
+| `MassTransit.sln` | Deleted | `MassTransit.sln` |
+| `MassTransit.sln.DotSettings` | Deleted | `MassTransit.sln.DotSettings` |
 | `NOTICE` | Modified | `NOTICE` |
 | `NuGet.README.md` | Modified | `NuGet.README.md` |
 | `NuGet.config` | Added |  |
 | `README.md` | Modified | `README.md` |
 | `SECURITY.md` | Modified | `SECURITY.md` |
 | `ViciOne.ServiceBus.Benchmarks.slnx` | Added |  |
-| `ViciOne.ServiceBus.sln` | Modified | `MassTransit.sln` |
-| `ViciOne.ServiceBus.sln.DotSettings` | Modified | `MassTransit.sln.DotSettings` |
+| `ViciOne.ServiceBus.slnx` | Added |  |
 | `ViciOne.ServiceBus.snk` | Renamed | `MassTransit.snk` |
 | `benchmarks/ToDo.md` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/ActiveMqOptionSet.cs` | Added |  |
@@ -794,6 +795,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/TEXT_PATH_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/TOOL_TEST_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/generation-result.json` | Added |  |
+| `global.json` | Added |  |
 | `signing.props` | Modified | `signing.props` |
 | `src/Directory.Build.props` | Modified | `src/Directory.Build.props` |
 | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` | Deleted | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` |

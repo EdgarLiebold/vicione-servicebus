@@ -25,13 +25,14 @@ and build automation. The rename changes neither the origin nor any Apache-2.0 o
 
 Requirements:
 
-- .NET SDK 10.0.302, or the compatible repository-approved SDK baseline
+- .NET SDK 10.0.302 exactly. `global.json` pins it with `rollForward: disable`, so a different SDK
+  fails the build instead of silently rolling forward
 - access to the package sources configured for the development environment
 
 ```bash
-dotnet restore ViciOne.ServiceBus.sln
-dotnet build ViciOne.ServiceBus.sln --configuration Release --no-restore
-dotnet test ViciOne.ServiceBus.sln --configuration Release --no-build --no-restore
+dotnet restore ViciOne.ServiceBus.slnx
+dotnet build ViciOne.ServiceBus.slnx --configuration Release --no-restore
+dotnet test ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
 ```
 
 Every runtime, test and benchmark project targets `net10.0`. The Roslyn analyzer is the single

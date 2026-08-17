@@ -42,7 +42,7 @@ import tempfile
 from pathlib import Path
 
 WANTED = ("TargetFrameworks", "TargetFramework", "AssemblyName", "TargetPath")
-SOLUTION = "ViciOne.ServiceBus.sln"
+SOLUTION = "ViciOne.ServiceBus.slnx"
 BUILD = ("dotnet", "build", SOLUTION, "-c", "Release", "--nologo")
 READER = Path(__file__).with_name("api_surface.cs")
 

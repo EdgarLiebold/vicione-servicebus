@@ -17,7 +17,7 @@ identity while retaining upstream attribution and source scope.
 
 The following changed baseline files cannot carry an in-file comment and are
 covered by exact path-bound entries in MODIFICATIONS.md:
-ViciOne.ServiceBus.sln
+ViciOne.ServiceBus.slnx
 ViciOne.ServiceBus.snk
 vicione-servicebus-logo.png
 src/vicione-servicebus-logo.png

@@ -1,0 +1,146 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="ReleaseUnsigned" />
+    <Platform Name="Any CPU" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/.solution/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="NuGet.README.md" />
+    <File Path="README.md" />
+    <File Path="signing.props" />
+  </Folder>
+  <Folder Name="/Analyzers/">
+    <Project Path="src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Interoperability/">
+    <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Persistence/">
+    <Project Path="src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Scheduling/">
+    <Project Path="src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+      <Build Solution="*|x86" Project="false" />
+      <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+      <Build Solution="*|x86" Project="false" />
+      <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/SignalR/">
+    <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Transports/">
+    <Project Path="src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    </Project>
+    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+      <Build Solution="*|x86" Project="false" />
+      <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+    </Project>
+    <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+      <Build Solution="*|x86" Project="false" />
+      <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Transports/Riders/">
+    <Project Path="src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj">
+      <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+  </Project>
+  <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+  </Project>
+  <Project Path="src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    <Build Solution="*|x86" Project="false" />
+    <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+  </Project>
+  <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    <Build Solution="*|x86" Project="false" />
+  </Project>
+  <Project Path="tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Debug" />
+  </Project>
+  <Project Path="tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj">
+    <BuildType Solution="ReleaseUnsigned|*" Project="Release" />
+    <Build Solution="*|x86" Project="false" />
+    <Build Solution="ReleaseUnsigned|Any CPU" Project="false" />
+  </Project>
+</Solution>

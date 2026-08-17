@@ -12,7 +12,7 @@ The following changed baseline files cannot carry a syntax-valid in-file comment
 
 | Target path | Reason and modification |
 |---|---|
-| `ViciOne.ServiceBus.sln` | Visual Studio solution grammar has no portable comment position; solution and project paths renamed. |
+| `ViciOne.ServiceBus.slnx` | Solution file; paths renamed, and the solution migrated to the SDK's XML solution format, which this repository does not annotate per file because CHANGELIST.md carries the section 4(b) record. |
 | `ViciOne.ServiceBus.snk` | Binary strong-name key; path renamed, bytes retained. |
 | `vicione-servicebus-logo.png` | Binary PNG; replaced with the ViciOne.ServiceBus product asset. |
 | `src/vicione-servicebus-logo.png` | Binary PNG packaging copy; replaced with the same product asset. |

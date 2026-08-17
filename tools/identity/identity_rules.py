@@ -57,7 +57,7 @@ FORMER_TRADES_TYPE = "".join(("TradesBooked", "M", "T"))
 
 COMMENTLESS_OR_BINARY_EXCEPTIONS = frozenset(
     {
-        "ViciOne.ServiceBus.sln",
+        "ViciOne.ServiceBus.slnx",
         "ViciOne.ServiceBus.snk",
         "vicione-servicebus-logo.png",
         "src/vicione-servicebus-logo.png",
