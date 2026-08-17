@@ -114,7 +114,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
         }
 
         [Test]
-        [Explicit]
         public async Task Should_start_with_delay_successfully()
         {
             await using var provider = CreateServiceProvider(x =>

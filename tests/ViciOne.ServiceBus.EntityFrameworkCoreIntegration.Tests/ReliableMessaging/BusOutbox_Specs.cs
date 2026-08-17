@@ -410,7 +410,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
         }
 
         [Test]
-        [Explicit]
         public async Task Fill_up_the_outbox()
         {
             await using var provider = new ServiceCollection()
@@ -482,7 +481,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
         }
 
         [Test]
-        [Explicit]
         public async Task Should_support_delayed_message_scheduler()
         {
             await using var provider = new ServiceCollection()
@@ -531,7 +529,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
             Assert.That(await consumerHarness.Consumed.Any<PingMessage>(), Is.True);
         }
 
-        [Explicit]
         [Test]
         public async Task Should_work_without_starting_the_bus()
         {
