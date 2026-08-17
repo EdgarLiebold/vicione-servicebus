@@ -17,6 +17,20 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
                 .AddSource("ViciOne.ServiceBus")
                 .AddSource("UnitTests")
+                .AddJaegerExporter(o =>
+                {
+                    o.AgentHost = "localhost";
+                    o.AgentPort = 6831;
+                    o.MaxPayloadSizeInBytes = 4096;
+                    o.ExportProcessorType = ExportProcessorType.Batch;
+                    o.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
+                    {
+                        MaxQueueSize = 2048,
+                        ScheduledDelayMilliseconds = 5000,
+                        ExporterTimeoutMilliseconds = 30000,
+                        MaxExportBatchSize = 512,
+                    };
+                })
                 .Build();
         }
 
