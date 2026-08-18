@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_EVIDENCE_CORRECTIONS",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "revision": "0008",
+  "correctsRevision": "0007",
+  "correctsRecord": "0080",
+  "statement": "Older evidence stays as it was written and is not rewritten. This revision names what in it was wrong, what was measured instead, and where that measurement lives.",
+  "corrections": [
+    {
+      "id": "COR-0008-001",
+      "wrongStatement": "Both solutions build at the real SDK warning level.",
+      "wrongWhere": "BUILD_DEFAULTS of revision 0007, and record 0080.",
+      "whyItWasWrong": "The cap was removed from Directory.Build.props at the repository root and measured there. tests/Directory.Build.props set WarningLevel to 4 as well, so every test project still evaluated to 4, and the netstandard2.0 analyzer project evaluated to an empty value because the SDK defaults a level only for net5.0 and later. One measurement was turned into a statement about all projects.",
+      "measuredInstead": "Every one of the forty tracked projects is evaluated separately in Debug and in Release. All of them report WarningLevel 10 and LangVersion 14.0.",
+      "evidence": "BUILD_DEFAULTS.json of this revision."
+    },
+    {
+      "id": "COR-0008-002",
+      "wrongStatement": "The SQL transport category is 97 of 97.",
+      "wrongWhere": "Record 0080.",
+      "whyItWasWrong": "PACKAGE_GROUPS recorded 103 cases and 97 passed for that project. Six cases were excluded, and reporting the passed count as the whole set hid them.",
+      "measuredInstead": "The six cases are closed and the category is 101 of 101 with nothing excluded. Four measured throughput and asserted nothing; the measurement they stood for is in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so the cases are removed. The other two are the delivery count limit on both engines, which now sets the limit, reads it back from the queue the migrator created, and asserts that a delivery at the limit is neither delivered again nor left in the queue.",
+      "evidence": "SQL_CATEGORY.json of this revision and build/test-infrastructure/not-executed-inventory.json."
+    },
+    {
+      "id": "COR-0008-003",
+      "wrongStatement": "No NewId benchmark exists in the benchmark project.",
+      "wrongWhere": "Record 0080 and the abstractions comment of the not-executed inventory.",
+      "whyItWasWrong": "The search covered benchmarks/ViciOne.ServiceBus.Benchmark only. The NewId benchmarks are in benchmarks/ViciOne.ServiceBus.BenchmarkConsole, where the assembly wide BenchmarkSwitcher finds them.",
+      "measuredInstead": "They exist and are named after what they measure: NewIdGenerationBenchmarks and NewIdConversionBenchmarks. No duplicate benchmark was created.",
+      "evidence": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/NewIdGenerationBenchmarks.cs and NewIdConversionBenchmarks.cs, and the corrected inventory comment."
+    },
+    {
+      "id": "COR-0008-004",
+      "wrongStatement": "RS1038 and the NUnit cache case are open architecture or product owner decisions.",
+      "wrongWhere": "Record 0080, points 1 and 2 of its open list.",
+      "whyItWasWrong": "The effective slice revision 0008, REQ-CLEAN-005, prescribes the target construction for both. Two decision papers were written for questions that were already answered.",
+      "measuredInstead": "Both are built as the slice prescribes: separate analyzer, code fix and pack projects with zero RS1038 and no suppression, and the public effect proof instead of the exact end counts in the cache case.",
+      "evidence": "Commits 920a11bc and a1b51a36."
+    },
+    {
+      "id": "COR-0008-005",
+      "wrongStatement": "A started default bus does not reach the network at all, and XML and Protobuf do not exist here.",
+      "wrongWhere": "Record 0080 and the comments of the two fixtures.",
+      "whyItWasWrong": "The DiagnosticListener observes outgoing HttpClient requests on the paths the fixture walks, not every conceivable socket. XML and Protobuf are not message body serializers of their own, but they are payload shapes the retained serializers carry, and XmlPayload_Specs and ProtoBufAsJson_Specs cover them.",
+      "measuredInstead": "Both fixtures name their measurement scope, including what lies outside it.",
+      "evidence": "Commit 5362ed52."
+    }
+  ]
+}
