@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests.PgSql;
+namespace ViciOne.ServiceBus.SqlTransport.Tests.PgSql;
 
 using System.Threading.Tasks;
 using NUnit.Framework;

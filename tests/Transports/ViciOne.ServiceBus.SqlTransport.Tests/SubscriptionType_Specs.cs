@@ -2,7 +2,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Tests;
 
 using System;
 using System.Threading.Tasks;
-using DbTransport.Tests;
+using SqlTransport.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Testing;

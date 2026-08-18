@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1146 |
-| Modified | 4507 |
-| Deleted | 1140 |
+| Added | 1148 |
+| Modified | 4508 |
+| Deleted | 1139 |
 | Renamed | 3 |
 
 | Path | Status | Baseline path |
@@ -137,6 +137,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/SqlOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/packages.lock.json` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Diagnostics/README.md` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj` | Added |  |
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
@@ -5307,7 +5309,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LazyMessageType_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LazyMessageType_Specs.cs` |
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LockTimeout_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/LockTimeout_Specs.cs` |
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/ManyReceiveEndpoints_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/ManyReceiveEndpoints_Specs.cs` |
-| `tests/MassTransit.Azure.ServiceBus.Core.Tests/MassTransit.Azure.ServiceBus.Core.Tests.csproj` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MassTransit.Azure.ServiceBus.Core.Tests.csproj` |
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MessageData_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MessageData_Specs.cs` |
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/PublishDynamicType_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/PublishDynamicType_Specs.cs` |
 | `tests/MassTransit.Azure.ServiceBus.Core.Tests/PublishFaultCache_Specs.cs` | Deleted | `tests/MassTransit.Azure.ServiceBus.Core.Tests/PublishFaultCache_Specs.cs` |
@@ -6264,6 +6265,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Modified | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MassTransit.Azure.ServiceBus.Core.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/HubLifeTimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |

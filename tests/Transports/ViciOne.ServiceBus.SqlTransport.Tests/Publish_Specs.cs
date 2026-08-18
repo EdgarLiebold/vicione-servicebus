@@ -1,6 +1,7 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests;
+namespace ViciOne.ServiceBus.SqlTransport.Tests;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,19 +79,30 @@ public class Using_publish<T>
 public class Publishing_a_unsubscribed_message_type<T>
     where T : IDatabaseTestConfiguration, new()
 {
-    [Test]
     /// <summary>
-    /// A message type nobody subscribes to reaches no queue. The case published one and asserted
-    /// nothing at all, so a delivery into a queue, into the dead letter queue, or nothing happening
-    /// would all have passed it. The two negative assertions are read from the transport's own tables.
+    /// Publishing a message type nobody subscribes to leaves no delivery and no message row.
     /// <para>
-    /// Measured while writing this: the row in the message table itself does remain after the publish,
-    /// within the inactivity window this case waits. Whether the transport promises to remove it, and
-    /// on which sweep, is a product question, so this case asserts what it can prove - that nothing was
-    /// delivered anywhere - and does not claim the stronger half of its old name.
+    /// Both dialects promise exactly this in their publish procedure: it counts the deliveries it
+    /// created and, when that count is zero, deletes the message row it had just written. The case
+    /// therefore asks about that one row and its deliveries, chosen by an identifier the caller sets,
+    /// rather than about a count over a table that every fixture ever run against this database shares.
+    /// </para>
+    /// <para>
+    /// The subscribed publish is the control, and it is not decoration. Without it, an absent row would
+    /// also be what a publish that never reached the transport leaves behind, and the case would pass
+    /// for the wrong reason. It proves in the same run, against the same endpoint, that a publish does
+    /// arrive and does leave a delivery in this queue.
+    /// </para>
+    /// <para>
+    /// The unsubscribed contract belongs to this fixture and to nothing else. That is not tidiness: the
+    /// transport database outlives a fixture, and so do its queues and their subscriptions. Publishing
+    /// the shared TestMessage contract here landed a delivery in a queue named testmessage that another
+    /// fixture had left behind in an earlier run, so the type was subscribed and the case was measuring
+    /// the opposite of its own name.
     /// </para>
     /// </summary>
-    public async Task Should_not_leave_orphaned_messages()
+    [Test]
+    public async Task Should_leave_neither_a_delivery_nor_a_message_row()
     {
         var dialect = TransportInspection.DialectOf(_configuration);
         var queue = $"orphan-input-queue-{NewId.Next().ToString("N")}";
@@ -98,6 +110,7 @@ public class Publishing_a_unsubscribed_message_type<T>
         await using var provider = _configuration.Create()
             .AddViciOneServiceBusTestHarness(x =>
             {
+                x.AddConsumer<SubscribedMessageConsumer>();
                 x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(3));
 
                 _configuration.Configure(x, (context, cfg) =>
@@ -105,6 +118,8 @@ public class Publishing_a_unsubscribed_message_type<T>
                     cfg.ReceiveEndpoint(queue, e =>
                     {
                         e.PrefetchCount = 30;
+
+                        e.ConfigureConsumer<SubscribedMessageConsumer>(context);
                     });
                 });
             })
@@ -114,11 +129,17 @@ public class Publishing_a_unsubscribed_message_type<T>
 
         await harness.Start();
 
-        long before;
-        await using (var connection = await provider.OpenTransport(dialect))
-            before = await connection.MessageCount(dialect, TransportSchema.Name);
+        var subscribed = NewId.NextGuid();
+        var unsubscribed = NewId.NextGuid();
 
-        await harness.Bus.Publish(new TestMessage("nobody subscribes to this"), harness.CancellationToken);
+        await harness.Bus.Publish(new SubscribedMessage("somebody subscribes to this"),
+            context => context.MessageId = subscribed, harness.CancellationToken);
+
+        Assert.That(await harness.Consumed.Any<SubscribedMessage>(), Is.True,
+            "the control message was never consumed, so this run cannot say what a publish does");
+
+        await harness.Bus.Publish(new UnsubscribedMessage("nobody subscribes to this"),
+            context => context.MessageId = unsubscribed, harness.CancellationToken);
 
         // Inactivity, not a fixed wait: the endpoint reports that nothing is arriving any more.
         await harness.InactivityTask;
@@ -127,14 +148,21 @@ public class Publishing_a_unsubscribed_message_type<T>
         {
             var queued = await connection.DeliveryCount(dialect, TransportSchema.Name, queue, 1);
             var deadLettered = await connection.DeliveryCount(dialect, TransportSchema.Name, queue, 3);
-            var after = await connection.MessageCount(dialect, TransportSchema.Name);
+            var errored = await connection.DeliveryCount(dialect, TransportSchema.Name, queue, 2);
+
+            var rowExists = await connection.MessageExists(dialect, TransportSchema.Name, unsubscribed);
+            var deliveries = await connection.DeliveryCountForMessage(dialect, TransportSchema.Name, unsubscribed);
+            IReadOnlyList<string> holders = await connection.QueuesHoldingMessage(dialect, TransportSchema.Name, unsubscribed);
 
             Assert.Multiple(() =>
             {
+                Assert.That(rowExists, Is.False,
+                    "the publish created no delivery, so its message row had to be removed and it is still there");
+                Assert.That(deliveries, Is.Zero,
+                    $"the unsubscribed message has a delivery in: {string.Join(", ", holders)}");
                 Assert.That(queued, Is.Zero, "the unsubscribed message was delivered into the queue anyway");
+                Assert.That(errored, Is.Zero, "the unsubscribed message ended up in the error queue");
                 Assert.That(deadLettered, Is.Zero, "the unsubscribed message ended up in the dead letter queue");
-                Assert.That(after, Is.GreaterThanOrEqualTo(before),
-                    "the message table shrank, which this case does not drive and cannot explain");
             });
         }
 
@@ -146,5 +174,26 @@ public class Publishing_a_unsubscribed_message_type<T>
     public Publishing_a_unsubscribed_message_type()
     {
         _configuration = new T();
+    }
+
+
+    /// <summary>The control contract. Something consumes it, so publishing it must leave a delivery.</summary>
+    public record SubscribedMessage(string Value);
+
+
+    /// <summary>
+    /// The subject. Nothing in this repository consumes it, and no other fixture publishes it, so no
+    /// queue left behind in the shared transport database can carry a subscription for it.
+    /// </summary>
+    public record UnsubscribedMessage(string Value);
+
+
+    class SubscribedMessageConsumer :
+        IConsumer<SubscribedMessage>
+    {
+        public Task Consume(ConsumeContext<SubscribedMessage> context)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

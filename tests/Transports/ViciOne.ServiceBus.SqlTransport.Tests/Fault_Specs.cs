@@ -1,7 +1,8 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests
+namespace ViciOne.ServiceBus.SqlTransport.Tests
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using FaultMessages;
     using Microsoft.Extensions.DependencyInjection;
@@ -67,9 +68,21 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             await harness.Stop();
         }
 
+        /// <summary>
+        /// A consumer that throws produces a fault and its message moves into the error queue of the
+        /// endpoint it was delivered to.
+        /// <para>
+        /// The endpoint is named by this case, so both halves are read from that one queue: the queue
+        /// itself must end up empty, and its error queue must hold exactly the one delivery. Counting
+        /// error deliveries across every queue of the transport would be satisfied by any endpoint of
+        /// any fixture erroring at the same moment, which is not what this case is about.
+        /// </para>
+        /// </summary>
         [Test]
         public async Task Should_publish_fault_and_move_to_the_error_queue()
         {
+            var queue = $"fault-input-queue-{NewId.Next().ToString("N")}";
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
@@ -77,10 +90,14 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
                     x.AddHandler(async (ConsumeContext<Fault<MemberUpdateCommand>> _) =>
                     {
                     });
-                    x.AddHandler(async (ConsumeContext<UpdateMemberAddress> _) => throw new ApplicationException("I meant to do that!"));
 
                     x.UsingPostgres((context, cfg) =>
                     {
+                        cfg.ReceiveEndpoint(queue, e =>
+                        {
+                            e.Handler<UpdateMemberAddress>(_ => throw new ApplicationException("I meant to do that!"));
+                        });
+
                         cfg.ConfigureEndpoints(context);
                     });
                 })
@@ -89,11 +106,6 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             var harness = provider.GetTestHarness();
 
             await harness.Start();
-
-            long errorQueuedBefore;
-            await using (var connection = await provider.OpenTransport(TransportDialect.Postgres))
-                errorQueuedBefore = await connection.DeliveryCountByQueueType(TransportDialect.Postgres,
-                    TransportSchema.Name, ErrorQueueType);
 
             await harness.Bus.Publish<UpdateMemberAddress>(new
             {
@@ -106,16 +118,19 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.InactivityTask;
 
-            // The fault says the consumer threw. The move says the message is no longer in the queue it
-            // came from, which is the second half of the name and was never asserted. The endpoints are
-            // named by the formatter here, so the error queues are counted as a set.
             await using (var connection = await provider.OpenTransport(TransportDialect.Postgres))
             {
-                var errorQueuedAfter = await connection.DeliveryCountByQueueType(TransportDialect.Postgres,
-                    TransportSchema.Name, ErrorQueueType);
+                var errored = await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name,
+                    queue, ErrorQueueType);
+                var remaining = await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name,
+                    queue, 1);
 
-                Assert.That(errorQueuedAfter - errorQueuedBefore, Is.EqualTo(1),
-                    "the faulted message did not move into an error queue");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(errored, Is.EqualTo(1),
+                        "the faulted message did not move into the error queue of the endpoint it was delivered to");
+                    Assert.That(remaining, Is.Zero, "the faulted message is still in the queue it came from");
+                });
             }
 
             await harness.Stop();
@@ -144,7 +159,11 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             // When each attempt entered the consumer. The fault alone says the schedule ran out; it
             // says nothing about how often it delivered or how far apart, which is what the
             // configuration above actually promises.
-            var attempts = new ConcurrentQueue<DateTime>();
+            // Monotonic, because this case asserts a distance between two moments rather than a moment.
+            // A wall clock steps when the machine synchronises its time, and a step backwards across a
+            // redelivery interval would report a redelivery that arrived sooner than it was told to.
+            var elapsed = Stopwatch.StartNew();
+            var attempts = new ConcurrentQueue<TimeSpan>();
 
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
@@ -156,7 +175,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
                     });
                     x.AddHandler((ConsumeContext<UpdateMemberAddress> _) =>
                     {
-                        attempts.Enqueue(DateTime.UtcNow);
+                        attempts.Enqueue(elapsed.Elapsed);
 
                         throw new ApplicationException("I meant to do that!");
                     });
@@ -188,7 +207,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.InactivityTask;
 
-            DateTime[] delivered = attempts.ToArray();
+            TimeSpan[] delivered = attempts.ToArray();
 
             Assert.Multiple(() =>
             {

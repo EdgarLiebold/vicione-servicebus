@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests;
+namespace ViciOne.ServiceBus.SqlTransport.Tests;
 
 using System;
 using EntityFrameworkCoreIntegration;

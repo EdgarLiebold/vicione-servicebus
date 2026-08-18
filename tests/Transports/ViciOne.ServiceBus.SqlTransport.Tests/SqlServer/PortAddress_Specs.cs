@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer;
+namespace ViciOne.ServiceBus.SqlTransport.Tests.SqlServer;
 
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;

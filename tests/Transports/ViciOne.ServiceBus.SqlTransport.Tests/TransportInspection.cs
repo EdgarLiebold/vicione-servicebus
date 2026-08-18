@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.DbTransport.Tests;
+namespace ViciOne.ServiceBus.SqlTransport.Tests;
 
 using System;
 using System.Collections.Generic;
@@ -179,29 +179,59 @@ public static class TransportInspection
     }
 
     /// <summary>
-    /// How many deliveries sit in queues of that type, across every queue name. A fixture that lets the
-    /// transport name its endpoints cannot ask for one queue, so it compares this before and after.
+    /// Whether the transport still holds the one message that carries this identifier.
+    /// <para>
+    /// The publish procedure of both dialects removes the message row it just wrote when the publish
+    /// produced no delivery at all. A count over the whole table cannot see that: the table is shared
+    /// by every fixture that ever ran against this database, and one row appearing or disappearing
+    /// among them says nothing about the row this case published. The message id is chosen by the
+    /// caller, so this asks about exactly that row.
+    /// </para>
     /// </summary>
-    public static Task<long> DeliveryCountByQueueType(this DbConnection connection, TransportDialect dialect,
-        string schema, int queueType)
+    public static async Task<bool> MessageExists(this DbConnection connection, TransportDialect dialect, string schema,
+        Guid messageId)
     {
         var text = dialect == TransportDialect.SqlServer
-            ? $"SELECT COUNT(*) FROM {schema}.MessageDelivery d JOIN {schema}.Queue q ON q.Id = d.QueueId "
-              + "WHERE q.Type = @type"
-            : $"SELECT COUNT(*) FROM \"{schema}\".message_delivery d JOIN \"{schema}\".queue q ON q.id = d.queue_id "
-              + "WHERE q.type = @type";
+            ? $"SELECT COUNT(*) FROM {schema}.Message WHERE MessageId = @messageId"
+            : $"SELECT COUNT(*) FROM \"{schema}\".message WHERE message_id = @messageId";
 
-        return connection.Scalar(text, ("type", queueType));
+        return await connection.Scalar(text, ("messageId", messageId)) > 0;
     }
 
-    /// <summary>How many messages the transport holds in total, across every queue.</summary>
-    public static Task<long> MessageCount(this DbConnection connection, TransportDialect dialect, string schema)
+    /// <summary>
+    /// How many deliveries exist for the one message that carries this identifier, in any queue and of
+    /// any queue type. Zero and a missing message row are different statements, and this case needs
+    /// both: a delivery could outlive its message row, and a row could survive with no delivery.
+    /// </summary>
+    public static Task<long> DeliveryCountForMessage(this DbConnection connection, TransportDialect dialect,
+        string schema, Guid messageId)
     {
         var text = dialect == TransportDialect.SqlServer
-            ? $"SELECT COUNT(*) FROM {schema}.Message"
-            : $"SELECT COUNT(*) FROM \"{schema}\".message";
+            ? $"SELECT COUNT(*) FROM {schema}.MessageDelivery d JOIN {schema}.Message m "
+              + "ON m.TransportMessageId = d.TransportMessageId WHERE m.MessageId = @messageId"
+            : $"SELECT COUNT(*) FROM \"{schema}\".message_delivery d JOIN \"{schema}\".message m "
+              + "ON m.transport_message_id = d.transport_message_id WHERE m.message_id = @messageId";
 
-        return connection.Scalar(text);
+        return connection.Scalar(text, ("messageId", messageId));
+    }
+
+    /// <summary>
+    /// Every queue that holds a delivery of the one message carrying this identifier, as "name/type".
+    /// Used where a count of zero is not the whole answer: if a delivery exists, the case has to be able
+    /// to say where, instead of leaving the reader to guess which endpoint subscribed.
+    /// </summary>
+    public static Task<IReadOnlyList<string>> QueuesHoldingMessage(this DbConnection connection,
+        TransportDialect dialect, string schema, Guid messageId)
+    {
+        var text = dialect == TransportDialect.SqlServer
+            ? $"SELECT CONCAT(q.Name, '/', q.Type) FROM {schema}.MessageDelivery d "
+              + $"JOIN {schema}.Queue q ON q.Id = d.QueueId JOIN {schema}.Message m "
+              + "ON m.TransportMessageId = d.TransportMessageId WHERE m.MessageId = @messageId"
+            : $"SELECT q.name || '/' || q.type FROM \"{schema}\".message_delivery d "
+              + $"JOIN \"{schema}\".queue q ON q.id = d.queue_id JOIN \"{schema}\".message m "
+              + "ON m.transport_message_id = d.transport_message_id WHERE m.message_id = @messageId";
+
+        return connection.Strings(text, ("messageId", messageId));
     }
 
     static async Task<IReadOnlyList<string>> Strings(this DbConnection connection, string text, params (string Name, object Value)[] parameters)
