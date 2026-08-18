@@ -295,22 +295,22 @@ namespace ViciOne.ServiceBus.Tests
         /// <summary>
         /// Every message that was sent is delivered to the batch consumer exactly once.
         /// <para>
-        /// The assurance used to be that a set of duplicates stayed empty, which is only half of it:
-        /// a message the transport dropped never enters that set either, so a loss passed the
-        /// assertion and only showed up as the fixture running into its own timeout. The identities
-        /// are chosen by the sender now and compared as sets, so a duplicate and a loss each fail on
-        /// their own sentence.
+        /// The assurance used to be that a set of duplicates stayed empty, which is only half of it: a
+        /// message the transport dropped never enters that set either, so a loss passed the assertion and
+        /// only showed up as the fixture running into its own timeout. The identities are chosen by the
+        /// sender now and compared as sets, so a duplicate and a loss each fail on their own sentence.
         /// </para>
         /// <para>
-        /// The consumer used to spend fifty million loop iterations per batch to be slow enough for
-        /// batches to overlap. That is machine time, not an assurance, and it is what made this
-        /// fixture take over two minutes here. A bounded yield gives the same interleaving of
-        /// continuations without burning a core for it, and the timeout is down from two minutes to
-        /// thirty seconds, which is the measurable part of that change.
+        /// The delivery has to be exactly once while batches actually overlap, otherwise the case only
+        /// describes a consumer that runs alone. Overlap is stated rather than provoked: each invocation
+        /// announces that it is inside the consumer and waits until a second one has done the same, and
+        /// the fixture asserts afterwards that this happened. The fifty million loop iterations and the
+        /// thirty two yields that stood here were both attempts to make overlap likely; neither could
+        /// report whether it occurred.
         /// </para>
         /// </summary>
         [Test]
-        public async Task Should_not_deliver_duplicate_messages()
+        public async Task Should_deliver_each_message_exactly_once()
         {
             Guid[] sent = Enumerable.Range(0, Count).Select(_ => NewId.NextGuid()).ToArray();
 
@@ -318,9 +318,9 @@ namespace ViciOne.ServiceBus.Tests
                 await InputQueueSendEndpoint.Send(new DoWork(), Pipe.Execute<SendContext>(context => context.MessageId = messageId));
 
             // Completion alone cannot see a loss: it is raised once every identity has arrived, so a
-            // message the transport dropped would leave this waiting until the fixture timed out and
-            // the assertions below would never run. Inactivity is the second way out, and it is what
-            // turns a loss into a failed sentence instead of a timeout.
+            // message the transport dropped would leave this waiting until the fixture timed out and the
+            // assertions below would never run. Inactivity is the second way out, and it is what turns a
+            // loss into a failed sentence instead of a timeout.
             await Task.WhenAny(_completed.Task, InactivityTask);
 
             Guid[] received;
@@ -333,6 +333,10 @@ namespace ViciOne.ServiceBus.Tests
 
             Assert.Multiple(() =>
             {
+                Assert.That(_overlap.Observed, Is.True,
+                    "no two batch consumer invocations were inside the consumer at the same time, so an exactly once delivery under overlap was never exercised");
+                Assert.That(_overlap.HighWaterMark, Is.GreaterThanOrEqualTo(RequiredOverlap),
+                    "fewer invocations overlapped than the case requires");
                 Assert.That(duplicates, Is.Empty, "the batch consumer saw a message identity more than once");
                 Assert.That(received, Is.EquivalentTo(sent), "the delivered identities are not exactly the sent ones");
             });
@@ -349,19 +353,40 @@ namespace ViciOne.ServiceBus.Tests
 
         readonly HashSet<Guid> _alreadyReceivedMessages = new HashSet<Guid>();
         readonly HashSet<Guid> _duplicateMessages = new HashSet<Guid>();
+        readonly OverlapBarrier _overlap = new OverlapBarrier(RequiredOverlap, TimeSpan.FromSeconds(10));
         TaskCompletionSource<int> _completed;
-        const int Count = 15000;
+
+        /// <summary>How many invocations have to be inside the consumer together before any is released.</summary>
+        const int RequiredOverlap = 2;
+
+        /// <summary>Messages per batch.</summary>
+        const int BatchSize = 100;
+
+        /// <summary>How many batches the endpoint may deliver at the same time.</summary>
+        const int ConcurrentBatches = 4;
+
+        /// <summary>
+        /// Enough messages for several batches to be in flight at once, and no more. Fifteen thousand
+        /// stood here and proved nothing these ten batches do not.
+        /// </summary>
+        const int Count = 10 * BatchSize;
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
         {
             _completed = GetTask<int>();
 
+            // A message stays in flight until the batch it belongs to has been consumed, so the endpoint
+            // needs room for every message of every batch that may overlap. With fewer slots than that
+            // the configuration itself forbids the overlap this case is about.
+            configurator.ConcurrentMessageLimit = BatchSize * ConcurrentBatches;
+
             configurator.Batch<DoWork>(x =>
             {
-                x.MessageLimit = 100;
+                x.MessageLimit = BatchSize;
                 x.TimeLimit = TimeSpan.FromMilliseconds(50);
+                x.ConcurrencyLimit = ConcurrentBatches;
 
-                x.Consumer(() => new DoWorkConsumer(_alreadyReceivedMessages, _duplicateMessages, _completed));
+                x.Consumer(() => new DoWorkConsumer(_alreadyReceivedMessages, _duplicateMessages, _completed, _overlap));
             });
         }
 
@@ -371,22 +396,87 @@ namespace ViciOne.ServiceBus.Tests
         }
 
 
+        /// <summary>
+        /// Holds every arrival until the required number of them is inside, then releases all of them and
+        /// stays open. Reached is completed by the arrivals themselves, so the release is an observation
+        /// rather than a guess. The bound is what makes the barrier safe: an invocation that never gets
+        /// company leaves anyway, and the fixture then fails on the assertion that no overlap happened
+        /// instead of holding the endpoint for the rest of the run.
+        /// </summary>
+        class OverlapBarrier
+        {
+            readonly CancellationTokenSource _abandon;
+            readonly int _required;
+            readonly TaskCompletionSource<bool> _reached = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            int _highWaterMark;
+            int _inside;
+
+            public OverlapBarrier(int required, TimeSpan bound)
+            {
+                _required = required;
+                _abandon = new CancellationTokenSource(bound);
+            }
+
+            public bool Observed => _reached.Task.IsCompletedSuccessfully;
+
+            public int HighWaterMark => Volatile.Read(ref _highWaterMark);
+
+            public async Task Pass(CancellationToken cancellationToken)
+            {
+                var inside = Interlocked.Increment(ref _inside);
+
+                int seen;
+                do
+                {
+                    seen = Volatile.Read(ref _highWaterMark);
+                }
+                while (inside > seen && Interlocked.CompareExchange(ref _highWaterMark, inside, seen) != seen);
+
+                if (inside >= _required)
+                    _reached.TrySetResult(true);
+
+                using var abandon = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _abandon.Token);
+
+                try
+                {
+                    await _reached.Task.WaitAsync(abandon.Token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    // No company arrived within the bound, or the fixture is shutting down. Leaving the
+                    // consumer is the only useful thing left; the assertion on Observed reports it.
+                }
+                finally
+                {
+                    Interlocked.Decrement(ref _inside);
+                }
+            }
+        }
+
+
         class DoWorkConsumer :
             IConsumer<Batch<DoWork>>
         {
             readonly HashSet<Guid> _alreadyReceivedMessages;
             readonly TaskCompletionSource<int> _completed;
             readonly HashSet<Guid> _duplicateMessages;
+            readonly OverlapBarrier _overlap;
 
-            public DoWorkConsumer(HashSet<Guid> alreadyReceivedMessages, HashSet<Guid> duplicateMessages, TaskCompletionSource<int> completed)
+            public DoWorkConsumer(HashSet<Guid> alreadyReceivedMessages, HashSet<Guid> duplicateMessages, TaskCompletionSource<int> completed,
+                OverlapBarrier overlap)
             {
                 _alreadyReceivedMessages = alreadyReceivedMessages;
                 _duplicateMessages = duplicateMessages;
                 _completed = completed;
+                _overlap = overlap;
             }
 
             public async Task Consume(ConsumeContext<Batch<DoWork>> context)
             {
+                // Held here until another invocation is inside as well, so the recording below happens
+                // while batches genuinely overlap rather than one after the other.
+                await _overlap.Pass(context.CancellationToken).ConfigureAwait(false);
+
                 lock (_alreadyReceivedMessages)
                 {
                     foreach (ConsumeContext<DoWork> msg in context.Message)
@@ -403,11 +493,6 @@ namespace ViciOne.ServiceBus.Tests
                             _completed.TrySetResult(Count);
                     }
                 }
-
-                // Enough yields to let the batches of this endpoint interleave, and nothing more. The
-                // fifty million iterations that stood here only bought wall clock time.
-                for (var i = 0; i < 32; i++)
-                    await Task.Yield();
             }
         }
     }

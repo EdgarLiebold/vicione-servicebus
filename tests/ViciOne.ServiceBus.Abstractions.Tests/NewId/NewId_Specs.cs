@@ -38,30 +38,14 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
             Assert.That(lowerId, Is.LessThanOrEqualTo(greaterId));
         }
 
-        [Test]
-        public void Should_generate_sequential_ids_quickly()
-        {
-            NewId.SetTickProvider(new StopwatchTickProvider());
-            NewId.Next();
-
-            var limit = 10;
-
-            var ids = new NewId[limit];
-            for (var i = 0; i < limit; i++)
-                ids[i] = NewId.Next();
-
-            for (var i = 0; i < limit - 1; i++)
-            {
-                Assert.That(ids[i + 1], Is.Not.EqualTo(ids[i]));
-                Console.WriteLine(ids[i]);
-            }
-        }
+        // A case that generated ten identifiers, compared each with the one before it and printed them
+        // stood here. Should_generate_unique_identifiers_with_each_invocation asserts the same property
+        // over two hundred thousand identifiers and compares every one with every other, so the weaker
+        // one is gone rather than kept beside it.
 
         [Test]
         public void Should_be_using_the_correct_algorithm()
         {
-            NewId.SetTickProvider(new StopwatchTickProvider());
-
             var first = NewId.NextGuid();
             Guid[] next = NewId.NextGuid(3);
 
@@ -76,8 +60,6 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
         [Test]
         public void Should_be_using_the_correct_algorithm_for_sequential_guids()
         {
-            NewId.SetTickProvider(new StopwatchTickProvider());
-
             var first = NewId.NextSequentialGuid();
             var next = new Guid[3];
             NewId.NextSequentialGuid(next, 0, 3);
@@ -117,28 +99,39 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
         }
 
         /// <summary>
-        /// A process id provider changes the identifier without disturbing its timestamp.
+        /// The process id is what separates two identifiers whose every other input is the same.
+        /// <para>
+        /// Every input the generator reads is fixed here: the same tick, the same worker id, the same
+        /// starting sequence. Only the process id provider differs, so nothing else can account for a
+        /// difference between the identifiers. The equal pair is the control: without it, an identifier
+        /// that differs for any reason at all would satisfy the case.
+        /// </para>
         /// </summary>
         [Test]
-        public void Should_carry_the_timestamp_with_a_process_id_provider()
+        public void Should_let_the_process_id_separate_two_otherwise_equal_generators()
         {
             var moment = new DateTime(2026, 8, 17, 21, 4, 5, DateTimeKind.Utc);
 
-            var plain = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider());
-            var withProcessId = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider(),
-                new CurrentProcessIdProvider());
-
-            var id = withProcessId.Next();
+            var withoutProcessId = Generator(moment, null).Next();
+            var withProcessId = Generator(moment, new FixedProcessIdProvider(0x1A, 0x2B)).Next();
+            var withOtherProcessId = Generator(moment, new FixedProcessIdProvider(0x3C, 0x4D)).Next();
+            var withSameProcessIdAgain = Generator(moment, new FixedProcessIdProvider(0x1A, 0x2B)).Next();
 
             Assert.Multiple(() =>
             {
-                Assert.That(id.Timestamp, Is.EqualTo(moment));
-                // Both generators sit on the same fixed tick and start their sequence at the same
-                // place, so the process id is the only thing that can separate them. Comparing the
-                // whole identifier avoids guessing which part of it carries that value.
-                Assert.That(id.ToString(), Is.Not.EqualTo(plain.Next().ToString()),
-                    "the process id provider left the identifier unchanged");
+                Assert.That(withProcessId.Timestamp, Is.EqualTo(moment), "the process id provider moved the timestamp");
+                Assert.That(withProcessId.ToString(), Is.Not.EqualTo(withoutProcessId.ToString()),
+                    "a process id provider left the identifier unchanged");
+                Assert.That(withProcessId.ToString(), Is.Not.EqualTo(withOtherProcessId.ToString()),
+                    "two different process ids produced the same identifier");
+                Assert.That(withProcessId.ToString(), Is.EqualTo(withSameProcessIdAgain.ToString()),
+                    "two generators that differ in nothing produced different identifiers, so the case above proves nothing");
             });
+        }
+
+        static NewIdGenerator Generator(DateTime moment, IProcessIdProvider processIdProvider)
+        {
+            return new NewIdGenerator(new FixedTickProvider(moment), new FixedWorkerIdProvider(), processIdProvider);
         }
 
         /// <summary>
@@ -197,5 +190,33 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
             public long Ticks => _ticks;
         }
 
+
+        /// <summary>The same worker id for every generator, so it cannot account for a difference.</summary>
+        class FixedWorkerIdProvider :
+            IWorkerIdProvider
+        {
+            public byte[] GetWorkerId(int index)
+            {
+                return new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
+            }
+        }
+
+
+        /// <summary>A process id the test chooses, so it is the only input that varies.</summary>
+        class FixedProcessIdProvider :
+            IProcessIdProvider
+        {
+            readonly byte[] _processId;
+
+            public FixedProcessIdProvider(byte first, byte second)
+            {
+                _processId = new[] { first, second };
+            }
+
+            public byte[] GetProcessId()
+            {
+                return _processId;
+            }
+        }
     }
 }

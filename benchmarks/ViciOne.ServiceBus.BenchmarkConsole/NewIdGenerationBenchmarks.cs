@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcForce]
-    public class Benchmarker
+    public class NewIdGenerationBenchmarks
     {
         [Benchmark(Baseline = true, Description = "Next")]
         public NewId GetNext()
