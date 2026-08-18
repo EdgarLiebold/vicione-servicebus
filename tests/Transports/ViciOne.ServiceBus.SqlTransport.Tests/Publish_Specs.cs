@@ -90,8 +90,10 @@ public class Publishing_a_unsubscribed_message_type<T>
     /// <para>
     /// The subscribed publish is the control, and it is not decoration. Without it, an absent row would
     /// also be what a publish that never reached the transport leaves behind, and the case would pass
-    /// for the wrong reason. It proves in the same run, against the same endpoint, that a publish does
-    /// arrive and does leave a delivery in this queue.
+    /// for the wrong reason. What it proves, in the same run and against the same endpoint, is that a
+    /// publish arrives and is consumed. It says nothing about a delivery row still being there
+    /// afterwards - a consumed delivery is removed, and its message row goes with it through the
+    /// cascade - which is why the control is read from the consumer and not from the table.
     /// </para>
     /// <para>
     /// The unsubscribed contract belongs to this fixture and to nothing else. That is not tidiness: the

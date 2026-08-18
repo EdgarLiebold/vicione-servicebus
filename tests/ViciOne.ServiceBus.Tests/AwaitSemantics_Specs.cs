@@ -139,11 +139,19 @@ namespace ViciOne.ServiceBus.Tests
             Assert.That(returned.Task.Wait(TimeSpan.FromMilliseconds(500)), Is.False,
                 "the wait returned although its continuation was posted to a context nobody pumped");
 
-            context.PumpUntil(returned.Task);
-
-            Assert.That(returned.Task.Wait(TimeSpan.FromSeconds(5)), Is.True, "pumping the context did not release the wait");
-            Assert.That(returned.Task.Result, Is.EqualTo(42));
-            Assert.That(context.Posted, Is.GreaterThan(0), "no continuation was posted, so this case measured nothing");
+            Thread pump = context.PumpUntil(returned.Task);
+            try
+            {
+                Assert.That(returned.Task.Wait(TimeSpan.FromSeconds(5)), Is.True, "pumping the context did not release the wait");
+                Assert.That(returned.Task.Result, Is.EqualTo(42));
+                Assert.That(context.Posted, Is.GreaterThan(0), "no continuation was posted, so this case measured nothing");
+            }
+            finally
+            {
+                // Before the using disposes the context and its queue.
+                Assert.That(pump.Join(TimeSpan.FromSeconds(5)), Is.True, "the pump thread did not end");
+                Assert.That(caller.Join(TimeSpan.FromSeconds(5)), Is.True, "the blocked caller thread did not end");
+            }
         }
 
         [Test]
@@ -220,11 +228,15 @@ namespace ViciOne.ServiceBus.Tests
             }
 
             /// <summary>
-            /// Drains the queue from another thread until the given task is done. This is what a caller
-            /// blocked inside Await cannot do for itself, which is the entire point of the case that
-            /// uses it.
+            /// Drains the queue from another thread until the given task is done, and hands back the
+            /// thread so the caller can wait for it. This is what a caller blocked inside Await cannot
+            /// do for itself, which is the entire point of the case that uses it.
+            /// <para>
+            /// The caller has to join before disposing: a pump still running against a disposed queue
+            /// throws on a thread nobody observes, and the case would pass while leaving that behind.
+            /// </para>
             /// </summary>
-            public void PumpUntil(Task completion)
+            public Thread PumpUntil(Task completion)
             {
                 var pump = new Thread(() =>
                 {
@@ -236,6 +248,8 @@ namespace ViciOne.ServiceBus.Tests
                 }) { IsBackground = true };
 
                 pump.Start();
+
+                return pump;
             }
         }
     }

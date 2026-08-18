@@ -848,18 +848,38 @@ class Policy:
                               "this repository holds two solutions, so the command exits with MSB1011")
 
     def check_every_project_belongs_to_a_solution(self) -> None:
-        """A project no solution references is not built, not tested and not seen.
+        """A project no solution references is not built, and a reference to nothing is not a project.
 
-        This one is not hypothetical. A stray test project reappeared twice: once when a disallowed
-        history rewrite resurrected it, and once when a routine `git add -A` picked the untracked file
-        up again. Nothing referenced it, nothing built it, and the only thing that ever noticed was the
-        lock file rule complaining about a project no one could name. A project is either part of a
-        solution or it is not part of this repository.
+        Both directions, and the solution is read as the XML it is. A regular expression over
+        Path="..." finds a reference inside a comment and misses one written with single quotes, which
+        is not a gate, it is a guess that usually agrees.
+
+        The first direction is not hypothetical: a stray test project reappeared twice, once when a
+        disallowed history rewrite resurrected it and once when a routine `git add -A` picked the
+        untracked file up again. Nothing referenced it and nothing built it. The second direction
+        catches the opposite mistake - a project moved or removed while a solution still names it,
+        which fails the build for everyone rather than silently.
         """
-        referenced: set[str] = set()
+        referenced: dict[str, str] = {}
+
         for solution in sorted(self.root.glob("*.slnx")):
-            text = self.read(solution.relative_to(self.root).as_posix()) or ""
-            referenced.update(match.replace("\\", "/") for match in re.findall(r'Path="([^"]+)"', text))
+            name = solution.relative_to(self.root).as_posix()
+            try:
+                tree = ElementTree.parse(solution)
+            except ElementTree.ParseError as error:
+                self.fail("solution", f"{name} is not parsable as XML: {error}")
+                continue
+
+            for element in tree.getroot().iter("Project"):
+                path = element.get("Path")
+                if not path:
+                    self.fail("solution", f"{name} carries a Project element without a Path")
+                    continue
+
+                relative = path.replace("\\", "/")
+                if not (self.root / relative).is_file():
+                    self.fail("solution", f"{name} references '{relative}', which is not a file")
+                referenced[relative] = name
 
         for project in sorted(self.root.rglob("*.csproj")):
             relative = project.relative_to(self.root).as_posix()

@@ -765,6 +765,32 @@ class PolicyTestCase(unittest.TestCase):
             encoding="utf-8")
         self.assert_rejected("pack")
 
+    def test_rejects_a_solution_reference_to_nothing(self) -> None:
+        self.write_solution()
+        solution = self.root / "ViciOne.ServiceBus.slnx"
+        solution.write_text(
+            solution.read_text(encoding="utf-8").replace(
+                "</Solution>", '  <Project Path="src/Gone/Gone.csproj" />\n</Solution>'),
+            encoding="utf-8")
+
+        policy = Policy(self.root)
+        policy.run()
+
+        self.assertTrue(any(failure.startswith("solution") for failure in policy.failures),
+                        f"a reference to a project that does not exist was accepted: {policy.failures}")
+
+    def test_reads_a_reference_the_regex_would_have_missed(self) -> None:
+        """Single quotes are valid XML and a Path= regex does not see them."""
+        projects = sorted(p.relative_to(self.root).as_posix() for p in self.root.rglob("*.csproj"))
+        body = "<Solution>\n" + "".join(f"  <Project Path='{path}' />\n" for path in projects) + "</Solution>\n"
+        (self.root / "ViciOne.ServiceBus.slnx").write_text(body, encoding="utf-8")
+
+        policy = Policy(self.root)
+        policy.run()
+
+        self.assertFalse(any(failure.startswith("orphan-project") for failure in policy.failures),
+                         f"a project named with single quotes was read as unreferenced: {policy.failures}")
+
     def test_rejects_a_project_no_solution_names(self) -> None:
         stray = self.root / "tests/ViciOne.ServiceBus.Stray.Tests"
         stray.mkdir(parents=True)

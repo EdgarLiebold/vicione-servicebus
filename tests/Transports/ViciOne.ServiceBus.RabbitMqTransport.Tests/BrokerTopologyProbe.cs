@@ -18,11 +18,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     /// assert what was created instead of only that the bus started. The management API is the broker's
     /// own view; asking the bus would only repeat what the bus intended.
     /// </summary>
-    public static class BrokerTopologyProbe
+    static class BrokerTopologyProbe
     {
         static readonly HttpClient Client = new() { Timeout = TimeSpan.FromSeconds(10) };
 
-        public static async Task<IReadOnlyCollection<string>> Exchanges(RabbitMqTestHarness harness)
+        internal static async Task<IReadOnlyCollection<string>> Exchanges(RabbitMqTestHarness harness)
         {
             var virtualHost = harness.HostAddress.AbsolutePath.Trim('/');
             var uri = new UriBuilder("http", harness.HostAddress.Host, ManagementPort,
@@ -53,7 +53,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         /// How many channels the broker currently holds open for this virtual host. Publishing must not
         /// leak one: the transport keeps a channel per connection and reuses it.
         /// </summary>
-        public static async Task<int> ChannelCount(RabbitMqTestHarness harness)
+        internal static async Task<int> ChannelCount(RabbitMqTestHarness harness)
         {
             var virtualHost = harness.HostAddress.AbsolutePath.Trim('/');
             var uri = new UriBuilder("http", harness.HostAddress.Host, ManagementPort,

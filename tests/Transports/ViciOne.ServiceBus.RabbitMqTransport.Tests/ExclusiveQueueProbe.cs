@@ -41,10 +41,10 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     /// Shared by both fixtures that need it, so the two cannot drift apart on what "held" means.
     /// </para>
     /// </summary>
-    public static class ExclusiveQueueProbe
+    static class ExclusiveQueueProbe
     {
         /// <summary>What the broker said about the queue, including that it said nothing usable.</summary>
-        public enum QueueState
+        internal enum QueueState
         {
             Held,
             Released,
@@ -53,13 +53,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
 
         /// <summary>How long a precondition may take to come about.</summary>
-        public static readonly TimeSpan Budget = TimeSpan.FromSeconds(30);
+        internal static readonly TimeSpan Budget = TimeSpan.FromSeconds(30);
 
         /// <summary>How long a single question to the broker may take, when the budget allows that much.</summary>
-        public static readonly TimeSpan CallLimit = TimeSpan.FromSeconds(10);
+        internal static readonly TimeSpan CallLimit = TimeSpan.FromSeconds(10);
 
         /// <summary>How long to wait between two questions.</summary>
-        public static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
+        internal static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
 
         /// <summary>
         /// One client for the whole run. A probe polls every 100 ms for up to 30 s, and a client per poll
@@ -75,7 +75,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         /// </summary>
         static readonly HttpClient Client = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
 
-        public static async Task WaitUntilHeld(RabbitMqTestHarness harness, string queueName)
+        internal static async Task WaitUntilHeld(RabbitMqTestHarness harness, string queueName)
         {
             var last = await Poll(harness, queueName, QueueState.Held).ConfigureAwait(false);
             if (last == QueueState.Held)
@@ -86,7 +86,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 + "so the precondition of this spec never came about"));
         }
 
-        public static async Task WaitUntilReleased(RabbitMqTestHarness harness, string queueName)
+        internal static async Task WaitUntilReleased(RabbitMqTestHarness harness, string queueName)
         {
             var last = await Poll(harness, queueName, QueueState.Released).ConfigureAwait(false);
             if (last == QueueState.Released)

@@ -26,7 +26,7 @@ public enum TransportDialect
 /// instead of asserting that it opened a connection or that some time passed. Every statement here is
 /// read only apart from the two that a fixture uses to arrange state it could not otherwise reach.
 /// </summary>
-public static class TransportInspection
+static class TransportInspection
 {
     /// <summary>
     /// Which engine a configuration addresses. A configuration this method does not know is a failure,
@@ -188,7 +188,7 @@ public static class TransportInspection
     /// caller, so this asks about exactly that row.
     /// </para>
     /// </summary>
-    public static async Task<bool> MessageExists(this DbConnection connection, TransportDialect dialect, string schema,
+    internal static async Task<bool> MessageExists(this DbConnection connection, TransportDialect dialect, string schema,
         Guid messageId)
     {
         var text = dialect == TransportDialect.SqlServer
@@ -200,8 +200,13 @@ public static class TransportInspection
 
     /// <summary>
     /// How many deliveries exist for the one message that carries this identifier, in any queue and of
-    /// any queue type. Zero and a missing message row are different statements, and this case needs
-    /// both: a delivery could outlive its message row, and a row could survive with no delivery.
+    /// any queue type.
+    /// <para>
+    /// A delivery cannot outlive its message row: in both dialects message_delivery references message
+    /// with ON DELETE CASCADE, so deleting the row takes its deliveries with it. What this number adds
+    /// to the row's absence is therefore the other direction - a row that survived with no delivery at
+    /// all, which is exactly the state the publish procedure promises not to leave.
+    /// </para>
     /// </summary>
     public static Task<long> DeliveryCountForMessage(this DbConnection connection, TransportDialect dialect,
         string schema, Guid messageId)
@@ -218,7 +223,8 @@ public static class TransportInspection
     /// <summary>
     /// Every queue that holds a delivery of the one message carrying this identifier, as "name/type".
     /// Used where a count of zero is not the whole answer: if a delivery exists, the case has to be able
-    /// to say where, instead of leaving the reader to guess which endpoint subscribed.
+    /// to say where, instead of leaving the reader to guess which endpoint subscribed. It reads through
+    /// the message row, which the cascade guarantees is there for as long as any of its deliveries is.
     /// </summary>
     public static Task<IReadOnlyList<string>> QueuesHoldingMessage(this DbConnection connection,
         TransportDialect dialect, string schema, Guid messageId)
