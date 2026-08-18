@@ -21,10 +21,13 @@ namespace ViciOne.ServiceBus.Analyzers
     {
         public const string CancellationTokenOverloadMethodRuleId = "MCA2016";
 
+        // Diagnostic property keys. The code fix reads them from its own assembly, so they are part of
+        // the contract between the two.
+        public const string ParameterIndex = "ParameterIndex";
+        public const string ParameterName = "ParameterName";
+        public const string CancellationTokens = "CancellationTokens";
+
         const string Category = "Reliability";
-        internal const string ParameterIndex = "ParameterIndex";
-        internal const string ParameterName = "ParameterName";
-        internal const string CancellationTokens = "CancellationTokens";
 
         static readonly DiagnosticDescriptor CancellationTokenOverloadMethodRule = new DiagnosticDescriptor(CancellationTokenOverloadMethodRuleId,
             "Context.CancellationToken could be used in method overload with CancellationToken",

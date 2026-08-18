@@ -8,30 +8,22 @@
          SDK, so both are pinned here to the level the rest of the repository builds at. -->
     <LangVersion>14.0</LangVersion>
     <WarningLevel>10</WarningLevel>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <DevelopmentDependency>true</DevelopmentDependency>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Authors>Remco Blok, $(Authors)</Authors>
-    <PackageTags>ViciOne.ServiceBus</PackageTags>
-    <Description>$(Description)</Description>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-
-    <!-- Override the Directory.build.props and disable a snupkg from being created -->
-    <EmbedUntrackedSources>false</EmbedUntrackedSources>
-    <IncludeSymbols>false</IncludeSymbols>
+    <!-- The package is produced by ViciOne.ServiceBus.Analyzers.Package, which carries this assembly
+         and the code fix assembly. This project ships no package of its own. Restore names a project
+         node after its PackageId, so leaving it at the project name would make this project and the
+         package it belongs to one ambiguous node. The identifier below exists only to name this node
+         and is never published, because IsPackable is false. -->
+    <IsPackable>false</IsPackable>
+    <PackageId>ViciOne.ServiceBus.Analyzers.Assembly</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
+    <!-- Command line compilations do not provide Microsoft.CodeAnalysis.Workspaces, so an assembly a
+         compiler loads must not reference it. Only the CSharp package is referenced here; everything
+         that needs Workspaces lives in ViciOne.ServiceBus.Analyzers.CodeFixes. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="tools\*.ps1" CopyToOutputDirectory="IfDifferent" Pack="true" PackagePath="" />
-    <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>

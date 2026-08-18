@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <WarningLevel>10</WarningLevel>
+
+    <!-- This project carries no logic. It exists so that the analyzer assembly and the code fix
+         assembly, which must not live together, still ship as the one package they always were. -->
+    <PackageId>ViciOne.ServiceBus.Analyzers</PackageId>
+    <AssemblyName>ViciOne.ServiceBus.Analyzers.Package</AssemblyName>
+    <RootNamespace>ViciOne.ServiceBus.Analyzers.Package</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeSymbols>false</IncludeSymbols>
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <Authors>Remco Blok, $(Authors)</Authors>
+    <PackageTags>ViciOne.ServiceBus</PackageTags>
+    <Description>$(Description)</Description>
+
+    <TargetsForTfmSpecificContentInPackage>
+      $(TargetsForTfmSpecificContentInPackage);PackAnalyzerAssemblies
+    </TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Referenced for their build output only: neither assembly is a dependency of the package. -->
+    <ProjectReference Include="..\ViciOne.ServiceBus.Analyzers\ViciOne.ServiceBus.Analyzers.csproj"
+                      PrivateAssets="all" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Analyzers.CodeFixes\ViciOne.ServiceBus.Analyzers.CodeFixes.csproj"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- PackagePath is empty because NuGet keeps the item's own relative directory, so the scripts
+         land in tools/ exactly as they do in the project. -->
+    <None Update="tools\*.ps1" CopyToOutputDirectory="IfDifferent" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <Target Name="PackAnalyzerAssemblies">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)ViciOne.ServiceBus.Analyzers.dll"
+                              PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)ViciOne.ServiceBus.Analyzers.CodeFixes.dll"
+                              PackagePath="analyzers/dotnet/cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>

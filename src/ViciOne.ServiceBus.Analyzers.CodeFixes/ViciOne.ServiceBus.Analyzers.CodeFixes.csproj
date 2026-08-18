@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- Same reasoning as the analyzer assembly: the host is not a net10.0 process, and
+         netstandard2.0 inherits neither setting from the SDK. -->
+    <LangVersion>14.0</LangVersion>
+    <WarningLevel>10</WarningLevel>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Code fixes run inside an IDE or a fix-all host, which does provide Workspaces. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViciOne.ServiceBus.Analyzers\ViciOne.ServiceBus.Analyzers.csproj" />
+  </ItemGroup>
+
+</Project>
