@@ -113,9 +113,15 @@ python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq \
 
 The broker runner starts the pinned fixture, reads back the ephemeral loopback ports Docker bound,
 generates a run-scoped account, hands all of it to the test process alone and removes the fixture
-afterwards. Each run has its own compose project and its own output root, so two runs on one machine
-share nothing. A fixture that was not started makes the affected tests fail with a named missing
-contract rather than falling back to a default host or secret.
+afterwards. A fixture that was not started makes the affected tests fail with a named missing contract
+rather than falling back to a default host or secret.
+
+Every run owns everything it writes. One identity per run gives it its compose project and a root under
+`artifacts/run-output/<identity>/`, and the raw TRX, the endpoint projection, the control directory and
+the broker logs all live there. A directory named with `--evidence-dir` is a **parent**: the record
+lands in `<evidence-dir>/<identity>/`, never in a file a second invocation of the same category would
+overwrite. A category started directly, without the broker runner, creates the same kind of root for
+itself.
 
 `REAL_EPHEMERAL_CLOUD` capabilities - Azure Service Bus, Event Hubs, Amazon SQS, S3, Azure Table,
 Azure Blob and DynamoDB - are not verified locally and are not verified in the required profile

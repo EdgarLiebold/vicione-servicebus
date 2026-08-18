@@ -13,6 +13,9 @@ from __future__ import annotations
 
 import json
 import tempfile
+import shutil
+import subprocess
+from unittest import mock
 import unittest
 from pathlib import Path
 
@@ -206,6 +209,99 @@ class SelectorRejectionTestCase(unittest.TestCase):
         self.assertEqual(runner.option_token("--Filter=Category!=Slow"), "--filter")
         self.assertEqual(runner.option_token("/Tests:One"), "/tests")
         self.assertEqual(runner.option_token("--no-restore"), "--no-restore")
+
+
+class Owning_the_output_of_one_run(unittest.TestCase):
+    """Two invocations of the same category must not meet in any file.
+
+    This is the case the earlier parallel proof did not cover: it started two command children against
+    different brokers, so it never reached the category runner where the TRX and the record were
+    written to one fixed name each.
+    """
+
+    def setUp(self) -> None:
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+        self.addCleanup(setattr, runner, "RAW_RUN_OUTPUT_DIR", runner.RAW_RUN_OUTPUT_DIR)
+        self.addCleanup(setattr, runner, "REPOSITORY_ROOT", runner.REPOSITORY_ROOT)
+        runner.RAW_RUN_OUTPUT_DIR = self.root / "run-output"
+        runner.REPOSITORY_ROOT = self.root
+
+    def run_category(self, evidence: Path, run_root: str | None = None) -> dict:
+        """Runs one category with the process boundary replaced, so no test starts dotnet."""
+        environment = {runner.RUN_ROOT_VARIABLE: run_root} if run_root else {}
+
+        def fake_run(command, **kwargs):
+            trx = Path([part for part in command if part.startswith("trx;LogFileName=")][0].split("=", 1)[1])
+            trx.parent.mkdir(parents=True, exist_ok=True)
+            trx.write_text(TRX_WITH_ONE_PASSING_CASE, encoding="utf-8")
+
+            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
+
+        with mock.patch.dict(runner.os.environ, environment, clear=False), \
+                mock.patch.object(runner.subprocess, "run", side_effect=fake_run), \
+                mock.patch.object(runner, "minimum_executed", return_value=None), \
+                mock.patch.object(runner, "inventoried_cases", return_value=[]):
+            return runner.run_category("core", "some.csproj", evidence, [])
+
+    def test_two_runs_of_one_category_write_different_files(self) -> None:
+        evidence = self.root / "artifacts/required/core"
+
+        first = self.run_category(evidence)
+        second = self.run_category(evidence)
+
+        self.assertNotEqual(first["trxPath"], second["trxPath"], "both runs wrote the same TRX")
+        self.assertNotEqual(first["evidenceDir"], second["evidenceDir"], "both runs wrote the same record")
+        self.assertTrue((self.root / first["trxPath"]).is_file(), "the first run's TRX was removed")
+        self.assertTrue((self.root / second["trxPath"]).is_file())
+
+    def test_a_caller_path_is_a_parent_and_not_a_file(self) -> None:
+        evidence = self.root / "artifacts/required/core"
+
+        record = self.run_category(evidence)
+
+        self.assertTrue(record["evidenceDir"].startswith("artifacts/required/core/"),
+                        f"the caller's directory has to stay a parent: {record['evidenceDir']}")
+
+    def test_a_run_root_handed_down_is_used_rather_than_a_new_one(self) -> None:
+        handed = self.root / "run-output" / "vicione-fromtherunner"
+
+        record = self.run_category(self.root / "artifacts/required/core", run_root=str(handed))
+
+        self.assertTrue(record["trxPath"].endswith("vicione-fromtherunner/core.trx"), record["trxPath"])
+
+    def test_an_interrupted_run_leaves_the_other_run_untouched(self) -> None:
+        evidence = self.root / "artifacts/required/core"
+
+        survivor = self.run_category(evidence)
+
+        # A second run that dies before it writes anything: its root exists, the first one's files do not
+        # move, and nothing of the first run is deleted.
+        abandoned = runner.RAW_RUN_OUTPUT_DIR / "vicione-killedmidway"
+        abandoned.mkdir(parents=True)
+        (abandoned / "core.trx").write_text("half written", encoding="utf-8")
+
+        self.assertTrue((self.root / survivor["trxPath"]).is_file(),
+                        "an abandoned run removed the file of a run that finished")
+        self.assertEqual(TRX_WITH_ONE_PASSING_CASE, (self.root / survivor["trxPath"]).read_text(encoding="utf-8"))
+
+
+TRX_WITH_ONE_PASSING_CASE = """<?xml version="1.0" encoding="UTF-8"?>
+<TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times start="2026-08-18T10:00:00.0000000+00:00" finish="2026-08-18T10:00:01.0000000+00:00" />
+  <Results>
+    <UnitTestResult testName="Suite.Behaviour.Should_pass" outcome="Passed" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Suite.Behaviour.Should_pass">
+      <TestMethod className="Suite.Behaviour" name="Should_pass" />
+    </UnitTest>
+  </TestDefinitions>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" />
+  </ResultSummary>
+</TestRun>
+"""
 
 
 if __name__ == "__main__":

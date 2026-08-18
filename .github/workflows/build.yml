@@ -145,8 +145,7 @@ jobs:
             --broker rabbitmq \
             --category rabbitmq \
             --project tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
-            --evidence-dir artifacts/required/rabbitmq \
-            --ports-out artifacts/required/rabbitmq/endpoints.json \
+            --evidence-dir artifacts/required/rabbitmq
             --one-refusal-per-vhost 'test-exclusive-*'
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
@@ -221,8 +220,7 @@ jobs:
             --allow-broker-outage activemq \
             --category activemq \
             --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
-            --evidence-dir artifacts/required/activemq \
-            --ports-out artifacts/required/activemq/endpoints.json
+            --evidence-dir artifacts/required/activemq
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -249,8 +247,7 @@ jobs:
             --broker postgres \
             --category sql-transport \
             --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj \
-            --evidence-dir artifacts/required/sql-transport \
-            --ports-out artifacts/required/sql-transport/endpoints.json
+            --evidence-dir artifacts/required/sql-transport
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -311,8 +308,7 @@ jobs:
             --broker postgres \
             --category entity-framework-core \
             --project tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
-            --evidence-dir artifacts/required/entity-framework \
-            --ports-out artifacts/required/entity-framework/endpoints.json
+            --evidence-dir artifacts/required/entity-framework
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:

@@ -463,7 +463,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--category")
     parser.add_argument("--project")
     parser.add_argument("--evidence-dir", type=Path, default=Path("artifacts/run-output"))
-    parser.add_argument("--ports-out", type=Path, help="Optional file for the resolved endpoints, secrets excluded.")
+    # --ports-out is gone. The projection is written under the run root, where it cannot be the file
+    # another invocation overwrites, and its path is printed so a caller can find it.
     parser.add_argument(
         "--one-refusal-per-vhost",
         metavar="GLOB",
@@ -545,9 +546,11 @@ def main(argv: list[str] | None = None) -> int:
             outage_thread.start()
             print(f"outage control ready for {broker} at {control}")
 
-        if args.ports_out:
-            args.ports_out.parent.mkdir(parents=True, exist_ok=True)
-            args.ports_out.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        # Always under this run's own root. A caller supplied path was a file two runs of one
+        # category wrote in turn, and the second one's endpoints were read as the first one's.
+        projection = run_root / "endpoints.json"
+        projection.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"endpoints projected to {projection.relative_to(REPO_ROOT)}")
 
         if args.command:
             # A deliberately started scenario rather than a category: the fixture boundary is the same,

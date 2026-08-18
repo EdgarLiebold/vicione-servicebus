@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import re
+import secrets
 import shlex
 import subprocess
 import sys
@@ -30,6 +31,10 @@ TRX_NAMESPACE = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_RUN_OUTPUT_DIR = REPOSITORY_ROOT / "artifacts" / "run-output"
+
+# Handed down by tools/ci/run_broker_category.py when it started the fixture. A category started
+# directly creates its own, so nothing this run writes can be a path another run deletes.
+RUN_ROOT_VARIABLE = "VICIONE_SERVICEBUS_RUN_ROOT"
 
 
 class CategoryError(RuntimeError):
@@ -283,15 +288,25 @@ def reject_selectors(extra: list[str]) -> None:
 def run_category(category: str, project: str, evidence_dir: Path, extra: list[str]) -> dict[str, object]:
     reject_selectors(extra)
 
+    # Everything this run writes lives under one root that belongs to it alone. The broker runner
+    # hands one down when it started the fixture; a category started directly creates its own, so a
+    # direct run is no less isolated than a brokered one.
+    run_root = Path(os.environ.get(RUN_ROOT_VARIABLE) or "")
+    if not run_root.name:
+        run_root = RAW_RUN_OUTPUT_DIR / f"vicione-{secrets.token_hex(6)}"
+    run_root.mkdir(parents=True, exist_ok=True)
+
+    # An explicit --evidence-dir is a parent, never the file. Two runs of one category pointed at the
+    # same directory would otherwise overwrite each other's record, which is exactly what a caller
+    # naming a stable path expects not to happen.
+    evidence_dir = evidence_dir / run_root.name
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
     # The TRX is the raw output of one run: large, repetitive and reproducible by rerunning. It is
     # written under artifacts/, which .gitignore covers, so that it cannot accumulate in the tree the
     # way 434 MiB of it once did. What is kept beside the evidence is the record below, which names
     # every counter the TRX carried. tools/ci/policy_validator.py rejects a raw artifact under evidence/.
-    run_output = RAW_RUN_OUTPUT_DIR
-    run_output.mkdir(parents=True, exist_ok=True)
-    trx_path = run_output / f"{category}.trx"
+    trx_path = run_root / f"{category}.trx"
     if trx_path.exists():
         trx_path.unlink()
 
@@ -334,6 +349,9 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
         "trxRunDurationSeconds": read_run_duration(trx_path),
         "trxProduced": trx_path.is_file(),
         "trxPath": trx_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "runRoot": run_root.relative_to(REPOSITORY_ROOT).as_posix(),
+        "evidenceDir": evidence_dir.relative_to(REPOSITORY_ROOT).as_posix()
+        if evidence_dir.is_relative_to(REPOSITORY_ROOT) else str(evidence_dir),
         "notExecuted": skipped,
         "notExecutedUnlisted": unlisted,
     }
