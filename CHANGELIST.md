@@ -137,13 +137,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/SqlOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/packages.lock.json` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/Program.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/PublishLoadScenario.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/README.md` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/RunScopedBroker.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Diagnostics/packages.lock.json` | Added |  |
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
@@ -6807,6 +6800,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/test_run_broker_category.py` | Added |  |
 | `tools/ci/test_run_test_category.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/Program.cs` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/PublishLoadScenario.cs` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/README.md` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/RunScopedBroker.cs` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/packages.lock.json` | Added |  |
 | `tools/identity/analyzer_baseline_gate.py` | Added |  |
 | `tools/identity/apply_identity_refactor.py` | Added |  |
 | `tools/identity/artifact_gate.py` | Added |  |

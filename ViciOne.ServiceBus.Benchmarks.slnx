@@ -3,7 +3,9 @@
     <Project Path="benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj" />
     <Project Path="benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj" />
     <Project Path="benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj" />
-    <Project Path="benchmarks/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj" />
+  </Folder>
+  <Folder Name="/diagnostics/">
+    <Project Path="tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj" />
   </Folder>
   <Folder Name="/dependencies/">
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />

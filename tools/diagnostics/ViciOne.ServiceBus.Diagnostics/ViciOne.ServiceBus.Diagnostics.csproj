@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
   </ItemGroup>
 
 </Project>

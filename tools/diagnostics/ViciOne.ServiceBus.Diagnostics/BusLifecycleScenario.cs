@@ -22,31 +22,49 @@ static class BusLifecycleScenario
     {
         await RunScopedBroker.CreateVirtualHost("test", cancellationToken);
 
-        var process = Process.GetCurrentProcess();
+        using var process = Process.GetCurrentProcess();
         var samples = new List<object>();
 
         for (var cycle = 1; cycle <= cycles; cycle++)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Three separate measurements, because they answer three different questions. Reporting
+            // their sum as a round trip would name the start and the stop as latency.
             var harness = new RabbitMqTestHarness();
-            var roundTrip = Stopwatch.StartNew();
+            var startElapsed = Stopwatch.StartNew();
+            var started = false;
+            long roundTripMilliseconds = -1;
+            long stopMilliseconds;
 
-            await harness.Start();
             try
             {
+                await harness.Start();
+                started = true;
+                startElapsed.Stop();
+
                 // The handler is connected to the started bus, so the message has to reach the bus
                 // endpoint and come back out of it. A send that is merely accepted proves nothing.
+                var roundTrip = Stopwatch.StartNew();
+
                 Task<ConsumeContext<DiagnosticPing>> handled = harness.SubscribeHandler<DiagnosticPing>();
 
                 await harness.BusSendEndpoint.Send(new DiagnosticPing());
 
                 await handled.WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
+
+                roundTripMilliseconds = roundTrip.ElapsedMilliseconds;
             }
             finally
             {
-                await harness.Stop();
-                roundTrip.Stop();
+                // A start that threw still leaves a harness to dispose, and skipping that is how a
+                // diagnostic starts measuring its own leak.
+                var stopElapsed = Stopwatch.StartNew();
+                if (started)
+                    await harness.Stop();
+
+                harness.Dispose();
+                stopMilliseconds = stopElapsed.ElapsedMilliseconds;
             }
 
             if (cycle == 1 || cycle % sampleEvery == 0 || cycle == cycles)
@@ -55,7 +73,10 @@ static class BusLifecycleScenario
                 samples.Add(new
                 {
                     cycle,
-                    roundTripMilliseconds = roundTrip.ElapsedMilliseconds,
+                    startMilliseconds = startElapsed.ElapsedMilliseconds,
+                    roundTripMilliseconds,
+                    stopMilliseconds,
+                    cycleMilliseconds = startElapsed.ElapsedMilliseconds + roundTripMilliseconds + stopMilliseconds,
                     threadPoolThreads = ThreadPool.ThreadCount,
                     processThreads = process.Threads.Count,
                     pendingWorkItems = ThreadPool.PendingWorkItemCount,
