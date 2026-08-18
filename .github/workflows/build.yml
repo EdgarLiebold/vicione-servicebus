@@ -44,8 +44,13 @@ jobs:
       - uses: actions/checkout@v5
       - name: Validate CI policy
         run: python3 tools/ci/policy_validator.py
-      - name: Policy self-tests
-        run: python3 tools/ci/test_policy_validator.py
+      # Every Python test module in this repository, not only the policy self-tests. A module that no
+      # job starts is an inventory entry; check_every_tool_test_module_runs fails when one is added
+      # outside a directory that is discovered here.
+      - name: CI tool self-tests
+        run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
+      - name: Identity tool self-tests
+        run: python3 -m unittest discover -s tools/identity -p 'test_*.py'
 
   build:
     name: "Required: Build"
@@ -279,9 +284,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # No service containers here. The databases come from the same pinned compose definition a developer
-    # uses locally, started through the canonical runner, with a secret generated for this run. The
-    # service containers that stood here used moving image tags and the well known password Password12!,
-    # so a local run and the runner were not the same fixture and the account was not run-scoped.
+    # uses locally, started through the canonical runner, with a secret generated for this run. A
+    # service container with a moving image tag and a fixed account would make the runner a different
+    # fixture from the local one, and its account would not be run-scoped.
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     steps:

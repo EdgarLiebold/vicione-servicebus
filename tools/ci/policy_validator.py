@@ -788,6 +788,29 @@ class Policy:
                           f"{relative} is a raw run artifact under evidence/; keep the category summary "
                           "and the digest instead, and write the run output under artifacts/")
 
+    def check_every_tool_test_module_runs(self) -> None:
+        """A test module nobody starts is an inventory entry, not a proof.
+
+        This repository holds fifteen Python test modules under tools/. Exactly one of them was named
+        by a required job; the other fourteen, 94 cases across the identity gates and the two CI
+        runners, were green and never started by anything but a developer who remembered them. That is
+        the same defect the not-executed inventory exists to prevent, one layer down.
+
+        A job satisfies this either by naming the module path or by discovering its directory. The
+        check reads the workflow text, so it proves that the command is written, not that it passed -
+        the run itself proves that.
+        """
+        text = "\n".join((self.root / name).read_text(encoding="utf-8") for name in self.workflow_files())
+
+        for module in sorted(self.root.glob("tools/**/test_*.py")):
+            relative = module.relative_to(self.root).as_posix()
+            directory = module.parent.relative_to(self.root).as_posix()
+            if relative in text or f"unittest discover -s {directory}" in text:
+                continue
+            self.fail("tool-test-not-run",
+                      f"{relative} is never started by a required job; name it or discover "
+                      f"{directory}, or the module is an inventory entry rather than a proof")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -909,7 +932,8 @@ class Policy:
                      self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
                      self.check_pack_depends_on_every_gate, self.check_capability_matrix,
                      self.check_dueness_classes, self.check_executed_floor,
-                     self.check_no_raw_run_artifacts_in_evidence):
+                     self.check_no_raw_run_artifacts_in_evidence,
+                     self.check_every_tool_test_module_runs):
             rule()
 
         if self.failures:

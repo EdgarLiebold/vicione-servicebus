@@ -144,7 +144,7 @@ env:
 
 jobs:
 """
-    + JOB % ("policy", "python3 tools/ci/policy_validator.py")
+    + JOB % ("policy", "python3 -m unittest discover -s tools/ci -p 'test_*.py'")
     + JOB % ("build", "dotnet build -c Release")
     + JOB % ("analyzer", "python3 tools/ci/run_test_category.py --category analyzer")
     + JOB % ("core-unit", "python3 tools/ci/run_test_category.py --category core")
@@ -748,6 +748,31 @@ class PolicyTestCase(unittest.TestCase):
         })
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
         self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_tool_test_module_no_job_starts(self) -> None:
+        module = self.root / "tools/identity/test_identity_gate.py"
+        module.parent.mkdir(parents=True, exist_ok=True)
+        module.write_text("# a proof nobody starts\n", encoding="utf-8")
+        self.assert_rejected("tool-test-not-run")
+
+    def test_accepts_a_tool_test_module_whose_directory_is_discovered(self) -> None:
+        module = self.root / "tools/ci/test_something_else.py"
+        module.parent.mkdir(parents=True, exist_ok=True)
+        module.write_text("# discovered by the policy job\n", encoding="utf-8")
+        self.assertEqual([], self.failures())
+
+    def test_accepts_a_tool_test_module_a_job_names(self) -> None:
+        module = self.root / "tools/identity/test_identity_gate.py"
+        module.parent.mkdir(parents=True, exist_ok=True)
+        module.write_text("# named by a job\n", encoding="utf-8")
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace(
+                "python3 -m unittest discover -s tools/ci -p 'test_*.py'",
+                "python3 -m unittest discover -s tools/ci -p 'test_*.py' && "
+                "python3 tools/identity/test_identity_gate.py"),
+            encoding="utf-8")
+        self.assertEqual([], self.failures())
 
     def test_rejects_a_trx_under_evidence(self) -> None:
         artifact = self.root / "evidence/some-record/core-unit.trx"
