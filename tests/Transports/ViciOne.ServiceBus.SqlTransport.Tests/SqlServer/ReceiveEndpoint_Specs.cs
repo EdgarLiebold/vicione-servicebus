@@ -25,7 +25,7 @@ public class Configuring_a_receive_endpoint_without_topology
             {
                 x.AddOptions<ViciOneServiceBusHostOptions>()
                     .Configure(options => options.StartTimeout = TimeSpan.FromSeconds(10));
-                
+
                 x.AddConsumer<TestMessageConsumer>();
 
                 x.UsingSqlServer((context, cfg) =>
