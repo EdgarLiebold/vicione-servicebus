@@ -26,11 +26,12 @@
       "rationale": "Artemis is a second, separate broker used by the parameterized 'artemis' flavor of a subset of the ActiveMQ specs. It is not the ViciOne fixture and is not a required gate. It is pinned here so the branch has a reproducible endpoint instead of the hardcoded port 61618 with admin/admin it carried from the imported baseline."
     },
     "mssql": {
-      "repository": "mcr.microsoft.com/azure-sql-edge",
-      "tag": "latest",
-      "digest": "sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf",
-      "reference": "mcr.microsoft.com/azure-sql-edge@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf",
-      "rationale": "SQL Server for the Entity Framework specs. The imported baseline ran them on ubuntu with exactly this image as a service container, so the 'LocalDb' in the provider name is a misnomer: its first two candidates are a Linux SQL Server, not Windows LocalDB. The tag is pinned by digest because 'latest' is a moving target."
+      "repository": "mcr.microsoft.com/mssql/server",
+      "tag": "2025-latest",
+      "digest": "sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1",
+      "reference": "mcr.microsoft.com/mssql/server:2025-latest@sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1",
+      "platform": "linux/amd64",
+      "rationale": "SQL Server for the Entity Framework and SQL transport specs. It replaces mcr.microsoft.com/azure-sql-edge, which Microsoft retired on 2025-09-30 and which receives no security or bug fixes: a discontinued image is not a test substrate. This is the supported SQL Server 2025 line on Ubuntu. It publishes linux/amd64 only, so on an arm64 developer machine it runs under emulation and the full SQL Server proof belongs to the x64 runner; PostgreSQL stays the fast local dialect check."
     },
     "postgres": {
       "repository": "postgres",

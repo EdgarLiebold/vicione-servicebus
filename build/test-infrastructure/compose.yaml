@@ -66,7 +66,11 @@ services:
   # them on ubuntu with service containers; the connection provider is called LocalDb but its first two
   # candidates are a Linux SQL Server. Both are pinned here so the required category has a fixture at all.
   mssql:
-    image: mcr.microsoft.com/azure-sql-edge@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
+    image: mcr.microsoft.com/mssql/server:2025-latest@sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1
+    # amd64 only, and stated rather than discovered: on an arm64 developer machine this runs under
+    # emulation, which is why the SQL Server proof belongs to the x64 runner and PostgreSQL is the fast
+    # local dialect check.
+    platform: linux/amd64
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${VICIONE_SERVICEBUS_MSSQL_PASS:?run credentials are missing, source new-run-credentials.sh}
