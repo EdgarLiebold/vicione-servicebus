@@ -1,14 +1,20 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
-ViciOne.ServiceBus supports the current major version only. If issues or vulnerabilities are encountered with previous versions for which there is no workaround, upgrading to the latest version if recommended.
+ViciOne.ServiceBus has not been published yet. There is therefore no released version to support and
+no support cycle to promise. Until the first release, security work happens against the development
+branch of this repository.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 8.x     | :white_check_mark: |
-| < 8.0   | :x:                |
+## Reporting a vulnerability
 
-## Reporting a Vulnerability
+Report a vulnerability privately, never as a public issue: a public issue discloses the weakness
+before there is anything to upgrade to.
 
-Vulnerabilities can be reported by submitting an issue.
+- Use GitHub's private vulnerability reporting for this repository
+  (Security → Report a vulnerability), which opens a channel visible only to the maintainers, or
+- write to the maintainer address recorded in the repository metadata if that channel is unavailable.
+
+Please include what you observed, how to reproduce it, and which commit you observed it on. You will
+get an acknowledgement of receipt; a fix and a disclosure date are agreed with you before anything is
+published.

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+import struct
 import sys
 import tempfile
 import types
@@ -18,8 +19,13 @@ from identity_rules import FORMER_PASCAL, contains_former_identity_bytes
 
 
 ROOT = Path(__file__).resolve().parents[2]
-STOPPED_PACKAGE = ROOT / "src/ViciOne.ServiceBus/bin/Release/ViciOne.ServiceBus.1.0.0.nupkg"
-STOPPED_PACKAGE_SHA256 = "91427c55ff06b29199422505eda1f1576f2af6f865bc501c174ab6934bac9e10"
+
+# The fixture used to be a package left behind under src/<project>/bin/Release. Build output lives
+# under artifacts/ now and is not tracked, so a test that reads it measures whatever the last build
+# happened to leave there, or nothing at all. The fixture is built here instead: a package whose raw
+# container bytes carry the former identity while none of its entries do, which is exactly the case
+# the scanner has to accept without reading the container as text.
+STOPPED_PACKAGE_PATH = "artifacts/packages/ViciOne.ServiceBus.1.0.0.nupkg"
 
 
 def package(
@@ -66,8 +72,29 @@ def load_mutant(
 
 class ArtifactGateTests(unittest.TestCase):
     def stopped_package_bytes(self) -> bytes:
-        data = STOPPED_PACKAGE.read_bytes()
-        self.assertEqual(STOPPED_PACKAGE_SHA256, hashlib.sha256(data).hexdigest())
+        # A container whose raw bytes carry the former identity in a zip extra field: not an entry
+        # path, not entry content, not an entry comment and not the archive comment, so every place
+        # the scanner is required to read stays clean while the container as a whole does not.
+        payload = FORMER_PASCAL.encode("ascii")
+        extra = struct.pack("<HH", 0x9901, len(payload)) + payload
+
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w") as archive:
+            info = zipfile.ZipInfo("lib/net10.0/ViciOne.ServiceBus.dll")
+            info.extra = extra
+            archive.writestr(info, b"safe")
+
+            nuspec = zipfile.ZipInfo("ViciOne.ServiceBus.nuspec")
+            archive.writestr(nuspec, b"<package><metadata><id>ViciOne.ServiceBus</id></metadata></package>")
+
+        data = buffer.getvalue()
+
+        # The premise of every case below, stated rather than assumed.
+        self.assertTrue(contains_former_identity_bytes(data))
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            for name in archive.namelist():
+                self.assertFalse(contains_former_identity_bytes(archive.read(name)))
+                self.assertFalse(contains_former_identity_bytes(name.encode("utf-8")))
         return data
 
     def test_rejects_former_identity_in_outer_package_path(self) -> None:
@@ -141,7 +168,7 @@ class ArtifactGateTests(unittest.TestCase):
     def test_accepts_exact_stopped_package_without_scanning_raw_container_bytes(self) -> None:
         data = self.stopped_package_bytes()
         self.assertTrue(contains_former_identity_bytes(data))
-        records, findings = scan_nupkg(STOPPED_PACKAGE.relative_to(ROOT).as_posix(), data)
+        records, findings = scan_nupkg(STOPPED_PACKAGE_PATH, data)
         self.assertGreater(len(records), 0)
         self.assertEqual([], findings)
 
@@ -152,7 +179,7 @@ class ArtifactGateTests(unittest.TestCase):
             project = root / "src/Probe/Probe.csproj"
             project.parent.mkdir(parents=True)
             project.write_text("<Project />\n", encoding="utf-8")
-            target = project.parent / "bin/Release/Probe.1.0.0.nupkg"
+            target = root / "artifacts/packages/Probe.1.0.0.nupkg"
             target.parent.mkdir(parents=True)
             target.write_bytes(data)
             result = scan_artifacts(root)
@@ -230,7 +257,7 @@ class ArtifactGateTests(unittest.TestCase):
                 try:
                     if mutant_id == "RAW_CONTAINER_SCAN_REINTRODUCED":
                         _, findings = mutant.scan_nupkg(
-                            STOPPED_PACKAGE.relative_to(ROOT).as_posix(), stopped_data
+                            STOPPED_PACKAGE_PATH, stopped_data
                         )
                         mutant_violation = bool(findings)
                     elif mutant_id == "OUTER_PACKAGE_PATH_CHECK_REMOVED":

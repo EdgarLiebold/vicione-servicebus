@@ -68,7 +68,9 @@ BROKER_CREDENTIAL_VARIABLES = {
 }
 
 # SQL Server cannot rename 'sa', so only the secret is run-scoped. It must also satisfy the engine's
-# complexity rules, which a plain hex secret does not.
+# complexity rules, which a plain hex secret does not. The account name is published all the same: the
+# fixtures read every part of an endpoint from the runner contract and hold no default of their own.
+MSSQL_USER_VARIABLE = "VICIONE_SERVICEBUS_MSSQL_USER"
 MSSQL_PASSWORD_VARIABLE = "VICIONE_SERVICEBUS_MSSQL_PASS"
 MSSQL_ACCOUNT_NAME = "sa"
 
@@ -201,6 +203,7 @@ def build_environment() -> dict[str, str]:
         environment[user_variable] = ACCOUNT_NAME
         # 32 hex characters from the OS CSPRNG, new on every run and never written to disk.
         environment[pass_variable] = secrets.token_hex(16)
+    environment[MSSQL_USER_VARIABLE] = MSSQL_ACCOUNT_NAME
     environment[MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
     return environment
 

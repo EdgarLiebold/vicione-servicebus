@@ -1,70 +1,62 @@
 namespace ViciOne.ServiceBus.DbTransport.Tests;
 
-using ViciOne.ServiceBus.Tests;
+using ViciOne.ServiceBus.TestInfrastructure;
 
 
 /// <summary>
-/// Points the SQL transport specs at the database fixture the canonical runner started.
+/// Points the SQL transport specs at the database fixtures of this run.
 /// <para>
-/// The imported baseline wrote the endpoint straight into the two test configurations: host
-/// 'localhost' on the engine default port, with the well known administrative secret. The runner
-/// publishes an ephemeral loopback port per run instead, so those specs could only ever reach a
-/// server that happened to sit on the default port — on a machine without one they report
-/// connection refused, and on a machine with an unrelated one they measure the wrong server.
-/// That is the same defect <see cref="RunScopedDatabase"/> already closed for the persistence specs.
+/// The imported baseline wrote the endpoint into the two test configurations: host 'localhost' on the
+/// engine default port with the well known administrative secret. The runner publishes an ephemeral
+/// loopback port per run, so those specs could only ever reach a server that happened to sit on the
+/// default port - on a machine without one they reported a refused connection, and on a machine with an
+/// unrelated one they measured the wrong server. Both were silent about which of the two had happened.
 /// </para>
 /// <para>
-/// The run-scoped fixture wins and is not probed. The historic literals stay as the documented
-/// fallback for a developer running against their own server, which is the same policy
-/// <see cref="LocalDbConnectionStringProvider"/> follows.
+/// There is therefore no fallback. Every value comes from <see cref="TestRunnerContract"/>, and an
+/// endpoint the runner did not publish raises <see cref="TestRunnerContractException"/> before the first
+/// connection attempt.
 /// </para>
 /// </summary>
 public static class RunScopedTransportEndpoint
 {
-    const string FallbackHost = "localhost";
-    const string FallbackAdminPassword = "Password12!";
-
     /// <summary>The transport database every spec shares.</summary>
-    public const string SharedDatabase = "ViciOneServiceBus_transport_tests";
+    public const string SharedDatabase = TestDatabase.SqlTransport;
 
-    /// <summary>
-    /// The transport database of the provisioning specs. They create and drop a database on purpose,
-    /// and dropping one disconnects every session still attached to it, so they must not be pointed
-    /// at <see cref="SharedDatabase"/>.
-    /// </summary>
-    public const string ProvisioningDatabase = "ViciOneServiceBus_provisioning_tests";
+    /// <summary>The transport database of the provisioning specs, which create and drop one on purpose.</summary>
+    public const string ProvisioningDatabase = TestDatabase.SqlTransportProvisioning;
 
-    /// <summary>
-    /// PostgreSQL connection string of the run-scoped fixture, or the historic default when the
-    /// runner started none. Specs that derive their whole configuration from a connection string
-    /// read it here instead of carrying their own literal.
-    /// </summary>
+    /// <summary>PostgreSQL connection string of this run for the given database.</summary>
     public static string PostgresConnectionString(string database)
     {
-        return RunScopedDatabase.PostgresIsConfigured
-            ? RunScopedDatabase.PostgresConnectionString(database)
-            : $"host={FallbackHost};user id=postgres;password={FallbackAdminPassword};database={database};";
+        return TestDatabase.Postgres(database);
     }
 
-    /// <summary>Applies the run-scoped PostgreSQL endpoint, keeping the historic values as fallback.</summary>
+    /// <summary>SQL Server connection string of this run for the given database.</summary>
+    public static string SqlServerConnectionString(string database)
+    {
+        return TestDatabase.SqlServer(database);
+    }
+
+    /// <summary>Applies the PostgreSQL endpoint of this run.</summary>
     public static void UseRunScopedPostgres(this SqlTransportOptions options)
     {
-        var configured = RunScopedDatabase.PostgresIsConfigured;
+        var endpoint = TestRunnerContract.Postgres;
 
-        options.Host = configured ? RunScopedDatabase.PostgresHost : FallbackHost;
-        options.Port = configured ? RunScopedDatabase.PostgresPort : null;
-        options.AdminUsername = configured ? RunScopedDatabase.PostgresUsername : "postgres";
-        options.AdminPassword = configured ? RunScopedDatabase.PostgresPassword : FallbackAdminPassword;
+        options.Host = endpoint.Host;
+        options.Port = endpoint.Port;
+        options.AdminUsername = endpoint.Username;
+        options.AdminPassword = endpoint.Password;
     }
 
-    /// <summary>Applies the run-scoped SQL Server endpoint, keeping the historic values as fallback.</summary>
+    /// <summary>Applies the SQL Server endpoint of this run.</summary>
     public static void UseRunScopedSqlServer(this SqlTransportOptions options)
     {
-        var configured = RunScopedDatabase.SqlServerIsConfigured;
+        var endpoint = TestRunnerContract.SqlServer;
 
-        options.Host = configured ? RunScopedDatabase.SqlServerHost : FallbackHost;
-        options.Port = configured ? RunScopedDatabase.SqlServerPort : null;
-        options.AdminUsername = RunScopedDatabase.SqlServerAccount;
-        options.AdminPassword = configured ? RunScopedDatabase.SqlServerPassword : FallbackAdminPassword;
+        options.Host = endpoint.Host;
+        options.Port = endpoint.Port;
+        options.AdminUsername = endpoint.Username;
+        options.AdminPassword = endpoint.Password;
     }
 }

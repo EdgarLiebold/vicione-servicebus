@@ -4,7 +4,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
     using System.Threading.Tasks;
     using System.Transactions;
     using Internals;
-    using ViciOne.ServiceBus.Tests;
+    using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests;
     using ViciOne.ServiceBus.Tests.Saga.Messages;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -127,7 +128,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
         TransactionOutboxTestsDbContext GetDbContext()
         {
             var dbContext = new TransactionOutboxTestsDbContext(new DbContextOptionsBuilder()
-                .UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString("ViciOneServiceBusUnitTests_TransactionOutbox")).Options);
+                .UseSqlServer(TestDatabase.SqlServer("ViciOneServiceBusUnitTests_TransactionOutbox")).Options);
             return dbContext;
         }
 

@@ -9,6 +9,10 @@ Copyright 2007-2024 Chris Patterson
 ViciOne.ServiceBus
 Copyright 2026 Edgar Liebold
 
+ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18.
+The Apache License, Version 2.0 text is unchanged and is carried as LICENSE.txt; only its
+file name changed, from LICENSE, to match the repository structure this product requires.
+
 ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 This repository is a full fork of MassTransit 8.5.10 at upstream commit
 62ab339afa3bac2e9b3fe1769d0d35d7e44778e9 and remains licensed under the

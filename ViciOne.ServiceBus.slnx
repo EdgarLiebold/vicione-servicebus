@@ -56,5 +56,6 @@
   <Project Path="src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj" />
   <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
   <Project Path="tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj" />
+  <Project Path="tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj" />
   <Project Path="tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj" />
 </Solution>

@@ -3,20 +3,11 @@
 ViciOne.ServiceBus provides a developer-focused, modern platform for creating distributed applications without complexity.
 
 - First class testing support
-- Write once, then deploy using RabbitMQ, Azure Service Bus, and Amazon SQS
+- Write once, then deploy using RabbitMQ, Azure Service Bus, Amazon SQS, ActiveMQ or a SQL database
 - Observability via Open Telemetry (OTEL)
-- Fully-supported, widely-adopted, a complete end-to-end solution
 
-## Documentation
-
-Get started by [reading through the documentation](https://github.com/EdgarLiebold/vicione-servicebus/).
-
-## Build Status
-
-| Branch  |                                                                                              Status                                                                                              |
-|---------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| master  |  [![master](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml/badge.svg?branch=master&event=push)](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml)  |
-| develop | [![develop](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/EdgarLiebold/vicione-servicebus/actions/workflows/build.yml) |
+The repository README and CONTRIBUTING describe how to build, test and pack this product. There is
+no separate documentation site yet, and none is claimed here.
 
 ## ViciOne.ServiceBus NuGet packages
 

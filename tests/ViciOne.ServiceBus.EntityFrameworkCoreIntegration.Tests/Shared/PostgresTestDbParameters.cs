@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
 {
-    using ViciOne.ServiceBus.Tests;
+    using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests;
     using System;
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
             // The endpoint and account come from the fixture the runner started. The literal that stood
             // here addressed the default port with a well known account, so it measured whatever held
             // that port rather than the pinned fixture.
-            builder.UseNpgsql(RunScopedDatabase.PostgresConnectionString("ViciOneServiceBusUnitTests"), m =>
+            builder.UseNpgsql(TestDatabase.Postgres(TestDatabase.PostgresPersistence), m =>
             {
                 m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 m.MigrationsHistoryTable($"__{dbContextType.Name}");

@@ -27,6 +27,6 @@
         <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
         <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
         <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.SqlServer\ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
-        <ProjectReference Include="..\ViciOne.ServiceBus.Tests\ViciOne.ServiceBus.Tests.csproj" />
+        <ProjectReference Include="..\ViciOne.ServiceBus.TestInfrastructure\ViciOne.ServiceBus.TestInfrastructure.csproj" />
     </ItemGroup>
 </Project>

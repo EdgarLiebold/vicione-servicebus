@@ -12,18 +12,29 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
     [TestFixture]
     public class When_a_consumer_throws_an_exception
     {
+        /// <summary>
+        /// An endpoint with no consumer for the message skips it, and a skipped message must not stay in the
+        /// queue. The case used to send one and wait two seconds without asserting anything, so it passed
+        /// whatever the transport did with it, including nothing.
+        /// </summary>
         [Test]
         public async Task Should_dead_letter_skipped_messages()
         {
+            // A fresh queue per run: the transport database outlives a single run, so a queue that keeps its
+            // name carries the dead letters of every earlier one and no exact count can be asserted.
+            var queue = $"skipped-message-queue-{NewId.Next().ToString("N")}";
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
                 {
+                    x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(5), testTimeout: TimeSpan.FromSeconds(60));
+
                     x.UsingPostgres((context, cfg) =>
                     {
-                        cfg.ReceiveEndpoint("input-queue", e =>
+                        cfg.ReceiveEndpoint(queue, e =>
                         {
-                            e.PollingInterval = TimeSpan.FromSeconds(.5);
+                            e.PollingInterval = TimeSpan.FromMilliseconds(200);
                             e.ConfigureConsumeTopology = false;
                         });
                     });
@@ -34,11 +45,25 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.Start();
 
-            var endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:input-queue"));
+            var endpoint = await harness.Bus.GetSendEndpoint(new Uri($"queue:{queue}"));
 
-            await endpoint.Send(new TestMessage("Hello, World!"));
+            await endpoint.Send(new TestMessage("nothing on this endpoint consumes this"));
 
-            await Task.Delay(2000);
+            // The endpoint reports that nothing is arriving any more, rather than a fixed two seconds.
+            await harness.InactivityTask;
+
+            await using var connection = await provider.OpenTransport(TransportDialect.Postgres);
+
+            var queued = await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name, queue, 1);
+            var skipped = await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name, queue, 3);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(queued, Is.Zero, "the skipped message is still in the queue it was sent to");
+                Assert.That(skipped, Is.EqualTo(1), "the skipped message did not reach the dead letter queue");
+            });
+
+            await harness.Stop();
         }
 
         [Test]

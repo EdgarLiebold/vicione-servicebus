@@ -12,10 +12,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 848 |
-| Modified | 4882 |
-| Deleted | 757 |
-| Renamed | 10 |
+| Added | 880 |
+| Modified | 4878 |
+| Deleted | 764 |
+| Renamed | 8 |
 
 | Path | Status | Baseline path |
 |---|---|---|
@@ -29,9 +29,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.gitignore` | Modified | `.gitignore` |
 | `AGENTS.md` | Modified | `AGENTS.md` |
 | `CHANGELIST.md` | Added |  |
+| `CHANGELOG.md` | Added |  |
+| `CONTRIBUTING.md` | Added |  |
 | `COPYRIGHT` | Modified | `COPYRIGHT` |
 | `Directory.Build.props` | Modified | `Directory.Build.props` |
 | `Directory.Packages.props` | Modified | `Directory.Packages.props` |
+| `LICENSE` | Deleted | `LICENSE` |
+| `LICENSE.txt` | Added |  |
 | `MODIFICATIONS.md` | Added |  |
 | `MassTransit.sln` | Deleted | `MassTransit.sln` |
 | `MassTransit.sln.DotSettings` | Deleted | `MassTransit.sln.DotSettings` |
@@ -107,7 +111,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmark/docker-compose.yml` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/BenchmarkConfiguration.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/BenchmarkRunOutcome.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Benchmarker.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ChannelBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/CronExpressionBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs` | Added |  |
@@ -115,7 +118,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/JsonSerializationBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBenchmark.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/NewIdBenchmarks.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/NewIdConversionBenchmarks.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/NewIdGenerationBenchmarks.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Program.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/SendBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/SerializationBenchmark.cs` | Added |  |
@@ -216,6 +220,22 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0077-public-api-diff/ROOT_AND_STRUCTURE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0078-final-gate/FINAL_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0079-graph-and-sabotage/GRAPH_AND_SABOTAGE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/API_DIFF.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/API_REMOVAL_CLASSIFICATION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/BATCH_MUTATIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/BUILD_DEFAULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/FORMATTER_CENSUS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/NEWID_MUTATIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/NUGET_SABOTAGE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/PACKAGE_GROUPS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/PACK_SCAN.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/ROOT_AND_OUTPUT.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/RS1038_DECISION_PROPOSAL.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/SECTION_7_CLOSURE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/SOLUTION_MEMBERSHIP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/SOLUTION_SABOTAGE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/SOLUTION_TRUTH_SURVEY.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0080-recovery/UNSAFE_CENSUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/CORE_EXPLICIT_DISPOSITION_MATRIX.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec024-phaseA/quartz/quartz.trx` | Added |  |
@@ -810,6 +830,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` |
 | `src/MassTransit.Abstractions/UsageTelemetry/MassTransitUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/MassTransitUsageTelemetry.cs` |
 | `src/MassTransit.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` |
+| `src/MassTransit.Analyzers/CancellationTokenOverloadMethodFixer.cs` | Deleted | `src/MassTransit.Analyzers/CancellationTokenOverloadMethodFixer.cs` |
+| `src/MassTransit.Analyzers/MessageContractCodeFixProvider.cs` | Deleted | `src/MassTransit.Analyzers/MessageContractCodeFixProvider.cs` |
+| `src/MassTransit.Analyzers/tools/install.ps1` | Deleted | `src/MassTransit.Analyzers/tools/install.ps1` |
+| `src/MassTransit.Analyzers/tools/uninstall.ps1` | Deleted | `src/MassTransit.Analyzers/tools/uninstall.ps1` |
 | `src/MassTransit.Interop.NServiceBus/Configuration/NServiceBusSerializerConfigurationExtensions.cs` | Deleted | `src/MassTransit.Interop.NServiceBus/Configuration/NServiceBusSerializerConfigurationExtensions.cs` |
 | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj` | Deleted | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj` |
 | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj.DotSettings` | Deleted | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj.DotSettings` |
@@ -3110,22 +3134,24 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithmOptions.cs` | Modified | `src/MassTransit.Abstractions/Util/RequestRateAlgorithmOptions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj` | Modified | `src/MassTransit.Abstractions/MassTransit.Abstractions.csproj` |
 | `src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj.DotSettings` | Modified | `src/MassTransit.Abstractions/MassTransit.Abstractions.csproj.DotSettings` |
+| `src/ViciOne.ServiceBus.Analyzers.CodeFixes/CancellationTokenOverloadMethodFixer.cs` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.CodeFixes/MessageContractCodeFixProvider.cs` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.Package/tools/install.ps1` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.Package/tools/uninstall.ps1` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md` | Modified | `src/MassTransit.Analyzers/AnalyzerReleases.Shipped.md` |
 | `src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Unshipped.md` | Renamed | `src/MassTransit.Analyzers/AnalyzerReleases.Unshipped.md` |
 | `src/ViciOne.ServiceBus.Analyzers/AsyncMethodAnalyzer.cs` | Modified | `src/MassTransit.Analyzers/AsyncMethodAnalyzer.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/CancellationTokenOverloadMethodAnalyzer.cs` | Modified | `src/MassTransit.Analyzers/CancellationTokenOverloadMethodAnalyzer.cs` |
-| `src/ViciOne.ServiceBus.Analyzers/CancellationTokenOverloadMethodFixer.cs` | Modified | `src/MassTransit.Analyzers/CancellationTokenOverloadMethodFixer.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/CommonExpressions.cs` | Modified | `src/MassTransit.Analyzers/CommonExpressions.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/Helpers/NodeList.cs` | Modified | `src/MassTransit.Analyzers/Helpers/NodeList.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/Helpers/NodeTable.cs` | Modified | `src/MassTransit.Analyzers/Helpers/NodeTable.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/Helpers/OperationExtensions.cs` | Modified | `src/MassTransit.Analyzers/Helpers/OperationExtensions.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/Helpers/TypeConversionHelper.cs` | Modified | `src/MassTransit.Analyzers/Helpers/TypeConversionHelper.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/MessageContractAnalyzer.cs` | Modified | `src/MassTransit.Analyzers/MessageContractAnalyzer.cs` |
-| `src/ViciOne.ServiceBus.Analyzers/MessageContractCodeFixProvider.cs` | Modified | `src/MassTransit.Analyzers/MessageContractCodeFixProvider.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/PropertyNameEqualityComparer.cs` | Modified | `src/MassTransit.Analyzers/PropertyNameEqualityComparer.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj` | Modified | `src/MassTransit.Analyzers/MassTransit.Analyzers.csproj` |
-| `src/ViciOne.ServiceBus.Analyzers/tools/install.ps1` | Renamed | `src/MassTransit.Analyzers/tools/install.ps1` |
-| `src/ViciOne.ServiceBus.Analyzers/tools/uninstall.ps1` | Renamed | `src/MassTransit.Analyzers/tools/uninstall.ps1` |
 | `src/ViciOne.ServiceBus.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` | Modified | `src/MassTransit.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/InternalMessagePackResolver.cs` | Modified | `src/MassTransit.MessagePack/Serialization/InternalMessagePackResolver.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackEnvelope.cs` |
@@ -5536,10 +5562,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` |
 | `tests/MassTransit.SqlTransport.Tests/LicenseConfiguration.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/LicenseConfiguration.cs` |
+| `tests/MassTransit.SqlTransport.Tests/SqlServer/Publish_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/SqlServer/Publish_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
 | `tests/MassTransit.Tests/Encryption/TestMessage.cs` | Deleted | `tests/MassTransit.Tests/Encryption/TestMessage.cs` |
+| `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
 | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/Performance_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Performance_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` |
@@ -5628,6 +5656,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/MassTransit.AmazonSqsTransport.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/docker-compose.yml` | Renamed | `tests/MassTransit.AmazonSqsTransport.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceState_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Await_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/DictionaryInitializer_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/DictionaryInitializer_Specs.cs` |
@@ -5957,6 +5986,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/BusOutbox_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/BusOutbox_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Configuration_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Configuration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/DelayedDelivery_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/DelayedDelivery_Specs.cs` |
+| `tests/ViciOne.ServiceBus.SqlTransport.Tests/DeliberateConsumerFault.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Expiration_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Expiration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/ExtensionData_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/ExtensionData_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Fault_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Fault_Specs.cs` |
@@ -5983,13 +6013,18 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/Provision_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/Provision_Specs.cs` |
-| `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/Publish_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/Publish_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/ReceiveEndpoint_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/ReceiveEndpoint_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServerDatabaseTestConfiguration.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServerDatabaseTestConfiguration.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SubscriptionType_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SubscriptionType_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/TestConfigurationExtensions.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/TestConfigurationExtensions.cs` |
+| `tests/ViciOne.ServiceBus.SqlTransport.Tests/TransportInspection.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Modified | `tests/MassTransit.SqlTransport.Tests/MassTransit.SqlTransport.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/docker-compose.yml` | Modified | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/DatabaseEndpoint.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/TestDatabase.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContract.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Audit/AuditFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/Audit_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
@@ -6158,7 +6193,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/JobServiceLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JsonToken_Specs.cs` | Modified | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/LocalDbConnectionStringProvider.cs` | Modified | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MediatorRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs` | Modified | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageContext_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
@@ -6272,7 +6306,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/RequestFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ResponsePatternMatching_Specs.cs` | Modified | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/Retry_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RunScopedDatabase.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Saga/InitiateSaga_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/InitiateSaga_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/InjectingSampleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/InjectingSampleSaga.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/Injecting_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/Injecting_Specs.cs` |

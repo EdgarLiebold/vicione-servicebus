@@ -143,7 +143,7 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
         self.assert_extra_legal_identity_rejected("MODIFICATIONS.md")
 
     def test_rejects_extra_former_identity_in_license(self) -> None:
-        self.assert_extra_legal_identity_rejected("LICENSE")
+        self.assert_extra_legal_identity_rejected("LICENSE.txt")
 
     def test_rejects_unchanged_commentable_format_exception(self) -> None:
         root = Path(__file__).resolve().parents[2]

@@ -1,7 +1,8 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
 {
     using System.Reflection;
-    using ViciOne.ServiceBus.Tests;
+    using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
     using TestFramework;
@@ -20,7 +21,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests
 
         public static void Apply(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), m =>
+            builder.UseSqlServer(TestDatabase.SqlServer(), m =>
             {
                 m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 m.MigrationsHistoryTable($"__{nameof(FutureSagaDbContext)}");

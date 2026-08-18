@@ -128,9 +128,11 @@ def commit_candidate_files(root: Path) -> Iterable[Path]:
 def legal_identity_contexts() -> dict[str, tuple[str, ...]]:
     upstream_url = f"https://github.com/{FORMER_PASCAL}/{FORMER_PASCAL}"
     return {
+        # The present provenance statement, not the one the import wrote. The repository was created
+        # from a complete pinned fork and carries the retained, modernised scope today; a gate that
+        # still demanded the old sentence would be asserting a claim the product no longer makes.
         "README.md": (
-            f"Dieses Repository ist ein vollständiger Fork von **{FORMER_PASCAL} 8.5.10**, Upstream-Commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, aus dem Projekt [{FORMER_PASCAL}]({upstream_url}). Der übernommene und geänderte Bestand steht unter der **Apache License 2.0**; siehe [LICENSE](LICENSE), [NOTICE](NOTICE), [COPYRIGHT](COPYRIGHT) und [MODIFICATIONS.md](MODIFICATIONS.md).",
-            f"This repository is a complete fork of **{FORMER_PASCAL} 8.5.10**, upstream commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, from the [{FORMER_PASCAL}]({upstream_url}) project. The retained and modified code is licensed under the **Apache License 2.0**; see [LICENSE](LICENSE), [NOTICE](NOTICE), [COPYRIGHT](COPYRIGHT), and [MODIFICATIONS.md](MODIFICATIONS.md).",
+            f"This repository was created from a complete, pinned fork of **{FORMER_PASCAL} 8.5.10**, upstream commit\n`62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, from the\n[{FORMER_PASCAL}]({upstream_url}) project, and carries the deliberately\nretained and modernised ViciOne capability scope today. The retained and modified code is licensed\nunder the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),\n[COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md).",
         ),
         "NOTICE": (
             f"{FORMER_PASCAL}\nCopyright 2007-2024 Chris Patterson",
@@ -140,7 +142,7 @@ def legal_identity_contexts() -> dict[str, tuple[str, ...]]:
         "MODIFICATIONS.md": (
             f"The baseline is the complete {FORMER_PASCAL} 8.5.10 source tree at upstream commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, imported into the local fork baseline commit `1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc` (tree `2b09d4e2b2e14289f06ba112ce1ae52e326a0307`).",
         ),
-        "LICENSE": (),
+        "LICENSE.txt": (),
     }
 
 
@@ -402,8 +404,15 @@ def derive_package_inventory(root: Path) -> list[dict[str, object]]:
         root_namespace = xml_property(tree, "RootNamespace") or assembly
         is_test = project.relative_to(root).as_posix().startswith("tests/")
         is_packable = (xml_property(tree, "IsPackable") or ("false" if is_test else "true")).casefold() == "true"
+        # The SDK writes every build result under artifacts/, so there is no bin beside a project to
+        # read any more. A gate that kept looking there would report zero artifacts for every project
+        # and call that a pass.
         artifacts: list[dict[str, str]] = []
-        for artifact in sorted(project.parent.glob("bin/Release/**/*")):
+        artifact_roots = [
+            root / "artifacts/sdk/bin" / project_name,
+            root / "artifacts/packages",
+        ]
+        for artifact in sorted(item for artifact_root in artifact_roots for item in artifact_root.glob("**/*")):
             if not artifact.is_file() or artifact.suffix.casefold() not in {".dll", ".pdb", ".nupkg"}:
                 continue
             if artifact.suffix.casefold() == ".nupkg" or artifact.stem == assembly:
@@ -486,8 +495,11 @@ def validate_legal_documents(root: Path) -> list[Finding]:
     unchanged_container = ".devcontainer/devcontainer.json"
     if unchanged_container in notice or unchanged_container in modifications:
         findings.append(Finding("legal-exception-list", unchanged_container, "unchanged commentable file is listed as an exception"))
-    if baseline_bytes(root, "LICENSE") != (root / "LICENSE").read_bytes():
-        findings.append(Finding("legal", "LICENSE", "LICENSE is not byte-identical"))
+    # The baseline carries the licence as LICENSE, the product carries it as LICENSE.txt. The name is
+    # the only thing that changed, so the historical path and the active path are named separately and
+    # their bytes are compared.
+    if baseline_bytes(root, "LICENSE") != (root / "LICENSE.txt").read_bytes():
+        findings.append(Finding("legal", "LICENSE.txt", "the licence text differs from the imported baseline"))
     return findings
 
 
@@ -544,7 +556,7 @@ def run_gate(root: Path, output: Path | None) -> int:
     api, api_findings = derive_public_api_mapping(root)
     scan_findings = scan_tree(root)
     conformance_findings = derive_refactor_conformance(root)
-    license_equal = baseline_bytes(root, "LICENSE") == (root / "LICENSE").read_bytes()
+    license_equal = baseline_bytes(root, "LICENSE") == (root / "LICENSE.txt").read_bytes()
     legal_findings = validate_legal_documents(root)
     persisted_findings = validate_persisted_evidence(
         root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY",

@@ -1,9 +1,10 @@
 # AGENTS.md
 
-This repository is the complete Apache-2.0 source fork of **MassTransit 8.5.10** at the fixed
-upstream commit, published under the product identity `ViciOne.ServiceBus`. Upstream provenance, the
-Apache license and the modification notices stay; see [README.md](README.md), [LICENSE](LICENSE),
-[NOTICE](NOTICE), [COPYRIGHT](COPYRIGHT), [MODIFICATIONS.md](MODIFICATIONS.md) and the generated
+This repository was created from the complete Apache-2.0 source fork of **MassTransit 8.5.10** at
+the fixed upstream commit and carries the retained, modernised capability scope under the product
+identity `ViciOne.ServiceBus`. Upstream provenance, the Apache license and the modification notices
+stay; see [README.md](README.md), [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
+[COPYRIGHT](COPYRIGHT), [MODIFICATIONS.md](MODIFICATIONS.md) and the generated
 [CHANGELIST.md](CHANGELIST.md).
 
 ViciOne changes are made only from a hash-bound development slice. What is in scope, what is

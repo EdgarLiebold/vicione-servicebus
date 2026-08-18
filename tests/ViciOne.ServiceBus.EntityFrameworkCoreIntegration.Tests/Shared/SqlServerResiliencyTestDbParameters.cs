@@ -2,7 +2,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
 {
     using System;
     using System.Reflection;
-    using ViciOne.ServiceBus.Tests;
+    using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests;
     using Microsoft.EntityFrameworkCore;
     using TestFramework;
 
@@ -25,7 +26,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Shared
 
         public void Apply(Type dbContextType, DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), m =>
+            builder.UseSqlServer(TestDatabase.SqlServer(), m =>
             {
                 m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 m.MigrationsHistoryTable($"__{dbContextType.Name}");

@@ -1,7 +1,8 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 {
     using System.Reflection;
-    using ViciOne.ServiceBus.Tests;
+    using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
     using TestFramework;
@@ -21,7 +22,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.ReliableMessag
 
         public static void Apply(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), options =>
+            builder.UseSqlServer(TestDatabase.SqlServer(), options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                 options.MigrationsHistoryTable($"__{nameof(ReliableDbContext)}");

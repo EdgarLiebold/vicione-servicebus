@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests;
 using System;
 using System.Reflection;
 using EntityFrameworkCoreIntegration;
-using ViciOne.ServiceBus.Tests;
+using ViciOne.ServiceBus.TestInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SqlServer;
@@ -23,7 +23,7 @@ public class SqlServerDatabaseTestConfiguration :
     public void Apply<TDbContext>(DbContextOptionsBuilder builder)
         where TDbContext : DbContext
     {
-        builder.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), m =>
+        builder.UseSqlServer(TestDatabase.SqlServer(), m =>
         {
             m.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
             m.MigrationsHistoryTable($"__{typeof(TDbContext).Name}");

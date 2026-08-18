@@ -275,7 +275,7 @@ def generate(root: Path, evidence: Path, build_binlog: Path, tool_tests: int) ->
     legal_validation_findings = [item.as_dict() for item in validate_legal_documents(root)]
     legal_gate = {
         "status": "PASS" if not legal_validation_findings else "FAIL",
-        "licenseByteIdentical": baseline_bytes(root, "LICENSE") == (root / "LICENSE").read_bytes(),
+        "licenseByteIdentical": baseline_bytes(root, "LICENSE") == (root / "LICENSE.txt").read_bytes(),
         "exactChangedFormatExceptions": exception_paths,
         "allExceptionsInNotice": all(path in notice for path in exception_paths),
         "allExceptionsInModifications": all(path in modifications for path in exception_paths),
@@ -336,7 +336,7 @@ def generate(root: Path, evidence: Path, build_binlog: Path, tool_tests: int) ->
     }
     write_json(evidence / "BINARY_GATE.json", binary_gate)
 
-    packages_on_disk = sorted(root.glob("src/**/bin/Release/*.nupkg"))
+    packages_on_disk = sorted(root.glob("artifacts/packages/*.nupkg"))
     pack_gate = {
         "status": "PASS" if len(packages_on_disk) == 33 else "FAIL",
         "isPackableProjects": 33,

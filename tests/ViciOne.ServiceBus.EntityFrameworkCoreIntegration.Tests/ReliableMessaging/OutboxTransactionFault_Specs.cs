@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Logging;
+using ViciOne.ServiceBus.TestInfrastructure;
 using ViciOne.ServiceBus.Tests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,7 @@ public class OutboxTransactionFault_Specs
         services
             .AddDbContext<TestDbContext>(builder =>
             {
-                builder.UseSqlServer(LocalDbConnectionStringProvider.GetLocalDbConnectionString(), options =>
+                builder.UseSqlServer(TestDatabase.SqlServer(), options =>
                 {
                     options.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
                     options.MigrationsHistoryTable($"__{nameof(TestDbContext)}");

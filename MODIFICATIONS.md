@@ -6,6 +6,26 @@ The baseline is the complete MassTransit 8.5.10 source tree at upstream commit `
 
 ViciOne changed the technical identity to `ViciOne.ServiceBus` across paths, projects, assemblies, packages, source identifiers, configuration, wire formats, topology, diagnostics, tests, documentation and automation. The deterministic mapping and one-to-one baseline census are generated under `evidence/WP-F2-SERVICEBUS-IDENTITY/`.
 
+## ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18
+
+Beyond the identity change, ViciOne removed and modernised capabilities of the baseline:
+
+- The foreign licence check and the usage telemetry were removed with their dependency injection and
+  public API surface. The telemetry reported host, bus, rider and endpoint data to a hard wired third
+  party address on every bus start and was on by default.
+- The inert `TypeAttributes.Serializable` flag on the dynamically emitted message proxy was removed
+  together with its `SYSLIB0050` suppression.
+- Analyzers and code fixes were split into two assemblies, so the analyzer assembly no longer
+  references `Microsoft.CodeAnalysis.Workspaces`. They still ship as the one package
+  `ViciOne.ServiceBus.Analyzers`.
+- The build was modernised onto `net10.0` with one output root, the canonical `.slnx` solution and
+  the SDK warning level.
+- The Apache-2.0 licence text is carried as `LICENSE.txt`. The text is unchanged; only the file name
+  changed, and the generated ChangeList records the rename.
+
+Which file each of these touched is not repeated here. The generated
+[CHANGELIST.md](CHANGELIST.md) is the section 4(b) record and holds the complete path inventory.
+
 ## Exact changed-format exceptions
 
 The following changed baseline files cannot carry a syntax-valid in-file comment. Each entry is exact; this is not an extension- or directory-wide waiver.

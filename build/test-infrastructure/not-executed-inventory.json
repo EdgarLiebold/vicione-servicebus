@@ -25,7 +25,7 @@
     "abstractions": {
       "project": "tests/ViciOne.ServiceBus.Abstractions.Tests",
       "explicitAttributeCount": 0,
-      "comment": "Empty because all five NewId cases left this list the only way a case may: they were fixed and they execute. The two timestamp cases read the wall clock and accepted any value within a minute while printing both for a human; they supply the tick source now and compare the exact timestamp. The two uniqueness cases generated twenty million and one million identifiers and printed how many duplicates they had found without asserting anything; they are bounded at 200000 each and assert that every identifier is distinct, each proven by its own duplicate mutation. The fifth measured throughput only and is removed rather than kept as a permanently excluded case; no NewId benchmark exists in the benchmark project to move it to, which is recorded rather than glossed over.",
+      "comment": "Empty because all five NewId cases left this list the only way a case may: they were fixed and they execute. The two timestamp cases read the wall clock and accepted any value within a minute while printing both for a human; they supply the tick source now and compare the exact timestamp. The two uniqueness cases generated twenty million and one million identifiers and printed how many duplicates they had found without asserting anything; they are bounded at 200000 each and assert that every identifier is distinct, each proven by its own duplicate mutation. The fifth measured throughput only and is removed rather than kept as a permanently excluded case; the NewId benchmarks it belongs beside are NewIdGenerationBenchmarks and NewIdConversionBenchmarks in benchmarks/ViciOne.ServiceBus.BenchmarkConsole, which the assembly wide BenchmarkSwitcher finds. The earlier statement that no NewId benchmark existed was wrong: it came from searching one benchmark project instead of the tracked tree.",
       "cases": []
     },
     "rabbitmq": {
@@ -248,57 +248,9 @@
     },
     "sql-transport": {
       "project": "tests/ViciOne.ServiceBus.SqlTransport.Tests",
-      "explicitAttributeCount": 5,
-      "cases": [
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_consume_a_lot_of_messages",
-          "fixture": "Configuring_the_postgresql_bus",
-          "test": "Should_consume_a_lot_of_messages",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_BENCHMARK",
-          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_consume_a_lot_of_published_messages",
-          "fixture": "Configuring_the_postgresql_bus",
-          "test": "Should_consume_a_lot_of_published_messages",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_BENCHMARK",
-          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Configuring_the_postgresql_bus.Should_give_me_so_much_of_the_datas",
-          "fixture": "Configuring_the_postgresql_bus",
-          "test": "Should_give_me_so_much_of_the_datas",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_BENCHMARK",
-          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.SqlServer.Using_publish.Should_consume_a_lot_of_published_messages",
-          "fixture": "Using_publish",
-          "test": "Should_consume_a_lot_of_published_messages",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_BENCHMARK",
-          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<PostgresDatabaseTestConfiguration>.Should_not_consume_the_message_after_the_limit",
-          "fixture": "Using_message_delivery_count_limit<PostgresDatabaseTestConfiguration>",
-          "test": "Should_not_consume_the_message_after_the_limit",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
-          "reason": "Asserts that the message is not consumed, but never engages the delivery count limit it is named after: MaxDeliveryCount is public on ISqlQueueConfigurator, which ISqlReceiveEndpointConfigurator inherits, and the fixture sets it nowhere, so the queue keeps the migrator default of 10. The consumer succeeds, so exactly one delivery is correct. Run with the marker removed against the run-scoped fixtures: expected 0, but was 1. Open point for the assurance rework, not a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.DbTransport.Tests.Using_message_delivery_count_limit<SqlServerDatabaseTestConfiguration>.Should_not_consume_the_message_after_the_limit",
-          "fixture": "Using_message_delivery_count_limit<SqlServerDatabaseTestConfiguration>",
-          "test": "Should_not_consume_the_message_after_the_limit",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
-          "reason": "Same defect as the PostgreSQL fixture of this class and measured the same way on SQL Server: expected 0, but was 1. Open point for the assurance rework, not a pass."
-        }
-      ]
+      "explicitAttributeCount": 0,
+      "cases": [],
+      "comment": "Empty because all six cases left this list the only way a case may: they were closed and they execute. Four measured throughput, published or sent a thousand messages and printed a message rate without asserting anything; the measurement they stood for lives in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so they are removed rather than kept as permanently excluded cases. The remaining two are the delivery count limit on both engines. They asserted that a message is not consumed after the limit but never set it, so the queue kept the migrator default of ten and their consumer succeeded, which is why both engines measured expected 0 but was 1. The limit is set now and read back from the queue the migrator created, and a delivery driven to that limit is neither handed to a consumer again nor left in the queue. Removing the limit from the fetch statement turns both fixtures red."
     }
   }
 }

@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.DbTransport.Tests;
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +18,10 @@ public class Using_publish<T>
     [Test]
     public async Task Should_consume_a_lot_of_published_messages()
     {
+        // A fresh queue per run: the transport database outlives a run, and a queue that keeps its name
+        // still holds what an earlier fixture published into it, so no exact set could be asserted.
+        var queue = $"publish-input-queue-{NewId.Next().ToString("N")}";
+
         await using var provider = _configuration.Create()
             .AddViciOneServiceBusTestHarness(TextWriter.Null, x =>
             {
@@ -27,7 +30,7 @@ public class Using_publish<T>
 
                 _configuration.Configure(x, (context, cfg) =>
                 {
-                    cfg.ReceiveEndpoint("publish-input-queue", e =>
+                    cfg.ReceiveEndpoint(queue, e =>
                     {
                         e.PrefetchCount = 30;
 
@@ -43,29 +46,22 @@ public class Using_publish<T>
 
         var options = new ParallelOptions { MaxDegreeOfParallelism = 10 };
 
-        var timer = Stopwatch.StartNew();
-
         const int limit = 1000;
 
-        await Parallel.ForEachAsync(Enumerable.Range(0, limit), options, async (i, token) =>
+        var published = Enumerable.Range(0, limit).Select(i => $"Hello, World! {i}").ToArray();
+
+        await Parallel.ForEachAsync(published, options, async (value, token) =>
         {
-            await harness.Bus.Publish(new TestMessage($"Hello, World! {i}"), token);
+            await harness.Bus.Publish(new TestMessage(value), token);
         });
 
-        var sendElapsed = timer.Elapsed;
+        var consumed = await harness.Consumed.SelectAsync<TestMessage>().Take(limit)
+            .Select(x => x.Context.Message.Value).ToListAsync();
 
-        await harness.Consumed.SelectAsync<TestMessage>().Take(limit).Count();
+        Assert.That(consumed, Is.EquivalentTo(published),
+            "the messages that arrived are not exactly the ones that were published");
 
-        var consumeElapsed = timer.Elapsed;
-
-        timer.Stop();
-
-        Console.WriteLine("Total publish duration: {0:g}", sendElapsed);
-        Console.WriteLine("Publish message rate: {0:F2} (msg/s)",
-            limit * 1000 / sendElapsed.TotalMilliseconds);
-        Console.WriteLine("Total consume duration: {0:g}", consumeElapsed);
-        Console.WriteLine("Consume message rate: {0:F2} (msg/s)",
-            limit * 1000 / consumeElapsed.TotalMilliseconds);
+        await harness.Stop();
     }
 
     readonly T _configuration;

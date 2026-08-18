@@ -9,10 +9,11 @@ security, provenance and publication gates have passed.
 
 ## Origin and license
 
-This repository is a complete fork of **MassTransit 8.5.10**, upstream commit
+This repository was created from a complete, pinned fork of **MassTransit 8.5.10**, upstream commit
 `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, from the
-[MassTransit](https://github.com/MassTransit/MassTransit) project. The retained and modified code is
-licensed under the **Apache License 2.0**; see [LICENSE](LICENSE), [NOTICE](NOTICE),
+[MassTransit](https://github.com/MassTransit/MassTransit) project, and carries the deliberately
+retained and modernised ViciOne capability scope today. The retained and modified code is licensed
+under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
 [COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md). The generated
 [CHANGELIST.md](CHANGELIST.md) is the section 4(b) record of what changed.
 
@@ -33,6 +34,7 @@ Requirements:
 dotnet restore ViciOne.ServiceBus.slnx
 dotnet build ViciOne.ServiceBus.slnx --configuration Release --no-restore
 dotnet test ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
+dotnet pack ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
 ```
 
 Every runtime, test and benchmark project targets `net10.0`. The Roslyn analyzer is the single
@@ -40,8 +42,13 @@ exception and stays on `netstandard2.0`, because the compiler that loads it is n
 process.
 
 The repository contains transport and persistence integration tests that require their external
-infrastructure. Missing infrastructure is reported as an explicit incomplete proof; tests are never
-silently skipped or weakened.
+infrastructure. `tools/ci/run_broker_category.py` starts the pinned fixture for a category and
+publishes its endpoint to the run; a fixture that was not started makes the affected tests fail with
+a named missing contract rather than falling back to a default host or secret. Missing infrastructure
+is reported as an explicit incomplete proof; tests are never silently skipped or weakened.
+
+Build output goes to `artifacts/sdk`, packages to `artifacts/packages`. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the full restore, build, test, pack and review path.
 
 ## Scope
 

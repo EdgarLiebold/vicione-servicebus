@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus.DbTransport.Tests;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Tests.Middleware.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Testing;
@@ -29,7 +28,7 @@ public class When_the_redelivery_header_is_present<T>
                         return;
                     }
 
-                    throw new TestException("Ouch!");
+                    throw new DeliberateConsumerFault("the consumer failed on purpose so the message is redelivered");
                 });
 
                 x.AddHandler(async (ConsumeContext<OutboundMessage> _) =>

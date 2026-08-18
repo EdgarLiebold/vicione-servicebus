@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus.DbTransport.Tests;
 using System;
 using System.Reflection;
 using EntityFrameworkCoreIntegration;
-using ViciOne.ServiceBus.Tests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
