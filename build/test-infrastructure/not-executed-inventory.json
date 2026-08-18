@@ -30,7 +30,7 @@
     },
     "rabbitmq": {
       "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
-      "explicitAttributeCount": 13,
+      "explicitAttributeCount": 12,
       "cases": [
         {
           "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.BusLifecycleAccumulation_Probe.Measure_round_trip_across_bus_lifecycles",
@@ -105,70 +105,6 @@
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         },
         {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_carry_excess_baggage",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_excess_baggage_with_the_configured_serializer",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_carry_excess_baggage_with_the_configured_serializer",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_carry_the_baggage_with_the_configured_serializer",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_carry_the_baggage_with_the_configured_serializer",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_consumer",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_for_a_consumer",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_batch_consumer",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_for_a_batch_consumer",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_routing_slip",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_for_a_routing_slip",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_from_the_mediator",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_from_the_mediator",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.OpenTelemetry_Specs.Should_support_the_saga_harness",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_support_the_saga_harness",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
           "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Pounding_the_crap_out_of_the_send_endpoint.Should_end_well",
           "fixture": "Pounding_the_crap_out_of_the_send_endpoint",
           "test": "Should_end_well",
@@ -202,7 +138,7 @@
     },
     "activemq": {
       "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
-      "explicitAttributeCount": 4,
+      "explicitAttributeCount": 3,
       "cases": [
         {
           "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
@@ -219,14 +155,6 @@
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_MANUAL_OBSERVATION",
           "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.OpenTelemetry_Specs.Should_report_telemetry_for_a_consumer",
-          "fixture": "OpenTelemetry_Specs",
-          "test": "Should_report_telemetry_for_a_consumer",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
         },
         {
           "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"activemq\").Should_fault_nicely",

@@ -18,8 +18,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
     using Testing;
 
 
+    /// <summary>
+    /// Telemetry the product emits, read from the listener the fixture installs. It needs the
+    /// pinned broker and nothing else: the tracing here registers a source and no exporter, so
+    /// the external infrastructure this fixture was excluded for never existed.
+    /// </summary>
     [TestFixture]
-    [Explicit]
     public class OpenTelemetry_Specs
     {
         [Test]

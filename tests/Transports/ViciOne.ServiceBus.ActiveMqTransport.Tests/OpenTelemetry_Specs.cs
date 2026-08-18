@@ -32,8 +32,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     }
 
 
+    /// <summary>
+    /// Telemetry the product emits, read from the listener the fixture installs. It needs the
+    /// pinned broker and nothing else: the tracing here registers a source and no exporter, so
+    /// the external infrastructure this fixture was excluded for never existed.
+    /// </summary>
     [TestFixture]
-    [Explicit]
     public class OpenTelemetry_Specs
     {
         [Test]
@@ -51,6 +55,10 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
                     x.UsingActiveMq((context, cfg) =>
                     {
+                        // Without this the configurator keeps its built-in default and the spec
+                        // connects to localhost:61616 as admin, which is not the pinned fixture.
+                        cfg.ConfigureHost(ActiveMqHostAddress.ActiveMqScheme);
+
                         cfg.ConfigureEndpoints(context);
                     });
                 })
