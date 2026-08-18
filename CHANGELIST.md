@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1162 |
+| Added | 1161 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -140,14 +140,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
-| `build/test-infrastructure/capability-matrix.json` | Added |  |
 | `build/test-infrastructure/compose.yaml` | Added |  |
 | `build/test-infrastructure/haproxy/haproxy.cfg` | Added |  |
 | `build/test-infrastructure/images.lock.json` | Added |  |
 | `build/test-infrastructure/new-run-credentials.sh` | Added |  |
-| `build/test-infrastructure/not-executed-inventory.json` | Added |  |
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
+| `build/verification/VERIFICATION_MODEL.json` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
 | `evidence/RAW_RUN_ARTIFACT_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json` | Added |  |
@@ -6791,7 +6790,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |
-| `tools/ci/capability_matrix.py` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
@@ -6801,6 +6799,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/test_policy_validator.py` | Added |  |
 | `tools/ci/test_run_broker_category.py` | Added |  |
 | `tools/ci/test_run_test_category.py` | Added |  |
+| `tools/ci/verification_model.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/Program.cs` | Added |  |

@@ -40,7 +40,7 @@ TEST_TIMEZONE = "UTC"
 ZERO_COUNTERS = {"total": 0, "executed": 0, "passed": 0, "failed": 0, "notExecuted": 0}
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-NOT_EXECUTED_INVENTORY = REPO_ROOT / "build/test-infrastructure/not-executed-inventory.json"
+VERIFICATION_MODEL = REPO_ROOT / "build/verification/VERIFICATION_MODEL.json"
 
 # Options that narrow the run. A required category is only a proof when it is complete, so the
 # controller refuses them itself instead of trusting the workflow text that calls it. A settings file
@@ -135,39 +135,49 @@ def minimum_executed(category: str) -> int | None:
     shrinking category red.
     """
     try:
-        data = json.loads(NOT_EXECUTED_INVENTORY.read_text(encoding="utf-8"))
+        data = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
 
-    entry = data.get("categories", {}).get(category)
-    if not isinstance(entry, dict):
+    run = declared_run(data, category)
+    if run is None:
         return None
 
-    floor = entry.get("minimumExecutedCases")
+    floor = run.get("minimumExecutedCases")
 
     return floor if isinstance(floor, int) and floor > 0 else None
 
 
-def inventoried_cases(category: str) -> list[str] | None:
-    """The cases the inventory permits this category to leave unexecuted, as full identities.
+def declared_run(model: dict, category: str) -> dict | None:
+    """The one run of the model that starts this category, or None if it declares none."""
+    for capability in model.get("capabilities", []):
+        for run in capability.get("runs", []):
+            if run.get("category") == category:
+                return run
 
-    None means the inventory could not be read at all, which is itself a failure: without it there
+    return None
+
+
+def inventoried_cases(category: str) -> list[str] | None:
+    """The cases the model permits this category to leave unexecuted, as full identities.
+
+    None means the model could not be read at all, which is itself a failure: without it there
     is no statement about what the category skips, and a required category may not skip silently.
     An entry without a full identity is not a permission either; naming a case by its short form
     would authorise every case that happens to share that form.
     """
-    if not NOT_EXECUTED_INVENTORY.is_file():
+    if not VERIFICATION_MODEL.is_file():
         return None
     try:
-        data = json.loads(NOT_EXECUTED_INVENTORY.read_text(encoding="utf-8"))
+        data = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return None
-    entry = data.get("categories", {}).get(category)
-    if entry is None:
-        # A category the inventory does not mention is a category that skips nothing.
+    run = declared_run(data, category)
+    if run is None:
+        # A category the model does not declare is a category nothing authorises to skip.
         return []
     permitted = []
-    for case in entry.get("cases", []):
+    for case in run.get("notExecuted", []):
         identity = case.get("identity") if isinstance(case, dict) else None
         if isinstance(identity, str) and identity:
             permitted.append(identity)
@@ -346,7 +356,7 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
     if permitted is None:
         raise CategoryError(
             f"Required category '{category}' has no readable not-executed inventory at "
-            f"{NOT_EXECUTED_INVENTORY.relative_to(REPO_ROOT)}; a required category may not skip silently."
+            f"{VERIFICATION_MODEL.relative_to(REPO_ROOT)}; a required category may not skip silently."
         )
     floor = minimum_executed(category)
     if floor is not None and counters["executed"] < floor:

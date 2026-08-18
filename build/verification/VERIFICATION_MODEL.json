@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_VERIFICATION_MODEL",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "description": "The one active truth about what this product carries and how each of it is verified. It replaces build/test-infrastructure/capability-matrix.json, which classified only the source projects, and build/test-infrastructure/not-executed-inventory.json, which was a second list of the same categories kept by hand. Every project of this repository belongs to exactly one capability here, every required run names the job, the category and the project it starts, and every case that does not execute is named with its reason.",
+  "verificationClasses": {
+    "LOCAL_REQUIRED_RUN": "A behaviour suite that runs in the required profile on the build machine alone. It needs no container and no credential.",
+    "PINNED_FIXTURE_REQUIRED_RUN": "A behaviour suite that runs in the required profile against a pinned container fixture from build/test-infrastructure/compose.yaml, started by tools/ci/run_broker_category.py.",
+    "REAL_EPHEMERAL_CLOUD": "A behaviour suite that needs a real, short lived cloud resource. It is not executed here and can never report a pass. This is a visible open proof, never a gate.",
+    "COMPILE_AND_PACK_PROOF": "A shipped capability with no behaviour suite of its own, exercised by the suites that use it. It is proven by compiling and packing.",
+    "DEVELOPER_TOOL_COMPILE_PROOF": "Not shipped to a consumer. It is proven by compiling, and by its own tests where it has them.",
+    "SUPPORT_LIBRARY": "Compiled and exercised through the capabilities that reference it; it carries no category of its own."
+  },
+  "duenessClasses": {
+    "NOT_DUE_EXTERNAL_INFRASTRUCTURE": "Needs a service or credential this work package pins no fixture for. Forbidden in a category that runs against a pinned fixture: nine cases hid behind it while the broker they needed was exactly the one the required profile starts.",
+    "NOT_DUE_BENCHMARK": "Measures throughput or timing instead of behaviour.",
+    "NOT_DUE_TIMING_SENSITIVE": "Asserts against a wall clock interval and is not stable in a loaded full run.",
+    "NOT_DUE_MANUAL_OBSERVATION": "Produces output for a human; asserts nothing a gate could evaluate.",
+    "NOT_DUE_ENVIRONMENT_DEPENDENT": "Depends on host environment the run deliberately pins.",
+    "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE": "Asserts an outcome its own configuration never engages. Measured against both engines, and kept out with the measurement written down until the intended mechanism is decided. The other five classes state why a sound case cannot run here; none of them can state that the case itself is unsound, and forcing it into one of them would be false.",
+    "NOT_DUE_REAL_CLOUD_RESOURCE": "Needs a real, short lived cloud resource that no container can stand in for. This is the only class a category with a pinned fixture may use, and it can never become a pass: the capability matrix carries the same statement as REAL_EPHEMERAL_CLOUD."
+  },
+  "floorSemantics": "minimumExecutedCases is the number of cases the category executed when it was last recorded. tools/ci/run_test_category.py fails a run that executes fewer, because coverage can fall without a single failure: a new exclusion, a renamed fixture or a narrowing filter all leave the counters green. Raising a floor is a normal part of adding cases; lowering one is a decision that belongs in a record.",
+  "openDefectsNotInventoried": {
+    "statement": "Empty. All five cases record 0025 raised as F-1 are closed by product corrections and by two adjustments the product owner authorised on 2026-08-10, which are to be reported to the lead architect. Every one of them now runs in the required category. A case leaves this list by being fixed and executed, never by being reclassified.",
+    "cases": [],
+    "count": 0
+  },
+  "capabilities": [
+    {
+      "id": "analyzers",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.Analyzers",
+        "src/ViciOne.ServiceBus.Analyzers.CodeFixes",
+        "src/ViciOne.ServiceBus.Analyzers.Package"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Analyzers.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "analyzer",
+          "category": "analyzer",
+          "project": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+          "minimumExecutedCases": 115,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/ViciOne.ServiceBus.Analyzers.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "benchmarks",
+      "class": "DEVELOPER_TOOL_COMPILE_PROOF",
+      "sourceProjects": [],
+      "testProjects": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark",
+        "benchmarks/ViciOne.ServiceBus.BenchmarkConsole"
+      ],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "benchmarks",
+          "category": "benchmarks",
+          "project": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+          "minimumExecutedCases": 75,
+          "notExecuted": [],
+          "testProjectDirectory": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus",
+        "src/ViciOne.ServiceBus.Abstractions"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Abstractions.Tests",
+        "tests/ViciOne.ServiceBus.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "core-unit",
+          "category": "core",
+          "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "minimumExecutedCases": 1872,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/ViciOne.ServiceBus.Tests",
+          "explicitAttributeCount": 0
+        },
+        {
+          "job": "core-unit",
+          "category": "abstractions",
+          "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+          "minimumExecutedCases": 74,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/ViciOne.ServiceBus.Abstractions.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "diagnostics",
+      "class": "DEVELOPER_TOOL_COMPILE_PROOF",
+      "sourceProjects": [],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [
+        "tools/diagnostics/ViciOne.ServiceBus.Diagnostics"
+      ],
+      "rationale": "Two deliberately started scenarios that gate nothing. They are compiled by the engineering solution so a broken one is found, and they are never part of a required run.",
+      "runs": []
+    },
+    {
+      "id": "message-data-amazon-s3",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.AmazonS3"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [],
+      "verifiedThroughCapability": "transport-amazon-sqs"
+    },
+    {
+      "id": "message-data-azure-storage",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Storage"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [],
+      "verifiedThroughCapability": "transport-azure-service-bus"
+    },
+    {
+      "id": "persistence-azure-table",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Table"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "persistence-dynamodb",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "persistence-entity-framework-core",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "entity-framework",
+          "category": "entity-framework-core",
+          "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+          "minimumExecutedCases": 160,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "rider-azure-event-hubs",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.EventHubIntegration"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "scheduling-quartz",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration"
+      ],
+      "testProjects": [
+        "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "quartz",
+          "category": "quartz",
+          "project": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+          "minimumExecutedCases": 89,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "serialization-messagepack",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.MessagePack"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [],
+      "verifiedThroughCapability": "core"
+    },
+    {
+      "id": "signalr",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.SignalR"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.SignalR.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "signalr",
+          "category": "signalr",
+          "project": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+          "minimumExecutedCases": 26,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/ViciOne.ServiceBus.SignalR.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    },
+    {
+      "id": "state-machine-visualizer",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.StateMachineVisualizer"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [],
+      "verifiedThroughCapability": "core"
+    },
+    {
+      "id": "test-framework",
+      "class": "COMPILE_AND_PACK_PROOF",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.TestFramework"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "test-infrastructure",
+      "class": "SUPPORT_LIBRARY",
+      "sourceProjects": [],
+      "testProjects": [],
+      "supportProjects": [
+        "tests/ViciOne.ServiceBus.TestInfrastructure"
+      ],
+      "toolProjects": [],
+      "rationale": "The run-scoped fixture contract every database backed test project reads. It carries no case of its own; it is compiled and exercised by the categories that reference it, and its own assurances are asserted in RunnerContract_Specs inside the SQL transport project.",
+      "runs": []
+    },
+    {
+      "id": "transport-activemq",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "activemq",
+          "category": "activemq",
+          "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+          "minimumExecutedCases": 148,
+          "notExecuted": [
+            {
+              "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
+              "fixture": "Configuring_the_publish_topology_at_startup",
+              "test": "Should_create_the_exchanges",
+              "mechanism": "EXPLICIT",
+              "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+              "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
+            },
+            {
+              "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
+              "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
+              "test": "Should_create_the_exchanges",
+              "mechanism": "EXPLICIT",
+              "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+              "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
+            }
+          ],
+          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+          "explicitAttributeCount": 2
+        }
+      ]
+    },
+    {
+      "id": "transport-amazon-sqs",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "transport-azure-service-bus",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": []
+    },
+    {
+      "id": "transport-rabbitmq",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "rabbitmq",
+          "category": "rabbitmq",
+          "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+          "minimumExecutedCases": 361,
+          "notExecuted": [
+            {
+              "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect",
+              "fixture": "Connecting_to_RabbitMQ_via_Amazon",
+              "test": "Should_connect",
+              "mechanism": "EXPLICIT",
+              "dueness": "NOT_DUE_REAL_CLOUD_RESOURCE",
+              "reason": "Addresses a real Amazon MQ broker over TLS with an account nobody in this run has. The pinned RabbitMQ fixture cannot stand in for it, so it stays a visible open cloud proof and never a pass."
+            }
+          ],
+          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+          "explicitAttributeCount": 1
+        }
+      ]
+    },
+    {
+      "id": "transport-sql",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql",
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests"
+      ],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "",
+      "runs": [
+        {
+          "job": "sql-transport",
+          "category": "sql-transport",
+          "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+          "minimumExecutedCases": 110,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
+    }
+  ],
+  "notes": {
+    "verifiedThroughCapability": "A capability whose cases live in another capability's test project names that capability instead of claiming the project a second time. Every project belongs to exactly one owner, and a reader can still find where a capability is exercised."
+  }
+}

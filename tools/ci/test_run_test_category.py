@@ -50,19 +50,23 @@ class IdentityContractTestCase(unittest.TestCase):
         self.addCleanup(self._directory.cleanup)
 
     def inventory(self, identities: list[str], category: str = "core") -> None:
-        path = self.root / "inventory.json"
+        path = self.root / "model.json"
         path.write_text(json.dumps({
-            "categories": {
-                category: {
-                    "cases": [
-                        {"identity": identity, "fixture": identity.split(".")[-2], "test": identity.split(".")[-1],
-                         "mechanism": "EXPLICIT", "dueness": "NOT_DUE_BENCHMARK", "reason": "measured, not behaviour"}
-                        for identity in identities
-                    ]
-                }
-            }
-        }), encoding="utf-8")
-        runner.NOT_EXECUTED_INVENTORY = path
+            "schemaVersion": 1,
+            "kind": "SERVICEBUS_VERIFICATION_MODEL",
+            "capabilities": [{
+                "id": f"capability-{category}",
+                "class": "LOCAL_REQUIRED_RUN",
+                "runs": [{
+                    "job": category,
+                    "category": category,
+                    "project": "tests/Some.Tests/Some.Tests.csproj",
+                    "minimumExecutedCases": 1,
+                    "notExecuted": [{"identity": identity} for identity in identities],
+                }],
+            }],
+        }, indent=2), encoding="utf-8")
+        runner.VERIFICATION_MODEL = path
 
     def test_the_same_fixture_and_case_name_in_two_namespaces_are_two_identities(self):
         trx = write_trx(self.root / "a.trx", [

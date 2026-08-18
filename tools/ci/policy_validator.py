@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import capability_matrix  # noqa: E402  (repository local, resolved from this file's folder)
+import verification_model  # noqa: E402  (repository local, resolved from this file's folder)
 from xml.etree import ElementTree
 
 RESTORE_CONFIG = "NuGet.config"
@@ -66,7 +66,7 @@ KNOWN_CREDENTIALS = ("guest", "admin")
 
 # The single binding list of everything a required category does not execute. Both halves of the
 # exclusion rule read it: this validator before a run, run_test_category.py after one.
-NOT_EXECUTED_INVENTORY = "build/test-infrastructure/not-executed-inventory.json"
+VERIFICATION_MODEL = "build/verification/VERIFICATION_MODEL.json"
 
 # The guard that keeps the historic localhost/guest defaults out of the required broker run.
 RUN_SCOPED_GUARD_FILE = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestSetUpFixture.cs"
@@ -294,24 +294,24 @@ class Policy:
         The run time half of this rule is in run_test_category.py, which rejects any not executed
         case the inventory does not name. This half catches the same mutation before a run.
         """
-        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        inventory = self.read(VERIFICATION_MODEL)
         if inventory is None:
-            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} is missing; "
+            self.fail("test-exclusion", f"{VERIFICATION_MODEL} is missing; "
                                         "the required categories would have no binding list of what they skip")
             return
         try:
             data = json.loads(inventory)
         except json.JSONDecodeError as error:
-            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} is not readable: {error}")
+            self.fail("test-exclusion", f"{VERIFICATION_MODEL} is not readable: {error}")
             return
 
-        categories = data.get("categories")
-        if not isinstance(categories, dict) or not categories:
-            self.fail("test-exclusion", f"{NOT_EXECUTED_INVENTORY} names no category")
+        categories = {run["category"]: run for run in verification_model.runs(data) if run.get("category")}
+        if not categories:
+            self.fail("test-exclusion", f"{VERIFICATION_MODEL} declares no required run")
             return
 
         for name, category in sorted(categories.items()):
-            project = str(category.get("project", ""))
+            project = str(category.get("testProjectDirectory", ""))
             directory = self.root / project
             if not project or not directory.is_dir():
                 self.fail("test-exclusion", f"category '{name}' names no existing test project: '{project}'")
@@ -338,9 +338,9 @@ class Policy:
             if not isinstance(declared, int) or declared != explicit:
                 self.fail("test-exclusion",
                           f"category '{name}' declares {declared} [Explicit] attributes but {project} carries "
-                          f"{explicit}; a new exclusion has to be classified in {NOT_EXECUTED_INVENTORY}")
+                          f"{explicit}; a new exclusion has to be classified in {VERIFICATION_MODEL}")
 
-            cases = category.get("cases")
+            cases = category.get("notExecuted")
             if not isinstance(cases, list):
                 self.fail("test-exclusion", f"category '{name}' has no case list")
                 continue
@@ -701,10 +701,10 @@ class Policy:
         if "--no-restore" not in section:
             self.fail("pack", "the pack job packs without --no-restore, so it restores a second time unbound")
 
-    def check_capability_matrix(self) -> None:
+    def check_verification_model(self) -> None:
         """The active capability truth has to hold before anything reads it."""
-        for problem in capability_matrix.findings(self.root):
-            self.fail("capability-matrix", problem)
+        for problem in verification_model.findings(self.root):
+            self.fail("verification-model", problem)
 
     def workflow_files(self) -> list[str]:
         directory = self.root / ".github/workflows"
@@ -720,7 +720,7 @@ class Policy:
         them again, so a category with a fixture may not use it. Every category in the matrix whose
         capability is verified against a pinned fixture is such a category.
         """
-        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        inventory = self.read(VERIFICATION_MODEL)
         if inventory is None:
             return
         try:
@@ -729,21 +729,23 @@ class Policy:
             return
 
         try:
-            matrix = capability_matrix.load(self.root)
-        except capability_matrix.MatrixError:
+            matrix = verification_model.load(self.root)
+        except verification_model.ModelError:
             return
 
-        fixture_projects = {
-            project
+        with_a_fixture = {
+            run["category"]
             for capability in matrix.get("capabilities", [])
             if capability.get("class") == "PINNED_FIXTURE_REQUIRED_RUN"
-            for project in capability.get("testProjects", [])
+            for run in capability.get("runs", [])
+            if run.get("category")
         }
 
-        for name, category in sorted(data.get("categories", {}).items()):
-            if str(category.get("project", "")) not in fixture_projects:
+        for run in sorted(verification_model.runs(data), key=lambda r: r.get("category") or ""):
+            name = run.get("category")
+            if name not in with_a_fixture:
                 continue
-            for case in category.get("cases", []):
+            for case in run.get("notExecuted", []):
                 if not isinstance(case, dict):
                     continue
                 if case.get("dueness") == "NOT_DUE_EXTERNAL_INFRASTRUCTURE":
@@ -754,7 +756,7 @@ class Policy:
 
     def check_executed_floor(self) -> None:
         """Every category that a required job runs records the count it must not fall below."""
-        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        inventory = self.read(VERIFICATION_MODEL)
         if inventory is None:
             return
         try:
@@ -1009,7 +1011,7 @@ class Policy:
                      self.check_transport_operations_take_a_lease,
                      self.check_restore_sources, self.check_restore_lock_files,
                      self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
-                     self.check_pack_depends_on_every_gate, self.check_capability_matrix,
+                     self.check_pack_depends_on_every_gate, self.check_verification_model,
                      self.check_dueness_classes, self.check_executed_floor,
                      self.check_no_raw_run_artifacts_in_evidence,
                      self.check_every_tool_test_module_runs,

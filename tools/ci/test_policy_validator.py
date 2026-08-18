@@ -100,24 +100,72 @@ GLOBAL_JSON = """\
 }
 """ % APPROVED_SDK
 
-CAPABILITY_MATRIX = {
-    "schemaVersion": 1,
-    "kind": "SERVICEBUS_CAPABILITY_MATRIX",
-    "verificationClasses": {
-        "LOCAL_REQUIRED_RUN": "runs locally in the required profile",
-        "PINNED_FIXTURE_REQUIRED_RUN": "runs against a pinned fixture in the required profile",
-        "REAL_EPHEMERAL_CLOUD": "needs a real cloud resource and is not executed here",
-    },
-    "capabilities": [
-        {"id": "core", "class": "LOCAL_REQUIRED_RUN",
-         "sourceProjects": ["src/ViciOne.ServiceBus"], "testProjects": [], "requiredJobs": ["core-unit"]},
-        {"id": "analyzers", "class": "LOCAL_REQUIRED_RUN",
-         "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers"], "testProjects": [],
-         "requiredJobs": ["analyzer"]},
-        {"id": "transport-rabbitmq", "class": "PINNED_FIXTURE_REQUIRED_RUN",
-         "sourceProjects": [], "testProjects": [RABBITMQ_TEST_PROJECT], "requiredJobs": ["rabbitmq"]},
-    ],
-}
+# One list of what the fixture runs, so its workflow and its model cannot disagree by construction.
+# That is the same rule the model exists to enforce, applied to the fixture that tests it.
+BROKER_OF = {"activemq": "activemq", "rabbitmq": "rabbitmq", "sql-transport": "postgres",
+             "entity-framework-core": "postgres"}
+
+FIXTURE_RUNS = [
+    ("analyzer", "analyzer", "tests/Analyzer.Tests/Analyzer.Tests.csproj"),
+    ("core-unit", "core", "tests/Core.Tests/Core.Tests.csproj"),
+    ("signalr", "signalr", "tests/SignalR.Tests/SignalR.Tests.csproj"),
+    ("quartz", "quartz", "tests/Quartz.Tests/Quartz.Tests.csproj"),
+    ("activemq", "activemq", "tests/ActiveMq.Tests/ActiveMq.Tests.csproj"),
+    ("sql-transport", "sql-transport", "tests/Sql.Tests/Sql.Tests.csproj"),
+    ("benchmarks", "benchmarks", "tests/Benchmarks.Tests/Benchmarks.Tests.csproj"),
+    ("rabbitmq", "rabbitmq", f"{RABBITMQ_TEST_PROJECT}/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj"),
+    ("entity-framework", "entity-framework-core", "tests/Ef.Tests/Ef.Tests.csproj"),
+]
+
+
+def fixture_model() -> dict:
+    capabilities = []
+    for index, (job, category, project) in enumerate(FIXTURE_RUNS):
+        capabilities.append({
+            "id": f"capability-{category}",
+            "class": "PINNED_FIXTURE_REQUIRED_RUN" if category in BROKER_OF else "LOCAL_REQUIRED_RUN",
+            "sourceProjects": ["src/ViciOne.ServiceBus"] if index == 0 else [],
+            "testProjects": [project.rsplit("/", 1)[0]],
+            "supportProjects": [],
+            "toolProjects": [],
+            "runs": [{
+                "job": job,
+                "category": category,
+                "project": project,
+                "testProjectDirectory": RABBITMQ_TEST_PROJECT,
+                "minimumExecutedCases": 1,
+                "explicitAttributeCount": 1,
+                "notExecuted": [
+                    {
+                        "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand.Should_be_watched_by_a_human",
+                        "fixture": "Watching_by_hand",
+                        "test": "Should_be_watched_by_a_human",
+                        "mechanism": "EXPLICIT",
+                        "dueness": "NOT_DUE_MANUAL_OBSERVATION",
+                        "reason": "Asserts nothing a gate could evaluate.",
+                    }
+                ] if category == "rabbitmq" else [],
+            }],
+        })
+
+    capabilities.append({
+        "id": "capability-analyzers-source", "class": "LOCAL_REQUIRED_RUN",
+        "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers"], "testProjects": [],
+        "supportProjects": [], "toolProjects": [],
+        "verifiedThroughCapability": "capability-analyzer",
+    })
+
+    return {
+        "schemaVersion": 1,
+        "kind": "SERVICEBUS_VERIFICATION_MODEL",
+        "verificationClasses": {
+            "LOCAL_REQUIRED_RUN": "runs locally in the required profile",
+            "PINNED_FIXTURE_REQUIRED_RUN": "runs against a pinned fixture in the required profile",
+            "REAL_EPHEMERAL_CLOUD": "needs a real cloud resource and is not executed here",
+        },
+        "capabilities": capabilities,
+    }
+
 
 JOB = """\
   %s:
@@ -146,15 +194,12 @@ jobs:
 """
     + JOB % ("policy", "python3 -m unittest discover -s tools/ci -p 'test_*.py'")
     + JOB % ("build", "dotnet build ViciOne.ServiceBus.slnx -c Release")
-    + JOB % ("analyzer", "python3 tools/ci/run_test_category.py --category analyzer")
-    + JOB % ("core-unit", "python3 tools/ci/run_test_category.py --category core")
-    + JOB % ("signalr", "python3 tools/ci/run_test_category.py --category signalr")
-    + JOB % ("quartz", "python3 tools/ci/run_test_category.py --category quartz")
-    + JOB % ("activemq", "python3 tools/ci/run_broker_category.py --broker activemq --category activemq")
-    + JOB % ("sql-transport", "python3 tools/ci/run_broker_category.py --broker postgres --category sql-transport")
-    + JOB % ("benchmarks", "python3 tools/ci/run_test_category.py --category benchmarks")
-    + JOB % ("rabbitmq", "python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq")
-    + JOB % ("entity-framework", "python3 tools/ci/run_test_category.py --category entity-framework-core")
+    + "".join(
+        JOB % (job, (f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
+                     f"--category {category} --project {project}")
+               if category in BROKER_OF else
+               f"python3 tools/ci/run_test_category.py --category {category} --project {project}")
+        for job, category, project in FIXTURE_RUNS)
     + """\
   pack:
     runs-on: ubuntu-latest
@@ -247,27 +292,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 }
 """
 
-NOT_EXECUTED_INVENTORY = {
-    "schemaVersion": 1,
-    "kind": "NOT_EXECUTED_INVENTORY",
-    "categories": {
-        "rabbitmq": {
-            "project": RABBITMQ_TEST_PROJECT,
-            "explicitAttributeCount": 1,
-            "minimumExecutedCases": 1,
-            "cases": [
-                {
-                    "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand.Should_be_watched_by_a_human",
-                    "fixture": "Watching_by_hand",
-                    "test": "Should_be_watched_by_a_human",
-                    "mechanism": "EXPLICIT",
-                    "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-                    "reason": "Asserts nothing a gate could evaluate.",
-                }
-            ],
-        }
-    },
-}
 
 
 class PolicyTestCase(unittest.TestCase):
@@ -282,8 +306,9 @@ class PolicyTestCase(unittest.TestCase):
         (infra / "images.lock.json").write_text(json.dumps(LOCK, indent=2), encoding="utf-8")
         (infra / "rabbitmq/Dockerfile").write_text(RABBIT_DOCKERFILE, encoding="utf-8")
         (infra / "activemq/Dockerfile").write_text(ACTIVEMQ_DOCKERFILE, encoding="utf-8")
-        (infra / "not-executed-inventory.json").write_text(
-            json.dumps(NOT_EXECUTED_INVENTORY, indent=2), encoding="utf-8"
+        (self.root / "build/verification").mkdir(parents=True, exist_ok=True)
+        (self.root / "build/verification/VERIFICATION_MODEL.json").write_text(
+            json.dumps(fixture_model(), indent=2), encoding="utf-8"
         )
 
         specs = self.root / RABBITMQ_TEST_PROJECT
@@ -299,9 +324,7 @@ class PolicyTestCase(unittest.TestCase):
         (self.root / "NuGet.config").write_text(NUGET_CONFIG, encoding="utf-8")
         self.write_solution()
         (self.root / "global.json").write_text(GLOBAL_JSON, encoding="utf-8")
-        (infra / "capability-matrix.json").write_text(
-            json.dumps(CAPABILITY_MATRIX, indent=2), encoding="utf-8"
-        )
+
 
         # The matrix names projects, and a project that is not there is a finding of its own, so the
         # fixture carries the ones it claims.
@@ -319,6 +342,12 @@ class PolicyTestCase(unittest.TestCase):
 
         # Every project the lock file rule sees has to carry one, or that rule fires instead of the
         # one a case is about.
+        for _, _, project in FIXTURE_RUNS:
+            target = self.root / project
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if not target.exists():
+                target.write_text("<Project />\n", encoding="utf-8")
+
         for project in sorted(self.root.rglob("*.csproj")):
             (project.parent / "packages.lock.json").write_text("{}\n", encoding="utf-8")
 
@@ -346,16 +375,16 @@ class PolicyTestCase(unittest.TestCase):
         return self.root / "build/test-infrastructure/compose.yaml"
 
     def inventory(self) -> Path:
-        return self.root / "build/test-infrastructure/not-executed-inventory.json"
+        return self.root / "build/verification/VERIFICATION_MODEL.json"
 
     def matrix(self) -> Path:
-        return self.root / "build/test-infrastructure/capability-matrix.json"
+        return self.root / "build/verification/VERIFICATION_MODEL.json"
 
     def workflow(self) -> Path:
         return self.root / ".github/workflows/build.yml"
 
     def inventory(self) -> Path:
-        return self.root / "build/test-infrastructure/not-executed-inventory.json"
+        return self.root / "build/verification/VERIFICATION_MODEL.json"
 
     def rabbitmq_spec(self, name: str) -> Path:
         return self.root / RABBITMQ_TEST_PROJECT / name
@@ -543,21 +572,22 @@ class PolicyTestCase(unittest.TestCase):
         self.assert_rejected("test-exclusion")
 
     def test_rejects_inventorying_a_due_case_as_not_executed(self) -> None:
-        inventory = json.loads(json.dumps(NOT_EXECUTED_INVENTORY))
-        inventory["categories"]["rabbitmq"]["cases"][0]["dueness"] = "DUE_OPEN_DEFECT"
-        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+        self.with_case(dueness="DUE_OPEN_DEFECT")
+
         self.assert_rejected("test-exclusion")
 
     def with_case(self, **changes: object) -> None:
         """Rewrite the single inventoried case of the fixture repository."""
-        inventory = json.loads(json.dumps(NOT_EXECUTED_INVENTORY))
-        case = inventory["categories"]["rabbitmq"]["cases"][0]
+        model = fixture_model()
+        run = next(r for capability in model["capabilities"] for r in capability.get("runs", [])
+                   if r["category"] == "rabbitmq")
+        case = run["notExecuted"][0]
         for key, value in changes.items():
             if value is None:
                 case.pop(key, None)
             else:
                 case[key] = value
-        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
 
     def test_accepts_a_namespaced_full_identity(self) -> None:
         # The baseline entry already carries one; stating it as its own case keeps the positive side
@@ -672,9 +702,9 @@ class PolicyTestCase(unittest.TestCase):
     # -- required profile ----------------------------------------------------------------------
 
     def test_rejects_removing_a_required_category(self) -> None:
-        removed = (JOB % ("rabbitmq",
-                          "python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq")
-                   ).format(sdk=APPROVED_SDK)
+        job, category, project = next(entry for entry in FIXTURE_RUNS if entry[1] == "rabbitmq")
+        removed = (JOB % (job, f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
+                               f"--category {category} --project {project}")).format(sdk=APPROVED_SDK)
         self.assertIn(removed, BUILD_WORKFLOW, "the anchor for the removed job is gone")
         body = BUILD_WORKFLOW.replace(removed, "")
         self.workflow().write_text(body, encoding="utf-8")
@@ -741,22 +771,57 @@ class PolicyTestCase(unittest.TestCase):
         self.assert_rejected("pack")
 
     def test_rejects_a_removed_capability_in_the_matrix(self) -> None:
-        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix = fixture_model()
         matrix["capabilities"].append({
             "id": "kafka", "class": "REAL_EPHEMERAL_CLOUD",
             "sourceProjects": ["src/Transports/ViciOne.ServiceBus.KafkaIntegration"], "testProjects": [],
+            "supportProjects": [], "toolProjects": [],
         })
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
-    def test_rejects_a_capability_claimed_twice(self) -> None:
-        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+    def test_rejects_an_invented_job(self) -> None:
+        """A job name nobody runs used to stay green, so the model could point at nothing."""
+        model = fixture_model()
+        model["capabilities"][0]["runs"][0]["job"] = "a-job-that-does-not-exist"
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_run_that_names_the_wrong_project(self) -> None:
+        model = fixture_model()
+        model["capabilities"][0]["runs"][0]["project"] = "tests/Somewhere.Else/Somewhere.Else.csproj"
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_workflow_job_the_model_does_not_explain(self) -> None:
+        """The other direction: a required job that belongs to no capability."""
+        self.workflow().write_text(
+            BUILD_WORKFLOW.format(sdk=APPROVED_SDK)
+            + (JOB % ("kafka", "python3 tools/ci/run_test_category.py --category kafka --project x.csproj")
+               ).format(sdk=APPROVED_SDK),
+            encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_lowered_executed_floor(self) -> None:
+        """A floor that may fall is not a floor. Zero is the shape a lowering takes."""
+        model = fixture_model()
+        model["capabilities"][0]["runs"][0]["minimumExecutedCases"] = 0
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_project_claimed_twice(self) -> None:
+        matrix = fixture_model()
         matrix["capabilities"].append({
             "id": "core-again", "class": "LOCAL_REQUIRED_RUN",
-            "sourceProjects": ["src/ViciOne.ServiceBus"], "testProjects": [], "requiredJobs": ["core-unit"],
+            "sourceProjects": ["src/ViciOne.ServiceBus"], "testProjects": [], "supportProjects": [],
+            "toolProjects": [], "verifiedThroughCapability": "capability-core",
         })
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
     def test_rejects_a_pack_that_keeps_an_earlier_run_output(self) -> None:
         workflow = self.workflow()
@@ -880,29 +945,31 @@ class PolicyTestCase(unittest.TestCase):
         unclassified.mkdir(parents=True)
         (unclassified / "ViciOne.ServiceBus.Unclassified.csproj").write_text("<Project />\n", encoding="utf-8")
         (unclassified / "packages.lock.json").write_text("{}\n", encoding="utf-8")
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
     def test_rejects_a_required_capability_without_a_job(self) -> None:
-        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix = fixture_model()
         for capability in matrix["capabilities"]:
-            if capability["id"] == "core":
-                capability.pop("requiredJobs")
+            if capability["id"] == "capability-core":
+                capability.pop("runs")
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
     def test_rejects_an_unknown_verification_class(self) -> None:
-        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix = fixture_model()
         matrix["capabilities"][0]["class"] = "SOMEHOW_VERIFIED"
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
     def test_rejects_a_missing_capability_matrix(self) -> None:
         self.matrix().unlink()
-        self.assert_rejected("capability-matrix")
+        self.assert_rejected("verification-model")
 
     def test_rejects_external_infrastructure_for_a_category_with_a_fixture(self) -> None:
-        inventory = json.loads(self.inventory().read_text(encoding="utf-8"))
-        inventory["categories"]["rabbitmq"]["cases"].append({
+        inventory = fixture_model()
+        run = next(r for capability in inventory["capabilities"] for r in capability.get("runs", [])
+                   if r["category"] == "rabbitmq")
+        run["notExecuted"].append({
             "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Some_Specs.Should_do_something",
             "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
             "reason": "claims a fixture that the required profile starts",
@@ -911,10 +978,13 @@ class PolicyTestCase(unittest.TestCase):
         self.assert_rejected("dueness-class")
 
     def test_rejects_a_category_without_an_executed_floor(self) -> None:
-        inventory = json.loads(self.inventory().read_text(encoding="utf-8"))
-        inventory["categories"]["rabbitmq"].pop("minimumExecutedCases", None)
-        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
-        self.assert_rejected("executed-floor")
+        model = fixture_model()
+        for capability in model["capabilities"]:
+            for run in capability.get("runs", []):
+                run.pop("minimumExecutedCases", None)
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
 
     def test_rejects_returning_upstream_repository_guard(self) -> None:
         self.workflow().write_text(
