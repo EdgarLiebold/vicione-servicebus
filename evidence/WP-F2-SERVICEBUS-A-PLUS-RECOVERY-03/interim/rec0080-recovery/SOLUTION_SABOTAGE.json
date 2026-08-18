@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "SOLUTION_SABOTAGE_CASES",
+  "statement": "The membership proof is only worth what it rejects. Each case was applied to the canonical solution, measured, and the file restored and compared byte for byte afterwards.",
+  "cases": [
+    {
+      "id": "DEAD_PATH",
+      "mutation": "a project path that has no csproj on disk was added",
+      "caught": true,
+      "reportedBy": [
+        "onlyInSlnx",
+        "deadPaths"
+      ]
+    },
+    {
+      "id": "DUPLICATE",
+      "mutation": "an existing project path was listed a second time",
+      "caught": true,
+      "reportedBy": [
+        "duplicates"
+      ]
+    },
+    {
+      "id": "DROPPED_MEMBER",
+      "mutation": "a real member was removed from the solution",
+      "caught": true,
+      "reportedBy": [
+        "onlyInSln"
+      ]
+    }
+  ],
+  "caught": 3,
+  "missed": 0,
+  "restoredByteIdentical": true
+}

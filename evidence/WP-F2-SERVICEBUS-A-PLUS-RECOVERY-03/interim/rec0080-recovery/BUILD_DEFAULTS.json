@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "CENTRAL_BUILD_DEFAULTS_DISPOSITION",
+  "method": "The SDK side was evaluated on an empty net10.0 project outside the repository, so no Directory.Build.props of this repository could take part. The repository side was evaluated with MSBuild on real projects with nothing forced.",
+  "properties": [
+    {
+      "property": "WarningLevel",
+      "sdkDefault": "10",
+      "repositoryBefore": "4",
+      "repositoryAfter": "10",
+      "disposition": "REMOVED",
+      "finding": "The repository cut the compiler warning level by six for every project. Removing the cap surfaces eight warnings, all CS8981 on the alias directives of one generated protobuf file in the core test project, and none in any product project. That file already carried the generator's own narrow pragma, which now also lists 8981. Both solutions build at level 10 with zero warnings."
+    },
+    {
+      "property": "Optimize",
+      "sdkDefault": "true in Release",
+      "repositoryBefore": "true",
+      "repositoryAfter": "true (from the SDK)",
+      "disposition": "REMOVED",
+      "finding": "An inherited repetition of the SDK default. The evaluated value is unchanged."
+    },
+    {
+      "property": "DefineConstants",
+      "sdkDefault": "TRACE;DEBUG in Debug, TRACE;RELEASE in Release",
+      "repositoryBefore": "TRACE;;TRACE;RELEASE",
+      "repositoryAfter": "TRACE;RELEASE",
+      "disposition": "REMOVED",
+      "finding": "The repository prepended DEBUG;TRACE and TRACE to a list the SDK already fills, which evaluated to a duplicated TRACE and an empty entry."
+    },
+    {
+      "property": "DebugType",
+      "sdkDefault": "portable",
+      "repositoryBefore": "full in Debug, embedded in Release",
+      "repositoryAfter": "unchanged",
+      "disposition": "KEPT",
+      "finding": "Not an SDK default and a deliberate choice: full symbols while debugging, embedded symbols in the shipped assemblies."
+    },
+    {
+      "property": "AllowUnsafeBlocks",
+      "sdkDefault": "false",
+      "repositoryBefore": "true for every product project",
+      "repositoryAfter": "true in ViciOne.ServiceBus.Abstractions and ViciOne.ServiceBus only",
+      "disposition": "LOCALISED",
+      "finding": "Twenty product projects were measured one at a time with the switch off, each with its dependencies left built, and every restoring build returned zero. Exactly two report CS0227. The first attempt at this measurement was invalid and is recorded as such: passing the property on the command line makes it global, so it reached the referenced projects too, the build stopped at the first failure and the remaining projects failed with CS0006 on reference assemblies a non-incremental run had just removed. A red result is not a finding until it is red for the reason under test."
+    },
+    {
+      "property": "NoWarn CS1591",
+      "sdkDefault": "not set",
+      "repositoryBefore": "CS1591",
+      "repositoryAfter": "CS1591",
+      "disposition": "OPEN",
+      "finding": "Left standing on purpose. Directive 0078 and 0079 both order it disposed against the package and documentation policy rather than closed as a convenient silence, and that disposition is still open."
+    }
+  ],
+  "unsafeNeedingProjects": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions"
+  ],
+  "unsafeMeasuredProjects": 20,
+  "buildsAfterCorrection": [
+    {
+      "solution": "ViciOne.ServiceBus.slnx",
+      "configuration": "Debug",
+      "incremental": false,
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "solution": "ViciOne.ServiceBus.slnx",
+      "configuration": "Release",
+      "incremental": false,
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "solution": "ViciOne.ServiceBus.Benchmarks.slnx",
+      "configuration": "Release",
+      "incremental": false,
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "notInScope": "No repository wide nullable or public API annotation migration was started. Directive 0079 assigns that to F-SB-02 with a type by type proof, and nothing here adds a suppression that would stand in its way."
+}

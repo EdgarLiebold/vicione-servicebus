@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "kind": "PACKAGE_GROUP_DISPOSITION",
+  "groups": [
+    {
+      "group": 1,
+      "name": "SourceLink and test logger",
+      "changes": [
+        "Microsoft.SourceLink.GitHub 8.0.0 removed",
+        "GitHubActionsTestLogger 2.4.1 -> 3.0.5"
+      ],
+      "proof": "A real pack before and after. With the package present the nuspec carried <repository type=\"git\" url=\"https://github.com/EdgarLiebold/vicione-servicebus.git\" commit=\"...\"/>. Without it the SDK produces the same element and additionally a branch attribute, so nothing was lost by removing the package.",
+      "status": "DONE"
+    },
+    {
+      "group": 2,
+      "name": "BenchmarkDotNet",
+      "changes": [
+        "confirmed at 0.15.8, deliberately not moved"
+      ],
+      "proof": "The central pin already reads 0.15.8 and the benchmark solution builds non-incrementally with zero warnings and zero errors.",
+      "status": "DONE"
+    },
+    {
+      "group": 3,
+      "name": "NUnit with adapter and analyzer",
+      "changes": [
+        "HELD at NUnit 4.4.0, NUnit3TestAdapter 6.1.0, NUnit.Analyzers 4.11.2"
+      ],
+      "proof": "The ordered bump to 4.6.1 was applied, measured and taken back. It turns two behaviour assertions of the bucket cache red: Should_fill_them_even_fuller settles at 100 where 101 is expected and Should_fill_up_the_buckets_over_time_and_remove_old_entries at 99 where 100 is expected. The cause is isolated rather than guessed. In a detached worktree at f7828bc2 with nothing else changed, bumping NUnit alone reproduces it, and the same commit with 4.4.0 is green. A bounded wait for the value was tried and does not help: the counts settle one below and stay there for ten seconds, so this is not a race a wait can close. The new framework schedules async test continuations differently and the cache evicts one more node under it. That wait was taken back again, because it fixed nothing and an unjustified change is not an improvement.",
+      "status": "BLOCKED",
+      "decisionNeeded": "Either the eviction count of GreenCache may not depend on continuation scheduling, which makes this a product finding, or the assertion encodes an ordering that was never promised, which makes it a test finding. The two answers put the correction in different places, so it is a product decision and not a package step. Shipping 4.6.1 before it is answered would leave a required category red, and relaxing the assertion to make it pass is not allowed."
+    },
+    {
+      "group": 4,
+      "name": "Roslyn and code fix layout",
+      "changes": [
+        "Microsoft.CodeAnalysis.CSharp.Workspaces 4.11.0 -> 5.6.0"
+      ],
+      "proof": "The bump surfaced exactly the two diagnostics the directive named. RS1008 was a real correctness defect and is fixed: CancellationTokenOverloadMethodAnalyzer held its member cache of ISymbol in an instance field, and an analyzer instance is reused across compilations, so the cache both kept every symbol of every compilation alive and could answer a later compilation with symbols of an earlier one. The cache now lives inside the compilation start scope. The analyzer category is 111/111 after the change.",
+      "openFinding": "RS1038 remains, three times, one per DiagnosticAnalyzer. See the decision proposal beside this file.",
+      "status": "PARTIAL"
+    },
+    {
+      "group": 5,
+      "name": "SqlClient",
+      "changes": [
+        "Microsoft.Data.SqlClient 5.2.3 -> 7.0.2"
+      ],
+      "proof": "sql-transport PASS 103 total, 97 passed, 0 failed against SQL Server and PostgreSQL fixtures, and entity-framework-core PASS 160/160 against both engines. These were re-measured after the NUnit group was taken back.",
+      "status": "DONE"
+    },
+    {
+      "group": 6,
+      "name": "the remaining graph against .NET 10",
+      "changes": [
+        "Microsoft.AspNetCore.SignalR.Protocols.MessagePack 9.0.19 -> 10.0.11",
+        "Microsoft.Extensions.Diagnostics.Testing 9.0.0 -> 10.9.0"
+      ],
+      "proof": "These were the only two pins left off the .NET 10 line. signalr PASS 26/26. MediatR and the orphaned System.* pins the directive names are already absent from the evaluated graph: the file holds neither. Dapper stays at 2.1.79 because it carries the internal implementation of the retained SQL transports, which is what the directive permits; the generic Dapper adapter is what was removed, and no package with that identity exists.",
+      "status": "DONE"
+    }
+  ],
+  "documentationAndToolTruths": [
+    {
+      "item": "src/NuGet.README.md",
+      "action": "REMOVED",
+      "detail": "It was a second, stale package list beside the root file and nothing referenced it: src/Directory.Build.props packs ..\\..\\NuGet.README.md. Exactly one package README is packed now."
+    },
+    {
+      "item": "NuGet.README.md",
+      "action": "REWRITTEN_FROM_MEASUREMENT",
+      "detail": "The list is derived from the evaluated PackageId of the twenty packable projects instead of being edited by hand. The imported list named Azure.Cosmos, Azure.Cosmos.Table, DapperIntegration, EntityFramework, Marten, MongoDb, NHibernate, Redis, Hangfire, Kafka, Prometheus, Interop.NServiceBus and WebJobs.EventHubs, none of which this fork builds, and a deprecated section that repeated the upstream product's own history rather than this repository's package truth."
+    },
+    {
+      "item": "Azure Table identity",
+      "action": "CORRECTED",
+      "detail": "The project, assembly and namespace already said Azure.Table while PackageId, Title, PackageTags and Description still carried Azure.Cosmos.Table. The capability is Azure Table storage; Cosmos DB for Table is named in the description as a supported endpoint of that API rather than as the product identity."
+    },
+    {
+      "item": "tools/identity/evidence_summary_gate.py",
+      "action": "ISOLATED_AS_HISTORICAL",
+      "detail": "It reproduces the frozen gate summary of WP-F2-SERVICEBUS-IDENTITY correction 02 and nothing invokes it. Its constants describe that past tree, naming ViciOne.ServiceBus.sln and Directory.Build.targets, and CORRECTION_02_DOTNET_INPUT_BINDING is a hash over exactly that list, so rewriting them would falsify the record. The module docstring now says so and the tool refuses to run without --historical-reproduction, which is an enforced isolation rather than a comment."
+    }
+  ],
+  "blockedGroups": [
+    3
+  ]
+}

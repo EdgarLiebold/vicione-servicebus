@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "SECTION_7_CLOSURE",
+  "batchConsumer": {
+    "before": "Fifteen thousand messages, and a consumer that burned fifty million loop iterations per batch with a yield every five million so batches would overlap. Two minute fixture timeout, and it took 2:09 on this machine. The assurance was that a set of duplicates stayed empty.",
+    "after": "The sender chooses the identities and the assurance compares the delivered set with the sent set, so a duplicate and a loss each fail on their own sentence. The spin is a bounded thirty two yields, the timeout is thirty seconds, and two runs measured 24 s each.",
+    "whyTheOldAssuranceWasHalf": "A message the transport dropped never enters a duplicate set, so a loss passed the assertion and only appeared as the fixture timing out. Completion alone cannot see it either, because completion is raised once every identity has arrived; inactivity is the second way out and turns a loss into a failed sentence.",
+    "mutations": [
+      "DUPLICATE -> 'the batch consumer saw a message identity more than once'",
+      "LOSS -> 'the delivered identities are not exactly the sent ones'"
+    ]
+  },
+  "newIdCases": {
+    "closed": 5,
+    "detail": [
+      "Should_be_able_to_extract_timestamp and its process id sibling read the wall clock and accepted any timestamp within a minute while printing both for a human. They build a generator with a tick source the test chooses and compare the exact timestamp.",
+      "The first attempt configured the process wide NewId instead, which needs the shared generator reset for a tick provider to take effect. That reset moved the sequence every other test in the assembly shares and turned Should_be_using_the_correct_algorithm_for_sequential_guids red on a tick boundary. A local generator asserts the same thing and disturbs nothing.",
+      "The second attempt asserted that the process id changes a chosen substring of the identifier, which was a guess about where that value lands and was wrong. Two generators that differ only in the process provider are compared whole instead.",
+      "Should_be_completely_thread_safe_to_avoid_duplicates generated twenty million identifiers and printed how many duplicates it found, asserting nothing. It is bounded at 200000 and asserts that every identifier is distinct.",
+      "Should_generate_unique_identifiers_with_each_invocation compared each identifier only with the one before it, which a generator cycling through a small set would pass. It counts distinct identifiers now.",
+      "Should_be_fast_and_friendly measured throughput only and is removed rather than kept as a permanently excluded case. No NewId benchmark exists in the benchmark project to move it to, which is recorded rather than glossed over."
+    ]
+  },
+  "category": {
+    "abstractions": {
+      "total": 75,
+      "passed": 75,
+      "failed": 0,
+      "notExecuted": 0
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "RESTORE_SOURCE_SABOTAGE",
+  "statement": "The kept NuGet.config is only worth what its guard rejects. Each case was applied, measured against tools/ci/policy_validator.py and the file restored and compared byte for byte. The validator writes its findings to stderr, which an earlier reading of stdout alone missed; the exit code was the reliable signal and both streams are read here.",
+  "cases": [
+    {
+      "id": "NO_CLEAR",
+      "caught": true,
+      "validatorExit": 1,
+      "finding": "FAIL ci-policy restore-sources: packageSources does not clear the inherited sources"
+    },
+    {
+      "id": "SECOND_SOURCE",
+      "caught": true,
+      "validatorExit": 1,
+      "finding": "FAIL ci-policy restore-sources: packageSources declares 2 sources; exactly one is allowed"
+    },
+    {
+      "id": "NO_MAPPING",
+      "caught": true,
+      "validatorExit": 1,
+      "finding": "FAIL ci-policy restore-sources: no packageSourceMapping, so central package management cannot decide which source a package comes from"
+    },
+    {
+      "id": "DISABLED_NOT_CLEARED",
+      "caught": true,
+      "validatorExit": 1,
+      "finding": "FAIL ci-policy restore-sources: NuGet.config declares 0 disabledPackageSources sections; exactly one is required so a host entry cannot disable the only source"
+    }
+  ],
+  "caught": 4,
+  "missed": 0,
+  "restoredByteIdentical": true
+}

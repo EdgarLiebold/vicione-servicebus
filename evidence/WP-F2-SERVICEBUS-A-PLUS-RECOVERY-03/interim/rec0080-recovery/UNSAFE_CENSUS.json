@@ -1,0 +1,189 @@
+[
+  {
+    "project": "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+    "assembly": "ViciOne.ServiceBus.AmazonS3",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+    "assembly": "ViciOne.ServiceBus.Azure.Storage",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+    "assembly": "ViciOne.ServiceBus.Azure.Table",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+    "assembly": "ViciOne.ServiceBus.DynamoDbIntegration",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+    "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+    "assembly": "ViciOne.ServiceBus.QuartzIntegration",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+    "assembly": "ViciOne.ServiceBus.ActiveMqTransport",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+    "assembly": "ViciOne.ServiceBus.AmazonSqsTransport",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+    "assembly": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+    "assembly": "ViciOne.ServiceBus.EventHubIntegration",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+    "assembly": "ViciOne.ServiceBus.RabbitMqTransport",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+    "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+    "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+    "assembly": "ViciOne.ServiceBus.Abstractions",
+    "needsUnsafe": true,
+    "unsafeSources": [
+      "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/Base32Formatter.cs",
+      "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/DashedHexFormatter.cs",
+      "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/HexFormatter.cs",
+      "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/ZBase32Formatter.cs"
+    ],
+    "otherErrors": [],
+    "probeExit": 1,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+    "assembly": "ViciOne.ServiceBus.Analyzers",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
+    "assembly": "ViciOne.ServiceBus.MessagePack",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+    "assembly": "ViciOne.ServiceBus.SignalR",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+    "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
+    "assembly": "ViciOne.ServiceBus.TestFramework",
+    "needsUnsafe": false,
+    "unsafeSources": [],
+    "otherErrors": [],
+    "probeExit": 0,
+    "restoreExit": 0
+  },
+  {
+    "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+    "assembly": "ViciOne.ServiceBus",
+    "needsUnsafe": true,
+    "unsafeSources": [
+      "src/ViciOne.ServiceBus/Middleware/Murmur3UnsafeHashGenerator.cs"
+    ],
+    "otherErrors": [],
+    "probeExit": 1,
+    "restoreExit": 0
+  }
+]
