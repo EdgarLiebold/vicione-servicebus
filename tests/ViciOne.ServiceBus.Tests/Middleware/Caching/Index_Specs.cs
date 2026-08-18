@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Tests.Middleware.Caching
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Caching;
@@ -76,11 +77,20 @@ namespace ViciOne.ServiceBus.Tests.Middleware.Caching
 
             var helloKey = "Hello";
 
-            Task<SimpleValue> valueTask = index.Get(helloKey, SimpleValueFactory.Faulty);
+            // The second request and the plain read have to arrive while the first value is still pending.
+            // A factory the test releases itself states that; a factory that merely takes a while leaves it
+            // to whichever continuation runs first.
+            var pending = new ControlledValueFactory();
+
+            Task<SimpleValue> valueTask = index.Get(helloKey, pending.Create);
+
+            await pending.Started;
 
             Task<SimpleValue> goodValueTask = index.Get(helloKey, SimpleValueFactory.Healthy);
 
             Task<SimpleValue> readValueTask = index.Get(helloKey);
+
+            pending.Fail(new TestException("The SimpleValue factory is quite faulty at the moment."));
 
             Assert.That(async () => await valueTask, Throws.TypeOf<TestException>());
 
@@ -101,6 +111,31 @@ namespace ViciOne.ServiceBus.Tests.Middleware.Caching
                 Assert.That(readValue.Id, Is.EqualTo(helloKey));
                 Assert.That(readValue.Value, Is.EqualTo("The key is Hello"));
             });
+        }
+
+
+        /// <summary>
+        /// A value factory whose start and outcome the test decides, so a fixture can state that a value is
+        /// still pending instead of hoping that it is.
+        /// </summary>
+        class ControlledValueFactory
+        {
+            readonly TaskCompletionSource<bool> _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            readonly TaskCompletionSource<SimpleValue> _value = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public Task<bool> Started => _started.Task;
+
+            public Task<SimpleValue> Create(string key)
+            {
+                _started.TrySetResult(true);
+
+                return _value.Task;
+            }
+
+            public void Fail(Exception exception)
+            {
+                _value.TrySetException(exception);
+            }
         }
     }
 }

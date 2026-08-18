@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests
         [Test]
         public void Should_retry_the_status_message()
         {
-            TestDelegate invocation = () => Bus.ConnectStateMachineSaga(_machine, _repository);
+            Action invocation = () => Bus.ConnectStateMachineSaga(_machine, _repository);
 
             Assert.Throws<ConfigurationException>(invocation);
         }

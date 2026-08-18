@@ -42,19 +42,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="Npgsql" Version="10.0.3" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
-    <!--
-      Group 3 of the ordered package work is held at these versions and is the one open blocker of
-      that section. NUnit 4.6.1 turns two behaviour assertions of the bucket cache red, and the cause
-      is isolated rather than guessed: at commit f7828bc2 with nothing else changed, bumping NUnit
-      alone reproduces it and the same commit with 4.4.0 is green. The counts settle one below their
-      expected value and stay there, so it is not a race that a wait can close; the new framework
-      schedules async test continuations differently and the cache evicts one more node under it.
-      Whether the eviction count of GreenCache may depend on continuation scheduling, or whether the
-      assertion encodes an ordering that was never promised, decides where the correction belongs,
-      and that is a product decision rather than a package step. Shipping 4.6.1 meanwhile would leave
-      a required category red.
-    -->
-    <PackageVersion Include="NUnit" Version="4.4.0" />
+    <PackageVersion Include="NUnit" Version="4.6.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
