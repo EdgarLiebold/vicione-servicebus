@@ -17,7 +17,7 @@ dotnet pack    ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 
 Two solutions sit at the repository root, so every command names the one it means; an unqualified
 `dotnet build` exits with MSB1011 and does nothing. The benchmarks and the diagnostics live in
-`ViciOne.ServiceBus.Benchmarks.slnx`.
+`ViciOne.ServiceBus.Engineering.slnx`.
 
 There is deliberately no `dotnet test` line here. A blanket run over the solution starts test
 projects whose fixtures are not running and cannot reach the capabilities that need a real cloud
@@ -34,7 +34,7 @@ record. Updating a package is the one operation that may change it:
 # 1. change the version in Directory.Packages.props
 # 2. resolve it and write the lock files
 dotnet restore ViciOne.ServiceBus.slnx -p:RestoreLockedMode=false --force-evaluate
-dotnet restore ViciOne.ServiceBus.Benchmarks.slnx -p:RestoreLockedMode=false --force-evaluate
+dotnet restore ViciOne.ServiceBus.Engineering.slnx -p:RestoreLockedMode=false --force-evaluate
 # 3. read the lock file diff before committing it
 git diff -- '**/packages.lock.json'
 ```

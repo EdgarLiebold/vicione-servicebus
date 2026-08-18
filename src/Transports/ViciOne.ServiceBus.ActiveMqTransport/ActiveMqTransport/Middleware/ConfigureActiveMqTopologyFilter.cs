@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Apache.NMS;
 using Topology;
 
 
@@ -69,16 +68,14 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         await Task.WhenAll(_brokerTopology.Queues.Select(queue => Declare(context, queue))).ConfigureAwait(false);
     }
 
-    async Task Declare(SessionContext context, Topic topic)
+    Task Declare(SessionContext context, Topic topic)
     {
         LogContext.Debug?.Log("Declare topic {Topic}", topic);
 
-        // Resolving the name is a client side act and leaves the broker without the topic, which is
-        // what this filter used to do and why a deployed topology was deployed nowhere. Materializing
-        // it is what the broker records.
-        ITopic resolved = await context.GetTopic(topic).ConfigureAwait(false);
-
-        await context.Materialize(resolved).ConfigureAwait(false);
+        // The outcome, not the steps. Resolving a name is a client side act that leaves the broker
+        // without the topic, which is what this filter used to do and why a deployed topology was
+        // deployed nowhere.
+        return context.EnsureTopicExists(topic);
     }
 
     Task Declare(SessionContext context, Queue queue)

@@ -19,7 +19,7 @@ short and point here rather than repeating any of it.
 | Solution | Holds |
 |---|---|
 | `ViciOne.ServiceBus.slnx` | the product, its tests and the analyzer |
-| `ViciOne.ServiceBus.Benchmarks.slnx` | the benchmarks and the diagnostics, plus the product projects they reference |
+| `ViciOne.ServiceBus.Engineering.slnx` | everything that is engineering rather than product: the benchmarks, the diagnostics and their tests, plus the product projects they reference |
 
 Every `dotnet` command names its solution. Two solutions sit at the repository root, so an
 unqualified `dotnet build` does not pick one - it exits with MSB1011 and does nothing.
@@ -41,7 +41,7 @@ line:
 
 ```bash
 dotnet restore ViciOne.ServiceBus.slnx -p:RestoreLockedMode=false --force-evaluate
-dotnet restore ViciOne.ServiceBus.Benchmarks.slnx -p:RestoreLockedMode=false --force-evaluate
+dotnet restore ViciOne.ServiceBus.Engineering.slnx -p:RestoreLockedMode=false --force-evaluate
 ```
 
 `--force-evaluate` is not optional here. Without it the restore reuses the resolution it already has

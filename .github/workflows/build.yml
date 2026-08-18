@@ -269,9 +269,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore
-        run: dotnet restore ViciOne.ServiceBus.Benchmarks.slnx --locked-mode
+        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
       - name: Build
-        run: dotnet build ViciOne.ServiceBus.Benchmarks.slnx -c Release --no-restore
+        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
       - name: Benchmark harness tests
         run: |
           python3 tools/ci/run_test_category.py \

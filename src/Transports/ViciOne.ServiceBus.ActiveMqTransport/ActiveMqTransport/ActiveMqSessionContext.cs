@@ -75,14 +75,25 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             }, CancellationToken);
         }
 
-        public Task Materialize(IDestination destination)
+        public Task EnsureTopicExists(Topic topic)
         {
             return _executor.Run(() =>
             {
-                // Opened and closed inside the session's executor, like every other session operation:
-                // the NMS session is not thread safe and this runs while the endpoint is starting.
+                // Resolution and the short lived producer belong together and belong here: both touch
+                // the session, which is not thread safe, and this runs while the endpoint is starting.
+                var topicName = topic.EntityName.Split('?')[0];
+                ITopic destination = SessionUtil.GetTopic(_session, topicName);
+
                 IMessageProducer producer = _session.CreateProducer(destination);
-                producer.Close();
+                try
+                {
+                    producer.Close();
+                }
+                finally
+                {
+                    // A producer whose close threw is still a producer this session holds.
+                    producer.Dispose();
+                }
             }, CancellationToken);
         }
 

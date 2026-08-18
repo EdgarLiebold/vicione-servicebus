@@ -18,16 +18,22 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         Task<IQueue> GetQueue(Queue queue);
 
         /// <summary>
-        /// Makes the broker hold this destination, rather than only resolving its name on the client.
+        /// Makes the broker hold this topic, so that a deployed publish topology exists on the broker
+        /// and not only in the client.
         /// <para>
-        /// Measured against the pinned fixture: SessionUtil.GetTopic returns an NMS destination object
-        /// and the broker's topic list stays empty, so a topology deployed with it is deployed nowhere.
-        /// Opening a producer for the destination and closing it again is what the broker records. A
-        /// consumer would do it too, and is not used: it would create a subscription with delivery
-        /// semantics, where a deployment is meant to announce the destination and nothing else.
+        /// Measured against the pinned fixture: resolving a topic name returns an NMS destination
+        /// object while the broker's topic list stays empty, so a topology deployed that way is
+        /// deployed nowhere. What the broker records is a producer opened for the destination and
+        /// closed again. A consumer would do it too and is not used: it would create a subscription
+        /// with delivery semantics, where a deployment announces the destination and nothing else.
+        /// </para>
+        /// <para>
+        /// The caller asks for the outcome. How the outcome is reached is a property of the session,
+        /// and a filter that orchestrated the NMS steps itself would own an implementation detail it
+        /// cannot see the consequences of.
         /// </para>
         /// </summary>
-        Task Materialize(IDestination destination);
+        Task EnsureTopicExists(Topic topic);
 
         Task<IDestination> GetDestination(string destinationName, DestinationType destinationType);
 

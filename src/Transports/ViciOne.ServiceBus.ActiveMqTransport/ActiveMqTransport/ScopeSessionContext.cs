@@ -30,9 +30,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             return _context.GetTopic(topic);
         }
 
-        public Task Materialize(IDestination destination)
+        public Task EnsureTopicExists(Topic topic)
         {
-            return _context.Materialize(destination);
+            return _context.EnsureTopicExists(topic);
         }
 
         public Task<IQueue> GetQueue(Queue queue)
