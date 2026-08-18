@@ -47,15 +47,20 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 
     /// <summary>
     /// DeployPublishTopology declares the exchanges of the named message types when the bus starts,
-    /// before anything is published. Both cases below had an empty body: they started a bus and
-    /// asserted nothing, so they would have passed with the deployment switched off. They read the
-    /// exchanges from the broker's own management API now.
+    /// before anything is published, and it is read back from the broker's own management API.
+    /// <para>
+    /// A complete statement about a topology is not two names that are present. It is every name the
+    /// configuration implies, and every name it excludes: an implemented base type carries its own
+    /// exchange, a base type marked <see cref="ExcludeFromTopologyAttribute"/> must carry none, and a
+    /// type the configuration never reaches must be absent. Only the two together separate a working
+    /// deployment from one that declares whatever it happens to see.
+    /// </para>
     /// </summary>
     public class Configuring_the_publish_topology_at_startup :
         RabbitMqTestFixture
     {
         [Test]
-        public async Task Should_create_the_exchanges()
+        public async Task Should_create_the_exchanges_of_the_named_types_and_their_included_base_types()
         {
             IReadOnlyCollection<string> exchanges = await BrokerTopologyProbe.Exchanges(RabbitMqTestHarness);
 
@@ -63,8 +68,24 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(OrderSubmitted))),
                     "the exchange of a published message type was not deployed at startup");
+                Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(OrderEvent))),
+                    "the base type of a published message type carries its own exchange and it was not deployed");
                 Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(PackageShipped))),
                     "the exchange of the second published message type was not deployed at startup");
+            });
+        }
+
+        [Test]
+        public async Task Should_create_no_exchange_for_a_type_the_configuration_does_not_reach()
+        {
+            IReadOnlyCollection<string> exchanges = await BrokerTopologyProbe.Exchanges(RabbitMqTestHarness);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(exchanges, Does.Not.Contain(ExchangeNames.Of(typeof(PackageEvent))),
+                    "a base type marked ExcludeFromTopology was deployed anyway");
+                Assert.That(exchanges, Does.Not.Contain(ExchangeNames.Of(typeof(CustomerEvent))),
+                    "a type this configuration never publishes was deployed anyway");
             });
         }
 
@@ -82,19 +103,34 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         RabbitMqTestFixture
     {
         [Test]
-        public async Task Should_create_the_exchanges()
+        public async Task Should_create_the_exchange_of_every_type_the_scan_finds()
         {
             IReadOnlyCollection<string> exchanges = await BrokerTopologyProbe.Exchanges(RabbitMqTestHarness);
 
-            // The namespace form has to find the types itself, so the second one is what separates it
-            // from a single explicit Publish call.
+            // CustomerEvent is what separates a namespace scan from an explicit Publish call: nothing
+            // names it, it is not a base type of anything published, and it is in the namespace.
             Assert.Multiple(() =>
             {
                 Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(OrderSubmitted))),
                     "the namespace scan did not deploy the exchange of the type it was anchored on");
+                Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(OrderEvent))),
+                    "the namespace scan did not deploy the base type in the same namespace");
                 Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(PackageShipped))),
                     "the namespace scan deployed only the anchor type and not the rest of its namespace");
+                Assert.That(exchanges, Does.Contain(ExchangeNames.Of(typeof(CustomerEvent))),
+                    "the namespace scan did not deploy a type that nothing else in the configuration reaches");
             });
+        }
+
+        [Test]
+        public async Task Should_create_no_exchange_for_an_excluded_type_it_found()
+        {
+            IReadOnlyCollection<string> exchanges = await BrokerTopologyProbe.Exchanges(RabbitMqTestHarness);
+
+            // The scan does reach PackageEvent - it is in the namespace it walks - so this is the
+            // exclusion taking effect, not the scan missing it.
+            Assert.That(exchanges, Does.Not.Contain(ExchangeNames.Of(typeof(PackageEvent))),
+                "the namespace scan deployed a base type marked ExcludeFromTopology");
         }
 
         protected override void ConfigureRabbitMqBus(IRabbitMqBusFactoryConfigurator configurator)

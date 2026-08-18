@@ -1,11 +1,13 @@
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 {
     using System;
+    using System.Diagnostics;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Text;
     using System.Text.Json;
+    using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
     using ViciOne.ServiceBus.Testing;
@@ -53,12 +55,25 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         /// <summary>How long a precondition may take to come about.</summary>
         public static readonly TimeSpan Budget = TimeSpan.FromSeconds(30);
 
+        /// <summary>How long a single question to the broker may take, when the budget allows that much.</summary>
+        public static readonly TimeSpan CallLimit = TimeSpan.FromSeconds(10);
+
+        /// <summary>How long to wait between two questions.</summary>
+        public static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
+
         /// <summary>
         /// One client for the whole run. A probe polls every 100 ms for up to 30 s, and a client per poll
         /// leaves a socket in TIME_WAIT for each — hundreds of them over a category run, on the very
         /// machine the timing-sensitive specs are being measured on.
+        /// <para>
+        /// It carries no timeout of its own. A client timeout is counted from the start of its own call
+        /// and knows nothing about the budget of the wait around it, so a ten second call begun one
+        /// second before the budget expires would still be running nine seconds after the wait was
+        /// supposed to be over. Every call is bounded by a token instead, and that token never outlives
+        /// what is left of the budget.
+        /// </para>
         /// </summary>
-        static readonly HttpClient Client = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+        static readonly HttpClient Client = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
 
         public static async Task WaitUntilHeld(RabbitMqTestHarness harness, string queueName)
         {
@@ -89,26 +104,44 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 : $"'{queueName}': {expected}";
         }
 
+        static Task<QueueState> Poll(RabbitMqTestHarness harness, string queueName, QueueState wanted)
+        {
+            return PollUntil(remaining => StateOf(harness, queueName, remaining), wanted, Budget, PollInterval);
+        }
+
         /// <summary>
         /// Polls until the wanted state is reported or the budget expires, and returns the last state the
         /// broker reported. An <see cref="QueueState.Unknown"/> is never the wanted state, so it can only
         /// ever cost time, never turn a wait into a success.
+        /// <para>
+        /// The budget is monotonic. A wall clock is not a duration: it steps when the machine
+        /// synchronises its time, and a step backwards over a thirty second budget is not unusual on a
+        /// container host. The reader is handed what is left of the budget so that its own call cannot
+        /// outlive the wait it belongs to.
+        /// </para>
         /// </summary>
-        static async Task<QueueState> Poll(RabbitMqTestHarness harness, string queueName, QueueState wanted)
+        internal static async Task<QueueState> PollUntil(Func<TimeSpan, Task<QueueState>> read, QueueState wanted,
+            TimeSpan budget, TimeSpan interval)
         {
-            var deadline = DateTime.UtcNow + Budget;
+            var elapsed = Stopwatch.StartNew();
             var last = QueueState.Unknown;
 
-            while (DateTime.UtcNow < deadline)
+            while (true)
             {
-                last = await StateOf(harness, queueName).ConfigureAwait(false);
+                var remaining = budget - elapsed.Elapsed;
+                if (remaining <= TimeSpan.Zero)
+                    return last;
+
+                last = await read(remaining).ConfigureAwait(false);
                 if (last == wanted)
                     return last;
 
-                await Task.Delay(100).ConfigureAwait(false);
-            }
+                var pause = budget - elapsed.Elapsed;
+                if (pause <= TimeSpan.Zero)
+                    return last;
 
-            return last;
+                await Task.Delay(pause < interval ? pause : interval).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -116,7 +149,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         /// the state in which any other connection's declare is refused with reply code 405. An exclusive
         /// queue disappears with the connection that owns it, so its absence is the released state.
         /// </summary>
-        static async Task<QueueState> StateOf(RabbitMqTestHarness harness, string queueName)
+        static async Task<QueueState> StateOf(RabbitMqTestHarness harness, string queueName, TimeSpan remaining)
         {
             var virtualHost = harness.HostAddress.AbsolutePath.Trim('/');
             var uri = new UriBuilder("http", harness.HostAddress.Host, ManagementPort,
@@ -126,11 +159,13 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             var credentials = Encoding.ASCII.GetBytes($"{harness.Username}:{harness.Password}");
             request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(credentials));
 
+            using var cancellation = new CancellationTokenSource(remaining < CallLimit ? remaining : CallLimit);
+
             try
             {
-                using var response = await Client.SendAsync(request).ConfigureAwait(false);
+                using var response = await Client.SendAsync(request, cancellation.Token).ConfigureAwait(false);
                 var body = response.IsSuccessStatusCode
-                    ? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                    ? await response.Content.ReadAsStringAsync(cancellation.Token).ConfigureAwait(false)
                     : string.Empty;
 
                 return StateFrom(response.StatusCode, body);
@@ -139,17 +174,23 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 return QueueState.Unknown;
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 return QueueState.Unknown;
             }
         }
 
         /// <summary>
-        /// The whole decision, as a function of what the management API answered. Held only on an answer
-        /// that says the queue exists and is exclusive; released on the queue being gone or reported
-        /// without exclusivity; unknown on anything else, including the 500 the management plugin
-        /// answers while a queue is being deleted.
+        /// The whole decision, as a function of what the management API answered.
+        /// <para>
+        /// Only two answers are statements about the queue: <c>404</c>, because an exclusive queue
+        /// disappears with the connection that owns it, and a body whose <c>exclusive</c> field is the
+        /// boolean it is documented to be. Everything else is unknown - the 500 the management plugin
+        /// answers while a queue is being deleted, a refused credential, a body that is not an object,
+        /// a body that omits the field, and a field that carries null, a number or a string. A present
+        /// queue whose exclusivity cannot be read is not a released queue; it is a queue this probe
+        /// cannot speak about.
+        /// </para>
         /// </summary>
         internal static QueueState StateFrom(HttpStatusCode status, string body)
         {
@@ -163,10 +204,16 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             {
                 using var document = JsonDocument.Parse(body);
 
-                return document.RootElement.TryGetProperty("exclusive", out var exclusive)
-                    && exclusive.ValueKind == JsonValueKind.True
-                        ? QueueState.Held
-                        : QueueState.Released;
+                if (document.RootElement.ValueKind != JsonValueKind.Object
+                    || !document.RootElement.TryGetProperty("exclusive", out var exclusive))
+                    return QueueState.Unknown;
+
+                return exclusive.ValueKind switch
+                {
+                    JsonValueKind.True => QueueState.Held,
+                    JsonValueKind.False => QueueState.Released,
+                    _ => QueueState.Unknown
+                };
             }
             catch (JsonException)
             {
