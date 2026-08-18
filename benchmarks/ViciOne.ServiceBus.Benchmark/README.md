@@ -7,10 +7,10 @@ Environment-dependent runs that have not yet been executed are tracked once in [
 Build from the repository root:
 
 ```sh
-dotnet build ViciOne.ServiceBus.Engineering.slnx --configuration Release -p:TargetFramework=net10.0
+dotnet build ViciOne.ServiceBus.Engineering.slnx --configuration Release
 ```
 
-The explicit target-framework property keeps the multi-targeted product dependencies on the benchmark's supported `net10.0` target.
+There is no target-framework property on that line any more, and no explanation about multi-targeted product dependencies: every retained runtime, test and tool project of this repository targets `net10.0` alone. The only exceptions are the two Roslyn components and the analyzer package project, none of which this solution builds.
 
 Display the command-line options:
 

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_ANCHOR_BINDING",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0093-lead-directive, section 5",
+  "reportedIn": "development record 0094",
+  "statement": "Every anchor the model declares for the core category was bound against a real result file of tests/ViciOne.ServiceBus.Tests before the model was written, so the anchors are measured identities rather than names that look right.",
+  "method": "dotnet test tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj -c Release --filter \"FullyQualifiedName~When_visualizing_a_state_machine|FullyQualifiedName~message_pack\" with a TRX logger, then run_test_category.read_executed and unproven_anchors against it. The filter is a measurement of the identities, not a required run: a required category still runs unfiltered through the canonical runner.",
+  "executedCases": 19,
+  "anchors": {
+    "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine": [
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine.Should_parse_the_graph",
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine.Should_show_the_differences",
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine.Should_show_the_goods"
+    ],
+    "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine_again": [
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine_again.Should_show_the_goods"
+    ],
+    "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine": [
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine.Should_parse_the_graph",
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine.Should_show_graphviz_output",
+      "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine.Should_show_mermaid_output"
+    ],
+    "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader": [
+      "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_read_a_string_keyed_dictionary_under_that_mode",
+      "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_read_untrusted_data_with_the_hardened_security_mode",
+      "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_resist_hash_collisions_when_reading_dictionary_keys"
+    ],
+    "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set": [
+      "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set.Should_name_the_serializer_only_in_the_type_that_owns_the_options",
+      "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set.Should_report_the_owner_itself_when_it_is_not_excluded"
+    ]
+  },
+  "unproven": [],
+  "reading": "Five anchors, each carried by at least one case that really executed. The anchor these replaced was the namespace ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous, which no fixture identity can ever equal."
+}

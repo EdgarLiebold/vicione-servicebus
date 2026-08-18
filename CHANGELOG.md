@@ -19,9 +19,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
-- One output root: compilation output under `artifacts/sdk`, packages under `artifacts/packages`, and
-  everything a single test run writes under `artifacts/run-output/<run>/`, so two runs on one machine
-  share no file.
+- Two roots, and a run owns its own child of each. Compilation output under `artifacts/sdk`, packages
+  under `artifacts/packages`; the raw TRX, the endpoint projection, the control files and the broker
+  logs of one run under `artifacts/run-output/<run>/`; and the durable category record under the
+  caller's own evidence parent, in its own `<run>` child. Saying that every file a run writes lives
+  below the run-output root was false: the record is the one file meant to outlive the run, which is
+  why it is written where the caller asked for it. Two runs on one machine still share no file.
 - `.slnx` is the canonical solution; the mechanical configuration matrix is gone. There are two:
   `ViciOne.ServiceBus.slnx` for the product and `ViciOne.ServiceBus.Engineering.slnx` for the
   benchmarks, the diagnostics and their tests.

@@ -43,9 +43,12 @@ git diff -- '**/packages.lock.json'
 packages whose version range did not change, so a lock file can stay stale while the command reports
 success.
 
-Compilation output goes to `artifacts/sdk`, packages to `artifacts/packages`, and a run's own files -
-raw TRX, category record, endpoint projection, broker logs - to `artifacts/run-output/<run>/`. That is
-where the repository's own build and test entry points put them. It is not a property of the machine:
+Compilation output goes to `artifacts/sdk` and packages to `artifacts/packages`. A run's raw files -
+TRX, endpoint projection, control files, broker logs - go to `artifacts/run-output/<run>/`, and its
+durable category record goes to the evidence parent the caller named, in that run's own `<run>` child.
+Two roots, one child of each per run: the record is the one file meant to outlive the run, so it is
+written where the caller asked for it rather than under the raw output. That is where the repository's
+own build and test entry points put them. It is not a property of the machine:
 a tool invoked with its own output path, or an SDK feature that writes elsewhere, still writes
 elsewhere. The claim is about where this repository's paths lead, not about what is possible.
 

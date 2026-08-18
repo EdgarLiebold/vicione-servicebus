@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_COUNTEREXAMPLE_REPLAY",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0093-lead-directive",
+  "reportedIn": "development record 0094",
+  "method": "Each row was measured on this machine. Where the 'before' state is the rejected candidate d65c1220, it was reproduced by removing exactly the correction from the working tree rather than by checking that commit out, and the bytes were written back afterwards and compared. Every mutation is also a permanent case, so the same counterexample is red in the suite from now on.",
+  "rows": [
+    {
+      "id": "workflow-missing-continuation",
+      "directive": "0093 section 1",
+      "claim": "The required RabbitMQ job runs the command the step was written to run.",
+      "counterexample": "Removing the backslash after --evidence-dir makes --one-refusal-per-vhost a command of its own.",
+      "before": "accepted: the whole Python suite stayed green and the effective step was two commands",
+      "after": "rejected: FAIL ci-policy workflow-command: .github/workflows/build.yml line 143: the shell builds '--one-refusal-per-vhost 'test-exclusive-*'' as a command of its own",
+      "command": "python3 tools/ci/policy_validator.py, with the backslash removed and written back"
+    },
+    {
+      "id": "workflow-vector-refused",
+      "directive": "0093 section 1",
+      "claim": "A reconstructed runner call is one the runner accepts.",
+      "counterexample": "A step that drops --project, or mixes --command with a category, or names an outage for a broker it does not start.",
+      "before": "not checked at all: the rules looked for expected substrings",
+      "after": "rejected: the vector is parsed by run_broker_category.build_parser and closed by its validate; four permanent cases",
+      "command": "python3 -m unittest discover -s tools/ci -p test_policy_validator.py"
+    },
+    {
+      "id": "teardown-false-green-restore",
+      "directive": "0093 section 2",
+      "claim": "A green child with a failed broker restore is a red run.",
+      "counterexample": "compose start of the interrupted broker returns non zero on an otherwise green run.",
+      "before": "returned 0 after printing FAIL broker-restore",
+      "after": "returns 1 and prints FAIL broker-restore plus FAIL broker-fixture",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "teardown-false-green-controller",
+      "directive": "0093 section 2",
+      "claim": "A green child with a control thread that did not end is a red run.",
+      "counterexample": "The outage control thread is still alive after its join budget.",
+      "before": "returned 0 after printing FAIL outage-controller",
+      "after": "returns 1 and names the thread that can still act on a fixture being removed",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "teardown-false-green-down",
+      "directive": "0093 section 2",
+      "claim": "A green child with a failed compose down is a red run.",
+      "counterexample": "stop() raises TeardownError on an otherwise green run.",
+      "before": "raised out of the finally block, so the exit code came from an unhandled exception",
+      "after": "returns 1 and prints FAIL broker-teardown as a cleanup finding",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "primary-failure-keeps-its-code",
+      "directive": "0093 section 2",
+      "claim": "A child failure stays the primary diagnostic while every cleanup failure is still reported.",
+      "counterexample": "Child exits 3 while both the restore and the down fail.",
+      "before": "not covered: the tests drove stop(), not the decision in main()",
+      "after": "returns 3, and both FAIL broker-restore and FAIL broker-teardown are printed",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "controller-thread-exception",
+      "directive": "0093 section 2",
+      "claim": "An exception escaping the control thread makes an otherwise green run red.",
+      "counterexample": "serve_outage_requests raises.",
+      "before": "the interpreter printed a traceback and the run kept its exit code 0",
+      "after": "returns 1 and names the exception the thread ended with",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "controller-stop-during-readiness",
+      "directive": "0093 section 2",
+      "claim": "The controller observes its stop request inside the long readiness wait.",
+      "counterexample": "A restore is requested, the broker never becomes healthy, the teardown asks the thread to stop.",
+      "before": "the thread slept 0.5 s at a time and kept asking Docker about a service being removed",
+      "after": "the wait ends on the stop request and the request is answered as failed, naming the teardown",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "outage-broker-not-started",
+      "directive": "0093 section 2",
+      "claim": "--allow-broker-outage names a broker the run starts, in both modes.",
+      "counterexample": "--broker rabbitmq --allow-broker-outage activemq --command -- true",
+      "before": "returned 0 and started the ActiveMQ relay with no ActiveMQ behind it",
+      "after": "argparse error 2: --allow-broker-outage names 'activemq', which this run does not start",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_broker_category.py"
+    },
+    {
+      "id": "publish-load-snapshot-order",
+      "directive": "0093 section 3",
+      "claim": "The exact set is read only once nothing can still be counting.",
+      "counterexample": "A handler observes an identity while the stop is draining; the snapshot is taken first.",
+      "before": "the scan ran against live handlers, so the reported set belonged to no single moment",
+      "after": "ObserveThenQuiesceThenRead reads after the stop; taking the snapshot first turns the case red",
+      "command": "dotnet test tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests -c Release"
+    },
+    {
+      "id": "publish-load-quiescence",
+      "directive": "0093 section 3",
+      "claim": "A stop that ran out of its budget is not a standstill.",
+      "counterexample": "The stop swallows its own cancellation and returns normally, which is what the transport does.",
+      "before": "not measured: the snapshot was taken with the consumer still attached",
+      "after": "Quiesce reads the budget rather than the exception and reports 'inconclusive'",
+      "command": "dotnet test tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests -c Release"
+    },
+    {
+      "id": "diagnostics-output-sink",
+      "directive": "0093 section 3",
+      "claim": "A successfully parsed --output survives a later failure.",
+      "counterexample": "publish-load --messages 0 --output <file>",
+      "before": "returned 1, wrote the structured failure to stdout and left the file absent",
+      "after": "returns 1 and writes the structured failure into the file the caller asked for",
+      "command": "dotnet test tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests -c Release"
+    },
+    {
+      "id": "forwarded-output-arguments",
+      "directive": "0093 section 7",
+      "claim": "One run owns all of its mutable output.",
+      "counterexample": "A second --logger, --results-directory, --diag, --collect and -p:OutputPath / -p:ArtifactsPath.",
+      "before": "accepted: only the options that select tests were refused",
+      "after": "refused: the command line takes no further argument and forwards none; ten permanent cases, one per class of damage",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_test_category.py"
+    },
+    {
+      "id": "diagnostics-not-gated",
+      "directive": "0093 section 4",
+      "claim": "The diagnostics correctness cases gate the tool.",
+      "counterexample": "No required job started tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests.",
+      "before": "the README and the model said they gated it; the benchmarks job ran the benchmark harness alone",
+      "after": "required category 'diagnostics' in the same job, 35 executed cases, floor 35",
+      "command": "python3 tools/ci/run_test_category.py --category diagnostics --project tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj --evidence-dir artifacts/required/diagnostics"
+    },
+    {
+      "id": "anchor-namespace",
+      "directive": "0093 section 5",
+      "claim": "An indirect anchor names the cases that exercise the capability.",
+      "counterexample": "The anchor is a namespace holding many unrelated tests.",
+      "before": "accepted: 'namespace X' was found in the source text",
+      "after": "rejected before the run, and a namespace can carry no executed fixture identity either",
+      "command": "python3 -m unittest discover -s tools/ci -p test_policy_validator.py"
+    },
+    {
+      "id": "anchor-comment",
+      "directive": "0093 section 5",
+      "claim": "An anchor is a declaration, not a word in a file.",
+      "counterexample": "A commented out fixture with the anchor's name.",
+      "before": "accepted: the raw text contained the name",
+      "after": "rejected: comments are removed before the declarations are read",
+      "command": "python3 -m unittest discover -s tools/ci -p test_policy_validator.py"
+    },
+    {
+      "id": "anchor-ordinary-class",
+      "directive": "0093 section 5",
+      "claim": "An anchor is a test fixture.",
+      "counterexample": "namespace Proof.Anchor; public class WordsOnly { }",
+      "before": "accepted: a class declaration was enough",
+      "after": "rejected: the file has to carry a test attribute",
+      "command": "python3 -m unittest discover -s tools/ci -p test_policy_validator.py"
+    },
+    {
+      "id": "anchor-not-executed",
+      "directive": "0093 section 5",
+      "claim": "An anchor is proven by a case that ran.",
+      "counterexample": "The fixture is in the result file with outcome NotExecuted.",
+      "before": "not checked at run time at all",
+      "after": "the category fails: it executed no case of that fixture",
+      "command": "python3 -m unittest discover -s tools/ci -p test_run_test_category.py"
+    },
+    {
+      "id": "central-locked-mode-case",
+      "directive": "0093 section 6",
+      "claim": "No project can leave the central build contract.",
+      "counterexample": "<RestoreLockedMode>False</RestoreLockedMode> plus <RestoreLockedModeFromCommandLine>true</RestoreLockedModeFromCommandLine>",
+      "before": "accepted: the text search compared a lower case spelling",
+      "after": "rejected: FAIL ci-policy central-contract naming restorelockedmode",
+      "command": "python3 tools/ci/policy_validator.py with the property injected into src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj and written back"
+    },
+    {
+      "id": "central-conditional-import",
+      "directive": "0093 section 6",
+      "claim": "No project can leave the central build contract.",
+      "counterexample": "<ImportDirectoryBuildTargets Condition=\" '$(OS)' != 'Windows_NT' \">False</...>",
+      "before": "accepted: the text search looked for the element without an attribute",
+      "after": "rejected: FAIL ci-policy central-contract naming importdirectorybuildtargets",
+      "command": "python3 tools/ci/policy_validator.py with the property injected and written back"
+    },
+    {
+      "id": "central-conditional-redirect",
+      "directive": "0093 section 6",
+      "claim": "No project can leave the central build contract.",
+      "counterexample": "<DirectoryBuildTargetsPath Condition=\" '$(Configuration)' == 'Release' \">build/Elsewhere.targets</...>",
+      "before": "accepted: same reason",
+      "after": "rejected: FAIL ci-policy central-contract naming directorybuildtargetspath",
+      "command": "python3 tools/ci/policy_validator.py with the property injected and written back"
+    },
+    {
+      "id": "executed-floor-dead-loop",
+      "directive": "0093 section 6, found while working the same model",
+      "claim": "Every declared run records the case count it must not fall below.",
+      "counterexample": "A model in which no run declares minimumExecutedCases.",
+      "before": "accepted: the rule iterated a top level 'categories' object the model does not have",
+      "after": "rejected: FAIL ci-policy executed-floor, read from the declared runs",
+      "command": "python3 -m unittest discover -s tools/ci -p test_policy_validator.py"
+    }
+  ]
+}
