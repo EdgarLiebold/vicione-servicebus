@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_CLOSING_RUN",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "reportedIn": "development record 0085",
+  "commit": "62c7b4d0cea2cbdc6b4978ad4cb6f483bf207ff3",
+  "treeIsClean": true,
+  "statement": "One full local run of the required profile in the order .github/workflows/build.yml declares it, against the commit named above with a clean working tree. Every step of the profile ran; none was skipped and none was narrowed.",
+  "steps": [
+    {
+      "step": "policy-validator",
+      "exitCode": 0,
+      "seconds": 2
+    },
+    {
+      "step": "policy-selftests-ci",
+      "exitCode": 0,
+      "seconds": 13
+    },
+    {
+      "step": "policy-selftests-ident",
+      "exitCode": 0,
+      "seconds": 9
+    },
+    {
+      "step": "build-restore",
+      "exitCode": 0,
+      "seconds": 9
+    },
+    {
+      "step": "build",
+      "exitCode": 0,
+      "seconds": 38
+    },
+    {
+      "step": "analyzer",
+      "exitCode": 0,
+      "seconds": 13
+    },
+    {
+      "step": "core",
+      "exitCode": 0,
+      "seconds": 397
+    },
+    {
+      "step": "abstractions",
+      "exitCode": 0,
+      "seconds": 6
+    },
+    {
+      "step": "signalr",
+      "exitCode": 0,
+      "seconds": 29
+    },
+    {
+      "step": "quartz",
+      "exitCode": 0,
+      "seconds": 310
+    },
+    {
+      "step": "benchmarks-restore",
+      "exitCode": 0,
+      "seconds": 6
+    },
+    {
+      "step": "benchmarks-build",
+      "exitCode": 0,
+      "seconds": 13
+    },
+    {
+      "step": "benchmarks",
+      "exitCode": 0,
+      "seconds": 13
+    },
+    {
+      "step": "rabbitmq",
+      "exitCode": 0,
+      "seconds": 540
+    },
+    {
+      "step": "activemq",
+      "exitCode": 0,
+      "seconds": 200
+    },
+    {
+      "step": "sql-transport",
+      "exitCode": 0,
+      "seconds": 295
+    },
+    {
+      "step": "entity-framework",
+      "exitCode": 0,
+      "seconds": 473
+    },
+    {
+      "step": "pack-restore",
+      "exitCode": 0,
+      "seconds": 7
+    },
+    {
+      "step": "pack-build",
+      "exitCode": 0,
+      "seconds": 10
+    },
+    {
+      "step": "pack",
+      "exitCode": 0,
+      "seconds": 8
+    },
+    {
+      "step": "pack-hash",
+      "exitCode": 0,
+      "seconds": 0
+    }
+  ],
+  "totals": {
+    "executedCases": 3030,
+    "failedCases": 0,
+    "notExecutedCases": 3,
+    "notExecutedUnlisted": 0
+  },
+  "categories": {
+    "activemq": {
+      "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+      "counters": {
+        "total": 150,
+        "executed": 148,
+        "passed": 148,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [
+        "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
+        "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges"
+      ],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 171.288,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "analyzer": {
+      "project": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+      "counters": {
+        "total": 115,
+        "executed": 115,
+        "passed": 115,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 12.412,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "benchmarks": {
+      "project": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
+      "counters": {
+        "total": 75,
+        "executed": 75,
+        "passed": 75,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 13.188,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "abstractions": {
+      "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+      "counters": {
+        "total": 74,
+        "executed": 74,
+        "passed": 74,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 5.918,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "core": {
+      "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "counters": {
+        "total": 1872,
+        "executed": 1872,
+        "passed": 1872,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 396.423,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "entity-framework-core": {
+      "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+      "counters": {
+        "total": 160,
+        "executed": 160,
+        "passed": 160,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 455.548,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "quartz": {
+      "project": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+      "counters": {
+        "total": 89,
+        "executed": 89,
+        "passed": 89,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 310.515,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "rabbitmq": {
+      "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+      "counters": {
+        "total": 362,
+        "executed": 361,
+        "passed": 361,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [
+        "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect"
+      ],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 523.212,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "signalr": {
+      "project": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+      "counters": {
+        "total": 26,
+        "executed": 26,
+        "passed": 26,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 28.553,
+      "timezone": "UTC",
+      "exitCode": 0
+    },
+    "sql-transport": {
+      "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+      "counters": {
+        "total": 110,
+        "executed": 110,
+        "passed": 110,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 277.013,
+      "timezone": "UTC",
+      "exitCode": 0
+    }
+  },
+  "pack": {
+    "packages": 20,
+    "outputEmptiedFirst": true,
+    "sha256": {
+      "ViciOne.ServiceBus.1.0.0.nupkg": "39a570bd1f591ce946e736a2078d94c1ca01fb32f24fe26ddd018019f119b6af",
+      "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg": "d8d02cfa5de7fe7fa39a149990238bac5c1301bd8f5e5718a43ac034098d232c",
+      "ViciOne.ServiceBus.ActiveMQ.1.0.0.nupkg": "422c01a343c5c624c54f05e5ee60c7bbe2049299869931bfb42dcad63dabfde7",
+      "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg": "209d09dfb3433c6d77149f4ddb3602670058bf2d8047e435a2ffe35480321dad",
+      "ViciOne.ServiceBus.AmazonSQS.1.0.0.nupkg": "36a5568ad728dee239bc46b98a4f55fd96302f6528f05c9edf02544284e98ee2",
+      "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg": "a0e6741bc50f4bca4b930820312b3fe0df1dcc4b59ccdb720ac7ec3b7d2813ef",
+      "ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg": "50af4a97025bc8b0ea731ede4b95a80b58a8e60696b2509284a4bc8c89e59dd4",
+      "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg": "7bd976e5ce0259e40dc5a55a9705c7292632c5e55a54f4ad342c32b288e072a8",
+      "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg": "7c95f11893033930db41d5511a2371b991297bb187b248ee5e9e407f67297033",
+      "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg": "0820f94dbc9b1490c97b31e3a51c5005621532d2e4615ad5503251e9e05e5f11",
+      "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg": "4af88d57991c221b90d9bb7bf83a98afac3077c1c4dd02a890e5e5dcd22e1ef9",
+      "ViciOne.ServiceBus.EventHub.1.0.0.nupkg": "fa4fdece610d8ba9dce62a6d1e7fff818c918536d639f2c6586042508eaad9a5",
+      "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg": "c9d470f68760109b819b8319cb4e96d38c3f4ce5198b8694688feccd5a198b47",
+      "ViciOne.ServiceBus.Quartz.1.0.0.nupkg": "c90b806713d4ed420c09e32edc2e9ae91f205b0f322a269c25405f5bfa4552c4",
+      "ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg": "780bd6d82663f15fa5718037f5b78b71ffbbf4ee49189d0de53767cb9027f5d5",
+      "ViciOne.ServiceBus.SignalR.1.0.0.nupkg": "924c59c98901cac1c58d211ce3dd1264157005070cb8d4e63cef1f473464b7c3",
+      "ViciOne.ServiceBus.SqlTransport.PostgreSQL.1.0.0.nupkg": "30d499e4ec4975785e51221728a7c01ef1a0975682c32d962677f8981dfb41e6",
+      "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg": "15a34d3fa6f7a6fbbf3b95cb7972ee3ae74ac6abfba4d8574f06dc137065ab9b",
+      "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg": "e61a922e93a667cf5a62f703e711eb6f867b26c9bd236d0fc0a0434083ff9acd",
+      "ViciOne.ServiceBus.TestFramework.1.0.0.nupkg": "e7fb9d5ed82e98681b94fe0ea2debe05a3f66333b2b4997c542d7fc37e0474a9"
+    }
+  },
+  "rawArtifacts": "The TRX of every category and the collected broker logs are under artifacts/run-output, which git ignores. This record carries the counters they held; tools/ci/policy_validator.py rejects a raw artifact under evidence/.",
+  "dockerAfterTheRun": "no container running"
+}
