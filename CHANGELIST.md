@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 880 |
+| Added | 924 |
 | Modified | 4878 |
 | Deleted | 764 |
 | Renamed | 8 |
@@ -109,6 +109,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmark/configs/otel-collector/otelcol-config-extras.yml` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/configs/otel-collector/otelcol-config.yml` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/docker-compose.yml` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmark/packages.lock.json` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/BenchmarkConfiguration.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/BenchmarkRunOutcome.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ChannelBenchmark.cs` | Added |  |
@@ -129,6 +130,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Throughput/TestContext.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Throughput/ThroughputTestContext.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/packages.lock.json` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/AnalyticsTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BenchmarkRunOutcomeTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BusOutboxDatabaseSettingsTests.cs` | Added |  |
@@ -136,6 +138,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/RabbitMqOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/SqlOptionSetTests.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/packages.lock.json` | Added |  |
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
@@ -263,6 +266,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0005/RECOVERY_STATUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0006/RECOVERY_STATUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0007/RECOVERY_STATUS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/BUILD_DEFAULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/CORRECTIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/SQL_CATEGORY.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/architecture.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/clean-build.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/mutation.json` | Added |  |
@@ -1165,6 +1171,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/Configuration/AmazonS3MessageDataRepositorySelectorExtensions.cs` | Modified | `src/Persistence/MassTransit.AmazonS3/Configuration/AmazonS3MessageDataRepositorySelectorExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj` | Modified | `src/Persistence/MassTransit.AmazonS3/MassTransit.AmazonS3.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.AmazonS3/MassTransit.AmazonS3.csproj.DotSettings` |
+| `src/Persistence/ViciOne.ServiceBus.AmazonS3/packages.lock.json` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/AzureStorage/MessageData/AzureStorageMessageDataRepository.cs` | Modified | `src/Persistence/MassTransit.Azure.Storage/AzureStorage/MessageData/AzureStorageMessageDataRepository.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/AzureStorage/MessageData/IBlobNameGenerator.cs` | Modified | `src/Persistence/MassTransit.Azure.Storage/AzureStorage/MessageData/IBlobNameGenerator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/AzureStorage/MessageData/NewIdBlobNameGenerator.cs` | Modified | `src/Persistence/MassTransit.Azure.Storage/AzureStorage/MessageData/NewIdBlobNameGenerator.cs` |
@@ -1172,6 +1179,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/Configuration/MessageDataRepositorySelectorExtensions.cs` | Modified | `src/Persistence/MassTransit.Azure.Storage/Configuration/MessageDataRepositorySelectorExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj.DotSettings` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Storage/packages.lock.json` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AuditRecord.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableAuditStore.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/DatabaseContext.cs` |
@@ -1204,6 +1212,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/IAzureTableSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/IAzureTableSagaRepositoryConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj` | Modified | `src/Persistence/MassTransit.Azure.Table/MassTransit.Azure.Table.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.Azure.Table/MassTransit.Azure.Table.csproj.DotSettings` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/packages.lock.json` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryRegistrationProvider.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryRegistrationProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` |
@@ -1218,6 +1227,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Exceptions/DynamoDbSagaConcurrencyException.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Exceptions/DynamoDbSagaConcurrencyException.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/MassTransit.DynamoDbIntegration.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/MassTransit.DynamoDbIntegration.csproj.DotSettings` |
+| `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/packages.lock.json` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkBusOutboxConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkBusOutboxConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkOutboxConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkOutboxConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` |
@@ -1292,6 +1302,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/SagaClassMap.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/SagaClassMap.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/MassTransit.EntityFrameworkCoreIntegration.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/MassTransit.EntityFrameworkCoreIntegration.csproj.DotSettings` |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/packages.lock.json` | Added |  |
 | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/HangfireEndpointDefinition.cs` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/HangfireEndpointDefinition.cs` |
 | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/PauseScheduledRecurringMessageConsumerDefinition.cs` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/PauseScheduledRecurringMessageConsumerDefinition.cs` |
 | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/ResumeScheduledMessageConsumerDefinition.cs` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/Configuration/Configuration/ResumeScheduledMessageConsumerDefinition.cs` |
@@ -1347,6 +1358,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzSchedulerOptions.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzSchedulerOptions.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj.DotSettings` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj.DotSettings` |
+| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/packages.lock.json` | Added |  |
 | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
 | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
@@ -1640,6 +1652,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqSendTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqSendTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj` | Modified | `src/Transports/MassTransit.ActiveMqTransport/MassTransit.ActiveMqTransport.csproj` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj.DotSettings` | Modified | `src/Transports/MassTransit.ActiveMqTransport/MassTransit.ActiveMqTransport.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsBusFactory.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsBusFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsEndpointAddress.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsEndpointAddress.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsHostAddress.cs` |
@@ -1804,6 +1817,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsSendTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsSendTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/MassTransit.AmazonSqsTransport.csproj` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj.DotSettings` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/MassTransit.AmazonSqsTransport.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureBusFactory.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/AzureBusFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureServiceBusTransport/ClientContext.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/AzureServiceBusTransport/ClientContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureServiceBusTransport/ClientContextFactory.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/AzureServiceBusTransport/ClientContextFactory.cs` |
@@ -2025,6 +2039,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/Topology/ServiceBusBrokerTopologyExtensions.cs` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/Topology/ServiceBusBrokerTopologyExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/MassTransit.Azure.ServiceBus.Core.csproj` |
 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj.DotSettings` | Modified | `src/Transports/MassTransit.Azure.ServiceBus.Core/MassTransit.Azure.ServiceBus.Core.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/Configuration/IEventHubFactoryConfigurator.cs` | Modified | `src/Transports/MassTransit.EventHubIntegration/Configuration/IEventHubFactoryConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/Configuration/IEventHubProducer.cs` | Modified | `src/Transports/MassTransit.EventHubIntegration/Configuration/IEventHubProducer.cs` |
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/Configuration/IEventHubReceiveEndpointConfigurator.cs` | Modified | `src/Transports/MassTransit.EventHubIntegration/Configuration/IEventHubReceiveEndpointConfigurator.cs` |
@@ -2114,6 +2129,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/ProduceExtensions.cs` | Modified | `src/Transports/MassTransit.EventHubIntegration/ProduceExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj` | Modified | `src/Transports/MassTransit.EventHubIntegration/MassTransit.EventHubIntegration.csproj` |
 | `src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj.DotSettings` | Modified | `src/Transports/MassTransit.EventHubIntegration/MassTransit.EventHubIntegration.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.EventHubIntegration/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/IRabbitMqBatchPublishConfigurator.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Configuration/IRabbitMqBatchPublishConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/IRabbitMqBusFactoryConfigurator.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Configuration/IRabbitMqBusFactoryConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/IRabbitMqClusterConfigurator.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Configuration/IRabbitMqClusterConfigurator.cs` |
@@ -2296,6 +2312,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Topology/PublishBrokerTopologyOptions.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Topology/PublishBrokerTopologyOptions.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj` | Modified | `src/Transports/MassTransit.RabbitMqTransport/MassTransit.RabbitMqTransport.csproj` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj.DotSettings` | Modified | `src/Transports/MassTransit.RabbitMqTransport/MassTransit.RabbitMqTransport.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/IPostgresSqlHostConfigurator.cs` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/Configuration/IPostgresSqlHostConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresBusFactoryConfiguratorExtensions.cs` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/Configuration/PostgresBusFactoryConfiguratorExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresHostConfigurationExtensions.cs` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/Configuration/PostgresHostConfigurationExtensions.cs` |
@@ -2315,6 +2332,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/SqlTransport/PostgreSql/UriTypeHandler.cs` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/SqlTransport/PostgreSql/UriTypeHandler.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/MassTransit.SqlTransport.PostgreSql.csproj` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj.DotSettings` | Modified | `src/Transports/MassTransit.SqlTransport.PostgreSql/MassTransit.SqlTransport.PostgreSql.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/packages.lock.json` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/ISqlServerSqlHostConfigurator.cs` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/Configuration/ISqlServerSqlHostConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerDbTransportConfigurationExtensions.cs` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/Configuration/SqlServerDbTransportConfigurationExtensions.cs` |
@@ -2331,6 +2349,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/SqlTransport/SqlServer/UriTypeHandler.cs` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/SqlTransport/SqlServer/UriTypeHandler.cs` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/MassTransit.SqlTransport.SqlServer.csproj` |
 | `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj.DotSettings` | Modified | `src/Transports/MassTransit.SqlTransport.SqlServer/MassTransit.SqlTransport.SqlServer.csproj.DotSettings` |
+| `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Attributes/ConfigureConsumeTopologyAttribute.cs` | Modified | `src/MassTransit.Abstractions/Attributes/ConfigureConsumeTopologyAttribute.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Attributes/EntityNameAttribute.cs` | Modified | `src/MassTransit.Abstractions/Attributes/EntityNameAttribute.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Attributes/ExcludeFromConfigureEndpointsAttribute.cs` | Modified | `src/MassTransit.Abstractions/Attributes/ExcludeFromConfigureEndpointsAttribute.cs` |
@@ -3134,10 +3153,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithmOptions.cs` | Modified | `src/MassTransit.Abstractions/Util/RequestRateAlgorithmOptions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj` | Modified | `src/MassTransit.Abstractions/MassTransit.Abstractions.csproj` |
 | `src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj.DotSettings` | Modified | `src/MassTransit.Abstractions/MassTransit.Abstractions.csproj.DotSettings` |
+| `src/ViciOne.ServiceBus.Abstractions/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.CodeFixes/CancellationTokenOverloadMethodFixer.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.CodeFixes/MessageContractCodeFixProvider.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.CodeFixes/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj` | Added |  |
+| `src/ViciOne.ServiceBus.Analyzers.Package/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.Package/tools/install.ps1` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers.Package/tools/uninstall.ps1` | Added |  |
 | `src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md` | Modified | `src/MassTransit.Analyzers/AnalyzerReleases.Shipped.md` |
@@ -3152,6 +3174,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Analyzers/MessageContractAnalyzer.cs` | Modified | `src/MassTransit.Analyzers/MessageContractAnalyzer.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/PropertyNameEqualityComparer.cs` | Modified | `src/MassTransit.Analyzers/PropertyNameEqualityComparer.cs` |
 | `src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj` | Modified | `src/MassTransit.Analyzers/MassTransit.Analyzers.csproj` |
+| `src/ViciOne.ServiceBus.Analyzers/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` | Modified | `src/MassTransit.MessagePack/Configuration/MessagePackConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/InternalMessagePackResolver.cs` | Modified | `src/MassTransit.MessagePack/Serialization/InternalMessagePackResolver.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/MessagePackEnvelope.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MessagePackEnvelope.cs` |
@@ -3167,6 +3190,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.MessagePack/Serialization/ViciOneServiceBusMessagePackFormatterResolver.cs` | Modified | `src/MassTransit.MessagePack/Serialization/MassTransitMessagePackFormatterResolver.cs` |
 | `src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj` | Modified | `src/MassTransit.MessagePack/MassTransit.MessagePack.csproj` |
 | `src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj.DotSettings` | Modified | `src/MassTransit.MessagePack/MassTransit.MessagePack.csproj.DotSettings` |
+| `src/ViciOne.ServiceBus.MessagePack/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.SignalR/Configuration/Definitions/AllConsumerDefinition.cs` | Modified | `src/MassTransit.SignalR/Configuration/Definitions/AllConsumerDefinition.cs` |
 | `src/ViciOne.ServiceBus.SignalR/Configuration/Definitions/ConnectionConsumerDefinition.cs` | Modified | `src/MassTransit.SignalR/Configuration/Definitions/ConnectionConsumerDefinition.cs` |
 | `src/ViciOne.ServiceBus.SignalR/Configuration/Definitions/GroupConsumerDefinition.cs` | Modified | `src/MassTransit.SignalR/Configuration/Definitions/GroupConsumerDefinition.cs` |
@@ -3198,10 +3222,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj` | Modified | `src/MassTransit.SignalR/MassTransit.SignalR.csproj` |
 | `src/ViciOne.ServiceBus.SignalR/ViciOneServiceBusHubLifetimeManager.cs` | Modified | `src/MassTransit.SignalR/MassTransitHubLifetimeManager.cs` |
 | `src/ViciOne.ServiceBus.SignalR/ViciOneServiceBusSignalRConfigurationExtensions.cs` | Modified | `src/MassTransit.SignalR/MassTransitSignalRConfigurationExtensions.cs` |
+| `src/ViciOne.ServiceBus.SignalR/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/Abstractions/StateMachineGenerator.cs` | Modified | `src/MassTransit.StateMachineVisualizer/Abstractions/StateMachineGenerator.cs` |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineGraphvizGenerator.cs` | Modified | `src/MassTransit.StateMachineVisualizer/StateMachineGraphvizGenerator.cs` |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineMermaidGenerator.cs` | Modified | `src/MassTransit.StateMachineVisualizer/StateMachineMermaidGenerator.cs` |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj` | Modified | `src/MassTransit.StateMachineVisualizer/MassTransit.StateMachineVisualizer.csproj` |
+| `src/ViciOne.ServiceBus.StateMachineVisualizer/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus.TestFramework/ActivityTestContext.cs` | Modified | `src/MassTransit.TestFramework/ActivityTestContext.cs` |
 | `src/ViciOne.ServiceBus.TestFramework/ActivityTestContextConfigurator.cs` | Modified | `src/MassTransit.TestFramework/ActivityTestContextConfigurator.cs` |
 | `src/ViciOne.ServiceBus.TestFramework/AsyncTestFixture.cs` | Modified | `src/MassTransit.TestFramework/AsyncTestFixture.cs` |
@@ -3348,6 +3374,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.TestFramework/ThreadSafeRandom.cs` | Modified | `src/MassTransit.TestFramework/ThreadSafeRandom.cs` |
 | `src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj` | Modified | `src/MassTransit.TestFramework/MassTransit.TestFramework.csproj` |
 | `src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml` | Modified | `src/MassTransit.TestFramework/MassTransit.TestFramework.log4net.xml` |
+| `src/ViciOne.ServiceBus.TestFramework/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContext.cs` | Modified | `src/MassTransit/Agents/ActivePipeContext.cs` |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContextAgent.cs` | Modified | `src/MassTransit/Agents/ActivePipeContextAgent.cs` |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContextHandle.cs` | Modified | `src/MassTransit/Agents/ActivePipeContextHandle.cs` |
@@ -5324,6 +5351,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj.DotSettings` | Modified | `src/MassTransit/MassTransit.csproj.DotSettings` |
 | `src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs` | Modified | `src/MassTransit/MassTransitBus.cs` |
 | `src/ViciOne.ServiceBus/ViciOneServiceBusHostedService.cs` | Modified | `src/MassTransit/MassTransitHostedService.cs` |
+| `src/ViciOne.ServiceBus/packages.lock.json` | Added |  |
 | `src/vicione-servicebus-logo.png` | Modified | `src/mt-logo-small.png` |
 | `tests/Directory.Build.props` | Modified | `tests/Directory.Build.props` |
 | `tests/MassTransit.AmazonSqsTransport.Tests/Encrypted_Specs.cs` | Deleted | `tests/MassTransit.AmazonSqsTransport.Tests/Encrypted_Specs.cs` |
@@ -5594,6 +5622,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj.DotSettings` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ArtemisBroker.cs` | Added |  |
@@ -5626,6 +5655,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/VirtualTopicEndpoint_Specs.cs` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/VirtualTopicEndpoint_Specs.cs` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/docker-compose.yml` | Modified | `tests/MassTransit.ActiveMqTransport.Tests/docker-compose.yml` |
 | `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/jolokia-access.xml` | Renamed | `tests/MassTransit.ActiveMqTransport.Tests/jolokia-access.xml` |
+| `tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsAddress_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/AmazonSqsAddress_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsTestFixture.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/AmazonSqsTestFixture.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Configure_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/Configure_Specs.cs` |
@@ -5656,6 +5686,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Modified | `tests/MassTransit.AmazonSqsTransport.Tests/MassTransit.AmazonSqsTransport.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/docker-compose.yml` | Renamed | `tests/MassTransit.AmazonSqsTransport.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceState_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Await_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` |
@@ -5670,6 +5701,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Modified | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Address_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/Address_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusEndpointUriCreator.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/AzureServiceBusEndpointUriCreator.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusTestFixture.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/AzureServiceBusTestFixture.cs` |
@@ -5726,6 +5758,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Turnout/Complete_Specs.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/Turnout/Complete_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/TwoScopeAzureServiceBusTestFixture.cs` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/TwoScopeAzureServiceBusTestFixture.cs` |
 | `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj` | Modified | `tests/MassTransit.Azure.ServiceBus.Core.Tests/MassTransit.Azure.ServiceBus.Core.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_ConsumeRecords_Specs.cs` | Modified | `tests/MassTransit.Azure.Table.Tests/Audit/AuditStore_ConsumeRecords_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_Filter_Specs .cs` | Modified | `tests/MassTransit.Azure.Table.Tests/Audit/AuditStore_Filter_Specs .cs` |
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_PartitionKey_Specs.cs` | Modified | `tests/MassTransit.Azure.Table.Tests/Audit/AuditStore_PartitionKey_Specs.cs` |
@@ -5750,12 +5783,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/SlowConcurrentSaga_Specs.cs` | Modified | `tests/MassTransit.Azure.Table.Tests/SlowConcurrentSaga/SlowConcurrentSaga_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Modified | `tests/MassTransit.Azure.Table.Tests/MassTransit.Azure.Table.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Azure.Table.Tests/docker-compose.yml` | Modified | `tests/MassTransit.Azure.Table.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Choir_Specs.cs` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/Choir_Specs.cs` |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Container_Specs.cs` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/Container_Specs.cs` |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Messages.cs` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/Messages.cs` |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SagaPersistenceTests.cs` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/SagaPersistenceTests.cs` |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SimpleSaga.cs` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/SimpleSaga.cs` |
 | `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Modified | `tests/MassTransit.DynamoDbIntegration.Tests/MassTransit.DynamoDbIntegration.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/AuditStore/AuditStore_Specs.cs` | Modified | `tests/MassTransit.EntityFrameworkCoreIntegration.Tests/AuditStore/AuditStore_Specs.cs` |
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/AuditStore/DataAccess/AuditContextFactory.cs` | Modified | `tests/MassTransit.EntityFrameworkCoreIntegration.Tests/AuditStore/DataAccess/AuditContextFactory.cs` |
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/BusOutboxDeliveryContext_Specs.cs` | Added |  |
@@ -5816,6 +5851,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Turnout/JobServiceSagaDbContextFactory.cs` | Modified | `tests/MassTransit.EntityFrameworkCoreIntegration.Tests/Turnout/JobServiceSagaDbContextFactory.cs` |
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Modified | `tests/MassTransit.EntityFrameworkCoreIntegration.Tests/MassTransit.EntityFrameworkCoreIntegration.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/docker-compose.yml` | Modified | `tests/MassTransit.EntityFrameworkCoreIntegration.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/BatchProducer_Specs.cs` | Modified | `tests/MassTransit.EventHubIntegration.Tests/BatchProducer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/BatchReceive_Specs.cs` | Modified | `tests/MassTransit.EventHubIntegration.Tests/BatchReceive_Specs.cs` |
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/Configuration.cs` | Modified | `tests/MassTransit.EventHubIntegration.Tests/Configuration.cs` |
@@ -5837,6 +5873,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj` | Modified | `tests/MassTransit.EventHubIntegration.Tests/MassTransit.EventHubIntegration.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json` | Renamed | `tests/MassTransit.EventHubIntegration.Tests/config.json` |
 | `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/docker-compose.yml` | Modified | `tests/MassTransit.EventHubIntegration.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Container_Specs.cs` | Modified | `tests/MassTransit.QuartzIntegration.Tests/Container_Specs.cs` |
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Courier_Specs.cs` | Modified | `tests/MassTransit.QuartzIntegration.Tests/Courier_Specs.cs` |
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/DelayRetry_Specs.cs` | Modified | `tests/MassTransit.QuartzIntegration.Tests/DelayRetry_Specs.cs` |
@@ -5864,6 +5901,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/TwoMessage_Specs.cs` | Modified | `tests/MassTransit.QuartzIntegration.Tests/TwoMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/Utils.cs` | Modified | `tests/MassTransit.QuartzIntegration.Tests/Utils.cs` |
 | `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Modified | `tests/MassTransit.QuartzIntegration.Tests/MassTransit.QuartzIntegration.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/AlternateExchange_Specs.cs` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/AlternateExchange_Specs.cs` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/AmazonMQ_Specs.cs` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/AmazonMQ_Specs.cs` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/Batching_Specs.cs` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/Batching_Specs.cs` |
@@ -5965,6 +6003,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/When_a_message_consumer_throws_an_exception.cs` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/When_a_message_consumer_throws_an_exception.cs` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Renamed | `tests/MassTransit.RabbitMqTransport.Tests/client.p12` |
 | `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/docker-compose.yml` | Modified | `tests/MassTransit.RabbitMqTransport.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/HubLifeTimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |
@@ -5982,6 +6021,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/ViciOneServiceBusHubLifetimeTestFixture.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/MassTransitHubLifetimeTestFixture.cs` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj` | Modified | `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Address_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Address_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/BusOutbox_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/BusOutbox_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Configuration_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Configuration_Specs.cs` |
@@ -6020,11 +6060,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/TransportInspection.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Modified | `tests/MassTransit.SqlTransport.Tests/MassTransit.SqlTransport.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/docker-compose.yml` | Modified | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` |
+| `tests/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/DatabaseEndpoint.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestDatabase.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContract.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
+| `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Audit/AuditFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/Audit_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
@@ -6517,12 +6559,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs` | Modified | `tests/MassTransit.Tests/Transports/TopicExchange_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/TypeCastRetry_Specs.cs` | Modified | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
+| `tools/ci/test_locked_restore.py` | Added |  |
 | `tools/ci/test_policy_validator.py` | Added |  |
 | `tools/ci/test_run_test_category.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |

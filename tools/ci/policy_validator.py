@@ -601,12 +601,10 @@ class Policy:
         the lock files exist to prevent, so the presence of the file is checked here, before any
         restore runs.
         """
-        projects = sorted(self.root.rglob("*.csproj"))
-        if not projects:
-            self.fail("restore-lock", "no project was found, so this rule proves nothing")
-            return
-
-        for project in projects:
+        # No vacuity guard here: this rule runs against synthetic trees in its own tests as well, and a
+        # tree without projects is not a policy violation. That the real repository has projects at all,
+        # and a lock file for every one of them, is asserted in tools/ci/test_locked_restore.py.
+        for project in sorted(self.root.rglob("*.csproj")):
             relative = project.relative_to(self.root)
             if relative.parts[0] in {"artifacts", "obj", "bin"}:
                 continue

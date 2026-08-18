@@ -39,6 +39,39 @@ def restore(root: Path, project: Path, locked: bool) -> subprocess.CompletedProc
     return subprocess.run(command, cwd=root, text=True, capture_output=True, check=False, env=environment)
 
 
+class TrackedLockFileTests(unittest.TestCase):
+    """That the repository has projects at all, and a lock file for every one of them.
+
+    The policy rule checks each project it finds and deliberately does not fail on a tree without
+    projects, because it runs against synthetic trees in its own tests. The claim that this tree is not
+    such a tree belongs here, where it can be made about the real repository.
+    """
+
+    def test_every_project_carries_a_tracked_lock_file(self) -> None:
+        tracked = subprocess.run(["git", "ls-files", "*.csproj"], cwd=REPO_ROOT, text=True,
+                                 capture_output=True, check=True).stdout.split()
+        self.assertGreater(len(tracked), 30, "the repository reports far fewer projects than it has")
+
+        missing = sorted(
+            project for project in tracked
+            if not (REPO_ROOT / project).parent.joinpath("packages.lock.json").is_file()
+        )
+
+        self.assertEqual([], missing, "these projects resolve without a lock file")
+
+    def test_every_lock_file_belongs_to_a_project(self) -> None:
+        locks = subprocess.run(["git", "ls-files", "packages.lock.json", "**/packages.lock.json"],
+                               cwd=REPO_ROOT, text=True, capture_output=True, check=True).stdout.split()
+        self.assertGreater(len(locks), 30, "the repository tracks far fewer lock files than it has projects")
+
+        orphans = sorted(
+            lock for lock in locks
+            if not list((REPO_ROOT / lock).parent.glob("*.csproj"))
+        )
+
+        self.assertEqual([], orphans, "these lock files belong to no project")
+
+
 class LockedRestoreTests(unittest.TestCase):
     """Each case works on its own copy, so a failing case cannot leave the repository changed."""
 
