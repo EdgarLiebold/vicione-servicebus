@@ -88,6 +88,10 @@ LOCK = {
 
 RABBITMQ_TEST_PROJECT = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
 
+# The one fixture the fixture repository leans on indirectly. It runs: an anchor on a case that is
+# never executed proves as little as an anchor on a comment.
+ANCHOR_FIXTURE = "ViciOne.ServiceBus.RabbitMqTransport.Tests.Delivering_a_message"
+
 APPROVED_SDK = "10.0.302"
 
 GLOBAL_JSON = """\
@@ -155,7 +159,7 @@ def fixture_model() -> dict:
         # Through the one fixture capability whose test project really holds sources, so the anchor
         # check has something to find. The rest of the fixture projects are bare stubs.
         "verifiedThroughCapability": "capability-rabbitmq",
-        "testAnchors": ["ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand"],
+        "testAnchors": [{"category": "rabbitmq", "fixture": ANCHOR_FIXTURE}],
     })
 
     return {
@@ -502,6 +506,89 @@ class PolicyTestCase(unittest.TestCase):
         self.rewrite_the_rabbitmq_step(self.mutated_step("      - run: |\n", "      - run: >\n"))
 
         self.assert_rejected("workflow-command")
+
+    # -- what an indirect anchor has to be ------------------------------------------------------
+    #
+    # A capability without a test project of its own may say it is verified through the run of another.
+    # That link was prose plus a name searched for in raw source text, so a source file containing
+    # nothing but words satisfied it, and the anchor in use was a whole namespace holding many
+    # unrelated tests. Each mutation below is one shape that used to pass.
+
+    def anchor(self, value) -> None:
+        model = fixture_model()
+        for capability in model["capabilities"]:
+            if capability.get("verifiedThroughCapability"):
+                capability["testAnchors"] = value
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+    def test_accepts_an_anchor_on_a_fixture_the_category_runs(self) -> None:
+        self.anchor([{"category": "rabbitmq", "fixture": ANCHOR_FIXTURE}])
+
+        self.assertEqual([], self.failures())
+
+    def test_rejects_an_anchor_on_a_namespace(self) -> None:
+        self.anchor([{"category": "rabbitmq", "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests"}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_on_a_class_that_carries_no_test(self) -> None:
+        self.rabbitmq_spec("Helpers.cs").write_text(
+            "namespace ViciOne.ServiceBus.RabbitMqTransport.Tests\n{\n"
+            "    public class WordsOnly\n    {\n    }\n}\n", encoding="utf-8")
+        self.anchor([{"category": "rabbitmq",
+                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.WordsOnly"}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_that_appears_only_in_a_comment(self) -> None:
+        self.rabbitmq_spec("Delivery_Specs.cs").write_text(
+            REQUIRED_SPEC + "\n// [TestFixture] public class Ghost_Specs { [Test] public void Should_haunt() { } }\n",
+            encoding="utf-8")
+        self.anchor([{"category": "rabbitmq",
+                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Ghost_Specs"}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_on_a_fixture_that_does_not_exist(self) -> None:
+        self.anchor([{"category": "rabbitmq",
+                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Was_removed_last_week"}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_on_a_fixture_of_another_project(self) -> None:
+        """The name exists in the repository, just not in the project of the run that is supposed to
+        prove it."""
+        self.anchor([{"category": "rabbitmq", "fixture": "Some.Other.Project.Tests.Delivering_a_message"}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_in_a_category_the_terminal_capability_does_not_run(self) -> None:
+        self.anchor([{"category": "quartz", "fixture": ANCHOR_FIXTURE}])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_that_does_not_say_which_run_executes_it(self) -> None:
+        """The bare name was the old form. It leaves open which of the terminal capability's runs is
+        meant, and a run cannot bind what it does not know is its own."""
+        self.anchor([ANCHOR_FIXTURE])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_capability_that_leans_on_a_run_and_names_no_anchor(self) -> None:
+        self.anchor([])
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_run_without_an_executed_floor(self) -> None:
+        """This rule read a top level 'categories' object the model has not had since it replaced the
+        two files before it, so its loop ran over nothing and it passed for every repository."""
+        model = fixture_model()
+        for capability in model["capabilities"]:
+            for run in capability.get("runs", []):
+                run.pop("minimumExecutedCases", None)
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("executed-floor")
 
     # -- broker images -------------------------------------------------------------------------
 

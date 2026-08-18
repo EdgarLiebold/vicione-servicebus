@@ -278,12 +278,22 @@ jobs:
             --category benchmarks \
             --project benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj \
             --evidence-dir artifacts/required/benchmarks
+      # The correctness cases of the diagnostics tool. The measurements it can take stay on demand and
+      # gate nothing; these are its deterministic code and its command line, and the repository said
+      # they gated the tool while no required job ever started them.
+      - name: Diagnostics tool tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category diagnostics \
+            --project tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj \
+            --evidence-dir artifacts/required/diagnostics
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-benchmarks
           path: |
             artifacts/required/benchmarks
+            artifacts/required/diagnostics
             artifacts/run-output
 
   entity-framework:

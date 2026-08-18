@@ -88,4 +88,7 @@ ledger's exact, missing, duplicate, stranger, late duplicate, timeout and cancel
 observation boundary - standstill before the snapshot, and no exactness without one - the sink a result
 is written to on both the success and the failure path, and the command line's refusals.
 
-The measurements themselves stay on demand and gate nothing.
+They gate the tool: the required `diagnostics` category of the engineering job runs this project
+through `tools/ci/run_test_category.py`, like every other required category, with a measured floor of
+executed cases. Saying that they gated the tool while no required job ever started them was a claim
+about a run that did not exist. The measurements themselves stay on demand and gate nothing.

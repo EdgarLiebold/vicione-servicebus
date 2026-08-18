@@ -336,5 +336,106 @@ TRX_WITH_ONE_PASSING_CASE = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
+class Binding_an_indirect_anchor_to_a_case_that_ran(unittest.TestCase):
+    """A capability that leans on another capability's run is proven by what that run executed.
+
+    The old link was a name searched for in raw source text, so a comment, an ordinary class or a whole
+    namespace satisfied it equally well. What replaces it is a claim about this run: the named fixture
+    executed a case in it.
+    """
+
+    def setUp(self) -> None:
+        self._directory = tempfile.TemporaryDirectory()
+        self.root = Path(self._directory.name)
+        self.addCleanup(self._directory.cleanup)
+        self.addCleanup(setattr, runner, "VERIFICATION_MODEL", runner.VERIFICATION_MODEL)
+
+    ANCHOR = "Suite.Visualizing.When_visualizing_a_state_machine"
+
+    def model(self, anchors: list[dict], category: str = "core") -> None:
+        path = self.root / "model.json"
+        path.write_text(json.dumps({
+            "schemaVersion": 1,
+            "kind": "SERVICEBUS_VERIFICATION_MODEL",
+            "capabilities": [
+                {
+                    "id": "capability-core",
+                    "class": "LOCAL_REQUIRED_RUN",
+                    "runs": [{"job": category, "category": category,
+                              "project": "tests/Some.Tests/Some.Tests.csproj",
+                              "minimumExecutedCases": 1, "notExecuted": []}],
+                },
+                {
+                    "id": "capability-visualizer",
+                    "class": "LOCAL_REQUIRED_RUN",
+                    "verifiedThroughCapability": "capability-core",
+                    "testAnchors": anchors,
+                },
+            ],
+        }, indent=2), encoding="utf-8")
+        runner.VERIFICATION_MODEL = path
+
+    def unproven(self, cases: list[tuple[str, str, str]], category: str = "core") -> list[str]:
+        trx = write_trx(self.root / "run.trx", cases)
+
+        return runner.unproven_anchors(runner.required_anchors(category), runner.read_executed(trx))
+
+    def test_an_anchor_whose_fixture_executed_a_case_is_proven(self) -> None:
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([], self.unproven([(self.ANCHOR, "Should_render_the_graph", "Passed")]))
+
+    def test_an_anchor_whose_fixture_was_not_executed_is_not_proven(self) -> None:
+        """The counterexample that matters most: the fixture exists, it is even in the result file, and
+        the run never started it. A source search cannot tell that apart from a case that ran."""
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([self.ANCHOR],
+                         self.unproven([(self.ANCHOR, "Should_render_the_graph", "NotExecuted")]))
+
+    def test_an_anchor_no_case_of_this_run_belongs_to_is_not_proven(self) -> None:
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([self.ANCHOR], self.unproven([("Suite.Other.Delivering", "Should_arrive", "Passed")]))
+
+    def test_a_failing_case_still_belongs_to_its_anchor(self) -> None:
+        """Executed is the question here. Whether the category is green is decided elsewhere, and a
+        fixture that ran and failed is not an unproven anchor on top of it."""
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([], self.unproven([(self.ANCHOR, "Should_render_the_graph", "Failed")]))
+
+    def test_a_parameterised_fixture_carries_its_own_anchor(self) -> None:
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([], self.unproven([(f"{self.ANCHOR}(&quot;dot&quot;)", "Should_render", "Passed")]))
+
+    def test_a_fixture_whose_name_only_starts_with_the_anchor_does_not_carry_it(self) -> None:
+        """A prefix is not an identity. Suffixing the name would otherwise let a neighbouring fixture
+        stand in for the one that was named."""
+        self.model([{"category": "core", "fixture": self.ANCHOR}])
+
+        self.assertEqual([self.ANCHOR],
+                         self.unproven([(f"{self.ANCHOR}_again", "Should_render_the_graph", "Passed")]))
+
+    def test_only_the_anchors_of_the_category_being_run_are_required(self) -> None:
+        self.model([{"category": "quartz", "fixture": self.ANCHOR}])
+
+        self.assertEqual([], runner.required_anchors("core"))
+
+    def test_the_record_names_the_cases_that_carried_each_anchor(self) -> None:
+        trx = write_trx(self.root / "run.trx", [
+            (self.ANCHOR, "Should_render_the_graph", "Passed"),
+            (self.ANCHOR, "Should_render_the_composite", "Passed"),
+            ("Suite.Other.Delivering", "Should_arrive", "Passed"),
+        ])
+        executed = runner.read_executed(trx)
+
+        carried = sorted(identity for fixture, identity in executed if fixture == self.ANCHOR)
+
+        self.assertEqual([f"{self.ANCHOR}.Should_render_the_composite",
+                          f"{self.ANCHOR}.Should_render_the_graph"], carried)
+
+
 if __name__ == "__main__":
     unittest.main()

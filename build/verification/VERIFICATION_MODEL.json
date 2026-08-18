@@ -124,8 +124,18 @@
       "toolProjects": [
         "tools/diagnostics/ViciOne.ServiceBus.Diagnostics"
       ],
-      "rationale": "Two deliberately started scenarios that gate nothing, and the correctness cases of the tool itself, which do. The scenarios are compiled by the engineering solution so a broken one is found; their measurements are never part of a required run, while the ledger and the command line are held by tests like any other code.",
-      "runs": []
+      "rationale": "Two deliberately started scenarios that gate nothing, and the correctness cases of the tool itself, which do. The scenarios are compiled by the engineering solution so a broken one is found; their measurements are never part of a required run. The ledger, the observation boundary and the command line are held by the 'diagnostics' category of the engineering job, which runs them through tools/ci/run_test_category.py like every other required category. Saying that the tests gate the tool while no required job started them was a claim about a run that did not exist.",
+      "runs": [
+        {
+          "job": "benchmarks",
+          "category": "diagnostics",
+          "project": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
+          "minimumExecutedCases": 35,
+          "notExecuted": [],
+          "testProjectDirectory": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
+          "explicitAttributeCount": 0
+        }
+      ]
     },
     {
       "id": "message-data-amazon-s3",
@@ -254,8 +264,14 @@
       "runs": [],
       "verifiedThroughCapability": "core",
       "testAnchors": [
-        "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader",
-        "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set"
+        {
+          "category": "core",
+          "fixture": "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader"
+        },
+        {
+          "category": "core",
+          "fixture": "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set"
+        }
       ]
     },
     {
@@ -291,11 +307,22 @@
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The visualizer has no test project of its own; the cases that exercise it live in the core suite. The anchor used to be the whole Automatonymous namespace, which holds many tests that have nothing to do with it, so the link proved only that the namespace existed. It names the three fixtures that really render a state machine, and the run binds each of them to a case that executed.",
       "runs": [],
       "verifiedThroughCapability": "core",
       "testAnchors": [
-        "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous"
+        {
+          "category": "core",
+          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine"
+        },
+        {
+          "category": "core",
+          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine_again"
+        },
+        {
+          "category": "core",
+          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine"
+        }
       ]
     },
     {

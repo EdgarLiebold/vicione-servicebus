@@ -179,6 +179,79 @@ def unauthorised_not_executed(skipped: list[str], permitted: list[str]) -> list[
     return sorted(remaining.elements())
 
 
+def fixture_of(class_name: str) -> str:
+    """The fixture identity of a TRX class attribute, without its parameterised arguments.
+
+    A parameterised fixture reports as Namespace.Fixture(argument list). The anchor names the fixture,
+    so the arguments come off before the two are compared - and only from the end, because a name is
+    never compared as a prefix here.
+    """
+    head, opened, _ = type_name(class_name).partition("(")
+
+    return head if opened else class_name
+
+
+def read_executed(trx_path: Path) -> list[tuple[str, str]]:
+    """(fixture, identity) of every case this run really executed.
+
+    Read from the result list rather than from the definitions: a case that was defined and not started
+    is not evidence of anything, and that difference is the whole point of binding an anchor to a run.
+    """
+    if not trx_path.is_file():
+        return []
+    try:
+        root = ElementTree.parse(trx_path).getroot()
+    except ElementTree.ParseError:
+        return []
+
+    definitions = {}
+    for definition in root.findall("t:TestDefinitions/t:UnitTest", TRX_NAMESPACE):
+        method = definition.find("t:TestMethod", TRX_NAMESPACE)
+        if method is None:
+            continue
+        definitions[definition.attrib.get("id")] = (
+            fixture_of(method.attrib.get("className", "")), identity_of(method))
+
+    executed = []
+    for result in root.findall("t:Results/t:UnitTestResult", TRX_NAMESPACE):
+        if result.attrib.get("outcome") == "NotExecuted":
+            continue
+        entry = definitions.get(result.attrib.get("testId"))
+        if entry:
+            executed.append(entry)
+
+    return executed
+
+
+def required_anchors(category: str) -> list[str]:
+    """The fixtures this category has to have executed, because another capability leans on them.
+
+    A capability without a test project of its own may say it is verified through the run of another
+    one. That link used to be prose plus a name searched for in source text, which a comment satisfied
+    just as well as a fixture. Here it becomes a claim about this run: the named fixture executed a case
+    in it, or the category is not the proof it was declared to be.
+    """
+    try:
+        model = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    fixtures = []
+    for capability in model.get("capabilities", []):
+        for anchor in capability.get("testAnchors", []):
+            if isinstance(anchor, dict) and anchor.get("category") == category and anchor.get("fixture"):
+                fixtures.append(str(anchor["fixture"]))
+
+    return sorted(set(fixtures))
+
+
+def unproven_anchors(anchors: list[str], executed: list[tuple[str, str]]) -> list[str]:
+    """The anchors this run executed no case for, which is the only way one is proven."""
+    ran = {fixture for fixture, _ in executed}
+
+    return sorted(anchor for anchor in anchors if anchor not in ran)
+
+
 def read_counters(trx_path: Path) -> dict[str, int]:
     """Read the authoritative counters from a TRX result file.
 
@@ -301,6 +374,16 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
     permitted = inventoried_cases(category)
     unlisted = unauthorised_not_executed(skipped, permitted) if permitted is not None else skipped
 
+    executed = read_executed(trx_path)
+    anchors = required_anchors(category)
+    unproven = unproven_anchors(anchors, executed)
+    # The identities that carry each anchor, so the record says which cases proved it rather than that
+    # something did. A capability leaning on this run is only as good as this list.
+    proof_of_anchor = {
+        anchor: sorted(identity for fixture, identity in executed if fixture == anchor)
+        for anchor in anchors
+    }
+
     record = {
         "schemaVersion": 2,
         "kind": "REQUIRED_CATEGORY_RESULT",
@@ -323,6 +406,8 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
         if evidence_dir.is_relative_to(REPOSITORY_ROOT) else str(evidence_dir),
         "notExecuted": skipped,
         "notExecutedUnlisted": unlisted,
+        "verifiedAnchors": proof_of_anchor,
+        "unprovenAnchors": unproven,
     }
     # Written before the gate is evaluated: a rejected category must leave evidence too.
     (evidence_dir / f"{category}.json").write_text(
@@ -357,6 +442,12 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
         raise CategoryError(
             f"Required category '{category}' did not execute {len(unlisted)} case(s) that the "
             f"inventory does not name: {', '.join(unlisted)}."
+        )
+    if unproven:
+        raise CategoryError(
+            f"Required category '{category}' executed no case of {len(unproven)} fixture(s) that another "
+            f"capability is verified through: {', '.join(unproven)}. A capability that leans on this run "
+            "is proven by the cases that ran in it, not by a name that appears in a source file."
         )
     if completed.returncode != 0:
         raise CategoryError(f"Required category '{category}' exited with {completed.returncode}.")

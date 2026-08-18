@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from xml.etree import ElementTree
@@ -129,16 +130,64 @@ def workflow_jobs(root: Path) -> dict[str, str]:
     return jobs
 
 
+LINE_COMMENT = re.compile(r"//[^\n]*")
+BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+NAMESPACE_DECLARATION = re.compile(r"^\s*namespace\s+([A-Za-z_][\w.]*)", re.M)
+TEST_ATTRIBUTE = re.compile(r"\[\s*(?:Test|TestCase|TestCaseSource|Theory)\b")
+
+
+def declared_fixtures(root: Path, project: str) -> tuple[set[str], set[str]]:
+    """Every class of a test project that could be a fixture, and every namespace it declares.
+
+    Comments are removed first. The counterexample that made this necessary was an anchor satisfied by
+    a source file which contained nothing but words: the old check searched the raw text for
+    'namespace X' and 'class Y', so a sentence in a comment was as good as a declaration.
+
+    A class only counts when the file it is declared in also carries a test attribute. That is what
+    separates a fixture from an ordinary class - the second thing the old check accepted.
+
+    Deliberately generous about nesting: a file that declares two namespaces registers its classes under
+    both. This is a check before a run, and being wrong in the permissive direction here costs nothing -
+    tools/ci/run_test_category.py binds the same anchor to an executed identity of the real run, where a
+    name that belongs to another namespace has no case at all.
+    """
+    fixtures: set[str] = set()
+    namespaces: set[str] = set()
+
+    for source in sorted((root / project).rglob("*.cs")):
+        if "/bin/" in source.as_posix() or "/obj/" in source.as_posix():
+            continue
+
+        text = source.read_text(encoding="utf-8-sig", errors="replace")
+        text = LINE_COMMENT.sub("", BLOCK_COMMENT.sub("", text))
+
+        declared = NAMESPACE_DECLARATION.findall(text)
+        namespaces.update(declared)
+        if not declared or not TEST_ATTRIBUTE.search(text):
+            continue
+
+        for name in re.findall(r"\bclass\s+([A-Za-z_]\w*)", text):
+            for namespace in declared:
+                fixtures.add(f"{namespace}.{name}")
+
+    return fixtures, namespaces
+
+
 def resolve_indirect_verification(root: Path, capabilities: list[dict]) -> list[str]:
     """Follows every verifiedThroughCapability to a run, and refuses a link that proves nothing.
 
     A prose link is not a proof. It has to end at a capability that really declares a run, it may not
-    lead in a circle or back to itself, and the capability that leans on it has to name the fixtures
-    inside that run's test project which actually exercise it - checked to exist, and checked to
-    belong to that project rather than to some other one with a similar name.
+    lead in a circle or back to itself, and the capability that leans on it has to name the exact test
+    fixtures which exercise it, each together with the category whose run executes them.
+
+    Naming the category is the point. An anchor that only says which type it means leaves open which of
+    the terminal capability's runs is supposed to prove it, and a run cannot bind what it does not know
+    is its own. With the category on the anchor, tools/ci/run_test_category.py collects exactly the
+    anchors of the category it is running and requires each of them to have executed.
     """
     problems: list[str] = []
     by_id = {capability.get("id"): capability for capability in capabilities}
+    fixtures_of: dict[str, tuple[set[str], set[str]]] = {}
 
     for capability in capabilities:
         identity = capability.get("id")
@@ -183,20 +232,44 @@ def resolve_indirect_verification(root: Path, capabilities: list[dict]) -> list[
                 "so nothing states which cases there exercise it")
             continue
 
-        projects = [root / project for project in terminal.get("testProjects", [])]
-        sources = [source for project in projects for source in project.rglob("*.cs")
-                   if "/bin/" not in source.as_posix() and "/obj/" not in source.as_posix()]
-        text = "\n".join(source.read_text(encoding="utf-8-sig", errors="replace") for source in sources)
+        runs_by_category = {run.get("category"): run for run in terminal.get("runs", []) if run.get("category")}
 
         for anchor in anchors:
-            namespace, _, name = anchor.rpartition(".")
-            if f"namespace {anchor}" in text:
+            if not isinstance(anchor, dict) or not anchor.get("category") or not anchor.get("fixture"):
+                problems.append(
+                    f"capability '{identity}' names the anchor {anchor!r}, which is not a category and a "
+                    "fixture; an anchor that does not say which run executes it binds nothing")
                 continue
-            if f"namespace {namespace}" in text and (f"class {name}" in text or f"namespace {anchor}" in text):
+
+            category, fixture = anchor["category"], anchor["fixture"]
+            run = runs_by_category.get(category)
+            if run is None:
+                problems.append(
+                    f"capability '{identity}' anchors '{fixture}' in category '{category}', which the "
+                    f"capability '{terminal['id']}' it leans on does not run")
                 continue
-            problems.append(
-                f"capability '{identity}' names the anchor '{anchor}', which does not exist in the test "
-                f"project of '{terminal['id']}'")
+
+            project = run.get("testProjectDirectory")
+            if not project:
+                problems.append(
+                    f"the run of category '{category}' names no test project directory, so an anchor in it "
+                    "cannot be checked to exist")
+                continue
+
+            if project not in fixtures_of:
+                fixtures_of[project] = declared_fixtures(root, project)
+            fixtures, namespaces = fixtures_of[project]
+
+            if fixture in namespaces:
+                problems.append(
+                    f"capability '{identity}' anchors the namespace '{fixture}', which names every case "
+                    "that happens to live under it rather than the ones that exercise this capability")
+                continue
+
+            if fixture not in fixtures:
+                problems.append(
+                    f"capability '{identity}' anchors '{fixture}', which is not a test fixture of "
+                    f"'{project}'")
 
     return problems
 

@@ -942,7 +942,14 @@ class Policy:
                               "infrastructure")
 
     def check_executed_floor(self) -> None:
-        """Every category that a required job runs records the count it must not fall below."""
+        """Every category that a required job runs records the count it must not fall below.
+
+        This rule read a top level 'categories' object, which the verification model has not had since
+        it replaced the two files before it. The loop therefore ran over nothing at all and the check
+        passed for every repository, including one with no floor anywhere. Found while working the
+        anchors of the same model; it is the same failure as the ones the directive names - a control
+        that reports success without looking at anything.
+        """
         inventory = self.read(VERIFICATION_MODEL)
         if inventory is None:
             return
@@ -951,12 +958,17 @@ class Policy:
         except json.JSONDecodeError:
             return
 
-        for name, category in sorted(data.get("categories", {}).items()):
-            floor = category.get("minimumExecutedCases")
+        declared = verification_model.runs(data)
+        if not declared:
+            self.fail("executed-floor", f"{VERIFICATION_MODEL} declares no run, so no category has a floor")
+            return
+
+        for run in sorted(declared, key=lambda entry: str(entry.get("category"))):
+            floor = run.get("minimumExecutedCases")
             if not isinstance(floor, int) or floor <= 0:
                 self.fail("executed-floor",
-                          f"category '{name}' records no minimumExecutedCases, so a category that shrinks "
-                          "would still report green")
+                          f"category '{run.get('category')}' records no minimumExecutedCases, so a category "
+                          "that shrinks would still report green")
 
     def check_no_raw_run_artifacts_in_evidence(self) -> None:
         """evidence/ is the durable record. A raw run artifact is not durable record material.
