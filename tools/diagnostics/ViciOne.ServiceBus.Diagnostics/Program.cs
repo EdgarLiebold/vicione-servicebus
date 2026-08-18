@@ -101,7 +101,7 @@ internal static class Program
     /// tell which one was meant. An option without a value is a value that was forgotten.
     /// </para>
     /// </summary>
-    static Dictionary<string, string> ParseOptions(string[] args, IReadOnlyCollection<string> known)
+    internal static Dictionary<string, string> ParseOptions(string[] args, IReadOnlyCollection<string> known)
     {
         var options = new Dictionary<string, string>(StringComparer.Ordinal);
 
@@ -131,7 +131,7 @@ internal static class Program
         return options;
     }
 
-    static int Number(Dictionary<string, string> options, string name, int fallback)
+    internal static int Number(Dictionary<string, string> options, string name, int fallback)
     {
         if (!options.TryGetValue(name, out var value))
             return fallback;
@@ -141,14 +141,20 @@ internal static class Program
             : throw new ArgumentException($"--{name} must be a positive number, not '{value}'");
     }
 
-    const string Usage = """
+    internal const string Usage = """
         Deliberately started diagnostics against the pinned RabbitMQ fixture of a run.
 
           bus-lifecycle [--cycles 240] [--sample-every 20] [--output <file>]
           publish-load  [--messages 100000] [--concurrency 32] [--prefetch 10000]
                         [--completion-limit-seconds 180] [--output <file>]
 
-        Both read the broker of the run from the environment the canonical runner publishes and refuse
-        to start without it. Neither gates a build.
+        Start them through the canonical runner, which owns the fixture:
+
+          python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
+            dotnet run --project tools/diagnostics/ViciOne.ServiceBus.Diagnostics -c Release -- \
+            publish-load --messages 100000
+
+        Neither reads a default host, port or account, so neither runs outside that environment, and
+        neither gates a build.
         """;
 }

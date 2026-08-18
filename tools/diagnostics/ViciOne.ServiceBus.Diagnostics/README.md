@@ -47,15 +47,28 @@ never restarts a bus.
 
 ## publish-load
 
-Publishes `--messages` messages concurrently to one auto delete endpoint and waits until every one of
-them has been consumed, then reports the time to publish, the time to complete, and the rate of each.
+Publishes `--messages` messages concurrently to one auto delete endpoint, waits until every identity
+this run owns has arrived at least once, keeps observing for a further three seconds and then reads
+what it holds.
 
-Every message carries a sequence this run owns, and completion means every one of those sequences was
-seen exactly once. A count of consume events cannot say that: one message delivered twice and another
-lost reaches the same number. The result therefore names `uniqueConsumed`, `missing`, `duplicates` and
-`outOfRange`, and `completedPerSecond` is null unless the set was complete, because a rate for an
-incomplete set invites the wrong conclusion.
+Two questions are kept apart. That every identity arrived is what the wait ends on. That the
+observation was *exact* is a different one: every identity seen exactly once, nothing seen twice, and
+nothing seen that this run never published. `outcome` is `exact`, `invalid` or `timeout`, and
+`completedPerSecond` is reported only for `exact` - a rate for a run that lost or duplicated a
+message invites the wrong conclusion.
 
-It replaces `HammerTime_Specs`, which was an `[Explicit]` fixture of the same category. Its subject is
-the shape of the load - a hundred thousand publishes in flight at once against a consumer with a
-bounded concurrency - and completion is part of the measurement rather than a timeout.
+`observationBoundary` names what was actually observed. The three second window after the last first
+seen identity is why a duplicate delivered a moment later is still reported; it is not a claim that
+nothing will ever arrive again, because the consumer stays attached until the bus stops. Cancellation
+is raised rather than reported as an incomplete set, because it is not an answer about the messages.
+
+It replaces `HammerTime_Specs`, which was an `[Explicit]` fixture of the required RabbitMQ category.
+Its subject is the shape of the load - a hundred thousand publishes in flight at once against a
+consumer with a bounded concurrency - and completion is part of the measurement rather than a timeout.
+
+## Tests
+
+`tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests` holds the correctness cases of this tool: the
+ledger's exact, missing, duplicate, stranger, late duplicate, timeout, cancellation and concurrency
+behaviour, and the command line's refusals. They gate the tool. The measurements themselves stay on
+demand and gate nothing.

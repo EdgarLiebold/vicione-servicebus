@@ -6,6 +6,7 @@
   </Folder>
   <Folder Name="/diagnostics/">
     <Project Path="tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj" />
+    <Project Path="tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj" />
   </Folder>
   <Folder Name="/dependencies/">
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />

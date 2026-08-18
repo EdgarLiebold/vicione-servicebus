@@ -117,12 +117,14 @@
       "id": "diagnostics",
       "class": "DEVELOPER_TOOL_COMPILE_PROOF",
       "sourceProjects": [],
-      "testProjects": [],
+      "testProjects": [
+        "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests"
+      ],
       "supportProjects": [],
       "toolProjects": [
         "tools/diagnostics/ViciOne.ServiceBus.Diagnostics"
       ],
-      "rationale": "Two deliberately started scenarios that gate nothing. They are compiled by the engineering solution so a broken one is found, and they are never part of a required run.",
+      "rationale": "Two deliberately started scenarios that gate nothing, and the correctness cases of the tool itself, which do. The scenarios are compiled by the engineering solution so a broken one is found; their measurements are never part of a required run, while the ledger and the command line are held by tests like any other code.",
       "runs": []
     },
     {

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1166 |
+| Added | 1172 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -5951,6 +5951,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Utils.cs` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Added |  |
 | `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ArtemisBroker.cs` | Added |  |
@@ -6806,7 +6810,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/test_run_test_category.py` | Added |  |
 | `tools/ci/verification_model.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/AssemblyInfo.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |
+| `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/MessageSequenceLedger.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/Program.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/PublishLoadScenario.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/README.md` | Added |  |
