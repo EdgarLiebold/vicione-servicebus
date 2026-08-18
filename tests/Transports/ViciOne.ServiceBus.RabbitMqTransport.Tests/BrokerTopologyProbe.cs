@@ -49,6 +49,33 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
                 .ToArray();
         }
 
+        /// <summary>
+        /// How many channels the broker currently holds open for this virtual host. Publishing must not
+        /// leak one: the transport keeps a channel per connection and reuses it.
+        /// </summary>
+        public static async Task<int> ChannelCount(RabbitMqTestHarness harness)
+        {
+            var virtualHost = harness.HostAddress.AbsolutePath.Trim('/');
+            var uri = new UriBuilder("http", harness.HostAddress.Host, ManagementPort,
+                $"api/vhosts/{Uri.EscapeDataString(virtualHost)}/channels").Uri;
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            var credentials = Encoding.ASCII.GetBytes($"{harness.Username}:{harness.Password}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(credentials));
+
+            using var response = await Client.SendAsync(request).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Assert.Fail($"the management API answered {(int)response.StatusCode} {response.ReasonPhrase}, so this "
+                    + "probe cannot tell how many channels the broker holds");
+            }
+
+            using var document = JsonDocument.Parse(await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+
+            return document.RootElement.GetArrayLength();
+        }
+
         static int ManagementPort =>
             int.TryParse(Environment.GetEnvironmentVariable("VICIONE_SERVICEBUS_RMQ_MGMT_PORT"), out var port)
                 ? port

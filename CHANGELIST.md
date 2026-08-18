@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1303 |
+| Added | 1301 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -6250,7 +6250,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BrokerTopologyProbe.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BuildTopology_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BusEndpointReady_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BusLifecycleAccumulation_Probe.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Bytes_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ConcurrencyFilter_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Conductor_Specs.cs` | Added |  |
@@ -6278,7 +6277,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/FailedConnection_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Failure_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/FaultPoly_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/HammerTime_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/HarnessSetupFailure_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/HeaderObject_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/HostConfigurator_Specs.cs` | Added |  |

@@ -122,6 +122,27 @@ def read_not_executed(trx_path: Path) -> list[str]:
     return sorted(names)
 
 
+def minimum_executed(category: str) -> int | None:
+    """The number of cases this category executed when it was last recorded, as a floor.
+
+    Coverage can fall without a single failure: a new exclusion, a renamed fixture, a filter that
+    matches less than it used to. The counters would still read green, so the floor is what turns a
+    shrinking category red.
+    """
+    try:
+        data = json.loads(NOT_EXECUTED_INVENTORY.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+    entry = data.get("categories", {}).get(category)
+    if not isinstance(entry, dict):
+        return None
+
+    floor = entry.get("minimumExecutedCases")
+
+    return floor if isinstance(floor, int) and floor > 0 else None
+
+
 def inventoried_cases(category: str) -> list[str] | None:
     """The cases the inventory permits this category to leave unexecuted, as full identities.
 
@@ -313,6 +334,14 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
         raise CategoryError(
             f"Required category '{category}' has no readable not-executed inventory at "
             f"{NOT_EXECUTED_INVENTORY.relative_to(REPO_ROOT)}; a required category may not skip silently."
+        )
+    floor = minimum_executed(category)
+    if floor is not None and counters["executed"] < floor:
+        raise CategoryError(
+            f"Required category '{category}' executed {counters['executed']} case(s) but the inventory "
+            f"records a floor of {floor}. A category that executes fewer cases than it did before has "
+            "lost coverage, whether by a new exclusion, a renamed fixture or a filter, and a green "
+            "result would hide exactly that."
         )
     if unlisted:
         raise CategoryError(

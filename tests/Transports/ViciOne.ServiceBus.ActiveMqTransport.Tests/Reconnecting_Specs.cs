@@ -19,22 +19,34 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         {
         }
 
+        /// <summary>
+        /// Delivery survives the send endpoint cache turning over, on both protocols.
+        /// <para>
+        /// The case printed "Okay, restart ActiveMQ" and then looped for twenty seconds while a human
+        /// was expected to restart the broker. What it can assert without that human is the mechanism
+        /// this fixture actually configures: a send endpoint cache with a two second minimum age and
+        /// room for five entries. Enough request/response round trips run to push every cached endpoint
+        /// past that age and past that capacity, and a message published afterwards still arrives.
+        /// </para>
+        /// <para>
+        /// Recovery from a broker that really goes away is not covered by this case and is not claimed
+        /// anywhere else either: automating it needs container control from inside a test.
+        /// </para>
+        /// </summary>
         [Test]
-        [Explicit]
-        public async Task Should_fault_nicely()
+        public async Task Should_keep_delivering_while_the_send_endpoint_cache_turns_over()
         {
             await Bus.Publish(new ReconnectMessage { Value = "Before" });
 
-            var beforeFound = await Task.Run(() => _consumer.Received.Select<ReconnectMessage>(x => x.Context.Message.Value == "Before").Any());
-            Assert.That(beforeFound, Is.True);
+            var beforeFound = await Task.Run(() =>
+                _consumer.Received.Select<ReconnectMessage>(x => x.Context.Message.Value == "Before").Any());
+            Assert.That(beforeFound, Is.True, "the message published before the cache turned over never arrived");
 
-            Console.WriteLine("Okay, restart ActiveMQ");
-
-            for (var i = 0; i < 20; i++)
+            // More round trips than the cache holds, spread past its minimum age, so entries are both
+            // evicted by capacity and aged out rather than only one of the two.
+            for (var round = 0; round < CacheTurnoverRounds; round++)
             {
-                await Task.Delay(1000);
-
-                Console.Write($"{i}. ");
+                await Task.Delay(CacheTurnoverInterval, TestCancellationToken);
 
                 var clientFactory = Bus.CreateClientFactory(TestTimeout);
 
@@ -42,18 +54,24 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
                 Response<PongMessage> response = await request.GetResponse<PongMessage>();
 
+                Assert.That(response.Message, Is.Not.Null, $"round trip {round} produced no response");
+
                 if (clientFactory is IAsyncDisposable asyncDisposable)
                     await asyncDisposable.DisposeAsync();
             }
 
-            Console.WriteLine("");
-            Console.WriteLine("Resuming");
-
             await Bus.Publish(new ReconnectMessage { Value = "After" });
 
-            var afterFound = await Task.Run(() => _consumer.Received.Select<ReconnectMessage>(x => x.Context.Message.Value == "After").Any());
-            Assert.That(afterFound, Is.True);
+            var afterFound = await Task.Run(() =>
+                _consumer.Received.Select<ReconnectMessage>(x => x.Context.Message.Value == "After").Any());
+            Assert.That(afterFound, Is.True, "delivery stopped once the send endpoint cache had turned over");
         }
+
+        /// <summary>Six rounds against a cache that holds five entries, so capacity is exceeded.</summary>
+        const int CacheTurnoverRounds = 6;
+
+        /// <summary>Half a second each, so six rounds pass the two second minimum age comfortably.</summary>
+        static readonly TimeSpan CacheTurnoverInterval = TimeSpan.FromMilliseconds(500);
 
         public Reconnecting_Specs()
         {

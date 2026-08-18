@@ -4,12 +4,13 @@
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
   "description": "The one binding list of every case a required category does not execute. A category that reports a positive count and zero failures says nothing about the tests it never started, so both halves of the exclusion rule read this file: tools/ci/policy_validator.py before a run and tools/ci/run_test_category.py after one. A not executed case that is not listed here turns its category red. Nothing in this file is a pass.",
   "duenessClasses": {
-    "NOT_DUE_EXTERNAL_INFRASTRUCTURE": "Needs a service or credential this work package pins no fixture for.",
+    "NOT_DUE_EXTERNAL_INFRASTRUCTURE": "Needs a service or credential this work package pins no fixture for. Forbidden in a category that runs against a pinned fixture: nine cases hid behind it while the broker they needed was exactly the one the required profile starts.",
     "NOT_DUE_BENCHMARK": "Measures throughput or timing instead of behaviour.",
     "NOT_DUE_TIMING_SENSITIVE": "Asserts against a wall clock interval and is not stable in a loaded full run.",
     "NOT_DUE_MANUAL_OBSERVATION": "Produces output for a human; asserts nothing a gate could evaluate.",
     "NOT_DUE_ENVIRONMENT_DEPENDENT": "Depends on host environment the run deliberately pins.",
-    "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE": "Asserts an outcome its own configuration never engages. Measured against both engines, and kept out with the measurement written down until the intended mechanism is decided. The other five classes state why a sound case cannot run here; none of them can state that the case itself is unsound, and forcing it into one of them would be false."
+    "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE": "Asserts an outcome its own configuration never engages. Measured against both engines, and kept out with the measurement written down until the intended mechanism is decided. The other five classes state why a sound case cannot run here; none of them can state that the case itself is unsound, and forcing it into one of them would be false.",
+    "NOT_DUE_REAL_CLOUD_RESOURCE": "Needs a real, short lived cloud resource that no container can stand in for. This is the only class a category with a pinned fixture may use, and it can never become a pass: the capability matrix carries the same statement as REAL_EPHEMERAL_CLOUD."
   },
   "openDefectsNotInventoried": {
     "statement": "Empty. All five cases record 0025 raised as F-1 are closed by product corrections and by two adjustments the product owner authorised on 2026-08-10, which are to be reported to the lead architect. Every one of them now runs in the required category. A case leaves this list by being fixed and executed, never by being reclassified.",
@@ -20,125 +21,41 @@
     "core": {
       "project": "tests/ViciOne.ServiceBus.Tests",
       "explicitAttributeCount": 0,
-      "cases": []
+      "cases": [],
+      "minimumExecutedCases": 1872
     },
     "abstractions": {
       "project": "tests/ViciOne.ServiceBus.Abstractions.Tests",
       "explicitAttributeCount": 0,
       "comment": "Empty because all five NewId cases left this list the only way a case may: they were fixed and they execute. The two timestamp cases read the wall clock and accepted any value within a minute while printing both for a human; they supply the tick source now and compare the exact timestamp. The two uniqueness cases generated twenty million and one million identifiers and printed how many duplicates they had found without asserting anything; they are bounded at 200000 each and assert that every identifier is distinct, each proven by its own duplicate mutation. The fifth measured throughput only and is removed rather than kept as a permanently excluded case; the NewId benchmarks it belongs beside are NewIdGenerationBenchmarks and NewIdConversionBenchmarks in benchmarks/ViciOne.ServiceBus.BenchmarkConsole, which the assembly wide BenchmarkSwitcher finds. The earlier statement that no NewId benchmark existed was wrong: it came from searching one benchmark project instead of the tracked tree.",
-      "cases": []
+      "cases": [],
+      "minimumExecutedCases": 74
     },
     "rabbitmq": {
       "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
-      "explicitAttributeCount": 10,
+      "explicitAttributeCount": 1,
       "cases": [
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.BusLifecycleAccumulation_Probe.Measure_round_trip_across_bus_lifecycles",
-          "fixture": "BusLifecycleAccumulation_Probe",
-          "test": "Measure_round_trip_across_bus_lifecycles",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
-          "fixture": "Configuring_the_publish_topology_at_startup",
-          "test": "Should_create_the_exchanges",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
-          "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
-          "test": "Should_create_the_exchanges",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
         {
           "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect",
           "fixture": "Connecting_to_RabbitMQ_via_Amazon",
           "test": "Should_connect",
           "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
-          "reason": "Needs infrastructure this work package pins no fixture for. Not executed, never a pass."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_recover_from_a_crashed_server",
-          "fixture": "Failing_to_connect_to_rabbitmq",
-          "test": "Should_recover_from_a_crashed_server",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_start_without_any_configuration",
-          "fixture": "Failing_to_connect_to_rabbitmq",
-          "test": "Should_start_without_any_configuration",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly",
-          "fixture": "Failing_to_connect_to_rabbitmq",
-          "test": "Should_startup_and_shut_down_cleanly",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_an_endpoint",
-          "fixture": "Failing_to_connect_to_rabbitmq",
-          "test": "Should_startup_and_shut_down_cleanly_with_an_endpoint",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Failing_to_connect_to_rabbitmq.Should_startup_and_shut_down_cleanly_with_publish",
-          "fixture": "Failing_to_connect_to_rabbitmq",
-          "test": "Should_startup_and_shut_down_cleanly_with_publish",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Pounding_the_crap_out_of_the_send_endpoint.Should_end_well",
-          "fixture": "Pounding_the_crap_out_of_the_send_endpoint",
-          "test": "Should_end_well",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_BENCHMARK",
-          "reason": "Measures throughput or timing rather than behaviour. A required gate cannot own a benchmark."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Send_Specs.WhenAMessageIsPublishedToTheEndpointFaulting.Should_take_time_to_watch_channel_use",
-          "fixture": "WhenAMessageIsPublishedToTheEndpointFaulting",
-          "test": "Should_take_time_to_watch_channel_use",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Send_Specs.WhenAMessageIsPublishedToTheEndpointSuccessfully.Should_take_time_to_watch_channel_use",
-          "fixture": "WhenAMessageIsPublishedToTheEndpointSuccessfully",
-          "test": "Should_take_time_to_watch_channel_use",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+          "dueness": "NOT_DUE_REAL_CLOUD_RESOURCE",
+          "reason": "Addresses a real Amazon MQ broker over TLS with an account nobody in this run has. The pinned RabbitMQ fixture cannot stand in for it, so it stays a visible open cloud proof and never a pass."
         }
-      ]
+      ],
+      "minimumExecutedCases": 354
     },
     "entity-framework-core": {
       "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
       "explicitAttributeCount": 0,
       "comment": "Empty because the four outbox cases this category used to exclude are closed the only way a case may leave this list: they were fixed and they execute. Commit 797ea083 removed their markers and the category runs them against both engines; that commit failed to carry the closure into this file, which left the declared count at 4 against a project holding 0 until it was corrected here.",
-      "cases": []
+      "cases": [],
+      "minimumExecutedCases": 160
     },
     "activemq": {
       "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
-      "explicitAttributeCount": 3,
+      "explicitAttributeCount": 2,
       "cases": [
         {
           "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
@@ -155,30 +72,17 @@
           "mechanism": "EXPLICIT",
           "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
           "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"activemq\").Should_fault_nicely",
-          "fixture": "Reconnecting_Specs(\"activemq\")",
-          "test": "Should_fault_nicely",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
-        },
-        {
-          "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"amqp\").Should_fault_nicely",
-          "fixture": "Reconnecting_Specs(\"amqp\")",
-          "test": "Should_fault_nicely",
-          "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
         }
-      ]
+      ],
+      "minimumExecutedCases": 148
     },
     "sql-transport": {
       "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
       "explicitAttributeCount": 0,
       "cases": [],
-      "comment": "Empty because all six cases left this list the only way a case may: they were closed and they execute. Four measured throughput, published or sent a thousand messages and printed a message rate without asserting anything; the measurement they stood for lives in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so they are removed rather than kept as permanently excluded cases. The remaining two are the delivery count limit on both engines. They asserted that a message is not consumed after the limit but never set it, so the queue kept the migrator default of ten and their consumer succeeded, which is why both engines measured expected 0 but was 1. The limit is set now and read back from the queue the migrator created, and a delivery driven to that limit is neither handed to a consumer again nor left in the queue. Removing the limit from the fetch statement turns both fixtures red."
+      "comment": "Empty because all six cases left this list the only way a case may: they were closed and they execute. Four measured throughput, published or sent a thousand messages and printed a message rate without asserting anything; the measurement they stood for lives in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so they are removed rather than kept as permanently excluded cases. The remaining two are the delivery count limit on both engines. They asserted that a message is not consumed after the limit but never set it, so the queue kept the migrator default of ten and their consumer succeeded, which is why both engines measured expected 0 but was 1. The limit is set now and read back from the queue the migrator created, and a delivery driven to that limit is neither handed to a consumer again nor left in the queue. Removing the limit from the fetch statement turns both fixtures red.",
+      "minimumExecutedCases": 101
     }
-  }
+  },
+  "floorSemantics": "minimumExecutedCases is the number of cases the category executed when it was last recorded. tools/ci/run_test_category.py fails a run that executes fewer, because coverage can fall without a single failure: a new exclusion, a renamed fixture or a narrowing filter all leave the counters green. Raising a floor is a normal part of adding cases; lowering one is a decision that belongs in a record."
 }

@@ -708,6 +708,63 @@ class Policy:
             return []
         return [p.relative_to(self.root).as_posix() for p in sorted(directory.glob("*.yml"))]
 
+    def check_dueness_classes(self) -> None:
+        """A case may not claim missing infrastructure that the category's own fixture provides.
+
+        Nine cases were excluded as NOT_DUE_EXTERNAL_INFRASTRUCTURE while the pinned broker they need
+        is exactly what the required profile starts. The class was the whole reason nobody looked at
+        them again, so a category with a fixture may not use it. Every category in the matrix whose
+        capability is verified against a pinned fixture is such a category.
+        """
+        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        if inventory is None:
+            return
+        try:
+            data = json.loads(inventory)
+        except json.JSONDecodeError:
+            return
+
+        try:
+            matrix = capability_matrix.load(self.root)
+        except capability_matrix.MatrixError:
+            return
+
+        fixture_projects = {
+            project
+            for capability in matrix.get("capabilities", [])
+            if capability.get("class") == "PINNED_FIXTURE_REQUIRED_RUN"
+            for project in capability.get("testProjects", [])
+        }
+
+        for name, category in sorted(data.get("categories", {}).items()):
+            if str(category.get("project", "")) not in fixture_projects:
+                continue
+            for case in category.get("cases", []):
+                if not isinstance(case, dict):
+                    continue
+                if case.get("dueness") == "NOT_DUE_EXTERNAL_INFRASTRUCTURE":
+                    self.fail("dueness-class",
+                              f"category '{name}' runs against a pinned fixture, so "
+                              f"'{case.get('identity', '<unnamed>')}' may not be excluded as needing external "
+                              "infrastructure")
+
+    def check_executed_floor(self) -> None:
+        """Every category that a required job runs records the count it must not fall below."""
+        inventory = self.read(NOT_EXECUTED_INVENTORY)
+        if inventory is None:
+            return
+        try:
+            data = json.loads(inventory)
+        except json.JSONDecodeError:
+            return
+
+        for name, category in sorted(data.get("categories", {}).items()):
+            floor = category.get("minimumExecutedCases")
+            if not isinstance(floor, int) or floor <= 0:
+                self.fail("executed-floor",
+                          f"category '{name}' records no minimumExecutedCases, so a category that shrinks "
+                          "would still report green")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -827,7 +884,8 @@ class Policy:
                      self.check_transport_operations_take_a_lease,
                      self.check_restore_sources, self.check_restore_lock_files,
                      self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
-                     self.check_pack_depends_on_every_gate, self.check_capability_matrix):
+                     self.check_pack_depends_on_every_gate, self.check_capability_matrix,
+                     self.check_dueness_classes, self.check_executed_floor):
             rule()
 
         if self.failures:

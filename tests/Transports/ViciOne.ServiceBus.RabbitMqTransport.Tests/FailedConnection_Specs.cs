@@ -75,96 +75,69 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             }, Throws.TypeOf<RabbitMqConnectionException>());
         }
 
+        /// <summary>
+        /// Starting and stopping a bus cleanly, against the fixture this run started.
+        /// <para>
+        /// Five cases stood here and none of them asserted anything. Four addressed
+        /// <c>rabbitmq://localhost/</c> or configured no host at all, so they could not reach the
+        /// run-scoped fixture and two of them slept thirty and sixty seconds so a human could watch a
+        /// connection. What they were about - a bus that comes up and goes down without faulting - is a
+        /// product promise, and it is asserted here instead. The fifth wanted a human to crash the
+        /// broker mid-run; automating that needs container control from inside a test, so it is removed
+        /// rather than pretended, and the reconnect behaviour it gestured at has no coverage claimed for
+        /// it here.
+        /// </para>
+        /// </summary>
         [Test]
-        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It sleeps 30 s while a human is expected to crash the broker.")]
-        [Category("Manual")]
-        public async Task Should_recover_from_a_crashed_server()
+        public async Task Should_start_and_stop_cleanly_without_a_receive_endpoint()
         {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
             {
                 BusTestFixture.ConfigureBusDiagnostics(x);
 
-                x.ReceiveEndpoint("input-queue", e =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
             });
 
-            var handle = await busControl.StartAsync();
-            try
-            {
-                Console.WriteLine("Waiting for connection...");
+            var handle = await busControl.StartAsync(TestCancellationToken);
 
-                await handle.Ready;
+            await handle.Ready.OrCanceled(TestCancellationToken);
 
-                await Task.Delay(30000);
-            }
-            finally
-            {
-                await handle.StopAsync();
-            }
+            Assert.That(handle.Ready.IsCompletedSuccessfully, Is.True, "the bus reported ready without being ready");
+
+            await handle.StopAsync(TestCancellationToken);
+
+            Assert.That(busControl.CheckHealth().Status, Is.EqualTo(BusHealthStatus.Unhealthy),
+                "the bus still reports itself as healthy after it was stopped");
         }
 
         [Test]
-        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
-        [Category("Manual")]
-        public async Task Should_start_without_any_configuration()
+        public async Task Should_start_and_stop_cleanly_with_a_receive_endpoint()
         {
-            var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
-            {
-                BusTestFixture.ConfigureBusDiagnostics(x);
-            });
+            var received = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var handle = await busControl.StartAsync(new CancellationTokenSource(5000).Token);
-            try
-            {
-                await handle.Ready;
-            }
-            finally
-            {
-                await handle.StopAsync();
-            }
-        }
-
-        [Test]
-        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
-        [Category("Manual")]
-        public async Task Should_startup_and_shut_down_cleanly()
-        {
-            var busControl = Bus.Factory.CreateUsingRabbitMq(x => BusTestFixture.ConfigureBusDiagnostics(x));
-
-            BusHandle handle;
-            using (var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
-            {
-                handle = await busControl.StartAsync(timeout.Token);
-            }
-
-            try
-            {
-                await handle.Ready;
-            }
-            finally
-            {
-                await handle.StopAsync(CancellationToken.None);
-            }
-        }
-
-        [Test]
-        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It sleeps 60 s, which no test budget covers, and observes the connection by eye.")]
-        [Category("Manual")]
-        public async Task Should_startup_and_shut_down_cleanly_with_an_endpoint()
-        {
             var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
             {
                 BusTestFixture.ConfigureBusDiagnostics(x);
 
-                x.Host(new Uri("rabbitmq://localhost/"), h =>
+                x.Host(RunScopedBroker.HostAddress, h =>
                 {
+                    h.Username(RunScopedBroker.User);
+                    h.Password(RunScopedBroker.Pass);
                 });
 
-                x.ReceiveEndpoint("input_queue", e =>
+                x.ReceiveEndpoint("start-stop-queue", e =>
                 {
-                    e.Handler<Test>(async context =>
+                    e.PurgeOnStartup = true;
+
+                    e.Handler<Test>(_ =>
                     {
+                        received.TrySetResult(true);
+
+                        return Task.CompletedTask;
                     });
                 });
             });
@@ -172,41 +145,20 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
             var handle = await busControl.StartAsync(TestCancellationToken);
             try
             {
-                Console.WriteLine("Waiting for connection...");
+                await handle.Ready.OrCanceled(TestCancellationToken);
 
-                await handle.Ready;
+                // A started endpoint that cannot receive would still report ready, so the message is
+                // what separates a running endpoint from a started one.
+                await busControl.Publish<Test>(new TestMessage(), TestCancellationToken);
 
-                await Task.Delay(60000);
+                await received.Task.OrCanceled(TestCancellationToken);
             }
             finally
             {
                 await handle.StopAsync(TestCancellationToken);
             }
-        }
 
-        [Test]
-        [Explicit("Manual profile: the method asserts nothing, so it can never be a required proof. It deliberately configures no host, so it cannot address the run-scoped fixture.")]
-        [Category("Manual")]
-        public async Task Should_startup_and_shut_down_cleanly_with_publish()
-        {
-            var busControl = Bus.Factory.CreateUsingRabbitMq(x =>
-            {
-                BusTestFixture.ConfigureBusDiagnostics(x);
-
-                x.Host(new Uri("rabbitmq://localhost/"), h =>
-                {
-                });
-            });
-
-            await busControl.StartAsync();
-            try
-            {
-                await busControl.Publish(new TestMessage());
-            }
-            finally
-            {
-                await busControl.StopAsync();
-            }
+            Assert.That(received.Task.IsCompletedSuccessfully, Is.True, "the receive endpoint never delivered");
         }
 
         public Failing_to_connect_to_rabbitmq()

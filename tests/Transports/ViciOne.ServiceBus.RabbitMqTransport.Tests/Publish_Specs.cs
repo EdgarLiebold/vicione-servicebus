@@ -121,24 +121,28 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         public class WhenAMessageIsPublishedToTheEndpointSuccessfully :
             RabbitMqTestFixture
         {
+            /// <summary>
+            /// The fixture is named after the channel count, and nothing here read it: a second case
+            /// waited fifteen seconds so a human could watch it in the management UI. The broker is
+            /// asked directly now, and that case is gone.
+            /// </summary>
             [Test]
             public async Task Should_not_increase_channel_count()
             {
+                var before = await BrokerTopologyProbe.ChannelCount(RabbitMqTestHarness);
+
                 var message = new A { Id = Guid.NewGuid() };
                 await Bus.Publish(message);
 
                 ConsumeContext<A> received = await _receivedA;
 
-                Assert.That(received.Message.Id, Is.EqualTo(message.Id));
-            }
+                var after = await BrokerTopologyProbe.ChannelCount(RabbitMqTestHarness);
 
-            [Test]
-            [Explicit("Manual observation of the channel count; runs into the harness timeout unattended")]
-            public async Task Should_take_time_to_watch_channel_use()
-            {
-                ConsumeContext<A> received = await _receivedA;
-
-                await Task.Delay(15000);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(received.Message.Id, Is.EqualTo(message.Id));
+                    Assert.That(after, Is.EqualTo(before), "publishing opened a channel and did not give it back");
+                });
             }
 
             Task<ConsumeContext<A>> _receivedA;
@@ -156,24 +160,28 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         public class WhenAMessageIsPublishedToTheEndpointFaulting :
             RabbitMqTestFixture
         {
+            /// <summary>
+            /// A consumer that throws sends a fault, and that path must not leak a channel either. The
+            /// case that waited fifteen seconds for a human to read the count is replaced by asking the
+            /// broker.
+            /// </summary>
             [Test]
             public async Task Should_not_increase_channel_count()
             {
+                var before = await BrokerTopologyProbe.ChannelCount(RabbitMqTestHarness);
+
                 var message = new A { Id = Guid.NewGuid() };
                 await Bus.Publish(message);
 
                 ConsumeContext<Fault<A>> received = await _faultA;
 
-                Assert.That(received.Message.Message.Id, Is.EqualTo(message.Id));
-            }
+                var after = await BrokerTopologyProbe.ChannelCount(RabbitMqTestHarness);
 
-            [Test]
-            [Explicit("Manual observation of the channel count; runs into the harness timeout unattended")]
-            public async Task Should_take_time_to_watch_channel_use()
-            {
-                ConsumeContext<Fault<A>> received = await _faultA;
-
-                await Task.Delay(15000);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(received.Message.Message.Id, Is.EqualTo(message.Id));
+                    Assert.That(after, Is.EqualTo(before), "publishing a fault opened a channel and did not give it back");
+                });
             }
 
             Task<ConsumeContext<A>> _receivedA;

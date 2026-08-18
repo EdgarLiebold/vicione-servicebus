@@ -253,6 +253,7 @@ NOT_EXECUTED_INVENTORY = {
         "rabbitmq": {
             "project": RABBITMQ_TEST_PROJECT,
             "explicitAttributeCount": 1,
+            "minimumExecutedCases": 1,
             "cases": [
                 {
                     "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand.Should_be_watched_by_a_human",
@@ -334,6 +335,9 @@ class PolicyTestCase(unittest.TestCase):
 
     def compose(self) -> Path:
         return self.root / "build/test-infrastructure/compose.yaml"
+
+    def inventory(self) -> Path:
+        return self.root / "build/test-infrastructure/not-executed-inventory.json"
 
     def matrix(self) -> Path:
         return self.root / "build/test-infrastructure/capability-matrix.json"
@@ -769,6 +773,22 @@ class PolicyTestCase(unittest.TestCase):
     def test_rejects_a_missing_capability_matrix(self) -> None:
         self.matrix().unlink()
         self.assert_rejected("capability-matrix")
+
+    def test_rejects_external_infrastructure_for_a_category_with_a_fixture(self) -> None:
+        inventory = json.loads(self.inventory().read_text(encoding="utf-8"))
+        inventory["categories"]["rabbitmq"]["cases"].append({
+            "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Some_Specs.Should_do_something",
+            "dueness": "NOT_DUE_EXTERNAL_INFRASTRUCTURE",
+            "reason": "claims a fixture that the required profile starts",
+        })
+        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+        self.assert_rejected("dueness-class")
+
+    def test_rejects_a_category_without_an_executed_floor(self) -> None:
+        inventory = json.loads(self.inventory().read_text(encoding="utf-8"))
+        inventory["categories"]["rabbitmq"].pop("minimumExecutedCases", None)
+        self.inventory().write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+        self.assert_rejected("executed-floor")
 
     def test_rejects_returning_upstream_repository_guard(self) -> None:
         self.workflow().write_text(
