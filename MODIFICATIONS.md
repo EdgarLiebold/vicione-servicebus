@@ -34,8 +34,6 @@ The following changed baseline files cannot carry a syntax-valid in-file comment
 |---|---|
 | `ViciOne.ServiceBus.slnx` | Solution file; paths renamed, and the solution migrated to the SDK's XML solution format, which this repository does not annotate per file because CHANGELIST.md carries the section 4(b) record. |
 | `ViciOne.ServiceBus.snk` | Binary strong-name key; path renamed, bytes retained. |
-| `vicione-servicebus-logo.png` | Binary PNG; replaced with the ViciOne.ServiceBus product asset. |
-| `src/vicione-servicebus-logo.png` | Binary PNG packaging copy; replaced with the same product asset. |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt` | Commentless golden-vector fixture; path renamed, vector bytes retained. |
 | `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json` | Strict JSON fixture; identity-bearing keys/values renamed. |
 | `tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc` | Strict Avro JSON schema; identity-bearing names renamed. |

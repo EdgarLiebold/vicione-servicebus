@@ -16,7 +16,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageIcon>vicione-servicebus-logo.png</PackageIcon>
     <PackageReadmeFile>NuGet.README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/EdgarLiebold/vicione-servicebus</PackageProjectUrl>
@@ -31,7 +30,6 @@
     <!-- Anchored to this file, not to the project. A relative ..\..\ resolved to the repository root
          only for the projects that sit directly under src/; for the ones a folder deeper it pointed at
          src/ and pack failed with NU5019 for fifteen of them. -->
-    <None Include="$(MSBuildThisFileDirectory)..\vicione-servicebus-logo.png" Pack="true" Visible="false" PackagePath=""/>
     <None Include="$(MSBuildThisFileDirectory)..\NuGet.README.md" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
 

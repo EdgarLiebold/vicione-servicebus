@@ -13,8 +13,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | Status | Count |
 |---|---|
 | Added | 1298 |
-| Modified | 4510 |
-| Deleted | 1137 |
+| Modified | 4508 |
+| Deleted | 1139 |
 | Renamed | 3 |
 
 | Path | Status | Baseline path |
@@ -823,6 +823,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/TOOL_TEST_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/generation-result.json` | Added |  |
 | `global.json` | Added |  |
+| `mt-logo-small.png` | Deleted | `mt-logo-small.png` |
 | `signing.props` | Modified | `signing.props` |
 | `src/Directory.Build.props` | Modified | `src/Directory.Build.props` |
 | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` | Deleted | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` |
@@ -5353,7 +5354,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/ViciOneServiceBusBus.cs` | Modified | `src/MassTransit/MassTransitBus.cs` |
 | `src/ViciOne.ServiceBus/ViciOneServiceBusHostedService.cs` | Modified | `src/MassTransit/MassTransitHostedService.cs` |
 | `src/ViciOne.ServiceBus/packages.lock.json` | Added |  |
-| `src/vicione-servicebus-logo.png` | Modified | `src/mt-logo-small.png` |
+| `src/mt-logo-small.png` | Deleted | `src/mt-logo-small.png` |
 | `tests/Directory.Build.props` | Modified | `tests/Directory.Build.props` |
 | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Deleted | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` |
 | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Deleted | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` |
@@ -6966,4 +6967,3 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/identity/test_result_gate.py` | Added |  |
 | `tools/identity/test_test_failure_partition_gate.py` | Added |  |
 | `tools/identity/test_test_result_gate.py` | Added |  |
-| `vicione-servicebus-logo.png` | Modified | `mt-logo-small.png` |

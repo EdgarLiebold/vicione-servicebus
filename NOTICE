@@ -12,6 +12,9 @@ Copyright 2026 Edgar Liebold
 ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18.
 The Apache License, Version 2.0 text is unchanged and is carried as LICENSE.txt; only its
 file name changed, from LICENSE, to match the repository structure this product requires.
+The product logo, which replaced the upstream one during the identity change, is removed:
+nothing referenced it except the package icon, and the packages ship without one. Both
+copies are recorded as removals in CHANGELIST.md.
 
 ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 This repository is a full fork of MassTransit 8.5.10 at upstream commit
@@ -23,8 +26,6 @@ The following changed baseline files cannot carry an in-file comment and are
 covered by exact path-bound entries in MODIFICATIONS.md:
 ViciOne.ServiceBus.slnx
 ViciOne.ServiceBus.snk
-vicione-servicebus-logo.png
-src/vicione-servicebus-logo.png
 tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt
 tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json
 tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc

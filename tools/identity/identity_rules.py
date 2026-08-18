@@ -59,8 +59,6 @@ COMMENTLESS_OR_BINARY_EXCEPTIONS = frozenset(
     {
         "ViciOne.ServiceBus.slnx",
         "ViciOne.ServiceBus.snk",
-        "vicione-servicebus-logo.png",
-        "src/vicione-servicebus-logo.png",
         "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt",
         "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json",
         "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12",
