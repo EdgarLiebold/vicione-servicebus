@@ -930,6 +930,39 @@ class Policy:
                           f"target '{name}' in {relative} raises no Error; a warning in a central "
                           "contract is a note nobody reads")
 
+    def check_no_project_leaves_the_central_contract(self) -> None:
+        """A project may not take itself out of the repository's build contract.
+
+        Three ways exist and each was open. ImportDirectoryBuildTargets=false skips the late gates
+        entirely; RestoreLockedMode=false inside a project resolves past its own lock file while
+        keeping it; and pointing CustomBeforeMicrosoftCommonTargets or DirectoryBuildTargetsPath
+        somewhere else replaces the contract with another file. The documented package update passes
+        its property on the command line, where the whole run and the diff of the change see it.
+        """
+        escapes = (
+            ("ImportDirectoryBuildTargets", "false", "skips the late central build gates"),
+            ("RestoreLockedMode", "false", "resolves past its own lock file"),
+        )
+
+        for project in sorted(self.root.rglob("*.csproj")):
+            relative = project.relative_to(self.root).as_posix()
+            if relative.startswith("artifacts/"):
+                continue
+
+            text = project.read_text(encoding="utf-8-sig", errors="replace")
+            for name, value, effect in escapes:
+                if f"<{name}>{value}</{name}>" in text.replace(" ", ""):
+                    self.fail("central-contract",
+                              f"{relative} sets {name} to {value}, which {effect}. That belongs on the "
+                              "command line of the one documented call, not into a project")
+
+            for redirect in ("DirectoryBuildTargetsPath", "CustomBeforeMicrosoftCommonTargets",
+                             "CustomAfterMicrosoftCommonTargets"):
+                if f"<{redirect}>" in text:
+                    self.fail("central-contract",
+                              f"{relative} sets {redirect}, which points the central build path at "
+                              "something other than the repository's own contract")
+
     def check_workflow_inputs_are_pinned(self) -> None:
         """Nothing a required run consumes may be a moving reference.
 
@@ -1087,7 +1120,8 @@ class Policy:
                      self.check_every_dotnet_command_names_its_target,
                      self.check_every_project_belongs_to_a_solution,
                      self.check_central_build_targets_are_effective,
-                     self.check_workflow_inputs_are_pinned):
+                     self.check_workflow_inputs_are_pinned,
+                     self.check_no_project_leaves_the_central_contract):
             rule()
 
         if self.failures:

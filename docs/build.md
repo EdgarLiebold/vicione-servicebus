@@ -56,7 +56,7 @@ Every runtime, test, benchmark and tool project targets **net10.0**.
 `ViciOne.ServiceBus.Analyzers`, `ViciOne.ServiceBus.Analyzers.CodeFixes` and
 `ViciOne.ServiceBus.Analyzers.Package`. They are loaded by the compiler rather than by the
 application, and the compiler that loads them is not a `net10.0` process. Each of the three declares
-`VicioneCompilerHost` so the exception is stated by the project rather than inferred from its name;
+`ViciOneCompilerHost` so the exception is stated by the project rather than inferred from its name;
 `Directory.Build.targets` refuses `netstandard2.0` from any project that does not.
 
 ## The central build contract
@@ -68,14 +68,18 @@ project actually ended up in. It raises errors, never warnings.
 | Code | Refuses |
 |---|---|
 | `VOSB0001` | a project that turned `RestorePackagesWithLockFile` off |
+| `VOSB0006` | a project that turned `RestoreLockedMode` off in itself rather than on the command line |
 | `VOSB0002` | a packable project without a licence expression or file |
 | `VOSB0003` | a packable project without the readme the notice promises |
 | `VOSB0004` | a target framework this product does not support |
 | `VOSB0005` | `netstandard2.0` from a project that is not a declared compiler host |
 
 Both files are imported by every project, including a project built directly rather than through its
-solution. `-p:ImportDirectoryBuildTargets=false` is the documented way to leave the contract, and it
-is the only one: a project cannot opt out from inside itself.
+solution. `-p:ImportDirectoryBuildTargets=false` leaves the contract for one command, which is what a
+tooling experiment sometimes needs; a project may not write that, `RestoreLockedMode=false` or a
+redirected central build path into itself, and `check_no_project_leaves_the_central_contract` refuses
+all three. The difference is visibility: a property on the command line is seen by the whole run and
+by whoever reads the change; one inside a project is seen by nobody.
 
 ## Verification
 

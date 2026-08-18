@@ -941,6 +941,31 @@ class PolicyTestCase(unittest.TestCase):
 
         self.assert_rejected("moving-reference")
 
+    def test_rejects_a_project_that_skips_the_build_targets(self) -> None:
+        project = next(self.root.rglob("*.csproj"))
+        project.write_text(
+            "<Project>\n  <PropertyGroup>\n    <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_project_that_turns_locked_mode_off_in_itself(self) -> None:
+        project = next(self.root.rglob("*.csproj"))
+        project.write_text(
+            "<Project>\n  <PropertyGroup>\n    <RestoreLockedMode>false</RestoreLockedMode>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_project_that_points_the_build_path_elsewhere(self) -> None:
+        project = next(self.root.rglob("*.csproj"))
+        project.write_text(
+            "<Project>\n  <PropertyGroup>\n"
+            "    <CustomBeforeMicrosoftCommonTargets>other.targets</CustomBeforeMicrosoftCommonTargets>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+
+        self.assert_rejected("central-contract")
+
     def test_rejects_a_decorative_build_targets_file(self) -> None:
         (self.root / "Directory.Build.targets").write_text("<Project />\n", encoding="utf-8")
 

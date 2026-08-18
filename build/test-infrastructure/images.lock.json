@@ -13,10 +13,10 @@
     },
     "activemq-proxy": {
       "repository": "haproxy",
-      "tag": "3.4-alpine",
+      "tag": "3.4.3-alpine",
       "digest": "sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
-      "reference": "haproxy:3.4-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
-      "rationale": "A plain TCP relay in front of ActiveMQ, so that a recovery case can hold one address across a real broker restart. Compose publishes an ephemeral loopback port per container start, so a restarted broker returns on a different port every time and no client could reconnect to the address it was given; the proxy is never restarted and the broker behind it really goes away. Official Docker library image, 3.4 is the current stable line and carries the lts tag, GPLv2 with the LGPL runtime exception, and the manifest list covers linux/amd64 and linux/arm64 so the same digest serves the CI runner and a developer machine. The digest is the manifest list, not one architecture."
+      "reference": "haproxy:3.4.3-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
+      "rationale": "A plain TCP relay in front of ActiveMQ, so that a recovery case can hold one address across a real broker restart. Compose publishes an ephemeral loopback port per container start, so a restarted broker returns on a different port every time and no client could reconnect to the address it was given; the proxy is never restarted and the broker behind it really goes away. Official Docker library image, 3.4 is the current stable line and carries the lts tag, GPLv2 with the LGPL runtime exception, and the manifest list covers linux/amd64 and linux/arm64 so the same digest serves the CI runner and a developer machine. The digest is the manifest list, not one architecture. The tag names the concrete release rather than the 3.4 line, for the same reason."
     },
     "artemis": {
       "repository": "quay.io/artemiscloud/activemq-artemis-broker",
@@ -27,11 +27,11 @@
     },
     "mssql": {
       "repository": "mcr.microsoft.com/mssql/server",
-      "tag": "2025-latest",
+      "tag": "2025-CU8-ubuntu-24.04",
       "digest": "sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1",
-      "reference": "mcr.microsoft.com/mssql/server:2025-latest@sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1",
+      "reference": "mcr.microsoft.com/mssql/server:2025-CU8-ubuntu-24.04@sha256:4bab24f36c1ecd48e85f7d37df26e6bf301641d84c3fe652f9a0dcc947d512e1",
       "platform": "linux/amd64",
-      "rationale": "SQL Server for the Entity Framework and SQL transport specs. It replaces mcr.microsoft.com/azure-sql-edge, which Microsoft retired on 2025-09-30 and which receives no security or bug fixes: a discontinued image is not a test substrate. This is the supported SQL Server 2025 line on Ubuntu. It publishes linux/amd64 only, so on an arm64 developer machine it runs under emulation and the full SQL Server proof belongs to the x64 runner; PostgreSQL stays the fast local dialect check."
+      "rationale": "SQL Server for the Entity Framework and SQL transport specs. It replaces mcr.microsoft.com/azure-sql-edge, which Microsoft retired on 2025-09-30 and which receives no security or bug fixes: a discontinued image is not a test substrate. This is the supported SQL Server 2025 line on Ubuntu. It publishes linux/amd64 only, so on an arm64 developer machine it runs under emulation and the full SQL Server proof belongs to the x64 runner; PostgreSQL stays the fast local dialect check. The tag is the concrete cumulative update rather than a moving 'latest' that happens to point at this digest today: the digest fixes the bytes, and the tag makes the human statement equally exact."
     },
     "postgres": {
       "repository": "postgres",

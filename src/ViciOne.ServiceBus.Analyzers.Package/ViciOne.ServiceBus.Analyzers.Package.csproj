@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <!-- Loaded by the compiler, not by the application, which is why this one project may leave the
          product's net10.0 target. Directory.Build.targets refuses netstandard2.0 without it. -->
-    <VicioneCompilerHost>true</VicioneCompilerHost>
+    <ViciOneCompilerHost>true</ViciOneCompilerHost>
     <LangVersion>14.0</LangVersion>
     <WarningLevel>10</WarningLevel>
 

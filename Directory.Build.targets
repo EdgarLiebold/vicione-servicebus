@@ -11,17 +11,25 @@
        errors is the same thing with a longer path, and a warning in one that does not is a note
        nobody reads. -->
 
-  <!-- 1. Every project resolves against a tracked lock file, in locked mode.
+  <!-- 1. Every project resolves against a tracked lock file, and it resolves in locked mode.
 
-       Directory.Build.props sets both, but a project can turn either off in its own PropertyGroup,
-       and a restore that resolves the graph unbound is exactly what the lock files exist to prevent.
-       Updating a package is the one legitimate exception and says so on the command line, which is
-       why the check accepts an explicitly passed false and refuses a silently written one. -->
+       Directory.Build.props sets both, and a project can turn either off in its own PropertyGroup.
+       Checking only the first left the second open: a project could keep its lock file and resolve
+       past it, which is the very thing the lock file exists to prevent.
+
+       Updating a package is the one legitimate exception, and it says so on the command line rather
+       than in a file: the documented update call passes RestoreLockedMode=false and force evaluation
+       on the command line. A property passed globally reaches every project; one written into a
+       project reaches only that one, and nobody reading the diff of a package update would see it. That is the difference this pair of
+       gates encodes, and RestoreLockedModeFromCommandLine is what tells them apart. -->
   <Target Name="AssertLockedRestoreIsIntact"
-          BeforeTargets="CollectPackageReferences"
-          Condition=" '$(RestorePackagesWithLockFile)' != 'true' ">
+          BeforeTargets="CollectPackageReferences">
     <Error Code="VOSB0001"
-           Text="$(MSBuildProjectName) turned RestorePackagesWithLockFile off. Every project of this repository resolves against a tracked packages.lock.json; see CONTRIBUTING.md for how a package is updated." />
+           Text="$(MSBuildProjectName) turned RestorePackagesWithLockFile off. Every project of this repository resolves against a tracked packages.lock.json; see docs/build.md for how a package is updated."
+           Condition=" '$(RestorePackagesWithLockFile)' != 'true' " />
+    <Error Code="VOSB0006"
+           Text="$(MSBuildProjectName) turned RestoreLockedMode off in the project. Updating a package is done on the command line, where the whole run sees it: dotnet restore -p:RestoreLockedMode=false --force-evaluate."
+           Condition=" '$(RestoreLockedMode)' != 'true' AND '$(RestoreLockedModeFromCommandLine)' != 'true' " />
   </Target>
 
   <!-- 2. A packable project carries the licence evidence Apache 2.0 section 4(b) asks for.
@@ -54,7 +62,7 @@
            Condition=" '$(TargetFramework)' != 'net10.0' AND '$(TargetFramework)' != 'netstandard2.0' " />
     <Error Code="VOSB0005"
            Text="$(MSBuildProjectName) targets netstandard2.0 without being a Roslyn compiler host. That exception is stated in docs/build.md and is reserved for the analyzer, its code fixes and their package."
-           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(VicioneCompilerHost)' != 'true' " />
+           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(ViciOneCompilerHost)' != 'true' " />
   </Target>
 
 </Project>

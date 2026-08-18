@@ -20,6 +20,9 @@
          after which the changed lock files are reviewed in the diff like any other change. See
          CONTRIBUTING.md. -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Remembered before the default is applied, so Directory.Build.targets can tell a caller who
+         passed -p:RestoreLockedMode=false apart from a project that wrote it into itself. -->
+    <RestoreLockedModeFromCommandLine Condition=" '$(RestoreLockedMode)' != '' ">true</RestoreLockedModeFromCommandLine>
     <RestoreLockedMode Condition=" '$(RestoreLockedMode)' == '' ">true</RestoreLockedMode>
   </PropertyGroup>
 
