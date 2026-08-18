@@ -37,6 +37,10 @@ dotnet test ViciOne.ServiceBus.slnx --configuration Release --no-build --no-rest
 dotnet pack ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
 ```
 
+Every project resolves against a tracked `packages.lock.json` and locked mode is the default, so the
+restore above fails rather than quietly moving a package version. Updating one is the single
+documented exception; see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Every runtime, test and benchmark project targets `net10.0`. The Roslyn analyzer is the single
 exception and stays on `netstandard2.0`, because the compiler that loads it is not a `net10.0`
 process.

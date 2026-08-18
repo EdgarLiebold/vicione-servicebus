@@ -9,10 +9,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- Every project resolves against a tracked packages.lock.json. A restore that would resolve
-         anything else than the lock file records fails instead of quietly taking a different version.
-         The CI restore adds -p:RestoreLockedMode=true; locally the lock file is written and updated. -->
+    <!-- Every project resolves against a tracked packages.lock.json, and locked mode is the default
+         rather than a flag the caller has to remember. A restore that would resolve anything other
+         than what the lock file records fails, wherever it runs: locally, in CI, in a build and in a
+         pack. Updating a package is the one operation that may change the graph, and it says so by
+         turning the mode off for itself:
+
+             dotnet restore -p:RestoreLockedMode=false
+
+         after which the changed lock files are reviewed in the diff like any other change. See
+         CONTRIBUTING.md. -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition=" '$(RestoreLockedMode)' == '' ">true</RestoreLockedMode>
   </PropertyGroup>
 
   <PropertyGroup>

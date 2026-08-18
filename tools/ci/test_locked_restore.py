@@ -28,10 +28,18 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PROBE_PROJECT = Path("src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj")
 
 
-def restore(root: Path, project: Path, locked: bool) -> subprocess.CompletedProcess[str]:
+def restore(root: Path, project: Path, locked: bool | None = None) -> subprocess.CompletedProcess[str]:
+    """Restore the project. locked=None is the plain call a developer types, which is the point.
+
+    Locked mode is the repository default, so the plain call has to refuse a changed graph on its own.
+    Passing locked=True adds the flag anyway, and locked=False is the one documented way to open the
+    graph, which is what a package update does.
+    """
     command = ["dotnet", "restore", str(root / project)]
-    if locked:
+    if locked is True:
         command.append("--locked-mode")
+    elif locked is False:
+        command.append("-p:RestoreLockedMode=false")
 
     environment = dict(os.environ)
     environment["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
@@ -92,6 +100,41 @@ class LockedRestoreTests(unittest.TestCase):
     def tearDown(self) -> None:
         self._directory.cleanup()
 
+    def test_a_plain_restore_is_locked_without_asking_for_it(self) -> None:
+        """The default, measured on the call a developer actually types."""
+        self.sabotage_lock_file()
+
+        result = restore(self.root, PROBE_PROJECT)
+
+        self.assertNotEqual(0, result.returncode,
+                            "a plain restore accepted a changed lock file, so locked mode is not the default")
+
+    def test_the_documented_update_path_opens_the_graph(self) -> None:
+        """The one operation that may change the graph, and it says so.
+
+        Without this the case above could be satisfied by a repository in which no restore can ever
+        update a package again, which would make updating one impossible rather than deliberate. The
+        mode is read from the evaluated project rather than from a restore, because a restore that
+        opens the graph resolves against the network and would make this case depend on a feed.
+        """
+        self.assertEqual("true", self.evaluated("RestoreLockedMode"),
+                         "locked mode is not the default of the repository")
+        self.assertEqual("false", self.evaluated("RestoreLockedMode", "-p:RestoreLockedMode=false"),
+                         "the documented update switch does not open the graph")
+
+    def evaluated(self, property_name: str, *arguments: str) -> str:
+        result = subprocess.run(
+            ["dotnet", "msbuild", str(self.root / PROBE_PROJECT), f"-getProperty:{property_name}", *arguments],
+            cwd=self.root, text=True, capture_output=True, check=True)
+        return result.stdout.strip()
+
+    def sabotage_lock_file(self) -> None:
+        content = json.loads(self.lock_file.read_text(encoding="utf-8"))
+        framework = next(iter(content["dependencies"].values()))
+        _, entry = next(iter(framework.items()))
+        entry["resolved"] = "0.0.1-sabotage"
+        self.lock_file.write_text(json.dumps(content, indent=2) + "\n", encoding="utf-8")
+
     def test_the_tracked_lock_file_restores_in_locked_mode(self) -> None:
         self.assertTrue(self.lock_file.is_file(), "the project carries no tracked lock file")
 
@@ -100,16 +143,13 @@ class LockedRestoreTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, f"a locked restore of the tracked lock file failed: {result.stdout}")
 
     def test_a_changed_lock_file_fails_the_locked_restore(self) -> None:
-        content = json.loads(self.lock_file.read_text(encoding="utf-8"))
-        framework = next(iter(content["dependencies"].values()))
-        name, entry = next(iter(framework.items()))
-        entry["resolved"] = "0.0.1-sabotage"
-        self.lock_file.write_text(json.dumps(content, indent=2) + "\n", encoding="utf-8")
+        self.sabotage_lock_file()
 
         result = restore(self.root, PROBE_PROJECT, locked=True)
 
         self.assertNotEqual(0, result.returncode,
-                            f"a locked restore accepted a lock file that resolves {name} to a version nobody asked for")
+                            "a locked restore accepted a lock file that resolves a package to a version "
+                            "nobody asked for")
 
     def test_a_changed_package_graph_fails_the_locked_restore(self) -> None:
         packages = self.root / "Directory.Packages.props"

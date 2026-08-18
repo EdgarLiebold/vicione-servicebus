@@ -19,8 +19,31 @@ dotnet pack    ViciOne.ServiceBus.slnx --configuration Release --no-build --no-r
 The benchmark projects live in a second solution and are built the same way:
 
 ```bash
-dotnet build ViciOne.ServiceBus.Benchmarks.slnx --configuration Release
+dotnet restore ViciOne.ServiceBus.Benchmarks.slnx
+dotnet build   ViciOne.ServiceBus.Benchmarks.slnx --configuration Release --no-restore
 ```
+
+## Packages are locked
+
+Every project resolves against a tracked `packages.lock.json`, and locked mode is the repository
+default. The plain `dotnet restore` above therefore fails if the graph would resolve to anything other
+than what the lock files record - locally, in CI, in a build and in a pack alike. Nothing on a normal
+path can move a package version without saying so.
+
+Updating a package is the one operation that may change the graph, so it is the one call that turns
+the mode off:
+
+```bash
+# 1. change the version in Directory.Packages.props
+# 2. resolve it and write the lock files
+dotnet restore ViciOne.ServiceBus.slnx -p:RestoreLockedMode=false
+dotnet restore ViciOne.ServiceBus.Benchmarks.slnx -p:RestoreLockedMode=false
+# 3. read the lock file diff before committing it
+git diff -- '**/packages.lock.json'
+```
+
+The lock file diff is part of the change and is reviewed like any other. A pull request that moves a
+package version without it is incomplete.
 
 Compilation output goes to `artifacts/sdk`, packages to `artifacts/packages`. There is no `bin` or
 `obj` beside a project, so a build result can only come from one place.
