@@ -223,9 +223,9 @@ def main(argv: list[str] | None = None) -> int:
     # 'artemis' flavor that addresses a second, separate broker. Repeating --broker starts each of them,
     # so no spec has to fall back to a fixed port because its fixture was not started.
     parser.add_argument("--broker", required=True, action="append", choices=sorted(BROKER_PORTS))
-    parser.add_argument("--category", required=True)
-    parser.add_argument("--project", required=True)
-    parser.add_argument("--evidence-dir", required=True, type=Path)
+    parser.add_argument("--category")
+    parser.add_argument("--project")
+    parser.add_argument("--evidence-dir", type=Path, default=Path("artifacts/run-output"))
     parser.add_argument("--ports-out", type=Path, help="Optional file for the resolved endpoints, secrets excluded.")
     parser.add_argument(
         "--one-refusal-per-vhost",
@@ -233,8 +233,20 @@ def main(argv: list[str] | None = None) -> int:
         help="Fail the run unless every virtual host matching GLOB saw exactly one exclusivity refusal, "
              "counted from the broker's own freshly collected log.",
     )
+    parser.add_argument(
+        "--command",
+        action="store_true",
+        help="Treat everything after -- as a command to run inside the fixture environment instead of a "
+             "test category. The fixture is started, its endpoints and run-scoped account are handed to "
+             "the child alone, and it is torn down afterwards exactly as for a category.",
+    )
     parser.add_argument("rest", nargs="*")
     args = parser.parse_args(argv)
+
+    if args.command and not args.rest:
+        parser.error("--command needs the command itself after --")
+    if not args.command and not (args.category and args.project):
+        parser.error("either --category with --project, or --command with the command after --")
 
     brokers = list(dict.fromkeys(args.broker))
     credentials = build_environment()
@@ -262,15 +274,21 @@ def main(argv: list[str] | None = None) -> int:
             args.ports_out.parent.mkdir(parents=True, exist_ok=True)
             args.ports_out.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-        runner = REPO_ROOT / "tools/ci/run_test_category.py"
-        completed = subprocess.run(
-            [sys.executable, str(runner),
-             "--category", args.category,
-             "--project", args.project,
-             "--evidence-dir", str(args.evidence_dir),
-             *(["--", *args.rest] if args.rest else [])],
-            env=environment, text=True, check=False,
-        )
+        if args.command:
+            # A deliberately started scenario rather than a category: the fixture boundary is the same,
+            # the child gets the same endpoints and the same run-scoped account, and it still cannot
+            # reach a broker this runner did not start.
+            completed = subprocess.run(args.rest, env=environment, text=True, check=False)
+        else:
+            runner = REPO_ROOT / "tools/ci/run_test_category.py"
+            completed = subprocess.run(
+                [sys.executable, str(runner),
+                 "--category", args.category,
+                 "--project", args.project,
+                 "--evidence-dir", str(args.evidence_dir),
+                 *(["--", *args.rest] if args.rest else [])],
+                env=environment, text=True, check=False,
+            )
 
         if args.one_refusal_per_vhost:
             # Before the teardown, and on the log this run produced. The check runs even when the tests

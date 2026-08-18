@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_DIAGNOSTIC_DISPOSITION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0086-lead-directive, section 6",
+  "reportedIn": "development record 0088",
+  "statement": "Each removed diagnostic file, and the owner that carries its effect today. Neither is claimed as redundant: both were rebuilt as scenarios that are started deliberately, produce a structured result and gate nothing.",
+  "dispositions": {
+    "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BusLifecycleAccumulation_Probe.cs": {
+      "capability": "How a publish and consume round trip, the thread pool, the process threads, the pending work items and the managed memory behave as bus lifecycles accumulate.",
+      "wasMarked": "[Explicit] inside the required RabbitMQ category, so the category counted it and never ran it.",
+      "owner": "benchmarks/ViciOne.ServiceBus.Diagnostics, scenario bus-lifecycle",
+      "whatCarriedOver": [
+        "240 start and stop cycles by default, sampled every 20 as before",
+        "the round trip is a real send into the bus endpoint and a handler that receives it, not a send that was merely accepted",
+        "the same five resource readings per sample"
+      ],
+      "whatChanged": [
+        "it is a program that is started deliberately rather than a test the category has to skip",
+        "the result is one JSON object instead of semicolon separated console lines",
+        "it refuses to start without the run-scoped broker of a run instead of addressing whatever is on localhost"
+      ],
+      "notEquivalentTo": "The latency benchmark in the benchmark console, which never restarts a bus and therefore cannot observe accumulation across lifecycles.",
+      "removedAtCommit": "f0be9dd7",
+      "sha256BeforeRemoval": "e31cb67dc170ff50cf0c9334f431dd69d9baab8b52ce812d4c695621737eb5cd",
+      "linesBeforeRemoval": 74
+    },
+    "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/HammerTime_Specs.cs": {
+      "capability": "A hundred thousand publishes in flight at once against one endpoint with a bounded consumer concurrency, measured to the last consumed message.",
+      "wasMarked": "[Explicit] inside the required RabbitMQ category, so the category counted it and never ran it.",
+      "owner": "benchmarks/ViciOne.ServiceBus.Diagnostics, scenario publish-load",
+      "whatCarriedOver": [
+        "100000 messages, concurrency limit 32, prefetch 10000, publisher confirmation off",
+        "an auto delete, non durable endpoint",
+        "completion of every message is awaited and reported, not only the publish"
+      ],
+      "whatChanged": [
+        "the queue name is run-scoped instead of the fixed input_queue_express, so two runs cannot meet",
+        "the result is one JSON object with the three durations and two rates instead of three console lines",
+        "the completion limit is a parameter rather than a fixture timeout"
+      ],
+      "notEquivalentTo": "The throughput benchmark, which measures a steady rate rather than the behaviour of a single burst that is larger than the prefetch window.",
+      "removedAtCommit": "f0be9dd7",
+      "sha256BeforeRemoval": "10d30464105163cf16132aa563d450e893ab3f7211c8fa9f179e5009e9756da0",
+      "linesBeforeRemoval": 97
+    }
+  },
+  "provenRun": {
+    "busLifecycle": "6 cycles sampled every 2, inside the pinned fixture through the canonical runner, exit code 0",
+    "publishLoad": "3000 messages, concurrency 32, prefetch 1000, all 3000 consumed, exit code 0",
+    "note": "Run at a small scale to prove the scenarios work end to end. Their defaults remain the ones the removed files used."
+  }
+}

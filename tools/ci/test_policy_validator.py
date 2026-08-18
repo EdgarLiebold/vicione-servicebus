@@ -297,6 +297,7 @@ class PolicyTestCase(unittest.TestCase):
         (workflows / "build.yml").write_text(BUILD_WORKFLOW, encoding="utf-8")
 
         (self.root / "NuGet.config").write_text(NUGET_CONFIG, encoding="utf-8")
+        self.write_solution()
         (self.root / "global.json").write_text(GLOBAL_JSON, encoding="utf-8")
         (infra / "capability-matrix.json").write_text(
             json.dumps(CAPABILITY_MATRIX, indent=2), encoding="utf-8"
@@ -321,7 +322,14 @@ class PolicyTestCase(unittest.TestCase):
         for project in sorted(self.root.rglob("*.csproj")):
             (project.parent / "packages.lock.json").write_text("{}\n", encoding="utf-8")
 
+    def write_solution(self) -> None:
+        """Names every project the fixture holds, so the orphan rule has nothing to complain about."""
+        projects = sorted(p.relative_to(self.root).as_posix() for p in self.root.rglob("*.csproj"))
+        body = "<Solution>\n" + "".join(f'  <Project Path="{path}" />\n' for path in projects) + "</Solution>\n"
+        (self.root / "ViciOne.ServiceBus.slnx").write_text(body, encoding="utf-8")
+
     def failures(self) -> list[str]:
+        self.write_solution()
         policy = Policy(self.root)
         policy.run()
         return policy.failures
@@ -756,6 +764,19 @@ class PolicyTestCase(unittest.TestCase):
             workflow.read_text(encoding="utf-8").replace("      - run: rm -rf artifacts/packages\n", "", 1),
             encoding="utf-8")
         self.assert_rejected("pack")
+
+    def test_rejects_a_project_no_solution_names(self) -> None:
+        stray = self.root / "tests/ViciOne.ServiceBus.Stray.Tests"
+        stray.mkdir(parents=True)
+        (stray / "ViciOne.ServiceBus.Stray.Tests.csproj").write_text("<Project />\n", encoding="utf-8")
+        (stray / "packages.lock.json").write_text("{}\n", encoding="utf-8")
+
+        # Written after the fixture solution, and the solution is not rewritten for this one case.
+        policy = Policy(self.root)
+        policy.run()
+
+        self.assertTrue(any(failure.startswith("orphan-project") for failure in policy.failures),
+                        f"a project no solution names was accepted: {policy.failures}")
 
     def test_rejects_a_dotnet_command_without_a_target(self) -> None:
         workflow = self.workflow()

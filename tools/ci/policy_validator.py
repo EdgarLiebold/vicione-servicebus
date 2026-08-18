@@ -847,6 +847,29 @@ class Policy:
                               f"{relative}:{number} runs '{verb}' without naming a solution or project; "
                               "this repository holds two solutions, so the command exits with MSB1011")
 
+    def check_every_project_belongs_to_a_solution(self) -> None:
+        """A project no solution references is not built, not tested and not seen.
+
+        This one is not hypothetical. A stray test project reappeared twice: once when a disallowed
+        history rewrite resurrected it, and once when a routine `git add -A` picked the untracked file
+        up again. Nothing referenced it, nothing built it, and the only thing that ever noticed was the
+        lock file rule complaining about a project no one could name. A project is either part of a
+        solution or it is not part of this repository.
+        """
+        referenced: set[str] = set()
+        for solution in sorted(self.root.glob("*.slnx")):
+            text = self.read(solution.relative_to(self.root).as_posix()) or ""
+            referenced.update(match.replace("\\", "/") for match in re.findall(r'Path="([^"]+)"', text))
+
+        for project in sorted(self.root.rglob("*.csproj")):
+            relative = project.relative_to(self.root).as_posix()
+            if relative.startswith("artifacts/"):
+                continue
+            if relative not in referenced:
+                self.fail("orphan-project",
+                          f"{relative} is referenced by no solution, so nothing builds it and nothing "
+                          "verifies it")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -970,7 +993,8 @@ class Policy:
                      self.check_dueness_classes, self.check_executed_floor,
                      self.check_no_raw_run_artifacts_in_evidence,
                      self.check_every_tool_test_module_runs,
-                     self.check_every_dotnet_command_names_its_target):
+                     self.check_every_dotnet_command_names_its_target,
+                     self.check_every_project_belongs_to_a_solution):
             rule()
 
         if self.failures:
