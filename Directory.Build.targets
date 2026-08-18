@@ -1,0 +1,60 @@
+<Project>
+  <!-- The late half of the central build contract.
+
+       Directory.Build.props is imported before a project's own content and therefore states defaults
+       a project may still override. This file is imported after it, so what it asserts is the state
+       the project actually ended up in. That is the only place where three promises this repository
+       makes can be checked at all, because each of them is about a value a project could have changed
+       after the props were read.
+
+       These are build errors, not warnings. A warning in a repository that builds with warnings as
+       errors is the same thing with a longer path, and a warning in one that does not is a note
+       nobody reads. -->
+
+  <!-- 1. Every project resolves against a tracked lock file, in locked mode.
+
+       Directory.Build.props sets both, but a project can turn either off in its own PropertyGroup,
+       and a restore that resolves the graph unbound is exactly what the lock files exist to prevent.
+       Updating a package is the one legitimate exception and says so on the command line, which is
+       why the check accepts an explicitly passed false and refuses a silently written one. -->
+  <Target Name="AssertLockedRestoreIsIntact"
+          BeforeTargets="CollectPackageReferences"
+          Condition=" '$(RestorePackagesWithLockFile)' != 'true' ">
+    <Error Code="VOSB0001"
+           Text="$(MSBuildProjectName) turned RestorePackagesWithLockFile off. Every project of this repository resolves against a tracked packages.lock.json; see CONTRIBUTING.md for how a package is updated." />
+  </Target>
+
+  <!-- 2. A packable project carries the licence evidence Apache 2.0 section 4(b) asks for.
+
+       The readme is added centrally in src/Directory.Build.props. A project that unsets PackageId or
+       drops the readme would still pack, and the package would ship without the file the notice
+       promises is in it. -->
+  <Target Name="AssertPackagedProjectsCarryTheirNotice"
+          BeforeTargets="GenerateNuspec"
+          Condition=" '$(IsPackable)' == 'true' ">
+    <Error Code="VOSB0002"
+           Text="$(MSBuildProjectName) is packable but declares no PackageLicenseExpression, so the package would ship without the licence it is distributed under."
+           Condition=" '$(PackageLicenseExpression)' == '' AND '$(PackageLicenseFile)' == '' " />
+    <Error Code="VOSB0003"
+           Text="$(MSBuildProjectName) is packable but names no PackageReadmeFile, so the package would ship without the notice this fork is required to carry."
+           Condition=" '$(PackageReadmeFile)' == '' " />
+  </Target>
+
+  <!-- 3. Nothing builds for a framework this product does not support.
+
+       net10.0 is the product target; netstandard2.0 is the compiler host exception and belongs to the
+       three Roslyn projects alone, because an analyzer and its code fixes are loaded by the compiler
+       rather than by the application. A fourth project reaching for it would be shipping a second,
+       unstated support promise. -->
+  <Target Name="AssertTargetFrameworkIsSupported"
+          BeforeTargets="BeforeBuild"
+          Condition=" '$(TargetFramework)' != '' ">
+    <Error Code="VOSB0004"
+           Text="$(MSBuildProjectName) targets $(TargetFramework). This product targets net10.0; netstandard2.0 is the compiler host exception and is reserved for the Roslyn projects."
+           Condition=" '$(TargetFramework)' != 'net10.0' AND '$(TargetFramework)' != 'netstandard2.0' " />
+    <Error Code="VOSB0005"
+           Text="$(MSBuildProjectName) targets netstandard2.0 without being a Roslyn compiler host. That exception is stated in docs/build.md and is reserved for the analyzer, its code fixes and their package."
+           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(VicioneCompilerHost)' != 'true' " />
+  </Target>
+
+</Project>

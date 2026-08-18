@@ -169,9 +169,9 @@ def fixture_model() -> dict:
 
 JOB = """\
   %s:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: '{sdk}'
       - run: %s
@@ -202,7 +202,7 @@ jobs:
         for job, category, project in FIXTURE_RUNS)
     + """\
   pack:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - policy
       - build
@@ -216,14 +216,14 @@ jobs:
       - rabbitmq
       - entity-framework
     steps:
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: '{sdk}'
       - run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
       - run: rm -rf artifacts/packages
       - run: dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages
       - run: sha256sum artifacts/packages/*.nupkg
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
 """).format(sdk=APPROVED_SDK)
 
 SHIPPED = "## Release 1.0\n\n### New Rules\nRule ID | Category | Severity | Notes\n"
@@ -322,6 +322,10 @@ class PolicyTestCase(unittest.TestCase):
         (workflows / "build.yml").write_text(BUILD_WORKFLOW, encoding="utf-8")
 
         (self.root / "NuGet.config").write_text(NUGET_CONFIG, encoding="utf-8")
+        (self.root / "Directory.Build.targets").write_text(
+            '<Project>\n  <Target Name="AssertSomething" BeforeTargets="BeforeBuild">\n'
+            '    <Error Text="a gate that fires" Condition=" \'$(Broken)\' == \'true\' " />\n'
+            '  </Target>\n</Project>\n', encoding="utf-8")
         self.write_solution()
         (self.root / "global.json").write_text(GLOBAL_JSON, encoding="utf-8")
 
@@ -714,14 +718,14 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_a_windows_runner(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-latest",
-                                   "  build:\n    runs-on: windows-latest", 1), encoding="utf-8")
+            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-24.04",
+                                   "  build:\n    runs-on: windows-2022", 1), encoding="utf-8")
         self.assert_rejected("required-runner")
 
     def test_rejects_a_macos_runner(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-latest",
-                                   "  build:\n    runs-on: macos-latest", 1), encoding="utf-8")
+            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-24.04",
+                                   "  build:\n    runs-on: macos-14", 1), encoding="utf-8")
         self.assert_rejected("required-runner")
 
     def test_rejects_a_floating_sdk_version(self) -> None:
@@ -855,6 +859,42 @@ class PolicyTestCase(unittest.TestCase):
 
         self.assertFalse(any(failure.startswith("orphan-project") for failure in policy.failures),
                          f"a project named with single quotes was read as unreferenced: {policy.failures}")
+
+    def test_rejects_an_action_pinned_to_a_tag(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace(
+                "actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68", "actions/setup-dotnet@v5"),
+            encoding="utf-8")
+
+        self.assert_rejected("moving-reference")
+
+    def test_rejects_a_runner_label_that_moves(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace("ubuntu-24.04", "ubuntu-latest", 1),
+            encoding="utf-8")
+
+        self.assert_rejected("moving-reference")
+
+    def test_rejects_a_decorative_build_targets_file(self) -> None:
+        (self.root / "Directory.Build.targets").write_text("<Project />\n", encoding="utf-8")
+
+        self.assert_rejected("build-targets")
+
+    def test_rejects_a_gate_that_only_warns(self) -> None:
+        (self.root / "Directory.Build.targets").write_text(
+            '<Project>\n  <Target Name="Check" BeforeTargets="BeforeBuild">\n'
+            '    <Warning Text="something" />\n  </Target>\n</Project>\n', encoding="utf-8")
+
+        self.assert_rejected("build-targets")
+
+    def test_rejects_a_gate_that_hangs_off_nothing(self) -> None:
+        (self.root / "Directory.Build.targets").write_text(
+            '<Project>\n  <Target Name="Check">\n    <Error Text="something" />\n  </Target>\n</Project>\n',
+            encoding="utf-8")
+
+        self.assert_rejected("build-targets")
 
     def test_rejects_a_project_no_solution_names(self) -> None:
         stray = self.root / "tests/ViciOne.ServiceBus.Stray.Tests"
@@ -1011,7 +1051,7 @@ class PolicyTestCase(unittest.TestCase):
         self.assert_rejected("pack")
 
     def test_rejects_pack_without_run_artifact(self) -> None:
-        self.workflow().write_text(BUILD_WORKFLOW.replace("      - uses: actions/upload-artifact@v4\n", ""),
+        self.workflow().write_text(BUILD_WORKFLOW.replace("      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1\n", ""),
                                    encoding="utf-8")
         self.assert_rejected("pack")
 

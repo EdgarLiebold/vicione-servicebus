@@ -50,7 +50,7 @@ REQUIRED_CATEGORIES = ("build", "analyzer", "core-unit", "signalr", "quartz", "a
                        "sql-transport", "benchmarks", "rabbitmq", "entity-framework", "pack")
 
 # The one operating system the required profile runs on, and the exact SDK global.json releases.
-REQUIRED_RUNNER = "ubuntu-latest"
+REQUIRED_RUNNER = "ubuntu-24.04"
 APPROVED_SDK_FILE = "global.json"
 DIGEST = re.compile(r"@sha256:[0-9a-f]{64}")
 SHA256 = re.compile(r"\b[0-9a-f]{64}\b")
@@ -892,6 +892,75 @@ class Policy:
                           f"{relative} is referenced by no solution, so nothing builds it and nothing "
                           "verifies it")
 
+    def check_central_build_targets_are_effective(self) -> None:
+        """Directory.Build.targets has to assert something, not merely exist.
+
+        A decorative file is worse than no file: it looks like a central contract and enforces
+        nothing, so the next reader assumes the promises in it are held. What makes this one effective
+        is that every gate raises an Error rather than a Warning - a warning is a note nobody reads in
+        a repository that does not fail on them - and that each gate hangs off a real build target, so
+        it is evaluated rather than only defined.
+        """
+        relative = "Directory.Build.targets"
+        text = self.read(relative)
+        if text is None:
+            self.fail("build-targets", f"{relative} is missing, so the repository has no late central "
+                                       "build contract at all")
+            return
+
+        try:
+            root = ElementTree.fromstring(text)
+        except ElementTree.ParseError as error:
+            self.fail("build-targets", f"{relative} is not parsable as XML: {error}")
+            return
+
+        targets = [element for element in root if element.tag == "Target"]
+        if not targets:
+            self.fail("build-targets", f"{relative} declares no target, so it asserts nothing")
+            return
+
+        for target in targets:
+            name = target.get("Name", "<unnamed>")
+            if not (target.get("BeforeTargets") or target.get("AfterTargets") or target.get("DependsOnTargets")):
+                self.fail("build-targets",
+                          f"target '{name}' in {relative} hangs off no build target, so it is defined "
+                          "and never evaluated")
+            if not [child for child in target if child.tag == "Error"]:
+                self.fail("build-targets",
+                          f"target '{name}' in {relative} raises no Error; a warning in a central "
+                          "contract is a note nobody reads")
+
+    def check_workflow_inputs_are_pinned(self) -> None:
+        """Nothing a required run consumes may be a moving reference.
+
+        A tag and a runner label are both names somebody else can repoint. The SDK is pinned, the
+        images are pinned by digest, and an action pinned to v5 would have been the one input left
+        where a change outside this repository changes what runs inside it. ubuntu-latest is the same
+        thing for the machine underneath: it moves to the next LTS when GitHub decides, and the build
+        that meets it is not the build that was verified.
+        """
+        for relative in self.workflow_files():
+            workflow = self.read(relative)
+            if workflow is None:
+                continue
+
+            for number, line in enumerate(workflow.splitlines(), 1):
+                stripped = line.strip()
+                if stripped.startswith("#"):
+                    continue
+
+                if stripped.startswith("- uses:") or stripped.startswith("uses:"):
+                    reference = stripped.split("uses:", 1)[1].strip().split()[0]
+                    if "@" not in reference or not re.fullmatch(r"[0-9a-f]{40}", reference.split("@", 1)[1]):
+                        self.fail("moving-reference",
+                                  f"{relative}:{number} uses '{reference}', which is a tag rather than a "
+                                  "commit; whoever can move that tag decides what runs here")
+
+                if stripped.startswith("runs-on:") and stripped.endswith("-latest"):
+                    self.fail("moving-reference",
+                              f"{relative}:{number} runs on '{stripped.split(':', 1)[1].strip()}', which "
+                              "moves when GitHub repoints it; name the image this repository verified against")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -1016,7 +1085,9 @@ class Policy:
                      self.check_no_raw_run_artifacts_in_evidence,
                      self.check_every_tool_test_module_runs,
                      self.check_every_dotnet_command_names_its_target,
-                     self.check_every_project_belongs_to_a_solution):
+                     self.check_every_project_belongs_to_a_solution,
+                     self.check_central_build_targets_are_effective,
+                     self.check_workflow_inputs_are_pinned):
             rule()
 
         if self.failures:

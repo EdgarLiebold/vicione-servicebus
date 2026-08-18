@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1161 |
+| Added | 1164 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `CONTRIBUTING.md` | Added |  |
 | `COPYRIGHT` | Modified | `COPYRIGHT` |
 | `Directory.Build.props` | Modified | `Directory.Build.props` |
+| `Directory.Build.targets` | Added |  |
 | `Directory.Packages.props` | Modified | `Directory.Packages.props` |
 | `LICENSE` | Deleted | `LICENSE` |
 | `LICENSE.txt` | Added |  |
@@ -147,6 +148,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
+| `docs/build.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
 | `evidence/RAW_RUN_ARTIFACT_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json` | Added |  |
@@ -236,6 +238,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0088/test-isolation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/broker-recovery.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/sql-fixture-replacement.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/tool-manifest-census.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/write-census.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json` | Added |  |

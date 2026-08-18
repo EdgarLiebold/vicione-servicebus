@@ -30,6 +30,9 @@ _ReSharper*
 # a record has to carry is copied into the record instead.
 /interim/
 
+# pytest keeps its cache beside the working directory it was started in.
+.pytest_cache/
+
 # osx noise
 .DS_Store
 *.DS_Store

@@ -28,6 +28,15 @@ on:
 permissions:
   contents: read
 
+# Actions are pinned to the commit each tag pointed at, with the tag beside it so a reader can see
+# which release was chosen. A tag is a moving reference: whoever can move it can change what runs in
+# this repository, and the pinned SDK and the pinned images would then be the only bound inputs left.
+# Automated updates stay possible - each new SHA is reviewed like any other change.
+#
+# The runner image is named rather than left to ubuntu-latest, which moves to the next LTS whenever
+# GitHub decides. A build that changes because a label was repointed is not reproducible, and the SDK
+# this repository pins is the one thing that must not meet an unexpected base image.
+
 env:
   # Exactly what global.json releases. A floating '10.0.x' can resolve to an SDK the
   # repository has not approved, and global.json would then fail the build after the fact.
@@ -38,10 +47,10 @@ env:
 jobs:
   policy:
     name: "Required: Policy"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate CI policy
         run: python3 tools/ci/policy_validator.py
       # Every Python test module in this repository, not only the policy self-tests. A module that no
@@ -54,11 +63,11 @@ jobs:
 
   build:
     name: "Required: Build"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore
@@ -68,11 +77,11 @@ jobs:
 
   analyzer:
     name: "Required: Analyzer"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Analyzer tests
@@ -81,7 +90,7 @@ jobs:
             --category analyzer \
             --project tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj \
             --evidence-dir artifacts/required/analyzer
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-analyzer
@@ -91,11 +100,11 @@ jobs:
 
   core-unit:
     name: "Required: Core/Unit"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Core tests
@@ -110,7 +119,7 @@ jobs:
             --category abstractions \
             --project tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj \
             --evidence-dir artifacts/required/core
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-core-unit
@@ -120,11 +129,11 @@ jobs:
 
   rabbitmq:
     name: "Required: RabbitMQ"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       # One run path for local and CI: the runner starts the pinned fixture, reads the ephemeral
@@ -139,7 +148,7 @@ jobs:
             --evidence-dir artifacts/required/rabbitmq \
             --ports-out artifacts/required/rabbitmq/endpoints.json \
             --one-refusal-per-vhost 'test-exclusive-*'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-rabbitmq
@@ -149,11 +158,11 @@ jobs:
 
   signalr:
     name: "Required: SignalR"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: SignalR tests
@@ -162,7 +171,7 @@ jobs:
             --category signalr \
             --project tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj \
             --evidence-dir artifacts/required/signalr
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-signalr
@@ -172,11 +181,11 @@ jobs:
 
   quartz:
     name: "Required: Quartz"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Quartz tests
@@ -185,7 +194,7 @@ jobs:
             --category quartz \
             --project tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj \
             --evidence-dir artifacts/required/quartz
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-quartz
@@ -195,11 +204,11 @@ jobs:
 
   activemq:
     name: "Required: ActiveMQ"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       # Two brokers: the ActiveMQ specs are parameterized over an Artemis flavor that addresses a
@@ -213,7 +222,7 @@ jobs:
             --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
             --evidence-dir artifacts/required/activemq \
             --ports-out artifacts/required/activemq/endpoints.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-activemq
@@ -223,13 +232,13 @@ jobs:
 
   sql-transport:
     name: "Required: SQL Transport"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: SQL transport tests
@@ -241,7 +250,7 @@ jobs:
             --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj \
             --evidence-dir artifacts/required/sql-transport \
             --ports-out artifacts/required/sql-transport/endpoints.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-sql-transport
@@ -251,14 +260,14 @@ jobs:
 
   benchmarks:
     name: "Required: Benchmarks"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     # The benchmark solution is the second one in this repository. A green main build hides a broken
     # benchmark project entirely, so its compile belongs to the required profile. No benchmark is run
     # and no performance bound is asserted here.
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore
@@ -271,7 +280,7 @@ jobs:
             --category benchmarks \
             --project benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj \
             --evidence-dir artifacts/required/benchmarks
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-benchmarks
@@ -281,7 +290,7 @@ jobs:
 
   entity-framework:
     name: "Required: EntityFrameworkCore"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     # No service containers here. The databases come from the same pinned compose definition a developer
     # uses locally, started through the canonical runner, with a secret generated for this run. A
@@ -290,8 +299,8 @@ jobs:
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: EntityFrameworkCore tests
@@ -303,7 +312,7 @@ jobs:
             --project tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
             --evidence-dir artifacts/required/entity-framework \
             --ports-out artifacts/required/entity-framework/endpoints.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-entity-framework
@@ -312,7 +321,7 @@ jobs:
             artifacts/run-output
   pack:
     name: "Required: Pack"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     # Pack runs only after every required gate is green. It builds verifiable run artifacts and
     # publishes nothing: no nuget.org push, no registry, no external side effect of any kind.
@@ -329,8 +338,8 @@ jobs:
       - rabbitmq
       - entity-framework
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       # This job starts from a clean checkout, so the chain is closed inside it: an explicit locked
@@ -352,7 +361,7 @@ jobs:
           set -euo pipefail
           test -n "$(ls -A artifacts/packages)" || { echo "pack produced no package"; exit 1; }
           sha256sum artifacts/packages/*.nupkg | tee artifacts/packages/SHA256SUMS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: required-packages
           path: artifacts/packages

@@ -24,35 +24,26 @@ and build automation. The rename changes neither the origin nor any Apache-2.0 o
 
 ## Build
 
-Requirements:
-
-- .NET SDK 10.0.302 exactly. `global.json` pins it with `rollForward: disable`, so a different SDK
-  fails the build instead of silently rolling forward
-- access to the package sources configured for the development environment
+- .NET SDK 10.0.302 exactly, pinned by `global.json` with `rollForward: disable`
+- exactly one package source, nuget.org, named in `NuGet.config`; the machine's own configuration
+  does not participate
 
 ```bash
-dotnet restore ViciOne.ServiceBus.slnx
-dotnet build ViciOne.ServiceBus.slnx --configuration Release --no-restore
-dotnet test ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
-dotnet pack ViciOne.ServiceBus.slnx --configuration Release --no-build --no-restore
+dotnet restore ViciOne.ServiceBus.slnx --locked-mode
+dotnet build   ViciOne.ServiceBus.slnx -c Release --no-restore
+dotnet pack    ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 ```
 
-Every project resolves against a tracked `packages.lock.json` and locked mode is the default, so the
-restore above fails rather than quietly moving a package version. Updating one is the single
-documented exception; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Two solutions sit at the root, so every command names the one it means. Every project resolves
+against a tracked `packages.lock.json`; updating a package is the single documented exception.
 
-Every runtime, test and benchmark project targets `net10.0`. The Roslyn analyzer is the single
-exception and stays on `netstandard2.0`, because the compiler that loads it is not a `net10.0`
-process.
+There is no single command that tests this product locally: a blanket `dotnet test` would start test
+projects whose fixtures are not running, and the capabilities that need a real cloud resource have no
+local fixture at all. Each category is started through its runner, which owns its fixture.
 
-The repository contains transport and persistence integration tests that require their external
-infrastructure. `tools/ci/run_broker_category.py` starts the pinned fixture for a category and
-publishes its endpoint to the run; a fixture that was not started makes the affected tests fail with
-a named missing contract rather than falling back to a default host or secret. Missing infrastructure
-is reported as an explicit incomplete proof; tests are never silently skipped or weakened.
-
-Build output goes to `artifacts/sdk`, packages to `artifacts/packages`. See
-[CONTRIBUTING.md](CONTRIBUTING.md) for the full restore, build, test, pack and review path.
+[docs/build.md](docs/build.md) carries the whole contract - the two solutions, the locked restore and
+how a package is updated, the three Roslyn projects that are the `netstandard2.0` exception, the five
+central build gates, the verification model and how each category is run.
 
 ## Scope
 
