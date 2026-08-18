@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_CAPABILITY_MATRIX",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "description": "The one active truth about what this product carries and how each of it is verified. Only retained capabilities appear here. A capability that was removed is not modelled with a state value; it is absent, and its removal lives in the keep/remove decision, CHANGELIST.md and the evidence. Every source project belongs to exactly one capability, and every capability carries exactly one verification class.",
+  "verificationClasses": {
+    "LOCAL_REQUIRED_RUN": "A behaviour suite that runs in the required profile on the build machine alone. It needs no container and no credential.",
+    "PINNED_FIXTURE_REQUIRED_RUN": "A behaviour suite that runs in the required profile against a pinned container fixture from build/test-infrastructure/compose.yaml, started by tools/ci/run_broker_category.py.",
+    "REAL_EPHEMERAL_CLOUD": "A behaviour suite that needs a real, short lived cloud resource. It is not executed here and can never report a pass. This is a visible open proof, never a gate.",
+    "COMPILE_AND_PACK_PROOF": "A shipped capability with no behaviour suite of its own, exercised by the suites that use it. It is proven by compiling and packing.",
+    "DEVELOPER_TOOL_COMPILE_PROOF": "Not shipped to a consumer. It is proven by compiling, and by its own tests where it has them."
+  },
+  "capabilities": [
+    {
+      "id": "core",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus",
+        "src/ViciOne.ServiceBus.Abstractions"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Tests",
+        "tests/ViciOne.ServiceBus.Abstractions.Tests"
+      ],
+      "requiredJobs": [
+        "core-unit"
+      ]
+    },
+    {
+      "id": "serialization-messagepack",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.MessagePack"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Tests"
+      ],
+      "requiredJobs": [
+        "core-unit"
+      ]
+    },
+    {
+      "id": "state-machine-visualizer",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.StateMachineVisualizer"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Tests"
+      ],
+      "requiredJobs": [
+        "core-unit"
+      ]
+    },
+    {
+      "id": "analyzers",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.Analyzers",
+        "src/ViciOne.ServiceBus.Analyzers.CodeFixes",
+        "src/ViciOne.ServiceBus.Analyzers.Package"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.Analyzers.Tests"
+      ],
+      "requiredJobs": [
+        "analyzer"
+      ]
+    },
+    {
+      "id": "signalr",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.SignalR"
+      ],
+      "testProjects": [
+        "tests/ViciOne.ServiceBus.SignalR.Tests"
+      ],
+      "requiredJobs": [
+        "signalr"
+      ]
+    },
+    {
+      "id": "scheduling-quartz",
+      "class": "LOCAL_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration"
+      ],
+      "testProjects": [
+        "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests"
+      ],
+      "requiredJobs": [
+        "quartz"
+      ]
+    },
+    {
+      "id": "persistence-entity-framework-core",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests"
+      ],
+      "fixtures": [
+        "mssql",
+        "postgres"
+      ],
+      "requiredJobs": [
+        "entity-framework"
+      ]
+    },
+    {
+      "id": "transport-sql",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql",
+        "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests"
+      ],
+      "fixtures": [
+        "mssql",
+        "postgres"
+      ],
+      "requiredJobs": [
+        "sql-transport"
+      ]
+    },
+    {
+      "id": "transport-rabbitmq",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.RabbitMqTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
+      ],
+      "fixtures": [
+        "rabbitmq"
+      ],
+      "requiredJobs": [
+        "rabbitmq"
+      ]
+    },
+    {
+      "id": "transport-activemq",
+      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.ActiveMqTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests"
+      ],
+      "fixtures": [
+        "activemq",
+        "artemis"
+      ],
+      "requiredJobs": [
+        "activemq"
+      ]
+    },
+    {
+      "id": "transport-amazon-sqs",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests"
+      ],
+      "openProof": "A real Amazon SQS account. Not executed here."
+    },
+    {
+      "id": "message-data-amazon-s3",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.AmazonS3"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests"
+      ],
+      "openProof": "A real Amazon S3 bucket. Its cases live in the SQS suite."
+    },
+    {
+      "id": "transport-azure-service-bus",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests"
+      ],
+      "openProof": "A real Azure Service Bus namespace. Not executed here."
+    },
+    {
+      "id": "message-data-azure-storage",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Storage"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests"
+      ],
+      "openProof": "A real Azure Blob Storage account. Its cases live in the Azure Service Bus suite."
+    },
+    {
+      "id": "rider-azure-event-hubs",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Transports/ViciOne.ServiceBus.EventHubIntegration"
+      ],
+      "testProjects": [
+        "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests"
+      ],
+      "openProof": "A real Azure Event Hubs namespace and a storage account. Not executed here."
+    },
+    {
+      "id": "persistence-azure-table",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.Azure.Table"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests"
+      ],
+      "openProof": "A real Azure Table Storage account. Not executed here."
+    },
+    {
+      "id": "persistence-dynamodb",
+      "class": "REAL_EPHEMERAL_CLOUD",
+      "sourceProjects": [
+        "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration"
+      ],
+      "testProjects": [
+        "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests"
+      ],
+      "openProof": "A real Amazon DynamoDB table. Not executed here."
+    },
+    {
+      "id": "test-framework",
+      "class": "COMPILE_AND_PACK_PROOF",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.TestFramework"
+      ],
+      "testProjects": [],
+      "note": "The harness every suite above runs on; exercised by all of them."
+    },
+    {
+      "id": "benchmarks",
+      "class": "DEVELOPER_TOOL_COMPILE_PROOF",
+      "sourceProjects": [],
+      "testProjects": [
+        "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests"
+      ],
+      "toolProjects": [
+        "benchmarks/ViciOne.ServiceBus.Benchmark",
+        "benchmarks/ViciOne.ServiceBus.BenchmarkConsole"
+      ],
+      "requiredJobs": [
+        "benchmarks"
+      ]
+    }
+  ]
+}

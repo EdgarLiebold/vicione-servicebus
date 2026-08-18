@@ -86,7 +86,50 @@ LOCK = {
     },
 }
 
-BUILD_WORKFLOW = """\
+RABBITMQ_TEST_PROJECT = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
+
+APPROVED_SDK = "10.0.302"
+
+GLOBAL_JSON = """\
+{
+  "sdk": {
+    "version": "%s",
+    "allowPrerelease": false,
+    "rollForward": "disable"
+  }
+}
+""" % APPROVED_SDK
+
+CAPABILITY_MATRIX = {
+    "schemaVersion": 1,
+    "kind": "SERVICEBUS_CAPABILITY_MATRIX",
+    "verificationClasses": {
+        "LOCAL_REQUIRED_RUN": "runs locally in the required profile",
+        "PINNED_FIXTURE_REQUIRED_RUN": "runs against a pinned fixture in the required profile",
+        "REAL_EPHEMERAL_CLOUD": "needs a real cloud resource and is not executed here",
+    },
+    "capabilities": [
+        {"id": "core", "class": "LOCAL_REQUIRED_RUN",
+         "sourceProjects": ["src/ViciOne.ServiceBus"], "testProjects": [], "requiredJobs": ["core-unit"]},
+        {"id": "analyzers", "class": "LOCAL_REQUIRED_RUN",
+         "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers"], "testProjects": [],
+         "requiredJobs": ["analyzer"]},
+        {"id": "transport-rabbitmq", "class": "PINNED_FIXTURE_REQUIRED_RUN",
+         "sourceProjects": [], "testProjects": [RABBITMQ_TEST_PROJECT], "requiredJobs": ["rabbitmq"]},
+    ],
+}
+
+JOB = """\
+  %s:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '{sdk}'
+      - run: %s
+"""
+
+BUILD_WORKFLOW = ("""\
 name: Required CI
 
 on:
@@ -96,43 +139,49 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  DOTNET_VERSION: '{sdk}'
+
 jobs:
-  policy:
-    steps:
-      - run: python3 tools/ci/policy_validator.py
-  build:
-    steps:
-      - run: dotnet build -c Release
-  analyzer:
-    steps:
-      - run: python3 tools/ci/run_test_category.py --category analyzer
-  core-unit:
-    steps:
-      - run: python3 tools/ci/run_test_category.py --category core
-  rabbitmq:
-    steps:
-      - run: python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq
-  entity-framework:
-    steps:
-      - run: python3 tools/ci/run_test_category.py --category entity-framework-core
+"""
+    + JOB % ("policy", "python3 tools/ci/policy_validator.py")
+    + JOB % ("build", "dotnet build -c Release")
+    + JOB % ("analyzer", "python3 tools/ci/run_test_category.py --category analyzer")
+    + JOB % ("core-unit", "python3 tools/ci/run_test_category.py --category core")
+    + JOB % ("signalr", "python3 tools/ci/run_test_category.py --category signalr")
+    + JOB % ("quartz", "python3 tools/ci/run_test_category.py --category quartz")
+    + JOB % ("activemq", "python3 tools/ci/run_broker_category.py --broker activemq --category activemq")
+    + JOB % ("sql-transport", "python3 tools/ci/run_broker_category.py --broker postgres --category sql-transport")
+    + JOB % ("benchmarks", "python3 tools/ci/run_test_category.py --category benchmarks")
+    + JOB % ("rabbitmq", "python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq")
+    + JOB % ("entity-framework", "python3 tools/ci/run_test_category.py --category entity-framework-core")
+    + """\
   pack:
+    runs-on: ubuntu-latest
     needs:
       - policy
       - build
       - analyzer
       - core-unit
+      - signalr
+      - quartz
+      - activemq
+      - sql-transport
+      - benchmarks
       - rabbitmq
       - entity-framework
     steps:
-      - run: dotnet pack -c Release -o artifacts/packages
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '{sdk}'
+      - run: dotnet restore --locked-mode
+      - run: dotnet pack -c Release --no-build --no-restore -o artifacts/packages
       - run: sha256sum artifacts/packages/*.nupkg
       - uses: actions/upload-artifact@v4
-"""
+""").format(sdk=APPROVED_SDK)
 
 SHIPPED = "## Release 1.0\n\n### New Rules\nRule ID | Category | Severity | Notes\n"
 UNSHIPPED = ""
-
-RABBITMQ_TEST_PROJECT = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
 
 SET_UP_FIXTURE = """\
 using NUnit.Framework;
@@ -246,11 +295,29 @@ class PolicyTestCase(unittest.TestCase):
         (workflows / "build.yml").write_text(BUILD_WORKFLOW, encoding="utf-8")
 
         (self.root / "NuGet.config").write_text(NUGET_CONFIG, encoding="utf-8")
+        (self.root / "global.json").write_text(GLOBAL_JSON, encoding="utf-8")
+        (infra / "capability-matrix.json").write_text(
+            json.dumps(CAPABILITY_MATRIX, indent=2), encoding="utf-8"
+        )
+
+        # The matrix names projects, and a project that is not there is a finding of its own, so the
+        # fixture carries the ones it claims.
+        (self.root / "src/ViciOne.ServiceBus").mkdir(parents=True)
+        (self.root / "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj").write_text(
+            "<Project />\n", encoding="utf-8")
+        (specs / "ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj").write_text(
+            "<Project />\n", encoding="utf-8")
 
         analyzers = self.root / "src/ViciOne.ServiceBus.Analyzers"
         analyzers.mkdir(parents=True)
         (analyzers / "AnalyzerReleases.Shipped.md").write_text(SHIPPED, encoding="utf-8")
         (analyzers / "AnalyzerReleases.Unshipped.md").write_text(UNSHIPPED, encoding="utf-8")
+        (analyzers / "ViciOne.ServiceBus.Analyzers.csproj").write_text("<Project />\n", encoding="utf-8")
+
+        # Every project the lock file rule sees has to carry one, or that rule fires instead of the
+        # one a case is about.
+        for project in sorted(self.root.rglob("*.csproj")):
+            (project.parent / "packages.lock.json").write_text("{}\n", encoding="utf-8")
 
     def failures(self) -> list[str]:
         policy = Policy(self.root)
@@ -267,6 +334,9 @@ class PolicyTestCase(unittest.TestCase):
 
     def compose(self) -> Path:
         return self.root / "build/test-infrastructure/compose.yaml"
+
+    def matrix(self) -> Path:
+        return self.root / "build/test-infrastructure/capability-matrix.json"
 
     def workflow(self) -> Path:
         return self.root / ".github/workflows/build.yml"
@@ -589,11 +659,116 @@ class PolicyTestCase(unittest.TestCase):
     # -- required profile ----------------------------------------------------------------------
 
     def test_rejects_removing_a_required_category(self) -> None:
-        body = BUILD_WORKFLOW.replace(
-            "  rabbitmq:\n    steps:\n"
-            "      - run: python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq\n", "")
+        removed = (JOB % ("rabbitmq",
+                          "python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq")
+                   ).format(sdk=APPROVED_SDK)
+        self.assertIn(removed, BUILD_WORKFLOW, "the anchor for the removed job is gone")
+        body = BUILD_WORKFLOW.replace(removed, "")
         self.workflow().write_text(body, encoding="utf-8")
         self.assert_rejected("required-profile")
+
+    # -- operating system, approved SDK, selector binding, pack chain, capability matrix ---------
+
+    def test_rejects_a_windows_runner(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-latest",
+                                   "  build:\n    runs-on: windows-latest", 1), encoding="utf-8")
+        self.assert_rejected("required-runner")
+
+    def test_rejects_a_macos_runner(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("  build:\n    runs-on: ubuntu-latest",
+                                   "  build:\n    runs-on: macos-latest", 1), encoding="utf-8")
+        self.assert_rejected("required-runner")
+
+    def test_rejects_a_floating_sdk_version(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace(f"DOTNET_VERSION: '{APPROVED_SDK}'", "DOTNET_VERSION: '10.0.x'"),
+            encoding="utf-8")
+        self.assert_rejected("required-runner")
+
+    def test_rejects_an_sdk_the_repository_did_not_approve(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace(f"dotnet-version: '{APPROVED_SDK}'", "dotnet-version: '10.0.100'"),
+            encoding="utf-8")
+        self.assert_rejected("required-runner")
+
+    def test_rejects_a_selectable_target_without_a_job(self) -> None:
+        (self.root / ".github/workflows/extended.yml").write_text(
+            "name: Extended\n"
+            "on:\n"
+            "  workflow_dispatch:\n"
+            "    inputs:\n"
+            "      target:\n"
+            "        type: choice\n"
+            "        options:\n"
+            "          - activemq\n"
+            "          - amazon-sqs\n"
+            "jobs:\n"
+            "  activemq:\n"
+            "    runs-on: ubuntu-latest\n"
+            "    if: inputs.target == 'activemq'\n"
+            "    steps:\n"
+            "      - run: echo run\n", encoding="utf-8")
+        self.assert_rejected("selector-binding")
+
+    def test_rejects_pack_without_every_gate(self) -> None:
+        self.workflow().write_text(BUILD_WORKFLOW.replace("      - sql-transport\n", "", 1), encoding="utf-8")
+        self.assert_rejected("pack")
+
+    def test_rejects_pack_that_restores_unbound(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("      - run: dotnet restore --locked-mode\n", "", 1), encoding="utf-8")
+        self.assert_rejected("pack")
+
+    def test_rejects_pack_that_restores_a_second_time(self) -> None:
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("dotnet pack -c Release --no-build --no-restore -o artifacts/packages",
+                                   "dotnet pack -c Release -o artifacts/packages"), encoding="utf-8")
+        self.assert_rejected("pack")
+
+    def test_rejects_a_removed_capability_in_the_matrix(self) -> None:
+        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix["capabilities"].append({
+            "id": "kafka", "class": "REAL_EPHEMERAL_CLOUD",
+            "sourceProjects": ["src/Transports/ViciOne.ServiceBus.KafkaIntegration"], "testProjects": [],
+        })
+        self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
+        self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_capability_claimed_twice(self) -> None:
+        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix["capabilities"].append({
+            "id": "core-again", "class": "LOCAL_REQUIRED_RUN",
+            "sourceProjects": ["src/ViciOne.ServiceBus"], "testProjects": [], "requiredJobs": ["core-unit"],
+        })
+        self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
+        self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_retained_capability_nobody_classifies(self) -> None:
+        unclassified = self.root / "src/ViciOne.ServiceBus.Unclassified"
+        unclassified.mkdir(parents=True)
+        (unclassified / "ViciOne.ServiceBus.Unclassified.csproj").write_text("<Project />\n", encoding="utf-8")
+        (unclassified / "packages.lock.json").write_text("{}\n", encoding="utf-8")
+        self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_required_capability_without_a_job(self) -> None:
+        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        for capability in matrix["capabilities"]:
+            if capability["id"] == "core":
+                capability.pop("requiredJobs")
+        self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
+        self.assert_rejected("capability-matrix")
+
+    def test_rejects_an_unknown_verification_class(self) -> None:
+        matrix = json.loads(self.matrix().read_text(encoding="utf-8"))
+        matrix["capabilities"][0]["class"] = "SOMEHOW_VERIFIED"
+        self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
+        self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_missing_capability_matrix(self) -> None:
+        self.matrix().unlink()
+        self.assert_rejected("capability-matrix")
 
     def test_rejects_returning_upstream_repository_guard(self) -> None:
         self.workflow().write_text(

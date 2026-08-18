@@ -4,8 +4,13 @@
 # passing silently. Upstream repository and branch guards are gone: they were structurally false in
 # this fork and made the whole publish chain disappear while the run still looked green.
 #
-# Transports that the fork preserves but ViciOne does not ship live in extended-transports.yml.
-# They stay visible and manually runnable instead of being hidden behind an unsatisfiable condition.
+# Every retained capability that can run on the build machine runs here. What needs a real cloud
+# resource is named in build/test-infrastructure/capability-matrix.json as an open proof and has no
+# job at all: a selectable target without an executing job ends green on an inventory print, which is
+# false green. The extended and nightly workflows that offered exactly that are gone.
+#
+# Linux only. REQ-CLEAN-002 makes the required profile Linux, and nothing in this product is built or
+# supported for Windows.
 name: Required CI
 
 # No path filter. The rule below it rejects a job level condition because an unsatisfiable one makes
@@ -24,7 +29,9 @@ permissions:
   contents: read
 
 env:
-  DOTNET_VERSION: '10.0.x'
+  # Exactly what global.json releases. A floating '10.0.x' can resolve to an SDK the
+  # repository has not approved, and global.json would then fail the build after the fact.
+  DOTNET_VERSION: '10.0.302'
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_NOLOGO: 1
 
@@ -42,12 +49,8 @@ jobs:
 
   build:
     name: "Required: Build"
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ['ubuntu-latest', 'windows-latest']
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v5
@@ -133,6 +136,128 @@ jobs:
           name: required-rabbitmq
           path: artifacts/required/rabbitmq
 
+  signalr:
+    name: "Required: SignalR"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: SignalR tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category signalr \
+            --project tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj \
+            --evidence-dir artifacts/required/signalr
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-signalr
+          path: artifacts/required/signalr
+
+  quartz:
+    name: "Required: Quartz"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Quartz tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category quartz \
+            --project tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj \
+            --evidence-dir artifacts/required/quartz
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-quartz
+          path: artifacts/required/quartz
+
+  activemq:
+    name: "Required: ActiveMQ"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      # Two brokers: the ActiveMQ specs are parameterized over an Artemis flavor that addresses a
+      # second, separate broker. Both are pinned fixtures, so both belong to the required profile.
+      - name: ActiveMQ tests
+        run: |
+          python3 tools/ci/run_broker_category.py \
+            --broker activemq \
+            --broker artemis \
+            --category activemq \
+            --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
+            --evidence-dir artifacts/required/activemq \
+            --ports-out artifacts/required/activemq/endpoints.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-activemq
+          path: artifacts/required/activemq
+
+  sql-transport:
+    name: "Required: SQL Transport"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: SQL transport tests
+        run: |
+          python3 tools/ci/run_broker_category.py \
+            --broker mssql \
+            --broker postgres \
+            --category sql-transport \
+            --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj \
+            --evidence-dir artifacts/required/sql-transport \
+            --ports-out artifacts/required/sql-transport/endpoints.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-sql-transport
+          path: artifacts/required/sql-transport
+
+  benchmarks:
+    name: "Required: Benchmarks"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The benchmark solution is the second one in this repository. A green main build hides a broken
+    # benchmark project entirely, so its compile belongs to the required profile. No benchmark is run
+    # and no performance bound is asserted here.
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore ViciOne.ServiceBus.Benchmarks.slnx --locked-mode
+      - name: Build
+        run: dotnet build ViciOne.ServiceBus.Benchmarks.slnx -c Release --no-restore
+      - name: Benchmark harness tests
+        run: |
+          python3 tools/ci/run_test_category.py \
+            --category benchmarks \
+            --project benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj \
+            --evidence-dir artifacts/required/benchmarks
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: required-benchmarks
+          path: artifacts/required/benchmarks
+
   entity-framework:
     name: "Required: EntityFrameworkCore"
     runs-on: ubuntu-latest
@@ -173,6 +298,11 @@ jobs:
       - build
       - analyzer
       - core-unit
+      - signalr
+      - quartz
+      - activemq
+      - sql-transport
+      - benchmarks
       - rabbitmq
       - entity-framework
     steps:
@@ -180,8 +310,15 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      # This job starts from a clean checkout, so the chain is closed inside it: an explicit locked
+      # restore, then a build, then a pack that restores nothing again. An implicit restore inside
+      # pack would resolve the graph unbound, which is the one thing the lock files exist to prevent.
+      - name: Restore
+        run: dotnet restore --locked-mode
+      - name: Build
+        run: dotnet build -c Release --no-restore
       - name: Pack
-        run: dotnet pack -c Release -o artifacts/packages
+        run: dotnet pack -c Release --no-build --no-restore -o artifacts/packages
       - name: Hash packages
         run: |
           set -euo pipefail

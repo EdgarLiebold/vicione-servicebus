@@ -31,6 +31,9 @@ import json
 import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import capability_matrix  # noqa: E402  (repository local, resolved from this file's folder)
 from xml.etree import ElementTree
 
 RESTORE_CONFIG = "NuGet.config"
@@ -40,7 +43,15 @@ CREDENTIAL_ELEMENT = "packageSourceCredentials"
 CREDENTIAL_KEYS = ("Username", "Password", "ClearTextPassword")
 
 FORBIDDEN_IMAGES = ("vicione-servicebus/rabbitmq", "vicione-servicebus/activemq")
-REQUIRED_CATEGORIES = ("build", "analyzer", "core-unit", "rabbitmq", "entity-framework", "pack")
+# Every job the required profile has to contain. It is derived from the capability matrix rather than
+# remembered: a retained capability that runs locally belongs in the required path, and a job that
+# only exists as a selectable target without an executing job is false green.
+REQUIRED_CATEGORIES = ("build", "analyzer", "core-unit", "signalr", "quartz", "activemq",
+                       "sql-transport", "benchmarks", "rabbitmq", "entity-framework", "pack")
+
+# The one operating system the required profile runs on, and the exact SDK global.json releases.
+REQUIRED_RUNNER = "ubuntu-latest"
+APPROVED_SDK_FILE = "global.json"
 DIGEST = re.compile(r"@sha256:[0-9a-f]{64}")
 SHA256 = re.compile(r"\b[0-9a-f]{64}\b")
 # The fixture must publish ephemeral loopback ports: "127.0.0.1::5672". Docker then allocates a free
@@ -229,9 +240,7 @@ class Policy:
 
     def check_no_effective_known_credentials(self) -> None:
         """A well known account must never be usable against the fixture."""
-        for relative in ("build/test-infrastructure/compose.yaml",
-                         ".github/workflows/build.yml",
-                         ".github/workflows/extended-transports.yml"):
+        for relative in ["build/test-infrastructure/compose.yaml"] + self.workflow_files():
             body = self.read(relative)
             if body is None:
                 continue
@@ -458,8 +467,7 @@ class Policy:
             self.fail("pack", "pack does not hash its packages")
 
     def check_no_publication(self) -> None:
-        for relative in (".github/workflows/build.yml", ".github/workflows/extended-transports.yml",
-                         ".github/workflows/nightly-transports.yml"):
+        for relative in self.workflow_files():
             body = self.read(relative)
             if body is None:
                 continue
@@ -592,6 +600,114 @@ class Policy:
                           f"{relative}: {name} calls the broker without taking a lease, so the subject can be "
                           "disposed while it is still running")
 
+    def check_required_runner_and_sdk(self) -> None:
+        """The required profile runs on one operating system and on the SDK that was approved.
+
+        A windows-latest leg claimed support this product does not have and does not want. A floating
+        '10.0.x' resolves to whatever the runner image ships, which global.json then rejects after the
+        fact; the version is pinned to the approved one instead.
+        """
+        approved = self.read(APPROVED_SDK_FILE)
+        version = None
+        if approved is None:
+            self.fail("required-runner", f"{APPROVED_SDK_FILE} is missing, so no SDK is approved")
+        else:
+            match = re.search(r'"version"\s*:\s*"([^"]+)"', approved)
+            if match is None:
+                self.fail("required-runner", f"{APPROVED_SDK_FILE} names no SDK version")
+            else:
+                version = match.group(1)
+
+        for relative in sorted(self.workflow_files()):
+            body = self.read(relative)
+            if body is None:
+                continue
+            stripped = strip_comments(body)
+
+            for runner in re.findall(r"runs-on:\s*(\S+)", stripped):
+                if runner != REQUIRED_RUNNER:
+                    self.fail("required-runner",
+                              f"{relative} runs a job on '{runner}'; this product builds and is supported "
+                              f"on {REQUIRED_RUNNER} only")
+
+            if re.search(r"windows|macos", stripped, re.I):
+                self.fail("required-runner", f"{relative} still names a Windows or macOS runner")
+
+            for declared in re.findall(r"dotnet-version:\s*'?\"?([^'\"\n]+)'?\"?", stripped):
+                declared = declared.strip()
+                if declared.startswith("${{"):
+                    continue
+                if version is not None and declared != version:
+                    self.fail("required-runner",
+                              f"{relative} asks for SDK '{declared}' while {APPROVED_SDK_FILE} approves "
+                              f"'{version}'")
+
+            for declared in re.findall(r"DOTNET_VERSION:\s*'?([^'\n]+)'?", stripped):
+                declared = declared.strip().strip("'")
+                if version is not None and declared != version:
+                    self.fail("required-runner",
+                              f"{relative} pins DOTNET_VERSION to '{declared}' while {APPROVED_SDK_FILE} "
+                              f"approves '{version}'")
+
+    def check_no_selector_without_a_job(self) -> None:
+        """A selectable target has to have a job that runs it.
+
+        A workflow that offers four targets and defines a job for one of them ends green for the other
+        three on an inventory print alone. That is not a skipped gate, it is a gate that reports success
+        without running.
+        """
+        for relative in sorted(self.workflow_files()):
+            body = self.read(relative)
+            if body is None:
+                continue
+            stripped = strip_comments(body)
+
+            options = re.search(r"options:\s*\n((?:\s+-\s+\S+\n)+)", stripped)
+            if options is None:
+                continue
+
+            targets = [line.strip().lstrip("- ").strip("'\"")
+                       for line in options.group(1).splitlines() if line.strip()]
+            for target in targets:
+                if not re.search(rf"inputs\.target\s*==\s*['\"]{re.escape(target)}['\"]", stripped):
+                    self.fail("selector-binding",
+                              f"{relative} offers the target '{target}' but no job runs it, so selecting it "
+                              "ends green without executing anything")
+
+    def check_pack_depends_on_every_gate(self) -> None:
+        """Pack may only run after every required gate, and may not resolve the graph on its own."""
+        body = self.read(".github/workflows/build.yml")
+        if body is None:
+            return
+        stripped = strip_comments(body)
+        section = self.job_section(stripped, "pack")
+
+        needs = re.search(r"needs:\s*\n((?:\s+-\s+\S+\n)+)", section)
+        declared = ({line.strip().lstrip("- ").strip() for line in needs.group(1).splitlines() if line.strip()}
+                    if needs else set())
+
+        for gate in REQUIRED_CATEGORIES:
+            if gate == "pack":
+                continue
+            if gate not in declared:
+                self.fail("pack", f"pack does not depend on the required gate '{gate}'")
+
+        if "--locked-mode" not in section:
+            self.fail("pack", "the pack job does not restore in locked mode, so it resolves the graph unbound")
+        if "--no-restore" not in section:
+            self.fail("pack", "the pack job packs without --no-restore, so it restores a second time unbound")
+
+    def check_capability_matrix(self) -> None:
+        """The active capability truth has to hold before anything reads it."""
+        for problem in capability_matrix.findings(self.root):
+            self.fail("capability-matrix", problem)
+
+    def workflow_files(self) -> list[str]:
+        directory = self.root / ".github/workflows"
+        if not directory.is_dir():
+            return []
+        return [p.relative_to(self.root).as_posix() for p in sorted(directory.glob("*.yml"))]
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -709,7 +825,9 @@ class Policy:
                      self.check_required_profile, self.check_pack,
                      self.check_no_publication, self.check_analyzer_release_tracking,
                      self.check_transport_operations_take_a_lease,
-                     self.check_restore_sources, self.check_restore_lock_files):
+                     self.check_restore_sources, self.check_restore_lock_files,
+                     self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
+                     self.check_pack_depends_on_every_gate, self.check_capability_matrix):
             rule()
 
         if self.failures:
