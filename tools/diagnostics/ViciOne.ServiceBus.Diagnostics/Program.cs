@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Diagnostics;
 
 using System;
@@ -15,7 +16,8 @@ using System.Threading.Tasks;
 /// </summary>
 internal static class Program
 {
-    static async Task<int> Main(string[] args)
+    /// <summary>Internal so the command boundary can be driven directly, including its failure exits.</summary>
+    internal static async Task<int> Main(string[] args)
     {
         if (args.Length == 0 || args[0] is "-h" or "--help")
         {
@@ -37,13 +39,20 @@ internal static class Program
             cancellation.Cancel();
         };
 
-        Dictionary<string, string> options;
+        // Resolved as soon as the options are complete, and used by every exit below. The failure paths
+        // used to build a fresh empty option set of their own, so a --output that had already been
+        // parsed was thrown away: publish-load --messages 0 --output <file> returned 1, wrote its
+        // structured failure to stdout and left the requested file absent. An option set that could not
+        // be read at all still has no sink, because then nothing was successfully parsed.
+        string? sink = null;
+
         try
         {
             if (known.Length == 0)
                 throw new ArgumentException($"unknown scenario '{args[0]}'. It is bus-lifecycle or publish-load");
 
-            options = ParseOptions(args, known);
+            Dictionary<string, string> options = ParseOptions(args, known);
+            sink = options.TryGetValue("output", out var path) ? path : null;
 
             var cycles = Number(options, "cycles", 240);
             var sampleEvery = Number(options, "sample-every", 20);
@@ -61,36 +70,38 @@ internal static class Program
                 _ => throw new ArgumentException($"unknown scenario '{args[0]}'")
             };
 
-            await Report(result, options, cancellation.Token);
+            await Report(result, sink, cancellation.Token);
 
             return 0;
         }
         catch (OperationCanceledException)
         {
             await Report(new { scenario = args[0], status = "cancelled", reason = "cancelled before the scenario could finish, so nothing was measured" },
-                new Dictionary<string, string>(StringComparer.Ordinal), CancellationToken.None);
+                sink, CancellationToken.None);
 
             return 1;
         }
         catch (Exception exception)
         {
-            // Structured on failure too: a caller that reads the output of a success has to be able to
-            // read the output of a failure without switching to parsing prose.
+            // Structured on failure too, and into the same sink: a caller that reads the output of a
+            // success has to be able to read the output of a failure without switching to parsing
+            // prose, and without looking somewhere else for it.
             await Report(new { scenario = args[0], status = "failed", error = exception.Message },
-                new Dictionary<string, string>(StringComparer.Ordinal), CancellationToken.None);
+                sink, CancellationToken.None);
 
             return 1;
         }
     }
 
-    static async Task Report(object result, Dictionary<string, string> options, CancellationToken cancellationToken)
+    /// <summary>The one place a result leaves this process, whether the run succeeded or failed.</summary>
+    internal static async Task Report(object result, string? sink, CancellationToken cancellationToken)
     {
         var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
 
-        if (options.TryGetValue("output", out var path))
-            await File.WriteAllTextAsync(path, json + Environment.NewLine, cancellationToken);
-        else
+        if (sink is null)
             Console.WriteLine(json);
+        else
+            await File.WriteAllTextAsync(sink, json + Environment.NewLine, cancellationToken);
     }
 
     /// <summary>

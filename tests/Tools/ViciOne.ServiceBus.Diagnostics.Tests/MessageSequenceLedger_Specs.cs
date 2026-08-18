@@ -171,8 +171,13 @@ public class Reading_a_ledger_of_expected_identities
             () => ledger.WaitForAllExpected(TimeSpan.FromSeconds(30), cancellation.Token));
     }
 
+    /// <summary>
+    /// The read is quiesced, and that is the only shape the ledger makes a claim about: every writer
+    /// has finished before the scan begins. A scan that runs against live handlers is a different
+    /// question, and PublishLoadScenario is where that boundary is established.
+    /// </summary>
     [Test]
-    public async Task Should_hold_under_concurrent_observation()
+    public async Task Should_read_an_exact_set_once_concurrent_observation_has_ended()
     {
         const int expected = 5000;
         var ledger = new MessageSequenceLedger(expected);

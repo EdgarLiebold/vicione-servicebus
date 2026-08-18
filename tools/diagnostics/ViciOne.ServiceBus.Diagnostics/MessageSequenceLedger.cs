@@ -78,13 +78,20 @@ sealed class MessageSequenceLedger
     }
 
     /// <summary>
-    /// What the ledger holds at this moment.
+    /// What the ledger holds, read without a lock and therefore only linearizable once nothing writes.
     /// <para>
-    /// A snapshot, and named as one. Nothing here claims that no further message will ever arrive: the
-    /// consumer is still attached until the bus stops, and a duplicate that arrives after the last
-    /// first-seen identity is exactly what this scenario has to be able to report. The caller decides
-    /// how long to keep observing before taking it, and the scenario states that boundary in its
-    /// result.
+    /// The scan walks the identities one after another. Against live handlers that is not a snapshot of
+    /// any single moment: a schedule in which the scan reads identity 0 as seen once, a consumer then
+    /// makes it a duplicate, and the scan walks on returns the old total and no duplicate at all, so a
+    /// run that had already duplicated a message reads as exact. Adding a lock here would put
+    /// contention into the path the diagnostic measures, which would change the very number it exists
+    /// to report.
+    /// </para>
+    /// <para>
+    /// So the caller owns the boundary: observe for as long as it wants, then bring the consumer to a
+    /// standstill, then read. <see cref="Snapshot.IsExact"/> is a statement about the run only when it
+    /// is read after that standstill, and <see cref="PublishLoadScenario"/> is where that order is
+    /// established and reported.
     /// </para>
     /// </summary>
     public Snapshot Read()

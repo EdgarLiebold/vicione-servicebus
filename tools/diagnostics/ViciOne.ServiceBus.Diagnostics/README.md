@@ -19,7 +19,17 @@ python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
 
 python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
   dotnet run --project tools/diagnostics/ViciOne.ServiceBus.Diagnostics -c Release -- \
-  publish-load --messages 100000 --output artifacts/run-output/publish-load.json
+  publish-load --messages 100000
+```
+
+Without `--output` the result goes to stdout, which belongs to the run that asked for it. A fixed path
+under `artifacts/run-output/` stood here and contradicted the rule the rest of this repository holds:
+one run owns all of its mutable output, and two runs writing the same file means the second one's
+result is read as the first one's. A caller who wants a file names one that belongs to the run - the
+runner prints its own run root, and `$VICIONE_SERVICEBUS_RUN_ROOT` carries it into the child:
+
+```
+--output "$VICIONE_SERVICEBUS_RUN_ROOT/publish-load.json"
 ```
 
 Running `dotnet run` on its own does not work and is not meant to: there is no default host, port or
@@ -53,14 +63,19 @@ what it holds.
 
 Two questions are kept apart. That every identity arrived is what the wait ends on. That the
 observation was *exact* is a different one: every identity seen exactly once, nothing seen twice, and
-nothing seen that this run never published. `outcome` is `exact`, `invalid` or `timeout`, and
-`completedPerSecond` is reported only for `exact` - a rate for a run that lost or duplicated a
-message invites the wrong conclusion.
+nothing seen that this run never published. `outcome` is `exact`, `invalid`, `inconclusive` or
+`timeout`, and `completedPerSecond` is reported only for `exact` - a rate for a run that lost or
+duplicated a message invites the wrong conclusion.
 
-`observationBoundary` names what was actually observed. The three second window after the last first
-seen identity is why a duplicate delivered a moment later is still reported; it is not a claim that
-nothing will ever arrive again, because the consumer stays attached until the bus stops. Cancellation
-is raised rather than reported as an incomplete set, because it is not an answer about the messages.
+Between the wait and the verdict there are three steps, in this order, and `observationBoundary` names
+all three. The three second window after the last first seen identity, which is why a duplicate
+delivered a moment later is still counted. Then a bounded stop of the bus, which returns only once the
+consumer reports zero activity, so no handler can still be counting. Then the snapshot. The ledger is
+scanned without a lock - a lock would put contention into the path this diagnostic measures - so a
+snapshot read while handlers were still running belongs to no single moment of the run, and that is
+what `inconclusive` says: the stop did not finish inside its budget, so exactness is not claimed even
+when the numbers look exact. Cancellation is raised rather than reported as an incomplete set, because
+it is not an answer about the messages.
 
 It replaces `HammerTime_Specs`, which was an `[Explicit]` fixture of the required RabbitMQ category.
 Its subject is the shape of the load - a hundred thousand publishes in flight at once against a
@@ -69,6 +84,8 @@ consumer with a bounded concurrency - and completion is part of the measurement 
 ## Tests
 
 `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests` holds the correctness cases of this tool: the
-ledger's exact, missing, duplicate, stranger, late duplicate, timeout, cancellation and concurrency
-behaviour, and the command line's refusals. They gate the tool. The measurements themselves stay on
-demand and gate nothing.
+ledger's exact, missing, duplicate, stranger, late duplicate, timeout and cancellation behaviour, the
+observation boundary - standstill before the snapshot, and no exactness without one - the sink a result
+is written to on both the success and the failure path, and the command line's refusals.
+
+The measurements themselves stay on demand and gate nothing.

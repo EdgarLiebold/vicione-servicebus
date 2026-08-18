@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1176 |
+| Added | 1177 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -5955,6 +5955,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Added |  |
