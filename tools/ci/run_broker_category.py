@@ -23,8 +23,12 @@ import json
 import os
 import re
 import secrets
+import shutil
+import socket
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -110,6 +114,91 @@ def start(brokers: list[str], environment: dict[str, str]) -> None:
 
 def stop(environment: dict[str, str] | None = None) -> None:
     compose("down", "-v", capture=True, environment=environment)
+
+
+# The fixture boundary a test asks for an outage through. The test writes a request file and waits for
+# a result file; this runner is the only thing that ever touches Docker.
+#
+# Why pause rather than stop: measured on this fixture, 'compose stop' followed by 'compose start'
+# rebinds the published port, because compose publishes an ephemeral loopback port per container start
+# (32955 became 32958). A client that reconnects to the address it was configured with would then be
+# reconnecting to a port nobody listens on, and the case would be measuring the fixture rather than the
+# transport. 'docker pause' freezes the container's processes and keeps the published port, so the
+# endpoint the bus holds stays the endpoint the broker comes back on. 'network disconnect' was measured
+# too and drops the mapping as well, so it is out for the same reason.
+OUTAGE_CONTROL_VARIABLE = "VICIONE_SERVICEBUS_FIXTURE_CONTROL"
+
+OUTAGE_ACTIONS = ("interrupt", "restore")
+
+# The port a client of that broker holds, and therefore the one whose reachability decides
+# whether an outage really happened.
+OUTAGE_PORT = {"activemq": 61616, "artemis": 61616, "rabbitmq": 5672,
+               "mssql": 1433, "postgres": 5432}
+
+
+def published_port(broker: str, container_port: int, environment: dict[str, str]) -> str | None:
+    result = compose("port", broker, str(container_port), capture=True, environment=environment)
+
+    return result.stdout.strip() or None
+
+
+def port_accepts(endpoint: str, timeout: float = 2.0) -> bool:
+    host, _, port = endpoint.rpartition(":")
+
+    try:
+        with socket.create_connection((host or "127.0.0.1", int(port)), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def serve_outage_requests(broker: str, container_port: int, control: Path, environment: dict[str, str],
+                          stop: threading.Event) -> None:
+    """Answers one outage request at a time, and answers it with what it observed rather than with what
+    it asked for. A request whose effect the runner cannot confirm is a failed request."""
+    while not stop.is_set():
+        for request in sorted(control.glob("*.request")):
+            result = request.with_suffix(".result")
+            if result.exists():
+                continue
+
+            answer: dict[str, object]
+            try:
+                asked = json.loads(request.read_text(encoding="utf-8"))
+                action = asked.get("action")
+                if action not in OUTAGE_ACTIONS:
+                    raise ValueError(f"unknown action {action!r}, expected one of {OUTAGE_ACTIONS}")
+
+                before = published_port(broker, container_port, environment)
+                compose("pause" if action == "interrupt" else "unpause", broker,
+                        capture=True, environment=environment)
+
+                wanted = action == "restore"
+                deadline = time.monotonic() + 60
+                observed = None
+                while time.monotonic() < deadline:
+                    observed = port_accepts(published_port(broker, container_port, environment) or "")
+                    if observed == wanted:
+                        break
+                    time.sleep(0.2)
+
+                after = published_port(broker, container_port, environment)
+                if observed != wanted:
+                    raise TimeoutError(
+                        f"the broker port still {'refuses' if wanted else 'accepts'} connections after "
+                        f"{action}, so the outage was not established")
+                if before != after:
+                    raise RuntimeError(
+                        f"the published port changed from {before} to {after}, so this is not the same "
+                        "endpoint any more and no client could reconnect to it")
+
+                answer = {"ok": True, "action": action, "endpoint": after, "accepts": observed}
+            except Exception as error:  # noqa: BLE001 - the answer carries the reason
+                answer = {"ok": False, "error": f"{type(error).__name__}: {error}"}
+
+            result.write_text(json.dumps(answer, sort_keys=True) + "\n", encoding="utf-8")
+
+        stop.wait(0.1)
 
 
 def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
@@ -234,6 +323,12 @@ def main(argv: list[str] | None = None) -> int:
              "counted from the broker's own freshly collected log.",
     )
     parser.add_argument(
+        "--allow-broker-outage",
+        metavar="BROKER",
+        help="Let the child ask this runner to interrupt and restore that broker, through a control "
+             "directory handed to it in the environment. The child never touches Docker itself.",
+    )
+    parser.add_argument(
         "--command",
         action="store_true",
         help="Treat everything after -- as a command to run inside the fixture environment instead of a "
@@ -270,6 +365,26 @@ def main(argv: list[str] | None = None) -> int:
         print(f"fixture {' and '.join(brokers)} ready on loopback: "
               + ", ".join(f"{name}={value}" for name, value in sorted(endpoints.items())))
 
+        outage_stop = threading.Event()
+        outage_thread = None
+        if args.allow_broker_outage:
+            broker = args.allow_broker_outage
+            if broker not in brokers:
+                raise RunnerError(f"--allow-broker-outage names '{broker}', which this run does not start")
+
+            control = REPO_ROOT / "artifacts" / "run-output" / "fixture-control"
+            if control.exists():
+                shutil.rmtree(control)
+            control.mkdir(parents=True)
+            environment[OUTAGE_CONTROL_VARIABLE] = str(control)
+
+            outage_thread = threading.Thread(
+                target=serve_outage_requests,
+                args=(broker, OUTAGE_PORT[broker], control, dict(environment), outage_stop),
+                daemon=True)
+            outage_thread.start()
+            print(f"outage control ready for {broker} at {control}")
+
         if args.ports_out:
             args.ports_out.parent.mkdir(parents=True, exist_ok=True)
             args.ports_out.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -301,11 +416,21 @@ def main(argv: list[str] | None = None) -> int:
                 if not assert_one_refusal_per_vhost(broker_log_path(broker), args.one_refusal_per_vhost):
                     return completed.returncode or 1
 
+        outage_stop.set()
+        if outage_thread is not None:
+            outage_thread.join(timeout=5)
+
         return completed.returncode
     except RunnerError as error:
         print(f"FAIL broker-category {args.category}: {error}", file=sys.stderr)
         return 1
     finally:
+        # An outage is undone before anything else, and unconditionally. A child that hung or was killed
+        # leaves the container paused, and a paused container survives a failed teardown: the next run
+        # then meets a broker that is up, has its ports and answers nothing.
+        if args.allow_broker_outage:
+            compose("unpause", args.allow_broker_outage, capture=True, environment=environment)
+
         # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
         # refusal check already collected are not fetched a second time: that would overwrite the very
         # file the verdict was read from.
