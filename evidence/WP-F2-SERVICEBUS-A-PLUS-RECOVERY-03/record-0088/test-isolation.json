@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_TEST_ISOLATION_PROOF",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0087-lead-directive",
+  "reportedIn": "development record 0088",
+  "defect": {
+    "module": "tools/identity/test_change_list.py",
+    "statement": "Every case mutated the canonical CHANGELIST.md of the checkout and relied on addCleanup to put it back; one case deleted it outright. Two concurrent invocations therefore saw each other's damage.",
+    "independentlyReproduced": "by the Lead, and again here"
+  },
+  "candidateAudit": {
+    "method": "An AST scan named 213 writing calls in 15 modules as candidates. Ownership was then proven by running each module on its own while a watcher sampled the tracked tree every 50 ms: the porcelain status, the digest of every tracked file, and which tracked file was absent at any moment. A module that damages the checkout shows up even when it restores it, because the measurement runs while the module runs.",
+    "beforeCorrection": {
+      "modulesTouchingTheCheckout": 1,
+      "module": "tools/identity/test_change_list.py",
+      "distinctTrackedTreeDigestsDuringRun": 3,
+      "trackedFilesAbsentAtSomeMoment": [
+        "CHANGELIST.md"
+      ]
+    },
+    "afterCorrection": {
+      "modulesTouchingTheCheckout": 0,
+      "modulesMeasured": 15,
+      "modules": [
+        {
+          "module": "tools/ci/test_locked_restore.py",
+          "exitCode": 0,
+          "executedCases": 8,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/ci/test_policy_validator.py",
+          "exitCode": 0,
+          "executedCases": 107,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/ci/test_run_test_category.py",
+          "exitCode": 0,
+          "executedCases": 14,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_analyzer_baseline_gate.py",
+          "exitCode": 0,
+          "executedCases": 2,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_artifact_gate.py",
+          "exitCode": 0,
+          "executedCases": 13,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_change_list.py",
+          "exitCode": 0,
+          "executedCases": 10,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_failure_partition_gate.py",
+          "exitCode": 0,
+          "executedCases": 0,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_freeze_manifest.py",
+          "exitCode": 0,
+          "executedCases": 6,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_identity_gate.py",
+          "exitCode": 0,
+          "executedCases": 34,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_identity_rules.py",
+          "exitCode": 0,
+          "executedCases": 23,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_not_executed_source_gate.py",
+          "exitCode": 0,
+          "executedCases": 2,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_proof_contract_gate.py",
+          "exitCode": 0,
+          "executedCases": 2,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_result_gate.py",
+          "exitCode": 0,
+          "executedCases": 0,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_test_failure_partition_gate.py",
+          "exitCode": 0,
+          "executedCases": 1,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        },
+        {
+          "module": "tools/identity/test_test_result_gate.py",
+          "exitCode": 0,
+          "executedCases": 6,
+          "statusUnchanged": true,
+          "trackedDigestUnchangedAfter": true,
+          "trackedDigestsSeenDuringRun": 1,
+          "trackedFilesMissingAtAnyMoment": []
+        }
+      ]
+    },
+    "disposition": "One module was in scope and is corrected. Every other module already wrote only below a root it created itself. Two files under tools/identity that the pattern test_*.py matches are not tests at all - test_failure_partition_gate.py and test_result_gate.py are gate tools that gate test results - and they execute zero cases; their writes go to a caller supplied --output. They are named in the verification model rather than silently discovered as tests."
+  },
+  "correction": {
+    "readOnlyAgainstTheCheckout": [
+      "Reading_the_canonical_change_list.test_accepts_the_generated_document",
+      "Reading_the_canonical_change_list.test_reports_the_number_of_rows_it_classified"
+    ],
+    "isolatedInAnOwnedFixture": [
+      "Refusing_a_document_that_no_longer_matches.test_accepts_the_document_it_just_generated",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_a_changed_status",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_a_missing_document",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_a_removed_entry",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_an_added_entry",
+      "Refusing_a_document_that_no_longer_matches.test_writes_only_below_the_repository_it_was_given"
+    ],
+    "repositoryInvariantCases": [
+      "Leaving_the_checkout_alone.test_a_failing_isolated_case_leaves_the_tracked_document_untouched",
+      "Leaving_the_checkout_alone.test_the_damaging_cases_leave_the_tracked_document_untouched"
+    ],
+    "boundary": "No product change. The baseline classification is replaced by an injected model inside the isolated cases only; the real classification stays under test through the read only cases, and the generator keeps its fail closed missing and mismatch behaviour."
+  },
+  "executedCases": {
+    "toolsCi": 129,
+    "toolsIdentity": 99,
+    "total": 228,
+    "changeListModuleBefore": 5,
+    "changeListModuleAfter": 10
+  },
+  "concurrentInvocations": {
+    "statement": "Two full identity suite invocations started simultaneously.",
+    "corrected": {
+      "exitCodes": [
+        0,
+        0
+      ],
+      "casesEach": 99,
+      "result": "both OK"
+    },
+    "mutation": {
+      "statement": "The previous version of the module put back byte for byte, nothing else changed.",
+      "exitCodes": [
+        1,
+        0
+      ],
+      "failure": "FileNotFoundError: [Errno 2] No such file or directory: '<repository>/CHANGELIST.md'",
+      "conclusion": "red for its own reason, and green again with the correction in place"
+    }
+  },
+  "interruptionSabotage": {
+    "statement": "A process created an isolated fixture, damaged its document and killed itself with SIGKILL, so no cleanup ran.",
+    "exitCode": 137,
+    "leaked": "its own private temporary directory under the system temp root, nothing else",
+    "canonicalChangeListUnchanged": true,
+    "gitStatusUnchanged": true
+  },
+  "killMutation": {
+    "statement": "The generator's mismatch branch was disabled, so the gate answered 0 for a document that does not match.",
+    "redCases": [
+      "Leaving_the_checkout_alone.test_the_damaging_cases_leave_the_tracked_document_untouched",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_a_changed_status",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_a_removed_entry",
+      "Refusing_a_document_that_no_longer_matches.test_rejects_an_added_entry"
+    ],
+    "message": "AssertionError: 1 != 0",
+    "conclusion": "The isolated cases still detect a corrupted document; isolation did not weaken the gate."
+  },
+  "repositoryInvariant": {
+    "changeListSha256": "6fe621e58c4472447ebbdd9fcb5b8947741386770a876cc509ebe02840ef2c08",
+    "changeListIdenticalBeforeAndAfterEveryProofAbove": true,
+    "gitStatusPorcelainAfter": [
+      " M tools/identity/test_change_list.py"
+    ]
+  }
+}
