@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1298 |
-| Modified | 4508 |
-| Deleted | 1139 |
+| Added | 1303 |
+| Modified | 4507 |
+| Deleted | 1140 |
 | Renamed | 3 |
 
 | Path | Status | Baseline path |
@@ -22,10 +22,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.gitattributes` | Modified | `.gitattributes` |
 | `.github/ISSUE_TEMPLATE/bug_report.yml` | Modified | `.github/ISSUE_TEMPLATE/bug_report.yml` |
 | `.github/ISSUE_TEMPLATE/config.yml` | Modified | `.github/ISSUE_TEMPLATE/config.yml` |
-| `.github/workflows/benchmark-build.yml` | Added |  |
 | `.github/workflows/build.yml` | Modified | `.github/workflows/build.yml` |
-| `.github/workflows/extended-transports.yml` | Added |  |
-| `.github/workflows/nightly-transports.yml` | Modified | `.github/workflows/nightly-transports.yml` |
+| `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
 | `AGENTS.md` | Modified | `AGENTS.md` |
 | `CHANGELIST.md` | Added |  |
@@ -142,8 +140,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
+| `build/test-infrastructure/capability-matrix.json` | Added |  |
 | `build/test-infrastructure/compose.yaml` | Added |  |
-| `build/test-infrastructure/extended-profile-inventory.json` | Added |  |
 | `build/test-infrastructure/images.lock.json` | Added |  |
 | `build/test-infrastructure/new-run-credentials.sh` | Added |  |
 | `build/test-infrastructure/not-executed-inventory.json` | Added |  |
@@ -270,6 +268,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/CLOSING_RUN.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/CORRECTIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0008/SQL_CATEGORY.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0009/LOGO_REMOVAL.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0009/STALE_PROFILE_INVENTORY.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0009/TEST_LAYOUT.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0009/VERIFICATION_RUN.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/architecture.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/clean-build.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/GUA-GOV-001/mutation.json` | Added |  |
@@ -6245,6 +6247,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BindQueue_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BrokerContract_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BrokerErrorClassification_Specs.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BrokerTopologyProbe.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BuildTopology_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BusEndpointReady_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/BusLifecycleAccumulation_Probe.cs` | Added |  |
@@ -6445,6 +6448,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Audit/AuditFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/Audit_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
+| `tests/ViciOne.ServiceBus.Tests/AwaitSemantics_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Caching/CacheRecovery_Specs.cs` | Added |  |
@@ -6936,6 +6940,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |
+| `tools/ci/capability_matrix.py` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |

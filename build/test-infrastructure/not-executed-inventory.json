@@ -30,7 +30,7 @@
     },
     "rabbitmq": {
       "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
-      "explicitAttributeCount": 12,
+      "explicitAttributeCount": 10,
       "cases": [
         {
           "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.BusLifecycleAccumulation_Probe.Measure_round_trip_across_bus_lifecycles",
@@ -145,16 +145,16 @@
           "fixture": "Configuring_the_publish_topology_at_startup",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+          "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
         },
         {
           "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
           "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
           "test": "Should_create_the_exchanges",
           "mechanism": "EXPLICIT",
-          "dueness": "NOT_DUE_MANUAL_OBSERVATION",
-          "reason": "Kept from the imported suite for manual observation; it asserts nothing a gate could evaluate."
+          "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
+          "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
         },
         {
           "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Reconnecting_Specs(\"activemq\").Should_fault_nicely",

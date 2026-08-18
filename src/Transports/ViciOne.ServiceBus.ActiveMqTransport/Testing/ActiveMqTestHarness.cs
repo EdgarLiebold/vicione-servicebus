@@ -187,7 +187,11 @@ namespace ViciOne.ServiceBus.Testing
             CleanVirtualHost = false;
         }
 
-        async Task<(IList<string>, IList<string>)> GetBrokerEntities()
+        /// <summary>
+        /// The queues and topics the broker itself reports. A spec that asserts a deployed topology has
+        /// to read the broker rather than the bus, which would only repeat what the bus intended.
+        /// </summary>
+        public async Task<(IList<string> Queues, IList<string> Topics)> GetBrokerEntities()
         {
             using var client = new HttpClient();
             var byteArray = Encoding.ASCII.GetBytes($"{Username}:{Password}");
