@@ -20,7 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from policy_validator import Policy  # noqa: E402
+from policy_validator import Policy, effective_commands  # noqa: E402
 
 
 NUGET_CONFIG = """\
@@ -170,6 +170,20 @@ def fixture_model() -> dict:
     }
 
 
+def runner_step(category: str, project: str) -> str:
+    """The one canonical invocation of a category, as one line.
+
+    Written once here because the workflow of the fixture and the cases that mutate it have to say the
+    same thing; two spellings of it would let a case mutate a step the workflow never carried.
+    """
+    if category in BROKER_OF:
+        return (f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
+                f"--category {category} --project {project} --evidence-dir artifacts/required/{category}")
+
+    return (f"python3 tools/ci/run_test_category.py --category {category} --project {project} "
+            f"--evidence-dir artifacts/required/{category}")
+
+
 JOB = """\
   %s:
     runs-on: ubuntu-24.04
@@ -197,12 +211,7 @@ jobs:
 """
     + JOB % ("policy", "python3 -m unittest discover -s tools/ci -p 'test_*.py'")
     + JOB % ("build", "dotnet build ViciOne.ServiceBus.slnx -c Release")
-    + "".join(
-        JOB % (job, (f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
-                     f"--category {category} --project {project}")
-               if category in BROKER_OF else
-               f"python3 tools/ci/run_test_category.py --category {category} --project {project}")
-        for job, category, project in FIXTURE_RUNS)
+    + "".join(JOB % (job, runner_step(category, project)) for job, category, project in FIXTURE_RUNS)
     + """\
   pack:
     runs-on: ubuntu-24.04
@@ -295,6 +304,21 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
 }
 """
 
+
+
+RABBITMQ_PROJECT_FILE = f"{RABBITMQ_TEST_PROJECT}/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj"
+
+# The canonical multi line form of the step whose missing continuation made the required RabbitMQ job
+# unexecutable. Written out rather than generated, because what these cases mutate is its text.
+CONTINUED_RABBITMQ_STEP = f"""\
+      - run: |
+          python3 tools/ci/run_broker_category.py \\
+            --broker rabbitmq \\
+            --category rabbitmq \\
+            --project {RABBITMQ_PROJECT_FILE} \\
+            --evidence-dir artifacts/required/rabbitmq \\
+            --one-refusal-per-vhost 'test-exclusive-*'
+"""
 
 
 class PolicyTestCase(unittest.TestCase):
@@ -400,6 +424,84 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_accepts_a_conforming_repository(self) -> None:
         self.assertEqual([], self.failures())
+
+    # -- the command a step really becomes ------------------------------------------------------
+    #
+    # The RabbitMQ step lost the backslash after its --evidence-dir line, so the shell built two
+    # commands out of it and the required job could not run at all. Every token the other rules look
+    # for was still present, which is why the whole Python suite stayed green. What these cases hold is
+    # the command the shell builds, and the argument vector the runner would really receive.
+
+    def rewrite_the_rabbitmq_step(self, script: str) -> None:
+        """Replaces the one line step of the fixture with a block, and proves the anchor was there."""
+        one_line = "      - run: " + runner_step("rabbitmq", RABBITMQ_PROJECT_FILE) + "\n"
+        body = self.workflow().read_text(encoding="utf-8")
+        self.assertIn(one_line, body, "the fixture no longer carries the step these cases mutate")
+        self.workflow().write_text(body.replace(one_line, script), encoding="utf-8")
+
+    def mutated_step(self, old: str, new: str) -> str:
+        """One change to the canonical step, with proof that it really changed something.
+
+        A mutation whose anchor has drifted replaces nothing, and the case then asserts that a
+        conforming repository is rejected - which it is not, so the case fails for the wrong reason or,
+        worse, passes because a different rule fired.
+        """
+        self.assertIn(old, CONTINUED_RABBITMQ_STEP, "the canonical step no longer carries this line")
+
+        return CONTINUED_RABBITMQ_STEP.replace(old, new)
+
+    def test_accepts_a_block_whose_continuations_are_complete(self) -> None:
+        self.rewrite_the_rabbitmq_step(CONTINUED_RABBITMQ_STEP)
+
+        self.assertEqual([], self.failures())
+
+    def test_rejects_a_block_whose_continuation_is_missing(self) -> None:
+        """The executed defect, permanently. Without the backslash the option becomes a command."""
+        self.rewrite_the_rabbitmq_step(self.mutated_step(
+            "            --evidence-dir artifacts/required/rabbitmq \\\n",
+            "            --evidence-dir artifacts/required/rabbitmq\n"))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_a_continuation_that_is_missing_in_the_middle_of_the_call(self) -> None:
+        """The same defect one line earlier, where the split leaves the runner without its project."""
+        self.rewrite_the_rabbitmq_step(self.mutated_step(
+            "            --category rabbitmq \\\n", "            --category rabbitmq\n"))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_a_call_the_runner_would_refuse(self) -> None:
+        """Reconstruction, not presence: the vector is parsed by the runner that would receive it."""
+        self.rewrite_the_rabbitmq_step(self.mutated_step(
+            f"            --project {RABBITMQ_PROJECT_FILE} \\\n", ""))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_a_call_that_mixes_the_two_runner_modes(self) -> None:
+        """Its own parser accepts this vector; the runner's closing rule is what refuses it."""
+        self.rewrite_the_rabbitmq_step(self.mutated_step(
+            "            --one-refusal-per-vhost 'test-exclusive-*'\n", "            --command -- true\n"))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_an_outage_for_a_broker_the_step_does_not_start(self) -> None:
+        self.rewrite_the_rabbitmq_step(self.mutated_step(
+            "            --broker rabbitmq \\\n",
+            "            --broker rabbitmq \\\n            --allow-broker-outage activemq \\\n"))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_a_step_with_an_unbalanced_quote(self) -> None:
+        self.rewrite_the_rabbitmq_step(self.mutated_step("'test-exclusive-*'", "'test-exclusive-*"))
+
+        self.assert_rejected("workflow-command")
+
+    def test_rejects_a_folded_script_the_reader_cannot_reconstruct(self) -> None:
+        """A folded scalar joins its lines by rules this reader does not implement, so it is refused
+        rather than read as something it may not be."""
+        self.rewrite_the_rabbitmq_step(self.mutated_step("      - run: |\n", "      - run: >\n"))
+
+        self.assert_rejected("workflow-command")
 
     # -- broker images -------------------------------------------------------------------------
 
@@ -710,8 +812,7 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_removing_a_required_category(self) -> None:
         job, category, project = next(entry for entry in FIXTURE_RUNS if entry[1] == "rabbitmq")
-        removed = (JOB % (job, f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
-                               f"--category {category} --project {project}")).format(sdk=APPROVED_SDK)
+        removed = (JOB % (job, runner_step(category, project))).format(sdk=APPROVED_SDK)
         self.assertIn(removed, BUILD_WORKFLOW, "the anchor for the removed job is gone")
         body = BUILD_WORKFLOW.replace(removed, "")
         self.workflow().write_text(body, encoding="utf-8")
@@ -1322,6 +1423,30 @@ class PolicyTestCase(unittest.TestCase):
     def test_rejects_an_unparsable_configuration(self) -> None:
         self.nuget_config().write_text("<configuration><packageSources>", encoding="utf-8")
         self.assert_rejected("restore-sources")
+
+
+
+class Turning_a_step_into_the_commands_a_shell_would_run(unittest.TestCase):
+    """The reader itself, on the two shapes that decide whether it can be trusted at all."""
+
+    def test_a_quoted_separator_is_not_a_command_boundary(self) -> None:
+        """The logger argument of dotnet test carries a semicolon inside quotes. Splitting on the raw
+        character would cut it in half and report a command nobody wrote."""
+        commands = effective_commands('dotnet test x.csproj --logger "trx;LogFileName=core.trx"')
+
+        self.assertEqual([["dotnet", "test", "x.csproj", "--logger", "trx;LogFileName=core.trx"]], commands)
+
+    def test_an_escaped_backslash_at_the_end_of_a_line_does_not_continue_it(self) -> None:
+        """An even number of trailing backslashes ends the line, which is why they are counted rather
+        than tested for one."""
+        commands = effective_commands("echo one\\\\\nfalse\n")
+
+        self.assertEqual([["echo", "one\\"], ["false"]], commands)
+
+    def test_a_continuation_joins_the_next_line_into_one_command(self) -> None:
+        commands = effective_commands("python3 x.py \\\n  --one 1 \\\n  --two 2\n")
+
+        self.assertEqual([["python3", "x.py", "--one", "1", "--two", "2"]], commands)
 
 
 if __name__ == "__main__":

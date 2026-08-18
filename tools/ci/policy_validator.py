@@ -27,13 +27,19 @@ Every rule exists because something actually went wrong, not because a rule seem
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import re
+import shlex
 import sys
+import textwrap
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import verification_model  # noqa: E402  (repository local, resolved from this file's folder)
+import run_broker_category  # noqa: E402  (repository local, resolved from this file's folder)
+import run_test_category  # noqa: E402
+import verification_model  # noqa: E402
 from xml.etree import ElementTree
 
 RESTORE_CONFIG = "NuGet.config"
@@ -109,6 +115,140 @@ LOCAL_BROKER_ENDPOINT = re.compile(
 def strip_comments(text: str) -> str:
     """Drop whole-line comments so prose about a forbidden pattern is not mistaken for the pattern."""
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+
+
+class WorkflowScriptError(RuntimeError):
+    """The workflow is not in a shape this reader can turn into commands.
+
+    A reader that guesses is worse than no reader: it would agree with a broken step for the wrong
+    reason. Everything it was not written for is refused so somebody looks.
+    """
+
+
+# What ends one command and starts the next one in a shell.
+SHELL_OPERATORS = frozenset({";", ";;", "&", "&&", "|", "|&", "||", "\n"})
+
+# The repository runners a workflow step may invoke, and the module that owns each command line.
+RUNNER_MODULES = {
+    "tools/ci/run_test_category.py": run_test_category,
+    "tools/ci/run_broker_category.py": run_broker_category,
+}
+
+
+def run_scripts(body: str) -> list[tuple[int, str]]:
+    """Every 'run:' script of a workflow, with the line it starts on.
+
+    A small line reader rather than a YAML parser, because this validator has to run before any
+    restore and may not depend on a package. It understands the two shapes this repository uses - a
+    one line script and a literal block - and refuses every other one.
+    """
+    scripts: list[tuple[int, str]] = []
+    lines = body.splitlines()
+    number = 0
+    while number < len(lines):
+        line = lines[number]
+        number += 1
+        if line.lstrip().startswith("#"):
+            continue
+        match = re.match(r"^\s*(?:-\s+)?run:\s*(.*)$", line)
+        if match is None:
+            continue
+
+        start = number
+        # The column 'run:' stands in decides what belongs to its block, so the list item form
+        # '- run: |' measures from the same place as the plain 'run: |'.
+        indent = " " * line.index("run:")
+        first = match.group(1).strip()
+
+        if first.startswith(">"):
+            raise WorkflowScriptError(
+                f"line {start}: a folded 'run: >' script joins its lines in a way this reader does not "
+                "reconstruct, so the command it produces would be a guess")
+        if first and first not in ("|", "|-", "|+"):
+            scripts.append((start, first))
+            continue
+        if not first:
+            raise WorkflowScriptError(f"line {start}: 'run:' carries neither a script nor a block scalar")
+
+        block: list[str] = []
+        while number < len(lines):
+            following = lines[number]
+            if following.strip() and not following.startswith(indent + " "):
+                break
+            block.append(following)
+            number += 1
+        scripts.append((start, textwrap.dedent("\n".join(block))))
+
+    return scripts
+
+
+def effective_commands(script: str) -> list[list[str]]:
+    """The commands a shell really builds from one step, with continuations joined and quotes honoured.
+
+    This is the whole point of the rule below. A step is text until the shell has joined its
+    continuation lines, and a rule that looks for expected substrings agrees with a step whose
+    continuation is missing exactly as readily as with one that works.
+    """
+    joined: list[str] = []
+    pending = ""
+    for line in script.splitlines():
+        stripped = line.rstrip()
+        trailing = len(stripped) - len(stripped.rstrip("\\"))
+        # An odd number of trailing backslashes continues the line. An even number is an escaped
+        # backslash and ends it, which is why they are counted rather than tested for one.
+        if trailing % 2 == 1:
+            pending += stripped[:-1] + " "
+            continue
+        joined.append(pending + stripped)
+        pending = ""
+    if pending:
+        joined.append(pending)
+
+    commands: list[list[str]] = []
+    for logical in joined:
+        if not logical.strip() or logical.lstrip().startswith("#"):
+            continue
+
+        lexer = shlex.shlex(logical, posix=True, punctuation_chars=True)
+        lexer.whitespace_split = True
+        try:
+            tokens = list(lexer)
+        except ValueError as error:
+            raise WorkflowScriptError(f"'{logical.strip()}' is not a shell command line: {error}") from error
+
+        current: list[str] = []
+        for token in tokens:
+            if token in SHELL_OPERATORS:
+                if current:
+                    commands.append(current)
+                current = []
+                continue
+            current.append(token)
+        if current:
+            commands.append(current)
+
+    return commands
+
+
+def refusal(module, vector: list[str]) -> str:
+    """Empty when that runner accepts this argument vector, the reason it gives otherwise.
+
+    The vector is handed to the runner's own parser, so what is proved here is that the command the
+    shell builds is a command the runner takes - not that the step mentions the right words.
+    """
+    parser = module.build_parser()
+    said = io.StringIO()
+    try:
+        with contextlib.redirect_stderr(said), contextlib.redirect_stdout(said):
+            args = parser.parse_args(vector)
+            close = getattr(module, "validate", None)
+            if close is not None:
+                close(parser, args)
+    except SystemExit:
+        spoken = said.getvalue().strip().splitlines()
+        return spoken[-1].strip() if spoken else "the runner refused the call without saying why"
+
+    return ""
 
 
 class Policy:
@@ -445,6 +585,53 @@ class Policy:
                 self.fail("required-profile",
                           f"the required profile filters its own trigger with '{keyword}'; a change outside that "
                           "list would run no required job at all")
+
+    def check_workflow_steps_are_the_commands_they_look_like(self) -> None:
+        """A required step is judged by the command the shell builds from it, not by its text.
+
+        The RabbitMQ step lost the backslash after its --evidence-dir line. Every token the other
+        rules look for was still there, so the whole Python suite stayed green - while the shell built
+        two commands out of it: the runner without --one-refusal-per-vhost, and a second command whose
+        program name was '--one-refusal-per-vhost'. The required RabbitMQ job could not run at all.
+
+        Two things are held here. A command may not begin with an option, which is what a missing
+        continuation always produces, and every reconstructed call of a repository runner is parsed
+        against that runner's own command line, so a vector it would refuse is refused here first.
+        """
+        for relative in sorted(self.workflow_files()):
+            body = self.read(relative)
+            if body is None:
+                continue
+
+            try:
+                scripts = run_scripts(body)
+            except WorkflowScriptError as error:
+                self.fail("workflow-command", f"{relative}: {error}")
+                continue
+
+            for line, script in scripts:
+                try:
+                    commands = effective_commands(script)
+                except WorkflowScriptError as error:
+                    self.fail("workflow-command", f"{relative} line {line}: {error}")
+                    continue
+
+                for command in commands:
+                    if command[0].startswith("-"):
+                        self.fail("workflow-command",
+                                  f"{relative} line {line}: the shell builds '{shlex.join(command)}' as a "
+                                  "command of its own, so the line before it is missing its continuation "
+                                  "and the option never reaches the program it was written for")
+                        continue
+
+                    named = [token for token in command if token in RUNNER_MODULES]
+                    for script_path in named:
+                        vector = command[command.index(script_path) + 1:]
+                        problem = refusal(RUNNER_MODULES[script_path], vector)
+                        if problem:
+                            self.fail("workflow-command",
+                                      f"{relative} line {line}: {script_path} would be called as "
+                                      f"'{shlex.join(vector)}', which it does not accept: {problem}")
 
     def check_pack(self) -> None:
         workflow = self.read(".github/workflows/build.yml")
@@ -1121,6 +1308,7 @@ class Policy:
                      self.check_every_project_belongs_to_a_solution,
                      self.check_central_build_targets_are_effective,
                      self.check_workflow_inputs_are_pinned,
+                     self.check_workflow_steps_are_the_commands_they_look_like,
                      self.check_no_project_leaves_the_central_contract):
             rule()
 

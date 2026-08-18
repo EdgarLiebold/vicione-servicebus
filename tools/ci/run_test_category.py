@@ -47,26 +47,6 @@ ZERO_COUNTERS = {"total": 0, "executed": 0, "passed": 0, "failed": 0, "notExecut
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VERIFICATION_MODEL = REPO_ROOT / "build/verification/VERIFICATION_MODEL.json"
 
-# Options that narrow the run. A required category is only a proof when it is complete, so the
-# controller refuses them itself instead of trusting the workflow text that calls it. A settings file
-# belongs here as well: it carries a TestCaseFilter of its own, so it narrows the run without ever
-# naming a filter on the command line.
-SELECTOR_OPTIONS = frozenset({
-    "--filter", "-filter", "/filter",
-    "--testcasefilter", "-testcasefilter", "/testcasefilter",
-    "--tests", "-tests", "/tests",
-    "--settings", "-settings", "/settings", "-s",
-})
-
-
-def option_token(argument: str) -> str:
-    """The option part of an argument, without its value and without case.
-
-    A selector reaches the command line as '--filter X', '--filter=X' or '/Tests:X', so the value has
-    to be cut off before the option can be recognised at all.
-    """
-    return argument.split("=", 1)[0].split(":", 1)[0].lower()
-
 
 def type_name(class_name: str) -> str:
     """The full type name of a TRX class attribute, with a trailing assembly qualification removed.
@@ -271,23 +251,7 @@ def parse_trx_time(value: str | None) -> datetime | None:
         return None
 
 
-def reject_selectors(extra: list[str]) -> None:
-    """A required category runs unfiltered, and the controller enforces that itself.
-
-    Only the selector options are refused. Ordinary build and restore options pass, because a blanket
-    rejection would stop the category from running at all instead of keeping it complete.
-    """
-    for argument in extra:
-        if option_token(argument) in SELECTOR_OPTIONS:
-            raise CategoryError(
-                f"Required category refuses the selector '{argument}'. A required category runs unfiltered; "
-                "a narrowed run is not a proof of the category."
-            )
-
-
-def run_category(category: str, project: str, evidence_dir: Path, extra: list[str]) -> dict[str, object]:
-    reject_selectors(extra)
-
+def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, object]:
     # Everything this run writes lives under one root that belongs to it alone. The broker runner
     # hands one down when it started the fixture; a category started directly creates its own, so a
     # direct run is no less isolated than a brokered one.
@@ -310,11 +274,16 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
     if trx_path.exists():
         trx_path.unlink()
 
+    # One exact invocation, with nothing forwarded into it. A required proof is the whole category run
+    # the same way every time, so there is no caller argument to weigh: the runner used to pass an
+    # arbitrary tail through to dotnet test, and a second --logger, a --results-directory, a --diag, a
+    # collector or an MSBuild output override each write files outside the root this run owns - while
+    # the repository states that one run owns all of its mutable output. --framework and -c would
+    # have changed what was measured on top of that.
     command = [
         "dotnet", "test", project,
         "-c", "Release",
         "--logger", f"trx;LogFileName={trx_path.resolve()}",
-        *extra,
     ]
     # The suite is not timezone independent. Two cron cases build a template hour in one offset and
     # reuse it across 31 October 2010, the day a European DST transition falls; they pass in UTC and
@@ -395,17 +364,31 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
     return record
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+def build_parser() -> argparse.ArgumentParser:
+    """The command line of this runner, as an object, and a closed one.
+
+    Closed in both directions: nothing is forwarded to dotnet test, and nothing unknown is accepted.
+    It is separate from main so that tools/ci/policy_validator.py can reconstruct the argument vector
+    a workflow step really produces and parse it against exactly this parser.
+    """
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog="The invocation is fixed. A required category is a proof of the whole category, run the "
+               "same way every time, so this runner takes no further argument and forwards none.")
     parser.add_argument("--category", required=True, help="Stable identifier of the required category.")
     parser.add_argument("--project", required=True, help="Test project or solution to run.")
     parser.add_argument("--evidence-dir", required=True, type=Path,
                         help="Where the counter record is written. The raw TRX goes to artifacts/run-output.")
-    parser.add_argument("rest", nargs="*", help="Additional arguments forwarded to dotnet test.")
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     try:
-        record = run_category(args.category, args.project, args.evidence_dir, list(args.rest))
+        record = run_category(args.category, args.project, args.evidence_dir)
     except CategoryError as error:
         print(f"FAIL required-category {args.category}: {error}", file=sys.stderr)
         return 1

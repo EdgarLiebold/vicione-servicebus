@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 """Focused tests for the broker category runner.
 
-They cover the two things a runner can get wrong without anybody noticing: accepting a command line
-that means two different runs at once, and reporting success after a teardown that did not happen.
-Both are checked without Docker, because what is under test is the runner's decision rather than the
-container engine's behaviour.
+They cover what a runner can get wrong without anybody noticing: accepting a command line that means
+two different runs at once, and reporting success after a cleanup that did not happen. Both are
+checked without Docker, because what is under test is the runner's decision rather than the container
+engine's behaviour.
+
+The verdict cases below drive main() rather than the single steps. Testing stop() alone was the gap
+the Lead's counterexamples went through: stop() was correct and the decision in main() that reads its
+result was not, so every step passed while the run still returned 0 after a failed cleanup.
 """
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import shutil
 import subprocess
@@ -56,6 +62,16 @@ class Refusing_a_contradictory_command_line(unittest.TestCase):
         self.assertIn("does not start",
                       self.refuses(["--broker", "rabbitmq", "--category", "x", "--project", "y",
                                     "--allow-broker-outage", "activemq"]))
+
+    def test_refuses_an_outage_for_an_unstarted_broker_in_command_mode_too(self) -> None:
+        """The same invariant, on the mode that used to return before reading it.
+
+        The command branch returned first, so this call was accepted: it started the ActiveMQ relay
+        with no ActiveMQ behind it and returned 0 for a fixture nothing could ever interrupt.
+        """
+        self.assertIn("does not start",
+                      self.refuses(["--broker", "rabbitmq", "--allow-broker-outage", "activemq",
+                                    "--command", "--", "true"]))
 
 
 class Reporting_a_teardown_that_did_not_happen(unittest.TestCase):
@@ -214,6 +230,164 @@ class Answering_an_outage_request(unittest.TestCase):
         answer = json.loads(result.read_text(encoding="utf-8"))
         self.assertEqual("failed", answer["status"])
         self.assertIn("no such service", answer["error"])
+
+
+class Separating_the_primary_outcome_from_the_cleanup(unittest.TestCase):
+    """A cleanup finding may never occupy the slot the primary failure is read from.
+
+    One variable held both, so a cleanup that failed on an otherwise green run wrote itself into it,
+    and the verdict at the end - "report this only if nothing failed before" - then found it already
+    occupied and returned 0. Two deterministic false greens came out of that single confusion, and
+    neither was visible from a test of the step that failed.
+
+    Every row here drives main() with the process and the Docker boundary replaced. The child is a
+    real process, so what the runner reads back is an exit code it did not invent.
+    """
+
+    def setUp(self) -> None:
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+
+        # Both, and together: the runner prints its run root relative to the repository, so a run
+        # root outside it is not a shape production ever has.
+        for name, value in (("RAW_RUN_OUTPUT_DIR", self.root / "run-output"), ("REPO_ROOT", self.root)):
+            patched = mock.patch.object(runner, name, value)
+            patched.start()
+            self.addCleanup(patched.stop)
+
+        self.compose_calls: list[tuple[str, ...]] = []
+
+    def compose(self, restore: int):
+        """Stands in for Docker. Only the restore is ever asked of it here; start and stop are replaced."""
+        def answer(*args: str, capture: bool = False, environment: dict | None = None):
+            self.compose_calls.append(args)
+            code = restore if args[:1] == ("start",) else 0
+            return subprocess.CompletedProcess(args=list(args), returncode=code, stdout="", stderr="no such container")
+
+        return answer
+
+    def run_main(self, argv: list[str], *, restore: int = 0, stop_raises: bool = False) -> tuple[int, str]:
+        def stop(environment=None):
+            if stop_raises:
+                raise runner.TeardownError("the fixture could not be removed: network is in use")
+
+        errors = io.StringIO()
+        with mock.patch.object(runner, "start"), \
+                mock.patch.object(runner, "resolve_ports", return_value={}), \
+                mock.patch.object(runner, "capture_logs"), \
+                mock.patch.object(runner, "compose", side_effect=self.compose(restore)), \
+                mock.patch.object(runner, "stop", side_effect=stop), \
+                contextlib.redirect_stdout(io.StringIO()), \
+                contextlib.redirect_stderr(errors):
+            code = runner.main(argv)
+
+        return code, errors.getvalue()
+
+    OUTAGE = ["--broker", "activemq", "--allow-broker-outage", "activemq", "--command", "--"]
+
+    def test_a_green_run_whose_cleanup_holds_returns_zero(self) -> None:
+        code, errors = self.run_main([*self.OUTAGE, "true"])
+
+        self.assertEqual(0, code)
+        self.assertNotIn("FAIL", errors)
+
+    def test_a_green_child_with_a_failed_restore_is_red(self) -> None:
+        code, errors = self.run_main([*self.OUTAGE, "true"], restore=1)
+
+        self.assertNotEqual(0, code, "the broker was left stopped and the run still reported success")
+        self.assertIn("broker-restore", errors)
+
+    def test_a_green_child_with_a_control_thread_that_does_not_end_is_red(self) -> None:
+        released = threading.Event()
+        self.addCleanup(released.set)
+
+        def deaf(broker, control, environment, stop_serving) -> None:
+            released.wait(30)
+
+        with mock.patch.object(runner, "serve_outage_requests", deaf), \
+                mock.patch.object(runner, "CONTROLLER_JOIN_SECONDS", 0.2):
+            code, errors = self.run_main([*self.OUTAGE, "true"])
+
+        self.assertNotEqual(0, code, "a control thread that never ended left the run green")
+        self.assertIn("outage-controller", errors)
+        self.assertIn("did not end", errors)
+
+    def test_a_green_child_with_a_failed_down_is_red(self) -> None:
+        code, errors = self.run_main([*self.OUTAGE, "true"], stop_raises=True)
+
+        self.assertNotEqual(0, code, "the fixture was left standing and the run still reported success")
+        self.assertIn("broker-teardown", errors)
+
+    def test_an_exception_escaping_the_control_thread_is_red(self) -> None:
+        """A thread that dies of an exception dies quietly: the interpreter prints it and the run
+        keeps its exit code. The failure is carried out of the thread so the run can be red for it."""
+        def explode(broker, control, environment, stop_serving) -> None:
+            raise RuntimeError("the control directory vanished under the thread")
+
+        with mock.patch.object(runner, "serve_outage_requests", explode):
+            code, errors = self.run_main([*self.OUTAGE, "true"])
+
+        self.assertNotEqual(0, code, "the control thread died of an exception and the run stayed green")
+        self.assertIn("the control directory vanished under the thread", errors)
+
+    def test_a_failing_child_keeps_its_own_exit_code_and_the_cleanup_is_still_reported(self) -> None:
+        """The primary diagnostic stays primary. The cleanup finding is printed all the same, because
+        a fixture left in a bad state is what the next run meets."""
+        code, errors = self.run_main([*self.OUTAGE, "sh", "-c", "exit 3"], restore=1, stop_raises=True)
+
+        self.assertEqual(3, code, "the child's own exit code is the verdict a reader has to see")
+        self.assertIn("broker-restore", errors)
+        self.assertIn("broker-teardown", errors)
+
+    def test_a_failing_child_alone_keeps_its_exit_code(self) -> None:
+        code, errors = self.run_main([*self.OUTAGE, "sh", "-c", "exit 3"])
+
+        self.assertEqual(3, code)
+        self.assertNotIn("FAIL", errors)
+
+    def test_the_broker_is_restored_before_the_fixture_is_removed(self) -> None:
+        """Order, not only presence: a restore issued after 'down -v' addresses a container that is
+        already gone."""
+        self.run_main([*self.OUTAGE, "true"])
+
+        self.assertIn(("start", "activemq"), [tuple(call[:2]) for call in self.compose_calls])
+
+
+class Ending_the_control_thread_while_it_waits(unittest.TestCase):
+    """The readiness wait is the long one, and it is the one the teardown collides with."""
+
+    def test_a_stop_request_ends_the_readiness_wait_instead_of_being_slept_through(self) -> None:
+        control = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, control, ignore_errors=True)
+
+        (control / "restore-0.request").write_text(
+            json.dumps({"schemaVersion": 1, "requestId": "restore-0", "action": "restore"}), encoding="utf-8")
+
+        started = threading.Event()
+
+        def never_healthy(*args: str, capture: bool = False, environment: dict | None = None):
+            started.set()
+            return subprocess.CompletedProcess(args=list(args), returncode=0, stdout="", stderr="")
+
+        stop = threading.Event()
+        with mock.patch.object(runner, "compose", side_effect=never_healthy), \
+                mock.patch.object(runner, "broker_is_healthy", return_value=False), \
+                mock.patch.object(runner, "broker_state", return_value="starting"):
+            thread = threading.Thread(
+                target=runner.serve_outage_requests, args=("activemq", control, {}, stop), daemon=True)
+            thread.start()
+
+            self.assertTrue(started.wait(5), "the controller never started working on the request")
+            stop.set()
+            thread.join(timeout=5)
+
+        self.assertFalse(thread.is_alive(),
+                         "the controller slept through its stop request and kept asking Docker about a "
+                         "service the teardown was already removing")
+
+        answer = json.loads((control / "restore-0.result").read_text(encoding="utf-8"))
+        self.assertEqual("failed", answer["status"])
+        self.assertIn("torn down", answer["error"])
 
 
 class Naming_the_project_of_this_run(unittest.TestCase):

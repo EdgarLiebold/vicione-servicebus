@@ -11,6 +11,8 @@ Standard library only, like the runner itself.
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import tempfile
 import shutil
@@ -176,39 +178,69 @@ class RunDurationTestCase(unittest.TestCase):
         self.assertIsNone(runner.parse_trx_time(None))
 
 
-class SelectorRejectionTestCase(unittest.TestCase):
-    REFUSED = (
-        "--filter", "--filter=Category!=Slow", "-filter", "/filter:Name~x",
-        "--TestCaseFilter:Name~x", "/TestCaseFilter:Name~x", "-testcasefilter",
-        "--tests", "--tests=One", "/Tests:One", "-tests",
-        # A settings file carries a TestCaseFilter of its own, so it narrows the run without ever
-        # naming a filter on the command line.
-        "--settings", "--settings=run.runsettings", "/Settings:run.runsettings", "-s", "-s=run.runsettings",
-    )
+class Keeping_the_invocation_closed(unittest.TestCase):
+    """A required category is the whole category, run the same way every time.
 
-    def test_every_selector_spelling_is_refused(self):
-        for selector in self.REFUSED:
-            with self.subTest(selector=selector):
-                with self.assertRaises(runner.CategoryError):
-                    runner.reject_selectors([selector])
+    The runner used to forward an arbitrary tail to dotnet test and refuse only the options that
+    select tests. Everything else passed, including every way of writing output somewhere the run does
+    not own: a second --logger, a --results-directory, a --diag, a collector and an MSBuild output
+    override. The repository states that one run owns all of its mutable output, and that statement was
+    false for any caller who added one of them. There is no allowlist now, because a required proof has
+    no argument left to weigh.
+    """
 
-    def test_a_selector_is_refused_wherever_it_stands(self):
-        with self.assertRaises(runner.CategoryError):
-            runner.reject_selectors(["--no-restore", "--settings", "run.runsettings"])
+    CANONICAL = ["--category", "core", "--project", "tests/Core/Core.csproj", "--evidence-dir", "artifacts/x"]
 
-    def test_ordinary_build_and_restore_options_pass(self):
-        # A blanket rejection would stop the category from running at all, which is the opposite of
-        # keeping it complete.
-        runner.reject_selectors([
-            "--no-restore", "--no-build", "-v", "minimal", "--verbosity", "detailed",
-            "-c", "Release", "--framework", "net9.0", "--nologo", "--results-directory", "artifacts",
-            "--logger", "trx;LogFileName=core.trx", "-p:ContinuousIntegrationBuild=true",
-        ])
+    # One per class of damage, named by what it would have written or changed.
+    REFUSED = {
+        "a second result log": ["--logger", "trx;LogFileName=elsewhere.trx"],
+        "a shared results directory": ["--results-directory", "artifacts"],
+        "a diagnostic log": ["--diag", "artifacts/diag.log"],
+        "a data collector": ["--collect", "XPlat Code Coverage"],
+        "an MSBuild output redirect": ["-p:OutputPath=artifacts/elsewhere"],
+        "an MSBuild artifacts redirect": ["-p:ArtifactsPath=artifacts/elsewhere"],
+        "a different framework": ["--framework", "net9.0"],
+        "a different configuration": ["-c", "Debug"],
+        "a test selector": ["--filter", "Category!=Slow"],
+        "a run settings file": ["--settings", "run.runsettings"],
+    }
 
-    def test_the_option_token_ignores_value_and_case(self):
-        self.assertEqual(runner.option_token("--Filter=Category!=Slow"), "--filter")
-        self.assertEqual(runner.option_token("/Tests:One"), "/tests")
-        self.assertEqual(runner.option_token("--no-restore"), "--no-restore")
+    def test_the_canonical_invocation_is_accepted(self):
+        parsed = runner.build_parser().parse_args(self.CANONICAL)
+
+        self.assertEqual("core", parsed.category)
+
+    def test_every_further_argument_is_refused(self):
+        for damage, extra in sorted(self.REFUSED.items()):
+            with self.subTest(damage=damage):
+                with self.assertRaises(SystemExit, msg=f"{damage} reached dotnet test"), \
+                        contextlib.redirect_stderr(io.StringIO()):
+                    runner.build_parser().parse_args(self.CANONICAL + extra)
+
+    def test_the_command_dotnet_test_receives_is_exactly_the_canonical_one(self):
+        """Not only that nothing is accepted, but that nothing is passed on either."""
+        seen = {}
+
+        def record(command, **kwargs):
+            seen["command"] = command
+            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
+
+        root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, root, ignore_errors=True)
+        self.addCleanup(setattr, runner, "RAW_RUN_OUTPUT_DIR", runner.RAW_RUN_OUTPUT_DIR)
+        self.addCleanup(setattr, runner, "REPOSITORY_ROOT", runner.REPOSITORY_ROOT)
+        runner.RAW_RUN_OUTPUT_DIR = root / "run-output"
+        runner.REPOSITORY_ROOT = root
+
+        with mock.patch.object(runner.subprocess, "run", side_effect=record), \
+                mock.patch.dict(runner.os.environ, {runner.RUN_ROOT_VARIABLE: ""}, clear=False), \
+                contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(runner.CategoryError):
+                runner.run_category("core", "tests/Core/Core.csproj", root / "evidence")
+
+        options = [token for token in seen["command"] if token.startswith("-")]
+        self.assertEqual(["-c", "--logger"], options,
+                         "dotnet test received an option this runner does not own")
 
 
 class Owning_the_output_of_one_run(unittest.TestCase):
@@ -242,7 +274,7 @@ class Owning_the_output_of_one_run(unittest.TestCase):
                 mock.patch.object(runner.subprocess, "run", side_effect=fake_run), \
                 mock.patch.object(runner, "minimum_executed", return_value=None), \
                 mock.patch.object(runner, "inventoried_cases", return_value=[]):
-            return runner.run_category("core", "some.csproj", evidence, [])
+            return runner.run_category("core", "some.csproj", evidence)
 
     def test_two_runs_of_one_category_write_different_files(self) -> None:
         evidence = self.root / "artifacts/required/core"

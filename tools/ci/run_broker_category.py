@@ -23,7 +23,6 @@ import json
 import os
 import re
 import secrets
-import shutil
 import subprocess
 import sys
 import threading
@@ -253,6 +252,11 @@ def serve_outage_requests(broker: str, control: Path, environment: dict[str, str
     """
     while not stop_serving.is_set():
         for request in sorted(control.glob("*.request")):
+            # Checked per request rather than per pass. A directory holding several requests would
+            # otherwise be worked to the end after the teardown already asked this thread to stop.
+            if stop_serving.is_set():
+                break
+
             result = request.with_suffix(".result")
             if result.exists():
                 continue
@@ -291,6 +295,16 @@ def serve_outage_requests(broker: str, control: Path, environment: dict[str, str
                 deadline = time.monotonic() + OUTAGE_BUDGET_SECONDS
                 observed = ""
                 while time.monotonic() < deadline:
+                    # The readiness wait is the long one, and it is the one the teardown collides
+                    # with: a thread that sleeps through its stop request keeps asking Docker about a
+                    # service the teardown is already removing, and the two then race over the same
+                    # compose project. Asked before every Docker call, so the last thing this thread
+                    # does after the request is to answer, not to act.
+                    if stop_serving.is_set():
+                        raise RunnerError(
+                            f"the fixture is being torn down while the {action} was still being "
+                            "confirmed, so this runner issues no further Docker action for it")
+
                     if action == "interrupt":
                         observed = broker_state(broker, environment)
                         if observed in ("exited", "stopped", "absent"):
@@ -300,7 +314,9 @@ def serve_outage_requests(broker: str, control: Path, environment: dict[str, str
                             observed = "healthy"
                             break
                         observed = broker_state(broker, environment)
-                    time.sleep(0.5)
+
+                    # Ends the moment the stop is requested; time.sleep did not.
+                    stop_serving.wait(0.5)
                 else:
                     raise TimeoutError(
                         f"the broker was still '{observed}' {OUTAGE_BUDGET_SECONDS} s after {action}, so "
@@ -436,6 +452,13 @@ def validate(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
     run names the command after --. Anything that mixes them was written by somebody who expected one
     of the two to happen, and guessing which one is worse than refusing.
     """
+    # Before the modes are separated, because it is true of both of them. Behind the mode split this
+    # rule was unreachable for a command run: --broker rabbitmq --allow-broker-outage activemq
+    # --command -- true was accepted, started the ActiveMQ relay without ActiveMQ behind it, and
+    # returned 0 for a fixture nobody could interrupt.
+    if args.allow_broker_outage and args.allow_broker_outage not in args.broker:
+        parser.error(f"--allow-broker-outage names '{args.allow_broker_outage}', which this run does not start")
+
     if args.command:
         if not args.rest:
             parser.error("--command needs the command itself after --")
@@ -450,11 +473,15 @@ def validate(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
     if args.rest:
         parser.error("a category run forwards extra arguments after --, and these arrived without it: "
                      + " ".join(args.rest))
-    if args.allow_broker_outage and args.allow_broker_outage not in args.broker:
-        parser.error(f"--allow-broker-outage names '{args.allow_broker_outage}', which this run does not start")
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The command line of this runner, as an object.
+
+    Separate from main so that tools/ci/policy_validator.py can reconstruct the argument vector a
+    workflow step really produces and parse it against this parser. Reading the workflow for expected
+    substrings proved nothing about the command the shell would build from them.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     # A suite may legitimately span more than one broker: the ActiveMQ specs are parameterized over an
     # 'artemis' flavor that addresses a second, separate broker. Repeating --broker starts each of them,
@@ -485,6 +512,194 @@ def main(argv: list[str] | None = None) -> int:
              "the child alone, and it is torn down afterwards exactly as for a category.",
     )
     parser.add_argument("rest", nargs="*")
+
+    return parser
+
+
+# How long the control thread is given to notice its stop request and end.
+CONTROLLER_JOIN_SECONDS = 10
+
+
+class OutageController:
+    """The runner side of the outage control directory, and the only thing that touches Docker for it.
+
+    It is an object rather than a bare thread because a thread that dies of an exception dies quietly:
+    the interpreter prints a traceback into the log and the run keeps whatever exit code it had. The
+    failure is kept here instead and reported as a cleanup finding, so an outage service that stopped
+    answering cannot leave a green run behind it.
+    """
+
+    def __init__(self, broker: str, control: Path, environment: dict[str, str]) -> None:
+        self._broker = broker
+        self._control = control
+        self._environment = environment
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._serve, name="outage-controller", daemon=True)
+        self.error: BaseException | None = None
+
+    def start(self) -> None:
+        self._thread.start()
+
+    def _serve(self) -> None:
+        try:
+            serve_outage_requests(self._broker, self._control, self._environment, self._stop)
+        except BaseException as error:  # noqa: BLE001 - kept so the run can report it as its own
+            self.error = error
+
+    def shutdown(self) -> list[str]:
+        """Stops the thread and says what it found. Never raises: this runs inside the teardown."""
+        self._stop.set()
+        self._thread.join(timeout=CONTROLLER_JOIN_SECONDS)
+
+        findings: list[str] = []
+        if self._thread.is_alive():
+            findings.append(
+                f"outage-controller: the control thread did not end within {CONTROLLER_JOIN_SECONDS} s, so "
+                "it can still issue Docker actions against a fixture that is being removed")
+        if self.error is not None:
+            findings.append(
+                f"outage-controller: the control thread ended with {type(self.error).__name__}: {self.error}")
+
+        return findings
+
+
+class RunState:
+    """What the teardown has to know about a run that may have failed anywhere inside it."""
+
+    def __init__(self) -> None:
+        self.controller: OutageController | None = None
+        self.captured: set[str] = set()
+
+
+def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str, str], run_root: Path,
+            state: RunState) -> int:
+    """Starts the fixture, runs the child, and returns the child's exit code.
+
+    Everything in here is the primary outcome of the run. Nothing in here tears anything down: that is
+    the teardown's work, and keeping the two apart is what stops a cleanup finding from occupying the
+    slot the primary failure is read from.
+    """
+    proxy = OUTAGE_PROXY.get(args.allow_broker_outage or "")
+    start(brokers + ([proxy] if proxy else []), environment)
+
+    endpoints: dict[str, str] = {}
+    for broker in brokers:
+        # In a recovery run the addresses of the fronted broker come from its relay. That is the
+        # whole point: the client keeps one address while the broker behind it restarts.
+        source = proxy if proxy and broker == args.allow_broker_outage else broker
+        endpoints.update(resolve_ports(broker, environment, service=source))
+        endpoints[BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
+    environment.update(endpoints)
+
+    if proxy:
+        print(f"{args.allow_broker_outage} is reached through {proxy}, so its address survives a restart")
+
+    print(f"fixture {' and '.join(brokers)} ready on loopback: "
+          + ", ".join(f"{name}={value}" for name, value in sorted(endpoints.items())))
+
+    if args.allow_broker_outage:
+        # Under this run's own root, so it is never the path another run deletes.
+        control = run_root / "fixture-control"
+        control.mkdir(parents=True)
+        environment[OUTAGE_CONTROL_VARIABLE] = str(control)
+
+        state.controller = OutageController(args.allow_broker_outage, control, dict(environment))
+        state.controller.start()
+        print(f"outage control ready for {args.allow_broker_outage} at {control}")
+
+    # Always under this run's own root. A caller supplied path was a file two runs of one
+    # category wrote in turn, and the second one's endpoints were read as the first one's.
+    projection = run_root / "endpoints.json"
+    projection.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"endpoints projected to {projection.relative_to(REPO_ROOT)}")
+
+    if args.command:
+        # A deliberately started scenario rather than a category: the fixture boundary is the same,
+        # the child gets the same endpoints and the same run-scoped account, and it still cannot
+        # reach a broker this runner did not start.
+        completed = subprocess.run(args.rest, env=environment, text=True, check=False)
+    else:
+        runner = REPO_ROOT / "tools/ci/run_test_category.py"
+        completed = subprocess.run(
+            [sys.executable, str(runner),
+             "--category", args.category,
+             "--project", args.project,
+             "--evidence-dir", str(args.evidence_dir)],
+            env=environment, text=True, check=False,
+        )
+
+    if args.one_refusal_per_vhost:
+        # Before the teardown, and on the log this run produced. The check runs even when the tests
+        # already failed: a retry loop is worth naming either way, and it must never be the reason a
+        # red run looks green.
+        capture_logs(brokers, environment)
+        state.captured.update(brokers)
+
+        for broker in brokers:
+            if not assert_one_refusal_per_vhost(broker_log_path(broker, environment), args.one_refusal_per_vhost):
+                return completed.returncode or 1
+
+    return completed.returncode
+
+
+def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str, str],
+             state: RunState) -> list[str]:
+    """Removes the fixture and returns every cleanup finding. Never raises.
+
+    A finding is not the primary outcome and may not be written into the same variable. That is
+    exactly what made two deterministic false greens: a failed restore and a control thread that was
+    still alive each printed FAIL, each filled the slot the primary failure was read from, and the
+    verdict at the end then found that slot occupied and returned 0.
+
+    Each step is also independent of the one before it. A restore that fails may not be the reason the
+    fixture is left standing, so the steps do not stop at the first finding.
+    """
+    findings: list[str] = []
+
+    # The control thread first. A thread still answering outage requests while the fixture is being
+    # removed acts on containers that are on their way out.
+    if state.controller is not None:
+        findings.extend(state.controller.shutdown())
+
+    # An outage is undone before anything else, and unconditionally. A child that hung or was killed
+    # leaves the broker stopped, and a stopped container survives a failed teardown: the next run
+    # then meets a fixture that is up and answers nothing.
+    if args.allow_broker_outage:
+        try:
+            restored = compose("start", args.allow_broker_outage, capture=True, environment=environment)
+        except OSError as error:
+            findings.append(f"broker-restore: {args.allow_broker_outage} could not be started again: {error}")
+        else:
+            if restored.returncode != 0:
+                findings.append(
+                    f"broker-restore: {args.allow_broker_outage} could not be started again: "
+                    f"{restored.stderr.strip() or restored.stdout.strip()}")
+
+    # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
+    # refusal check already collected are not fetched a second time: that would overwrite the very
+    # file the verdict was read from. A log is evidence about a run that already has its verdict, so
+    # failing to collect it is a warning rather than a finding.
+    try:
+        remaining = [broker for broker in brokers if broker not in state.captured]
+        if remaining:
+            capture_logs(remaining, environment)
+    except OSError as error:
+        print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
+
+    # Trap equivalent: the fixture is removed on success, on failure and on an exception alike, and a
+    # teardown that fails says so.
+    try:
+        stop(environment)
+    except TeardownError as error:
+        findings.append(f"broker-teardown: {error}")
+    except OSError as error:
+        findings.append(f"broker-teardown: the fixture could not be removed: {error}")
+
+    return findings
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     validate(parser, args)
@@ -508,135 +723,34 @@ def main(argv: list[str] | None = None) -> int:
     environment[RUN_ROOT_VARIABLE] = str(run_root)
     print(f"run identity {identity}, output under {run_root.relative_to(REPO_ROOT)}")
 
-    captured: set[str] = set()
-    outage_stop = threading.Event()
-    outage_thread: threading.Thread | None = None
-    failure: BaseException | None = None
+    state = RunState()
+    primary = 0
+    escaping: BaseException | None = None
 
     try:
-        proxy = OUTAGE_PROXY.get(args.allow_broker_outage or "")
-        start(brokers + ([proxy] if proxy else []), environment)
-
-        endpoints: dict[str, str] = {}
-        for broker in brokers:
-            # In a recovery run the addresses of the fronted broker come from its relay. That is the
-            # whole point: the client keeps one address while the broker behind it restarts.
-            source = proxy if proxy and broker == args.allow_broker_outage else broker
-            endpoints.update(resolve_ports(broker, environment, service=source))
-            endpoints[BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
-        environment.update(endpoints)
-
-        if proxy:
-            print(f"{args.allow_broker_outage} is reached through {proxy}, so its address survives a restart")
-
-        print(f"fixture {' and '.join(brokers)} ready on loopback: "
-              + ", ".join(f"{name}={value}" for name, value in sorted(endpoints.items())))
-
-        if args.allow_broker_outage:
-            broker = args.allow_broker_outage
-            # Under this run's own root, so it is never the path another run deletes.
-            control = run_root / "fixture-control"
-            control.mkdir(parents=True)
-            environment[OUTAGE_CONTROL_VARIABLE] = str(control)
-
-            outage_thread = threading.Thread(
-                target=serve_outage_requests,
-                args=(broker, control, dict(environment), outage_stop),
-                daemon=True)
-            outage_thread.start()
-            print(f"outage control ready for {broker} at {control}")
-
-        # Always under this run's own root. A caller supplied path was a file two runs of one
-        # category wrote in turn, and the second one's endpoints were read as the first one's.
-        projection = run_root / "endpoints.json"
-        projection.write_text(json.dumps(endpoints, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        print(f"endpoints projected to {projection.relative_to(REPO_ROOT)}")
-
-        if args.command:
-            # A deliberately started scenario rather than a category: the fixture boundary is the same,
-            # the child gets the same endpoints and the same run-scoped account, and it still cannot
-            # reach a broker this runner did not start.
-            completed = subprocess.run(args.rest, env=environment, text=True, check=False)
-        else:
-            runner = REPO_ROOT / "tools/ci/run_test_category.py"
-            completed = subprocess.run(
-                [sys.executable, str(runner),
-                 "--category", args.category,
-                 "--project", args.project,
-                 "--evidence-dir", str(args.evidence_dir),
-                 *(["--", *args.rest] if args.rest else [])],
-                env=environment, text=True, check=False,
-            )
-
-        if args.one_refusal_per_vhost:
-            # Before the teardown, and on the log this run produced. The check runs even when the tests
-            # already failed: a retry loop is worth naming either way, and it must never be the reason a
-            # red run looks green.
-            capture_logs(brokers, environment)
-            captured.update(brokers)
-
-            for broker in brokers:
-                if not assert_one_refusal_per_vhost(broker_log_path(broker, environment), args.one_refusal_per_vhost):
-                    return completed.returncode or 1
-
-        return completed.returncode
+        primary = execute(args, brokers, environment, run_root, state)
     except RunnerError as error:
-        failure = error
         print(f"FAIL broker-category {args.category or 'command'}: {error}", file=sys.stderr)
-        return 1
-    except BaseException as error:  # noqa: BLE001 - remembered so the teardown cannot replace it
-        failure = error
-        raise
-    finally:
-        # The control thread is stopped and joined in every exit path, including the ones that raise.
-        # A thread still answering outage requests while the fixture is being removed would act on
-        # containers that are on their way out.
-        outage_stop.set()
-        if outage_thread is not None:
-            outage_thread.join(timeout=10)
-        teardown_failed = False
+        primary = 1
+    except BaseException as error:  # noqa: BLE001 - re-raised once the fixture is cleaned up
+        escaping = error
 
-        # An outage is undone before anything else, and unconditionally. A child that hung or was killed
-        # leaves the broker stopped, and a stopped container survives a failed teardown: the next run
-        # then meets a fixture that is up and answers nothing.
-        if args.allow_broker_outage:
-            restored = compose("start", args.allow_broker_outage, capture=True, environment=environment)
-            if restored.returncode != 0 and failure is None:
-                print(f"FAIL broker-restore: the broker could not be started again: "
-                      f"{restored.stderr.strip() or restored.stdout.strip()}", file=sys.stderr)
-                failure = RunnerError("the broker could not be started again")
-                teardown_failed = True
+    findings = teardown(args, brokers, environment, state)
+    for finding in findings:
+        print(f"FAIL {finding}", file=sys.stderr)
 
-        if outage_thread is not None and outage_thread.is_alive():
-            print("FAIL outage-controller: the control thread did not terminate", file=sys.stderr)
-            if failure is None:
-                failure = RunnerError("the outage control thread did not terminate")
-            teardown_failed = True
+    # The exception a reader has to see is the one that came first, and the cleanup findings are
+    # already printed above it, so nothing is lost by letting it out here.
+    if escaping is not None:
+        raise escaping
 
-        # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
-        # refusal check already collected are not fetched a second time: that would overwrite the very
-        # file the verdict was read from.
-        try:
-            remaining = [broker for broker in brokers if broker not in captured]
-            if remaining:
-                capture_logs(remaining, environment)
-        except OSError as error:
-            print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
+    if findings:
+        print("FAIL broker-fixture: the fixture could not be returned to a usable state", file=sys.stderr)
+        # A primary failure stays the primary diagnostic and keeps its own exit code. An otherwise
+        # green run is red because of the cleanup alone.
+        return primary if primary != 0 else 1
 
-        # Trap equivalent: the fixture is removed on success, on failure and on an exception alike, and
-        # a teardown that fails says so. It never replaces the failure that came first - that one is
-        # already on its way out - but on an otherwise successful run it is the verdict.
-        try:
-            stop(environment)
-        except TeardownError as error:
-            print(f"FAIL broker-teardown: {error}", file=sys.stderr)
-            teardown_failed = True
-
-        if teardown_failed and failure is None:
-            # Raised rather than returned: a return inside finally would discard the value the try
-            # block produced, including a non zero one. A failure that came first stays the failure
-            # a reader sees; this one only decides the verdict of an otherwise green run.
-            raise RunnerError("the fixture could not be returned to a usable state")
+    return primary
 
 
 if __name__ == "__main__":

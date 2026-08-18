@@ -40,7 +40,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         /// <summary>Stops the broker, and returns only once the runner has seen it stopped.</summary>
         public static Task Interrupt()
         {
-            return Ask("interrupt");
+            return Ask(RequiredControlDirectory(), "interrupt", Budget);
         }
 
         /// <summary>
@@ -54,19 +54,32 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         /// </summary>
         public static Task Restore()
         {
-            return Ask("restore");
+            return Ask(RequiredControlDirectory(), "restore", Budget);
         }
 
-        static async Task Ask(string action)
+        static string RequiredControlDirectory()
         {
             var control = Environment.GetEnvironmentVariable(ControlVariable);
             if (string.IsNullOrWhiteSpace(control))
             {
                 Assert.Fail($"{ControlVariable} is not set, so this run cannot reach the broker controller. "
                     + "Start the fixture with tools/ci/run_broker_category.py --allow-broker-outage activemq.");
-                return;
             }
 
+            return control!;
+        }
+
+        /// <summary>
+        /// The exchange itself, with the control directory and the budget handed in.
+        /// <para>
+        /// Both are parameters so that the decisions in here - a refusal is a failure, an answer about
+        /// another request is not an answer, a runner that says nothing runs out of time - are provable
+        /// without a broker and without a Docker fixture. The public entry points above bind them to
+        /// the run this process was started in.
+        /// </para>
+        /// </summary>
+        internal static async Task Ask(string control, string action, TimeSpan budget)
+        {
             var requestId = $"{action}-{Guid.NewGuid():N}";
             var request = Path.Combine(control, $"{requestId}.request");
             var result = Path.Combine(control, $"{requestId}.result");
@@ -81,7 +94,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             // Monotonic: this is a duration, and a wall clock that steps would either cut the wait
             // short or extend it past the runner's own budget.
             var elapsed = Stopwatch.StartNew();
-            while (elapsed.Elapsed < Budget)
+            while (elapsed.Elapsed < budget)
             {
                 if (File.Exists(result))
                 {
@@ -98,7 +111,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             }
 
             Assert.Fail($"the runner did not answer the request to {action} the broker within "
-                + $"{Budget.TotalSeconds:0} s");
+                + $"{budget.TotalSeconds:0} s");
         }
 
         /// <summary>
@@ -110,7 +123,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         /// success for this one.
         /// </para>
         /// </summary>
-        static Answer Read(string path, string requestId, string action)
+        internal static Answer Read(string path, string requestId, string action)
         {
             JsonElement root;
             try
@@ -148,6 +161,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         }
 
 
-        readonly record struct Answer(string Status, string? Error);
+        internal readonly record struct Answer(string Status, string? Error);
     }
 }
