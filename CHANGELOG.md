@@ -27,8 +27,9 @@ entry below records what the current work changed for anyone reading the source.
   benchmarks, the diagnostics and their tests.
 - `Directory.Build.targets` carries the late half of the build contract: six errors that refuse a
   project which drops its lock file or locked mode, packs without its licence or notice, targets a
-  framework this product does not support, or reaches for `netstandard2.0` without being one of the
-  three declared Roslyn compiler hosts.
+  framework this product does not support, or reaches for `netstandard2.0` while being neither a
+  Roslyn component nor the analyzer package project whose framework group decides which consumers may
+  reference it.
 - `build/verification/VERIFICATION_MODEL.json` is the single verification truth. It replaced a
   capability matrix and a not-executed inventory that described the same categories twice.
 - The ActiveMQ publish topology is deployed to the broker. Resolving a destination name is a client

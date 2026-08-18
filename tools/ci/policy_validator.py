@@ -117,6 +117,53 @@ def strip_comments(text: str) -> str:
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
 
 
+# The two files that own the central build contract. Everything else in the repository is bound by it.
+CENTRAL_BUILD_FILES = ("Directory.Build.props", "Directory.Build.targets")
+
+# Properties that decide whether the central contract applies at all, with what writing one does.
+RESERVED_CENTRAL_PROPERTIES = {
+    "importdirectorybuildtargets": "Turning the import off skips the late central build gates entirely.",
+    "restorelockedmode": "Setting it in a file resolves past a lock file the project still carries.",
+    "restorelockedmodefromcommandline": "It is the flag the lock gate reads to tell the documented "
+                                        "update apart from an escape, so a project that sets it hands "
+                                        "itself the exception.",
+    "directorybuildtargetspath": "It points the late contract at another file.",
+    "custombeforemicrosoftcommontargets": "It injects a file ahead of the central contract.",
+    "customaftermicrosoftcommontargets": "It injects a file behind the central contract.",
+}
+
+
+def local_name(tag: object) -> str:
+    """An MSBuild element name without its namespace and without case.
+
+    Old style project files carry the 2003 MSBuild namespace and SDK style ones carry none, so the two
+    spell the same element differently. Comments and processing instructions have no string tag at all.
+    """
+    if not isinstance(tag, str):
+        return ""
+
+    return tag.rpartition("}")[2].lower()
+
+
+def msbuild_properties(root: ElementTree.Element) -> list[tuple[str, str]]:
+    """(name, value) of every property this file declares, wherever it declares it.
+
+    Any element inside a PropertyGroup is a property, and a PropertyGroup stands wherever MSBuild
+    allows one: under the project, inside a Choose/When, inside a Target. A reader that only looked at
+    the top level would miss exactly the places a property is put to avoid being seen.
+    """
+    declared = []
+    for group in root.iter():
+        if local_name(group.tag) != "propertygroup":
+            continue
+        for element in group:
+            name = local_name(element.tag)
+            if name:
+                declared.append((name, (element.text or "").strip()))
+
+    return declared
+
+
 class WorkflowScriptError(RuntimeError):
     """The workflow is not in a shape this reader can turn into commands.
 
@@ -1132,35 +1179,61 @@ class Policy:
     def check_no_project_leaves_the_central_contract(self) -> None:
         """A project may not take itself out of the repository's build contract.
 
-        Three ways exist and each was open. ImportDirectoryBuildTargets=false skips the late gates
-        entirely; RestoreLockedMode=false inside a project resolves past its own lock file while
-        keeping it; and pointing CustomBeforeMicrosoftCommonTargets or DirectoryBuildTargetsPath
-        somewhere else replaces the contract with another file. The documented package update passes
+        The properties below are reserved for the two root files. Each of them decides whether the
+        central contract applies at all, so a project that writes one has left it whatever value it
+        wrote: ImportDirectoryBuildTargets skips the late gates, DirectoryBuildTargetsPath and the two
+        CustomBefore/AfterMicrosoftCommonTargets hooks replace them with another file, RestoreLockedMode
+        resolves past a lock file the project still carries, and RestoreLockedModeFromCommandLine is the
+        flag the lock gate uses to tell a documented update apart from an escape - a project that sets
+        it hands itself the exception.
+
+        This searched exact XML text before, and three executed counterexamples walked past it:
+        RestoreLockedMode written as False, a conditional ImportDirectoryBuildTargets, and a conditional
+        DirectoryBuildTargetsPath redirect. The text search saw a capital letter and an attribute, not a
+        property. The XML is parsed instead, every PropertyGroup is read wherever it stands - including
+        inside a Choose or a Target - and the name is compared without case, whitespace, condition or
+        value entering into it.
+
+        Project-local props and targets are read as well, because an import is only one line away, and a
+        property in the imported file has exactly the effect it would have had in the project. The two
+        root files remain the sole owner. The documented package update stays possible because it passes
         its property on the command line, where the whole run and the diff of the change see it.
         """
-        escapes = (
-            ("ImportDirectoryBuildTargets", "false", "skips the late central build gates"),
-            ("RestoreLockedMode", "false", "resolves past its own lock file"),
-        )
-
-        for project in sorted(self.root.rglob("*.csproj")):
-            relative = project.relative_to(self.root).as_posix()
-            if relative.startswith("artifacts/"):
+        for path in sorted(self.build_files()):
+            relative = path.relative_to(self.root).as_posix()
+            try:
+                root = ElementTree.fromstring(path.read_text(encoding="utf-8-sig", errors="replace"))
+            except ElementTree.ParseError as error:
+                self.fail("central-contract", f"{relative} is not parsable as MSBuild XML: {error}")
                 continue
 
-            text = project.read_text(encoding="utf-8-sig", errors="replace")
-            for name, value, effect in escapes:
-                if f"<{name}>{value}</{name}>" in text.replace(" ", ""):
-                    self.fail("central-contract",
-                              f"{relative} sets {name} to {value}, which {effect}. That belongs on the "
-                              "command line of the one documented call, not into a project")
+            for name, value in msbuild_properties(root):
+                if name not in RESERVED_CENTRAL_PROPERTIES:
+                    continue
+                self.fail("central-contract",
+                          f"{relative} declares the reserved central property {name} as '{value}'. "
+                          f"{RESERVED_CENTRAL_PROPERTIES[name]} Only {' and '.join(CENTRAL_BUILD_FILES)} "
+                          "may set it, and a package update passes its property on the command line, "
+                          "where the whole run and the diff of the change see it")
 
-            for redirect in ("DirectoryBuildTargetsPath", "CustomBeforeMicrosoftCommonTargets",
-                             "CustomAfterMicrosoftCommonTargets"):
-                if f"<{redirect}>" in text:
-                    self.fail("central-contract",
-                              f"{relative} sets {redirect}, which points the central build path at "
-                              "something other than the repository's own contract")
+    def build_files(self) -> list[Path]:
+        """Every project and every project-local props or targets file of this repository.
+
+        The two root files are excluded because they are the contract; everything else is bound by it,
+        including a Directory.Build.props further down the tree, which is exactly the file somebody
+        would add to change the contract for one folder.
+        """
+        found = []
+        for pattern in ("*.csproj", "*.props", "*.targets"):
+            for path in self.root.rglob(pattern):
+                relative = path.relative_to(self.root).as_posix()
+                if relative.startswith("artifacts/") or "/bin/" in relative or "/obj/" in relative:
+                    continue
+                if relative in CENTRAL_BUILD_FILES:
+                    continue
+                found.append(path)
+
+        return found
 
     def check_workflow_inputs_are_pinned(self) -> None:
         """Nothing a required run consumes may be a moving reference.

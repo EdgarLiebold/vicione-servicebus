@@ -50,19 +50,28 @@
 
   <!-- 3. Nothing builds for a framework this product does not support.
 
-       net10.0 is the product target; netstandard2.0 is the compiler host exception and belongs to the
-       three Roslyn projects alone, because an analyzer and its code fixes are loaded by the compiler
-       rather than by the application. A fourth project reaching for it would be shipping a second,
-       unstated support promise. -->
+       net10.0 is the product target. netstandard2.0 has two narrow exceptions and they are not the
+       same thing, which is why they are no longer called by one name:
+
+       IsRoslynComponent is the standard property and it fits exactly two projects, the analyzer and
+       its code fixes. Those assemblies are loaded by the compiler rather than by the application, so
+       they cannot be net10.0.
+
+       ViciOneAnalyzerPackageSurface is the third project, and it is not a compiler host: it compiles
+       nothing, ships no build output and loads into nothing. Its framework is a consumer surface. An
+       analyzer package carries no lib/ folder, so the framework group of its nuspec is what decides
+       which projects may reference it. Measured on 2026-08-19: on net10.0 the package contents are
+       byte identical and that one group changes from .NETStandard2.0 to net10.0, which narrows who
+       may reference it. That is a capability, so the target stays and the reason is stated. -->
   <Target Name="AssertTargetFrameworkIsSupported"
           BeforeTargets="BeforeBuild"
           Condition=" '$(TargetFramework)' != '' ">
     <Error Code="VOSB0004"
-           Text="$(MSBuildProjectName) targets $(TargetFramework). This product targets net10.0; netstandard2.0 is the compiler host exception and is reserved for the Roslyn projects."
+           Text="$(MSBuildProjectName) targets $(TargetFramework). This product targets net10.0; netstandard2.0 is reserved for the two Roslyn components and the analyzer package project."
            Condition=" '$(TargetFramework)' != 'net10.0' AND '$(TargetFramework)' != 'netstandard2.0' " />
     <Error Code="VOSB0005"
-           Text="$(MSBuildProjectName) targets netstandard2.0 without being a Roslyn compiler host. That exception is stated in docs/build.md and is reserved for the analyzer, its code fixes and their package."
-           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(ViciOneCompilerHost)' != 'true' " />
+           Text="$(MSBuildProjectName) targets netstandard2.0 while being neither a Roslyn component nor the analyzer package project. Both exceptions are stated in docs/build.md: IsRoslynComponent for an assembly the compiler loads, ViciOneAnalyzerPackageSurface for the package whose framework group decides which consumers may reference it."
+           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(ViciOneAnalyzerPackageSurface)' != 'true' " />
   </Target>
 
 </Project>

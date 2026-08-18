@@ -52,12 +52,25 @@ reports success. The changed lock files are then reviewed in the diff like any o
 
 Every runtime, test, benchmark and tool project targets **net10.0**.
 
-**Three** projects are the exception and stay on `netstandard2.0`:
-`ViciOne.ServiceBus.Analyzers`, `ViciOne.ServiceBus.Analyzers.CodeFixes` and
-`ViciOne.ServiceBus.Analyzers.Package`. They are loaded by the compiler rather than by the
-application, and the compiler that loads them is not a `net10.0` process. Each of the three declares
-`ViciOneCompilerHost` so the exception is stated by the project rather than inferred from its name;
-`Directory.Build.targets` refuses `netstandard2.0` from any project that does not.
+Three projects stay on `netstandard2.0`, for **two different reasons**, and they are named apart
+because calling all three compiler hosts was inaccurate about the third.
+
+`ViciOne.ServiceBus.Analyzers` and `ViciOne.ServiceBus.Analyzers.CodeFixes` are Roslyn components:
+the compiler loads them and that compiler is not a `net10.0` process. Each declares the standard
+`IsRoslynComponent`.
+
+`ViciOne.ServiceBus.Analyzers.Package` hosts nothing. It compiles no source
+(`EnableDefaultCompileItems` is off), ships no build output (`IncludeBuildOutput` is off) and is
+loaded by nobody; it exists so the two assemblies above ship as the one package they always were.
+Its framework is a **consumer surface**: an analyzer package carries no `lib/` folder, so the
+framework group of its nuspec is what NuGet reads to decide which projects may reference it.
+Measured on 2026-08-19 by packing it both ways: on `net10.0` the package contents are byte identical
+- both analyzer assemblies, the readme and the two `tools/*.ps1` scripts - and one line of the nuspec
+changes, the empty dependency group, from `.NETStandard2.0` to `net10.0`. That line narrows who may
+reference the package, which is a capability, so the target stays and the project declares
+`ViciOneAnalyzerPackageSurface`.
+
+`Directory.Build.targets` refuses `netstandard2.0` from any project that declares neither.
 
 ## The central build contract
 
@@ -72,14 +85,30 @@ project actually ended up in. It raises errors, never warnings.
 | `VOSB0002` | a packable project without a licence expression or file |
 | `VOSB0003` | a packable project without the readme the notice promises |
 | `VOSB0004` | a target framework this product does not support |
-| `VOSB0005` | `netstandard2.0` from a project that is not a declared compiler host |
+| `VOSB0005` | `netstandard2.0` from a project that is neither a Roslyn component nor the analyzer package project |
 
 Both files are imported by every project, including a project built directly rather than through its
 solution. `-p:ImportDirectoryBuildTargets=false` leaves the contract for one command, which is what a
-tooling experiment sometimes needs; a project may not write that, `RestoreLockedMode=false` or a
-redirected central build path into itself, and `check_no_project_leaves_the_central_contract` refuses
-all three. The difference is visibility: a property on the command line is seen by the whole run and
-by whoever reads the change; one inside a project is seen by nobody.
+tooling experiment sometimes needs. The difference is visibility: a property on the command line is
+seen by the whole run and by whoever reads the change; one inside a project is seen by nobody.
+
+So six properties are reserved for the two root files, and
+`check_no_project_leaves_the_central_contract` refuses every one of them in any project, in any
+project-local `.props` or `.targets`, and in any `Directory.Build.props` further down the tree:
+
+| Reserved property | What writing it does |
+|---|---|
+| `ImportDirectoryBuildTargets` | skips the late central gates entirely |
+| `DirectoryBuildTargetsPath` | points the late contract at another file |
+| `CustomBeforeMicrosoftCommonTargets` | injects a file ahead of the contract |
+| `CustomAfterMicrosoftCommonTargets` | injects a file behind the contract |
+| `RestoreLockedMode` | resolves past a lock file the project still carries |
+| `RestoreLockedModeFromCommandLine` | hands the project the exception the command line exists to make visible |
+
+The rule parses the MSBuild XML rather than searching its text, and reads every `PropertyGroup`
+wherever it stands, including inside a `Choose` or a `Target`. It searched for exact XML text before,
+and three executed counterexamples walked past it: `RestoreLockedMode` written as `False`, a
+conditional `ImportDirectoryBuildTargets` and a conditional `DirectoryBuildTargetsPath` redirect.
 
 ## Verification
 

@@ -590,6 +590,129 @@ class PolicyTestCase(unittest.TestCase):
 
         self.assert_rejected("executed-floor")
 
+    # -- the central build contract a project may not leave ---------------------------------------
+    #
+    # This rule searched exact XML text. Three executed counterexamples walked past it: RestoreLockedMode
+    # written as False, a conditional ImportDirectoryBuildTargets and a conditional
+    # DirectoryBuildTargetsPath redirect. What is compared now is a parsed property name, so a capital
+    # letter, an attribute, whitespace and the value itself no longer decide whether it is seen.
+
+    def project_with(self, body: str, name: str = "ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj") -> None:
+        (self.root / RABBITMQ_TEST_PROJECT / name).write_text(
+            f"<Project Sdk=\"Microsoft.NET.Sdk\">\n{body}</Project>\n", encoding="utf-8")
+
+    def test_rejects_a_locked_mode_escape_written_in_another_case(self) -> None:
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <RestoreLockedMode>False</RestoreLockedMode>\n"
+            "    <RestoreLockedModeFromCommandLine>true</RestoreLockedModeFromCommandLine>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_project_that_hands_itself_the_command_line_exception(self) -> None:
+        """The flag the lock gate reads to tell a documented update apart from an escape. A project
+        that sets it has granted itself the exception the command line exists to make visible."""
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <RestoreLockedModeFromCommandLine>true</RestoreLockedModeFromCommandLine>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_conditional_import_of_the_central_targets(self) -> None:
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <ImportDirectoryBuildTargets Condition=\" '$(OS)' != 'Windows_NT' \">False"
+            "</ImportDirectoryBuildTargets>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_conditional_redirect_of_the_central_targets(self) -> None:
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <DirectoryBuildTargetsPath Condition=\" '$(Configuration)' == 'Release' \">"
+            "build/Elsewhere.targets</DirectoryBuildTargetsPath>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_hook_placed_before_the_common_targets(self) -> None:
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <CustomBeforeMicrosoftCommonTargets>build/Elsewhere.targets"
+            "</CustomBeforeMicrosoftCommonTargets>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_a_hook_placed_after_the_common_targets(self) -> None:
+        self.project_with(
+            "  <PropertyGroup>\n"
+            "    <CustomAfterMicrosoftCommonTargets>build/Elsewhere.targets"
+            "</CustomAfterMicrosoftCommonTargets>\n"
+            "  </PropertyGroup>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_the_property_when_it_hides_inside_a_choose(self) -> None:
+        """A PropertyGroup stands wherever MSBuild allows one. Reading only the top level would miss
+        exactly the places a property is put to avoid being seen."""
+        self.project_with(
+            "  <Choose>\n    <When Condition=\" '$(Configuration)' == 'Release' \">\n"
+            "      <PropertyGroup>\n"
+            "        <RestoreLockedMode>false</RestoreLockedMode>\n"
+            "      </PropertyGroup>\n"
+            "    </When>\n  </Choose>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_the_property_when_it_hides_inside_a_target(self) -> None:
+        self.project_with(
+            "  <Target Name=\"Sneak\" BeforeTargets=\"BeforeBuild\">\n"
+            "    <PropertyGroup>\n"
+            "      <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>\n"
+            "    </PropertyGroup>\n"
+            "  </Target>\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_the_property_in_a_props_file_the_project_imports(self) -> None:
+        """An import is one line away, and the property has the same effect from there."""
+        (self.root / RABBITMQ_TEST_PROJECT / "Local.props").write_text(
+            "<Project>\n  <PropertyGroup>\n"
+            "    <RestoreLockedMode>false</RestoreLockedMode>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+        self.project_with("  <Import Project=\"Local.props\" />\n")
+
+        self.assert_rejected("central-contract")
+
+    def test_rejects_the_property_in_a_directory_build_props_further_down_the_tree(self) -> None:
+        """The two root files are the contract. One added below them changes it for a folder."""
+        (self.root / RABBITMQ_TEST_PROJECT / "Directory.Build.props").write_text(
+            "<Project>\n  <PropertyGroup>\n"
+            "    <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+
+        self.assert_rejected("central-contract")
+
+    def test_accepts_the_reserved_properties_in_the_root_contract_itself(self) -> None:
+        """The root files are where these belong. A rule that rejected them there would be a rule
+        against the contract rather than for it."""
+        (self.root / "Directory.Build.props").write_text(
+            "<Project>\n  <PropertyGroup>\n"
+            "    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>\n"
+            "    <RestoreLockedMode>true</RestoreLockedMode>\n"
+            "  </PropertyGroup>\n</Project>\n", encoding="utf-8")
+
+        self.assertEqual([], self.failures())
+
+    def test_accepts_a_project_that_names_none_of_them(self) -> None:
+        self.project_with("  <PropertyGroup>\n    <TargetFramework>net10.0</TargetFramework>\n  </PropertyGroup>\n")
+
+        self.assertEqual([], self.failures())
+
     # -- broker images -------------------------------------------------------------------------
 
     def test_rejects_returning_rabbitmq_image(self) -> None:

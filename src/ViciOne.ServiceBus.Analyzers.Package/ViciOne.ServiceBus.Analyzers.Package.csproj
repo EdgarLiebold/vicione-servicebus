@@ -1,10 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Not a compiler host and not a Roslyn component: this project compiles nothing, ships no
+         build output and loads into nothing. Its framework is the one thing a consumer sees, because
+         an analyzer package carries no lib/ folder and NuGet decides from the framework group of the
+         nuspec which projects may reference it at all. Measured on 2026-08-19: switching this project
+         to net10.0 leaves the package contents byte identical - both analyzer assemblies, the readme
+         and the two tool scripts - and changes exactly one line of the nuspec, the empty dependency
+         group, from .NETStandard2.0 to net10.0. That line is the package's consumer surface, so the
+         target stays and the exception is named for what it is rather than called a compiler host. -->
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- Loaded by the compiler, not by the application, which is why this one project may leave the
-         product's net10.0 target. Directory.Build.targets refuses netstandard2.0 without it. -->
-    <ViciOneCompilerHost>true</ViciOneCompilerHost>
+    <ViciOneAnalyzerPackageSurface>true</ViciOneAnalyzerPackageSurface>
     <LangVersion>14.0</LangVersion>
     <WarningLevel>10</WarningLevel>
 
