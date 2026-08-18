@@ -70,12 +70,7 @@
     <PackageVersion Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
   <ItemGroup>
+    <!-- SourceLink is not referenced: the .NET SDK provides it. -->
     <GlobalPackageReference Include="GitHubActionsTestLogger" Version="3.0.5" />
-    <!--
-      Microsoft.SourceLink.GitHub was a global reference here. The .NET SDK carries SourceLink itself
-      since .NET 8, so the package only pinned an older copy of what the SDK already does. It is gone,
-      and the proof is a real pack rather than a claim: the produced nuspec still carries the same
-      repository element with type, url and commit that it carried with the package present.
-    -->
   </ItemGroup>
 </Project>

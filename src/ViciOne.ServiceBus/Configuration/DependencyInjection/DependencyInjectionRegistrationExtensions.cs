@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus
     using Microsoft.Extensions.Options;
     using Monitoring;
     using Transports;
-    
+
 
     /// <summary>
     /// Standard registration extensions, which are used to configure consumers, sagas, and activities on receive endpoints from a
