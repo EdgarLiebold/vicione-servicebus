@@ -29,7 +29,7 @@
       "cases": []
     },
     "rabbitmq": {
-      "project": "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
       "explicitAttributeCount": 13,
       "cases": [
         {
@@ -195,13 +195,13 @@
       ]
     },
     "entity-framework-core": {
-      "project": "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+      "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
       "explicitAttributeCount": 0,
       "comment": "Empty because the four outbox cases this category used to exclude are closed the only way a case may leave this list: they were fixed and they execute. Commit 797ea083 removed their markers and the category runs them against both engines; that commit failed to carry the closure into this file, which left the declared count at 4 against a project holding 0 until it was corrected here.",
       "cases": []
     },
     "activemq": {
-      "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
       "explicitAttributeCount": 4,
       "cases": [
         {
@@ -247,7 +247,7 @@
       ]
     },
     "sql-transport": {
-      "project": "tests/ViciOne.ServiceBus.SqlTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
       "explicitAttributeCount": 0,
       "cases": [],
       "comment": "Empty because all six cases left this list the only way a case may: they were closed and they execute. Four measured throughput, published or sent a thousand messages and printed a message rate without asserting anything; the measurement they stood for lives in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so they are removed rather than kept as permanently excluded cases. The remaining two are the delivery count limit on both engines. They asserted that a message is not consumed after the limit but never set it, so the queue kept the migrator default of ten and their consumer succeeded, which is why both engines measured expected 0 but was 1. The limit is set now and read back from the queue the migrator created, and a delivery driven to that limit is neither handed to a consumer again nor left in the queue. Removing the limit from the fetch statement turns both fixtures red."

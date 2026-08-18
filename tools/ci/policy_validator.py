@@ -58,7 +58,7 @@ KNOWN_CREDENTIALS = ("guest", "admin")
 NOT_EXECUTED_INVENTORY = "build/test-infrastructure/not-executed-inventory.json"
 
 # The guard that keeps the historic localhost/guest defaults out of the required broker run.
-RUN_SCOPED_GUARD_FILE = "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestSetUpFixture.cs"
+RUN_SCOPED_GUARD_FILE = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestSetUpFixture.cs"
 RUN_SCOPED_GUARD_METHOD = "RequireRunScopedCredentials"
 RUN_SCOPED_GUARD_VARIABLES = (
     "UsernameVariable", "PasswordVariable", "HostVariable", "PortVariable", "ManagementPortVariable",
@@ -507,9 +507,9 @@ class Policy:
         then reports a result that says nothing about the fixture the runner started. Four ActiveMQ
         fixtures and one RabbitMQ fixture failed exactly that way before this rule existed.
         """
-        for project in ("tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
-                        "tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-                        "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        for project in ("tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+                        "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+                        "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
                         "tests/ViciOne.ServiceBus.Tests"):
             directory = self.root / project
             if not directory.is_dir():

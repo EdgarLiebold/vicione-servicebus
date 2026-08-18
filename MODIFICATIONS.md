@@ -37,6 +37,6 @@ The following changed baseline files cannot carry a syntax-valid in-file comment
 | `vicione-servicebus-logo.png` | Binary PNG; replaced with the ViciOne.ServiceBus product asset. |
 | `src/vicione-servicebus-logo.png` | Binary PNG packaging copy; replaced with the same product asset. |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt` | Commentless golden-vector fixture; path renamed, vector bytes retained. |
-| `tests/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json` | Strict JSON fixture; identity-bearing keys/values renamed. |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json` | Strict JSON fixture; identity-bearing keys/values renamed. |
 | `tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc` | Strict Avro JSON schema; identity-bearing names renamed. |
-| `tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Binary certificate fixture; path renamed, bytes retained. |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Binary certificate fixture; path renamed, bytes retained. |

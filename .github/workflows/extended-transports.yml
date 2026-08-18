@@ -59,7 +59,7 @@ jobs:
             --broker activemq \
             --broker artemis \
             --category activemq \
-            --project tests/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
+            --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
             --evidence-dir artifacts/extended/activemq \
             --ports-out artifacts/extended/activemq/endpoints.json
       - uses: actions/upload-artifact@v4

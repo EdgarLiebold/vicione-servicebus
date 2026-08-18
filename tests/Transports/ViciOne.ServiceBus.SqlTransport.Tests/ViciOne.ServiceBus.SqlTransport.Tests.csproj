@@ -22,11 +22,11 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" />
-        <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
-        <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-        <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
-        <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
-        <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.SqlServer\ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
-        <ProjectReference Include="..\ViciOne.ServiceBus.TestInfrastructure\ViciOne.ServiceBus.TestInfrastructure.csproj" />
+        <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+        <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+        <ProjectReference Include="..\..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
+        <ProjectReference Include="..\..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
+        <ProjectReference Include="..\..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.SqlServer\ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
+        <ProjectReference Include="..\..\ViciOne.ServiceBus.TestInfrastructure\ViciOne.ServiceBus.TestInfrastructure.csproj" />
     </ItemGroup>
 </Project>

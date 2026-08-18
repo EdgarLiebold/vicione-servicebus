@@ -34,7 +34,7 @@ the test process:
 ```bash
 python3 tools/ci/run_broker_category.py --broker postgres --broker mssql \
     --category sql-transport \
-    --project tests/ViciOne.ServiceBus.SqlTransport.Tests \
+    --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests \
     --evidence-dir artifacts/test-evidence/sql-transport
 ```
 

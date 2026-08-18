@@ -12,17 +12,17 @@
   "targets": [
     {
       "id": "activemq",
-      "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
       "state": "IMPLEMENTED_MANUAL"
     },
     {
       "id": "amazon-sqs",
-      "project": "tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests",
       "state": "PRESERVED_NO_FIXTURE"
     },
     {
       "id": "artemis",
-      "project": "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
       "state": "IMPLEMENTED_MANUAL_SECOND_BROKER",
       "note": "The 'artemis' flavor of the parameterized ActiveMQ specs plus Sending_to_a_shared_topic_subscription_endpoint, which uses a shared durable topic that only Artemis supports. The imported baseline addressed a fixed port 61618 with admin/admin. That endpoint is now pinned by digest and run-scoped like every other fixture, and ArtemisBroker throws when the environment is absent, so the branch can never silently fall back to whatever listens on a fixed port. It is not part of the required path."
     },
@@ -33,7 +33,7 @@
     },
     {
       "id": "dynamodb",
-      "project": "tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+      "project": "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests",
       "state": "PRESERVED_NEEDS_SECRET"
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "eventhub",
-      "project": "tests/ViciOne.ServiceBus.EventHubIntegration.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests",
       "state": "PRESERVED_NEEDS_SECRET"
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "id": "quartz",
-      "project": "tests/ViciOne.ServiceBus.QuartzIntegration.Tests",
+      "project": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests",
       "state": "PRESERVED_NO_FIXTURE"
     },
     {
@@ -83,13 +83,13 @@
     },
     {
       "id": "sql-transport",
-      "project": "tests/ViciOne.ServiceBus.SqlTransport.Tests",
+      "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
       "state": "PRESERVED_NO_FIXTURE"
     }
   ],
   "manualCases": {
     "description": "Cases that stay visible but are never executed in the required path and never report a PASS. Each one asserts nothing, so it could not carry coverage even if it ran green.",
-    "howToRun": "python3 tools/ci/run_broker_category.py --broker rabbitmq --category manual --project tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/... -- --filter \"FullyQualifiedName=<the exact case>\"",
+    "howToRun": "python3 tools/ci/run_broker_category.py --broker rabbitmq --category manual --project tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/... -- --filter \"FullyQualifiedName=<the exact case>\"",
     "cases": [
       {
         "test": "Failing_to_connect_to_rabbitmq.Should_recover_from_a_crashed_server",

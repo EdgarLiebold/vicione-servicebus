@@ -132,7 +132,7 @@ jobs:
 SHIPPED = "## Release 1.0\n\n### New Rules\nRule ID | Category | Severity | Notes\n"
 UNSHIPPED = ""
 
-RABBITMQ_TEST_PROJECT = "tests/ViciOne.ServiceBus.RabbitMqTransport.Tests"
+RABBITMQ_TEST_PROJECT = "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
 
 SET_UP_FIXTURE = """\
 using NUnit.Framework;
@@ -359,7 +359,7 @@ class PolicyTestCase(unittest.TestCase):
     # -- hardcoded broker endpoints in specs ---------------------------------------------------
 
     def spec(self, name: str, body: str) -> Path:
-        directory = self.root / "tests/ViciOne.ServiceBus.ActiveMqTransport.Tests"
+        directory = self.root / "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests"
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / name
         path.write_text(body, encoding="utf-8")

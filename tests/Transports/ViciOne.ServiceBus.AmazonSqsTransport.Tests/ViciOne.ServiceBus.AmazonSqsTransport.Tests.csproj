@@ -13,11 +13,11 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.AmazonS3\ViciOne.ServiceBus.AmazonS3.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.AmazonSqsTransport\ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
-    <ProjectReference Include="..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\..\src\Persistence\ViciOne.ServiceBus.AmazonS3\ViciOne.ServiceBus.AmazonS3.csproj" />
+    <ProjectReference Include="..\..\..\src\Transports\ViciOne.ServiceBus.AmazonSqsTransport\ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
+    <ProjectReference Include="..\..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

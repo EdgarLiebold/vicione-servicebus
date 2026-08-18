@@ -123,7 +123,7 @@ jobs:
           python3 tools/ci/run_broker_category.py \
             --broker rabbitmq \
             --category rabbitmq \
-            --project tests/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
+            --project tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
             --evidence-dir artifacts/required/rabbitmq \
             --ports-out artifacts/required/rabbitmq/endpoints.json \
             --one-refusal-per-vhost 'test-exclusive-*'
@@ -154,7 +154,7 @@ jobs:
             --broker mssql \
             --broker postgres \
             --category entity-framework-core \
-            --project tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
+            --project tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
             --evidence-dir artifacts/required/entity-framework \
             --ports-out artifacts/required/entity-framework/endpoints.json
       - uses: actions/upload-artifact@v4

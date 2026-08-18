@@ -12,10 +12,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" />
-    <ProjectReference Include="..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-    <ProjectReference Include="..\ViciOne.ServiceBus.Tests\ViciOne.ServiceBus.Tests.csproj" />
+    <ProjectReference Include="..\..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.Tests\ViciOne.ServiceBus.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

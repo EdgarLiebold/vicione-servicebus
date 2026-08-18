@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Signed with the product key so the transport can grant it friend access: record 0047
+       requires a direct test of the internal producer of the already-closed channel exception. -->
+  <Import Project="../../../signing.props" />
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ionic.Zlib.Core" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.Analyzers">
@@ -14,11 +17,9 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
-    <PackageReference Include="SharpZipLib" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.ActiveMqTransport\ViciOne.ServiceBus.ActiveMqTransport.csproj" />
-    <ProjectReference Include="..\..\src\Scheduling\ViciOne.ServiceBus.QuartzIntegration\ViciOne.ServiceBus.QuartzIntegration.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus.TestFramework\ViciOne.ServiceBus.TestFramework.csproj" />
+    <ProjectReference Include="..\..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />
   </ItemGroup>
 
 </Project>
