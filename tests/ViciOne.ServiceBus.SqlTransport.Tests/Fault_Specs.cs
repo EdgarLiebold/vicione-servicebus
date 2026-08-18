@@ -103,11 +103,19 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
         [Test]
         public async Task Should_use_built_in_redelivery_to_redeliver_faulted_messages()
         {
+            // Three redeliveries a second apart, so the fault cannot arrive before three seconds have
+            // passed. The inactivity timeout stood at two: the harness declared the run idle while its
+            // own redelivery schedule was still running, and the case only passed while the machine was
+            // quiet enough for the fault to slip in first. The timeout is bound to the schedule now.
+            const int RedeliveryCount = 3;
+            var redeliveryInterval = TimeSpan.FromSeconds(1);
+            var inactivity = redeliveryInterval * (RedeliveryCount + 3);
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
                 {
-                    x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(2));
+                    x.SetTestTimeouts(testInactivityTimeout: inactivity, testTimeout: TimeSpan.FromSeconds(60));
                     x.AddHandler(async (ConsumeContext<Fault<MemberUpdateCommand>> _) =>
                     {
                     });
@@ -115,7 +123,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
                     x.AddConfigureEndpointsCallback((_, _, cfg) =>
                     {
-                        cfg.UseDelayedRedelivery(r => r.Interval(3, TimeSpan.FromSeconds(1)));
+                        cfg.UseDelayedRedelivery(r => r.Interval(RedeliveryCount, redeliveryInterval));
                     });
 
                     x.UsingPostgres((context, cfg) =>
@@ -135,7 +143,8 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
                 Address = "123 American Way"
             });
 
-            Assert.That(await harness.Consumed.Any<Fault<MemberUpdateCommand>>(), Is.True);
+            Assert.That(await harness.Consumed.Any<Fault<MemberUpdateCommand>>(), Is.True,
+                "no fault arrived, so the redelivery schedule never ran out or the fault was never published");
 
             await harness.Stop();
         }
