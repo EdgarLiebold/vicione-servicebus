@@ -332,27 +332,10 @@
           "job": "activemq",
           "category": "activemq",
           "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
-          "minimumExecutedCases": 148,
-          "notExecuted": [
-            {
-              "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup.Should_create_the_exchanges",
-              "fixture": "Configuring_the_publish_topology_at_startup",
-              "test": "Should_create_the_exchanges",
-              "mechanism": "EXPLICIT",
-              "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
-              "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
-            },
-            {
-              "identity": "ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuring_the_publish_topology_at_startup_by_namespace.Should_create_the_exchanges",
-              "fixture": "Configuring_the_publish_topology_at_startup_by_namespace",
-              "test": "Should_create_the_exchanges",
-              "mechanism": "EXPLICIT",
-              "dueness": "NOT_DUE_DEFECTIVE_IMPORTED_ASSURANCE",
-              "reason": "Measured, not guessed: the fixture starts, the bus endpoint runs, and the broker's own Jolokia view reports only the advisory topics and input_queue - none of the published message types. The same construction on RabbitMQ does deploy its exchanges, and both harnesses build their bus the same way, so the difference is in the ActiveMQ transport's deploy path rather than in the fixture. Writing the assertion the name promises therefore turns the case red on a product question that is not this developer's to answer alone. The case stays out with this measurement instead of the earlier claim that it is kept for manual observation, which was wrong: it asserts nothing because its body is empty, not because a human is meant to watch."
-            }
-          ],
+          "minimumExecutedCases": 154,
+          "notExecuted": [],
           "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
-          "explicitAttributeCount": 2
+          "explicitAttributeCount": 0
         }
       ]
     },

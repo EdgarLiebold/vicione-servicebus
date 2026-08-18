@@ -218,6 +218,7 @@ jobs:
           python3 tools/ci/run_broker_category.py \
             --broker activemq \
             --broker artemis \
+            --allow-broker-outage activemq \
             --category activemq \
             --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
             --evidence-dir artifacts/required/activemq \

@@ -75,6 +75,17 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             }, CancellationToken);
         }
 
+        public Task Materialize(IDestination destination)
+        {
+            return _executor.Run(() =>
+            {
+                // Opened and closed inside the session's executor, like every other session operation:
+                // the NMS session is not thread safe and this runs while the endpoint is starting.
+                IMessageProducer producer = _session.CreateProducer(destination);
+                producer.Close();
+            }, CancellationToken);
+        }
+
         public Task<IQueue> GetQueue(Queue queue)
         {
             return _executor.Run(() =>
