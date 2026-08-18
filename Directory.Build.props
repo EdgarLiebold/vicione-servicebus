@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- Every project resolves against a tracked packages.lock.json. A restore that would resolve
+         anything else than the lock file records fails instead of quietly taking a different version.
+         The CI restore adds -p:RestoreLockedMode=true; locally the lock file is written and updated. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!-- One output root: compilation output under artifacts/sdk, packages under artifacts/packages,
          so a build result can only come from one place. -->
     <UseArtifactsOutput>true</UseArtifactsOutput>

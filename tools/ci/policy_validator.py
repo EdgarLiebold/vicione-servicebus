@@ -592,6 +592,29 @@ class Policy:
                           f"{relative}: {name} calls the broker without taking a lease, so the subject can be "
                           "disposed while it is still running")
 
+    def check_restore_lock_files(self) -> None:
+        """Every project resolves against a tracked lock file.
+
+        Locked mode alone does not carry this. Measured: a restore with --locked-mode and no lock file
+        present writes one and succeeds, because RestorePackagesWithLockFile is on. A deleted lock file
+        would therefore reopen the package graph without anything reporting it, which is precisely what
+        the lock files exist to prevent, so the presence of the file is checked here, before any
+        restore runs.
+        """
+        projects = sorted(self.root.rglob("*.csproj"))
+        if not projects:
+            self.fail("restore-lock", "no project was found, so this rule proves nothing")
+            return
+
+        for project in projects:
+            relative = project.relative_to(self.root)
+            if relative.parts[0] in {"artifacts", "obj", "bin"}:
+                continue
+
+            lock_file = project.parent / "packages.lock.json"
+            if not lock_file.is_file():
+                self.fail("restore-lock", f"{relative.as_posix()} has no packages.lock.json, so its restore is not bound")
+
     def check_restore_sources(self) -> None:
         """The repository names its own restore source, so a restore cannot inherit machine state.
 
@@ -688,7 +711,7 @@ class Policy:
                      self.check_required_profile, self.check_pack,
                      self.check_no_publication, self.check_analyzer_release_tracking,
                      self.check_transport_operations_take_a_lease,
-                     self.check_restore_sources):
+                     self.check_restore_sources, self.check_restore_lock_files):
             rule()
 
         if self.failures:
