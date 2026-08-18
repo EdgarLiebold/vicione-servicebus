@@ -303,5 +303,24 @@
     }
   },
   "rawArtifacts": "The TRX of every category and the collected broker logs are under artifacts/run-output, which git ignores. This record carries the counters they held; tools/ci/policy_validator.py rejects a raw artifact under evidence/.",
-  "dockerAfterTheRun": "no container running"
+  "dockerAfterTheRun": "no container running",
+  "afterTheRun": {
+    "commit": "a2c5eeddb733126176c767e43367edcb9ba58ce9",
+    "whatChanged": "One added line in tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/ReceiveEndpoint_Specs.cs was an empty line carrying its indentation, so 'git diff --check 9b17dd0f..HEAD' did not answer empty. The line is blank now and the range answers empty again.",
+    "whyTheRunStillBinds": "The change touches one test project and nothing else. That project's category was executed again against this commit rather than assumed unaffected.",
+    "sqlTransportRerun": {
+      "counters": {
+        "total": 110,
+        "executed": 110,
+        "passed": 110,
+        "failed": 0,
+        "notExecuted": 0
+      },
+      "notExecuted": [],
+      "notExecutedUnlisted": [],
+      "processWallDurationSeconds": 289.312,
+      "exitCode": 0
+    },
+    "whitespaceFindingsInRange": 0
+  }
 }
