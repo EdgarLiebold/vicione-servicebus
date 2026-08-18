@@ -69,31 +69,136 @@ def category(model: dict, name: str) -> dict | None:
     return None
 
 
+class WorkflowShapeError(RuntimeError):
+    """The workflow is not in the shape this reader understands.
+
+    A small reader that guesses is worse than no reader: it agrees with the model for the wrong
+    reason. Anything it was not written for is refused so that somebody looks, rather than silently
+    producing a job list that happens to be empty.
+    """
+
+
 def workflow_jobs(root: Path) -> dict[str, str]:
-    """Job name to the text of that job, read from the required workflow."""
+    """Job name to the text of that job, read from the required workflow.
+
+    Deliberately a small line reader rather than a YAML parser, because it must not depend on a
+    package to run before a restore. It therefore refuses everything it was not written for: a
+    missing or empty jobs section, a job key that is not a plain name, a flow mapping, an anchor or
+    a merge key.
+    """
     workflow = root / ".github/workflows/build.yml"
     if not workflow.is_file():
-        return {}
+        raise WorkflowShapeError(".github/workflows/build.yml is missing")
+
+    lines = workflow.read_text(encoding="utf-8").splitlines()
+    if not any(line.rstrip() == "jobs:" for line in lines):
+        raise WorkflowShapeError("the workflow has no plain 'jobs:' section")
 
     jobs: dict[str, str] = {}
     current: str | None = None
     inside = False
-    for line in workflow.read_text(encoding="utf-8").splitlines():
+    for number, line in enumerate(lines, 1):
         if line.rstrip() == "jobs:":
+            if inside:
+                raise WorkflowShapeError(f"line {number}: a second jobs section")
             inside = True
             continue
         if not inside:
             continue
-        # A top level key other than jobs ends the section; anything at two spaces inside it is a job.
         if line and not line.startswith(" ") and line.rstrip().endswith(":"):
             break
-        if line.startswith("  ") and not line.startswith("    ") and line.rstrip().endswith(":"):
-            current = line.strip().rstrip(":")
+        if line.startswith("  ") and not line.startswith("    ") and line.strip():
+            key = line.strip()
+            if not key.endswith(":"):
+                raise WorkflowShapeError(f"line {number}: '{key}' is not a plain job key")
+            name = key.rstrip(":").strip()
+            if not name or not all(part.isalnum() or part in "-_" for part in name):
+                raise WorkflowShapeError(f"line {number}: '{name}' is not a plain job name")
+            if name in jobs:
+                raise WorkflowShapeError(f"line {number}: job '{name}' is declared twice")
+            current = name
             jobs[current] = ""
         elif current is not None:
+            if line.lstrip().startswith(("<<:", "&", "*")):
+                raise WorkflowShapeError(f"line {number}: anchors and merge keys are not supported here")
             jobs[current] += line + "\n"
 
+    if not jobs:
+        raise WorkflowShapeError("the jobs section is empty")
+
     return jobs
+
+
+def resolve_indirect_verification(root: Path, capabilities: list[dict]) -> list[str]:
+    """Follows every verifiedThroughCapability to a run, and refuses a link that proves nothing.
+
+    A prose link is not a proof. It has to end at a capability that really declares a run, it may not
+    lead in a circle or back to itself, and the capability that leans on it has to name the fixtures
+    inside that run's test project which actually exercise it - checked to exist, and checked to
+    belong to that project rather than to some other one with a similar name.
+    """
+    problems: list[str] = []
+    by_id = {capability.get("id"): capability for capability in capabilities}
+
+    for capability in capabilities:
+        identity = capability.get("id")
+        through = capability.get("verifiedThroughCapability")
+        if not through:
+            continue
+
+        seen = [identity]
+        current = through
+        terminal: dict | None = None
+        while True:
+            if current in seen:
+                problems.append(
+                    f"capability '{identity}' is verified through a cycle: {' -> '.join(seen + [current])}")
+                break
+            seen.append(current)
+
+            target = by_id.get(current)
+            if target is None:
+                problems.append(
+                    f"capability '{identity}' says it is verified through '{current}', which is not a capability")
+                break
+
+            if target.get("runs"):
+                terminal = target
+                break
+
+            current = target.get("verifiedThroughCapability")
+            if not current:
+                problems.append(
+                    f"capability '{identity}' is verified through '{seen[-1]}', which declares no run "
+                    "either, so the chain ends without a proof")
+                break
+
+        if terminal is None:
+            continue
+
+        anchors = capability.get("testAnchors")
+        if not anchors:
+            problems.append(
+                f"capability '{identity}' leans on the run of '{terminal['id']}' but names no test anchor, "
+                "so nothing states which cases there exercise it")
+            continue
+
+        projects = [root / project for project in terminal.get("testProjects", [])]
+        sources = [source for project in projects for source in project.rglob("*.cs")
+                   if "/bin/" not in source.as_posix() and "/obj/" not in source.as_posix()]
+        text = "\n".join(source.read_text(encoding="utf-8-sig", errors="replace") for source in sources)
+
+        for anchor in anchors:
+            namespace, _, name = anchor.rpartition(".")
+            if f"namespace {anchor}" in text:
+                continue
+            if f"namespace {namespace}" in text and (f"class {name}" in text or f"namespace {anchor}" in text):
+                continue
+            problems.append(
+                f"capability '{identity}' names the anchor '{anchor}', which does not exist in the test "
+                f"project of '{terminal['id']}'")
+
+    return problems
 
 
 def findings(root: Path) -> list[str]:
@@ -142,9 +247,6 @@ def findings(root: Path) -> list[str]:
             problems.append(
                 f"capability '{identity}' is verified by a required run but declares none and names no "
                 "capability whose run covers it")
-        if through and through not in {c.get("id") for c in capabilities}:
-            problems.append(
-                f"capability '{identity}' says it is verified through '{through}', which is not a capability")
         if through and capability.get("runs"):
             problems.append(
                 f"capability '{identity}' declares its own run and also claims to be verified through "
@@ -165,6 +267,8 @@ def findings(root: Path) -> list[str]:
                     f"the run of category '{run.get('category')}' declares no executed floor, so its "
                     "case count can fall without a single failure")
 
+    problems.extend(resolve_indirect_verification(root, capabilities))
+
     # Every project of this repository is classified exactly once. A project nobody classifies ships
     # without anyone stating how it is verified.
     present = {p.parent.relative_to(root).as_posix() for p in root.rglob("*.csproj")
@@ -176,8 +280,24 @@ def findings(root: Path) -> list[str]:
 
     # Both directions against the workflow: every declared run has a job that starts exactly it, and
     # every job of the required profile is explained by the model.
-    jobs = workflow_jobs(root)
+    try:
+        jobs = workflow_jobs(root)
+    except WorkflowShapeError as error:
+        problems.append(f"the required workflow cannot be read: {error}")
+        return problems
+
     explained: set[str] = {"policy", "build", "pack"}
+
+    # A category is started by exactly one run. A job may hold several distinct categories - core-unit
+    # runs core and abstractions - but two runs of one category are two truths about the same thing.
+    declared = [run.get("category") for run in runs(model)]
+    for category in sorted({name for name in declared if declared.count(name) > 1}):
+        problems.append(f"category '{category}' is declared by more than one run")
+
+    tuples = [(run.get("job"), run.get("category"), run.get("project")) for run in runs(model)]
+    for entry in sorted({tuple(t) for t in tuples if tuples.count(t) > 1}):
+        problems.append(f"the run {entry} is declared more than once")
+
     for run in runs(model):
         job = run.get("job")
         explained.add(job)

@@ -152,7 +152,10 @@ def fixture_model() -> dict:
         "id": "capability-analyzers-source", "class": "LOCAL_REQUIRED_RUN",
         "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers"], "testProjects": [],
         "supportProjects": [], "toolProjects": [],
-        "verifiedThroughCapability": "capability-analyzer",
+        # Through the one fixture capability whose test project really holds sources, so the anchor
+        # check has something to find. The rest of the fixture projects are bare stubs.
+        "verifiedThroughCapability": "capability-rabbitmq",
+        "testAnchors": ["ViciOne.ServiceBus.RabbitMqTransport.Tests.Watching_by_hand"],
     })
 
     return {
@@ -782,6 +785,67 @@ class PolicyTestCase(unittest.TestCase):
             "supportProjects": [], "toolProjects": [],
         })
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
+        self.assert_rejected("verification-model")
+
+    def test_rejects_one_category_declared_by_two_runs(self) -> None:
+        model = fixture_model()
+        first = model["capabilities"][0]["runs"][0]
+        model["capabilities"].append({
+            "id": "capability-again", "class": "LOCAL_REQUIRED_RUN", "sourceProjects": [],
+            "testProjects": [], "supportProjects": [], "toolProjects": [],
+            "runs": [dict(first)],
+        })
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_capability_verified_through_itself(self) -> None:
+        model = fixture_model()
+        model["capabilities"][0].pop("runs")
+        model["capabilities"][0]["verifiedThroughCapability"] = model["capabilities"][0]["id"]
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_cycle_of_two_capabilities(self) -> None:
+        model = fixture_model()
+        first, second = model["capabilities"][0], model["capabilities"][1]
+        for capability, other in ((first, second), (second, first)):
+            capability.pop("runs", None)
+            capability["verifiedThroughCapability"] = other["id"]
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_leaning_on_a_run_without_naming_an_anchor(self) -> None:
+        model = fixture_model()
+        model["capabilities"].append({
+            "id": "capability-leaning", "class": "LOCAL_REQUIRED_RUN", "sourceProjects": [],
+            "testProjects": [], "supportProjects": [], "toolProjects": [],
+            "verifiedThroughCapability": model["capabilities"][0]["id"],
+        })
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_an_anchor_that_is_not_in_that_test_project(self) -> None:
+        model = fixture_model()
+        rabbit = next(c for c in model["capabilities"] if c["runs"][0]["category"] == "rabbitmq")
+        model["capabilities"].append({
+            "id": "capability-anchored", "class": "LOCAL_REQUIRED_RUN", "sourceProjects": [],
+            "testProjects": [], "supportProjects": [], "toolProjects": [],
+            "verifiedThroughCapability": rabbit["id"],
+            "testAnchors": ["Somewhere.Else.Nothing_Like_This"],
+        })
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_workflow_shape_the_reader_was_not_written_for(self) -> None:
+        """A reader that guesses agrees with the model for the wrong reason."""
+        self.workflow().write_text(
+            BUILD_WORKFLOW.format(sdk=APPROVED_SDK).replace("jobs:\n", "jobs: {}\n", 1), encoding="utf-8")
+
         self.assert_rejected("verification-model")
 
     def test_rejects_an_invented_job(self) -> None:

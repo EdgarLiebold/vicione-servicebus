@@ -5,7 +5,7 @@
 # this fork and made the whole publish chain disappear while the run still looked green.
 #
 # Every retained capability that can run on the build machine runs here. What needs a real cloud
-# resource is named in build/test-infrastructure/capability-matrix.json as an open proof and has no
+# resource is named in build/verification/VERIFICATION_MODEL.json as an open proof and has no
 # job at all: a selectable target without an executing job ends green on an inventory print, which is
 # false green. The extended and nightly workflows that offered exactly that are gone.
 #

@@ -136,9 +136,8 @@
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [],
-      "verifiedThroughCapability": "transport-amazon-sqs"
+      "rationale": "Needs a real ephemeral cloud resource and is not verified here. It was linked to the transport capability of the same provider, which proved nothing: that capability has no run either, and sharing a test project is not sharing a proof.",
+      "runs": []
     },
     {
       "id": "message-data-azure-storage",
@@ -149,9 +148,8 @@
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [],
-      "verifiedThroughCapability": "transport-azure-service-bus"
+      "rationale": "Needs a real ephemeral cloud resource and is not verified here. It was linked to the transport capability of the same provider, which proved nothing: that capability has no run either, and sharing a test project is not sharing a proof.",
+      "runs": []
     },
     {
       "id": "persistence-azure-table",
@@ -254,7 +252,11 @@
       "toolProjects": [],
       "rationale": "",
       "runs": [],
-      "verifiedThroughCapability": "core"
+      "verifiedThroughCapability": "core",
+      "testAnchors": [
+        "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader",
+        "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set"
+      ]
     },
     {
       "id": "signalr",
@@ -291,7 +293,10 @@
       "toolProjects": [],
       "rationale": "",
       "runs": [],
-      "verifiedThroughCapability": "core"
+      "verifiedThroughCapability": "core",
+      "testAnchors": [
+        "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous"
+      ]
     },
     {
       "id": "test-framework",
@@ -429,6 +434,7 @@
     }
   ],
   "notes": {
-    "verifiedThroughCapability": "A capability whose cases live in another capability's test project names that capability instead of claiming the project a second time. Every project belongs to exactly one owner, and a reader can still find where a capability is exercised."
+    "verifiedThroughCapability": "A capability whose cases live in another capability's test project names that capability instead of claiming the project a second time. Every project belongs to exactly one owner, and a reader can still find where a capability is exercised.",
+    "testAnchors": "A capability verified through another one names the fixtures or namespaces inside that capability's test project which actually exercise it. A prose link is not a proof; the anchor is checked to exist and to belong to the terminal run's test project."
   }
 }
