@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_LOGO_REMOVAL",
+  "revision": "0009",
+  "boundCommit": "3acb66643d0039fda36bc84ec0dad864cc0795f2",
+  "searchScope": "every tracked and untracked file of the repository, artifacts excluded",
+  "filesRemoved": [
+    "vicione-servicebus-logo.png",
+    "src/vicione-servicebus-logo.png"
+  ],
+  "onlyUse": "PackageIcon in src/Directory.Build.props, which packed the root copy into every package. The copy under src was referenced by nothing.",
+  "afterRemoval": {
+    "imageFilesInRepository": 0,
+    "markdownImageEmbeds": 0,
+    "packageIconProperties": 0,
+    "iconElementInPackedNuspec": 0,
+    "activeTextClaimingAReplacementLogo": 0,
+    "noticeStatement": "records the removal in one sentence"
+  },
+  "legalRecords": "Both paths leave the commentless-exception set: they were listed because a changed binary cannot carry an in-file comment, and a file that no longer exists is not a changed file. The regenerated ChangeList records both as deletions under their upstream names.",
+  "keptDeliberately": "The two logo-token mapping rules in tools/identity/identity_rules.py. They record how the upstream token was mapped during the identity wave and are checked against synthetic probes, not against the tree; four guard tests pin all 41 rules. Removing them is a separate decision.",
+  "alsoRemoved": "The format exception for tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc, a file the tree does not contain: no tracked path contains Kafka at all."
+}

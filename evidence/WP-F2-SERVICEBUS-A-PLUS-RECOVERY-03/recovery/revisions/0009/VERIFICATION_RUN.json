@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_VERIFICATION_RUN",
+  "revision": "0009",
+  "boundCommit": "3acb66643d0039fda36bc84ec0dad864cc0795f2",
+  "purpose": "The same full local run as revision 0008, executed against the new test layout.",
+  "gates": [
+    {
+      "gate": "policy",
+      "result": "PASS"
+    },
+    {
+      "gate": "tools-identity",
+      "result": "PASS"
+    },
+    {
+      "gate": "tools-ci",
+      "result": "PASS"
+    },
+    {
+      "gate": "restore-locked-main",
+      "result": "PASS"
+    },
+    {
+      "gate": "restore-locked-benchmarks",
+      "result": "PASS"
+    },
+    {
+      "gate": "build-main",
+      "result": "PASS"
+    },
+    {
+      "gate": "build-benchmarks",
+      "result": "PASS"
+    },
+    {
+      "gate": "pack",
+      "result": "PASS"
+    }
+  ],
+  "packages": 20,
+  "warnings": 0,
+  "categories": [
+    {
+      "category": "analyzer",
+      "total": 115,
+      "passed": 115,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "core",
+      "total": 1865,
+      "passed": 1865,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "abstractions",
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "signalr",
+      "total": 26,
+      "passed": 26,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "quartz",
+      "total": 89,
+      "passed": 89,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "entity-framework-core",
+      "total": 160,
+      "passed": 160,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "sql-transport",
+      "total": 101,
+      "passed": 101,
+      "failed": 0,
+      "notExecuted": 0
+    },
+    {
+      "category": "rabbitmq",
+      "total": 362,
+      "passed": 342,
+      "failed": 0,
+      "notExecuted": 20
+    },
+    {
+      "category": "activemq",
+      "total": 150,
+      "passed": 145,
+      "failed": 0,
+      "notExecuted": 5
+    }
+  ],
+  "containersLeftRunning": 0,
+  "workingTree": "clean"
+}

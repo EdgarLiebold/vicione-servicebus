@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_TEST_LAYOUT",
+  "revision": "0009",
+  "boundCommit": "3acb66643d0039fda36bc84ec0dad864cc0795f2",
+  "rule": "tests mirrors the folder structure of src: what is grouped there is grouped here.",
+  "groups": {
+    "Persistence": [
+      "ViciOne.ServiceBus.Azure.Table.Tests",
+      "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+      "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests"
+    ],
+    "Scheduling": [
+      "ViciOne.ServiceBus.QuartzIntegration.Tests"
+    ],
+    "Transports": [
+      "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+      "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+      "ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests",
+      "ViciOne.ServiceBus.EventHubIntegration.Tests",
+      "ViciOne.ServiceBus.RabbitMqTransport.Tests",
+      "ViciOne.ServiceBus.SqlTransport.Tests"
+    ]
+  },
+  "ungrouped": [
+    "ViciOne.ServiceBus.Abstractions.Tests",
+    "ViciOne.ServiceBus.Analyzers.Tests",
+    "ViciOne.ServiceBus.SignalR.Tests",
+    "ViciOne.ServiceBus.TestInfrastructure",
+    "ViciOne.ServiceBus.Tests"
+  ],
+  "followedPathsIn": [
+    "ViciOne.ServiceBus.slnx",
+    ".github/workflows/build.yml",
+    ".github/workflows/extended-transports.yml",
+    "CONTRIBUTING.md",
+    "NOTICE",
+    "MODIFICATIONS.md",
+    "tools/ci/policy_validator.py",
+    "tools/ci/test_policy_validator.py",
+    "tools/identity/identity_rules.py",
+    "build/test-infrastructure/not-executed-inventory.json",
+    "build/test-infrastructure/extended-profile-inventory.json"
+  ],
+  "correctionFoundByTheBuild": "The RabbitMQ project imports signing.props, which is not a ProjectReference; the first rewrite missed it and the build named it."
+}

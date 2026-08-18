@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_STALE_INVENTORY_FINDING",
+  "revision": "0009",
+  "boundCommit": "3acb66643d0039fda36bc84ec0dad864cc0795f2",
+  "file": "build/test-infrastructure/extended-profile-inventory.json",
+  "owner": "WP-F2-SERVICEBUS-CI-BASELINE-03",
+  "notCorrectedHere": true,
+  "reason": "The file states capability scope. Whether a capability is preserved without a fixture or is not part of this product is a scope statement, not a mechanical path correction.",
+  "targetsTotal": 15,
+  "targetsWrong": 10,
+  "claimsPreservedButAbsent": [
+    {
+      "id": "dapper",
+      "project": "tests/ViciOne.ServiceBus.DapperIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "entity-framework-classic",
+      "project": "tests/ViciOne.ServiceBus.EntityFrameworkIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "hangfire",
+      "project": "tests/ViciOne.ServiceBus.HangfireIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "kafka",
+      "project": "tests/ViciOne.ServiceBus.KafkaIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "marten",
+      "project": "tests/ViciOne.ServiceBus.MartenIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "mongodb",
+      "project": "tests/ViciOne.ServiceBus.MongoDbIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "nhibernate",
+      "project": "tests/ViciOne.ServiceBus.NHibernateIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    },
+    {
+      "id": "redis",
+      "project": "tests/ViciOne.ServiceBus.RedisIntegration.Tests",
+      "trackedFilesMatchingTheCapability": 0
+    }
+  ],
+  "claimsNoFixtureButRunsGreen": [
+    {
+      "id": "quartz",
+      "measured": "89 of 89 in the required category"
+    },
+    {
+      "id": "sql-transport",
+      "measured": "101 of 101 in the required category"
+    }
+  ],
+  "cause": "The file was written while the fork still carried those projects and was never updated after the capability removal."
+}
