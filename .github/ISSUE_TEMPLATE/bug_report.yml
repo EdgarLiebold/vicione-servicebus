@@ -4,38 +4,26 @@ body:
   - type: markdown
     attributes:
       value: |
-        This bug report form is for submitting an issue found in ViciOne.ServiceBus that can be reproduced using the most recent version.
+        This form is for an issue found in ViciOne.ServiceBus that can be reproduced on the current
+        development branch. This product is built and supported on Linux only.
   - type: input
     id: contact
     attributes:
       label: Contact Details
-      description: If you have an active support contract, enter the email associated with the account.
+      description: How the maintainers can reach you about this report.
       placeholder: email@example.com
     validations:
       required: false
-  - type: dropdown
-    id: version
+  - type: input
+    id: commit
     attributes:
-      label: Version
-      description: In what version of ViciOne.ServiceBus did you discover this issue?
-      multiple: true
-      options:
-        - 8.x (develop, pre-release)
-        - 8.x
-        - 7.x (no longer supported)
-        - 6.x (really no longer supported)
-        - Earlier version (seriously?)
+      label: Commit
+      description: >-
+        ViciOne.ServiceBus has not been released yet, so a report names the commit it was observed on
+        rather than a version.
+      placeholder: 0123456789abcdef0123456789abcdef01234567
     validations:
       required: true
-  - type: dropdown
-    id: os
-    attributes:
-      label: On which operating system(s) are you experiencing the issue?
-      multiple: true
-      options:
-        - Windows
-        - MacOS
-        - Linux
   - type: dropdown
     id: broker
     attributes:
@@ -43,13 +31,13 @@ body:
       multiple: true
       options:
         - RabbitMQ
+        - ActiveMQ
+        - SQL (PostgreSQL or SQL Server)
         - Azure Service Bus
         - Amazon SQS
-        - ActiveMQ
+        - Azure Event Hubs
         - In-Memory
         - Mediator
-        - Kafka
-        - Azure Event Hub
   - type: textarea
     id: steps
     attributes:
@@ -81,7 +69,10 @@ body:
     id: logs
     attributes:
       label: Related log output, including any exceptions
-      description: Please paste any log output related to the issue (automatically formatted into code, so no need for backticks). Logs are usually required, if you don't have them, [turn them on](https://github.com/EdgarLiebold/vicione-servicebus/usage/logging.html) and capture them before creating an issue.
+      description: >-
+        Paste any log output related to the issue; it is formatted as code automatically. Logs are
+        usually required. ViciOne.ServiceBus logs through Microsoft.Extensions.Logging, so enabling
+        Debug for the ViciOne.ServiceBus category in your host is what captures them.
       render: shell
   - type: input
     id: repositorty

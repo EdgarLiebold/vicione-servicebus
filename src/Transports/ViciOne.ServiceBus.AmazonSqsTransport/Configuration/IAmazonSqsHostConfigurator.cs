@@ -23,7 +23,7 @@ public interface IAmazonSqsHostConfigurator
     /// <summary>
     /// Sets the credentials for the connection to AmazonSQS/AmazonSNS
     /// This is an alternative to using AccessKey() and SecretKey()
-    /// See https://docs.aws.amazon.com/sdkfornet1/latest/apidocs/html/T_Amazon_Runtime_AWSCredentials.htm for usages
+    /// See <see href="https://docs.aws.amazon.com/sdk-for-net/v4/developer-guide/net-dg-config-creds.html">Configure AWS credentials</see> for the ways to supply them.
     /// </summary>
     /// <param name="credentials"></param>
     void Credentials(AWSCredentials credentials);

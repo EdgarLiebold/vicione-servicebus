@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.Util
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
@@ -124,29 +123,29 @@ namespace ViciOne.ServiceBus.Util
             source.TrySetResult(true);
         }
 
+        /// <summary>
+        /// Runs the task to completion on the calling thread and rethrows its exception unwrapped.
+        /// <para>
+        /// A continuation posted to the current <see cref="SynchronizationContext"/> is not waited for
+        /// here: the awaiter itself blocks, and the context keeps whatever affinity it has. Windows
+        /// Forms and WPF dispatchers, reached by reflection, and an STA specific single threaded
+        /// context used to sit in front of this. None of them could ever run on this product's only
+        /// platform, where every call already took exactly the path below.
+        /// </para>
+        /// </summary>
         public static void Await(Func<Task> taskFactory, CancellationToken cancellationToken = default)
         {
             if (taskFactory == null)
                 throw new ArgumentNullException(nameof(taskFactory));
 
-            using (InitializeExecutionEnvironment())
-            {
-                var task = taskFactory();
-                if (task == null)
-                    throw new InvalidOperationException("The taskFactory must return a Task");
+            var task = taskFactory();
+            if (task == null)
+                throw new InvalidOperationException("The taskFactory must return a Task");
 
-                if (cancellationToken.CanBeCanceled)
-                    task = task.OrCanceled(cancellationToken);
+            if (cancellationToken.CanBeCanceled)
+                task = task.OrCanceled(cancellationToken);
 
-                var awaiter = new TaskAwaitAdapter(task);
-                if (!awaiter.IsCompleted)
-                {
-                    var dispatch = SynchronizationDispatcher.FromCurrentSynchronizationContext();
-                    dispatch.WaitForCompletion(awaiter);
-                }
-
-                awaiter.GetResult();
-            }
+            new TaskAwaitAdapter(task).GetResult();
         }
 
         public static void Await(Task task, CancellationToken cancellationToken = default)
@@ -154,21 +153,10 @@ namespace ViciOne.ServiceBus.Util
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            using (InitializeExecutionEnvironment())
-            {
-                if (cancellationToken.CanBeCanceled)
-                    task = task.OrCanceled(cancellationToken);
+            if (cancellationToken.CanBeCanceled)
+                task = task.OrCanceled(cancellationToken);
 
-                var awaiter = new TaskAwaitAdapter(task);
-
-                if (!awaiter.IsCompleted)
-                {
-                    var waitStrategy = SynchronizationDispatcher.FromCurrentSynchronizationContext();
-                    waitStrategy.WaitForCompletion(awaiter);
-                }
-
-                awaiter.GetResult();
-            }
+            new TaskAwaitAdapter(task).GetResult();
         }
 
         public static T Await<T>(Func<Task<T>> taskFactory, CancellationToken cancellationToken = default)
@@ -176,69 +164,15 @@ namespace ViciOne.ServiceBus.Util
             if (taskFactory == null)
                 throw new ArgumentNullException(nameof(taskFactory));
 
-            using (InitializeExecutionEnvironment())
-            {
-                Task<T>? task = taskFactory();
-                if (task == null)
-                    throw new InvalidOperationException("The taskFactory must return a Task");
+            Task<T>? task = taskFactory();
+            if (task == null)
+                throw new InvalidOperationException("The taskFactory must return a Task");
 
-                if (cancellationToken.CanBeCanceled)
-                    task = task.OrCanceled(cancellationToken);
+            if (cancellationToken.CanBeCanceled)
+                task = task.OrCanceled(cancellationToken);
 
-                var awaiter = new TaskAwaitAdapter<T>(task);
-                if (!awaiter.IsCompleted)
-                {
-                    var dispatch = SynchronizationDispatcher.FromCurrentSynchronizationContext();
-                    dispatch.WaitForCompletion(awaiter);
-                }
-
-                return awaiter.GetResultOfT();
-            }
+            return new TaskAwaitAdapter<T>(task).GetResultOfT();
         }
-
-        static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
-        {
-            if (continuation is null)
-                throw new ArgumentNullException(nameof(continuation));
-
-            var context = SynchronizationContext.Current;
-
-            awaiter.OnCompleted(() =>
-            {
-                if (context is null || SynchronizationContext.Current == context)
-                    continuation.Invoke();
-                else
-                    context.Post(_ => continuation.Invoke(), continuation);
-            });
-        }
-
-        static IDisposable? InitializeExecutionEnvironment()
-        {
-            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
-            {
-                var context = SynchronizationContext.Current;
-                if (context is null || context.GetType() == typeof(SynchronizationContext))
-                {
-                    var singleThreadedContext = new SingleThreadedSynchronizationContext(TimeSpan.FromSeconds(10));
-
-                    SetSynchronizationContext(singleThreadedContext);
-
-                    return new DisposableAction(() =>
-                    {
-                        SetSynchronizationContext(context);
-                        singleThreadedContext.Dispose();
-                    });
-                }
-            }
-
-            return null;
-        }
-
-        static void SetSynchronizationContext(SynchronizationContext? syncContext)
-        {
-            SynchronizationContext.SetSynchronizationContext(syncContext);
-        }
-
 
         static class Cached
         {
@@ -262,173 +196,6 @@ namespace ViciOne.ServiceBus.Util
         }
 
 
-        sealed class SingleThreadedSynchronizationContext :
-            SynchronizationContext,
-            IDisposable
-        {
-            const string ShutdownTimeoutMessage = "Work posted to the synchronization context did not complete within ten seconds.";
-
-            readonly Queue<ScheduledWork> _queue = new();
-
-            readonly TimeSpan _shutdownTimeout;
-            Status _status;
-            Stopwatch? _timeSinceShutdown;
-
-            public SingleThreadedSynchronizationContext(TimeSpan shutdownTimeout)
-            {
-                _shutdownTimeout = shutdownTimeout;
-            }
-
-            public void Dispose()
-            {
-                ShutDown();
-            }
-
-            public override void Post(SendOrPostCallback d, object? state)
-            {
-                if (d == null)
-                    throw new ArgumentNullException(nameof(d));
-
-                AddWork(new ScheduledWork(d, state, null));
-            }
-
-            public override void Send(SendOrPostCallback d, object? state)
-            {
-                if (d == null)
-                    throw new ArgumentNullException(nameof(d));
-
-                if (Current == this)
-                    d.Invoke(state);
-                else
-                {
-                    using var finished = new ManualResetEventSlim();
-
-                    AddWork(new ScheduledWork(d, state, finished));
-                    finished.Wait();
-                }
-            }
-
-            void AddWork(ScheduledWork work)
-            {
-                lock (_queue)
-                {
-                    switch (_status)
-                    {
-                        case Status.ShuttingDown:
-                            if (_timeSinceShutdown!.Elapsed < _shutdownTimeout)
-                                break;
-                            goto case Status.ShutDown;
-
-                        case Status.ShutDown:
-                            throw ErrorAndGetExceptionForShutdownTimeout();
-                    }
-
-                    _queue.Enqueue(work);
-                    Monitor.Pulse(_queue);
-                }
-            }
-
-            public void ShutDown()
-            {
-                lock (_queue)
-                {
-                    switch (_status)
-                    {
-                        case Status.ShuttingDown:
-                        case Status.ShutDown:
-                            return;
-                    }
-
-                    _timeSinceShutdown = Stopwatch.StartNew();
-                    _status = Status.ShuttingDown;
-                    Monitor.Pulse(_queue);
-                }
-            }
-
-            public void Run()
-            {
-                lock (_queue)
-                {
-                    switch (_status)
-                    {
-                        case Status.Running:
-                            throw new InvalidOperationException("SingleThreadedSynchronizationContext.Run may not be reentered.");
-
-                        case Status.ShuttingDown:
-                        case Status.ShutDown:
-                            throw new InvalidOperationException("This SingleThreadedSynchronizationContext has been shut down.");
-                    }
-
-                    _status = Status.Running;
-                }
-
-                while (TryTake(out var scheduledWork))
-                    scheduledWork.Execute();
-            }
-
-            bool TryTake(out ScheduledWork scheduledWork)
-            {
-                lock (_queue)
-                {
-                    while (_queue.Count == 0)
-                    {
-                        if (_status == Status.ShuttingDown)
-                        {
-                            _status = Status.ShutDown;
-                            scheduledWork = default;
-                            return false;
-                        }
-
-                        Monitor.Wait(_queue);
-                    }
-
-                    if (_status == Status.ShuttingDown && _timeSinceShutdown!.Elapsed > _shutdownTimeout)
-                    {
-                        _status = Status.ShutDown;
-                        throw ErrorAndGetExceptionForShutdownTimeout();
-                    }
-
-                    scheduledWork = _queue.Dequeue();
-                }
-
-                return true;
-            }
-
-            static Exception ErrorAndGetExceptionForShutdownTimeout()
-            {
-                return new InvalidOperationException(ShutdownTimeoutMessage);
-            }
-
-
-            struct ScheduledWork
-            {
-                readonly SendOrPostCallback _callback;
-                readonly object? _state;
-                readonly ManualResetEventSlim? _finished;
-
-                public ScheduledWork(SendOrPostCallback callback, object? state, ManualResetEventSlim? finished)
-                {
-                    _callback = callback;
-                    _state = state;
-                    _finished = finished;
-                }
-
-                public void Execute()
-                {
-                    _callback.Invoke(_state);
-                    _finished?.Set();
-                }
-            }
-
-
-            enum Status
-            {
-                NotStarted,
-                Running,
-                ShuttingDown,
-                ShutDown
-            }
-        }
 
 
         abstract class AwaitAdapter
@@ -488,220 +255,6 @@ namespace ViciOne.ServiceBus.Util
             public T GetResultOfT()
             {
                 return _awaiter.GetResult();
-            }
-        }
-
-
-        abstract class SynchronizationDispatcher
-        {
-            public abstract void WaitForCompletion(AwaitAdapter awaiter);
-
-            public static SynchronizationDispatcher FromCurrentSynchronizationContext()
-            {
-                var context = SynchronizationContext.Current;
-
-                if (context is SingleThreadedSynchronizationContext)
-                    return SingleThreadedSynchronizationDispatcher.Instance;
-
-                return WindowsFormsSynchronizationDispatcher.GetIfApplicable()
-                    ?? WpfSynchronizationDispatcher.GetIfApplicable()
-                    ?? NoSynchronizationDispatcher.Instance;
-            }
-
-
-            sealed class NoSynchronizationDispatcher :
-                SynchronizationDispatcher
-            {
-                public static readonly NoSynchronizationDispatcher Instance = new();
-
-                NoSynchronizationDispatcher()
-                {
-                }
-
-                public override void WaitForCompletion(AwaitAdapter awaiter)
-                {
-                    awaiter.GetResult();
-                }
-            }
-
-
-            sealed class WindowsFormsSynchronizationDispatcher :
-                SynchronizationDispatcher
-            {
-                static WindowsFormsSynchronizationDispatcher? _instance;
-                readonly Action _applicationExit;
-
-                readonly Action _applicationRun;
-
-                WindowsFormsSynchronizationDispatcher(Action applicationRun, Action applicationExit)
-                {
-                    _applicationRun = applicationRun;
-                    _applicationExit = applicationExit;
-                }
-
-                public static SynchronizationDispatcher? GetIfApplicable()
-                {
-                    if (!IsApplicable(SynchronizationContext.Current))
-                        return null;
-
-                    if (_instance is null)
-                    {
-                        var applicationType =
-                            SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", true)!;
-
-                        var applicationRun = (Action)applicationType
-                            .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                            .CreateDelegate(typeof(Action));
-
-                        var applicationExit = (Action)applicationType
-                            .GetMethod("Exit", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                            .CreateDelegate(typeof(Action));
-
-                        _instance = new WindowsFormsSynchronizationDispatcher(applicationRun, applicationExit);
-                    }
-
-                    return _instance;
-                }
-
-                static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
-                {
-                    return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
-                }
-
-                public override void WaitForCompletion(AwaitAdapter awaiter)
-                {
-                    var context = SynchronizationContext.Current;
-
-                    if (!IsApplicable(context))
-                        throw new InvalidOperationException("This dispatch must only be used from a WindowsFormsSynchronizationContext.");
-
-                    if (awaiter.IsCompleted)
-                        return;
-
-                    context.Post(_ => ContinueOnSameSynchronizationContext(awaiter, _applicationExit), awaiter);
-
-                    try
-                    {
-                        _applicationRun.Invoke();
-                    }
-                    finally
-                    {
-                        SynchronizationContext.SetSynchronizationContext(context);
-                    }
-                }
-            }
-
-
-            sealed class WpfSynchronizationDispatcher :
-                SynchronizationDispatcher
-            {
-                static WpfSynchronizationDispatcher? _instance;
-                readonly MethodInfo _dispatcherFrameSetContinueProperty;
-                readonly Type _dispatcherFrameType;
-
-                readonly MethodInfo _dispatcherPushFrame;
-
-                WpfSynchronizationDispatcher(MethodInfo dispatcherPushFrame,
-                    MethodInfo dispatcherFrameSetContinueProperty,
-                    Type dispatcherFrameType)
-                {
-                    _dispatcherPushFrame = dispatcherPushFrame;
-                    _dispatcherFrameSetContinueProperty = dispatcherFrameSetContinueProperty;
-                    _dispatcherFrameType = dispatcherFrameType;
-                }
-
-                public static SynchronizationDispatcher? GetIfApplicable()
-                {
-                    var context = SynchronizationContext.Current;
-
-                    if (!IsApplicable(context))
-                        return null;
-
-                    if (_instance is null)
-                    {
-                        var assemblyType = context.GetType().Assembly;
-                        var dispatcherType = assemblyType.GetType("System.Windows.Threading.Dispatcher", true)!;
-                        var dispatcherFrameType = assemblyType.GetType("System.Windows.Threading.DispatcherFrame", true)!;
-
-                        var dispatcherPushFrame = dispatcherType
-                            .GetMethod("PushFrame", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, new[] { dispatcherFrameType },
-                                null)!;
-
-                        var dispatcherSetFrameContinue = dispatcherFrameType
-                            .GetProperty("Continue")?
-                            .GetSetMethod()!;
-
-                        _instance = new WpfSynchronizationDispatcher(
-                            dispatcherPushFrame,
-                            dispatcherSetFrameContinue,
-                            dispatcherFrameType);
-                    }
-
-                    return _instance;
-                }
-
-                static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
-                {
-                    return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
-                }
-
-                public override void WaitForCompletion(AwaitAdapter awaiter)
-                {
-                    var context = SynchronizationContext.Current;
-
-                    if (!IsApplicable(context))
-                        throw new InvalidOperationException("This dispatch must only be used from a DispatcherSynchronizationContext.");
-
-                    if (awaiter.IsCompleted)
-                        return;
-
-                    var frame = Activator.CreateInstance(_dispatcherFrameType, true);
-
-                    context.Post(_ => ContinueOnSameSynchronizationContext(awaiter, () => _dispatcherFrameSetContinueProperty.Invoke(frame, [false])), awaiter);
-
-                    _dispatcherPushFrame.Invoke(null, [frame]);
-                }
-            }
-        }
-
-
-        sealed class SingleThreadedSynchronizationDispatcher :
-            SynchronizationDispatcher
-        {
-            public static readonly SingleThreadedSynchronizationDispatcher Instance = new();
-
-            SingleThreadedSynchronizationDispatcher()
-            {
-            }
-
-            public override void WaitForCompletion(AwaitAdapter awaiter)
-            {
-                var context = SynchronizationContext.Current as SingleThreadedSynchronizationContext
-                    ?? throw new InvalidOperationException("This dispatch must only be used from a SingleThreadedSynchronizationContext.");
-
-                if (awaiter.IsCompleted)
-                    return;
-
-                context.Post(_ => ContinueOnSameSynchronizationContext(awaiter, context.ShutDown), awaiter);
-
-                context.Run();
-            }
-        }
-
-
-        sealed class DisposableAction :
-            IDisposable
-        {
-            Action? _action;
-
-            public DisposableAction(Action action)
-            {
-                _action = action;
-            }
-
-            public void Dispose()
-            {
-                Interlocked.Exchange(ref _action, null)?.Invoke();
             }
         }
     }
