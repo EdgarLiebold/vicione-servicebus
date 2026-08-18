@@ -16,10 +16,9 @@ namespace ViciOne.ServiceBus.Tests.Middleware
     /// together: the retry sits inside the breaker, the breaker reacts to the faults that survive the retry, and the
     /// controller that observes the breaker changes the concurrency limit of the same pipe while it is running.
     ///
-    /// The previous version pushed a hundred and forty messages through this pipe, paced them with a one second
-    /// delay per attempt, printed the result to the console and swallowed every exception, so it contained no
-    /// assertion at all and could only fail by hanging. The composition is now driven by exactly as many messages as
-    /// the configured thresholds require, and every step is proven by the event it produces.
+    /// The composition is driven by exactly as many messages as the configured thresholds require, and every step is
+    /// proven by the event it produces. Nothing is paced by a delay and no exception is swallowed, so this fixture
+    /// cannot fail by hanging instead of by asserting.
     /// </summary>
     [TestFixture]
     public class Layering_retry_components_into_a_set

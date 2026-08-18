@@ -17,10 +17,8 @@ delegate TInterface DeserializeDelegate<out TInterface>(object formatter, ref Me
 /// <summary>
 /// Serializes an interface typed message through the formatter of its concrete type.
 /// <para>
-/// Both the invoker and the lookup of the concrete formatter used to be built on every single serialize
-/// and deserialize call: an expression tree was compiled per message, the generic resolver method was
-/// closed per message, and the formatter was fetched through a reflection invocation. All of it is
-/// compiled once per concrete type now and reached through delegates; see
+/// The invoker and the lookup of the concrete formatter are compiled once per concrete type and reached
+/// through delegates, rather than per serialize and deserialize call; see
 /// <see cref="ConcreteFormatterCache{TInterface}" /> for how the entries are bounded and why.
 /// </para>
 /// </summary>

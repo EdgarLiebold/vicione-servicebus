@@ -3,20 +3,19 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     using System;
 
 
-    /// <summary>
-    /// Run-scoped endpoint of the Artemis broker used by the 'artemis' flavor of the parameterized specs.
-    /// <para>
-    /// Artemis is a second, separate broker and is not the pinned ViciOne fixture. The imported baseline
-    /// addressed it at a fixed port 61618 with a well known admin account, which made the branch neither
-    /// a reproducible fixture nor visibly excluded. Every value now comes from the environment the
-    /// canonical runner provides.
-    /// </para>
-    /// <para>
-    /// When the environment is absent, reading an endpoint throws. That is deliberate: a silent fallback
-    /// to a fixed port would let a spec appear to prove something against whatever happens to listen
-    /// there, which is exactly the defect this type exists to remove.
-    /// </para>
-    /// </summary>
+/// <summary>
+/// Run-scoped endpoint of the Artemis broker used by the 'artemis' flavor of the parameterized specs.
+/// <para>
+/// Artemis is a second, separate broker and is not the pinned ViciOne fixture. Every value comes from
+/// the environment the canonical runner provides. A fixed port with a well known admin account would be
+/// neither a reproducible fixture nor a visible exclusion.
+/// </para>
+/// <para>
+/// When the environment is absent, reading an endpoint throws. That is deliberate: a silent fallback to
+/// a fixed port would let a spec appear to prove something against whatever happens to listen there,
+/// which is exactly the defect this type exists to remove.
+/// </para>
+/// </summary>
     public static class ArtemisBroker
     {
         public const string HostVariable = "VICIONE_SERVICEBUS_ARTEMIS_HOST";

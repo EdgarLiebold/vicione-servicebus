@@ -12,10 +12,9 @@ namespace ViciOne.ServiceBus.Tests.Diagnostics
     /// The StatsD counter writes one datagram per operation, and the datagram states the composed counter name and
     /// the StatsD metric type.
     ///
-    /// The previous version pushed a hundred thousand increments at a hardcoded external host and printed the
-    /// throughput, so it asserted nothing, could not run anywhere but on one machine, and measured the wall clock.
-    /// The counter now sends to a receiver that this case owns, on the loopback address and on an ephemeral port
-    /// that the receiver reports, and every datagram it produces is compared byte for byte.
+    /// The counter sends to a receiver this case owns, on the loopback address and on an ephemeral port that the
+    /// receiver reports, and every datagram it produces is compared byte for byte. Nothing is timed and nothing
+    /// leaves the machine.
     /// </summary>
     [TestFixture]
     public class StatsD_Specs

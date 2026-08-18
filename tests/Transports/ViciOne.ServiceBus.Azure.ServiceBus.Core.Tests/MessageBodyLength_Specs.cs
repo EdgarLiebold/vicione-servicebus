@@ -12,10 +12,10 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests
     /// what <c>GetBytes()</c> returns, whichever accessor ran first, and the stream it hands out cannot
     /// be written through.
     /// <para>
-    /// This type was missing from my census. I had reported that every implementation was enumerated
-    /// while counting the rows of one test source, and those rows are value variants rather than types.
-    /// The implementation itself turned out to be correct, which is the point: a census is a statement
-    /// about coverage, and it was wrong even though nothing was broken behind it.
+    /// The implementation is correct, and it is asserted anyway. Counting the rows of one test source
+    /// does not enumerate the implementations - those rows are value variants rather than types - so a
+    /// census built that way is wrong about its coverage even when nothing is broken behind it. This
+    /// case makes the coverage a fact rather than a count.
     /// </para>
     /// <para>
     /// It needs no namespace, no connection and no emulator: the body is built from a

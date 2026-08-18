@@ -10,15 +10,12 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
     [TestFixture]
     /// <summary>
-    /// One bus, two serializers: the endpoint answers with a different one than the bus publishes
-    /// with. The pair used to be the envelope and BSON.
+    /// One bus, two serializers: the endpoint answers with a different one than the bus publishes with.
     /// <para>
-    /// BSON went with the removed library, and the replacement has to be an independent serializer
-    /// implementation rather than a second mode of the same one. Raw JSON would have been the easy
-    /// substitution and the wrong one: it is System.Text.Json in both halves, so the case would have
-    /// proved that the envelope and raw modes coexist, which is a narrower statement than the one it
-    /// carried. MessagePack is a separate implementation with its own wire format and content type,
-    /// so what is asserted stays what it was.
+    /// The second one has to be an independent serializer implementation rather than a second mode of
+    /// the same one. Raw JSON is System.Text.Json in both halves, so the case would prove that the
+    /// envelope and raw modes coexist, which is a narrower statement than the one it carries.
+    /// MessagePack is a separate implementation with its own wire format and content type.
     /// </para>
     /// </summary>
     public class SeparateSerializer_Specs :

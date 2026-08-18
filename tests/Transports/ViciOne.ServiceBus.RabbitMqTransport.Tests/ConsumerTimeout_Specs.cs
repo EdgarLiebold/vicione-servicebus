@@ -131,11 +131,10 @@ public class When_the_consumer_timeout_is_reached_waiting_for_a_batch
                 "the second delivery did not carry the same messages as the first");
 
             // Point 3 -- processed and acknowledged.
-            // Nothing here counts a fault. An earlier revision carried an assertion that the probe had
-            // recorded none, but nothing ever recorded one, so it was green by construction and proved
-            // exactly nothing. A successful second delivery is already asserted by the two lines above
-            // and by the effect count below: had it faulted, the acknowledgement would not have been
-            // signalled and the effect would not have been applied.
+            // Nothing here counts a fault, and an assertion that the probe recorded none would be green
+            // by construction because nothing ever records one. A successful second delivery is asserted
+            // by the two lines above and by the effect count below: had it faulted, the acknowledgement
+            // would not have been signalled and the effect would not have been applied.
             Assert.That(acknowledged, Is.True);
 
             // Point 4 -- nothing left behind.
@@ -168,14 +167,11 @@ public class When_the_consumer_timeout_is_reached_waiting_for_a_batch
     /// rabbitmq:4.2-management).
     /// </para>
     /// <para>
-    /// The delivered spec asked for ten seconds and an earlier revision of this one for fifteen. Both
-    /// are below what the broker supports, and the fixture showed exactly what the documentation
-    /// predicts: with fifteen seconds configured, the broker discarded the delivery not after fifteen
-    /// seconds but at its next one minute evaluation, logging "Timeout used: 15000 ms" at that tick. A
-    /// spec built on that value would be asserting a window the broker never actually applied — so the
-    /// window here is one the broker honours, and the run is correspondingly longer. That is the
-    /// intended trade: a real integration test that takes a minute, not a faster one that proves
-    /// something else.
+    /// A shorter value does not shorten the run and does not hold. With fifteen seconds configured the
+    /// fixture shows what the documentation predicts: the broker discards the delivery at its next one
+    /// minute evaluation, logging "Timeout used: 15000 ms" at that tick, so the spec would assert a
+    /// window the broker never applied. This case takes a minute on purpose — a real integration test
+    /// that is slow, not a fast one that proves something else.
     /// </para>
     /// </summary>
     const int AcknowledgementTimeoutMilliseconds = 60000;

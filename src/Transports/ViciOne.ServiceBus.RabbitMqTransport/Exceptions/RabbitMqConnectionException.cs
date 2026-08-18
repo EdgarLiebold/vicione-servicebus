@@ -35,11 +35,10 @@ namespace ViciOne.ServiceBus
         /// <summary>
         /// The connection is shutting down and cannot serve this caller.
         /// <para>
-        /// Transient, and that is the correction. A stop is exactly the failure a later start resolves,
-        /// but it used to be announced with the public string constructor, whose flag is false — so a
-        /// routine shutdown carried the same answer as a refused credential, and every caller asking
-        /// "can waiting fix this?" was told no about a bus that was merely stopping. Measured, that made
-        /// each run after a stop fail specs that had nothing to do with it.
+        /// Transient, because a stop is exactly the failure a later start resolves. A caller asking
+        /// "can waiting fix this?" has to be told yes here; announced as permanent, a routine shutdown
+        /// carries the same answer as a refused credential and every run after a stop fails specs that
+        /// have nothing to do with it.
         /// </para>
         /// </summary>
         internal static RabbitMqConnectionException Stopping(string description)
@@ -55,12 +54,12 @@ namespace ViciOne.ServiceBus
         /// <summary>
         /// Whether the failure is worth waiting out.
         /// <para>
-        /// Transient is the default, and stays the default: an unreachable broker, a dropped connection
-        /// and every other fault the transport already recovers from are unchanged. Two answers are not
-        /// transient, because repeating them cannot change them — a refused credential, and a queue the
-        /// broker will not hand over exclusively. The second one is new. It used to be counted as
-        /// transient, so the endpoint start disappeared into a background retry loop and the caller was
-        /// left with the generic readiness timeout after sixty seconds instead of the broker's answer.
+        /// Transient is the default: an unreachable broker, a dropped connection and every other fault
+        /// the transport recovers from. Two answers are not transient, because repeating them cannot
+        /// change them — a refused credential, and a queue the broker will not hand over exclusively.
+        /// Counting the second one as transient hides the endpoint start in a background retry loop and
+        /// leaves the caller with the generic readiness timeout after sixty seconds instead of the
+        /// broker's answer.
         /// </para>
         /// </summary>
         static bool IsExceptionTransient(Exception exception)

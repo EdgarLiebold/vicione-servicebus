@@ -98,9 +98,9 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [Test]
         public void Should_use_the_options_the_callback_returns()
         {
-            // Returning a different instance used to be discarded, so only mutating the given one had
-            // any effect although the signature says otherwise. The naming policy is read through the
-            // converter, so the written property name says which options actually reached it.
+            // The signature returns options, so returning a different instance has to take effect and not
+            // only mutating the given one. The naming policy is read through the converter, so the
+            // written property name says which options actually reached it.
             var options = new JsonSerializerOptions();
 
             options.SetMessageSerializerOptions<SampleMessage>(
@@ -147,9 +147,9 @@ namespace ViciOne.ServiceBus.Tests.Serialization
 
 
     /// <summary>
-    /// The other callback, and the one my previous version never touched although its prose claimed
-    /// both. Putting the old implementation back — the one that assigns whatever the callback returned,
-    /// including nothing — left all nine configuration tests green, so the correction was unproven.
+    /// The second of the two callbacks. Both are asserted here: with only the first one covered, an
+    /// implementation that assigns whatever the callback returned, including nothing, leaves every
+    /// configuration case green and the assurance unproven.
     /// <para>
     /// These options are process wide state, so the fixture works on its own copy and puts the previous
     /// instance back afterwards. Without that a failing case here would change how every later test in

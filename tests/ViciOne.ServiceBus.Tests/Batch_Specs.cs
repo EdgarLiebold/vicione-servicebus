@@ -295,18 +295,17 @@ namespace ViciOne.ServiceBus.Tests
         /// <summary>
         /// Every message that was sent is delivered to the batch consumer exactly once.
         /// <para>
-        /// The assurance used to be that a set of duplicates stayed empty, which is only half of it: a
-        /// message the transport dropped never enters that set either, so a loss passed the assertion and
-        /// only showed up as the fixture running into its own timeout. The identities are chosen by the
-        /// sender now and compared as sets, so a duplicate and a loss each fail on their own sentence.
+        /// A set of duplicates that stays empty is only half of that: a message the transport dropped
+        /// never enters that set either, so a loss would pass and show up only as the fixture running
+        /// into its own timeout. The identities are chosen by the sender and compared as sets, so a
+        /// duplicate and a loss each fail on their own sentence.
         /// </para>
         /// <para>
         /// The delivery has to be exactly once while batches actually overlap, otherwise the case only
         /// describes a consumer that runs alone. Overlap is stated rather than provoked: each invocation
         /// announces that it is inside the consumer and waits until a second one has done the same, and
-        /// the fixture asserts afterwards that this happened. The fifty million loop iterations and the
-        /// thirty two yields that stood here were both attempts to make overlap likely; neither could
-        /// report whether it occurred.
+        /// the fixture asserts afterwards that this happened. A busy loop or a yield count can make
+        /// overlap likely but cannot report whether it occurred.
         /// </para>
         /// </summary>
         [Test]

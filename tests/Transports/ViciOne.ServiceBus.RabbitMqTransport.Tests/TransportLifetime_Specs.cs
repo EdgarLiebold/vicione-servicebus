@@ -190,10 +190,10 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.UnitTests
         }
 
         /// <summary>
-        /// A lease released twice releases once. It used to be a struct, which C# copies silently, and
-        /// a copy disposed a second time would have taken the active count below zero — from where an
-        /// operation still running could no longer hold disposal off, which is the defect all of the
-        /// above exists to prevent.
+        /// A lease released twice releases once. A struct will not do: C# copies it silently, and a copy
+        /// disposed a second time takes the active count below zero — from where an operation still
+        /// running can no longer hold disposal off, which is the defect all of the above exists to
+        /// prevent.
         /// </summary>
         [Test]
         public async Task Should_release_a_lease_only_once_however_often_it_is_disposed()

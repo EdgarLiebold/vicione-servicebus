@@ -28,8 +28,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             : base(new ActiveMqTestHarness
             {
                 // Shared durable topics are an Artemis feature, so this spec addresses the Artemis
-                // broker rather than the ViciOne fixture. The endpoint is run-scoped; the fixed port
-                // 61618 the imported baseline used could point at any broker on the machine.
+                // broker rather than the ViciOne fixture. The endpoint is run-scoped; a fixed port could
+                // point at any broker on the machine.
                 HostAddress = ArtemisBroker.AmqpAddress,
                 Username = ArtemisBroker.User,
                 Password = ArtemisBroker.Pass

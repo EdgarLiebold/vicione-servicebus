@@ -15,12 +15,9 @@ namespace ViciOne.ServiceBus.Tests
         /// <summary>
         /// Every message of a fault storm produces exactly one fault that carries the exception of its consumer.
         ///
-        /// The previous version sent a thousand messages into a consumer that slept a hundred milliseconds, then
-        /// read the collected faults through a blocking list whose deadline came from the wall clock, so the case
-        /// silently returned a short array when the machine was slow. It also asserted the exception type through a
-        /// projection whose result was discarded, so a fault carrying the wrong exception passed. The storm is now
-        /// bounded by a declared concurrency, the last expected fault is the barrier, and both the count and the
-        /// content of every fault are asserted.
+        /// The storm is bounded by a declared concurrency and the last expected fault is the barrier, so no deadline
+        /// comes from the wall clock and a slow machine cannot silently shorten the result. Both the count and the
+        /// content of every fault are asserted: a fault carrying the wrong exception fails here.
         /// </summary>
         [TestFixture]
         public class An_excessive_fault_storm :

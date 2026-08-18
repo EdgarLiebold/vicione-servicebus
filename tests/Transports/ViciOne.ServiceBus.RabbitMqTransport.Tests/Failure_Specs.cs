@@ -25,19 +25,17 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         /// A second bus that claims a bus endpoint queue another connection already holds exclusively
         /// must fail, say why, and stop trying.
         /// <para>
-        /// The spec used to assert that harness2.Start() throws. It cannot: the bus endpoint is
-        /// materialised on demand, so Start() never declares the exclusive queue and never meets the
-        /// conflict. Measured, the queue does not exist in the virtual host after either start, and the
-        /// second start returns normally. Upstream MassTransit carries this spec as [Explicit], so the
-        /// expectation never ran against a broker there either.
+        /// Start() is not where the conflict is met. The bus endpoint is materialised on demand, so
+        /// Start() never declares the exclusive queue: it returns normally and the queue does not exist
+        /// in the virtual host afterwards. The assertion therefore sits where the endpoint really comes
+        /// up.
         /// </para>
         /// <para>
-        /// Moving the assertion to where the endpoint really comes up was necessary but not sufficient.
-        /// Measured again, it was green for the wrong reason: the caller waited 60,0097 s and received
-        /// the generic readiness timeout, while the broker had answered
-        /// <c>resource_locked</c> four times over and the transport quietly went on retrying a declare
-        /// that could not succeed. The assertion below therefore pins the broker's own answer, its
-        /// reply code, a budget far below the readiness limit, and the absence of any further attempt.
+        /// That alone is not enough to be green for the right reason. Without the assertions below the
+        /// caller waits out the full readiness limit and receives the generic timeout, while the broker
+        /// has answered <c>resource_locked</c> several times over and the transport goes on retrying a
+        /// declare that cannot succeed. So this pins the broker's own answer, its reply code, a budget
+        /// far below the readiness limit, and the absence of any further attempt.
         /// </para>
         /// </summary>
         [Test]

@@ -58,7 +58,8 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Waits for the bus endpoint to be ready after a consumer has been connected to a running bus.
+        /// Waits for the bus endpoint to be ready after a consumer has been connected to a running bus,
+        /// and stops waiting when there is nothing left to wait for.
         /// <para>
         /// The bus endpoint is materialised on demand: it declares its queue when something first
         /// consumes on the bus, not when the bus starts. Connecting a consumer is therefore what brings
@@ -66,20 +67,14 @@ namespace ViciOne.ServiceBus
         /// would silently drop messages.
         /// </para>
         /// <para>
-        /// The wait used to be unbounded and uncancellable. An endpoint that can never start, for
-        /// instance because another connection already holds its exclusive queue, left the caller
-        /// blocked on its thread for good: no exception, no timeout, nothing naming a cause. Measured
-        /// against the pinned fixture, StartAsync returned normally and the first ConnectHandler never
-        /// came back. The bound below is the same sixty seconds this class already applies in
-        /// <see cref="StartAsync" /> when a caller supplies no token of its own, so no second notion of
-        /// "too long" is introduced, and TaskUtil.Await already accepted a token — it was simply never
-        /// given one.
+        /// The wait is bounded and cancellable. An endpoint that can never start, for instance because
+        /// another connection already holds its exclusive queue, would otherwise block the caller on its
+        /// thread for good: no exception, no timeout, nothing naming a cause. The bound is the same
+        /// sixty seconds this class applies in <see cref="StartAsync" /> when a caller supplies no token
+        /// of its own, so there is no second notion of "too long".
         /// </para>
-        /// </summary>
-        /// <summary>
-        /// Waits for the on-demand bus endpoint, and stops waiting when there is nothing left to wait for.
         /// <para>
-        /// A fault the transport recovers from leaves the wait exactly as it was: the retry runs and the
+        /// A fault the transport recovers from leaves the wait exactly as it is: the retry runs and the
         /// endpoint still becomes ready, which is the behaviour every recoverable hiccup during startup
         /// depends on. A fault it cannot recover from ends the wait with the transport's own exception,
         /// because the endpoint will not become ready by itself and holding the caller for the full
@@ -87,12 +82,10 @@ namespace ViciOne.ServiceBus
         /// </para>
         /// <para>
         /// The observer is connected here rather than in the receive endpoint, and that is deliberate.
-        /// An earlier revision completed the endpoint's own Started task on any unrecoverable fault,
-        /// which reaches every endpoint in the process and not only the one being waited for: measured,
-        /// six unrelated specs in the RabbitMQ suite failed, among them the ones that deliberately
-        /// provoke a refused credential — also an unrecoverable fault, and one whose existing behaviour
-        /// was never in question. The wait is the only place that needs to know, so it is the only place
-        /// that is told.
+        /// Completing the endpoint's own Started task on an unrecoverable fault reaches every endpoint
+        /// in the process and not only the one being waited for, including the specs that deliberately
+        /// provoke a refused credential. The wait is the only place that needs to know, so it is the
+        /// only place that is told.
         /// </para>
         /// </summary>
         void WaitUntilBusEndpointIsReady()

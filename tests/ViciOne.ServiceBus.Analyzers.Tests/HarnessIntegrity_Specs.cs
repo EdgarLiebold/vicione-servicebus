@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Analyzers.Tests
     /// <summary>
     /// Guards the analyzer test harness itself.
     /// A fixture that does not bind produces zero analyzer diagnostics, which is indistinguishable from
-    /// "the analyzer found nothing". On the imported baseline that silence hid a broken reference set and
-    /// kept 72 of 108 analyzer tests red without ever naming a cause. These tests fail if that silence returns.
+    /// "the analyzer found nothing". These tests fail if that silence returns, so a broken reference set
+    /// names itself instead of turning analyzer tests red without a cause.
     /// </summary>
     public class HarnessIntegrity_Specs :
         DiagnosticVerifier

@@ -139,9 +139,9 @@ sealed class ConcreteFormatterCache<TInterface>
 
     /// <summary>
     /// The value parameter is the interface and the cast to the concrete type happens inside the
-    /// compiled body. The previous version compiled the delegate over the concrete type and then
-    /// reinterpreted it with <c>Unsafe.As</c>, which asserted a conversion the runtime never checked and
-    /// which pointed the wrong way along the variance of the delegate.
+    /// compiled body. Compiling the delegate over the concrete type and reinterpreting it with
+    /// <c>Unsafe.As</c> asserts a conversion the runtime never checks, and it points the wrong way along
+    /// the variance of the delegate.
     /// </summary>
     static SerializeDelegate<TInterface> BuildSerialize(Type concreteType, Type formatterType)
     {

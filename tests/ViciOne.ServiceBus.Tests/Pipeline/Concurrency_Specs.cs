@@ -80,8 +80,7 @@ namespace ViciOne.ServiceBus.Tests.Pipeline
 
     /// <summary>
     /// The same rate limit contract as in the middleware fixture, proven for the consume context closure of the
-    /// filter. Both cases used to assert only a stopwatch reading of a hundred and one concurrently pushed messages;
-    /// they now use the held send as the observable effect of the limiter.
+    /// filter. Both cases use the held send as the observable effect of the limiter rather than a stopwatch reading.
     /// </summary>
     [TestFixture]
     public class Specifying_a_rate_limit

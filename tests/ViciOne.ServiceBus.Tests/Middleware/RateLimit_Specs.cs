@@ -13,12 +13,10 @@ namespace ViciOne.ServiceBus.Tests.Middleware
     /// The rate limit filter admits a fixed number of messages per interval and returns the consumed permits when
     /// the interval elapses.
     ///
-    /// Every case in this fixture used to assert nothing but a stopwatch reading of a hundred and one messages that
-    /// were pushed through the filter concurrently, so a slow machine passed and a broken limiter that simply stalled
-    /// passed as well. The limiter is now driven by its own observable effects: a message that has no permit does not
-    /// complete, and the send that was held completes exactly when the limit is raised or the interval replenishes
-    /// the permits. Where the interval must provably not interfere, it is configured so long that its timer cannot
-    /// fire while the case runs.
+    /// The limiter is driven by its own observable effects: a message that has no permit does not complete, and the
+    /// send that was held completes exactly when the limit is raised or the interval replenishes the permits. Where
+    /// the interval must provably not interfere, it is configured so long that its timer cannot fire while the case
+    /// runs. Nothing reads a stopwatch — a limiter that simply stalled would pass that, and so would a slow machine.
     /// </summary>
     [TestFixture]
     public class Specifying_a_rate_limit

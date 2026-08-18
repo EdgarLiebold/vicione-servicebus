@@ -13,11 +13,10 @@ namespace ViciOne.ServiceBus.Tests
 
 
     /// <summary>
-    /// The configuration of a bus has to be built, not merely accepted. Both cases used to call
-    /// CreateUsingInMemory, drop the returned bus control on the floor and assert nothing, so the only statement
-    /// they made was that configuring does not throw, and neither of them ever started or stopped a bus.
+    /// The configuration of a bus has to be built, not merely accepted. Configuring without ever starting states
+    /// only that configuring does not throw.
     ///
-    /// The configuration is now proven through the probe of the started bus, which reports the pipeline that was
+    /// The configuration is proven through the probe of the started bus, which reports the pipeline that was
     /// actually built, and the bus is stopped deterministically in every case.
     /// </summary>
     [TestFixture]

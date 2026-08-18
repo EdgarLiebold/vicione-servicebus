@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests
     ///
     /// Every step below moves the scheduler clock by one named functional step and then waits for a message
     /// barrier. Nothing waits on the wall clock, nothing polls, and no step hopes for a Quartz misfire: a jump
-    /// over several due times may coalesce them, which is exactly why these cases used to be explicit.
+    /// over several due times may coalesce them, which is why each step names the transition it waits for.
     /// </summary>
     [TestFixture]
     public class Specifying_a_recurring_event :

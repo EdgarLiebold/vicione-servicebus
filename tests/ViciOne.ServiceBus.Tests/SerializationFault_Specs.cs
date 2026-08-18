@@ -48,13 +48,11 @@ namespace ViciOne.ServiceBus.Tests
     /// A message whose body cannot be read by any deserializer of the endpoint must produce a receive fault that
     /// carries the identity of what failed, and its payload must not reach a regular consumer.
     ///
-    /// The previous version only set the content type header of the send context and then awaited the fault without
-    /// a single assertion. That could not work: setting the header alone leaves the body serialized by the endpoint
-    /// serializer, and an unknown media type falls back to the default deserializer, so the envelope deserialized
-    /// and the ping was consumed normally. The case therefore needed a debugger to appear to pass.
-    ///
-    /// Both halves are now stated explicitly. The content type is one that the endpoint provably does not register,
-    /// and the body is written unchanged and is not an envelope, so the fallback deserializer fails as well.
+    /// Both halves are stated explicitly. Setting the content type header of the send context alone does not do it:
+    /// the body stays serialized by the endpoint serializer and an unknown media type falls back to the default
+    /// deserializer, so the envelope deserializes and the message is consumed normally. The content type here is one
+    /// the endpoint provably does not register, and the body is written unchanged and is not an envelope, so the
+    /// fallback deserializer fails as well.
     /// </summary>
     [TestFixture]
     public class When_a_message_has_an_unrecognized_body_format :

@@ -12,12 +12,10 @@ namespace ViciOne.ServiceBus.Tests
     /// A receive endpoint that is configured for a high number of concurrent consumers must actually deliver that
     /// many messages at the same time.
     ///
-    /// The previous version of this case measured the average latency of one hundred publishes with a stopwatch and
-    /// printed it, while its bus configuration was commented out, so no consumer existed and the case could never
-    /// pass. The contract underneath it is kept and made observable: every delivery is held inside the handler until
-    /// all of them have arrived, so the number of deliveries that are simultaneously in flight is counted instead of
-    /// timed. If the endpoint served the messages one after another, the first delivery would never return and the
-    /// barrier would never be reached.
+    /// The contract is made observable rather than timed: every delivery is held inside the handler until all of
+    /// them have arrived, so the number of deliveries that are simultaneously in flight is counted. If the endpoint
+    /// served the messages one after another, the first delivery would never return and the barrier would never be
+    /// reached.
     /// </summary>
     [TestFixture]
     public class When_configuring_the_thread_pool_for_a_high_number_of_consumers :

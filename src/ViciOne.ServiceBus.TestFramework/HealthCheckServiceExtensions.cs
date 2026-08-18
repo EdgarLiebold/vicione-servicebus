@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.TestFramework
 
     public static class HealthCheckServiceExtensions
     {
-        /// <summary>How long a single status transition may take. Unchanged from the imported baseline.</summary>
+        /// <summary>How long a single status transition may take.</summary>
         static readonly TimeSpan Timeout = TimeSpan.FromSeconds(15);
 
 

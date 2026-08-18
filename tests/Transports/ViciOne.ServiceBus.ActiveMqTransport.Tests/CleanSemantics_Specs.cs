@@ -11,12 +11,11 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     /// <summary>
     /// Binds the one behavioural change this work package made to a member that ships.
     /// <para>
-    /// <see cref="ActiveMqTestHarness.Clean" /> began with <c>if (AdminPort != 8161) return;</c> in the
-    /// imported baseline. The pinned fixture publishes an ephemeral loopback port per run, so that
-    /// condition was true for every ViciOne run and the reset never happened: one fixture could leave
-    /// entities behind for the next. Removing the condition is the fix, and it is also a visible change
-    /// for any consumer who points the harness at a broker on a non-default admin port. A change that
-    /// is only described in a comment is not bound to anything, so it is asserted here.
+    /// <see cref="ActiveMqTestHarness.Clean" /> resets the broker on every admin port. A condition on
+    /// port 8161 disables the reset for every ViciOne run, because the pinned fixture publishes an
+    /// ephemeral loopback port, and one fixture then leaves entities behind for the next. It is also a
+    /// visible change for a consumer who points the harness at a broker on a non-default admin port, and
+    /// a change that is only described in a comment is bound to nothing.
     /// </para>
     /// </summary>
     [TestFixture]

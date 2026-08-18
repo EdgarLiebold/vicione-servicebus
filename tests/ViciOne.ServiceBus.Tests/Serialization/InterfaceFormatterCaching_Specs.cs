@@ -21,9 +21,9 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     /// would prove nothing under load and would still pass with the cache removed on a fast machine.
     /// </para>
     /// <para>
-    /// Each case builds its own cache. My previous version asserted a static counter, so a first use was
-    /// only a first use if no earlier test in the run had already warmed the same static state, and the
-    /// concurrency case could measure a cache that was already full.
+    /// Each case builds its own cache. Against a static counter a first use is only a first use if no
+    /// earlier test in the run has warmed the same static state, and the concurrency case can measure a
+    /// cache that is already full.
     /// </para>
     /// <para>
     /// The weak key cases below say that this table does not hold its own key. They are not an unload
@@ -143,8 +143,8 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         public void Should_write_through_the_formatter_of_the_runtime_type()
         {
             // The value arrives typed as the interface and is written by the formatter of whatever it
-            // actually is. That cast used to be a reinterpretation of the compiled delegate that the
-            // runtime never checked; it happens inside the compiled body now.
+            // actually is. The cast happens inside the compiled body, not as a reinterpretation of the
+            // compiled delegate that the runtime never checks.
             var round = RoundTrip(new AlsoCached { Id = 3, Name = "other implementation" });
 
             Assert.That(round.Id, Is.EqualTo(3));

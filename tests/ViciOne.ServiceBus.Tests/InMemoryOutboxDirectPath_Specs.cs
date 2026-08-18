@@ -15,10 +15,9 @@ namespace ViciOne.ServiceBus.Tests
     /// scoped consume context. It must not reach into somebody else's service provider for one.
     /// <para>
     /// The filter is driven directly rather than through a bus, because that is the only place where the
-    /// statement is decidable. My first two attempts wired a foreign service scope onto the endpoint
-    /// pipe and stayed green whichever implementation was in place: the outbox filter sits on the
-    /// message-type pipe and never saw that payload, so both versions did nothing and the probe proved
-    /// nothing. Here the payload is on the very context the filter reads.
+    /// statement is decidable. A foreign service scope wired onto the endpoint pipe stays green whichever
+    /// implementation is in place: the outbox filter sits on the message-type pipe and never sees that
+    /// payload, so the probe would prove nothing. Here the payload is on the very context the filter reads.
     /// </para>
     /// </summary>
     [TestFixture]

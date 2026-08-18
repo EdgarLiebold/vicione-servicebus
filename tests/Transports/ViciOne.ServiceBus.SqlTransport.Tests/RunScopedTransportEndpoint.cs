@@ -6,16 +6,14 @@ using ViciOne.ServiceBus.TestInfrastructure;
 /// <summary>
 /// Points the SQL transport specs at the database fixtures of this run.
 /// <para>
-/// The imported baseline wrote the endpoint into the two test configurations: host 'localhost' on the
-/// engine default port with the well known administrative secret. The runner publishes an ephemeral
-/// loopback port per run, so those specs could only ever reach a server that happened to sit on the
-/// default port - on a machine without one they reported a refused connection, and on a machine with an
-/// unrelated one they measured the wrong server. Both were silent about which of the two had happened.
+/// The runner publishes an ephemeral loopback port per run, so there is no fallback and no fixed
+/// endpoint. A spec that reaches for the engine default port with a well known administrative secret
+/// either reports a refused connection or measures an unrelated server, and it is silent about which of
+/// the two happened.
 /// </para>
 /// <para>
-/// There is therefore no fallback. Every value comes from <see cref="TestRunnerContract"/>, and an
-/// endpoint the runner did not publish raises <see cref="TestRunnerContractException"/> before the first
-/// connection attempt.
+/// Every value comes from <see cref="TestRunnerContract"/>, and an endpoint the runner did not publish
+/// raises <see cref="TestRunnerContractException"/> before the first connection attempt.
 /// </para>
 /// </summary>
 public static class RunScopedTransportEndpoint

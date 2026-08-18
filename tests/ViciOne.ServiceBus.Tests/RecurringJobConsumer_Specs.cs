@@ -99,10 +99,9 @@ public class Configuring_a_recurring_job_consumer
     /// Several recurring jobs of one message type, told apart by their name, each keep their own identity and their
     /// own schedule.
     ///
-    /// The previous version waited for thirty completions of a consumer that slept four seconds per run, so it took
-    /// minutes and proved only that some job of the type had run often enough. The completion of each named job is
-    /// the barrier now: a completion carrying that job identifier and that name can only be published after that one
-    /// named job has actually run.
+    /// The completion of each named job is the barrier: a completion carrying that job identifier and that name can
+    /// only be published after that one named job has actually run. Counting completions of the type would prove
+    /// only that some job of it ran often enough.
     /// </summary>
     [Test]
     public async Task Should_support_multiple_jobs_of_the_same_type_with_different_names()
@@ -305,7 +304,6 @@ public class Configuring_a_recurring_job_consumer
 
         public Task Run(JobContext<MaintenanceTask> context)
         {
-            // The four second delay of the previous version only served the removed thirty completion load loop.
             // Saving job state on cancellation is covered by JobConsumer_Specs, which asserts the saved state.
             _logger.LogInformation("Running MaintenanceTask: {Id} {Name}", context.JobId, context.Job.Name);
 

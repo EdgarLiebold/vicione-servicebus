@@ -13,10 +13,9 @@ namespace ViciOne.ServiceBus.Tests
     /// The timeline of the retained test framework renders the message flow of a conversation: which message was
     /// published, which was sent, which consumer handled it, and at which endpoint.
     ///
-    /// The previous version printed that rendering into the output stream of the test runner and asserted nothing,
-    /// and it paid the full inactivity timeout because it never forced the timeline to close. The rendering is now
-    /// written into a writer of this test and the structure of the flow is asserted: the number of each operation
-    /// follows from the topology of the consumers, not from timing.
+    /// The rendering is written into a writer of this test and the structure of the flow is asserted: the number of
+    /// each operation follows from the topology of the consumers, not from timing. The timeline is forced to close,
+    /// so the case does not pay the inactivity timeout.
     /// </summary>
     [TestFixture]
     public class MessageFlow_Specs

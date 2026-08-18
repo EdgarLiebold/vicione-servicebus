@@ -9,11 +9,11 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     /// The same invariant the core bodies are held to: the length a body reports is the length of what
     /// <c>GetBytes()</c> returns, whichever accessor ran first.
     /// <para>
-    /// This body was not in the review's list. I found it by enumerating every implementation of the
-    /// interface instead of only the ones named to me, and it carried the same defect in a sharper
-    /// form: it reported the cached array, so the length was nothing at all until somebody had already
-    /// read the body. A transport that asks for the size before reading got no answer, and the same
-    /// message answered differently depending on the order of two independent calls.
+    /// This body is held to the invariant because every implementation of the interface is enumerated,
+    /// not only the ones a review names. Reporting the cached array instead makes the length nothing at
+    /// all until somebody has already read the body: a transport that asks for the size before reading
+    /// gets no answer, and the same message answers differently depending on the order of two
+    /// independent calls.
     /// </para>
     /// <para>
     /// The provider's own message classes are used here, so this needs no broker and no test double.

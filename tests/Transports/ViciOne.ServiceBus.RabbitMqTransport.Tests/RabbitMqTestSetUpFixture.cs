@@ -50,9 +50,9 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests
         }
 
         /// <summary>
-        /// Creates the virtual host the suite runs against.
-        /// A failure here used to be written to the console and swallowed, which turned a broken
-        /// broker set up into a long cascade of unrelated test failures. It now fails the run.
+        /// Creates the virtual host the suite runs against, and fails the run when it cannot.
+        /// A failure written to the console and swallowed turns a broken broker set up into a long
+        /// cascade of unrelated test failures.
         /// </summary>
         static async Task CreateVirtualHost(string name)
         {

@@ -12,14 +12,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
     /// <summary>
     /// Owns one channel or one connection and separates saying it is finished from taking it away.
     /// <para>
-    /// The two used to be the same act, and that cost the broker's answer. When RabbitMQ refuses an
+    /// The two must not be the same act, or the broker's answer is lost. When RabbitMQ refuses an
     /// operation it completes that operation's continuation first — with the real reply code — and only
-    /// then raises its shutdown notification. The old handler disposed from inside that notification,
-    /// while the refused caller was still unwinding and had yet to release the client's own RPC
-    /// semaphore in its finally. Disposing underneath it turned a broker's answer into an
-    /// ObjectDisposedException, and a permanent refusal was retried as though it were a hiccup. Measured
-    /// against the pinned broker: five declares, five refusals with reply code 405, and four of them
-    /// replaced before anything could read them.
+    /// then raises its shutdown notification. Disposing from inside that notification runs while the
+    /// refused caller is still unwinding and has yet to release the client's own RPC semaphore in its
+    /// finally: it turns the broker's answer into an ObjectDisposedException and makes a permanent
+    /// refusal look like a hiccup worth retrying.
     /// </para>
     /// <para>
     /// So an operation takes a lease for as long as it runs, invalidation is immediate and never waits,

@@ -12,9 +12,9 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests
     /// covered here twice: once by running the invariant against it, and once by naming the reason the
     /// base answer is still its answer.
     /// <para>
-    /// I had reported it as covered because its base type is covered. That is an argument, not a proof:
-    /// an override added later would silently take it out of the statement while every existing test
-    /// stayed green. The disposition case below is what turns red in that moment.
+    /// "Covered because its base type is covered" is an argument, not a proof: an override added later
+    /// takes this type out of the statement while every existing test stays green. The disposition case
+    /// below is what turns red in that moment.
     /// </para>
     /// <para>
     /// Needs no queue and no credentials: the body is built from a plain <see cref="Message" />.

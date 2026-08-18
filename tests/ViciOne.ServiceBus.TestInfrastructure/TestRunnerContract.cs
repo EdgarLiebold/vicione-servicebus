@@ -8,13 +8,11 @@ namespace ViciOne.ServiceBus.TestInfrastructure
     /// <summary>
     /// The one place a test reads the database fixtures the canonical runner started.
     /// <para>
-    /// It is fail closed on purpose. The imported baseline wrote host, port and account into the specs -
-    /// localhost on the engine default port with a well known administrative secret - and every fixture
-    /// that could not reach the run scoped server silently measured whatever else answered there, or
-    /// reported a connection refusal that looked like an infrastructure problem rather than a missing
-    /// contract. There is therefore no default, no probing and no fallback: an incomplete contract raises
-    /// <see cref="TestRunnerContractException"/> naming the variables that are missing, before the first
-    /// connection is attempted. The exception carries no secret.
+    /// It is fail closed on purpose: no default, no probing and no fallback. A fixture that falls back
+    /// to a fixed host, port and account either measures whatever else answers there or reports a
+    /// connection refusal that looks like an infrastructure problem rather than a missing contract. An
+    /// incomplete contract raises <see cref="TestRunnerContractException"/> naming the variables that
+    /// are missing, before the first connection is attempted. The exception carries no secret.
     /// </para>
     /// </summary>
     public static class TestRunnerContract

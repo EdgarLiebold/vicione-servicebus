@@ -82,13 +82,12 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     /// group or function pointer, as a field access, or as a type or member token handed to reflection.
     /// </para>
     /// <para>
-    /// The owner is bound by namespace and name together. My first version excluded it by simple name,
-    /// and a second type of that name in another namespace walked straight past the rule. The
-    /// instruction stream is decoded with the runtime's own opcode table rather than scanned byte by
-    /// byte, so an operand that happens to look like a call is never read as one and an instruction is
-    /// never missed because its operand is longer than the scan assumed. I had claimed that scan could
-    /// only over-report; it could also under-report, and the method group probe below is exactly that
-    /// case.
+    /// The owner is bound by namespace and name together: excluded by simple name, a second type of that
+    /// name in another namespace walks straight past the rule. The instruction stream is decoded with
+    /// the runtime's own opcode table rather than scanned byte by byte, so an operand that happens to
+    /// look like a call is never read as one and an instruction is never missed because its operand is
+    /// longer than the scan assumed. A byte scan does not only over-report; it under-reports too, and
+    /// the method group probe below is exactly that case.
     /// </para>
     /// <para>
     /// What it does not cover: a call reached through a name computed at run time, or through a type
@@ -115,7 +114,7 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         public void Should_report_the_owner_itself_when_it_is_not_excluded()
         {
             // The control. Without it the assertion above could be green because the rule sees nothing
-            // at all, which is exactly how the previous version was wrong in the other direction.
+            // at all.
             var references = SerializerReferencesIn(typeof(InternalMessagePackResolver).Assembly.Location, excludeOwner: false);
 
             Assert.That(references, Has.Some.StartsWith(Owner + "."));
@@ -320,11 +319,11 @@ namespace ViciOne.ServiceBus.Tests.Serialization
     /// The rule that guards the option set is itself guarded, permanently and by behaviour rather than
     /// by a statement about its own constants.
     /// <para>
-    /// The previous version asserted that the owner constant contains a dot, which is true of the
-    /// constant and says nothing about the rule. What matters is what the rule does when it meets each
-    /// shape of bypass, so each shape is emitted into a throwaway assembly here and the rule is run
-    /// against it. These cases stay red if the rule is ever narrowed back to a name comparison or to a
-    /// scan that only looks at call instructions.
+    /// What matters is what the rule does when it meets each shape of bypass, so each shape is emitted
+    /// into a throwaway assembly here and the rule is run against it. Asserting that the owner constant
+    /// contains a dot is true of the constant and says nothing about the rule. These cases stay red if
+    /// the rule is ever narrowed back to a name comparison or to a scan that only looks at call
+    /// instructions.
     /// </para>
     /// </summary>
     [TestFixture]
@@ -344,8 +343,8 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [Test]
         public void Should_report_a_type_of_the_owner_simple_name_in_another_namespace()
         {
-            // The bypass the review found: the exclusion used to be a simple name, so this walked past
-            // the rule and the assembly reported nothing at all.
+            // A simple name in the exclusion lets this shape walk past the rule and the assembly reports
+            // nothing at all, so it is emitted here rather than described.
             using var assembly = Emit(Elsewhere, "InternalMessagePackResolver", DirectCall);
 
             Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
@@ -355,8 +354,8 @@ namespace ViciOne.ServiceBus.Tests.Serialization
         [Test]
         public void Should_report_a_method_group_that_never_calls()
         {
-            // ldftn, not call. A scan that only looked for call instructions reported nothing here,
-            // which is the under-reporting I had claimed was impossible.
+            // ldftn, not call. A scan that only looks for call instructions reports nothing here, which
+            // is the under-reporting a byte scan is assumed not to be capable of.
             using var assembly = Emit(Elsewhere, "Deferred", MethodGroup);
 
             Assert.That(Owning_the_message_pack_option_set.SerializerReferencesIn(assembly),
