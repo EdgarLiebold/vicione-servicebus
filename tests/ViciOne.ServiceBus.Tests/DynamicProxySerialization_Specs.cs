@@ -16,10 +16,14 @@ namespace ViciOne.ServiceBus.Tests
     /// That flag only ever meant anything to the formatter based serializers of the old framework,
     /// which are obsolete and which this fork does not ship. Its presence therefore had to be
     /// justified by a measurement rather than by habit, so these specs carry the emitted proxy
-    /// through every serialization format the fork actually retains and read the emitted metadata
-    /// itself. The retained set is System.Text.Json in its normal and raw shapes and MessagePack;
-    /// no XML, BSON or Protobuf message serializer exists here at all, so there is no fourth format
-    /// to measure.
+    /// through every message body serializer the fork retains and read the emitted metadata itself.
+    /// Those serializers are System.Text.Json in its normal and raw shapes, and MessagePack.
+    /// </para>
+    /// <para>
+    /// XML and Protobuf are not message body serializers of their own here, which is not the same as
+    /// saying they do not exist: they are payload shapes, and the retained serializers carry them.
+    /// XmlPayload_Specs and ProtoBufAsJson_Specs cover exactly that, so the scope of this fixture is
+    /// the serializer, not every format a message body can hold.
     /// </para>
     /// <para>
     /// The specs were run once with the flag still emitted and once after it was dropped. The

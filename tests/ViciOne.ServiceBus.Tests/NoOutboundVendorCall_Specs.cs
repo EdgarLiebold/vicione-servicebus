@@ -14,13 +14,20 @@ namespace ViciOne.ServiceBus.Tests
 
 
     /// <summary>
-    /// A default registration and a started bus must not reach the network at all.
+    /// A default registration and a started bus must issue no outgoing HTTP request.
     /// <para>
     /// The bus used to post host, bus, rider and endpoint details to a hard coded vendor host on every
     /// start, enabled by default. That path is gone, and this is what keeps it gone: the first test
     /// listens on the diagnostic source that every HttpClient request writes to, so any outgoing
     /// request during registration, start and stop is observed no matter who issues it. The second
     /// reads the shipped assemblies and fails on a hard coded outgoing address in the product itself.
+    /// </para>
+    /// <para>
+    /// What is measured, stated exactly: outgoing HttpClient requests on the registration, start,
+    /// publish and stop path of an in memory bus, and hard coded addresses in the shipped assemblies.
+    /// A socket opened without HttpClient, or a request on a path this fixture does not walk, is
+    /// outside that scope - "does not reach the network at all" would claim more than the listener can
+    /// see.
     /// </para>
     /// </summary>
     [TestFixture]
@@ -54,7 +61,7 @@ namespace ViciOne.ServiceBus.Tests
             }
 
             Assert.That(requests, Is.Empty,
-                "starting a default bus reached the network: " + string.Join(", ", requests));
+                "starting a default bus issued an outgoing HTTP request: " + string.Join(", ", requests));
         }
 
         [Test]
