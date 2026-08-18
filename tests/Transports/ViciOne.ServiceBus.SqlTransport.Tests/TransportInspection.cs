@@ -151,6 +151,36 @@ public static class TransportInspection
         return connection.Execute(text, ("queue", queue));
     }
 
+    /// <summary>
+    /// Whether the transport holds a queue of that name and type. Type 1 is the queue itself, 2 its
+    /// error queue and 3 its dead letter queue.
+    /// </summary>
+    public static async Task<bool> QueueExists(this DbConnection connection, TransportDialect dialect, string schema,
+        string queue, int queueType)
+    {
+        var text = dialect == TransportDialect.SqlServer
+            ? $"SELECT COUNT(*) FROM {schema}.Queue WHERE Name = @queue AND Type = @type"
+            : $"SELECT COUNT(*) FROM \"{schema}\".queue WHERE name = @queue AND type = @type";
+
+        return await connection.Scalar(text, ("queue", queue), ("type", queueType)) > 0;
+    }
+
+    /// <summary>
+    /// How many deliveries sit in queues of that type, across every queue name. A fixture that lets the
+    /// transport name its endpoints cannot ask for one queue, so it compares this before and after.
+    /// </summary>
+    public static Task<long> DeliveryCountByQueueType(this DbConnection connection, TransportDialect dialect,
+        string schema, int queueType)
+    {
+        var text = dialect == TransportDialect.SqlServer
+            ? $"SELECT COUNT(*) FROM {schema}.MessageDelivery d JOIN {schema}.Queue q ON q.Id = d.QueueId "
+              + "WHERE q.Type = @type"
+            : $"SELECT COUNT(*) FROM \"{schema}\".message_delivery d JOIN \"{schema}\".queue q ON q.id = d.queue_id "
+              + "WHERE q.type = @type";
+
+        return connection.Scalar(text, ("type", queueType));
+    }
+
     /// <summary>How many messages the transport holds in total, across every queue.</summary>
     public static Task<long> MessageCount(this DbConnection connection, TransportDialect dialect, string schema)
     {

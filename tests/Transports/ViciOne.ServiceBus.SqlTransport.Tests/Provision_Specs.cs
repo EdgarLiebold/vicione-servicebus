@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.DbTransport.Tests
 {
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -76,20 +77,29 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
         [Order(2)]
         public async Task Should_drop_the_database_on_shutdown()
         {
-            await using var provider = new ServiceCollection()
+            // The provider is not held by an await using here: the drop is what its disposal does, so
+            // this case disposes it itself and exactly once.
+            var provider = new ServiceCollection()
                 .ConfigurePostgresTransport(delete: true, database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 
-            var harness = provider.GetTestHarness();
+            DbConnection server;
+            try
+            {
+                var harness = provider.GetTestHarness();
 
-            await harness.Start();
+                await harness.Start();
 
-            // The server connection is taken while the provider is alive; the drop happens on its disposal.
-            var server = await provider.OpenServer(TransportDialect.Postgres);
+                // Taken while the provider is alive, used after it is gone.
+                server = await provider.OpenServer(TransportDialect.Postgres);
 
-            await harness.Stop();
-            await provider.DisposeAsync();
+                await harness.Stop();
+            }
+            finally
+            {
+                await provider.DisposeAsync();
+            }
 
             await using (server)
             {

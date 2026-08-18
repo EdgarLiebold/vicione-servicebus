@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -37,10 +38,14 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
             {
                 Assert.That(tables, Is.SupersetOf(TransportSchema.Tables),
                     "provisioning did not create every table the transport addresses");
-                Assert.That(indices, Is.Not.Empty,
-                    "provisioning created tables without a single index, so the transport would scan them");
-                Assert.That(indices.Any(name => name.Contains("messagedelivery")), Is.True,
-                    "the message delivery table carries no index of its own, which every fetch depends on");
+                // Named as exactly as the PostgreSQL case names its own: the index every fetch reads and
+                // the one that keeps a queue name unique, not merely "some index exists".
+                Assert.That(indices, Does.Contain("ix_messagedelivery_fetch"),
+                    "the index every fetch depends on is missing, so provisioning produced tables the transport cannot work on");
+                Assert.That(indices, Does.Contain("ix_queue_name_type"),
+                    "the queue name index is missing, so every queue lookup would scan the table");
+                Assert.That(indices, Does.Contain("ix_messagedelivery_transportmessageid"),
+                    "the index that finds a delivery by its transport message id is missing");
             });
 
             await harness.Stop();
@@ -50,20 +55,29 @@ namespace ViciOne.ServiceBus.DbTransport.Tests.SqlServer
         [Order(2)]
         public async Task Should_drop_the_database_on_shutdown()
         {
-            await using var provider = new ServiceCollection()
+            // The provider is not held by an await using here: the drop is what its disposal does, so
+            // this case disposes it itself and exactly once.
+            var provider = new ServiceCollection()
                 .ConfigureSqlServerTransport(delete: true, database: RunScopedTransportEndpoint.ProvisioningDatabase)
                 .AddViciOneServiceBusTestHarness()
                 .BuildServiceProvider(true);
 
-            var harness = provider.GetTestHarness();
+            DbConnection server;
+            try
+            {
+                var harness = provider.GetTestHarness();
 
-            await harness.Start();
+                await harness.Start();
 
-            // The server connection is taken while the provider is alive; the drop happens on its disposal.
-            var server = await provider.OpenServer(TransportDialect.SqlServer);
+                // Taken while the provider is alive, used after it is gone.
+                server = await provider.OpenServer(TransportDialect.SqlServer);
 
-            await harness.Stop();
-            await provider.DisposeAsync();
+                await harness.Stop();
+            }
+            finally
+            {
+                await provider.DisposeAsync();
+            }
 
             await using (server)
             {

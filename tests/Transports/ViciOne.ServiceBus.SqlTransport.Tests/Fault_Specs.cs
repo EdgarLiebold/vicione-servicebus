@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.DbTransport.Tests
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Threading.Tasks;
     using FaultMessages;
     using Microsoft.Extensions.DependencyInjection;
@@ -89,16 +90,45 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.Start();
 
+            long errorQueuedBefore;
+            await using (var connection = await provider.OpenTransport(TransportDialect.Postgres))
+                errorQueuedBefore = await connection.DeliveryCountByQueueType(TransportDialect.Postgres,
+                    TransportSchema.Name, ErrorQueueType);
+
             await harness.Bus.Publish<UpdateMemberAddress>(new
             {
                 MemberName = "Frank",
                 Address = "123 American Way"
             });
 
-            Assert.That(await harness.Consumed.Any<Fault<MemberUpdateCommand>>(), Is.True);
+            Assert.That(await harness.Consumed.Any<Fault<MemberUpdateCommand>>(), Is.True,
+                "no fault was published for the consumer that threw");
+
+            await harness.InactivityTask;
+
+            // The fault says the consumer threw. The move says the message is no longer in the queue it
+            // came from, which is the second half of the name and was never asserted. The endpoints are
+            // named by the formatter here, so the error queues are counted as a set.
+            await using (var connection = await provider.OpenTransport(TransportDialect.Postgres))
+            {
+                var errorQueuedAfter = await connection.DeliveryCountByQueueType(TransportDialect.Postgres,
+                    TransportSchema.Name, ErrorQueueType);
+
+                Assert.That(errorQueuedAfter - errorQueuedBefore, Is.EqualTo(1),
+                    "the faulted message did not move into an error queue");
+            }
 
             await harness.Stop();
         }
+
+        /// <summary>Queue type 2 is the error queue of a receive endpoint.</summary>
+        const int ErrorQueueType = 2;
+
+        /// <summary>
+        /// What a scheduler may be early by. Without it the case would assert a precision the transport
+        /// never promised and would flake on a loaded machine instead of reporting a defect.
+        /// </summary>
+        static readonly TimeSpan Tolerance = TimeSpan.FromMilliseconds(150);
 
         [Test]
         public async Task Should_use_built_in_redelivery_to_redeliver_faulted_messages()
@@ -111,6 +141,11 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
             var redeliveryInterval = TimeSpan.FromSeconds(1);
             var inactivity = redeliveryInterval * (RedeliveryCount + 3);
 
+            // When each attempt entered the consumer. The fault alone says the schedule ran out; it
+            // says nothing about how often it delivered or how far apart, which is what the
+            // configuration above actually promises.
+            var attempts = new ConcurrentQueue<DateTime>();
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
@@ -119,7 +154,12 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
                     x.AddHandler(async (ConsumeContext<Fault<MemberUpdateCommand>> _) =>
                     {
                     });
-                    x.AddHandler(async (ConsumeContext<UpdateMemberAddress> _) => throw new ApplicationException("I meant to do that!"));
+                    x.AddHandler((ConsumeContext<UpdateMemberAddress> _) =>
+                    {
+                        attempts.Enqueue(DateTime.UtcNow);
+
+                        throw new ApplicationException("I meant to do that!");
+                    });
 
                     x.AddConfigureEndpointsCallback((_, _, cfg) =>
                     {
@@ -145,6 +185,28 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             Assert.That(await harness.Consumed.Any<Fault<MemberUpdateCommand>>(), Is.True,
                 "no fault arrived, so the redelivery schedule never ran out or the fault was never published");
+
+            await harness.InactivityTask;
+
+            DateTime[] delivered = attempts.ToArray();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(delivered, Has.Length.EqualTo(RedeliveryCount + 1),
+                    "the consumer saw a different number of attempts than the first delivery plus the "
+                    + "configured redeliveries");
+
+                for (var attempt = 1; attempt < delivered.Length; attempt++)
+                {
+                    var gap = delivered[attempt] - delivered[attempt - 1];
+
+                    // The interval is a floor, not a promise of exactness: the transport may take
+                    // longer under load, but it may never redeliver sooner than it was told to.
+                    Assert.That(gap, Is.GreaterThanOrEqualTo(redeliveryInterval - Tolerance),
+                        $"redelivery {attempt} arrived {gap.TotalMilliseconds:F0} ms after the one before it, "
+                        + $"sooner than the configured {redeliveryInterval.TotalMilliseconds:F0} ms");
+                }
+            });
 
             await harness.Stop();
         }

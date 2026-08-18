@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.DbTransport.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -96,12 +97,19 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
         }
 
         [Test]
+        /// <summary>
+        /// The short configuration form sends a message that actually arrives. The case sent one and
+        /// asserted nothing, so a send that reached no queue would have passed it.
+        /// </summary>
         public async Task Should_support_the_standard_syntax()
         {
+            var queue = $"standard-syntax-queue-{NewId.Next().ToString("N")}";
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
                 {
+                    x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(3));
                     x.UsingPostgres();
                 })
                 .BuildServiceProvider(true);
@@ -110,21 +118,41 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.Start();
 
-            var endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:input-queue"));
+            var endpoint = await harness.Bus.GetSendEndpoint(new Uri($"queue:{queue}"));
 
             await endpoint.Send(new TestMessage("Hello, World!"), x =>
             {
                 x.Headers.Set("Simple-Header", "Some Value");
             });
+
+            await using var connection = await provider.OpenTransport(TransportDialect.Postgres);
+
+            Assert.That(await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name, queue, 1),
+                Is.EqualTo(1), "the message the short syntax sent did not reach its queue");
+
+            await harness.Stop();
         }
 
         [Test]
+        /// <summary>
+        /// Three queues, three messages, each in its own queue. The case sent all three and asserted
+        /// nothing, so one queue swallowing all of them, or none of them arriving, would have passed.
+        /// </summary>
         public async Task Should_support_the_standard_syntax_with_three_queues()
         {
+            var run = NewId.Next().ToString("N");
+            string[] queues =
+            {
+                $"three-queues-a-{run}",
+                $"three-queues-b-{run}",
+                $"three-queues-c-{run}"
+            };
+
             await using var provider = new ServiceCollection()
                 .ConfigurePostgresTransport()
                 .AddViciOneServiceBusTestHarness(x =>
                 {
+                    x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(3));
                     x.UsingPostgres();
                 })
                 .BuildServiceProvider(true);
@@ -133,26 +161,26 @@ namespace ViciOne.ServiceBus.DbTransport.Tests
 
             await harness.Start();
 
-            var endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:input-queue"));
-
-            await endpoint.Send(new TestMessage("Hello, World!"), x =>
+            foreach (var queue in queues)
             {
-                x.Headers.Set("Simple-Header", "Some Value");
-            });
+                var endpoint = await harness.Bus.GetSendEndpoint(new Uri($"queue:{queue}"));
 
-            endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:input-queue-2"));
+                await endpoint.Send(new TestMessage($"Hello, {queue}!"), x =>
+                {
+                    x.Headers.Set("Simple-Header", "Some Value");
+                });
+            }
 
-            await endpoint.Send(new TestMessage("Hello, World!"), x =>
-            {
-                x.Headers.Set("Simple-Header", "Some Value");
-            });
+            await using var connection = await provider.OpenTransport(TransportDialect.Postgres);
 
-            endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:input-queue-3"));
+            var delivered = new List<long>();
+            foreach (var queue in queues)
+                delivered.Add(await connection.DeliveryCount(TransportDialect.Postgres, TransportSchema.Name, queue, 1));
 
-            await endpoint.Send(new TestMessage("Hello, World!"), x =>
-            {
-                x.Headers.Set("Simple-Header", "Some Value");
-            });
+            Assert.That(delivered, Is.EqualTo(new long[] { 1, 1, 1 }),
+                "the three messages are not one in each of the three queues");
+
+            await harness.Stop();
         }
     }
 
