@@ -24,6 +24,12 @@ _ReSharper*
 # rule above does not match, so three generated reports were tracked once by accident.
 /artifacts/
 
+# Local run evidence: the category runners write their TRX and counter records here. A regeneration of
+# CHANGELIST.md walked it once and offered to record 887 additions of test results into the section
+# 4(b) notice, which is neither a source change nor something that may ever be tracked. Evidence that
+# a record has to carry is copied into the record instead.
+/interim/
+
 # osx noise
 .DS_Store
 *.DS_Store

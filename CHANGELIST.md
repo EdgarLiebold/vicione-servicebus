@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 844 |
-| Modified | 4909 |
-| Deleted | 730 |
+| Added | 848 |
+| Modified | 4882 |
+| Deleted | 757 |
 | Renamed | 10 |
 
 | Path | Status | Baseline path |
@@ -798,7 +798,18 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `global.json` | Added |  |
 | `signing.props` | Modified | `signing.props` |
 | `src/Directory.Build.props` | Modified | `src/Directory.Build.props` |
+| `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` | Deleted | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` |
+| `src/MassTransit.Abstractions/Licensing/LicenseContact.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseContact.cs` |
+| `src/MassTransit.Abstractions/Licensing/LicenseCustomer.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseCustomer.cs` |
+| `src/MassTransit.Abstractions/Licensing/LicenseFeature.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseFeature.cs` |
+| `src/MassTransit.Abstractions/Licensing/LicenseInfo.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseInfo.cs` |
+| `src/MassTransit.Abstractions/Licensing/LicenseProduct.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseProduct.cs` |
 | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` | Deleted | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` |
+| `src/MassTransit.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` |
+| `src/MassTransit.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` |
+| `src/MassTransit.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` |
+| `src/MassTransit.Abstractions/UsageTelemetry/MassTransitUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/MassTransitUsageTelemetry.cs` |
+| `src/MassTransit.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` |
 | `src/MassTransit.Interop.NServiceBus/Configuration/NServiceBusSerializerConfigurationExtensions.cs` | Deleted | `src/MassTransit.Interop.NServiceBus/Configuration/NServiceBusSerializerConfigurationExtensions.cs` |
 | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj` | Deleted | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj` |
 | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj.DotSettings` | Deleted | `src/MassTransit.Interop.NServiceBus/MassTransit.Interop.NServiceBus.csproj.DotSettings` |
@@ -894,6 +905,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
+| `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` | Deleted | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` |
 | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` | Deleted | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` |
@@ -901,16 +913,29 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` |
+| `src/MassTransit/Exceptions/InvalidLicenseException.cs` | Deleted | `src/MassTransit/Exceptions/InvalidLicenseException.cs` |
+| `src/MassTransit/Exceptions/InvalidLicenseFormatException.cs` | Deleted | `src/MassTransit/Exceptions/InvalidLicenseFormatException.cs` |
 | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` | Deleted | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` |
 | `src/MassTransit/LegacyObsolete/Activity.cs` | Deleted | `src/MassTransit/LegacyObsolete/Activity.cs` |
 | `src/MassTransit/LegacyObsolete/Behavior.cs` | Deleted | `src/MassTransit/LegacyObsolete/Behavior.cs` |
 | `src/MassTransit/LegacyObsolete/EventObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/EventObserver.cs` |
 | `src/MassTransit/LegacyObsolete/LegacySerializationExtensions.cs` | Deleted | `src/MassTransit/LegacyObsolete/LegacySerializationExtensions.cs` |
 | `src/MassTransit/LegacyObsolete/StateObserver.cs` | Deleted | `src/MassTransit/LegacyObsolete/StateObserver.cs` |
+| `src/MassTransit/Licensing/LicenseFile.cs` | Deleted | `src/MassTransit/Licensing/LicenseFile.cs` |
+| `src/MassTransit/Licensing/LicenseReader.cs` | Deleted | `src/MassTransit/Licensing/LicenseReader.cs` |
+| `src/MassTransit/Licensing/LicenseSettings.cs` | Deleted | `src/MassTransit/Licensing/LicenseSettings.cs` |
 | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` | Deleted | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` |
 | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` |
 | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` |
-| `src/NuGet.README.md` | Modified | `src/NuGet.README.md` |
+| `src/MassTransit/UsageTracking/IUsageTelemetrySource.cs` | Deleted | `src/MassTransit/UsageTracking/IUsageTelemetrySource.cs` |
+| `src/MassTransit/UsageTracking/IUsageTracker.cs` | Deleted | `src/MassTransit/UsageTracking/IUsageTracker.cs` |
+| `src/MassTransit/UsageTracking/MassTransitUsageTelemetryExtensions.cs` | Deleted | `src/MassTransit/UsageTracking/MassTransitUsageTelemetryExtensions.cs` |
+| `src/MassTransit/UsageTracking/UsageTelemetryBusObserver.cs` | Deleted | `src/MassTransit/UsageTracking/UsageTelemetryBusObserver.cs` |
+| `src/MassTransit/UsageTracking/UsageTelemetryConfigurationObserver.cs` | Deleted | `src/MassTransit/UsageTracking/UsageTelemetryConfigurationObserver.cs` |
+| `src/MassTransit/UsageTracking/UsageTelemetryEndpointConfigurationObserver.cs` | Deleted | `src/MassTransit/UsageTracking/UsageTelemetryEndpointConfigurationObserver.cs` |
+| `src/MassTransit/UsageTracking/UsageTelemetrySerializerContext.cs` | Deleted | `src/MassTransit/UsageTracking/UsageTelemetrySerializerContext.cs` |
+| `src/MassTransit/UsageTracking/UsageTracker.cs` | Deleted | `src/MassTransit/UsageTracking/UsageTracker.cs` |
+| `src/NuGet.README.md` | Deleted | `src/NuGet.README.md` |
 | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/AzureCosmosSerializerExtensions.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/AzureCosmosSerializerExtensions.cs` |
 | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosAuthSettings.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosAuthSettings.cs` |
 | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosClientFactory.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/AzureCosmos/CosmosClientFactory.cs` |
@@ -2411,7 +2436,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/Topology/IPublishTopologyConfigurator.cs` | Modified | `src/MassTransit.Abstractions/Configuration/Topology/IPublishTopologyConfigurator.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/Topology/ISendTopologyConfigurator.cs` | Modified | `src/MassTransit.Abstractions/Configuration/Topology/ISendTopologyConfigurator.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/Transports/IReceiveEndpointSpecification.cs` | Modified | `src/MassTransit.Abstractions/Configuration/Transports/IReceiveEndpointSpecification.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Configuration/UsageTelemetryOptions.cs` | Modified | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs` | Modified | `src/MassTransit.Abstractions/Configuration/ValidationResult.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultDisposition.cs` | Modified | `src/MassTransit.Abstractions/Configuration/ValidationResultDisposition.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs` | Modified | `src/MassTransit.Abstractions/Configuration/ValidationResultExtensions.cs` |
@@ -2717,11 +2741,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/JobService/Contracts/JobService/SubmitJob.cs` | Modified | `src/MassTransit.Abstractions/JobService/Contracts/JobService/SubmitJob.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/JobService/IPropertyCollection.cs` | Modified | `src/MassTransit.Abstractions/JobService/IPropertyCollection.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/JobService/ISetPropertyCollection.cs` | Modified | `src/MassTransit.Abstractions/JobService/ISetPropertyCollection.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Licensing/LicenseContact.cs` | Modified | `src/MassTransit.Abstractions/Licensing/LicenseContact.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Licensing/LicenseCustomer.cs` | Modified | `src/MassTransit.Abstractions/Licensing/LicenseCustomer.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Licensing/LicenseFeature.cs` | Modified | `src/MassTransit.Abstractions/Licensing/LicenseFeature.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Licensing/LicenseInfo.cs` | Modified | `src/MassTransit.Abstractions/Licensing/LicenseInfo.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Licensing/LicenseProduct.cs` | Modified | `src/MassTransit.Abstractions/Licensing/LicenseProduct.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Mediator/IMediator.cs` | Modified | `src/MassTransit.Abstractions/Mediator/IMediator.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Mediator/IScopedMediator.cs` | Modified | `src/MassTransit.Abstractions/Mediator/IScopedMediator.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Mediator/MediatorRequestHandler.cs` | Modified | `src/MassTransit.Abstractions/Mediator/MediatorRequestHandler.cs` |
@@ -3080,11 +3099,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Transports/TransportSetHeaderAdapter.cs` | Modified | `src/MassTransit.Abstractions/Transports/TransportSetHeaderAdapter.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Transports/TransportSetHeaderAdapterExtensions.cs` | Modified | `src/MassTransit.Abstractions/Transports/TransportSetHeaderAdapterExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/TypeCache.cs` | Modified | `src/MassTransit.Abstractions/TypeCache.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` | Modified | `src/MassTransit.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` | Modified | `src/MassTransit.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` | Modified | `src/MassTransit.Abstractions/UsageTelemetry/HostUsageTelemetry.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` | Modified | `src/MassTransit.Abstractions/UsageTelemetry/RiderUsageTelemetry.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/UsageTelemetry/ViciOneServiceBusUsageTelemetry.cs` | Modified | `src/MassTransit.Abstractions/UsageTelemetry/MassTransitUsageTelemetry.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Util/ActiveRequest.cs` | Modified | `src/MassTransit.Abstractions/Util/ActiveRequest.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Util/Connectable.cs` | Modified | `src/MassTransit.Abstractions/Util/Connectable.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Util/EmptyConnectHandle.cs` | Modified | `src/MassTransit.Abstractions/Util/EmptyConnectHandle.cs` |
@@ -3556,7 +3570,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/DependencyInjection/OutboxDeliveryServiceOptions.cs` | Modified | `src/MassTransit/Configuration/DependencyInjection/OutboxDeliveryServiceOptions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationConfiguratorExtensions.cs` | Modified | `src/MassTransit/Configuration/DependencyInjection/RegistrationConfiguratorExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/DependencyInjection/TestHarnessOptions.cs` | Modified | `src/MassTransit/Configuration/DependencyInjection/TestHarnessOptions.cs` |
-| `src/ViciOne.ServiceBus/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` | Modified | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/DependencyInjection/ViciOneServiceBusHealthCheckOptionsExtensions.cs` | Modified | `src/MassTransit/Configuration/DependencyInjection/MassTransitHealthCheckOptionsExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/DispatchConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/DispatchConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/ForkConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/ForkConfigurationExtensions.cs` |
@@ -3955,8 +3968,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Events/ReceiveTransportCompletedEvent.cs` | Modified | `src/MassTransit/Events/ReceiveTransportCompletedEvent.cs` |
 | `src/ViciOne.ServiceBus/Events/ReceiveTransportFaultedEvent.cs` | Modified | `src/MassTransit/Events/ReceiveTransportFaultedEvent.cs` |
 | `src/ViciOne.ServiceBus/Events/ReceiveTransportReadyEvent.cs` | Modified | `src/MassTransit/Events/ReceiveTransportReadyEvent.cs` |
-| `src/ViciOne.ServiceBus/Exceptions/InvalidLicenseException.cs` | Modified | `src/MassTransit/Exceptions/InvalidLicenseException.cs` |
-| `src/ViciOne.ServiceBus/Exceptions/InvalidLicenseFormatException.cs` | Modified | `src/MassTransit/Exceptions/InvalidLicenseFormatException.cs` |
 | `src/ViciOne.ServiceBus/Exceptions/ViciOneServiceBusApplicationException.cs` | Modified | `src/MassTransit/Exceptions/MassTransitApplicationException.cs` |
 | `src/ViciOne.ServiceBus/ForwardExtensions.cs` | Modified | `src/MassTransit/ForwardExtensions.cs` |
 | `src/ViciOne.ServiceBus/Futures/Configuration/FutureFaultConfigurator.cs` | Modified | `src/MassTransit/Futures/Configuration/FutureFaultConfigurator.cs` |
@@ -4260,9 +4271,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/JobService/RecurringJobScheduleConfiguratorExtensions.cs` | Modified | `src/MassTransit/JobService/RecurringJobScheduleConfiguratorExtensions.cs` |
 | `src/ViciOne.ServiceBus/JobServiceEventExtensions.cs` | Modified | `src/MassTransit/JobServiceEventExtensions.cs` |
 | `src/ViciOne.ServiceBus/JsonMessageBody.cs` | Modified | `src/MassTransit/JsonMessageBody.cs` |
-| `src/ViciOne.ServiceBus/Licensing/LicenseFile.cs` | Modified | `src/MassTransit/Licensing/LicenseFile.cs` |
-| `src/ViciOne.ServiceBus/Licensing/LicenseReader.cs` | Modified | `src/MassTransit/Licensing/LicenseReader.cs` |
-| `src/ViciOne.ServiceBus/Licensing/LicenseSettings.cs` | Modified | `src/MassTransit/Licensing/LicenseSettings.cs` |
 | `src/ViciOne.ServiceBus/LogContext.cs` | Modified | `src/MassTransit/LogContext.cs` |
 | `src/ViciOne.ServiceBus/Logging/BusLogContext.cs` | Modified | `src/MassTransit/Logging/BusLogContext.cs` |
 | `src/ViciOne.ServiceBus/Logging/Diagnostics/DiagnosticActivityExtensions.cs` | Modified | `src/MassTransit/Logging/Diagnostics/DiagnosticActivityExtensions.cs` |
@@ -5262,14 +5270,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Transports/TransportPipeContextSupervisor.cs` | Modified | `src/MassTransit/Transports/TransportPipeContextSupervisor.cs` |
 | `src/ViciOne.ServiceBus/Transports/TransportStartExtensions.cs` | Modified | `src/MassTransit/Transports/TransportStartExtensions.cs` |
 | `src/ViciOne.ServiceBus/Transports/ZeroActiveDispatchHandler.cs` | Modified | `src/MassTransit/Transports/ZeroActiveDispatchHandler.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/IUsageTelemetrySource.cs` | Modified | `src/MassTransit/UsageTracking/IUsageTelemetrySource.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/IUsageTracker.cs` | Modified | `src/MassTransit/UsageTracking/IUsageTracker.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/UsageTelemetryBusObserver.cs` | Modified | `src/MassTransit/UsageTracking/UsageTelemetryBusObserver.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/UsageTelemetryConfigurationObserver.cs` | Modified | `src/MassTransit/UsageTracking/UsageTelemetryConfigurationObserver.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/UsageTelemetryEndpointConfigurationObserver.cs` | Modified | `src/MassTransit/UsageTracking/UsageTelemetryEndpointConfigurationObserver.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/UsageTelemetrySerializerContext.cs` | Modified | `src/MassTransit/UsageTracking/UsageTelemetrySerializerContext.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/UsageTracker.cs` | Modified | `src/MassTransit/UsageTracking/UsageTracker.cs` |
-| `src/ViciOne.ServiceBus/UsageTracking/ViciOneServiceBusUsageTelemetryExtensions.cs` | Modified | `src/MassTransit/UsageTracking/MassTransitUsageTelemetryExtensions.cs` |
 | `src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs` | Modified | `src/MassTransit/Util/AssemblyTypeCache.cs` |
 | `src/ViciOne.ServiceBus/Util/ChannelExecutor.cs` | Modified | `src/MassTransit/Util/ChannelExecutor.cs` |
 | `src/ViciOne.ServiceBus/Util/ChartTable.cs` | Modified | `src/MassTransit/Util/ChartTable.cs` |
@@ -5535,6 +5535,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` |
+| `tests/MassTransit.SqlTransport.Tests/LicenseConfiguration.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/LicenseConfiguration.cs` |
 | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
@@ -5962,7 +5963,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/IDatabaseTestConfiguration.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/IDatabaseTestConfiguration.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/JobConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/JobServiceSagaDbContextFactory.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/JobServiceSagaDbContextFactory.cs` |
-| `tests/ViciOne.ServiceBus.SqlTransport.Tests/LicenseConfiguration.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/LicenseConfiguration.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/MigrationHostedService.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/MigrationHostedService.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/PartitionKey_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/PartitionKey_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/ChannelName_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/PgSql/ChannelName_Specs.cs` |
@@ -5978,6 +5978,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/RenewLock_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/RenewLock_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Request_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Request_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/RoutingSlip_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/RoutingSlip_Specs.cs` |
+| `tests/ViciOne.ServiceBus.SqlTransport.Tests/RunScopedTransportEndpoint.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/Scheduler_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/Scheduler_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` |
 | `tests/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` | Modified | `tests/MassTransit.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` |
@@ -6115,6 +6116,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/DelayedRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/Trace_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
+| `tests/ViciOne.ServiceBus.Tests/DynamicProxySerialization_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/EmittedMetrics_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` | Modified | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
@@ -6225,6 +6227,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/MultiBusRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MultiTestConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs` | Modified | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
+| `tests/ViciOne.ServiceBus.Tests/NoLicensingResidue_Specs.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/NoOutboundVendorCall_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Observer_Specs.cs` | Modified | `tests/MassTransit.Tests/Observer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Outbox_Specs.cs` | Modified | `tests/MassTransit.Tests/Outbox_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs` | Added |  |
