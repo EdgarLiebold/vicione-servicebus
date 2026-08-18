@@ -209,25 +209,36 @@ def broker_state(broker: str, environment: dict[str, str]) -> str:
 
 
 def broker_is_healthy(broker: str, environment: dict[str, str]) -> bool:
-    """Running is not ready. A broker that has just been started accepts nothing for a while, and the
-    compose health check is the fixture's own definition of when it does."""
+    """Running is not ready, and no answer is not health.
+
+    A broker that has just been started accepts nothing for a while, and the compose health check is
+    the fixture's own definition of when it does. Zero records means compose knows nothing about that
+    service, which is the opposite of healthy - answering true there would have reported a container
+    that does not exist as ready.
+    """
     result = compose("ps", "--format", "json", broker, capture=True, environment=environment)
     if result.returncode != 0:
         return False
 
+    records = []
     for line in result.stdout.splitlines():
         line = line.strip()
         if not line:
             continue
         entry = json.loads(line)
-        for record in entry if isinstance(entry, list) else [entry]:
-            health = str(record.get("Health", "")).casefold()
-            state = str(record.get("State", "")).casefold()
-            if state != "running":
-                return False
-            # A service without a health check reports an empty string; running is then all there is.
-            if health not in ("", "healthy"):
-                return False
+        records.extend(entry if isinstance(entry, list) else [entry])
+
+    if not records:
+        return False
+
+    for record in records:
+        health = str(record.get("Health", "")).casefold()
+        state = str(record.get("State", "")).casefold()
+        if state != "running":
+            return False
+        # A service without a health check reports an empty string; running is then all there is.
+        if health not in ("", "healthy"):
+            return False
 
     return True
 
@@ -246,16 +257,36 @@ def serve_outage_requests(broker: str, control: Path, environment: dict[str, str
             if result.exists():
                 continue
 
+            # Initialised per request: a value carried over from the previous one would be reported
+            # as this request's action in a failure answer.
             answer: dict[str, object]
             request_id = request.stem
+            action: str | None = None
             try:
                 asked = json.loads(request.read_text(encoding="utf-8"))
+                if not isinstance(asked, dict):
+                    raise ValueError("the request is not an object")
+
+                version = asked.get("schemaVersion")
+                if version != CONTROL_SCHEMA_VERSION:
+                    raise ValueError(
+                        f"the request speaks schema version {version!r}, this runner speaks "
+                        f"{CONTROL_SCHEMA_VERSION}")
+
+                if asked.get("requestId") != request_id:
+                    raise ValueError(
+                        f"the request carries id {asked.get('requestId')!r} in a file named {request_id!r}")
+
                 action = asked.get("action")
                 if action not in OUTAGE_ACTIONS:
                     raise ValueError(f"unknown action {action!r}, expected one of {OUTAGE_ACTIONS}")
 
-                compose("stop" if action == "interrupt" else "start", broker,
-                        capture=True, environment=environment)
+                performed = compose("stop" if action == "interrupt" else "start", broker,
+                                    capture=True, environment=environment)
+                if performed.returncode != 0:
+                    raise RunnerError(
+                        f"docker compose could not {action} {broker}: "
+                        f"{performed.stderr.strip() or performed.stdout.strip()}")
 
                 deadline = time.monotonic() + OUTAGE_BUDGET_SECONDS
                 observed = ""
@@ -279,8 +310,8 @@ def serve_outage_requests(broker: str, control: Path, environment: dict[str, str
                           "action": action, "status": "ok", "observed": observed}
             except Exception as error:  # noqa: BLE001 - the answer carries the reason
                 answer = {"schemaVersion": CONTROL_SCHEMA_VERSION, "requestId": request_id,
-                          "action": asked.get("action") if isinstance(locals().get("asked"), dict) else None,
-                          "status": "failed", "error": f"{type(error).__name__}: {error}"}
+                          "action": action, "status": "failed",
+                          "error": f"{type(error).__name__}: {error}"}
 
             publish_json(result, answer)
 
@@ -560,12 +591,24 @@ def main(argv: list[str] | None = None) -> int:
         outage_stop.set()
         if outage_thread is not None:
             outage_thread.join(timeout=10)
+        teardown_failed = False
 
         # An outage is undone before anything else, and unconditionally. A child that hung or was killed
         # leaves the broker stopped, and a stopped container survives a failed teardown: the next run
         # then meets a fixture that is up and answers nothing.
         if args.allow_broker_outage:
-            compose("start", args.allow_broker_outage, capture=True, environment=environment)
+            restored = compose("start", args.allow_broker_outage, capture=True, environment=environment)
+            if restored.returncode != 0 and failure is None:
+                print(f"FAIL broker-restore: the broker could not be started again: "
+                      f"{restored.stderr.strip() or restored.stdout.strip()}", file=sys.stderr)
+                failure = RunnerError("the broker could not be started again")
+                teardown_failed = True
+
+        if outage_thread is not None and outage_thread.is_alive():
+            print("FAIL outage-controller: the control thread did not terminate", file=sys.stderr)
+            if failure is None:
+                failure = RunnerError("the outage control thread did not terminate")
+            teardown_failed = True
 
         # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
         # refusal check already collected are not fetched a second time: that would overwrite the very
@@ -584,10 +627,13 @@ def main(argv: list[str] | None = None) -> int:
             stop(environment)
         except TeardownError as error:
             print(f"FAIL broker-teardown: {error}", file=sys.stderr)
-            if failure is None:
-                # Raised rather than returned: a return inside finally would discard the value the try
-                # block produced, including a non zero one.
-                raise
+            teardown_failed = True
+
+        if teardown_failed and failure is None:
+            # Raised rather than returned: a return inside finally would discard the value the try
+            # block produced, including a non zero one. A failure that came first stays the failure
+            # a reader sees; this one only decides the verdict of an otherwise green run.
+            raise RunnerError("the fixture could not be returned to a usable state")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 {
     using System;
@@ -67,8 +68,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             }
 
             var requestId = $"{action}-{Guid.NewGuid():N}";
-            var request = Path.Combine(control!, $"{requestId}.request");
-            var result = Path.Combine(control!, $"{requestId}.result");
+            var request = Path.Combine(control, $"{requestId}.request");
+            var result = Path.Combine(control, $"{requestId}.result");
 
             // Published by an atomic rename on the same directory, so the runner can never read a
             // request that is still being written.
@@ -84,7 +85,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             {
                 if (File.Exists(result))
                 {
-                    Answer answer = Read(result);
+                    Answer answer = Read(result, requestId, action);
 
                     if (answer.Status == "ok")
                         return;
@@ -100,10 +101,27 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 + $"{Budget.TotalSeconds:0} s");
         }
 
-        static Answer Read(string path)
+        /// <summary>
+        /// Reads the runner's answer, and refuses anything that is not an answer to this request.
+        /// <para>
+        /// The schema version, the echoed request id and the echoed action are all checked. A control
+        /// directory is a shared surface: a stale file from an earlier request, a runner speaking a
+        /// different version, or an answer about the opposite action would otherwise be read as
+        /// success for this one.
+        /// </para>
+        /// </summary>
+        static Answer Read(string path, string requestId, string action)
         {
-            using var document = JsonDocument.Parse(File.ReadAllText(path));
-            var root = document.RootElement;
+            JsonElement root;
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(path));
+                root = document.RootElement.Clone();
+            }
+            catch (JsonException unreadable)
+            {
+                return new Answer("failed", $"the runner's answer is not readable JSON: {unreadable.Message}");
+            }
 
             var version = root.TryGetProperty("schemaVersion", out var value) && value.TryGetInt32(out var number)
                 ? number
@@ -114,6 +132,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 return new Answer("failed",
                     $"the runner answered with schema version {version}, this side speaks {SchemaVersion}");
             }
+
+            var echoedId = root.TryGetProperty("requestId", out var identity) ? identity.GetString() : null;
+            if (echoedId != requestId)
+                return new Answer("failed", $"the answer carries request id '{echoedId}', this request is '{requestId}'");
+
+            var echoedAction = root.TryGetProperty("action", out var performed) ? performed.GetString() : null;
+            if (echoedAction != action)
+                return new Answer("failed", $"the answer is about '{echoedAction}', this request asked for '{action}'");
 
             var status = root.TryGetProperty("status", out var reported) ? reported.GetString() : null;
             var error = root.TryGetProperty("error", out var reason) ? reason.GetString() : null;

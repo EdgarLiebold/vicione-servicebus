@@ -71,7 +71,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 Assert.That(await Arrived(received, beforeTheOutage), Is.EqualTo(1),
                     "delivery did not work before the outage, so nothing after it would mean anything");
 
-                observer.Rearm();
+                observer.Watch();
 
                 try
                 {
@@ -88,7 +88,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                     await BrokerFaultController.Restore();
                 }
 
-                Assert.That(await observer.ReadyAgain(ReadyBudget), Is.True,
+                Assert.That(await observer.ReadyAfterTheFault(ReadyBudget), Is.True,
                     "the receive endpoint never became ready again after the broker returned");
 
                 var afterTheOutage = NewId.NextGuid().ToString();
@@ -106,8 +106,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         }
 
         /// <summary>
-        /// How often that exact identity arrived. Exactly once is the assertion; counting lets a
-        /// duplicate fail on its own sentence instead of hiding behind "at least one arrived".
+        /// How often that exact identity arrived, counted once the endpoint has stopped receiving.
+        /// <para>
+        /// Exactly once is the assertion, and counting lets a duplicate fail on its own sentence
+        /// instead of hiding behind "at least one arrived". The count is taken after a quiet period
+        /// rather than a fixed pause: the observation ends when nothing has arrived for
+        /// <see cref="QuietPeriod"/>, which is a statement about the endpoint rather than a guess at
+        /// how long a second copy would take. Nothing beyond that period is claimed.
+        /// </para>
         /// </summary>
         static async Task<int> Arrived(ConcurrentQueue<string> received, string identity)
         {
@@ -116,34 +122,68 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             while (elapsed.Elapsed < DeliveryBudget)
             {
                 if (received.Any(value => value == identity))
-                {
-                    // A moment for a second copy to show up, so a duplicate is reported as one.
-                    await Task.Delay(TimeSpan.FromSeconds(2));
-
-                    return received.Count(value => value == identity);
-                }
+                    break;
 
                 await Task.Delay(TimeSpan.FromMilliseconds(250));
             }
 
-            return 0;
+            // Drain: keep watching until the endpoint has been quiet, so a second copy that is still
+            // in flight is part of the count rather than of the next case.
+            var quiet = Stopwatch.StartNew();
+            var lastSeen = received.Count;
+            while (quiet.Elapsed < QuietPeriod && elapsed.Elapsed < DeliveryBudget + QuietPeriod)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+                var now = received.Count;
+                if (now != lastSeen)
+                {
+                    lastSeen = now;
+                    quiet.Restart();
+                }
+            }
+
+            return received.Count(value => value == identity);
         }
 
+        /// <summary>How long the endpoint has to have received nothing before the count is taken.</summary>
+        static readonly TimeSpan QuietPeriod = TimeSpan.FromSeconds(3);
+
         /// <summary>
-        /// Stops the harness, and gives up rather than hanging the run.
+        /// Stops the harness within a bound, and fails if it cannot.
         /// <para>
         /// The broker behind the relay is a different process than the one this harness connected to,
-        /// so a teardown that tries to clean entities it created can wait for an answer that is not
-        /// coming. The case has already made its statement at this point; a teardown that will not
-        /// finish must not turn that statement into a run without an end.
+        /// so a teardown that cleans entities it created can wait for an answer that is not coming.
+        /// That is a defect worth reporting, not a note: a harness that will not stop leaves a
+        /// connection and a consumer behind for every later case in the run.
+        /// </para>
+        /// <para>
+        /// The completed task is compared with the stop task itself. Comparing it with
+        /// Task.CompletedTask compares against a different object entirely, so the branch was taken
+        /// whenever the stop had not finished synchronously - which is always - and the case reported
+        /// a failure it had not measured while ignoring the one it had.
         /// </para>
         /// </summary>
         static async Task StopWithoutHanging(ActiveMqTestHarness harness)
         {
-            if (await Task.WhenAny(harness.Stop(), Task.Delay(StopBudget)) != Task.CompletedTask)
-                TestContext.Out.WriteLine($"the harness did not stop within {StopBudget.TotalSeconds:0} s");
+            try
+            {
+                Task stopping = harness.Stop();
 
-            harness.Dispose();
+                Task finished = await Task.WhenAny(stopping, Task.Delay(StopBudget));
+
+                Assert.That(finished, Is.SameAs(stopping),
+                    $"the harness did not stop within {StopBudget.TotalSeconds:0} s, so it leaves its "
+                    + "connection and its consumer behind for everything after it");
+
+                // Awaited on the successful path so an exception during the stop is observed rather
+                // than swallowed into an unobserved task.
+                await stopping;
+            }
+            finally
+            {
+                harness.Dispose();
+            }
         }
 
         /// <summary>How long the transport is given to notice that the broker is gone.</summary>
@@ -160,30 +200,55 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
 
         /// <summary>
-        /// What the receive endpoint said about itself. Both signals are latched, so one that arrives a
-        /// moment before the wait starts still counts.
+        /// What the receive endpoint said about itself, in order.
+        /// <para>
+        /// Recovery is a sequence, not two independent signals. Resetting both and waiting for either
+        /// lets a Ready that arrives before the Fault satisfy the recovery: the endpoint that was
+        /// already ready reports it again, the case sees Ready, and nothing was recovered. So this
+        /// carries a state rather than two latches - a Ready is only the recovery when it is observed
+        /// after the Fault that this outage caused.
+        /// </para>
         /// </summary>
-        class EndpointStateObserver :
+        internal sealed class EndpointStateObserver :
             IReceiveEndpointObserver
         {
+            readonly object _gate = new();
             TaskCompletionSource<bool> _faulted = Fresh();
-            TaskCompletionSource<bool> _ready = Fresh();
+            TaskCompletionSource<bool> _recovered = Fresh();
+            bool _watching;
+            bool _faultSeen;
 
-            /// <summary>Forgets the readiness of the start, so only the one after the outage counts.</summary>
-            public void Rearm()
+            /// <summary>
+            /// Starts watching one outage. Everything before this - including the readiness of the
+            /// start - is forgotten, and no Ready counts until a Fault has been seen.
+            /// </summary>
+            public void Watch()
             {
-                Volatile.Write(ref _faulted, Fresh());
-                Volatile.Write(ref _ready, Fresh());
+                lock (_gate)
+                {
+                    _faulted = Fresh();
+                    _recovered = Fresh();
+                    _watching = true;
+                    _faultSeen = false;
+                }
             }
 
             public Task<bool> Faulted(TimeSpan budget)
             {
-                return Within(Volatile.Read(ref _faulted).Task, budget);
+                Task<bool> signal;
+                lock (_gate)
+                    signal = _faulted.Task;
+
+                return Within(signal, budget);
             }
 
-            public Task<bool> ReadyAgain(TimeSpan budget)
+            public Task<bool> ReadyAfterTheFault(TimeSpan budget)
             {
-                return Within(Volatile.Read(ref _ready).Task, budget);
+                Task<bool> signal;
+                lock (_gate)
+                    signal = _recovered.Task;
+
+                return Within(signal, budget);
             }
 
             static async Task<bool> Within(Task<bool> signal, TimeSpan budget)
@@ -198,7 +263,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
             public Task Ready(ReceiveEndpointReady ready)
             {
-                Volatile.Read(ref _ready).TrySetResult(true);
+                lock (_gate)
+                {
+                    // A Ready before the Fault is the endpoint that never went away. It is not a
+                    // recovery and it may not complete one.
+                    if (_watching && _faultSeen)
+                        _recovered.TrySetResult(true);
+                }
 
                 return Task.CompletedTask;
             }
@@ -209,7 +280,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
             public Task Faulted(ReceiveEndpointFaulted faulted)
             {
-                Volatile.Read(ref _faulted).TrySetResult(true);
+                lock (_gate)
+                {
+                    if (!_watching)
+                        return Task.CompletedTask;
+
+                    _faultSeen = true;
+                    _faulted.TrySetResult(true);
+                }
 
                 return Task.CompletedTask;
             }
