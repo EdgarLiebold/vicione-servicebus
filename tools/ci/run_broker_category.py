@@ -24,7 +24,6 @@ import os
 import re
 import secrets
 import shutil
-import socket
 import subprocess
 import sys
 import threading
@@ -39,9 +38,23 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
 
 
-def broker_log_path(broker: str) -> Path:
-    return RAW_RUN_OUTPUT_DIR / f"{broker}-broker.log"
+def broker_log_path(broker: str, environment: dict[str, str]) -> Path:
+    """Under this run's own root. A shared file name means a second run overwrites the log the first
+    one's verdict was read from."""
+    root = environment.get(RUN_ROOT_VARIABLE)
+
+    return (Path(root) if root else RAW_RUN_OUTPUT_DIR) / f"{broker}-broker.log"
+
+
 COMPOSE_FILE = REPO_ROOT / "build/test-infrastructure/compose.yaml"
+
+# What separates one run from another. The compose project name decides which containers, networks and
+# volumes a command addresses, and the run root decides where output and control files land. Both are
+# derived from one identity so that nothing this run writes can collide with, or be removed by, another
+# run on the same machine.
+PROJECT_VARIABLE = "VICIONE_SERVICEBUS_COMPOSE_PROJECT"
+
+RUN_ROOT_VARIABLE = "VICIONE_SERVICEBUS_RUN_ROOT"
 
 # Container ports each broker exposes, mapped onto the environment variable the tests read.
 BROKER_PORTS = {
@@ -96,8 +109,22 @@ class RunnerError(RuntimeError):
     pass
 
 
+class TeardownError(RuntimeError):
+    """Raised when the fixture could not be removed. Never replaces the failure that came first."""
+
+
 def compose(*args: str, capture: bool = False, environment: dict[str, str] | None = None) -> subprocess.CompletedProcess:
-    command = ["docker", "compose", "-f", str(COMPOSE_FILE), *args]
+    """Every call names the compose project of this run.
+
+    Without it two runs share one project: the second one's 'down -v' removes the first one's
+    containers, and both write the same volumes. The name comes from the environment so that the
+    teardown in the finally block addresses exactly the project the start created, even when the
+    start itself failed.
+    """
+    project = (environment or os.environ).get(PROJECT_VARIABLE)
+    identity = ["-p", project] if project else []
+
+    command = ["docker", "compose", "-f", str(COMPOSE_FILE), *identity, *args]
     return subprocess.run(command, text=True, capture_output=capture, check=False, env=environment)
 
 
@@ -113,92 +140,144 @@ def start(brokers: list[str], environment: dict[str, str]) -> None:
 
 
 def stop(environment: dict[str, str] | None = None) -> None:
-    compose("down", "-v", capture=True, environment=environment)
+    """Removes this run's fixture, and says so when it could not.
+
+    A teardown that ignores the exit code leaves containers and volumes behind while the run reports
+    success. The next run then meets a database that still holds an earlier secret, or a broker that
+    is up and answers nothing, and the failure surfaces somewhere else entirely.
+    """
+    result = compose("down", "-v", "--remove-orphans", capture=True, environment=environment)
+    if result.returncode != 0:
+        raise TeardownError(f"the fixture could not be removed: {result.stderr.strip() or result.stdout.strip()}")
 
 
 # The fixture boundary a test asks for an outage through. The test writes a request file and waits for
 # a result file; this runner is the only thing that ever touches Docker.
 #
-# Why pause rather than stop: measured on this fixture, 'compose stop' followed by 'compose start'
-# rebinds the published port, because compose publishes an ephemeral loopback port per container start
-# (32955 became 32958). A client that reconnects to the address it was configured with would then be
-# reconnecting to a port nobody listens on, and the case would be measuring the fixture rather than the
-# transport. 'docker pause' freezes the container's processes and keeps the published port, so the
-# endpoint the bus holds stays the endpoint the broker comes back on. 'network disconnect' was measured
-# too and drops the mapping as well, so it is out for the same reason.
+# The broker is really stopped and really started again. What keeps the client's address stable across
+# that is the proxy in front of it, not the broker: compose publishes an ephemeral loopback port per
+# container start, so a restarted broker comes back on a different port every time - measured twice,
+# 32955 to 32958 here and 33002 to 33005 by the Lead. The proxy is never restarted, so the three
+# addresses the test process was given stay valid, and what changes behind them is a broker that was
+# genuinely gone.
 OUTAGE_CONTROL_VARIABLE = "VICIONE_SERVICEBUS_FIXTURE_CONTROL"
 
 OUTAGE_ACTIONS = ("interrupt", "restore")
 
-# The port a client of that broker holds, and therefore the one whose reachability decides
-# whether an outage really happened.
-OUTAGE_PORT = {"activemq": 61616, "artemis": 61616, "rabbitmq": 5672,
-               "mssql": 1433, "postgres": 5432}
+# The exchange between the child and this runner. Both sides write into a temporary file beside the
+# target and publish it with an atomic rename on the same filesystem, so no reader can ever meet a
+# half written JSON document.
+CONTROL_SCHEMA_VERSION = 1
 
 
-def published_port(broker: str, container_port: int, environment: dict[str, str]) -> str | None:
-    result = compose("port", broker, str(container_port), capture=True, environment=environment)
+def publish_json(target: Path, payload: dict[str, object]) -> None:
+    temporary = target.with_name(target.name + ".partial")
+    temporary.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.replace(target)
 
-    return result.stdout.strip() or None
+
+def broker_state(broker: str, environment: dict[str, str]) -> str:
+    """What Docker says about the container, which is the only honest answer about the broker.
+
+    Not a TCP handshake: the proxy in front of the broker accepts connections whether or not anything
+    is behind it, so a successful connect would report the proxy's health and call it the broker's.
+    """
+    result = compose("ps", "--format", "json", broker, capture=True, environment=environment)
+    if result.returncode != 0:
+        raise RunnerError(f"docker compose ps failed for {broker}: {result.stderr.strip()}")
+
+    states = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        entry = json.loads(line)
+        for record in entry if isinstance(entry, list) else [entry]:
+            states.append(str(record.get("State", "")).casefold())
+
+    if not states:
+        return "absent"
+
+    return states[0]
 
 
-def port_accepts(endpoint: str, timeout: float = 2.0) -> bool:
-    host, _, port = endpoint.rpartition(":")
-
-    try:
-        with socket.create_connection((host or "127.0.0.1", int(port)), timeout=timeout):
-            return True
-    except OSError:
+def broker_is_healthy(broker: str, environment: dict[str, str]) -> bool:
+    """Running is not ready. A broker that has just been started accepts nothing for a while, and the
+    compose health check is the fixture's own definition of when it does."""
+    result = compose("ps", "--format", "json", broker, capture=True, environment=environment)
+    if result.returncode != 0:
         return False
 
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        entry = json.loads(line)
+        for record in entry if isinstance(entry, list) else [entry]:
+            health = str(record.get("Health", "")).casefold()
+            state = str(record.get("State", "")).casefold()
+            if state != "running":
+                return False
+            # A service without a health check reports an empty string; running is then all there is.
+            if health not in ("", "healthy"):
+                return False
 
-def serve_outage_requests(broker: str, container_port: int, control: Path, environment: dict[str, str],
-                          stop: threading.Event) -> None:
-    """Answers one outage request at a time, and answers it with what it observed rather than with what
-    it asked for. A request whose effect the runner cannot confirm is a failed request."""
-    while not stop.is_set():
+    return True
+
+
+def serve_outage_requests(broker: str, control: Path, environment: dict[str, str],
+                          stop_serving: threading.Event) -> None:
+    """Answers one outage request at a time, with what it observed rather than with what it was asked.
+
+    A request whose effect cannot be confirmed is a failed request. 'interrupt' stops the broker and
+    waits until Docker reports it stopped; 'restore' starts it and waits for the fixture's own health
+    check, because a container that is running is not yet a broker that answers.
+    """
+    while not stop_serving.is_set():
         for request in sorted(control.glob("*.request")):
             result = request.with_suffix(".result")
             if result.exists():
                 continue
 
             answer: dict[str, object]
+            request_id = request.stem
             try:
                 asked = json.loads(request.read_text(encoding="utf-8"))
                 action = asked.get("action")
                 if action not in OUTAGE_ACTIONS:
                     raise ValueError(f"unknown action {action!r}, expected one of {OUTAGE_ACTIONS}")
 
-                before = published_port(broker, container_port, environment)
-                compose("pause" if action == "interrupt" else "unpause", broker,
+                compose("stop" if action == "interrupt" else "start", broker,
                         capture=True, environment=environment)
 
-                wanted = action == "restore"
-                deadline = time.monotonic() + 60
-                observed = None
+                deadline = time.monotonic() + OUTAGE_BUDGET_SECONDS
+                observed = ""
                 while time.monotonic() < deadline:
-                    observed = port_accepts(published_port(broker, container_port, environment) or "")
-                    if observed == wanted:
-                        break
-                    time.sleep(0.2)
-
-                after = published_port(broker, container_port, environment)
-                if observed != wanted:
+                    if action == "interrupt":
+                        observed = broker_state(broker, environment)
+                        if observed in ("exited", "stopped", "absent"):
+                            break
+                    else:
+                        if broker_is_healthy(broker, environment):
+                            observed = "healthy"
+                            break
+                        observed = broker_state(broker, environment)
+                    time.sleep(0.5)
+                else:
                     raise TimeoutError(
-                        f"the broker port still {'refuses' if wanted else 'accepts'} connections after "
-                        f"{action}, so the outage was not established")
-                if before != after:
-                    raise RuntimeError(
-                        f"the published port changed from {before} to {after}, so this is not the same "
-                        "endpoint any more and no client could reconnect to it")
+                        f"the broker was still '{observed}' {OUTAGE_BUDGET_SECONDS} s after {action}, so "
+                        "the outage was not established")
 
-                answer = {"ok": True, "action": action, "endpoint": after, "accepts": observed}
+                answer = {"schemaVersion": CONTROL_SCHEMA_VERSION, "requestId": request_id,
+                          "action": action, "status": "ok", "observed": observed}
             except Exception as error:  # noqa: BLE001 - the answer carries the reason
-                answer = {"ok": False, "error": f"{type(error).__name__}: {error}"}
+                answer = {"schemaVersion": CONTROL_SCHEMA_VERSION, "requestId": request_id,
+                          "action": asked.get("action") if isinstance(locals().get("asked"), dict) else None,
+                          "status": "failed", "error": f"{type(error).__name__}: {error}"}
 
-            result.write_text(json.dumps(answer, sort_keys=True) + "\n", encoding="utf-8")
+            publish_json(result, answer)
 
-        stop.wait(0.1)
+        stop_serving.wait(0.1)
 
 
 def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
@@ -210,13 +289,13 @@ def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
     reconstructed from assertions afterwards. Failure to collect it does not fail the run -- the log is
     evidence about a run that has already produced its verdict.
     """
-    RAW_RUN_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for broker in brokers:
         result = compose("logs", "--no-color", "--timestamps", broker, capture=True, environment=environment)
         if result.returncode != 0:
             print(f"WARN broker-log {broker}: not collected ({result.stderr.strip()})", file=sys.stderr)
             continue
-        target = broker_log_path(broker)
+        target = broker_log_path(broker, environment)
+        target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(result.stdout, encoding="utf-8")
         print(f"broker log {broker}: {target} ({len(result.stdout.splitlines())} lines)")
 
@@ -306,6 +385,31 @@ def build_environment() -> dict[str, str]:
     return environment
 
 
+def validate(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    """Closes the command line instead of checking two of its combinations.
+
+    Two modes exist and they do not overlap. A category run names a category and a project; a command
+    run names the command after --. Anything that mixes them was written by somebody who expected one
+    of the two to happen, and guessing which one is worse than refusing.
+    """
+    if args.command:
+        if not args.rest:
+            parser.error("--command needs the command itself after --")
+        for option, value in (("--category", args.category), ("--project", args.project),
+                              ("--one-refusal-per-vhost", args.one_refusal_per_vhost)):
+            if value:
+                parser.error(f"--command runs a command, so {option} has no meaning in the same call")
+        return
+
+    if not args.category or not args.project:
+        parser.error("either --category with --project, or --command with the command after --")
+    if args.rest:
+        parser.error("a category run forwards extra arguments after --, and these arrived without it: "
+                     + " ".join(args.rest))
+    if args.allow_broker_outage and args.allow_broker_outage not in args.broker:
+        parser.error(f"--allow-broker-outage names '{args.allow_broker_outage}', which this run does not start")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     # A suite may legitimately span more than one broker: the ActiveMQ specs are parameterized over an
@@ -338,10 +442,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("rest", nargs="*")
     args = parser.parse_args(argv)
 
-    if args.command and not args.rest:
-        parser.error("--command needs the command itself after --")
-    if not args.command and not (args.category and args.project):
-        parser.error("either --category with --project, or --command with the command after --")
+    validate(parser, args)
 
     brokers = list(dict.fromkeys(args.broker))
     credentials = build_environment()
@@ -352,7 +453,20 @@ def main(argv: list[str] | None = None) -> int:
     environment = dict(os.environ)
     environment.update(credentials)
 
+    # One identity for this run, and everything that can collide is derived from it: the compose
+    # project that decides which containers a command addresses, and the root every output and control
+    # file of this run lives under. Two runs on one machine now share nothing at all.
+    identity = f"vicione-{secrets.token_hex(6)}"
+    run_root = RAW_RUN_OUTPUT_DIR / identity
+    run_root.mkdir(parents=True, exist_ok=True)
+    environment[PROJECT_VARIABLE] = identity
+    environment[RUN_ROOT_VARIABLE] = str(run_root)
+    print(f"run identity {identity}, output under {run_root.relative_to(REPO_ROOT)}")
+
     captured: set[str] = set()
+    outage_stop = threading.Event()
+    outage_thread: threading.Thread | None = None
+    failure: BaseException | None = None
 
     try:
         start(brokers, environment)
@@ -365,22 +479,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"fixture {' and '.join(brokers)} ready on loopback: "
               + ", ".join(f"{name}={value}" for name, value in sorted(endpoints.items())))
 
-        outage_stop = threading.Event()
-        outage_thread = None
         if args.allow_broker_outage:
             broker = args.allow_broker_outage
-            if broker not in brokers:
-                raise RunnerError(f"--allow-broker-outage names '{broker}', which this run does not start")
-
-            control = REPO_ROOT / "artifacts" / "run-output" / "fixture-control"
-            if control.exists():
-                shutil.rmtree(control)
+            # Under this run's own root, so it is never the path another run deletes.
+            control = run_root / "fixture-control"
             control.mkdir(parents=True)
             environment[OUTAGE_CONTROL_VARIABLE] = str(control)
 
             outage_thread = threading.Thread(
                 target=serve_outage_requests,
-                args=(broker, OUTAGE_PORT[broker], control, dict(environment), outage_stop),
+                args=(broker, control, dict(environment), outage_stop),
                 daemon=True)
             outage_thread.start()
             print(f"outage control ready for {broker} at {control}")
@@ -413,23 +521,30 @@ def main(argv: list[str] | None = None) -> int:
             captured.update(brokers)
 
             for broker in brokers:
-                if not assert_one_refusal_per_vhost(broker_log_path(broker), args.one_refusal_per_vhost):
+                if not assert_one_refusal_per_vhost(broker_log_path(broker, environment), args.one_refusal_per_vhost):
                     return completed.returncode or 1
-
-        outage_stop.set()
-        if outage_thread is not None:
-            outage_thread.join(timeout=5)
 
         return completed.returncode
     except RunnerError as error:
-        print(f"FAIL broker-category {args.category}: {error}", file=sys.stderr)
+        failure = error
+        print(f"FAIL broker-category {args.category or 'command'}: {error}", file=sys.stderr)
         return 1
+    except BaseException as error:  # noqa: BLE001 - remembered so the teardown cannot replace it
+        failure = error
+        raise
     finally:
+        # The control thread is stopped and joined in every exit path, including the ones that raise.
+        # A thread still answering outage requests while the fixture is being removed would act on
+        # containers that are on their way out.
+        outage_stop.set()
+        if outage_thread is not None:
+            outage_thread.join(timeout=10)
+
         # An outage is undone before anything else, and unconditionally. A child that hung or was killed
-        # leaves the container paused, and a paused container survives a failed teardown: the next run
-        # then meets a broker that is up, has its ports and answers nothing.
+        # leaves the broker stopped, and a stopped container survives a failed teardown: the next run
+        # then meets a fixture that is up and answers nothing.
         if args.allow_broker_outage:
-            compose("unpause", args.allow_broker_outage, capture=True, environment=environment)
+            compose("start", args.allow_broker_outage, capture=True, environment=environment)
 
         # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
         # refusal check already collected are not fetched a second time: that would overwrite the very
@@ -441,8 +556,17 @@ def main(argv: list[str] | None = None) -> int:
         except OSError as error:
             print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
 
-        # Trap equivalent: the fixture is removed on success, on failure and on an exception alike.
-        stop(environment)
+        # Trap equivalent: the fixture is removed on success, on failure and on an exception alike, and
+        # a teardown that fails says so. It never replaces the failure that came first - that one is
+        # already on its way out - but on an otherwise successful run it is the verdict.
+        try:
+            stop(environment)
+        except TeardownError as error:
+            print(f"FAIL broker-teardown: {error}", file=sys.stderr)
+            if failure is None:
+                # Raised rather than returned: a return inside finally would discard the value the try
+                # block produced, including a non zero one.
+                raise
 
 
 if __name__ == "__main__":
