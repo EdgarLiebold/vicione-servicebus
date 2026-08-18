@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.TestInfrastructure
     /// before any connection attempt, so a missing contract reads as a missing contract instead of as a
     /// refused connection.
     /// </summary>
-    public class TestRunnerContractException :
+    public sealed class TestRunnerContractException :
         Exception
     {
         public TestRunnerContractException(string message)

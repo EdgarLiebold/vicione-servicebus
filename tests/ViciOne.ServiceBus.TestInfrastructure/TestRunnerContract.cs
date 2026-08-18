@@ -41,17 +41,6 @@ namespace ViciOne.ServiceBus.TestInfrastructure
         /// <summary>The PostgreSQL fixture of this run. Throws when the runner published no complete endpoint.</summary>
         public static DatabaseEndpoint Postgres => _postgres.Value;
 
-        /// <summary>
-        /// Whether a complete SQL Server endpoint was published. Reading this never throws, so a fixture
-        /// can report a missing contract in its own words; it must not be used to select a fallback.
-        /// </summary>
-        public static bool SqlServerIsConfigured => Missing(SqlServerHostVariable, SqlServerPortVariable,
-            SqlServerUsernameVariable, SqlServerPasswordVariable).Count == 0;
-
-        /// <summary>Whether a complete PostgreSQL endpoint was published. See <see cref="SqlServerIsConfigured"/>.</summary>
-        public static bool PostgresIsConfigured => Missing(PostgresHostVariable, PostgresPortVariable,
-            PostgresUsernameVariable, PostgresPasswordVariable).Count == 0;
-
         static DatabaseEndpoint Read(string engine, string hostVariable, string portVariable, string usernameVariable,
             string passwordVariable)
         {

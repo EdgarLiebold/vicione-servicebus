@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1301 |
+| Added | 1302 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -6369,6 +6369,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Request_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RoutingSlip_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RunScopedTransportEndpoint.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RunnerContract_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Scheduler_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` | Added |  |

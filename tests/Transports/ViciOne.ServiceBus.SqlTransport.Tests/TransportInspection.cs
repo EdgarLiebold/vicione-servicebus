@@ -28,9 +28,22 @@ public enum TransportDialect
 /// </summary>
 public static class TransportInspection
 {
+    /// <summary>
+    /// Which engine a configuration addresses. A configuration this method does not know is a failure,
+    /// not PostgreSQL: reading an unknown one as PostgreSQL would run every assertion of that fixture
+    /// against the wrong dialect's tables and report whatever it found there.
+    /// </summary>
     public static TransportDialect DialectOf(IDatabaseTestConfiguration configuration)
     {
-        return configuration is SqlServerDatabaseTestConfiguration ? TransportDialect.SqlServer : TransportDialect.Postgres;
+        return configuration switch
+        {
+            SqlServerDatabaseTestConfiguration => TransportDialect.SqlServer,
+            PostgresDatabaseTestConfiguration => TransportDialect.Postgres,
+            null => throw new ArgumentNullException(nameof(configuration)),
+            _ => throw new ArgumentOutOfRangeException(nameof(configuration), configuration.GetType().Name,
+                "This configuration names no known SQL dialect. Add it here rather than letting an "
+                + "inspection read one engine's tables through the other engine's statements.")
+        };
     }
 
     public static async Task<DbConnection> OpenTransport(this IServiceProvider provider, TransportDialect dialect)
