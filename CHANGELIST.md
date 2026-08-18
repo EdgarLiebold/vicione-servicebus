@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1156 |
+| Added | 1159 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -149,6 +149,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
 | `build/test-infrastructure/capability-matrix.json` | Added |  |
 | `build/test-infrastructure/compose.yaml` | Added |  |
+| `build/test-infrastructure/haproxy/haproxy.cfg` | Added |  |
 | `build/test-infrastructure/images.lock.json` | Added |  |
 | `build/test-infrastructure/new-run-credentials.sh` | Added |  |
 | `build/test-infrastructure/not-executed-inventory.json` | Added |  |
@@ -241,6 +242,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0088/activemq-outage-analysis.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0088/diagnostic-disposition.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0088/test-isolation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/broker-recovery.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/GIT_BASELINE_PROOF.json` | Added |  |
@@ -5953,6 +5955,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ArtemisBroker.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerFaultController.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerRecovery_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/CleanSemantics_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Compression_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Conductor_Specs.cs` | Added |  |
@@ -5963,7 +5967,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/DestinationExtensions.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/EndpointConfiguration_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ErrorQueue_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/FixtureOutage.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/InMemoryOutboxRedelivery_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/InvalidMessage_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/JobConsumer_Specs.cs` | Added |  |

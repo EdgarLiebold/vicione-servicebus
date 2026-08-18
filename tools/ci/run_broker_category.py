@@ -164,6 +164,13 @@ OUTAGE_CONTROL_VARIABLE = "VICIONE_SERVICEBUS_FIXTURE_CONTROL"
 
 OUTAGE_ACTIONS = ("interrupt", "restore")
 
+# The relay in front of a broker, for runs that take that broker away. Only a broker listed here can be
+# interrupted, because only it has an address that survives its own restart.
+OUTAGE_PROXY = {"activemq": "activemq-proxy"}
+
+# How long the runner waits for a broker to reach the state it was asked for.
+OUTAGE_BUDGET_SECONDS = 120
+
 # The exchange between the child and this runner. Both sides write into a temporary file beside the
 # target and publish it with an atomic rename on the same filesystem, so no reader can ever meet a
 # half written JSON document.
@@ -350,19 +357,25 @@ def assert_one_refusal_per_vhost(log_path: Path, pattern: str) -> bool:
     return True
 
 
-def resolve_ports(broker: str, environment: dict[str, str]) -> dict[str, str]:
-    """Ask Docker for the ports it actually bound, and refuse anything outside loopback."""
+def resolve_ports(broker: str, environment: dict[str, str], service: str | None = None) -> dict[str, str]:
+    """Ask Docker for the ports it actually bound, and refuse anything outside loopback.
+
+    The variables always belong to the broker; the service they are read from may be its relay. In a
+    recovery run that is the difference between an address the client can keep and one that changes
+    every time the broker restarts.
+    """
+    source = service or broker
     resolved: dict[str, str] = {}
     for container_port, variable in BROKER_PORTS[broker].items():
-        result = compose("port", broker, str(container_port), capture=True, environment=environment)
+        result = compose("port", source, str(container_port), capture=True, environment=environment)
         binding = result.stdout.strip()
         if result.returncode != 0 or not binding:
-            raise RunnerError(f"container port {container_port} of {broker} is not published")
+            raise RunnerError(f"container port {container_port} of {source} is not published")
 
         host, _, port = binding.rpartition(":")
         if host not in ("127.0.0.1", "[::1]"):
             raise RunnerError(
-                f"container port {container_port} of {broker} is published on '{host}' instead of loopback"
+                f"container port {container_port} of {source} is published on '{host}' instead of loopback"
             )
         resolved[variable] = port
     return resolved
@@ -469,12 +482,20 @@ def main(argv: list[str] | None = None) -> int:
     failure: BaseException | None = None
 
     try:
-        start(brokers, environment)
+        proxy = OUTAGE_PROXY.get(args.allow_broker_outage or "")
+        start(brokers + ([proxy] if proxy else []), environment)
+
         endpoints: dict[str, str] = {}
         for broker in brokers:
-            endpoints.update(resolve_ports(broker, environment))
+            # In a recovery run the addresses of the fronted broker come from its relay. That is the
+            # whole point: the client keeps one address while the broker behind it restarts.
+            source = proxy if proxy and broker == args.allow_broker_outage else broker
+            endpoints.update(resolve_ports(broker, environment, service=source))
             endpoints[BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
         environment.update(endpoints)
+
+        if proxy:
+            print(f"{args.allow_broker_outage} is reached through {proxy}, so its address survives a restart")
 
         print(f"fixture {' and '.join(brokers)} ready on loopback: "
               + ", ".join(f"{name}={value}" for name, value in sorted(endpoints.items())))

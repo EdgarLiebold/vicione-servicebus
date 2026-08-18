@@ -99,6 +99,26 @@ services:
       retries: 24
       start_period: 5s
 
+  # A plain TCP relay in front of ActiveMQ, started only by a run that needs to take the broker away
+  # and bring it back. The proxy is never restarted, so the three addresses handed to the test process
+  # survive a broker restart that would otherwise rebind every ephemeral port.
+  activemq-proxy:
+    image: haproxy:3.4-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - "127.0.0.1::61616"
+      - "127.0.0.1::5672"
+      - "127.0.0.1::8161"
+    healthcheck:
+      # The proxy is ready when it is listening. Whether anything is behind it is exactly what the
+      # outage changes, so it must not be part of the proxy's own health.
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 61616 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 2s
+
   activemq:
     build:
       context: ./activemq

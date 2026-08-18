@@ -11,6 +11,13 @@
       "reference": "apache/activemq-classic:6.2.0@sha256:992bc29a8459f6772ff14d168a8b011c9cde7a769ec01d72788c9cc4e9229564",
       "rationale": "Officially maintained Apache image. It replaces the abandoned upstream fixture image whose only tag was last pushed 2023-01-10."
     },
+    "activemq-proxy": {
+      "repository": "haproxy",
+      "tag": "3.4-alpine",
+      "digest": "sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
+      "reference": "haproxy:3.4-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
+      "rationale": "A plain TCP relay in front of ActiveMQ, so that a recovery case can hold one address across a real broker restart. Compose publishes an ephemeral loopback port per container start, so a restarted broker returns on a different port every time and no client could reconnect to the address it was given; the proxy is never restarted and the broker behind it really goes away. Official Docker library image, 3.4 is the current stable line and carries the lts tag, GPLv2 with the LGPL runtime exception, and the manifest list covers linux/amd64 and linux/arm64 so the same digest serves the CI runner and a developer machine. The digest is the manifest list, not one architecture."
+    },
     "artemis": {
       "repository": "quay.io/artemiscloud/activemq-artemis-broker",
       "tag": "",

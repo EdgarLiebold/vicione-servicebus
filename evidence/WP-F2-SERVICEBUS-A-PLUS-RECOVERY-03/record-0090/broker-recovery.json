@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_BROKER_RECOVERY_PROOF",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0089-reslice, section 2",
+  "decision": "OPT-PROXY, decided by the Lead in 0089",
+  "fixture": {
+    "relay": "haproxy:3.4-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5",
+    "why": "The relay is never restarted, so the three addresses handed to the test process stay valid while the broker behind them is really stopped and really started. Measured twice that a restarted container is published on a new ephemeral port: 32955 to 32958 here and 33002 to 33005 by the Lead.",
+    "published": "OpenWire, AMQP and Jolokia, on ephemeral loopback ports only. The relay reaches the broker by service name over the internal compose network.",
+    "licenceAndPlatform": "GPLv2 with the LGPL runtime exception; the pinned digest is the manifest list and covers linux/amd64 and linux/arm64."
+  },
+  "controlProtocol": {
+    "requestAndResult": "schemaVersion, requestId, action and an explicit status on both sides",
+    "publication": "each side writes a .partial file beside the target and publishes it by an atomic rename on the same directory, so no reader meets a half written document",
+    "interrupt": "docker compose stop, confirmed as the broker's own state through docker compose ps - not a TCP handshake at the relay, which would report the relay's health and call it the broker's",
+    "restore": "docker compose start, confirmed as healthy rather than merely running",
+    "observed": {
+      "interrupt": "absent",
+      "restore": "healthy"
+    },
+    "addressAcrossTheOutage": "unchanged, measured: the child kept OpenWire 33017 before, during and after"
+  },
+  "case": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerRecovery_Specs.cs, Recovering_from_a_broker_outage, one case per protocol",
+  "whatItObserves": [
+    "delivery of a run owned identity before the outage, exactly once",
+    "the receive endpoint reporting Faulted while the broker is stopped, from the endpoint observer",
+    "the receive endpoint reporting Ready again after the broker returned",
+    "delivery of a second run owned identity after the recovery, exactly once, over the address the bus was configured with"
+  ],
+  "whatItDoesNotDo": "It publishes nothing while the broker is down. Measured: a publish issued in that state does not return - not the task, the call - because it resolves a send endpoint against a session whose broker is not answering.",
+  "green": {
+    "cases": 2,
+    "protocols": [
+      "activemq (OpenWire)",
+      "amqp"
+    ],
+    "failed": 0,
+    "seconds": 64
+  },
+  "killMutation": {
+    "first attempt": {
+      "change": "ReceiveEndpoint.IsUnrecoverable treats every ConnectionException as unrecoverable",
+      "result": "both cases stayed green, so that branch is not what drives this recovery. Recorded because a mutation that changes nothing is a finding about the probe, not about the product."
+    },
+    "second attempt": {
+      "change": "ActiveMqHostConfiguration.ReceiveTransportRetryPolicy set to Retry.None",
+      "result": "both cases red with 'the receive endpoint never became ready again after the broker returned'",
+      "conclusion": "the case is held by the mechanism it claims to be about"
+    },
+    "restored": "byte identical"
+  }
+}
