@@ -2,10 +2,6 @@
 namespace ViciOne.ServiceBus.Util
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
     using Internals;
@@ -124,13 +120,17 @@ namespace ViciOne.ServiceBus.Util
         }
 
         /// <summary>
-        /// Runs the task to completion on the calling thread and rethrows its exception unwrapped.
+        /// Blocks the calling thread until the task finishes and rethrows its exception unwrapped.
         /// <para>
-        /// A continuation posted to the current <see cref="SynchronizationContext"/> is not waited for
-        /// here: the awaiter itself blocks, and the context keeps whatever affinity it has. Windows
-        /// Forms and WPF dispatchers, reached by reflection, and an STA specific single threaded
-        /// context used to sit in front of this. None of them could ever run on this product's only
-        /// platform, where every call already took exactly the path below.
+        /// The task is not run here and does not run on the calling thread: it runs wherever it was
+        /// started, and this call waits. The current <see cref="SynchronizationContext"/> is neither
+        /// read, captured, installed nor replaced, and nothing is posted to it.
+        /// </para>
+        /// <para>
+        /// This is not a deadlock free sync over async facility, and it does not claim to be. A task
+        /// whose own continuation captured the caller's context still needs that context to be pumped,
+        /// and the caller blocked here cannot pump it. Both halves are asserted in
+        /// <c>Awaiting_a_task_synchronously</c>.
         /// </para>
         /// </summary>
         public static void Await(Func<Task> taskFactory, CancellationToken cancellationToken = default)
@@ -145,7 +145,7 @@ namespace ViciOne.ServiceBus.Util
             if (cancellationToken.CanBeCanceled)
                 task = task.OrCanceled(cancellationToken);
 
-            new TaskAwaitAdapter(task).GetResult();
+            task.GetAwaiter().GetResult();
         }
 
         public static void Await(Task task, CancellationToken cancellationToken = default)
@@ -156,7 +156,7 @@ namespace ViciOne.ServiceBus.Util
             if (cancellationToken.CanBeCanceled)
                 task = task.OrCanceled(cancellationToken);
 
-            new TaskAwaitAdapter(task).GetResult();
+            task.GetAwaiter().GetResult();
         }
 
         public static T Await<T>(Func<Task<T>> taskFactory, CancellationToken cancellationToken = default)
@@ -171,7 +171,7 @@ namespace ViciOne.ServiceBus.Util
             if (cancellationToken.CanBeCanceled)
                 task = task.OrCanceled(cancellationToken);
 
-            return new TaskAwaitAdapter<T>(task).GetResultOfT();
+            return task.GetAwaiter().GetResult();
         }
 
         static class Cached
@@ -192,69 +192,6 @@ namespace ViciOne.ServiceBus.Util
                 TaskCompletionSource<T> source = GetTask<T>();
                 source.SetCanceled();
                 return source.Task;
-            }
-        }
-
-
-
-
-        abstract class AwaitAdapter
-        {
-            public abstract bool IsCompleted { get; }
-            public abstract void OnCompleted(Action action);
-            public abstract void GetResult();
-        }
-
-
-        sealed class TaskAwaitAdapter :
-            AwaitAdapter
-        {
-            readonly TaskAwaiter _awaiter;
-
-            public TaskAwaitAdapter(Task task)
-            {
-                _awaiter = task.GetAwaiter();
-            }
-
-            public override bool IsCompleted => _awaiter.IsCompleted;
-
-            public override void OnCompleted(Action action)
-            {
-                _awaiter.UnsafeOnCompleted(action);
-            }
-
-            public override void GetResult()
-            {
-                _awaiter.GetResult();
-            }
-        }
-
-
-        sealed class TaskAwaitAdapter<T> :
-            AwaitAdapter
-        {
-            readonly TaskAwaiter<T> _awaiter;
-
-            public TaskAwaitAdapter(Task<T> task)
-            {
-                _awaiter = task.GetAwaiter();
-            }
-
-            public override bool IsCompleted => _awaiter.IsCompleted;
-
-            public override void OnCompleted(Action action)
-            {
-                _awaiter.UnsafeOnCompleted(action);
-            }
-
-            public override void GetResult()
-            {
-                _awaiter.GetResult();
-            }
-
-            public T GetResultOfT()
-            {
-                return _awaiter.GetResult();
             }
         }
     }
