@@ -28,5 +28,4 @@ ViciOne.ServiceBus.slnx
 ViciOne.ServiceBus.snk
 tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt
 tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json
-tests/ViciOne.ServiceBus.KafkaIntegration.Tests/KafkaMessage.avsc
 tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12
