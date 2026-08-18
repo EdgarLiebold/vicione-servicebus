@@ -145,7 +145,7 @@ env:
 jobs:
 """
     + JOB % ("policy", "python3 -m unittest discover -s tools/ci -p 'test_*.py'")
-    + JOB % ("build", "dotnet build -c Release")
+    + JOB % ("build", "dotnet build ViciOne.ServiceBus.slnx -c Release")
     + JOB % ("analyzer", "python3 tools/ci/run_test_category.py --category analyzer")
     + JOB % ("core-unit", "python3 tools/ci/run_test_category.py --category core")
     + JOB % ("signalr", "python3 tools/ci/run_test_category.py --category signalr")
@@ -174,8 +174,9 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '{sdk}'
-      - run: dotnet restore --locked-mode
-      - run: dotnet pack -c Release --no-build --no-restore -o artifacts/packages
+      - run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
+      - run: rm -rf artifacts/packages
+      - run: dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages
       - run: sha256sum artifacts/packages/*.nupkg
       - uses: actions/upload-artifact@v4
 """).format(sdk=APPROVED_SDK)
@@ -722,13 +723,13 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_pack_that_restores_unbound(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("      - run: dotnet restore --locked-mode\n", "", 1), encoding="utf-8")
+            BUILD_WORKFLOW.replace("      - run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode\n", "", 1), encoding="utf-8")
         self.assert_rejected("pack")
 
     def test_rejects_pack_that_restores_a_second_time(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("dotnet pack -c Release --no-build --no-restore -o artifacts/packages",
-                                   "dotnet pack -c Release -o artifacts/packages"), encoding="utf-8")
+            BUILD_WORKFLOW.replace("dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages",
+                                   "dotnet pack ViciOne.ServiceBus.slnx -c Release -o artifacts/packages"), encoding="utf-8")
         self.assert_rejected("pack")
 
     def test_rejects_a_removed_capability_in_the_matrix(self) -> None:
@@ -748,6 +749,39 @@ class PolicyTestCase(unittest.TestCase):
         })
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
         self.assert_rejected("capability-matrix")
+
+    def test_rejects_a_pack_that_keeps_an_earlier_run_output(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace("      - run: rm -rf artifacts/packages\n", "", 1),
+            encoding="utf-8")
+        self.assert_rejected("pack")
+
+    def test_rejects_a_dotnet_command_without_a_target(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace(
+                "dotnet build ViciOne.ServiceBus.slnx -c Release", "dotnet build -c Release"),
+            encoding="utf-8")
+        self.assert_rejected("dotnet-target")
+
+    def test_rejects_a_pack_command_without_a_target(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace(
+                "dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore",
+                "dotnet pack -c Release --no-build --no-restore"),
+            encoding="utf-8")
+        self.assert_rejected("dotnet-target")
+
+    def test_accepts_a_dotnet_command_that_names_a_project(self) -> None:
+        workflow = self.workflow()
+        workflow.write_text(
+            workflow.read_text(encoding="utf-8").replace(
+                "dotnet build ViciOne.ServiceBus.slnx -c Release",
+                "dotnet build build/Tooling/Tooling.csproj -c Release"),
+            encoding="utf-8")
+        self.assertEqual([], self.failures())
 
     def test_rejects_a_tool_test_module_no_job_starts(self) -> None:
         module = self.root / "tools/identity/test_identity_gate.py"

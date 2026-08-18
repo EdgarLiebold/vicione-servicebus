@@ -62,9 +62,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore
-        run: dotnet restore --locked-mode
+        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
 
   analyzer:
     name: "Required: Analyzer"
@@ -337,11 +337,16 @@ jobs:
       # restore, then a build, then a pack that restores nothing again. An implicit restore inside
       # pack would resolve the graph unbound, which is the one thing the lock files exist to prevent.
       - name: Restore
-        run: dotnet restore --locked-mode
+        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
+      # The output directory is emptied first, so "a package is there" means this run produced it.
+      # Without that the hash step below is satisfied by whatever an earlier run left behind, which is
+      # exactly what a local run showed when pack itself had failed.
       - name: Pack
-        run: dotnet pack -c Release --no-build --no-restore -o artifacts/packages
+        run: |
+          rm -rf artifacts/packages
+          dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages
       - name: Hash packages
         run: |
           set -euo pipefail

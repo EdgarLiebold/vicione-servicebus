@@ -465,6 +465,10 @@ class Policy:
             self.fail("pack", "pack uploads no verifiable run artifact")
         if "sha256sum" not in section:
             self.fail("pack", "pack does not hash its packages")
+        # "a package is there" has to mean "this run produced it". A local run proved the difference:
+        # pack failed and the hash step was still satisfied by what an earlier run had left behind.
+        if "rm -rf artifacts/packages" not in section:
+            self.fail("pack", "pack does not empty its output directory, so a stale package satisfies its hash step")
 
     def check_no_publication(self) -> None:
         for relative in self.workflow_files():
@@ -811,6 +815,38 @@ class Policy:
                       f"{relative} is never started by a required job; name it or discover "
                       f"{directory}, or the module is an inventory entry rather than a proof")
 
+    DOTNET_VERBS_THAT_NEED_A_TARGET = ("dotnet restore", "dotnet build", "dotnet pack")
+
+    def check_every_dotnet_command_names_its_target(self) -> None:
+        """A dotnet command in a required job has to say which solution it means.
+
+        This repository holds two solutions at its root: the product one and the benchmark one. An
+        unqualified 'dotnet restore --locked-mode' or 'dotnet build -c Release' does not fall back to
+        one of them, it exits with MSB1011 and does nothing at all. The build job and the whole pack
+        chain stood in the workflow that way, so both would have failed on the runner the first time
+        anything triggered them.
+
+        The rule is unconditional rather than conditional on the number of solutions: a job that names
+        its target cannot become ambiguous by someone adding a second solution later.
+        """
+        for relative in self.workflow_files():
+            workflow = self.read(relative)
+            if workflow is None:
+                continue
+            for number, line in enumerate(workflow.splitlines(), 1):
+                stripped = line.strip()
+                if stripped.startswith("#"):
+                    continue
+                for verb in self.DOTNET_VERBS_THAT_NEED_A_TARGET:
+                    if verb not in stripped:
+                        continue
+                    target = stripped.split(verb, 1)[1]
+                    if any(token.endswith((".slnx", ".sln", ".csproj")) for token in target.split()):
+                        continue
+                    self.fail("dotnet-target",
+                              f"{relative}:{number} runs '{verb}' without naming a solution or project; "
+                              "this repository holds two solutions, so the command exits with MSB1011")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -933,7 +969,8 @@ class Policy:
                      self.check_pack_depends_on_every_gate, self.check_capability_matrix,
                      self.check_dueness_classes, self.check_executed_floor,
                      self.check_no_raw_run_artifacts_in_evidence,
-                     self.check_every_tool_test_module_runs):
+                     self.check_every_tool_test_module_runs,
+                     self.check_every_dotnet_command_names_its_target):
             rule()
 
         if self.failures:
