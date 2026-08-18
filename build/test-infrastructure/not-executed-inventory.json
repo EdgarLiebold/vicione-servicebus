@@ -44,7 +44,7 @@
           "reason": "Addresses a real Amazon MQ broker over TLS with an account nobody in this run has. The pinned RabbitMQ fixture cannot stand in for it, so it stays a visible open cloud proof and never a pass."
         }
       ],
-      "minimumExecutedCases": 354
+      "minimumExecutedCases": 361
     },
     "entity-framework-core": {
       "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
@@ -81,7 +81,7 @@
       "explicitAttributeCount": 0,
       "cases": [],
       "comment": "Empty because all six cases left this list the only way a case may: they were closed and they execute. Four measured throughput, published or sent a thousand messages and printed a message rate without asserting anything; the measurement they stood for lives in benchmarks/ViciOne.ServiceBus.Benchmark, which addresses the same PostgreSQL transport through SqlOptionSet, so they are removed rather than kept as permanently excluded cases. The remaining two are the delivery count limit on both engines. They asserted that a message is not consumed after the limit but never set it, so the queue kept the migrator default of ten and their consumer succeeded, which is why both engines measured expected 0 but was 1. The limit is set now and read back from the queue the migrator created, and a delivery driven to that limit is neither handed to a consumer again nor left in the queue. Removing the limit from the fetch statement turns both fixtures red.",
-      "minimumExecutedCases": 101
+      "minimumExecutedCases": 110
     }
   },
   "floorSemantics": "minimumExecutedCases is the number of cases the category executed when it was last recorded. tools/ci/run_test_category.py fails a run that executes fewer, because coverage can fall without a single failure: a new exclusion, a renamed fixture or a narrowing filter all leave the counters green. Raising a floor is a normal part of adding cases; lowering one is a decision that belongs in a record."

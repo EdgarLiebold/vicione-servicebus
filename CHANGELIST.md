@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1142 |
+| Added | 1143 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -6114,6 +6114,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ExcludeTopology_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ExclusiveConsumer_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ExclusiveQueueProbe.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ExclusiveQueueProbeDecision_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/FailedConnection_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Failure_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/FaultPoly_Specs.cs` | Added |  |

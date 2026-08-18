@@ -11,6 +11,9 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
     [TestFixture]
     public class Using_the_newid_generator
     {
+        /// <summary>The tick every case that pins one uses, so no case depends on the clock advancing.</summary>
+        static readonly DateTime Moment = new(2026, 8, 17, 21, 4, 5, DateTimeKind.Utc);
+
         [Test]
         public void Should_be_able_to_determine_equal_ids()
         {
@@ -43,59 +46,79 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
         // over two hundred thousand identifiers and compares every one with every other, so the weaker
         // one is gone rather than kept beside it.
 
+        /// <summary>
+        /// The layout of a generated identifier: the worker block is fixed, everything but the sequence
+        /// is shared, and the sequence counts up by one per identifier across both call shapes.
+        /// <para>
+        /// The tick is chosen here rather than read from the clock. Against the shared generator the
+        /// sequence only starts at zero because the tick happened to advance between the two calls, and
+        /// the comparison of a single identifier with a batch only holds while both fall inside the same
+        /// tick window - two conditions that contradict each other and that no assertion controls. With
+        /// a fixed tick the whole layout is exact: the single call takes sequence zero and the batch
+        /// continues at one.
+        /// </para>
+        /// </summary>
         [Test]
         public void Should_be_using_the_correct_algorithm()
         {
-            var first = NewId.NextGuid();
-            Guid[] next = NewId.NextGuid(3);
+            var generator = new NewIdGenerator(new FixedTickProvider(Moment), new BestPossibleWorkerIdProvider());
+
+            var first = generator.NextGuid();
+            var next = new Guid[3];
+            generator.NextGuid(next, 0, 3);
 
             for (var i = 0; i < next.Length - 1; i++)
             {
                 Assert.That(next[i].ToString().Substring(0, 4), Is.EqualTo(first.ToString().Substring(0, 4)));
                 Assert.That(next[i].ToString().Substring(6), Is.EqualTo(next[i + 1].ToString().Substring(6)));
-                Assert.That(int.Parse(next[i].ToString().Substring(4, 2)), Is.EqualTo(i));
-            }
-        }
-
-        [Test]
-        public void Should_be_using_the_correct_algorithm_for_sequential_guids()
-        {
-            var first = NewId.NextSequentialGuid();
-            var next = new Guid[3];
-            NewId.NextSequentialGuid(next, 0, 3);
-
-            for (var i = 0; i < next.Length - 1; i++)
-            {
-                Assert.That(next[i].ToString().Substring(0,14), Is.EqualTo(first.ToString().Substring(0, 14)));
-                Assert.That(next[i].ToString().Substring(19,13), Is.EqualTo(first.ToString().Substring(19, 13)));
-                Assert.That(next[i].ToString().Substring(0,32), Is.EqualTo(next[i+1].ToString().Substring(0,32)));
-                Assert.That(int.Parse(next[i].ToString().Substring(32,2)), Is.EqualTo(i));
+                Assert.That(int.Parse(next[i].ToString().Substring(4, 2)), Is.EqualTo(i + 1));
             }
         }
 
         /// <summary>
-        /// The timestamp an identifier carries is the tick its generator was given.
+        /// The same layout for the sequential format, where the tick leads: the first fourteen characters
+        /// are the tick, so they are equal for every identifier generated within one tick, and the
+        /// sequence sits in the last four.
         /// <para>
-        /// The imported case read the wall clock, generated an identifier and accepted any timestamp
-        /// within a minute of it while printing both for a human. A minute of slack asserts almost
-        /// nothing, and it is why the case never ran in a required category.
+        /// This case is why the tick is fixed. Against the shared generator it read the clock twice and
+        /// asserted that both readings fell in the same tick window; that window is about six and a half
+        /// milliseconds wide, so the case was green almost always and red when the two calls straddled a
+        /// boundary. A closing run caught it: expected "08defd16-156b-", measured "08defd16-156c-".
         /// </para>
+        /// </summary>
+        [Test]
+        public void Should_be_using_the_correct_algorithm_for_sequential_guids()
+        {
+            var generator = new NewIdGenerator(new FixedTickProvider(Moment), new BestPossibleWorkerIdProvider());
+
+            var first = generator.NextSequentialGuid();
+            var next = new Guid[3];
+            generator.NextSequentialGuid(next, 0, 3);
+
+            for (var i = 0; i < next.Length - 1; i++)
+            {
+                Assert.That(next[i].ToString().Substring(0, 14), Is.EqualTo(first.ToString().Substring(0, 14)));
+                Assert.That(next[i].ToString().Substring(19, 13), Is.EqualTo(first.ToString().Substring(19, 13)));
+                Assert.That(next[i].ToString().Substring(0, 32), Is.EqualTo(next[i + 1].ToString().Substring(0, 32)));
+                Assert.That(int.Parse(next[i].ToString().Substring(32, 2)), Is.EqualTo(i + 1));
+            }
+        }
+
+        /// <summary>
+        /// The timestamp an identifier carries is the tick its generator was given, exactly.
         /// <para>
-        /// The generator is built here rather than configured on the static NewId. Setting the
-        /// process wide tick provider needs the shared generator reset for it to take effect, and
-        /// that reset moves the sequence every other test in this assembly shares: it turned
-        /// Should_be_using_the_correct_algorithm_for_sequential_guids red on the tick boundary. A
-        /// local generator asserts the same thing and disturbs nothing.
+        /// The generator is built here rather than configured on the static NewId. Setting the process
+        /// wide tick provider needs the shared generator reset for it to take effect, and that reset
+        /// moves the sequence every other case in this assembly would share. A local generator asserts
+        /// the same thing and disturbs nothing.
         /// </para>
         /// </summary>
         [Test]
         public void Should_carry_the_timestamp_of_the_tick_it_was_given()
         {
-            var moment = new DateTime(2026, 8, 17, 21, 4, 5, DateTimeKind.Utc);
+            var generator = new NewIdGenerator(new FixedTickProvider(Moment), new BestPossibleWorkerIdProvider());
 
-            var generator = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider());
-
-            Assert.That(generator.Next().Timestamp, Is.EqualTo(moment));
+            Assert.That(generator.Next().Timestamp, Is.EqualTo(Moment));
         }
 
         /// <summary>
