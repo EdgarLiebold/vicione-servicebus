@@ -8,6 +8,11 @@ ViciOne changed the technical identity to `ViciOne.ServiceBus` across paths, pro
 
 ## ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18
 
+`SessionContext` gained `EnsureTopicExists(Topic)` and the ActiveMQ topology filter asks for that
+outcome. The baseline resolved each topic name through the NMS session and treated that as a
+deployment; measured against a real broker, resolving leaves the broker without the topic, so a
+deployed publish topology existed only in the client.
+
 Beyond the identity change, ViciOne removed and modernised capabilities of the baseline:
 
 - The foreign licence check and the usage telemetry were removed with their dependency injection and

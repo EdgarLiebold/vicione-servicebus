@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_CONTRADICTION_TABLE",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0091-lead-directive",
+  "reportedIn": "development record 0092",
+  "supersedes": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0090/contradiction-table.json, which is hash bound and unchanged. Four of its statements were false; they are named in superseding-evidence.json.",
+  "commit": "b26e58e90301909498f4841d5efa1a38f7db2e3f",
+  "rows": [
+    {
+      "claim": "publish-load reports a complete run only when every published identity arrived exactly once.",
+      "codePath": "MessageSequenceLedger separates AllExpectedSeen from Snapshot.IsExact; the scenario drains for three seconds and reports exact, invalid or timeout.",
+      "testResult": "21 cases in tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests, including every expected identity plus a duplicate and plus a stranger",
+      "negativeMutation": "the old predicate - exact means every identity arrived once - turns three cases red",
+      "evidence": "record-0092/superseding-evidence.json",
+      "state": "closed"
+    },
+    {
+      "claim": "Two invocations of the same category share no file.",
+      "codePath": "one run identity owns the compose project, the run root, the TRX, the record, the endpoint projection, the control directory and the broker logs; a caller directory is a parent.",
+      "testResult": "five cases modelling two invocations of one category, plus an abandoned run",
+      "negativeMutation": "restoring the fixed TRX and evidence paths turns three of them red",
+      "evidence": "record-0092/superseding-evidence.json",
+      "state": "closed"
+    },
+    {
+      "claim": "The recovery proof cannot report green for a weaker property.",
+      "codePath": "StopWithoutHanging compares against the stop task and awaits it; the endpoint observer requires Ready after the Fault of this outage; Arrived drains to a quiet endpoint; broker_is_healthy refuses zero records; every outage command checks its exit code.",
+      "testResult": "both recovery cases pass through the canonical runner, and 11 cases hold the health decision and the control protocol",
+      "negativeMutation": "ReceiveTransportRetryPolicy = Retry.None turns both recovery cases red; the ignored teardown exit code turns its case red",
+      "evidence": "record-0090/broker-recovery.json for the run, this record for the corrections",
+      "state": "closed"
+    },
+    {
+      "claim": "A capability verified through another one is really exercised by that one's run.",
+      "codePath": "verification_model.resolve_indirect_verification follows the link to a run, refuses cycles and self reference, and checks each named anchor exists in the terminal run's test project.",
+      "testResult": "six sabotage cases including a self cycle, a two capability cycle, a missing anchor and an anchor from another project",
+      "negativeMutation": "removing the resolution turns two of them red",
+      "evidence": "build/verification/VERIFICATION_MODEL.json",
+      "state": "closed"
+    },
+    {
+      "claim": "No project can leave the central build contract.",
+      "codePath": "VOSB0001 and VOSB0006 for the two lock properties; check_no_project_leaves_the_central_contract for the three project-local escapes.",
+      "testResult": "three sabotage cases, one per escape",
+      "negativeMutation": "each case fails on the rule being absent from the run list",
+      "evidence": "docs/build.md",
+      "state": "closed"
+    },
+    {
+      "claim": "Directory.Build.targets carries three targets and six error codes.",
+      "codePath": "Directory.Build.targets",
+      "testResult": "counted at this commit; record 0090 said five targets, which was never true",
+      "negativeMutation": "not applicable - this is a count, and it is stated rather than inferred",
+      "evidence": "record-0092/superseding-evidence.json",
+      "state": "closed"
+    },
+    {
+      "claim": "The local tool manifest binds the tools this repository uses.",
+      "codePath": "none - no dotnet tool is referenced anywhere",
+      "testResult": "census over every markdown, workflow, python and project file: nothing matched",
+      "negativeMutation": "not applicable",
+      "evidence": "record-0090/tool-manifest-census.json",
+      "state": "decided by the Lead in 0091: no empty manifest and no new dependency in this block; the first real tool arrives with a manifest, a lock, evidence and a place in the verification model"
+    }
+  ],
+  "unresolved": [],
+  "counters": {
+    "toolsCi": 176,
+    "toolsIdentity": 99,
+    "diagnosticsTests": 21
+  }
+}

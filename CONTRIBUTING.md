@@ -43,8 +43,11 @@ git diff -- '**/packages.lock.json'
 packages whose version range did not change, so a lock file can stay stale while the command reports
 success.
 
-Compilation output goes to `artifacts/sdk`, packages to `artifacts/packages`. There is no `bin` or
-`obj` beside a project, so a build result can only come from one place.
+Compilation output goes to `artifacts/sdk`, packages to `artifacts/packages`, and a run's own files -
+raw TRX, category record, endpoint projection, broker logs - to `artifacts/run-output/<run>/`. That is
+where the repository's own build and test entry points put them. It is not a property of the machine:
+a tool invoked with its own output path, or an SDK feature that writes elsewhere, still writes
+elsewhere. The claim is about where this repository's paths lead, not about what is possible.
 
 ## Tests that need infrastructure
 
