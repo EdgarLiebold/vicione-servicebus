@@ -292,21 +292,55 @@ namespace ViciOne.ServiceBus.Tests
     public class Using_a_batch_consumer :
         InMemoryTestFixture
     {
+        /// <summary>
+        /// Every message that was sent is delivered to the batch consumer exactly once.
+        /// <para>
+        /// The assurance used to be that a set of duplicates stayed empty, which is only half of it:
+        /// a message the transport dropped never enters that set either, so a loss passed the
+        /// assertion and only showed up as the fixture running into its own timeout. The identities
+        /// are chosen by the sender now and compared as sets, so a duplicate and a loss each fail on
+        /// their own sentence.
+        /// </para>
+        /// <para>
+        /// The consumer used to spend fifty million loop iterations per batch to be slow enough for
+        /// batches to overlap. That is machine time, not an assurance, and it is what made this
+        /// fixture take over two minutes here. A bounded yield gives the same interleaving of
+        /// continuations without burning a core for it, and the timeout is down from two minutes to
+        /// thirty seconds, which is the measurable part of that change.
+        /// </para>
+        /// </summary>
         [Test]
         public async Task Should_not_deliver_duplicate_messages()
         {
-            IEnumerable<DoWork> messages = Enumerable.Range(0, Count).Select(x => new DoWork());
-            foreach (var msg in messages)
-                await InputQueueSendEndpoint.Send(msg);
+            Guid[] sent = Enumerable.Range(0, Count).Select(_ => NewId.NextGuid()).ToArray();
 
-            await _completed.Task;
+            foreach (var messageId in sent)
+                await InputQueueSendEndpoint.Send(new DoWork(), Pipe.Execute<SendContext>(context => context.MessageId = messageId));
 
-            Assert.That(_duplicateMessages, Is.Empty);
+            // Completion alone cannot see a loss: it is raised once every identity has arrived, so a
+            // message the transport dropped would leave this waiting until the fixture timed out and
+            // the assertions below would never run. Inactivity is the second way out, and it is what
+            // turns a loss into a failed sentence instead of a timeout.
+            await Task.WhenAny(_completed.Task, InactivityTask);
+
+            Guid[] received;
+            Guid[] duplicates;
+            lock (_alreadyReceivedMessages)
+            {
+                received = _alreadyReceivedMessages.ToArray();
+                duplicates = _duplicateMessages.ToArray();
+            }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(duplicates, Is.Empty, "the batch consumer saw a message identity more than once");
+                Assert.That(received, Is.EquivalentTo(sent), "the delivered identities are not exactly the sent ones");
+            });
         }
 
         public Using_a_batch_consumer()
         {
-            TestTimeout = TimeSpan.FromMinutes(2);
+            TestTimeout = TimeSpan.FromSeconds(30);
         }
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
@@ -370,11 +404,10 @@ namespace ViciOne.ServiceBus.Tests
                     }
                 }
 
-                for (var i = 0; i < 50000000; i++)
-                {
-                    if (i % 5000000 == 0)
-                        await Task.Yield();
-                }
+                // Enough yields to let the batches of this endpoint interleave, and nothing more. The
+                // fifty million iterations that stood here only bought wall clock time.
+                for (var i = 0; i < 32; i++)
+                    await Task.Yield();
             }
         }
     }

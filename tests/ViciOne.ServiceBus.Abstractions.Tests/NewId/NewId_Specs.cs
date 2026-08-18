@@ -39,115 +39,6 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
         }
 
         [Test]
-        [Explicit]
-        public void Should_be_able_to_extract_timestamp()
-        {
-            var now = DateTime.UtcNow;
-            var id = NewId.Next();
-
-            var timestamp = id.Timestamp;
-
-            Console.WriteLine("Now: {0}, Timestamp: {1}", now, timestamp);
-
-            var difference = timestamp - now;
-            if (difference < TimeSpan.Zero)
-                difference = difference.Negate();
-
-            Assert.That(difference, Is.LessThanOrEqualTo(TimeSpan.FromMinutes(1)));
-        }
-
-        [Test]
-        [Explicit]
-        public void Should_be_able_to_extract_timestamp_with_process_id()
-        {
-            var now = DateTime.UtcNow;
-            NewId.SetProcessIdProvider(new CurrentProcessIdProvider());
-            var id = NewId.Next();
-
-            var timestamp = id.Timestamp;
-
-            Console.WriteLine("Now: {0}, Timestamp: {1}", now, timestamp);
-
-            var difference = timestamp - now;
-            if (difference < TimeSpan.Zero)
-                difference = difference.Negate();
-
-            Assert.That(difference, Is.LessThanOrEqualTo(TimeSpan.FromMinutes(1)));
-        }
-
-        [Test]
-        [Explicit]
-        public void Should_be_completely_thread_safe_to_avoid_duplicates()
-        {
-            NewId.Next();
-
-            var timer = Stopwatch.StartNew();
-
-            var threadCount = 20;
-
-            var loopCount = 1024 * 1024;
-
-            var limit = loopCount * threadCount;
-
-            var ids = new NewId[limit];
-
-            ParallelEnumerable
-                .Range(0, limit)
-                .WithDegreeOfParallelism(8)
-                .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
-                .ForAll(x =>
-                {
-                    ids[x] = NewId.Next();
-                });
-
-            timer.Stop();
-
-            Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
-                limit / timer.ElapsedMilliseconds);
-
-            Console.WriteLine("Distinct: {0}", ids.Distinct().Count());
-
-            IGrouping<NewId, NewId>[] duplicates = ids.GroupBy(x => x).Where(x => x.Count() > 1).ToArray();
-
-            Console.WriteLine("Duplicates: {0}", duplicates.Length);
-
-            foreach (IGrouping<NewId, NewId> newId in duplicates)
-                Console.WriteLine("{0} {1}", newId.Key, newId.Count());
-        }
-
-        [Test]
-        [Explicit]
-        public void Should_be_fast_and_friendly()
-        {
-            NewId.Next();
-
-
-            var limit = 1000000;
-
-            var ids = new NewId[limit];
-
-            Parallel.For(0, limit, x => ids[x] = NewId.Next());
-
-            var timer = Stopwatch.StartNew();
-
-            Parallel.For(0, limit, x => ids[x] = NewId.Next());
-
-            timer.Stop();
-
-            Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
-                limit / timer.ElapsedMilliseconds);
-
-            Console.WriteLine("Distinct: {0}", ids.Distinct().Count());
-
-            IGrouping<NewId, NewId>[] duplicates = ids.GroupBy(x => x).Where(x => x.Count() > 1).ToArray();
-
-            Console.WriteLine("Duplicates: {0}", duplicates.Length);
-
-            foreach (IGrouping<NewId, NewId> newId in duplicates)
-                Console.WriteLine("{0} {1}", newId.Key, newId.Count());
-        }
-
-        [Test]
         public void Should_generate_sequential_ids_quickly()
         {
             NewId.SetTickProvider(new StopwatchTickProvider());
@@ -200,32 +91,111 @@ namespace ViciOne.ServiceBus.Abstractions.Tests
             }
         }
 
+        /// <summary>
+        /// The timestamp an identifier carries is the tick its generator was given.
+        /// <para>
+        /// The imported case read the wall clock, generated an identifier and accepted any timestamp
+        /// within a minute of it while printing both for a human. A minute of slack asserts almost
+        /// nothing, and it is why the case never ran in a required category.
+        /// </para>
+        /// <para>
+        /// The generator is built here rather than configured on the static NewId. Setting the
+        /// process wide tick provider needs the shared generator reset for it to take effect, and
+        /// that reset moves the sequence every other test in this assembly shares: it turned
+        /// Should_be_using_the_correct_algorithm_for_sequential_guids red on the tick boundary. A
+        /// local generator asserts the same thing and disturbs nothing.
+        /// </para>
+        /// </summary>
         [Test]
-        [Explicit]
+        public void Should_carry_the_timestamp_of_the_tick_it_was_given()
+        {
+            var moment = new DateTime(2026, 8, 17, 21, 4, 5, DateTimeKind.Utc);
+
+            var generator = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider());
+
+            Assert.That(generator.Next().Timestamp, Is.EqualTo(moment));
+        }
+
+        /// <summary>
+        /// A process id provider changes the identifier without disturbing its timestamp.
+        /// </summary>
+        [Test]
+        public void Should_carry_the_timestamp_with_a_process_id_provider()
+        {
+            var moment = new DateTime(2026, 8, 17, 21, 4, 5, DateTimeKind.Utc);
+
+            var plain = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider());
+            var withProcessId = new NewIdGenerator(new FixedTickProvider(moment), new BestPossibleWorkerIdProvider(),
+                new CurrentProcessIdProvider());
+
+            var id = withProcessId.Next();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(id.Timestamp, Is.EqualTo(moment));
+                // Both generators sit on the same fixed tick and start their sequence at the same
+                // place, so the process id is the only thing that can separate them. Comparing the
+                // whole identifier avoids guessing which part of it carries that value.
+                Assert.That(id.ToString(), Is.Not.EqualTo(plain.Next().ToString()),
+                    "the process id provider left the identifier unchanged");
+            });
+        }
+
+        /// <summary>
+        /// Generating in parallel produces no repeated identifier.
+        /// <para>
+        /// The imported case generated twenty million identifiers across eight degrees of parallelism
+        /// and then printed how many duplicates it had found, asserting nothing at all. The count here
+        /// is bounded so the case can live in a required category, and the outcome is a sentence
+        /// rather than console output.
+        /// </para>
+        /// </summary>
+        [Test]
+        public void Should_be_thread_safe_and_produce_no_duplicate()
+        {
+            const int Count = 200_000;
+
+            var ids = new NewId[Count];
+
+            Parallel.For(0, Count, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i => ids[i] = NewId.Next());
+
+            Assert.That(ids.Distinct().Count(), Is.EqualTo(Count), "a parallel run repeated an identifier");
+        }
+
+        /// <summary>
+        /// Generating in sequence produces no repeated identifier.
+        /// <para>
+        /// The imported case compared each identifier only with the one before it, which a generator
+        /// that cycles through a small set would pass. Every identifier is compared with every other
+        /// one here, by counting the distinct ones.
+        /// </para>
+        /// </summary>
+        [Test]
         public void Should_generate_unique_identifiers_with_each_invocation()
         {
-            NewId.Next();
+            const int Count = 200_000;
 
-            var timer = Stopwatch.StartNew();
-
-            var limit = 1024 * 1024;
-
-            var ids = new NewId[limit];
-            for (var i = 0; i < limit; i++)
+            var ids = new NewId[Count];
+            for (var i = 0; i < Count; i++)
                 ids[i] = NewId.Next();
 
-            timer.Stop();
+            Assert.That(ids.Distinct().Count(), Is.EqualTo(Count), "a sequential run repeated an identifier");
+        }
 
-            for (var i = 0; i < limit - 1; i++)
+
+        /// <summary>A tick source the test chooses, so a timestamp can be compared exactly.</summary>
+        class FixedTickProvider :
+            ITickProvider
+        {
+            readonly long _ticks;
+
+            public FixedTickProvider(DateTime moment)
             {
-                Assert.That(ids[i + 1], Is.Not.EqualTo(ids[i]));
-                var end = ids[i].ToString().Substring(32, 4);
-                if (end == "0000")
-                    Console.WriteLine("{0}", ids[i].ToString());
+                _ticks = moment.Ticks;
             }
 
-            Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
-                limit / timer.ElapsedMilliseconds);
+            public long Ticks => _ticks;
         }
+
     }
 }
