@@ -749,6 +749,26 @@ class PolicyTestCase(unittest.TestCase):
         self.matrix().write_text(json.dumps(matrix, indent=2), encoding="utf-8")
         self.assert_rejected("capability-matrix")
 
+    def test_rejects_a_trx_under_evidence(self) -> None:
+        artifact = self.root / "evidence/some-record/core-unit.trx"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_text("<TestRun />\n", encoding="utf-8")
+        self.assert_rejected("raw-artifact")
+
+    def test_rejects_a_collected_broker_log_under_evidence(self) -> None:
+        artifact = self.root / "evidence/some-record/rabbitmq-broker.log"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_text("connection accepted\n", encoding="utf-8")
+        self.assert_rejected("raw-artifact")
+
+    def test_accepts_the_category_summary_the_runner_writes_beside_it(self) -> None:
+        # The summary is what a record binds, so the rule has to leave it alone; a rule that rejected
+        # every file under evidence/ would pass the two cases above for the wrong reason.
+        summary = self.root / "evidence/some-record/core-unit.json"
+        summary.parent.mkdir(parents=True)
+        summary.write_text(json.dumps({"executed": 1872}), encoding="utf-8")
+        self.assertEqual([], self.failures())
+
     def test_rejects_a_retained_capability_nobody_classifies(self) -> None:
         unclassified = self.root / "src/ViciOne.ServiceBus.Unclassified"
         unclassified.mkdir(parents=True)

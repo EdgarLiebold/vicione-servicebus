@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_EVIDENCE_DISPOSITION",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "measuredOn": "the tree of the commit that removes the artifacts, against its parent",
+  "before": {
+    "trackedFiles": 677,
+    "bytes": 551637501,
+    "mebibytes": 526.1,
+    "byKind": {
+      "rawTestResults": { "files": 139, "mebibytes": 429.1 },
+      "rawBrokerLogs": { "files": 23, "mebibytes": 5.3 },
+      "summariesGatesAndManifests": { "files": 515, "mebibytes": 91.7 }
+    },
+    "byteIdenticalGroups": 9,
+    "repeatedFiles": 45,
+    "repeatedMebibytes": 47.4,
+    "largestRepeat": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/post-0036-gates/API_SURFACE_CURRENT.json, 18 byte identical copies, 42.0 MiB",
+    "outboxRecordsBindingARawArtifact": 0
+  },
+  "after": {
+    "trackedFiles": 515,
+    "bytes": 96154585,
+    "mebibytes": 91.7
+  },
+  "removed": {
+    "files": 162,
+    "bytes": 455482916,
+    "mebibytes": 434.4,
+    "manifest": "evidence/RAW_RUN_ARTIFACT_MANIFEST.json"
+  },
+  "decision": "The product owner instructed this clean up. Raw run artifacts - the TRX result files and the collected broker logs - leave the working tree; the compact JSON summaries, gate records, manifests and reports stay, because they are what an outbox record binds and what a reader reads. Nothing is deleted from history: the removal is an ordinary commit, so every removed file remains readable at its parent and its digest is manifested.",
+  "whyTheseAndNotOthers": "A TRX is the raw output of one run. It is reproducible by rerunning, it repeats almost entirely between runs, and no outbox record binds one - that was measured, not assumed. The counters a record does cite are parsed out of it by tools/ci/run_test_category.py and written to the category JSON that stays.",
+  "retentionGoingForward": [
+    "tools/ci/run_test_category.py writes the TRX to artifacts/run-output and only the category record to the evidence directory.",
+    "tools/ci/run_broker_category.py writes the collected broker log to artifacts/run-output.",
+    "/artifacts/ is ignored by .gitignore, and *.trx and evidence/**/*.log are ignored as a second line.",
+    "check_no_raw_run_artifacts_in_evidence in tools/ci/policy_validator.py fails the run when a TRX or a log reaches evidence/. Three cases in tools/ci/test_policy_validator.py hold it, one of which proves the rule leaves the category summary alone.",
+    ".github/workflows/build.yml uploads artifacts/run-output beside each category record, so a failed CI run still hands out its raw output without the repository carrying it."
+  ],
+  "notDecidedHere": "Where raw artifacts are archived outside this repository, and for how long, is an infrastructure decision rather than a repository one. Nothing in this repository depends on an answer, because every removed file is still readable in git history."
+}

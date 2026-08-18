@@ -765,6 +765,29 @@ class Policy:
                           f"category '{name}' records no minimumExecutedCases, so a category that shrinks "
                           "would still report green")
 
+    def check_no_raw_run_artifacts_in_evidence(self) -> None:
+        """evidence/ is the durable record. A raw run artifact is not durable record material.
+
+        Measured before this rule existed: 526 MiB of tracked evidence, 434 of it in 139 TRX files and
+        23 collected broker logs, with 45 files that were a byte identical repeat of another, and not
+        one outbox record binding a TRX. What a record binds and a reader reads is the compact category
+        summary the runner writes beside the TRX; the TRX itself is reproducible by rerunning, and the
+        digests of the removed ones are in evidence/RAW_RUN_ARTIFACT_MANIFEST.json.
+
+        A run may of course still produce them - it has to, the counters are parsed out of them. They
+        belong under artifacts/, which git ignores wholesale, not under the tree that is kept.
+        """
+        evidence = self.root / "evidence"
+        if not evidence.is_dir():
+            return
+
+        for artifact in sorted(evidence.rglob("*")):
+            if artifact.suffix in (".trx", ".log") and artifact.is_file():
+                relative = artifact.relative_to(self.root).as_posix()
+                self.fail("raw-artifact",
+                          f"{relative} is a raw run artifact under evidence/; keep the category summary "
+                          "and the digest instead, and write the run output under artifacts/")
+
     def check_restore_lock_files(self) -> None:
         """Every project resolves against a tracked lock file.
 
@@ -885,7 +908,8 @@ class Policy:
                      self.check_restore_sources, self.check_restore_lock_files,
                      self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
                      self.check_pack_depends_on_every_gate, self.check_capability_matrix,
-                     self.check_dueness_classes, self.check_executed_floor):
+                     self.check_dueness_classes, self.check_executed_floor,
+                     self.check_no_raw_run_artifacts_in_evidence):
             rule()
 
         if self.failures:

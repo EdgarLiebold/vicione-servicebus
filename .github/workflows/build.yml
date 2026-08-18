@@ -80,7 +80,9 @@ jobs:
         if: always()
         with:
           name: required-analyzer
-          path: artifacts/required/analyzer
+          path: |
+            artifacts/required/analyzer
+            artifacts/run-output
 
   core-unit:
     name: "Required: Core/Unit"
@@ -107,7 +109,9 @@ jobs:
         if: always()
         with:
           name: required-core-unit
-          path: artifacts/required/core
+          path: |
+            artifacts/required/core
+            artifacts/run-output
 
   rabbitmq:
     name: "Required: RabbitMQ"
@@ -134,7 +138,9 @@ jobs:
         if: always()
         with:
           name: required-rabbitmq
-          path: artifacts/required/rabbitmq
+          path: |
+            artifacts/required/rabbitmq
+            artifacts/run-output
 
   signalr:
     name: "Required: SignalR"
@@ -155,7 +161,9 @@ jobs:
         if: always()
         with:
           name: required-signalr
-          path: artifacts/required/signalr
+          path: |
+            artifacts/required/signalr
+            artifacts/run-output
 
   quartz:
     name: "Required: Quartz"
@@ -176,7 +184,9 @@ jobs:
         if: always()
         with:
           name: required-quartz
-          path: artifacts/required/quartz
+          path: |
+            artifacts/required/quartz
+            artifacts/run-output
 
   activemq:
     name: "Required: ActiveMQ"
@@ -202,7 +212,9 @@ jobs:
         if: always()
         with:
           name: required-activemq
-          path: artifacts/required/activemq
+          path: |
+            artifacts/required/activemq
+            artifacts/run-output
 
   sql-transport:
     name: "Required: SQL Transport"
@@ -228,7 +240,9 @@ jobs:
         if: always()
         with:
           name: required-sql-transport
-          path: artifacts/required/sql-transport
+          path: |
+            artifacts/required/sql-transport
+            artifacts/run-output
 
   benchmarks:
     name: "Required: Benchmarks"
@@ -256,7 +270,9 @@ jobs:
         if: always()
         with:
           name: required-benchmarks
-          path: artifacts/required/benchmarks
+          path: |
+            artifacts/required/benchmarks
+            artifacts/run-output
 
   entity-framework:
     name: "Required: EntityFrameworkCore"
@@ -286,7 +302,9 @@ jobs:
         if: always()
         with:
           name: required-entity-framework
-          path: artifacts/required/entity-framework
+          path: |
+            artifacts/required/entity-framework
+            artifacts/run-output
   pack:
     name: "Required: Pack"
     runs-on: ubuntu-latest

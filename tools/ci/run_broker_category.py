@@ -28,6 +28,15 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+# A collected broker log is raw run output, not repository structure: it is large, it repeats between
+# runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
+# under artifacts/, which .gitignore covers; tools/ci/policy_validator.py rejects one under evidence/.
+RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
+
+
+def broker_log_path(broker: str) -> Path:
+    return RAW_RUN_OUTPUT_DIR / f"{broker}-broker.log"
 COMPOSE_FILE = REPO_ROOT / "build/test-infrastructure/compose.yaml"
 
 # Container ports each broker exposes, mapped onto the environment variable the tests read.
@@ -103,7 +112,7 @@ def stop(environment: dict[str, str] | None = None) -> None:
     compose("down", "-v", capture=True, environment=environment)
 
 
-def capture_logs(brokers: list[str], evidence_dir: Path, environment: dict[str, str]) -> None:
+def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
     """Write each broker's own log next to the test results, before the fixture is torn down.
 
     A broker states things no test process can observe about itself: that it took a delivery back
@@ -112,13 +121,13 @@ def capture_logs(brokers: list[str], evidence_dir: Path, environment: dict[str, 
     reconstructed from assertions afterwards. Failure to collect it does not fail the run -- the log is
     evidence about a run that has already produced its verdict.
     """
-    evidence_dir.mkdir(parents=True, exist_ok=True)
+    RAW_RUN_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for broker in brokers:
         result = compose("logs", "--no-color", "--timestamps", broker, capture=True, environment=environment)
         if result.returncode != 0:
             print(f"WARN broker-log {broker}: not collected ({result.stderr.strip()})", file=sys.stderr)
             continue
-        target = evidence_dir / f"{broker}-broker.log"
+        target = broker_log_path(broker)
         target.write_text(result.stdout, encoding="utf-8")
         print(f"broker log {broker}: {target} ({len(result.stdout.splitlines())} lines)")
 
@@ -267,11 +276,11 @@ def main(argv: list[str] | None = None) -> int:
             # Before the teardown, and on the log this run produced. The check runs even when the tests
             # already failed: a retry loop is worth naming either way, and it must never be the reason a
             # red run looks green.
-            capture_logs(brokers, args.evidence_dir, environment)
+            capture_logs(brokers, environment)
             captured.update(brokers)
 
             for broker in brokers:
-                if not assert_one_refusal_per_vhost(args.evidence_dir / f"{broker}-broker.log", args.one_refusal_per_vhost):
+                if not assert_one_refusal_per_vhost(broker_log_path(broker), args.one_refusal_per_vhost):
                     return completed.returncode or 1
 
         return completed.returncode
@@ -285,7 +294,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             remaining = [broker for broker in brokers if broker not in captured]
             if remaining:
-                capture_logs(remaining, args.evidence_dir, environment)
+                capture_logs(remaining, environment)
         except OSError as error:
             print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
 

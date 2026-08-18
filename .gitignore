@@ -51,3 +51,11 @@ dist
 sw.*
 .env
 .output
+
+# Raw run artifacts are not repository structure. A TRX or a collected broker log belongs to one run;
+# what is kept is the category summary that names its counters, and where a raw file mattered, its
+# digest in evidence/RAW_RUN_ARTIFACT_MANIFEST.json. A run still writes them - the counters are parsed
+# out of them - but under artifacts/, which is ignored above. policy_validator.py rejects one that
+# reaches evidence/, so these two lines are convenience and that check is the guard.
+*.trx
+evidence/**/*.log

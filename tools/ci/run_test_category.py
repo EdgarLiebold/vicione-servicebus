@@ -27,6 +27,11 @@ from pathlib import Path
 TRX_NAMESPACE = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
 
 
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+RAW_RUN_OUTPUT_DIR = REPOSITORY_ROOT / "artifacts" / "run-output"
+
+
 class CategoryError(RuntimeError):
     pass
 
@@ -269,7 +274,14 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
     reject_selectors(extra)
 
     evidence_dir.mkdir(parents=True, exist_ok=True)
-    trx_path = evidence_dir / f"{category}.trx"
+
+    # The TRX is the raw output of one run: large, repetitive and reproducible by rerunning. It is
+    # written under artifacts/, which .gitignore covers, so that it cannot accumulate in the tree the
+    # way 434 MiB of it once did. What is kept beside the evidence is the record below, which names
+    # every counter the TRX carried. tools/ci/policy_validator.py rejects a raw artifact under evidence/.
+    run_output = RAW_RUN_OUTPUT_DIR
+    run_output.mkdir(parents=True, exist_ok=True)
+    trx_path = run_output / f"{category}.trx"
     if trx_path.exists():
         trx_path.unlink()
 
@@ -311,6 +323,7 @@ def run_category(category: str, project: str, evidence_dir: Path, extra: list[st
         "processWallDurationSeconds": process_seconds,
         "trxRunDurationSeconds": read_run_duration(trx_path),
         "trxProduced": trx_path.is_file(),
+        "trxPath": trx_path.relative_to(REPOSITORY_ROOT).as_posix(),
         "notExecuted": skipped,
         "notExecutedUnlisted": unlisted,
     }
@@ -358,7 +371,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--category", required=True, help="Stable identifier of the required category.")
     parser.add_argument("--project", required=True, help="Test project or solution to run.")
-    parser.add_argument("--evidence-dir", required=True, type=Path, help="Where the TRX and counter record are written.")
+    parser.add_argument("--evidence-dir", required=True, type=Path,
+                        help="Where the counter record is written. The raw TRX goes to artifacts/run-output.")
     parser.add_argument("rest", nargs="*", help="Additional arguments forwarded to dotnet test.")
     args = parser.parse_args(argv)
 
