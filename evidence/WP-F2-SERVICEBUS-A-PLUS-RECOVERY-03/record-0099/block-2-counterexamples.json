@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_COUNTEREXAMPLE_MEASUREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "LEAD_DIRECTIVE 0098",
+  "block": "2 - run root containment and process group ownership (section C)",
+  "measuredAgainstCommit": "1880a3dea6d7729a7b7efab3113bfeec7d4f6a0e",
+  "note": "The three counterexamples section C reproduced, measured against the code of commit 1880a3de and against the code of this block. The group case starts a parent that exits on TERM and a grandchild that ignores it; everything it starts is killed in a finally.",
+  "before": {
+    "runRootOutsideTheOwnedArea": {
+      "verdict": "ADOPTED",
+      "claimed": "/private/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/tmpb25vlico/somebody-elses-place",
+      "insideTheOwnedArea": false
+    },
+    "processGroupTakedown": {
+      "membersBeforeTheTakedown": 2,
+      "takedownReturned": false,
+      "seconds": 0.2,
+      "parentExited": true,
+      "membersLeftInTheGroup": [
+        "77848 /Library/Developer/CommandLineTools/Library/Frameworks/Pytho"
+      ],
+      "verdict": "GROUP SURVIVED"
+    },
+    "processHiddenByAWord": {
+      "reallyRunning": 1,
+      "reportedSurvivors": 0,
+      "verdict": "HIDDEN BY A WORD"
+    }
+  },
+  "after": {
+    "runRootOutsideTheOwnedArea": {
+      "verdict": "REFUSED",
+      "reason": "VICIONE_SERVICEBUS_RUN_ROOT names '/private/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/tmp5qqoqf1o/somebody-elses-place', which resolves to '/private/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/tmp5qqoqf1o/somebody-elses-place' and is not a direct child of the run area '/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output'. This run would clean up outside the area this repository owns"
+    },
+    "processGroupTakedown": {
+      "membersBeforeTheTakedown": 2,
+      "takedownReturned": {
+        "signalled": true,
+        "escalatedToKill": true,
+        "survivors": []
+      },
+      "seconds": 3.11,
+      "parentExited": true,
+      "membersLeftInTheGroup": [],
+      "verdict": "GROUP TAKEN DOWN"
+    },
+    "processHiddenByAWord": {
+      "reallyRunning": 1,
+      "reportedSurvivors": 1,
+      "verdict": "REPORTED"
+    }
+  }
+}

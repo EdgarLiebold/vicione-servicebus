@@ -68,7 +68,10 @@ class VerifyFixture(unittest.TestCase):
     """A repository of this case alone, with every global the entry point reads bound to it."""
 
     def setUp(self) -> None:
-        self.root = Path(tempfile.mkdtemp())
+        # Resolved, like the repository root the code under test derives every path from:
+        # /var is a symbolic link to /private/var on this machine, and a fixture that is not
+        # canonical makes a run root and the root it is compared with two different strings.
+        self.root = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
 
         for module, name in ((verify, "REPO_ROOT"), (verify, "MODEL_FILE"),

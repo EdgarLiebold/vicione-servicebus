@@ -422,7 +422,9 @@ def category_findings(entry: dict) -> list[str]:
                         "taken down")
     if entry["survivingOwnedProcesses"]:
         findings.append(f"{len(entry['survivingOwnedProcesses'])} process(es) of this run survived it")
-    if entry["childExitCode"] != 0:
+    if entry["childExitCode"] is None:
+        findings.append("the child never reported an exit status, so nothing shows that it ran")
+    elif entry["childExitCode"] != 0:
         findings.append(f"the child exited with {entry['childExitCode']}")
     for name in ("missing", "unexpected", "duplicate"):
         if entry[name]:

@@ -15,6 +15,8 @@ import contextlib
 import io
 import json
 import os
+import signal
+import sys
 import tempfile
 import shutil
 import subprocess
@@ -64,7 +66,10 @@ class RunnerFixture(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.root = Path(tempfile.mkdtemp())
+        # Resolved, like the repository root the code under test derives every path from:
+        # /var is a symbolic link to /private/var on this machine, and a fixture that is not
+        # canonical makes a run root and the root it is compared with two different strings.
+        self.root = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
 
         for name in ("RAW_RUN_OUTPUT_DIR", "REPOSITORY_ROOT", "REPO_ROOT", "VERIFICATION_MODEL"):
@@ -205,14 +210,108 @@ class Claiming_a_run_root(RunnerFixture):
             self.assertEqual(owned, runner.claim_run_root())
 
     def test_refuses_a_handed_down_root_without_a_token(self) -> None:
-        stranger = self.root / "somebody-elses-run"
-        stranger.mkdir()
+        stranger = runner.RAW_RUN_OUTPUT_DIR / "vicione-0123456789ab"
+        stranger.mkdir(parents=True)
 
         with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(stranger)}):
             with self.assertRaises(runner.CategoryError) as raised:
                 runner.claim_run_root()
 
-        self.assertIn("without a valid ownership token", str(raised.exception))
+        self.assertIn("carries no ownership token file", str(raised.exception))
+
+    def test_refuses_a_root_outside_the_area_this_repository_owns(self) -> None:
+        """The counterexample: a token proves possession of a secret and says nothing about where.
+
+        Cleanup is what makes the difference matter. A run removes what is under its root, so a root
+        that resolves somewhere else is a run that removes somewhere else - and this was adopted
+        without a word, because the token in it matched.
+        """
+        outside = self.root / "somebody-elses-place"
+        outside.mkdir()
+        (outside / runner.RUN_TOKEN_FILE).write_text("deadbeef\n", encoding="utf-8")
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(outside),
+                                          runner.RUN_TOKEN_VARIABLE: "deadbeef"}):
+            with self.assertRaises(runner.CategoryError) as raised:
+                runner.claim_run_root()
+
+        self.assertIn("not a direct child of the run area", str(raised.exception),
+                      "a directory outside the owned run area was adopted on the strength of a "
+                      "matching token")
+
+    def test_refuses_a_root_below_a_root_this_repository_owns(self) -> None:
+        """One level, not any level. A nested directory is not the root a run cleans up."""
+        owned = runner.claim_run_root()
+        nested = owned / "vicione-0123456789ab"
+        nested.mkdir()
+        (nested / runner.RUN_TOKEN_FILE).write_text("deadbeef\n", encoding="utf-8")
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(nested),
+                                          runner.RUN_TOKEN_VARIABLE: "deadbeef"}):
+            with self.assertRaises(runner.CategoryError) as raised:
+                runner.claim_run_root()
+
+        self.assertIn("not a direct child of the run area", str(raised.exception))
+
+    def test_refuses_a_symbolic_link_to_a_root_it_would_otherwise_accept(self) -> None:
+        """A link is a second name, and a second name is something somebody can repoint later."""
+        owned = runner.claim_run_root()
+        token = (owned / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()
+        link = self.root / "link-to-a-run"
+        link.symlink_to(owned)
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(link),
+                                          runner.RUN_TOKEN_VARIABLE: token}):
+            with self.assertRaises(runner.CategoryError,
+                                   msg="a run root reached through a link was adopted, and a link is "
+                                       "a second name somebody can repoint after the check") as raised:
+                runner.claim_run_root()
+
+        self.assertIn("symbolic link", str(raised.exception))
+
+    def test_refuses_a_root_whose_token_file_is_a_link_to_somebody_elses(self) -> None:
+        owned = runner.claim_run_root()
+        other = runner.claim_run_root()
+        token = (other / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()
+        (owned / runner.RUN_TOKEN_FILE).unlink()
+        (owned / runner.RUN_TOKEN_FILE).symlink_to(other / runner.RUN_TOKEN_FILE)
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(owned),
+                                          runner.RUN_TOKEN_VARIABLE: token}):
+            with self.assertRaises(runner.CategoryError,
+                                   msg="a root proved its ownership with somebody else's token "
+                                       "file") as raised:
+                runner.claim_run_root()
+
+        self.assertIn("no ownership token file of its own", str(raised.exception))
+
+    def test_refuses_a_directory_in_the_run_area_that_is_not_a_minted_root(self) -> None:
+        stranger = runner.RAW_RUN_OUTPUT_DIR / "notes"
+        stranger.mkdir(parents=True)
+        (stranger / runner.RUN_TOKEN_FILE).write_text("deadbeef\n", encoding="utf-8")
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(stranger),
+                                          runner.RUN_TOKEN_VARIABLE: "deadbeef"}):
+            with self.assertRaises(runner.CategoryError,
+                                   msg="a directory that happens to sit in the run area was adopted "
+                                       "as a run of this repository") as raised:
+                runner.claim_run_root()
+
+        self.assertIn("not the name of a run root", str(raised.exception))
+
+    def test_accepts_the_owned_root_reached_through_a_path_that_walks_out_and_back(self) -> None:
+        """Containment is about where a path lands, not about how it reads.
+
+        The mutation guard of every case above: a rule that simply refused anything unusual would
+        satisfy all of them and would also refuse this, which is the same directory.
+        """
+        owned = runner.claim_run_root()
+        token = (owned / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()
+        walked = owned.parent / ".." / owned.parent.name / owned.name
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(walked),
+                                          runner.RUN_TOKEN_VARIABLE: token}):
+            self.assertEqual(owned.resolve(), runner.claim_run_root())
 
     def test_refuses_another_runs_root_even_with_a_token_variable(self) -> None:
         """The variable is the attacker's; the file is the owner's. They have to agree."""
@@ -298,12 +397,138 @@ class Bounding_the_test_process(RunnerFixture):
                          f"the compiler server was counted as a leak: {child['survivingOwnedProcesses']}")
         self.assertIn("sleep 30", child["survivingOwnedProcesses"][0])
 
+    def test_a_parent_that_ends_on_the_ask_does_not_end_its_group(self) -> None:
+        """The counterexample: the process that was started is usually the first one to go.
+
+        dotnet test is a tree - MSBuild nodes, a vstest console, a test host - and the takedown waited
+        for the process it started rather than for the group. Reproduced with a parent that exits on
+        TERM and a grandchild that ignores it: the takedown returned in a fifth of a second reporting
+        no kill, and one member of the group was still running.
+        """
+        grandchild = "import signal, time, sys; signal.signal(signal.SIGTERM, signal.SIG_IGN); " \
+                     "sys.stderr.write('up\\n'); sys.stderr.flush(); time.sleep(60)"
+        parent = "import subprocess, sys, time; subprocess.Popen([sys.executable, '-c', sys.argv[1]]); " \
+                 "time.sleep(60)"
+        child = subprocess.Popen([sys.executable, "-c", parent, grandchild], start_new_session=True,
+                                 stderr=subprocess.PIPE, text=True)
+        try:
+            child.stderr.readline()                       # the grandchild is up and in the group
+            self.assertEqual(2, len(runner.group_members(child.pid)))
+
+            with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 2), \
+                    mock.patch.object(runner, "KILL_GRACE_SECONDS", 5):
+                takedown = runner.terminate_tree(child)
+
+            self.assertEqual([], takedown["survivors"],
+                             "the takedown returned while the run's own process group was still "
+                             "running, because the process it started had already exited")
+            self.assertTrue(takedown["escalatedToKill"],
+                            "the group ignored the ask and was never killed")
+            self.assertEqual([], runner.group_members(child.pid),
+                             "the takedown reported an empty group and the group was not empty")
+        finally:
+            try:
+                os.killpg(child.pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
+            child.wait(timeout=10)
+            child.stderr.close()
+
+    def test_a_group_that_ends_on_the_ask_is_not_killed(self) -> None:
+        """The mutation guard of the case above: a takedown that always killed would satisfy it."""
+        child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"],
+                                 start_new_session=True)
+        try:
+            with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 10):
+                takedown = runner.terminate_tree(child)
+
+            self.assertEqual([], takedown["survivors"])
+            self.assertFalse(takedown["escalatedToKill"],
+                             "a group that ended when it was asked to was killed anyway")
+        finally:
+            try:
+                os.killpg(child.pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
+            child.wait(timeout=10)
+
+    def test_a_child_that_cannot_be_started_is_a_result_and_not_an_exception(self) -> None:
+        """A run that ends on a traceback ends before it writes the record saying what happened."""
+        child = runner.run_child([str(self.root / "not-a-program")], dict(os.environ), 30)
+
+        self.assertIsNone(child["exitCode"])
+        self.assertIn("could not be started", child["stderr"])
+        self.assertEqual([], child["survivingOwnedProcesses"])
+        self.assertFalse(child["timedOut"])
+
+    def test_a_process_that_merely_carries_the_compilers_name_stays_visible(self) -> None:
+        """The counterexample: the exception was a word, and a word is something anybody can write.
+
+        The census exists to find a process of this run that outlived it, so a way of being invisible
+        to it must not be a way of spelling an argument. Measured with the lead's own example: this
+        process was running and the census reported nothing at all.
+        """
+        holder = self.root / "hold_port.py"
+        holder.write_text("import time\ntime.sleep(25)\n", encoding="utf-8")
+
+        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
+            child = runner.run_child(
+                ["sh", "-c", f"{sys.executable} {holder} --label VBCSCompiler >/dev/null 2>&1 & exit 0"],
+                dict(os.environ), 30)
+
+        self.assertEqual(1, len(child["survivingOwnedProcesses"]),
+                         "a process was hidden from the census by a word in its command line")
+        pid, _, what = child["survivingOwnedProcesses"][0].partition(" ")
+        self.assertTrue(pid.isdigit())
+        self.assertTrue(what, "the finding names a pid and nothing about what it is")
+
+        # Ended here rather than waited out: this case starts it, so this case takes it back.
+        os.kill(int(pid), signal.SIGKILL)
+
     def test_the_child_gets_a_session_of_its_own(self) -> None:
         child = runner.run_child(["sh", "-c", "ps -o pgid= -p $$"], dict(os.environ), 30)
 
         self.assertNotEqual(str(os.getpgid(0)), child["stdout"].strip(),
                             "the child shares this process's group, so signalling its tree would "
                             "signal the runner as well")
+
+
+class Knowing_the_shared_compiler_by_what_it_is(unittest.TestCase):
+    """Recognised by identity, because the rule this replaced was a substring of the command line.
+
+    Measured on this machine: the SDK 10 apphost runs as
+    /usr/local/share/dotnet/sdk/10.0.302/Roslyn/bincore/VBCSCompiler -pipename:<name>, started here to
+    read its real command line rather than to recall one. Older SDKs ship no apphost and are started
+    through the host, so both forms are recognised.
+    """
+
+    APPHOST = "/usr/local/share/dotnet/sdk/10.0.302/Roslyn/bincore/VBCSCompiler"
+    ASSEMBLY = "/usr/local/share/dotnet/sdk/6.0.300/Roslyn/bincore/VBCSCompiler.dll"
+
+    def test_the_apphost_the_sdk_really_starts_is_the_compiler(self) -> None:
+        self.assertTrue(runner.is_shared_compiler(f"{self.APPHOST} -pipename:VBCSCompiler-abc"))
+
+    def test_the_assembly_started_through_the_host_is_the_compiler(self) -> None:
+        self.assertTrue(runner.is_shared_compiler(
+            f"/usr/local/share/dotnet/dotnet exec {self.ASSEMBLY} -pipename:x"))
+        self.assertTrue(runner.is_shared_compiler(f"/usr/local/share/dotnet/dotnet {self.ASSEMBLY}"))
+
+    def test_a_command_that_merely_mentions_the_compiler_is_not_the_compiler(self) -> None:
+        for command in ("python hold-port.py --label VBCSCompiler",
+                        "/usr/bin/sleep 30 # VBCSCompiler",
+                        "dotnet test --filter VBCSCompiler"):
+            with self.subTest(command=command):
+                self.assertFalse(runner.is_shared_compiler(command),
+                                 "a process would be invisible to the census because of a word in "
+                                 "its command line")
+
+    def test_the_compiler_name_somewhere_else_is_not_the_compiler(self) -> None:
+        self.assertFalse(runner.is_shared_compiler("/tmp/VBCSCompiler -pipename:x"))
+        self.assertFalse(runner.is_shared_compiler("/tmp/bincore/VBCSCompiler"))
+
+    def test_a_command_line_that_carries_nothing_is_not_the_compiler(self) -> None:
+        self.assertFalse(runner.is_shared_compiler(""))
+        self.assertFalse(runner.is_shared_compiler("   "))
 
 
 class Reading_every_result_the_run_defined(RunnerFixture):
@@ -582,8 +807,10 @@ class Owning_the_output_of_one_run(RunnerFixture):
         """The ambient variable alone is not a claim, and a run that believed it would write into and
         clean up a directory belonging to somebody else."""
         self.write_model()
-        stranger = self.root / "somebody-elses-run"
-        stranger.mkdir()
+        stranger = runner.RAW_RUN_OUTPUT_DIR / "vicione-0123456789ab"
+        stranger.mkdir(parents=True)
+        (stranger / runner.RUN_TOKEN_FILE).write_text("a token this run was never handed\n",
+                                                      encoding="utf-8")
 
         with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(stranger)}, clear=False):
             with self.assertRaises(runner.CategoryError) as raised:
