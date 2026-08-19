@@ -627,6 +627,9 @@
   ],
   "notes": {
     "verifiedThroughCapability": "A capability whose cases live in another capability's test project names that capability instead of claiming the project a second time. Every project belongs to exactly one owner, and a reader can still find where a capability is exercised.",
-    "testAnchors": "A capability verified through another one names the fixtures or namespaces inside that capability's test project which actually exercise it. A prose link is not a proof; the anchor is checked to exist and to belong to the terminal run's test project."
+    "testAnchors": "A capability verified through another one names the exact test fixtures inside that capability's test project which exercise it, each with the category whose run executes them. A namespace is not an anchor: it names every case that happens to live under it. A prose link is not a proof either - before a run the fixture is checked to be a declared class of that category's test project in a file that carries a test attribute, and during the run the category has to have executed at least one case whose fixture equals the anchor.",
+    "selections": "A selection is a named scope tools/ci/verify.py can be asked to verify. Its members are categories or other selections, and 'all' is defined here so that a narrower selection can never produce or satisfy an 'all' receipt.",
+    "expectedIdentities": "The exact identities a category is expected to execute, generated from a clean run of that category by tools/ci/verify.py --record-expected and never edited by hand. null means no complete clean run has recorded one yet, and a category in that state cannot be part of a passing receipt.",
+    "budgetSeconds": "How long a category's child process may take before its whole tree is taken down and the run is red. It is here rather than in a workflow because the canonical runner is also the local one, and a job timeout does nothing on a developer machine."
   }
 }

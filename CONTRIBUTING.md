@@ -54,19 +54,17 @@ elsewhere. The claim is about where this repository's paths lead, not about what
 
 ## Tests that need infrastructure
 
-A category that needs a broker or a database is started through its runner, which creates the
-fixture on a random loopback port, generates a fresh secret for the run and publishes the endpoint to
-the test process:
+Nothing about a fixture is written into a command. A selection names a scope, and the verification
+model says which of its categories need which brokers:
 
 ```bash
-python3 tools/ci/run_broker_category.py --broker postgres --broker mssql \
-    --category sql-transport \
-    --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests \
-    --evidence-dir artifacts/test-evidence/sql-transport
+python3 tools/ci/verify.py --selection sql-transport
 ```
 
-Nothing falls back to a default host, port, account or secret. A fixture that was not started makes
-the affected tests fail with the names of the missing variables, before any connection is attempted.
+The entry point starts the pinned fixture on a random loopback port, generates a fresh secret for the
+run, publishes the endpoints to the test process alone and removes the fixture afterwards. Nothing
+falls back to a default host, port, account or secret: a fixture that was not started makes the
+affected tests fail with the names of the missing variables, before any connection is attempted.
 
 ## What a change has to bring
 

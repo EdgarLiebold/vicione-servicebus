@@ -23,8 +23,12 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
 - Analyzers and code fixes were split into two assemblies, so the analyzer assembly no longer
   references `Microsoft.CodeAnalysis.Workspaces`. They still ship as the one package
   `ViciOne.ServiceBus.Analyzers`.
-- The build was modernised onto `net10.0` with one output root, the canonical `.slnx` solution and
-  the SDK warning level.
+- The build was modernised onto `net10.0`, with the canonical `.slnx` solution and the SDK warning
+  level. Compilation output has one central root, `artifacts/sdk`. Test execution and durable evidence
+  deliberately keep two separately owned roots: a run's raw files - result file, endpoint projection,
+  control files, broker logs - under `artifacts/run-output/<run>/`, and its durable record under the
+  evidence parent the caller named, in that run's own child of it. The record is the one file meant to
+  outlive the run, which is why it is not written under the raw output.
 - The Apache-2.0 licence text is carried as `LICENSE.txt`. The text is unchanged; only the file name
   changed, and the generated ChangeList records the rename.
 
