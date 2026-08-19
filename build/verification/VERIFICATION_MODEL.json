@@ -341,7 +341,7 @@
           ],
           "allowBrokerOutage": null,
           "oneRefusalPerVhost": null,
-          "expectedIdentities": null
+          "expectedIdentities": "build/verification/expected/entity-framework-core.txt"
         }
       ]
     },
@@ -568,7 +568,7 @@
           "job": "rabbitmq",
           "category": "rabbitmq",
           "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
-          "minimumExecutedCases": 361,
+          "minimumExecutedCases": 370,
           "notExecuted": [
             {
               "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect",
@@ -587,7 +587,7 @@
           ],
           "allowBrokerOutage": null,
           "oneRefusalPerVhost": "test-exclusive-*",
-          "expectedIdentities": null
+          "expectedIdentities": "build/verification/expected/rabbitmq.txt"
         }
       ]
     },
@@ -620,7 +620,7 @@
           ],
           "allowBrokerOutage": null,
           "oneRefusalPerVhost": null,
-          "expectedIdentities": null
+          "expectedIdentities": "build/verification/expected/sql-transport.txt"
         }
       ]
     }

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1201 |
+| Added | 1204 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -154,8 +154,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/diagnostics.txt` | Added |  |
+| `build/verification/expected/entity-framework-core.txt` | Added |  |
 | `build/verification/expected/quartz.txt` | Added |  |
+| `build/verification/expected/rabbitmq.txt` | Added |  |
 | `build/verification/expected/signalr.txt` | Added |  |
+| `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
 | `evidence/RAW_RUN_ARTIFACT_MANIFEST.json` | Added |  |
