@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_EXPECTED_REMOVAL_APPROVAL",
+  "category": "diagnostics",
+  "reference": "LEAD_DIRECTIVE 0098 section F: the two cases that did not capture or assert the fallback JSON are replaced by cases that do. This identity is one of them; the contract it stood for - writing to a path that is a directory does not end the process - is now held by Should_write_the_result_it_could_not_file_to_the_output_the_caller_reads, which asserts the result as well.",
+  "referenceSha256": "072e2bb00303b5d6f66665570ff47b8227a03eda521aee3175a63e0632f69483",
+  "removedIdentities": [
+    "ViciOne.ServiceBus.Diagnostics.Tests.Writing_the_result_where_the_caller_asked_for_it.Should_not_throw_when_the_sink_is_a_directory"
+  ],
+  "removedIdentitiesSha256": "3f12e01c31acf37fe58446c410b9781935b2bb8c6c8380648be4d1fe0de47ec4"
+}
