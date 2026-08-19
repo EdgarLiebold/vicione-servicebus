@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1199 |
+| Added | 1200 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -149,6 +149,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
 | `build/verification/expected/abstractions.txt` | Added |  |
+| `build/verification/expected/activemq.txt` | Added |  |
 | `build/verification/expected/analyzer.txt` | Added |  |
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |

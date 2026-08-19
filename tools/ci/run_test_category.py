@@ -52,6 +52,17 @@ TERMINATION_GRACE_SECONDS = 20
 # time.
 SURVIVOR_GRACE_SECONDS = 15
 
+# Processes the .NET SDK deliberately keeps alive after a build, which are therefore not evidence that
+# a run outlived itself. VBCSCompiler is the shared Roslyn compiler server: it idles for minutes by
+# design so the next build reuses it, it is shared with every other build on this machine, and it holds
+# nothing of this run - no fixture port, no file under the run root, no broker.
+#
+# Named rather than waited out. Its idle timeout is longer than any grace period this runner could
+# sensibly have, so a longer wait would only turn a false finding into a slow false finding. Measured
+# here: this control first fired on a leaked pid with no name, then on a green ActiveMQ category whose
+# survivor was exactly this process.
+SHARED_BUILD_SERVERS = ("VBCSCompiler",)
+
 
 class CategoryError(RuntimeError):
     pass
@@ -390,20 +401,31 @@ def terminate_tree(child: subprocess.Popen) -> bool:
     return True
 
 
-def surviving_owned_processes(group: int) -> list[int]:
-    """Processes still in this run's own process group, read after a grace period.
+def surviving_owned_processes(group: int) -> list[str]:
+    """Processes still in this run's own process group, read after a grace period, with what they are.
 
     The grace period is what makes this a finding rather than noise. Measured on a green core run: an
     MSBuild node was still in the group the instant the child returned and was gone shortly after, so
     a census taken at that moment reports a survivor on every successful run.
+
+    The command line is part of the finding, not decoration. A survivor reported as a number alone is
+    a mystery by the time anybody reads it - the process is gone and nothing says what leaked, which is
+    exactly what happened the first time this control fired.
     """
     deadline = time.monotonic() + SURVIVOR_GRACE_SECONDS
-    survivors: list[int] = []
     while True:
-        listing = subprocess.run(["ps", "-Ao", "pid,pgid"], capture_output=True, text=True, check=False)
-        survivors = [int(pid) for pid, pgid in
-                     (line.split() for line in listing.stdout.splitlines()[1:] if len(line.split()) == 2)
-                     if int(pgid) == group and int(pid) != group]
+        listing = subprocess.run(["ps", "-Ao", "pid,pgid,command"], capture_output=True, text=True,
+                                 check=False)
+        survivors = []
+        for line in listing.stdout.splitlines()[1:]:
+            parts = line.split(None, 2)
+            if len(parts) != 3 or not parts[1].isdigit():
+                continue
+            if int(parts[1]) != group or int(parts[0]) == group:
+                continue
+            if any(server in parts[2] for server in SHARED_BUILD_SERVERS):
+                continue
+            survivors.append(f"{parts[0]} {parts[2][:200]}")
         if not survivors or time.monotonic() >= deadline:
             return survivors
         time.sleep(0.5)

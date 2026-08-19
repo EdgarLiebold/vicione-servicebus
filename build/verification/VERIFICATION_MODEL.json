@@ -508,7 +508,7 @@
           "job": "activemq",
           "category": "activemq",
           "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
-          "minimumExecutedCases": 154,
+          "minimumExecutedCases": 178,
           "notExecuted": [],
           "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
           "explicitAttributeCount": 0,
@@ -519,7 +519,7 @@
           ],
           "allowBrokerOutage": "activemq",
           "oneRefusalPerVhost": null,
-          "expectedIdentities": null
+          "expectedIdentities": "build/verification/expected/activemq.txt"
         }
       ]
     },

@@ -265,6 +265,39 @@ class Bounding_the_test_process(RunnerFixture):
         self.assertEqual([], child["survivingOwnedProcesses"],
                          "a process of this run's own tree outlived the run that started it")
 
+    def test_a_survivor_is_reported_with_what_it_is(self) -> None:
+        """A number alone is a mystery by the time anybody reads the finding: the process is gone and
+        nothing says what leaked."""
+        # The leaked child closes the output pipes it inherited. One that keeps them open is waited
+        # for by communicate() anyway - the run then takes as long as the leak, which is a different
+        # shape and is covered by the budget.
+        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
+            child = runner.run_child(["sh", "-c", "sleep 30 >/dev/null 2>&1 & exit 0"],
+                                     dict(os.environ), 30)
+
+        self.assertEqual(1, len(child["survivingOwnedProcesses"]), child["survivingOwnedProcesses"])
+        self.assertIn("sleep 30", child["survivingOwnedProcesses"][0],
+                      "the finding names a pid and nothing about what it is")
+
+    def test_the_shared_compiler_server_is_not_a_survivor(self) -> None:
+        """The SDK keeps VBCSCompiler alive on purpose so the next build reuses it.
+
+        It holds nothing of this run - no fixture port, no file under the run root, no broker - and its
+        idle timeout is longer than any grace period this runner could sensibly have, so waiting it out
+        would only turn a false finding into a slow one. Measured: this control fired on a green
+        ActiveMQ category whose only survivor was exactly this process.
+        """
+        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
+            child = runner.run_child(
+                ["sh", "-c", "sleep 30 >/dev/null 2>&1 & exec -a "
+                             "/usr/local/share/dotnet/sdk/10.0.302/Roslyn/bincore/VBCSCompiler "
+                             "sleep 30 >/dev/null 2>&1 & exit 0"],
+                dict(os.environ), 30)
+
+        self.assertEqual(1, len(child["survivingOwnedProcesses"]),
+                         f"the compiler server was counted as a leak: {child['survivingOwnedProcesses']}")
+        self.assertIn("sleep 30", child["survivingOwnedProcesses"][0])
+
     def test_the_child_gets_a_session_of_its_own(self) -> None:
         child = runner.run_child(["sh", "-c", "ps -o pgid= -p $$"], dict(os.environ), 30)
 
