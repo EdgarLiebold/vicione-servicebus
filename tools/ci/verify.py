@@ -39,6 +39,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from verification import fixture as fixtures  # noqa: E402
 from verification import process_tree, receipt as receipts, run_scope, trx  # noqa: E402
 import run_test_category  # noqa: E402
 from verification import model as verification_model  # noqa: E402
@@ -52,9 +53,6 @@ RECEIPT_NAME = receipts.RECEIPT_NAME
 RECEIPT_KIND = receipts.RECEIPT_KIND
 RECEIPT_SCHEMA_VERSION = receipts.RECEIPT_SCHEMA_VERSION
 
-FIXTURE_RECORD_NAME = "fixture-findings.json"
-FIXTURE_RECORD_KIND = "SERVICEBUS_FIXTURE_FINDINGS"
-FIXTURE_RECORD_SCHEMA_VERSION = 1
 
 
 class VerificationError(RuntimeError):
@@ -79,6 +77,19 @@ def load_model() -> tuple[dict, str]:
         raise VerificationError(f"the verification model is not readable: {error}") from error
 
     return model, hashlib.sha256(raw).hexdigest()
+
+
+def read_identity_file(path: Path) -> list[str]:
+    """One identity per line, as the model's own reader gives them."""
+    return verification_model.read_identity_file(path)
+
+
+def expected_identities(run: dict) -> list[str] | None:
+    """What this category is expected to execute, bound to this repository."""
+    try:
+        return verification_model.expected_identities(run, REPO_ROOT)
+    except verification_model.ModelError as error:
+        raise VerificationError(str(error)) from error
 
 
 def declared_run(model: dict, category: str) -> dict:
@@ -113,129 +124,7 @@ def resolve_selection(model: dict, name: str) -> list[str]:
 
 # -- expected identities -------------------------------------------------------------------------
 
-def read_identity_file(path: Path) -> list[str]:
-    """One identity per line, comments and blank lines ignored."""
-    identities = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if stripped and not stripped.startswith("#"):
-            identities.append(stripped)
-
-    return identities
-
-
-def expected_identities(run: dict) -> list[str] | None:
-    """What this category is expected to execute, or None when nothing has recorded it yet.
-
-    None is a state, not an omission. A category whose expected set nobody has recorded from a
-    complete clean run cannot be part of a passing receipt, and the receipt says which ones those are.
-    """
-    declared = run.get("expectedIdentities")
-    if not declared:
-        return None
-
-    path = REPO_ROOT / declared
-    if not path.is_file():
-        raise VerificationError(
-            f"category '{run.get('category')}' names the expected set '{declared}', which is not there")
-
-    return read_identity_file(path)
-
-
 # -- the native result file ------------------------------------------------------------------------
-
-# -- the fixture side of a run ---------------------------------------------------------------------
-
-FIXTURE_RECORD_FIELDS = ("schemaVersion", "kind", "brokers", "allowedBrokerOutage", "findings", "logs")
-
-
-def fixture_record_findings(record: dict, run: dict) -> list[str]:
-    """Whether this fixture record really is the record of this category's fixture.
-
-    A record that names other brokers, another outage permission or another kind of document is
-    evidence about something else. It is refused here rather than counted as fixture proof, because a
-    record nobody compares with the declaration is a file, not a binding.
-    """
-    findings = []
-    declared = sorted(run.get("brokers") or [])
-
-    if record.get("kind") != FIXTURE_RECORD_KIND:
-        findings.append(f"the record is of kind {record.get('kind')!r} and not a fixture record")
-    if record.get("schemaVersion") != FIXTURE_RECORD_SCHEMA_VERSION:
-        findings.append(f"the record speaks schema version {record.get('schemaVersion')!r}, this "
-                        f"reader speaks {FIXTURE_RECORD_SCHEMA_VERSION}")
-    for name in sorted(record):
-        if name not in FIXTURE_RECORD_FIELDS:
-            findings.append(f"the record carries an unknown field '{name}'")
-
-    brokers = record.get("brokers")
-    if not isinstance(brokers, list) or not all(isinstance(entry, str) for entry in brokers):
-        findings.append("the record names no broker list")
-    elif sorted(brokers) != declared:
-        findings.append(f"the record is about {sorted(brokers)} and this category runs against "
-                        f"{declared}")
-
-    permitted = run.get("allowBrokerOutage")
-    if record.get("allowedBrokerOutage") != permitted:
-        findings.append(f"the record was produced with outage permission "
-                        f"{record.get('allowedBrokerOutage')!r} and this category declares "
-                        f"{permitted!r}")
-
-    reported = record.get("findings")
-    if not isinstance(reported, list) or not all(isinstance(entry, str) for entry in reported):
-        findings.append("the record's own findings are not a list of sentences")
-    else:
-        findings.extend(reported)
-
-    logs = record.get("logs")
-    if not isinstance(logs, dict):
-        findings.append("the record carries no broker log digests")
-    else:
-        for broker in declared:
-            if not isinstance(logs.get(broker), str) or not logs.get(broker):
-                findings.append(f"the record holds no log digest for '{broker}', so nothing binds that "
-                                "broker's output to this run")
-
-    return findings
-
-
-def fixture_evidence(run_root: Path, run: dict) -> dict[str, object]:
-    """What the fixture side of this run proved, and what is unproven when it wrote nothing.
-
-    A category that names brokers is a category whose result only means something if the fixture was
-    there, was the declared one and came back. A run of it that left no record has shown none of that.
-    Absence used to be read as "no finding", which is the difference between nothing went wrong and
-    nothing was looked at.
-
-    Read from the file the fixture wrote rather than from a child's output: recognising a cleanup
-    failure by matching prose in stderr would be reading a sentence, and a sentence is not a contract.
-    """
-    declared = sorted(run.get("brokers") or [])
-    path = run_root / FIXTURE_RECORD_NAME
-
-    if not path.is_file():
-        if declared:
-            return {"recorded": False, "sha256": None, "logs": {}, "findings": [
-                f"this category runs against {', '.join(declared)} and no fixture record was written, "
-                "so nothing shows that the fixture was started, was the declared one, or was returned"]}
-
-        return {"recorded": False, "sha256": None, "logs": {}, "findings": []}
-
-    sha256 = trx.digest(path)
-    try:
-        record = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as error:
-        return {"recorded": True, "sha256": sha256, "logs": {},
-                "findings": [f"the fixture record of this run is not readable: {error}"]}
-    if not isinstance(record, dict):
-        return {"recorded": True, "sha256": sha256, "logs": {},
-                "findings": ["the fixture record of this run is not a record"]}
-
-    logs = record.get("logs") if isinstance(record.get("logs"), dict) else {}
-
-    return {"recorded": True, "sha256": sha256, "logs": logs,
-            "findings": fixture_record_findings(record, run)}
-
 
 # -- running one category ------------------------------------------------------------------------
 
@@ -252,7 +141,7 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
     sys.stderr.write(child["stderr"])
 
     result = trx.parse_result_file(run_root / f"{category}.trx")
-    fixture = fixture_evidence(run_root, run)
+    fixture = fixtures.fixture_evidence(run_root, run)
     expected = expected_identities(run)
 
     entry = {
@@ -271,7 +160,7 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
         "executed": sorted(result["executed"]),
         "failed": sorted(result["failed"]),
         "skipped": sorted(result["skipped"]),
-        "approvedNotExecuted": sorted(run_test_category.permitted_not_executed(run)),
+        "approvedNotExecuted": sorted(verification_model.permitted_not_executed(run)),
         "resultsOmitted": result["omitted"],
         "resultCounters": result["counters"],
         "resultFindings": result["findings"],

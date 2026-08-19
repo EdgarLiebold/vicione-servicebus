@@ -27,6 +27,7 @@ from datetime import datetime
 from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from verification import model as verification_model  # noqa: E402
 from verification import process_tree, run_scope, trx  # noqa: E402  (repository local)
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -100,21 +101,6 @@ def category_contract(category: str, project: str) -> dict:
             "this run for as long as the machine stays up")
 
     return run
-
-
-def permitted_not_executed(run: dict) -> list[str]:
-    """The cases the model permits this category to leave unexecuted, as full identities.
-
-    An entry without a full identity is not a permission: naming a case by its short form would
-    authorise every case that happens to share it.
-    """
-    permitted = []
-    for case in run.get("notExecuted", []):
-        identity = case.get("identity") if isinstance(case, dict) else None
-        if isinstance(identity, str) and identity:
-            permitted.append(identity)
-
-    return permitted
 
 
 def unauthorised_not_executed(skipped: list[str], permitted: list[str]) -> list[str]:
@@ -215,7 +201,7 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
 
     counters = trx.read_counters(trx_path)
     skipped = trx.read_not_executed(trx_path)
-    permitted = permitted_not_executed(contract)
+    permitted = verification_model.permitted_not_executed(contract)
     unlisted = unauthorised_not_executed(skipped, permitted)
     omitted = trx.omitted_results(trx_path)
 

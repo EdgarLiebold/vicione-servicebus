@@ -20,6 +20,7 @@ from __future__ import annotations
 from collections import Counter
 from pathlib import Path
 
+from verification import fixture
 from verification import model as verification_model
 from verification import trx
 
@@ -31,6 +32,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_NAME = "verification-receipt.json"
 RECEIPT_KIND = "SERVICEBUS_VERIFICATION_RECEIPT"
 RECEIPT_SCHEMA_VERSION = 2
+FIXTURE_RECORD_NAME = fixture.FIXTURE_RECORD_NAME
 
 
 def category_findings(entry: dict) -> list[str]:
@@ -196,6 +198,22 @@ CATEGORY_FIELDS = {
 DERIVED_FIELDS = ("duplicate", "expectedRecorded", "missing", "passed", "unapprovedNotExecuted",
                   "unexpected")
 
+# What decides each field of a category record, declared rather than left to be inferred. Three fields
+# were in none of these - the expected set, the approved skips and the budget - so a record named its
+# own scope and approved its own skips while every number derived from them was correct. The case that
+# holds this classification against CATEGORY_FIELDS is what makes the next field a decision.
+CHECKED_AGAINST_THE_MODEL = ("allowBrokerOutage", "approvedNotExecuted", "brokers", "budgetSeconds",
+                             "category", "command", "expected", "fixtureRecorded", "project")
+
+# Read from the native result file where it is still there, and otherwise what the record states. The
+# consequence of each of them is recomputed above; the fact itself is the run's.
+PRIMARY_FACTS = ("brokerLogSha256", "childExitCode", "escalatedToKill", "executed", "failed",
+                 "fixtureFindings", "fixtureRecordSha256", "rawResultSha256", "resultCounters",
+                 "resultFindings", "resultsOmitted", "runRoot", "skipped",
+                 "survivingOwnedProcesses", "timedOut")
+
+DECIDED_HERE = ("findings", "terminal")
+
 
 def shape_findings(mapping: dict, fields: dict, where: str) -> list[str]:
     """A closed shape: every declared field present and of its kind, and no field beyond them.
@@ -257,9 +275,41 @@ def derivation_findings(entry: dict) -> list[str]:
 
 
 def declaration_findings(entry: dict, run: dict, repo_root: Path) -> list[str]:
-    """Where a category record disagrees with the model it claims to have run."""
+    """Where a category record disagrees with the model it claims to have run.
+
+    The scope of a run is the model's, not the record's. Recomputing every derived number from the
+    record's own sets makes the record consistent with itself and says nothing about whether those
+    sets are the ones this category has: a record that claimed a single expected identity, executed
+    exactly it and derived everything else correctly was believed, for a category the model records
+    1873 identities of.
+    """
     category = entry["category"]
     problems = []
+
+    if entry["budgetSeconds"] != run.get("budgetSeconds"):
+        problems.append(f"category '{category}' names the budget {entry['budgetSeconds']} s and the "
+                        f"model declares {run.get('budgetSeconds')} s")
+
+    permitted = sorted(verification_model.permitted_not_executed(run))
+    if sorted(entry["approvedNotExecuted"]) != permitted:
+        problems.append(f"category '{category}' approves {len(entry['approvedNotExecuted'])} "
+                        f"not-executed identity/identities and the model permits {len(permitted)}")
+
+    try:
+        manifest = verification_model.expected_identities(run, repo_root)
+    except verification_model.ModelError as error:
+        problems.append(f"category '{category}': {error}")
+    else:
+        if manifest is None and entry["expected"] is not None:
+            problems.append(f"category '{category}' carries an expected identity set and the model "
+                            "records none for it")
+        elif manifest is not None and entry["expected"] is None:
+            problems.append(f"category '{category}' carries no expected identity set and the model "
+                            f"records {len(manifest)} identities for it")
+        elif manifest is not None and sorted(entry["expected"]) != sorted(manifest):
+            problems.append(f"category '{category}' is measured against "
+                            f"{len(entry['expected'])} expected identity/identities and the model "
+                            f"records {len(manifest)}")
 
     if entry["project"] != run.get("project"):
         problems.append(f"category '{category}' names project '{entry['project']}' and the model "
@@ -280,24 +330,33 @@ def declaration_findings(entry: dict, run: dict, repo_root: Path) -> list[str]:
     return problems
 
 
-def reparse_findings(entry: dict, repo_root: Path) -> tuple[list[str], bool]:
+def reparse_findings(entry: dict, repo_root: Path, run: dict | None = None) -> tuple[list[str], bool]:
     """The record checked against the native evidence, where that evidence is still beside the receipt.
 
-    This is the only part of reading a receipt that is not a consistency check. Where the result file
-    is still there it is hashed and parsed again and the record has to agree with it. Where it is not,
-    this returns no finding and says so, because a receipt on its own records what a run reported and
-    cannot show that the run happened.
+    This is the only part of reading a receipt that is not a consistency check. Where the evidence is
+    still there it is hashed and read again and the record has to agree with it. Where it is not, this
+    returns no finding and says so, because a receipt on its own records what a run reported and cannot
+    show that the run happened.
+
+    Both halves of the evidence, which is what this missed: the result file was hashed and parsed
+    again while the fixture record and the broker logs were written into the receipt as digests and
+    never read. A fixture side that had changed since the receipt was written was believed, and so was
+    a log digest of nothing at all.
     """
     category = entry["category"]
-    trx_path = repo_root / entry["runRoot"] / f"{category}.trx"
+    run_root = repo_root / entry["runRoot"]
+    problems = fixture_reparse_findings(entry, run_root, run)
+
+    trx_path = run_root / f"{category}.trx"
     if not trx_path.is_file():
-        return [], False
+        return problems, False
 
     if trx.digest(trx_path) != entry["rawResultSha256"]:
-        return [f"category '{category}' names a result file whose bytes have changed since the receipt "
-                "was written"], True
+        problems.append(f"category '{category}' names a result file whose bytes have changed since the "
+                        "receipt was written")
 
-    problems = []
+        return problems, True
+
     parsed = trx.parse_result_file(trx_path)
     for name in ("executed", "failed", "skipped"):
         if sorted(parsed[name]) != sorted(entry[name]):
@@ -311,6 +370,43 @@ def reparse_findings(entry: dict, repo_root: Path) -> tuple[list[str], bool]:
                         f"about its result file and reading it again gives {len(parsed['findings'])}")
 
     return problems, True
+
+
+def fixture_reparse_findings(entry: dict, run_root: Path, run: dict | None) -> list[str]:
+    """The fixture side of a run, read again where it is still there.
+
+    The digest of the record binds the document, and reading it again binds what the document says: a
+    record could carry the right digest and a fixture finding the receipt does not repeat. Every broker
+    log the receipt names is rehashed for the same reason - a digest nobody recomputes is a number.
+    """
+    category = entry["category"]
+    problems = []
+
+    record_path = run_root / FIXTURE_RECORD_NAME
+    if record_path.is_file():
+        if trx.digest(record_path) != entry["fixtureRecordSha256"]:
+            problems.append(f"category '{category}' names a fixture record whose bytes have changed "
+                            "since the receipt was written")
+        elif run is not None:
+            again = fixture.fixture_evidence(run_root, run)
+            if sorted(again["findings"]) != sorted(entry["fixtureFindings"]):
+                problems.append(f"category '{category}' reports {len(entry['fixtureFindings'])} "
+                                f"fixture finding(s) and reading the record again gives "
+                                f"{len(again['findings'])}")
+            if again["logs"] != entry["brokerLogSha256"]:
+                problems.append(f"category '{category}' reports other broker log digests than the "
+                                "fixture record beside it does")
+    elif entry["fixtureRecorded"] and entry["fixtureRecordSha256"] is not None:
+        problems.append(f"category '{category}' reports a fixture record that is not beside its run "
+                        "root, so the digest it carries binds nothing that is still there")
+
+    for broker, digest in sorted(entry["brokerLogSha256"].items()):
+        log_path = run_root / f"{broker}-broker.log"
+        if log_path.is_file() and trx.digest(log_path) != digest:
+            problems.append(f"category '{category}' names a log of '{broker}' whose bytes have changed "
+                            "since the receipt was written")
+
+    return problems
 
 
 def receipt_findings(receipt: dict, selection: str, commit: str, tree: str, model_hash: str,
@@ -370,14 +466,15 @@ def receipt_findings(receipt: dict, selection: str, commit: str, tree: str, mode
             problems.extend(shape)
             continue
         problems.extend(derivation_findings(entry))
+        run = None
         if model is not None:
             try:
-                problems.extend(declaration_findings(
-                    entry, verification_model.declared_run(model, entry["category"]),
-                    repo_root or REPO_ROOT))
+                run = verification_model.declared_run(model, entry["category"])
             except verification_model.ModelError as error:
                 problems.append(str(error))
-        reparsed, _ = reparse_findings(entry, repo_root or REPO_ROOT)
+            else:
+                problems.extend(declaration_findings(entry, run, repo_root or REPO_ROOT))
+        reparsed, _ = reparse_findings(entry, repo_root or REPO_ROOT, run)
         problems.extend(reparsed)
 
     if receipt["terminal"] != "PASS":

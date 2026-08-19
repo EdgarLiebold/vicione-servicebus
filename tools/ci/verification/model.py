@@ -541,6 +541,52 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
+# -- what one category is expected to execute, and what it may leave alone -------------------
+
+def read_identity_file(path: Path) -> list[str]:
+    """One identity per line, comments and blank lines ignored."""
+    identities = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#"):
+            identities.append(stripped)
+
+    return identities
+
+
+def expected_identities(run: dict, repo_root: Path) -> list[str] | None:
+    """What this category is expected to execute, or None when nothing has recorded it yet.
+
+    None is a state, not an omission. A category whose expected set nobody has recorded from a
+    complete clean run cannot be part of a passing receipt, and the receipt says which ones those are.
+    """
+    declared = run.get("expectedIdentities")
+    if not declared:
+        return None
+
+    path = repo_root / declared
+    if not path.is_file():
+        raise ModelError(
+            f"category '{run.get('category')}' names the expected set '{declared}', which is not there")
+
+    return read_identity_file(path)
+
+
+def permitted_not_executed(run: dict) -> list[str]:
+    """The cases the model permits this category to leave unexecuted, as full identities.
+
+    An entry without a full identity is not a permission: naming a case by its short form would
+    authorise every case that happens to share it.
+    """
+    permitted = []
+    for case in run.get("notExecuted", []):
+        identity = case.get("identity") if isinstance(case, dict) else None
+        if isinstance(identity, str) and identity:
+            permitted.append(identity)
+
+    return permitted
+
+
 # -- what one category is, and the command that starts it -----------------------------------------
 
 EVIDENCE_DIR_OPTION = "--evidence-dir"

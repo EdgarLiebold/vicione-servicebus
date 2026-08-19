@@ -830,9 +830,70 @@ class Reading_a_receipt(VerifyFixture):
 
         self.assertIn("is declared to run", " ".join(self.findings(self.altered(command=command))))
 
+    def test_refuses_a_receipt_that_names_its_own_expected_set(self) -> None:
+        """The counterexample of my own making: a record that decides what completeness means.
+
+        Every derived number is recomputed from the record's own sets, which makes the record agree
+        with itself and says nothing about whether those sets are this category's. A record claiming
+        one expected identity, executing exactly it and deriving everything else correctly passed,
+        for a category whose manifest holds three.
+        """
+        one = f"{FIXTURE}.Should_be_the_only_case_anybody_expected"
+
+        problems = self.findings(self.altered(expected=[one], executed=[one], passed=[one]))
+
+        self.assertIn("is measured against 1 expected identity/identities and the model records 3",
+                      " ".join(problems),
+                      "the receipt named its own scope and was believed")
+
+    def test_refuses_a_receipt_that_approves_its_own_skip(self) -> None:
+        """Which cases may go unexecuted is the model's list, and this record wrote its own."""
+        silenced = f"{FIXTURE}.Should_have_run_and_did_not"
+
+        problems = self.findings(self.altered(skipped=[silenced], approvedNotExecuted=[silenced]))
+
+        self.assertIn("approves 1 not-executed identity/identities and the model permits 0",
+                      " ".join(problems),
+                      "the receipt approved a skip nobody approved and was believed")
+
+    def test_refuses_a_receipt_that_declares_its_own_budget(self) -> None:
+        problems = self.findings(self.altered(budgetSeconds=99999))
+
+        self.assertIn("names the budget 99999 s and the model declares 60 s", " ".join(problems))
+
     def test_refuses_a_receipt_reporting_brokers_the_model_does_not_declare(self) -> None:
         self.assertIn("names brokers", " ".join(self.findings(self.altered(brokers=["activemq"]))))
 
+
+class Every_field_of_a_record_is_decided_by_something(unittest.TestCase):
+    """A field nobody classified is a field nobody checks, and three of them were exactly that.
+
+    The expected set, the approved skips and the budget were neither recomputed nor held against the
+    model, so a record could carry its own answer for each of them. Adding a field to a receipt is a
+    decision about what decides it; this is where that decision has to be written down.
+    """
+
+    def test_the_classification_covers_every_field_exactly_once(self) -> None:
+        classified = (receipts.CHECKED_AGAINST_THE_MODEL + receipts.DERIVED_FIELDS
+                      + receipts.PRIMARY_FACTS + receipts.DECIDED_HERE)
+
+        self.assertEqual(sorted(set(receipts.CATEGORY_FIELDS)), sorted(classified),
+                         "a field of a category record is in no class or in two, so what checks it "
+                         "is either undecided or claimed twice")
+
+    def test_every_field_held_against_the_model_is_one_the_reader_reads(self) -> None:
+        """The guard: a name could be added to the list without a comparison behind it."""
+        source = (Path(receipts.__file__).read_text(encoding="utf-8"))
+        declaration = source[source.index("def declaration_findings"):
+                             source.index("def reparse_findings")]
+
+        for field in receipts.CHECKED_AGAINST_THE_MODEL:
+            if field == "category":
+                continue                       # the record is looked up by it rather than compared
+            with self.subTest(field=field):
+                self.assertIn(f'entry["{field}"]', declaration,
+                              f"'{field}' is declared as held against the model and the reader never "
+                              "reads it")
 
 class Reading_a_receipt_against_the_file_it_was_produced_from(VerifyFixture):
     """Where the native result is still there, the receipt is checked against it and not only itself.
@@ -882,6 +943,32 @@ class Reading_a_receipt_against_the_file_it_was_produced_from(VerifyFixture):
         problems = " ".join(self.findings(entry))
 
         self.assertIn("its result file carries 2", problems)
+
+    def test_refuses_a_receipt_whose_fixture_record_has_changed_since_it_was_written(self) -> None:
+        """Section A3 asked for the fixture evidence too, and this read only the result file.
+
+        The digest of the record went into the receipt and was never recomputed, so a fixture side
+        that had changed since the receipt was written was believed.
+        """
+        record = self.root / self.entry["runRoot"] / "fixture-findings.json"
+        record.write_text(json.dumps({
+            "schemaVersion": 1, "kind": "SERVICEBUS_FIXTURE_FINDINGS", "brokers": [],
+            "allowedBrokerOutage": None, "findings": [], "logs": {}}), encoding="utf-8")
+        entry = copy.deepcopy(self.entry)
+        entry["fixtureRecorded"] = True
+        entry["fixtureRecordSha256"] = "a" * 64
+
+        self.assertIn("fixture record whose bytes have changed", " ".join(self.findings(entry)),
+                      "the fixture record was not read again")
+
+    def test_refuses_a_receipt_whose_broker_log_has_changed_since_it_was_written(self) -> None:
+        log = self.root / self.entry["runRoot"] / "rabbitmq-broker.log"
+        log.write_text("a broker said something else\n", encoding="utf-8")
+        entry = copy.deepcopy(self.entry)
+        entry["brokerLogSha256"] = {"rabbitmq": "b" * 64}
+
+        self.assertIn("log of 'rabbitmq' whose bytes have changed", " ".join(self.findings(entry)),
+                      "a digest of a broker's own output was carried and never recomputed")
 
     def test_a_receipt_without_its_result_files_is_checked_and_says_so(self) -> None:
         """A handed-over receipt is worth checking and is worth exactly what it is.

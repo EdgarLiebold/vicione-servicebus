@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_COUNTEREXAMPLE_MEASUREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "LEAD_DIRECTIVE 0098",
+  "block": "6 - what I found in my own work of this directive",
+  "measuredAgainstCommit": "1d10c541badd403dafaee2e071371094abda77e9",
+  "note": "Found by attacking the result of block 1 the way the directive attacked what came before it. Every derived number was recomputed, which makes a record agree with itself and says nothing about whether the sets it computes from are this category's. Measured against the code before and after the correction, in one process each.",
+  "receiptNamingItsOwnScopeBefore": {
+    "modelExpectsOfCore": 1873,
+    "receiptNamingItsOwnScope": {
+      "claimedExpected": 1,
+      "findings": 0,
+      "sentences": [],
+      "verdict": "BELIEVED"
+    },
+    "receiptApprovingItsOwnSkip": {
+      "modelApproves": 0,
+      "claimedApproved": 1,
+      "findings": 0,
+      "sentences": [],
+      "verdict": "BELIEVED"
+    }
+  },
+  "receiptNamingItsOwnScopeAfter": {
+    "modelExpectsOfCore": 1873,
+    "receiptNamingItsOwnScope": {
+      "claimedExpected": 1,
+      "findings": 1,
+      "sentences": [
+        "category 'core' is measured against 1 expected identity/identities and the model records 1873"
+      ],
+      "verdict": "REFUSED"
+    },
+    "receiptApprovingItsOwnSkip": {
+      "modelApproves": 0,
+      "claimedApproved": 1,
+      "findings": 1,
+      "sentences": [
+        "category 'core' approves 1 not-executed identity/identities and the model permits 0"
+      ],
+      "verdict": "REFUSED"
+    }
+  }
+}

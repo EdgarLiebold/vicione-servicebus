@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1226 |
+| Added | 1231 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -270,6 +270,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-2-counterexamples.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-3-counterexamples.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-4-counterexample.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-5-structure.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-6-nested-process-groups.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-6-own-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/closing-run.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/diagnostics-removal-approval.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json` | Added |  |
@@ -6857,6 +6861,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/tests/test_verify.py` | Added |  |
 | `tools/ci/validate_receipt.py` | Added |  |
 | `tools/ci/verification/__init__.py` | Added |  |
+| `tools/ci/verification/fixture.py` | Added |  |
 | `tools/ci/verification/model.py` | Added |  |
 | `tools/ci/verification/process_tree.py` | Added |  |
 | `tools/ci/verification/receipt.py` | Added |  |

@@ -25,6 +25,7 @@ import unittest
 from pathlib import Path
 
 import run_test_category as runner
+from verification import model as verification_model
 from verification import process_tree, trx
 
 TRX_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n<TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">\n'
@@ -573,7 +574,7 @@ class IdentityContractTestCase(RunnerFixture):
         """The model permits these identities to stay unexecuted, and returns what that authorises."""
         self.write_model(notExecuted=[{"identity": identity} for identity in identities])
 
-        return runner.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
+        return verification_model.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
 
     def test_the_same_fixture_and_case_name_in_two_namespaces_are_two_identities(self):
         trx_path = write_trx(self.root / "a.trx", [
@@ -647,7 +648,7 @@ class IdentityContractTestCase(RunnerFixture):
         self.write_model(notExecuted=[
             {"fixture": "Delivery", "test": "Should_deliver_the_message", "mechanism": "EXPLICIT",
              "dueness": "NOT_DUE_BENCHMARK", "reason": "no identity given"}])
-        permitted = runner.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
+        permitted = verification_model.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
 
         self.assertEqual([], permitted, "an entry without an identity is not a permission")
 
