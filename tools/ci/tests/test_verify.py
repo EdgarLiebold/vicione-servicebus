@@ -765,13 +765,24 @@ class Reading_a_receipt(VerifyFixture):
         It has to fail for the contradiction. A refusal that came from some unrelated field would
         prove nothing about the arithmetic, so no finding here may name one.
         """
-        dropped = "Suite.Delivering_a_message.Should_never_have_been_dropped"
+        # Two things are held away from this case so that only the arithmetic is left. The expected
+        # set stays exactly the model's, so the scope check has nothing to say; and the record is one
+        # handed over without its result file, so nothing can be read again. That is precisely when
+        # the arithmetic is all a reader has - and it is the state this reader used to accept.
+        dropped = self.entry["expected"][0]
+        executed = [identity for identity in self.entry["executed"] if identity != dropped]
 
-        problems = self.findings(self.altered(expected=sorted(self.entry["expected"] + [dropped])))
+        problems = self.findings(self.altered(
+            runRoot="artifacts/run-output/a-root-nobody-kept", executed=executed,
+            passed=[identity for identity in self.entry["passed"] if identity != dropped]))
 
         self.assertTrue(problems, "the fabricated receipt was believed")
         self.assertIn(dropped, " ".join(problems),
                       "the receipt was refused without naming the identity it contradicts itself over")
+        for problem in problems:
+            self.assertNotIn("is measured against", problem,
+                             "the refusal rests on the scope check rather than on the arithmetic, so "
+                             "this case no longer proves that the derived numbers are recomputed")
         for problem in problems:
             for unrelated in ("commit", "tree ", "verification model", "selection", "project",
                               "broker", "command", "schema version", "unknown field", "working tree"):
