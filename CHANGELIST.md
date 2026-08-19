@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1204 |
+| Added | 1208 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -266,6 +266,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097/design-note-canonical-verification.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097/process-census.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097/test-identity-measurement.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-1-counterexamples.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-2-counterexamples.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/GIT_BASELINE_PROOF.json` | Added |  |
@@ -6830,11 +6832,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
+| `tools/ci/record_expected.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
 | `tools/ci/run_ownership.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
 | `tools/ci/test_locked_restore.py` | Added |  |
 | `tools/ci/test_policy_validator.py` | Added |  |
+| `tools/ci/test_record_expected.py` | Added |  |
 | `tools/ci/test_run_broker_category.py` | Added |  |
 | `tools/ci/test_run_test_category.py` | Added |  |
 | `tools/ci/test_verify.py` | Added |  |

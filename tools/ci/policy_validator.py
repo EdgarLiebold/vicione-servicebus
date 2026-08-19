@@ -31,6 +31,7 @@ import contextlib
 import io
 import json
 import re
+import subprocess
 import shlex
 import sys
 import textwrap
@@ -91,6 +92,9 @@ ANALYZER_PACKAGE_PROJECT = "src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.Ser
 
 # Retired: a project cannot grant itself a framework exception, so nobody may carry this any more.
 RETIRED_SELF_MARKERS = ("vicioneanalyzerpackagesurface", "vicionecompilerhost")
+
+# Where the expected identity sets live. One directory, one file per category.
+EXPECTED_IDENTITY_DIRECTORY = "build/verification/expected"
 BROKER_CATEGORIES = ("rabbitmq", "activemq")
 KNOWN_CREDENTIALS = ("guest", "admin")
 
@@ -367,6 +371,21 @@ class Policy:
     def read(self, relative: str) -> str | None:
         path = self.root / relative
         return path.read_text(encoding="utf-8") if path.is_file() else None
+
+    def tracked(self, relative: str) -> bool:
+        """Whether this path is part of the repository, as git answers it.
+
+        A tree that is not a repository cannot answer the question, and this reports True there rather
+        than inventing a failure: the fixtures of this validator's own suite are plain directories, and
+        a rule that failed on all of them would be about the fixture and not about the repository. The
+        case that proves this control runs against a real repository for that reason.
+        """
+        if not (self.root / ".git").exists():
+            return True
+        answer = subprocess.run(["git", "-C", str(self.root), "ls-files", "--error-unmatch", relative],
+                                capture_output=True, text=True, check=False)
+
+        return answer.returncode == 0
 
     @staticmethod
     def job_section(body: str, job: str) -> str:
@@ -1157,6 +1176,82 @@ class Policy:
                           f"category '{run.get('category')}' records no minimumExecutedCases, so a category "
                           "that shrinks would still report green")
 
+    def check_expected_identity_manifests(self) -> None:
+        """The expected sets are the truth a run is measured against, so they are files and not claims.
+
+        Each one is exactly build/verification/expected/<category>.txt, a regular file that is part of
+        this repository, sorted and free of repetition, and its size is the floor the model records for
+        the same category. A manifest that is a link is a second name somebody can repoint; one that
+        nobody committed is not the expected truth of anything; one whose floor disagrees with it is
+        two claims about one category.
+        """
+        inventory = self.read(VERIFICATION_MODEL)
+        if inventory is None:
+            return
+        try:
+            model = json.loads(inventory)
+        except json.JSONDecodeError:
+            return
+
+        directory = self.root / EXPECTED_IDENTITY_DIRECTORY
+        declared: set[str] = set()
+
+        for run in sorted(verification_model.runs(model), key=lambda entry: str(entry.get("category"))):
+            category = run.get("category")
+            named = run.get("expectedIdentities")
+            if not named:
+                self.fail("expected-identities",
+                          f"category '{category}' records no expected identity set, so nothing states "
+                          "which cases it is complete with")
+                continue
+
+            expected_path = f"{EXPECTED_IDENTITY_DIRECTORY}/{category}.txt"
+            if named != expected_path:
+                self.fail("expected-identities",
+                          f"category '{category}' names '{named}' and the expected set of a category "
+                          f"is '{expected_path}'")
+                continue
+
+            declared.add(f"{category}.txt")
+            path = self.root / named
+            if path.is_symlink():
+                self.fail("expected-identities",
+                          f"{named} is a symbolic link. The expected truth is the file itself, because "
+                          "a link is a second name somebody can repoint")
+                continue
+            if not path.is_file():
+                self.fail("expected-identities", f"{named} is not there, so this category is measured "
+                                                 "against nothing")
+                continue
+            if not self.tracked(named):
+                self.fail("expected-identities",
+                          f"{named} is not part of this repository, so it is not the expected truth of "
+                          "any committed state")
+
+            identities = [line.strip() for line in path.read_text(encoding="utf-8").splitlines()
+                          if line.strip() and not line.strip().startswith("#")]
+            if identities != sorted(identities):
+                self.fail("expected-identities",
+                          f"{named} is not sorted, so two recordings of one set are two different files")
+            if len(set(identities)) != len(identities):
+                repeated = sorted({entry for entry in identities if identities.count(entry) > 1})
+                self.fail("expected-identities",
+                          f"{named} names {repeated[0]} more than once, so its size is not the number "
+                          "of cases it holds")
+            floor = run.get("minimumExecutedCases")
+            if isinstance(floor, int) and floor != len(identities):
+                self.fail("expected-identities",
+                          f"category '{category}' records the floor {floor} and its expected set holds "
+                          f"{len(identities)} identities, so the model makes two claims about one "
+                          "category")
+
+        if directory.is_dir():
+            for path in sorted(directory.iterdir()):
+                if path.name not in declared:
+                    self.fail("expected-identities",
+                              f"{EXPECTED_IDENTITY_DIRECTORY}/{path.name} belongs to no category of "
+                              "this model, so nothing is measured against it and nothing maintains it")
+
     def check_no_raw_run_artifacts_in_evidence(self) -> None:
         """evidence/ is the durable record. A raw run artifact is not durable record material.
 
@@ -1365,6 +1460,73 @@ class Policy:
                                   "(EnableDefaultCompileItems is off), so it states something about a "
                                   "compilation that never happens")
 
+        self.check_the_named_projects_still_hold_their_exception()
+
+    def check_the_named_projects_still_hold_their_exception(self) -> None:
+        """The other direction: an exception nobody keeps is an exception nobody needs.
+
+        The rule above says that no project outside the three named ones may have the netstandard2.0
+        exception. It says nothing about the three, so all of them could quietly stop being what the
+        exception was granted for and every check would still pass - the analyzers could retarget, the
+        package project could start compiling source, and the reason the exception exists would be gone
+        while the exception stayed.
+
+        What each of them has to remain is what it is for. A Roslyn component runs inside the compiler,
+        which is why it targets netstandard2.0 and says IsRoslynComponent. The package project ships the
+        two assemblies as the one package they always were, which is why it compiles nothing, carries no
+        build output of its own and is a development dependency.
+        """
+        for relative in ROSLYN_COMPONENT_PROJECTS:
+            properties = self.msbuild_properties_of(relative)
+            if properties is None:
+                self.fail("framework-exception",
+                          f"{relative} is one of the two Roslyn components of this repository and is "
+                          "not there")
+                continue
+            if properties.get("targetframework") != "netstandard2.0":
+                self.fail("framework-exception",
+                          f"{relative} is a Roslyn component and targets "
+                          f"'{properties.get('targetframework')}'. A component the compiler loads is "
+                          "netstandard2.0, and that is the whole reason this project has an exception")
+            if properties.get("isroslyncomponent", "").lower() != "true":
+                self.fail("framework-exception",
+                          f"{relative} holds the framework exception of a Roslyn component and no "
+                          "longer declares IsRoslynComponent")
+
+        properties = self.msbuild_properties_of(ANALYZER_PACKAGE_PROJECT)
+        if properties is None:
+            self.fail("framework-exception",
+                      f"{ANALYZER_PACKAGE_PROJECT} carries the analyzer package surface and is not there")
+            return
+        if properties.get("targetframework") != "netstandard2.0":
+            self.fail("framework-exception",
+                      f"{ANALYZER_PACKAGE_PROJECT} targets '{properties.get('targetframework')}'. An "
+                      "analyzer package carries no lib folder, so the framework group of its nuspec is "
+                      "what decides which projects may reference it")
+        for name, wanted, why in (
+                ("enabledefaultcompileitems", "false",
+                 "it would start compiling source, and it exists to carry none"),
+                ("includebuildoutput", "false",
+                 "its own assembly would ship in the package beside the two that are the package"),
+                ("developmentdependency", "true",
+                 "it would flow to the consumers of a consumer as a runtime dependency")):
+            if properties.get(name, "").lower() != wanted:
+                self.fail("framework-exception",
+                          f"{ANALYZER_PACKAGE_PROJECT} sets {name}='{properties.get(name)}' and the "
+                          f"package surface needs '{wanted}': {why}")
+
+    def msbuild_properties_of(self, relative: str) -> dict[str, str] | None:
+        """The evaluated properties of one project, or None when there is no project to read."""
+        path = self.root / relative
+        if not path.is_file():
+            return None
+        try:
+            root = ElementTree.fromstring(path.read_text(encoding="utf-8-sig", errors="replace"))
+        except ElementTree.ParseError:
+            return None
+
+        return dict(msbuild_properties(root))
+
     def check_no_project_leaves_the_central_contract(self) -> None:
         """A project may not take itself out of the repository's build contract.
 
@@ -1563,31 +1725,21 @@ class Policy:
             if element.get("key") in CREDENTIAL_KEYS:
                 self.fail("restore-sources", f"{RESTORE_CONFIG} carries a '{element.get('key')}' entry")
 
+    def rules(self) -> list[str]:
+        """Every rule this validator has, found rather than listed.
+
+        The list this replaces was written by hand, and a rule that was defined and never added to it
+        ran nowhere: it was written, it passed review as written, and it looked at nothing. That is the
+        same shape as the loop over an empty dictionary this suite already found once, so the state is
+        removed instead of corrected - a method whose name begins with check_ is a rule, and being one
+        is what makes it run.
+        """
+        return sorted(name for name in dir(self)
+                      if name.startswith("check_") and callable(getattr(self, name)))
+
     def run(self) -> int:
-        for rule in (self.check_no_forbidden_images, self.check_pinning, self.check_host_binding,
-                     self.check_credentials, self.check_canonical_runner,
-                     self.check_no_effective_known_credentials, self.check_no_required_test_masking,
-                     self.check_no_silent_test_exclusion, self.check_run_scoped_credential_guard,
-                     self.check_no_hardcoded_broker_endpoint_in_tests,
-                     self.check_required_profile, self.check_pack,
-                     self.check_no_publication, self.check_analyzer_release_tracking,
-                     self.check_transport_operations_take_a_lease,
-                     self.check_restore_sources, self.check_restore_lock_files,
-                     self.check_required_runner_and_sdk, self.check_no_selector_without_a_job,
-                     self.check_pack_depends_on_every_gate, self.check_verification_model,
-                     self.check_dueness_classes, self.check_executed_floor,
-                     self.check_no_raw_run_artifacts_in_evidence,
-                     self.check_every_tool_test_module_runs,
-                     self.check_every_dotnet_command_names_its_target,
-                     self.check_every_project_belongs_to_a_solution,
-                     self.check_central_build_targets_are_effective,
-                     self.check_workflow_inputs_are_pinned,
-                     self.check_required_steps_are_the_canonical_invocation,
-                     self.check_no_step_masks_its_own_outcome,
-                     self.check_no_command_begins_with_an_option,
-                     self.check_no_project_leaves_the_central_contract,
-                     self.check_framework_exceptions_belong_to_named_projects):
-            rule()
+        for name in self.rules():
+            getattr(self, name)()
 
         if self.failures:
             for failure in self.failures:

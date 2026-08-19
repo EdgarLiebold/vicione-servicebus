@@ -11,9 +11,11 @@ when the repository legitimately changes.
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -21,7 +23,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from policy_validator import Policy, effective_commands  # noqa: E402
+from policy_validator import (ANALYZER_PACKAGE_PROJECT, Policy,  # noqa: E402
+                              ROSLYN_COMPONENT_PROJECTS, effective_commands)
 
 
 NUGET_CONFIG = """\
@@ -129,6 +132,8 @@ def fixture_model() -> dict:
         capabilities.append({
             "id": f"capability-{category}",
             "class": "PINNED_FIXTURE_REQUIRED_RUN" if category in BROKER_OF else "LOCAL_REQUIRED_RUN",
+            # Every project of the fixture is classified exactly once, the two Roslyn components and
+            # the package project among them.
             "sourceProjects": ["src/ViciOne.ServiceBus"] if index == 0 else [],
             "testProjects": [project.rsplit("/", 1)[0]],
             "supportProjects": [],
@@ -143,7 +148,7 @@ def fixture_model() -> dict:
                 "brokers": [BROKER_OF[category]] if category in BROKER_OF else [],
                 "allowBrokerOutage": None,
                 "oneRefusalPerVhost": None,
-                "expectedIdentities": None,
+                "expectedIdentities": f"build/verification/expected/{category}.txt",
                 "explicitAttributeCount": 1,
                 "notExecuted": [
                     {
@@ -160,7 +165,10 @@ def fixture_model() -> dict:
 
     capabilities.append({
         "id": "capability-analyzers-source", "class": "LOCAL_REQUIRED_RUN",
-        "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers"], "testProjects": [],
+        # The two Roslyn components and the package project, classified exactly once and here.
+        "sourceProjects": ["src/ViciOne.ServiceBus.Analyzers",
+                           "src/ViciOne.ServiceBus.Analyzers.CodeFixes",
+                           "src/ViciOne.ServiceBus.Analyzers.Package"], "testProjects": [],
         "supportProjects": [], "toolProjects": [],
         # Through the one fixture capability whose test project really holds sources, so the anchor
         # check has something to find. The rest of the fixture projects are bare stubs.
@@ -333,7 +341,32 @@ CONTINUED_RABBITMQ_STEP = f"""\
 """
 
 
-class PolicyTestCase(unittest.TestCase):
+ROSLYN_COMPONENT = """<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsRoslynComponent>true</IsRoslynComponent>
+  </PropertyGroup>
+</Project>
+"""
+
+ANALYZER_PACKAGE_SURFACE = """<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+</Project>
+"""
+
+
+class PolicyFixture(unittest.TestCase):
+    """A conforming repository of this case alone: everything the validator reads, in a state it accepts.
+
+    Held apart from the cases so that a group of cases about one rule can use it without inheriting -
+    and re-running - every case in the file.
+    """
+
     def setUp(self) -> None:
         self.root = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
@@ -349,6 +382,13 @@ class PolicyTestCase(unittest.TestCase):
         (self.root / "build/verification/VERIFICATION_MODEL.json").write_text(
             json.dumps(fixture_model(), indent=2), encoding="utf-8"
         )
+        # One expected identity set per category, sorted and as long as the floor beside it.
+        expected = self.root / "build/verification/expected"
+        expected.mkdir(parents=True)
+        for _, category, _ in FIXTURE_RUNS:
+            (expected / f"{category}.txt").write_text(
+                f"Suite.Delivering_a_message.Should_arrive_on_{category.replace('-', '_')}\n",
+                encoding="utf-8")
 
         specs = self.root / RABBITMQ_TEST_PROJECT
         specs.mkdir(parents=True)
@@ -381,7 +421,12 @@ class PolicyTestCase(unittest.TestCase):
         analyzers.mkdir(parents=True)
         (analyzers / "AnalyzerReleases.Shipped.md").write_text(SHIPPED, encoding="utf-8")
         (analyzers / "AnalyzerReleases.Unshipped.md").write_text(UNSHIPPED, encoding="utf-8")
-        (analyzers / "ViciOne.ServiceBus.Analyzers.csproj").write_text("<Project />\n", encoding="utf-8")
+
+        # The three projects the netstandard2.0 exception is granted to, as what the exception is for:
+        # two components the compiler loads, and one project that compiles nothing and ships the two.
+        self.write_project(ROSLYN_COMPONENT_PROJECTS[0], ROSLYN_COMPONENT)
+        self.write_project(ROSLYN_COMPONENT_PROJECTS[1], ROSLYN_COMPONENT)
+        self.write_project(ANALYZER_PACKAGE_PROJECT, ANALYZER_PACKAGE_SURFACE)
 
         # Every project the lock file rule sees has to carry one, or that rule fires instead of the
         # one a case is about.
@@ -393,6 +438,11 @@ class PolicyTestCase(unittest.TestCase):
 
         for project in sorted(self.root.rglob("*.csproj")):
             (project.parent / "packages.lock.json").write_text("{}\n", encoding="utf-8")
+
+    def write_project(self, relative: str, body: str) -> None:
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(body, encoding="utf-8")
 
     def write_solution(self) -> None:
         """Names every project the fixture holds, so the orphan rule has nothing to complain about."""
@@ -413,13 +463,26 @@ class PolicyTestCase(unittest.TestCase):
         policy.run()
         return policy.failures
 
-    def assert_rejected(self, rule: str, regenerate_solution: bool = True) -> None:
+    def assert_rejected(self, rule: str, regenerate_solution: bool = True,
+                        saying: str | None = None) -> None:
+        """The mutation is refused, and by the rule named - optionally, by the sentence named.
+
+        A rule name is not always enough. Several checks report under 'verification-model', so a case
+        that asks only for the name can be satisfied by a different check firing on the same mutation:
+        one here was, and a mutation probe found it rather than a reviewer. Where that can happen the
+        case names the sentence it is about.
+        """
         found = self.failures(regenerate_solution)
         self.assertTrue(found, f"the mutation was accepted; rule '{rule}' never fired")
         self.assertTrue(
             any(failure.startswith(rule) for failure in found),
             f"expected rule '{rule}' to fire, got: {found}",
         )
+        if saying is not None:
+            self.assertTrue(
+                any(failure.startswith(rule) and saying in failure for failure in found),
+                f"rule '{rule}' fired and never said '{saying}', so this case is about a different "
+                f"decision than it claims: {found}")
 
     def compose(self) -> Path:
         return self.root / "build/test-infrastructure/compose.yaml"
@@ -438,6 +501,19 @@ class PolicyTestCase(unittest.TestCase):
 
     def rabbitmq_spec(self, name: str) -> Path:
         return self.root / RABBITMQ_TEST_PROJECT / name
+
+    def rewrite_model(self, change) -> None:
+        """One run of the fixture model changed in place, for a case about the model itself."""
+        model = json.loads(self.inventory().read_text(encoding="utf-8"))
+        for capability in model["capabilities"]:
+            for run in capability.get("runs", []):
+                if run.get("category") == "core":
+                    change(run)
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+
+class PolicyTestCase(PolicyFixture):
+    """Every rule of the validator, one case at a time, against that repository."""
 
     # -- positive ------------------------------------------------------------------------------
 
@@ -552,6 +628,56 @@ class PolicyTestCase(unittest.TestCase):
         self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
 
         self.assert_rejected("executed-floor")
+
+    def test_rejects_a_run_without_a_budget(self) -> None:
+        """Without one, a test process that never returns holds the run for as long as the machine is up."""
+        self.rewrite_model(lambda run: run.update({"budgetSeconds": 0}))
+
+        self.assert_rejected("verification-model", saying="declares the budget 0")
+
+    def test_rejects_a_budget_that_is_not_a_number(self) -> None:
+        self.rewrite_model(lambda run: run.update({"budgetSeconds": "an hour"}))
+
+        self.assert_rejected("verification-model", saying="declares the budget 'an hour'")
+
+    def test_rejects_a_broker_list_that_is_not_one(self) -> None:
+        self.rewrite_model(lambda run: run.update({"brokers": "rabbitmq"}))
+
+        self.assert_rejected("verification-model", saying="not a list of broker names")
+
+    def test_rejects_a_run_that_names_one_broker_twice(self) -> None:
+        self.rewrite_model(lambda run: run.update({"brokers": ["rabbitmq", "rabbitmq"]}))
+
+        self.assert_rejected("verification-model", saying="names a broker twice")
+
+    def test_rejects_an_outage_permission_for_a_broker_the_run_never_starts(self) -> None:
+        """A run may only permit the outage of a fixture it owns; anything else is another run's."""
+        self.rewrite_model(lambda run: run.update({"brokers": [], "allowBrokerOutage": "activemq"}))
+
+        self.assert_rejected("verification-model",
+                             saying="permits an outage of 'activemq', which is not one of the brokers")
+
+    def test_rejects_a_refusal_rule_that_is_not_a_pattern(self) -> None:
+        self.rewrite_model(lambda run: run.update({"oneRefusalPerVhost": 7}))
+
+        self.assert_rejected("verification-model", saying="declares the refusal rule 7")
+
+    def test_rejects_a_run_whose_job_is_not_the_job_that_starts_it(self) -> None:
+        """The run names one job and the job map routes its category through another, so the model
+        says two different things about which job proves this category."""
+        self.rewrite_model(lambda run: run.update({"job": "quartz"}))
+
+        self.assert_rejected("verification-model",
+                             saying="says two different things about which job proves it")
+
+    def test_rejects_a_selection_that_resolves_to_nothing(self) -> None:
+        """A selection nobody's job names is still a scope somebody can ask for."""
+        model = json.loads(self.inventory().read_text(encoding="utf-8"))
+        model.setdefault("selections", {})["nothing"] = {"members": []}
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model",
+                             saying="selection 'nothing' resolves to no category at all")
 
     def test_rejects_a_project_without_a_lock_file(self) -> None:
         """Locked mode alone does not carry this: a restore with --locked-mode and no lock file writes
@@ -1725,6 +1851,204 @@ class PolicyTestCase(unittest.TestCase):
 
 
 
+def rule_names_reported_by(source: str) -> set[str]:
+    """Every rule name this module can report, read from its calls rather than from its text.
+
+    self.fail("rule", ...) is a call with a string first argument, so that is what is looked for. A
+    regular expression over the same file also matches one inside a comment or a docstring, which is a
+    rule name nothing can report.
+    """
+    names = set()
+    for node in ast.walk(ast.parse(source)):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        if node.func.attr != "fail" or not node.args:
+            continue
+        first = node.args[0]
+        if isinstance(first, ast.Constant) and isinstance(first.value, str):
+            names.add(first.value)
+
+    return names
+
+
+def rule_names_proven_by(source: str) -> set[str]:
+    """Every rule name a real test method of this file makes fire.
+
+    Real in the executable sense: the call has to sit inside a function whose name begins with test_,
+    inside a class, in the module's own syntax tree. A commented assert_rejected("imaginary-rule")
+    satisfies a text search and is not a case; so does one in a docstring, and so does one in a helper
+    that nothing calls.
+    """
+    names = set()
+    tree = ast.parse(source)
+    for holder in ast.walk(tree):
+        if not isinstance(holder, ast.ClassDef):
+            continue
+        for method in holder.body:
+            if not isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if not method.name.startswith("test_"):
+                continue
+            for node in ast.walk(method):
+                if not isinstance(node, ast.Call):
+                    continue
+                called = node.func.attr if isinstance(node.func, ast.Attribute) else None
+                if called not in ("assert_rejected", "startswith") or not node.args:
+                    continue
+                first = node.args[0]
+                if isinstance(first, ast.Constant) and isinstance(first.value, str):
+                    names.add(first.value)
+
+    return names
+
+
+class The_expected_identity_manifests(PolicyFixture):
+    """The sets a run is measured against are files of this repository, not claims about files."""
+
+    def manifest(self, category: str = "core") -> Path:
+        return self.root / f"build/verification/expected/{category}.txt"
+
+    def test_accepts_the_manifests_the_fixture_carries(self) -> None:
+        """The guard of every case below: a rule that failed on anything would satisfy all of them."""
+        self.assertEqual([], [failure for failure in self.failures()
+                              if failure.startswith("expected-identities")])
+
+    def test_rejects_a_category_that_records_no_expected_set(self) -> None:
+        self.rewrite_model(lambda run: run.update({"expectedIdentities": None}))
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_an_expected_set_that_is_not_where_a_category_s_set_lives(self) -> None:
+        self.rewrite_model(lambda run: run.update({"expectedIdentities": "build/elsewhere/core.txt"}))
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_manifest_that_is_not_there(self) -> None:
+        self.manifest().unlink()
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_manifest_that_is_a_link(self) -> None:
+        """A link is a second name, and a second name is something somebody can repoint."""
+        elsewhere = self.root / "elsewhere.txt"
+        elsewhere.write_text("Suite.Delivering_a_message.Should_arrive_on_core\n", encoding="utf-8")
+        self.manifest().unlink()
+        self.manifest().symlink_to(elsewhere)
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_manifest_that_is_not_sorted(self) -> None:
+        self.manifest().write_text("Suite.B.Should_be_second\nSuite.A.Should_be_first\n",
+                                   encoding="utf-8")
+        self.set_floor("core", 2)
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_manifest_that_names_one_identity_twice(self) -> None:
+        self.manifest().write_text("Suite.A.Should_run\nSuite.A.Should_run\n", encoding="utf-8")
+        self.set_floor("core", 2)
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_floor_that_disagrees_with_the_manifest_beside_it(self) -> None:
+        self.set_floor("core", 7)
+
+        self.assert_rejected("expected-identities")
+
+    def test_rejects_a_manifest_no_category_is_measured_against(self) -> None:
+        (self.root / "build/verification/expected/left-over.txt").write_text(
+            "Suite.A.Should_run\n", encoding="utf-8")
+
+        self.assert_rejected("expected-identities")
+
+    def set_floor(self, category: str, floor: int) -> None:
+        self.rewrite_model(lambda run: run.update({"minimumExecutedCases": floor}))
+
+
+class An_untracked_manifest(unittest.TestCase):
+    """Tracking is a question only a repository can answer, so this one asks a real repository.
+
+    The fixture of the suite above is a plain directory, where the validator reports nothing about
+    tracking because there is nothing to ask. This case makes a repository, commits one manifest and
+    leaves the other where git has never seen it.
+    """
+
+    def setUp(self) -> None:
+        self.root = Path(tempfile.mkdtemp()).resolve()
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+        for command in (["init", "-q"], ["config", "user.email", "case@example.invalid"],
+                        ["config", "user.name", "case"]):
+            subprocess.run(["git", "-C", str(self.root), *command], check=True,
+                           capture_output=True)
+
+        expected = self.root / "build/verification/expected"
+        expected.mkdir(parents=True)
+        (expected / "core.txt").write_text("Suite.A.Should_run\n", encoding="utf-8")
+        subprocess.run(["git", "-C", str(self.root), "add", "build"], check=True, capture_output=True)
+        subprocess.run(["git", "-C", str(self.root), "commit", "-q", "-m", "one manifest"],
+                       check=True, capture_output=True)
+
+    def test_a_manifest_nobody_committed_is_not_the_expected_truth_of_anything(self) -> None:
+        policy = Policy(self.root)
+        committed = policy.tracked("build/verification/expected/core.txt")
+
+        (self.root / "build/verification/expected/quartz.txt").write_text(
+            "Suite.A.Should_run\n", encoding="utf-8")
+        loose = policy.tracked("build/verification/expected/quartz.txt")
+
+        self.assertTrue(committed, "a manifest this repository holds was reported as untracked")
+        self.assertFalse(loose, "a manifest git has never seen counted as part of this repository")
+
+
+class The_three_projects_the_framework_exception_belongs_to(PolicyFixture):
+    """The other direction: an exception nobody keeps is an exception nobody needs."""
+
+    def test_rejects_a_roslyn_component_that_stopped_targeting_netstandard(self) -> None:
+        self.write_project(ROSLYN_COMPONENT_PROJECTS[0],
+                           ROSLYN_COMPONENT.replace("netstandard2.0", "net10.0"))
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_roslyn_component_that_no_longer_says_it_is_one(self) -> None:
+        self.write_project(ROSLYN_COMPONENT_PROJECTS[1],
+                           ROSLYN_COMPONENT.replace(
+                               "<IsRoslynComponent>true</IsRoslynComponent>", ""))
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_roslyn_component_that_is_no_longer_there(self) -> None:
+        (self.root / ROSLYN_COMPONENT_PROJECTS[1]).unlink()
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_package_surface_that_started_compiling_source(self) -> None:
+        self.write_project(ANALYZER_PACKAGE_PROJECT, ANALYZER_PACKAGE_SURFACE.replace(
+            "<EnableDefaultCompileItems>false</EnableDefaultCompileItems>",
+            "<EnableDefaultCompileItems>true</EnableDefaultCompileItems>"))
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_package_surface_that_ships_its_own_build_output(self) -> None:
+        self.write_project(ANALYZER_PACKAGE_PROJECT, ANALYZER_PACKAGE_SURFACE.replace(
+            "<IncludeBuildOutput>false</IncludeBuildOutput>",
+            "<IncludeBuildOutput>true</IncludeBuildOutput>"))
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_package_surface_that_is_no_longer_a_development_dependency(self) -> None:
+        self.write_project(ANALYZER_PACKAGE_PROJECT, ANALYZER_PACKAGE_SURFACE.replace(
+            "<DevelopmentDependency>true</DevelopmentDependency>",
+            "<DevelopmentDependency>false</DevelopmentDependency>"))
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_package_surface_that_stopped_targeting_netstandard(self) -> None:
+        self.write_project(ANALYZER_PACKAGE_PROJECT,
+                           ANALYZER_PACKAGE_SURFACE.replace("netstandard2.0", "net10.0"))
+
+        self.assert_rejected("framework-exception")
+
+
 class Every_rule_this_validator_can_report(unittest.TestCase):
     """A rule nobody has made fire is a rule nobody has proven works.
 
@@ -1732,19 +2056,77 @@ class Every_rule_this_validator_can_report(unittest.TestCase):
     replaced the two files before it, so it passed for every repository, and no case would have noticed.
     A second one is subtler - a rule can have a case and then lose it, because a suite stays green when
     a test disappears. This case is the thing that says so.
+
+    Read as syntax rather than as text. The version this replaces searched both files with a regular
+    expression, so a rule name written inside a comment counted as proof that a case exercised it.
     """
 
-    def test_has_a_case_that_makes_it_report(self) -> None:
-        here = Path(__file__).resolve().parent
-        reported = set(re.findall(r'self\.fail\(\s*"([a-z0-9-]+)"',
-                                  (here / "policy_validator.py").read_text(encoding="utf-8")))
-        cases = (here / "test_policy_validator.py").read_text(encoding="utf-8")
-        proven = set(re.findall(r'assert_rejected\(\s*"([a-z0-9-]+)"', cases))
-        proven |= set(re.findall(r'failure\.startswith\("([a-z0-9-]+)"\)', cases))
+    def source(self, name: str) -> str:
+        return (Path(__file__).resolve().parent / name).read_text(encoding="utf-8")
 
+    def test_has_a_case_that_makes_it_report(self) -> None:
+        reported = rule_names_reported_by(self.source("policy_validator.py"))
+        proven = rule_names_proven_by(self.source("test_policy_validator.py"))
+
+        self.assertTrue(reported, "no rule was found at all, so this case proves nothing")
         self.assertEqual(set(), reported - proven,
                          "these rules can report something and no case in this file ever makes them "
                          "do it, so nothing has shown that they work")
+
+    def test_a_rule_name_that_only_appears_in_a_comment_is_not_a_case(self) -> None:
+        """The mutation guard of the reader above, which is where the previous one gave way."""
+        commented = 'class T(unittest.TestCase):\n    def test_x(self):\n        # assert_rejected("ghost")\n        pass\n'
+
+        self.assertEqual(set(), rule_names_proven_by(commented))
+
+    def test_a_rule_name_outside_a_test_method_is_not_a_case(self) -> None:
+        helper = ('class T(unittest.TestCase):\n'
+                  '    def helper(self):\n        self.assert_rejected("ghost")\n')
+
+        self.assertEqual(set(), rule_names_proven_by(helper))
+
+    def test_a_call_inside_a_real_test_method_is_a_case(self) -> None:
+        """And the guard of the two above: a reader that found nothing would satisfy both."""
+        real = ('class T(unittest.TestCase):\n'
+                '    def test_x(self):\n        self.assert_rejected("pinning")\n')
+
+        self.assertEqual({"pinning"}, rule_names_proven_by(real))
+
+    def test_a_rule_named_only_in_a_docstring_cannot_be_reported(self) -> None:
+        module = ('class Policy:\n'
+                  '    def check_x(self):\n'
+                  '        """Nothing here reports \'ghost\'."""\n'
+                  '        self.fail("real", "something")\n')
+
+        self.assertEqual({"real"}, rule_names_reported_by(module))
+
+
+class Every_rule_this_validator_has_runs(unittest.TestCase):
+    """A rule that is defined and never called looks exactly like one that passes.
+
+    The list of rules used to be written by hand beside them, and a rule added without a line in that
+    list ran nowhere at all. The list is gone; a method whose name begins with check_ is a rule, and
+    being one is what makes it run.
+    """
+
+    def test_every_check_method_is_a_rule_that_runs(self) -> None:
+        policy = Policy(Path("/nowhere"))
+        defined = {name for name in dir(policy) if name.startswith("check_")}
+
+        self.assertEqual(defined, set(policy.rules()),
+                         "a rule of this validator is defined and never called")
+
+    def test_a_rule_added_after_this_was_written_still_runs(self) -> None:
+        """Not the list as it is today, but what happens to the next rule somebody writes."""
+        class LaterPolicy(Policy):
+            def check_something_added_later(self) -> None:
+                self.fail("later", "a rule written after the runner was")
+
+        policy = LaterPolicy(Path("/nowhere"))
+        policy.run()
+
+        self.assertIn("later: a rule written after the runner was", policy.failures,
+                      "a rule somebody adds does not run unless they also remember to register it")
 
 
 class Turning_a_step_into_the_commands_a_shell_would_run(unittest.TestCase):

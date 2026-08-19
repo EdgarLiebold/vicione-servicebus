@@ -29,6 +29,9 @@ MODEL_FILE = "build/verification/VERIFICATION_MODEL.json"
 
 REQUIRED_RUN_CLASSES = frozenset({"LOCAL_REQUIRED_RUN", "PINNED_FIXTURE_REQUIRED_RUN"})
 
+# Where an expected identity set lives, and the only place one is read from.
+EXPECTED_DIRECTORY = "build/verification/expected"
+
 PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjects")
 
 # Jobs of the required profile that verify nothing, so the model's job map does not name them.
@@ -315,6 +318,57 @@ def resolve_indirect_verification(root: Path, capabilities: list[dict]) -> list[
     return problems
 
 
+def run_shape(run: dict) -> list[str]:
+    """Every field of one run that decides what happens, checked for being a value of that kind.
+
+    A model is only an independent truth while everything in it is readable as what it claims to be.
+    A budget that is a string is a budget nothing can compare against, and a broker list that is not a
+    list is a fixture nobody can start; both used to be carried into a command and discovered there.
+    """
+    category = run.get("category")
+    problems = []
+
+    budget = run.get("budgetSeconds")
+    if not isinstance(budget, (int, float)) or isinstance(budget, bool) or budget <= 0:
+        problems.append(f"the run of category '{category}' declares the budget {budget!r}, so a test "
+                        "process that never returns would hold it for as long as the machine stays up")
+
+    brokers = run.get("brokers")
+    if brokers is None:
+        brokers = []
+    if not isinstance(brokers, list) or not all(isinstance(name, str) and name for name in brokers):
+        problems.append(f"the run of category '{category}' declares the brokers {brokers!r}, which is "
+                        "not a list of broker names")
+        brokers = []
+    elif len(set(brokers)) != len(brokers):
+        problems.append(f"the run of category '{category}' names a broker twice: {brokers}")
+
+    outage = run.get("allowBrokerOutage")
+    if outage is not None and not isinstance(outage, str):
+        problems.append(f"the run of category '{category}' declares the outage permission {outage!r}, "
+                        "which is not a broker name")
+    elif isinstance(outage, str) and outage not in brokers:
+        problems.append(f"the run of category '{category}' permits an outage of '{outage}', which is "
+                        "not one of the brokers it starts")
+
+    refusal = run.get("oneRefusalPerVhost")
+    if refusal is not None and not isinstance(refusal, str):
+        problems.append(f"the run of category '{category}' declares the refusal rule {refusal!r}, "
+                        "which is not a pattern")
+
+    declared = run.get("expectedIdentities")
+    if declared is not None:
+        if not isinstance(declared, str):
+            problems.append(f"the run of category '{category}' declares the expected set {declared!r}, "
+                            "which is not a path")
+        elif declared != f"{EXPECTED_DIRECTORY}/{category}.txt":
+            problems.append(f"the run of category '{category}' names the expected set '{declared}', "
+                            f"and the expected set of a category is '{EXPECTED_DIRECTORY}/"
+                            f"{category}.txt'")
+
+    return problems
+
+
 def findings(root: Path) -> list[str]:
     """Every way the model can stop being the truth, as a list of sentences."""
     try:
@@ -381,6 +435,8 @@ def findings(root: Path) -> list[str]:
                     f"the run of category '{run.get('category')}' declares no executed floor, so its "
                     "case count can fall without a single failure")
 
+            problems.extend(run_shape(run))
+
     problems.extend(resolve_indirect_verification(root, capabilities))
 
     # Every project of this repository is classified exactly once. A project nobody classifies ships
@@ -415,6 +471,15 @@ def findings(root: Path) -> list[str]:
     # The workflow names a selection and nothing else, so what is compared here is the map from job to
     # selection, not the text of a step. Checking a job body for '--category x' was a second copy of the
     # model inside YAML, and two copies of one truth are two truths.
+    # Every selection, not only the ones a job names. A selection that resolves in a circle or to
+    # nothing is a scope somebody can ask for, and asking for it is where it would be found otherwise.
+    for name in sorted(model.get("selections") or {}):
+        try:
+            if not resolve_selection(model, name):
+                problems.append(f"selection '{name}' resolves to no category at all")
+        except SelectionError as error:
+            problems.append(str(error))
+
     job_of_selection = model.get("jobs") or {}
     reached: dict[str, list[str]] = {}
     for job, selection in sorted(job_of_selection.items()):
@@ -438,6 +503,10 @@ def findings(root: Path) -> list[str]:
         elif len(jobs_reaching) > 1:
             problems.append(f"category '{category}' is reached by {jobs_reaching}, so two required jobs "
                             "run it and its result belongs to neither")
+        elif run.get("job") != jobs_reaching[0]:
+            problems.append(f"category '{category}' declares the job '{run.get('job')}' and the job "
+                            f"map routes it through '{jobs_reaching[0]}', so the model says two "
+                            "different things about which job proves it")
 
     for job in sorted(set(jobs) - explained):
         problems.append(f"the workflow has job '{job}', which the model's job map does not explain")

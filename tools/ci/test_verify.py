@@ -332,47 +332,38 @@ class Comparing_the_set_a_run_executed(VerifyFixture):
         self.assertIn("survived it", " ".join(result["findings"]))
 
 
-class Recording_an_expected_set(VerifyFixture):
-    """Recording resolves a difference from the previous expectation. It may not bake in a defect."""
+class Verifying_writes_nothing_it_is_measured_against(VerifyFixture):
+    """The command that measures may not be the command that rewrites what measuring means.
 
-    def record(self, cases, expected=None, **outcome) -> dict:
+    It was: --record-expected lived here, so a run in which a test had disappeared recorded the smaller
+    set as the new expectation and printed PASS for it. Recording is maintenance and lives in
+    tools/ci/record_expected.py now; this case holds the boundary.
+    """
+
+    def test_a_verifying_run_leaves_the_expected_set_and_the_model_untouched(self) -> None:
+        expected = self.expect(self_identities())
+        manifest = self.root / expected
         model = self.write_model(expectedIdentities=expected)
+        before = (manifest.read_bytes(), verify.MODEL_FILE.read_bytes())
+
+        # A run that disagrees with the expectation, which is the only run that would have a reason
+        # to change it.
         with mock.patch.object(run_test_category, "run_child",
-                               side_effect=self.child_writing(cases, **outcome)), \
+                               side_effect=self.child_writing(THREE_CASES[:2])), \
                 contextlib.redirect_stdout(io.StringIO()):
             result = verify.verify_category(verify.declared_run(model, "core"),
                                             self.root / "artifacts/verification/run")
-            verify.record_expected(model, result)
 
-        return result
+        self.assertEqual("FAIL", result["terminal"], "the case has to be a run that disagrees")
+        self.assertEqual(before, (manifest.read_bytes(), verify.MODEL_FILE.read_bytes()),
+                         "a verifying run changed the truth it is measured against")
 
-    def test_records_a_set_that_differs_from_the_previous_one(self) -> None:
-        """A case added or removed on purpose lands exactly here, and that is not a defect of the run."""
-        expected = self.expect([f"{FIXTURE}.Should_arrive"])
-
-        self.record(THREE_CASES, expected=expected)
-
-        written = (self.root / "build/verification/expected/core.txt").read_text(encoding="utf-8")
-
-        self.assertIn(f"{FIXTURE}.Should_retry", written)
-
-    def test_refuses_to_record_from_a_run_with_a_failed_case(self) -> None:
-        with self.assertRaises(verify.VerificationError) as raised:
-            self.record([(FIXTURE, "Should_arrive", "Failed")])
-
-        self.assertIn("cannot record", str(raised.exception))
-
-    def test_refuses_to_record_from_a_run_that_was_taken_down(self) -> None:
-        with self.assertRaises(verify.VerificationError):
-            self.record(THREE_CASES, timedOut=True, exitCode=1)
-
-    def test_refuses_to_record_from_a_run_that_left_a_process_behind(self) -> None:
-        with self.assertRaises(verify.VerificationError):
-            self.record(THREE_CASES, survivingOwnedProcesses=[4711])
-
-    def test_refuses_to_record_from_a_run_with_an_unapproved_skip(self) -> None:
-        with self.assertRaises(verify.VerificationError):
-            self.record([(FIXTURE, "Should_arrive", "NotExecuted")])
+    def test_the_entry_point_offers_no_way_to_write_an_expected_set(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit,
+                                   msg="the verifying command still takes an option that rewrites "
+                                       "the expectation it is measured against"):
+                verify.build_parser().parse_args(["--selection", "core", "--record-expected"])
 
 
 class Owning_what_a_run_writes(VerifyFixture):
