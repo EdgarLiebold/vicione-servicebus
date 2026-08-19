@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1186 |
+| Added | 1191 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -148,6 +148,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
+| `build/verification/expected/diagnostics.txt` | Added |  |
 | `docs/build.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
 | `evidence/RAW_RUN_ARTIFACT_MANIFEST.json` | Added |  |
@@ -6817,12 +6818,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/compare_api_surface.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
+| `tools/ci/run_ownership.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
 | `tools/ci/test_locked_restore.py` | Added |  |
 | `tools/ci/test_policy_validator.py` | Added |  |
 | `tools/ci/test_run_broker_category.py` | Added |  |
 | `tools/ci/test_run_test_category.py` | Added |  |
+| `tools/ci/test_verify.py` | Added |  |
+| `tools/ci/validate_receipt.py` | Added |  |
 | `tools/ci/verification_model.py` | Added |  |
+| `tools/ci/verify.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/AssemblyInfo.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |

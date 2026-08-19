@@ -3,6 +3,87 @@
   "kind": "SERVICEBUS_VERIFICATION_MODEL",
   "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
   "description": "The one active truth about what this product carries and how each of it is verified. It replaces build/test-infrastructure/capability-matrix.json, which classified only the source projects, and build/test-infrastructure/not-executed-inventory.json, which was a second list of the same categories kept by hand. Every project of this repository belongs to exactly one capability here, every required run names the job, the category and the project it starts, and every case that does not execute is named with its reason.",
+  "selections": {
+    "all": {
+      "members": [
+        "local",
+        "fixture"
+      ],
+      "note": "the complete required acceptance scope available to this work package: the local categories and the ones that run against a pinned fixture. It is defined here, so a narrower selection can never produce or satisfy an 'all' receipt."
+    },
+    "local": {
+      "members": [
+        "analyzer",
+        "core",
+        "abstractions",
+        "signalr",
+        "quartz",
+        "benchmarks",
+        "diagnostics"
+      ],
+      "note": "everything that needs no container"
+    },
+    "fixture": {
+      "members": [
+        "rabbitmq",
+        "activemq",
+        "sql-transport",
+        "entity-framework-core"
+      ],
+      "note": "everything that runs against the pinned Compose fixture"
+    },
+    "analyzer": {
+      "members": [
+        "analyzer"
+      ]
+    },
+    "core": {
+      "members": [
+        "core",
+        "abstractions"
+      ]
+    },
+    "signalr": {
+      "members": [
+        "signalr"
+      ]
+    },
+    "quartz": {
+      "members": [
+        "quartz"
+      ]
+    },
+    "benchmarks": {
+      "members": [
+        "benchmarks"
+      ]
+    },
+    "diagnostics": {
+      "members": [
+        "diagnostics"
+      ]
+    },
+    "rabbitmq": {
+      "members": [
+        "rabbitmq"
+      ]
+    },
+    "activemq": {
+      "members": [
+        "activemq"
+      ]
+    },
+    "sql-transport": {
+      "members": [
+        "sql-transport"
+      ]
+    },
+    "entity-framework": {
+      "members": [
+        "entity-framework-core"
+      ]
+    }
+  },
   "verificationClasses": {
     "LOCAL_REQUIRED_RUN": "A behaviour suite that runs in the required profile on the build machine alone. It needs no container and no credential.",
     "PINNED_FIXTURE_REQUIRED_RUN": "A behaviour suite that runs in the required profile against a pinned container fixture from build/test-infrastructure/compose.yaml, started by tools/ci/run_broker_category.py.",
@@ -50,7 +131,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/ViciOne.ServiceBus.Analyzers.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 900
+          "budgetSeconds": 900,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -76,7 +161,11 @@
           "notExecuted": [],
           "testProjectDirectory": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 900
+          "budgetSeconds": 900,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -103,7 +192,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/ViciOne.ServiceBus.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 1200
+          "budgetSeconds": 1200,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         },
         {
           "job": "core-unit",
@@ -113,7 +206,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/ViciOne.ServiceBus.Abstractions.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 600
+          "budgetSeconds": 600,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -138,7 +235,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 300
+          "budgetSeconds": 300,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": "build/verification/expected/diagnostics.txt"
         }
       ]
     },
@@ -215,7 +316,14 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 2400
+          "budgetSeconds": 2400,
+          "brokers": [
+            "mssql",
+            "postgres"
+          ],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -254,7 +362,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 900
+          "budgetSeconds": 900,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -302,7 +414,11 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/ViciOne.ServiceBus.SignalR.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 900
+          "budgetSeconds": 900,
+          "brokers": [],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -378,7 +494,14 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 2400
+          "budgetSeconds": 2400,
+          "brokers": [
+            "activemq",
+            "artemis"
+          ],
+          "allowBrokerOutage": "activemq",
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     },
@@ -440,7 +563,13 @@
           ],
           "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
           "explicitAttributeCount": 1,
-          "budgetSeconds": 2400
+          "budgetSeconds": 2400,
+          "brokers": [
+            "rabbitmq"
+          ],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": "test-exclusive-*",
+          "expectedIdentities": null
         }
       ]
     },
@@ -466,7 +595,14 @@
           "notExecuted": [],
           "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
           "explicitAttributeCount": 0,
-          "budgetSeconds": 2400
+          "budgetSeconds": 2400,
+          "brokers": [
+            "mssql",
+            "postgres"
+          ],
+          "allowBrokerOutage": null,
+          "oneRefusalPerVhost": null,
+          "expectedIdentities": null
         }
       ]
     }

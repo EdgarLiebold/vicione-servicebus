@@ -26,6 +26,9 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import run_ownership  # noqa: E402  (repository local, resolved from this file's folder)
+
 TRX_NAMESPACE = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
 
 
@@ -33,16 +36,11 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_RUN_OUTPUT_DIR = REPOSITORY_ROOT / "artifacts" / "run-output"
 
-# Handed down by the caller that started the fixture. A category started directly mints its own, so
-# nothing this run writes can be a path another run deletes.
-RUN_ROOT_VARIABLE = "VICIONE_SERVICEBUS_RUN_ROOT"
-
-# The proof that goes with it. A directory name is not a claim: any process on this machine can set an
-# environment variable, and a run that adopted a root on that basis alone would write into - and clean
-# up - a directory belonging to somebody else. The caller writes the secret into the root before
-# starting this process, so a handed-down root can be checked rather than believed.
-RUN_TOKEN_VARIABLE = "VICIONE_SERVICEBUS_RUN_TOKEN"
-RUN_TOKEN_FILE = "run-root.token"
+# Ownership of the directory this run writes into lives in one place, because the broker runner and the
+# canonical entry point have to agree with this one about what a claim is.
+RUN_ROOT_VARIABLE = run_ownership.RUN_ROOT_VARIABLE
+RUN_TOKEN_VARIABLE = run_ownership.RUN_TOKEN_VARIABLE
+RUN_TOKEN_FILE = run_ownership.RUN_TOKEN_FILE
 
 # How long the whole owned process tree is given to end after it was asked to, before the ask becomes
 # a kill.
@@ -354,31 +352,15 @@ def parse_trx_time(value: str | None) -> datetime | None:
 
 
 def claim_run_root() -> Path:
-    """The root this run owns. It is one this process minted, or one handed to it with proof.
+    """The root this run owns, minted here or handed down with the token that proves it.
 
-    An ambient VICIONE_SERVICEBUS_RUN_ROOT is not a claim. Any process on the machine can set that
-    variable, and a run that adopted it on that basis would write into - and later clean up - a
-    directory belonging to somebody else. A handed-down root is accepted only when it carries the
-    token file whose content matches the token variable, which the caller wrote into the root before
-    starting this process. Anything else is refused rather than worked around.
+    The decision itself lives in run_ownership, because the broker runner and the canonical entry point
+    make the same one and two implementations of it would drift.
     """
-    handed = (os.environ.get(RUN_ROOT_VARIABLE) or "").strip()
-    if handed:
-        root = Path(handed)
-        token = (os.environ.get(RUN_TOKEN_VARIABLE) or "").strip()
-        proof = root / RUN_TOKEN_FILE
-        if not token or not proof.is_file() or proof.read_text(encoding="utf-8").strip() != token:
-            raise CategoryError(
-                f"{RUN_ROOT_VARIABLE} names '{handed}' without a valid ownership token, so this run "
-                "cannot show that the directory is its own. A run root is handed down with proof or it "
-                "is not handed down at all.")
-        return root
-
-    root = RAW_RUN_OUTPUT_DIR / f"vicione-{secrets.token_hex(6)}"
-    root.mkdir(parents=True, exist_ok=False)
-    (root / RUN_TOKEN_FILE).write_text(secrets.token_hex(16) + "\n", encoding="utf-8")
-
-    return root
+    try:
+        return run_ownership.claim_run_root(RAW_RUN_OUTPUT_DIR)
+    except run_ownership.OwnershipError as error:
+        raise CategoryError(str(error)) from error
 
 
 def terminate_tree(child: subprocess.Popen) -> bool:
