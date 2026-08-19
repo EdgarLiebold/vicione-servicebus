@@ -393,6 +393,72 @@ class Owning_what_a_run_writes(VerifyFixture):
                          "the child was handed a root it cannot prove belongs to this run")
 
 
+class Carrying_the_fixture_side_into_the_receipt(VerifyFixture):
+    """A cleanup failure of the fixture may not live only in a child's output.
+
+    The broker runner writes its findings and its log digests into the run root, and the entry point
+    reads that file. Recognising one by matching prose in stderr would be reading a sentence, and a
+    sentence is not a contract.
+    """
+
+    def child_with_fixture(self, findings: list[str], logs: dict[str, str] | None = None):
+        def child(command, environment, budget):
+            root = Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE])
+            (root / "core.trx").write_text(trx_document(THREE_CASES), encoding="utf-8")
+            (root / "fixture-findings.json").write_text(json.dumps({
+                "schemaVersion": 1, "kind": "SERVICEBUS_FIXTURE_FINDINGS",
+                "brokers": ["activemq"], "findings": findings, "logs": logs or {},
+            }), encoding="utf-8")
+
+            return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
+                    "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
+
+        return child
+
+    def verify_with(self, findings, logs=None) -> dict:
+        expected = self.expect([f"{FIXTURE}.Should_arrive", f"{FIXTURE}.Should_acknowledge",
+                                f"{FIXTURE}.Should_retry"])
+        model = self.write_model(expectedIdentities=expected, brokers=["activemq"])
+        with mock.patch.object(run_test_category, "run_child",
+                               side_effect=self.child_with_fixture(findings, logs)), \
+                contextlib.redirect_stdout(io.StringIO()):
+            return verify.verify_category(verify.declared_run(model, "core"),
+                                          self.root / "artifacts/verification/run")
+
+    def test_a_clean_fixture_leaves_the_category_green(self) -> None:
+        result = self.verify_with([], {"activemq": "a" * 64})
+
+        self.assertEqual("PASS", result["terminal"])
+        self.assertEqual({"activemq": "a" * 64}, result["brokerLogSha256"])
+
+    def test_a_cleanup_finding_makes_an_otherwise_exact_category_red(self) -> None:
+        result = self.verify_with(["broker-teardown: the fixture could not be removed"])
+
+        self.assertEqual("FAIL", result["terminal"],
+                         "the set was exact and the fixture was left standing, and the receipt said "
+                         "nothing about it")
+        self.assertIn("broker-teardown", " ".join(result["findings"]))
+        self.assertEqual(["broker-teardown: the fixture could not be removed"], result["fixtureFindings"])
+
+    def test_a_category_without_a_fixture_reports_none(self) -> None:
+        expected = self.expect([f"{FIXTURE}.Should_arrive", f"{FIXTURE}.Should_acknowledge",
+                                f"{FIXTURE}.Should_retry"])
+
+        result = self.run_verify(THREE_CASES, expected=expected)
+
+        self.assertEqual([], result["fixtureFindings"])
+        self.assertEqual("PASS", result["terminal"])
+
+    def test_the_passed_identities_are_named_rather_than_derived(self) -> None:
+        expected = self.expect([f"{FIXTURE}.Should_arrive", f"{FIXTURE}.Should_acknowledge"])
+        mixed = [(FIXTURE, "Should_arrive", "Passed"), (FIXTURE, "Should_acknowledge", "Failed")]
+
+        result = self.run_verify(mixed, expected=expected)
+
+        self.assertEqual([f"{FIXTURE}.Should_arrive"], result["passed"])
+        self.assertEqual([f"{FIXTURE}.Should_acknowledge"], result["failed"])
+
+
 class Building_the_child_command(VerifyFixture):
     """The categories, projects, brokers and filters live in the model, not in a workflow."""
 
@@ -435,8 +501,8 @@ class Reading_a_receipt(VerifyFixture):
             "categories": [{"category": "core", "expectedRecorded": True, "missing": [],
                             "unexpected": [], "duplicate": [], "failed": [],
                             "unapprovedNotExecuted": [], "resultsOmitted": [],
-                            "survivingOwnedProcesses": [], "timedOut": False, "childExitCode": 0,
-                            "terminal": "PASS"}],
+                            "survivingOwnedProcesses": [], "fixtureFindings": [], "timedOut": False,
+                            "childExitCode": 0, "terminal": "PASS"}],
             "terminal": "PASS",
         }
         base.update(changes)
@@ -483,6 +549,14 @@ class Reading_a_receipt(VerifyFixture):
 
     def test_refuses_a_receipt_of_another_schema_version(self) -> None:
         self.assertIn("schema version", " ".join(self.findings(self.receipt(schemaVersion=99))))
+
+    def test_refuses_a_receipt_whose_fixture_left_a_finding(self) -> None:
+        """An exact set and a fixture that was left standing is not a pass, and the reader says so
+        without having to read anybody's output."""
+        left = self.receipt()
+        left["categories"][0]["fixtureFindings"] = ["broker-teardown: the fixture could not be removed"]
+
+        self.assertIn("fixtureFindings", " ".join(self.findings(left)))
 
 
 if __name__ == "__main__":

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
 import json
 import os
 import re
@@ -189,6 +190,18 @@ OUTAGE_BUDGET_SECONDS = 120
 # target and publish it with an atomic rename on the same filesystem, so no reader can ever meet a
 # half written JSON document.
 CONTROL_SCHEMA_VERSION = 1
+
+
+# What the fixture side of a run leaves behind for its caller, beside the raw output it already writes.
+FIXTURE_FINDINGS_FILE = "fixture-findings.json"
+
+
+def digest_of(path: Path) -> str | None:
+    """The sha256 of a collected broker log, or None when there is none to hash."""
+    if not path.is_file():
+        return None
+
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def publish_json(target: Path, payload: dict[str, object]) -> None:
@@ -825,6 +838,18 @@ def main(argv: list[str] | None = None) -> int:
     findings = teardown(args, brokers, environment, state)
     for finding in findings:
         print(f"FAIL {finding}", file=sys.stderr)
+
+    # Written where the caller can read it rather than left in this process's output. A caller that had
+    # to recognise a cleanup failure by matching prose in stderr would be reading a sentence, and a
+    # sentence is not a contract: the canonical entry point puts these into its receipt.
+    publish_json(run_root / FIXTURE_FINDINGS_FILE, {
+        "schemaVersion": 1,
+        "kind": "SERVICEBUS_FIXTURE_FINDINGS",
+        "brokers": brokers,
+        "allowedBrokerOutage": args.allow_broker_outage,
+        "findings": findings,
+        "logs": {broker: digest_of(broker_log_path(broker, environment)) for broker in brokers},
+    })
 
     # The exception a reader has to see is the one that came first, and the cleanup findings are
     # already printed above it, so nothing is lost by letting it out here.

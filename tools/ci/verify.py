@@ -219,6 +219,7 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
 
     trx_path = run_root / f"{category}.trx"
     executed, failed, skipped = executed_identities(trx_path)
+    fixture = fixture_findings(run_root)
     approved = run_test_category.permitted_not_executed(run)
     expected = expected_identities(run)
 
@@ -247,6 +248,8 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
         findings.append(f"{len(unapproved)} unapproved not-executed identity/identities")
     if omitted:
         findings.append(f"{len(omitted)} defined case(s) the result file reports no result for")
+    for problem in fixture.get("findings", []):
+        findings.append(f"fixture: {problem}")
 
     return {
         "category": category,
@@ -261,6 +264,9 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
         "expectedRecorded": expected is not None,
         "expected": sorted(expected) if expected is not None else None,
         "executed": sorted(executed),
+        # Named rather than left to be derived. A reader of a receipt should not have to subtract one
+        # list from another to learn what passed.
+        "passed": sorted((Counter(executed) - Counter(failed)).elements()),
         "failed": sorted(failed),
         "skipped": sorted(skipped),
         "approvedNotExecuted": sorted(approved),
@@ -270,6 +276,8 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
         "duplicate": comparison["duplicate"],
         "resultsOmitted": omitted,
         "rawResultSha256": digest(trx_path),
+        "fixtureFindings": fixture.get("findings", []),
+        "brokerLogSha256": fixture.get("logs", {}),
         "findings": findings,
         "terminal": "PASS" if not findings else "FAIL",
     }
@@ -318,6 +326,21 @@ def record_expected(model: dict, result: dict) -> str:
     MODEL_FILE.write_text(json.dumps(model, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     return relative
+
+
+def fixture_findings(run_root: Path) -> dict:
+    """What the fixture side of this run reported, read from the file it wrote rather than its output.
+
+    A category without a fixture writes none, which is not a finding. Recognising a cleanup failure by
+    matching prose in a child's stderr would be reading a sentence, and a sentence is not a contract.
+    """
+    path = run_root / "fixture-findings.json"
+    if not path.is_file():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        return {"findings": [f"the fixture findings of this run are not readable: {error}"]}
 
 
 def digest(path: Path) -> str | None:
@@ -375,7 +398,7 @@ def receipt_findings(receipt: dict, selection: str, commit: str, tree: str, mode
             problems.append(f"category '{category}' has no recorded expected identity set, so the "
                             "receipt proves no completeness for it")
         for field in ("missing", "unexpected", "duplicate", "failed", "unapprovedNotExecuted",
-                      "resultsOmitted", "survivingOwnedProcesses"):
+                      "resultsOmitted", "survivingOwnedProcesses", "fixtureFindings"):
             if entry.get(field):
                 problems.append(f"category '{category}' reports {len(entry[field])} {field}")
         if entry.get("timedOut"):
