@@ -52,25 +52,31 @@ reports success. The changed lock files are then reviewed in the diff like any o
 
 Every runtime, test, benchmark and tool project targets **net10.0**.
 
-Three projects stay on `netstandard2.0`, for **two different reasons**, and they are named apart
-because calling all three compiler hosts was inaccurate about the third.
+Exactly **three** projects stay on `netstandard2.0`, for two different reasons, and the exception is
+granted **by path** in `Directory.Build.targets`. A project cannot grant itself one: a marker a
+project sets about itself is not a control, because any project can set it, and a copied or renamed
+project would then carry the exception with it.
 
-`ViciOne.ServiceBus.Analyzers` and `ViciOne.ServiceBus.Analyzers.CodeFixes` are Roslyn components:
-the compiler loads them and that compiler is not a `net10.0` process. Each declares the standard
-`IsRoslynComponent`.
+| Project | Why |
+|---|---|
+| `src/ViciOne.ServiceBus.Analyzers` | a Roslyn component: the compiler loads it, and that compiler is not a `net10.0` process |
+| `src/ViciOne.ServiceBus.Analyzers.CodeFixes` | the same |
+| `src/ViciOne.ServiceBus.Analyzers.Package` | compiles nothing and ships no build output; its framework is the **consumer surface** of the analyzer package, because a package with no `lib/` folder is matched by the framework group of its nuspec |
 
-`ViciOne.ServiceBus.Analyzers.Package` hosts nothing. It compiles no source
-(`EnableDefaultCompileItems` is off), ships no build output (`IncludeBuildOutput` is off) and is
-loaded by nobody; it exists so the two assemblies above ship as the one package they always were.
-Its framework is a **consumer surface**: an analyzer package carries no `lib/` folder, so the
-framework group of its nuspec is what NuGet reads to decide which projects may reference it.
-Measured on 2026-08-19 by packing it both ways: on `net10.0` the package contents are byte identical
-- both analyzer assemblies, the readme and the two `tools/*.ps1` scripts - and one line of the nuspec
-changes, the empty dependency group, from `.NETStandard2.0` to `net10.0`. That line narrows who may
-reference the package, which is a capability, so the target stays and the project declares
-`ViciOneAnalyzerPackageSurface`.
+The two Roslyn components declare the standard `IsRoslynComponent`, which states what they are, and
+they keep an explicit `LangVersion` and `WarningLevel`: `netstandard2.0` inherits neither from the
+SDK, so without them those two would build at a different language level than the rest of the
+repository. That is a compatibility-bound compiler requirement of those two projects, not a general
+escape. The package project sets neither, because it compiles no source at all.
 
-`Directory.Build.targets` refuses `netstandard2.0` from any project that declares neither.
+Why the package project is not simply `net10.0` is a measurement, not an opinion: packed both ways at
+one commit, the package contents are byte identical and one line of the nuspec changes, the empty
+dependency group, from `.NETStandard2.0` to `net10.0`. That line narrows which projects may reference
+the package, which is a capability. The comparison is in
+`evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097/`.
+
+`Directory.Build.targets` refuses `netstandard2.0` from a fourth project, refuses `IsRoslynComponent`
+from anything but those two, and refuses the retired self-marker outright.
 
 ## The central build contract
 
@@ -85,14 +91,17 @@ project actually ended up in. It raises errors, never warnings.
 | `VOSB0002` | a packable project without a licence expression or file |
 | `VOSB0003` | a packable project without the readme the notice promises |
 | `VOSB0004` | a target framework this product does not support |
-| `VOSB0005` | `netstandard2.0` from a project that is neither a Roslyn component nor the analyzer package project |
+| `VOSB0005` | `netstandard2.0` from a project that is not one of the three named by path |
+| `VOSB0007` | `IsRoslynComponent` from a project that is not one of the two Roslyn components |
+| `VOSB0008` | the retired self-marker, which a project used to grant itself the framework exception with |
 
 Both files are imported by every project, including a project built directly rather than through its
-solution. `-p:ImportDirectoryBuildTargets=false` leaves the contract for one command, which is what a
-tooling experiment sometimes needs. The difference is visibility: a property on the command line is
-seen by the whole run and by whoever reads the change; one inside a project is seen by nobody.
+solution. There is no documented way to leave the contract: an earlier version of this page suggested
+`-p:ImportDirectoryBuildTargets=false` for a tooling experiment, and that is a general bypass of every
+late gate which nobody authorised. The one command line property that is allowed is the narrow restore
+property of a package update, above.
 
-So six properties are reserved for the two root files, and
+Six properties are reserved for the two root files, and
 `check_no_project_leaves_the_central_contract` refuses every one of them in any project, in any
 project-local `.props` or `.targets`, and in any `Directory.Build.props` further down the tree:
 

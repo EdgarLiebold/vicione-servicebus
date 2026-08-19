@@ -48,21 +48,27 @@
            Condition=" '$(PackageReadmeFile)' == '' " />
   </Target>
 
-  <!-- 3. Nothing builds for a framework this product does not support.
+  <!-- 3. Nothing builds for a framework this product does not support, and the exceptions are named
+       here rather than claimed by the project that wants one.
 
-       net10.0 is the product target. netstandard2.0 has two narrow exceptions and they are not the
-       same thing, which is why they are no longer called by one name:
+       net10.0 is the product target. Three projects may use netstandard2.0, and which three is decided
+       by their repository relative path below: a marker a project sets about itself is not a control,
+       because any project can set it. The measurement behind the third one is in
+       evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097; docs/build.md states the rule. -->
+  <PropertyGroup>
+    <ViciOneProjectIdentity>$([MSBuild]::MakeRelative($(MSBuildThisFileDirectory), $(MSBuildProjectFullPath)))</ViciOneProjectIdentity>
+    <ViciOneProjectIdentity>$(ViciOneProjectIdentity.Replace('\','/'))</ViciOneProjectIdentity>
 
-       IsRoslynComponent is the standard property and it fits exactly two projects, the analyzer and
-       its code fixes. Those assemblies are loaded by the compiler rather than by the application, so
-       they cannot be net10.0.
+    <!-- Loaded by the compiler rather than by the application, so it cannot be a net10.0 assembly. -->
+    <ViciOneRoslynComponentProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj' ">true</ViciOneRoslynComponentProject>
+    <ViciOneRoslynComponentProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj' ">true</ViciOneRoslynComponentProject>
 
-       ViciOneAnalyzerPackageSurface is the third project, and it is not a compiler host: it compiles
-       nothing, ships no build output and loads into nothing. Its framework is a consumer surface. An
-       analyzer package carries no lib/ folder, so the framework group of its nuspec is what decides
-       which projects may reference it. Measured on 2026-08-19: on net10.0 the package contents are
-       byte identical and that one group changes from .NETStandard2.0 to net10.0, which narrows who
-       may reference it. That is a capability, so the target stays and the reason is stated. -->
+    <!-- Compiles nothing and ships no build output. Its framework is the consumer surface of the
+         analyzer package: with no lib/ folder, the framework group of the nuspec decides which
+         projects may reference it. -->
+    <ViciOneAnalyzerPackageProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj' ">true</ViciOneAnalyzerPackageProject>
+  </PropertyGroup>
+
   <Target Name="AssertTargetFrameworkIsSupported"
           BeforeTargets="BeforeBuild"
           Condition=" '$(TargetFramework)' != '' ">
@@ -70,8 +76,14 @@
            Text="$(MSBuildProjectName) targets $(TargetFramework). This product targets net10.0; netstandard2.0 is reserved for the two Roslyn components and the analyzer package project."
            Condition=" '$(TargetFramework)' != 'net10.0' AND '$(TargetFramework)' != 'netstandard2.0' " />
     <Error Code="VOSB0005"
-           Text="$(MSBuildProjectName) targets netstandard2.0 while being neither a Roslyn component nor the analyzer package project. Both exceptions are stated in docs/build.md: IsRoslynComponent for an assembly the compiler loads, ViciOneAnalyzerPackageSurface for the package whose framework group decides which consumers may reference it."
-           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(IsRoslynComponent)' != 'true' AND '$(ViciOneAnalyzerPackageSurface)' != 'true' " />
+           Text="$(ViciOneProjectIdentity) targets netstandard2.0. That exception belongs to three named projects and is granted by path in Directory.Build.targets, not by a property a project sets about itself."
+           Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(ViciOneRoslynComponentProject)' != 'true' AND '$(ViciOneAnalyzerPackageProject)' != 'true' " />
+    <Error Code="VOSB0007"
+           Text="$(ViciOneProjectIdentity) declares IsRoslynComponent and is not one of the two Roslyn components of this repository. A copy of an analyzer project is a new project and gets no exception by carrying the marker of an old one."
+           Condition=" '$(IsRoslynComponent)' == 'true' AND '$(ViciOneRoslynComponentProject)' != 'true' " />
+    <Error Code="VOSB0008"
+           Text="$(ViciOneProjectIdentity) declares ViciOneAnalyzerPackageSurface. That property is retired: a project cannot grant itself the framework exception, and the one project that has it is named by path in Directory.Build.targets."
+           Condition=" '$(ViciOneAnalyzerPackageSurface)' != '' " />
   </Target>
 
 </Project>

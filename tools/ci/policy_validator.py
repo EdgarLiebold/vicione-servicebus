@@ -79,6 +79,18 @@ CANONICAL_INVOCATION = ("python3", CANONICAL_ENTRY_POINT, "--selection")
 
 # Jobs of the required profile that verify nothing and are therefore not in the model's job map.
 NON_VERIFYING_JOBS = ("policy", "build", "pack")
+
+# The only projects that may leave the product's net10.0 target, by exact repository relative path.
+# Two are loaded by the compiler; the third compiles nothing and its framework is the consumer surface
+# of the analyzer package. Directory.Build.targets grants the exception by the same three paths.
+ROSLYN_COMPONENT_PROJECTS = (
+    "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+    "src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj",
+)
+ANALYZER_PACKAGE_PROJECT = "src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj"
+
+# Retired: a project cannot grant itself a framework exception, so nobody may carry this any more.
+RETIRED_SELF_MARKERS = ("vicioneanalyzerpackagesurface", "vicionecompilerhost")
 BROKER_CATEGORIES = ("rabbitmq", "activemq")
 KNOWN_CREDENTIALS = ("guest", "admin")
 
@@ -1304,6 +1316,55 @@ class Policy:
                           f"target '{name}' in {relative} raises no Error; a warning in a central "
                           "contract is a note nobody reads")
 
+    def check_framework_exceptions_belong_to_named_projects(self) -> None:
+        """The netstandard2.0 exception is granted by path, not claimed by the project that wants one.
+
+        A marker a project sets about itself is not a control: any project can set it, so a copied,
+        renamed or newly added project could hand itself the exception and the central rule would agree.
+        Three exact repository relative paths have it, the same three Directory.Build.targets names, and
+        this rule catches a fourth before a build rather than during one.
+        """
+        for path in sorted(self.build_files()):
+            relative = path.relative_to(self.root).as_posix()
+            if not relative.endswith(".csproj"):
+                continue
+            try:
+                root = ElementTree.fromstring(path.read_text(encoding="utf-8-sig", errors="replace"))
+            except ElementTree.ParseError:
+                continue
+
+            properties = dict(msbuild_properties(root))
+            framework = properties.get("targetframework", "")
+            allowed = relative in ROSLYN_COMPONENT_PROJECTS or relative == ANALYZER_PACKAGE_PROJECT
+
+            if framework == "netstandard2.0" and not allowed:
+                self.fail("framework-exception",
+                          f"{relative} targets netstandard2.0. That exception belongs to "
+                          f"{', '.join(ROSLYN_COMPONENT_PROJECTS)} and {ANALYZER_PACKAGE_PROJECT}, and it "
+                          "is granted by path rather than by a property a project sets about itself")
+
+            if properties.get("isroslyncomponent", "").lower() == "true" \
+                    and relative not in ROSLYN_COMPONENT_PROJECTS:
+                self.fail("framework-exception",
+                          f"{relative} declares IsRoslynComponent and is not one of the two Roslyn "
+                          "components of this repository. A copy of an analyzer project is a new project "
+                          "and gets no exception by carrying the marker of an old one")
+
+            for marker in RETIRED_SELF_MARKERS:
+                if marker in properties:
+                    self.fail("framework-exception",
+                              f"{relative} declares {marker}, which is retired. A project cannot grant "
+                              "itself the framework exception; the projects that have one are named by "
+                              "path in Directory.Build.targets")
+
+            if relative == ANALYZER_PACKAGE_PROJECT:
+                for meaningless in ("langversion", "warninglevel"):
+                    if meaningless in properties:
+                        self.fail("framework-exception",
+                                  f"{relative} sets {meaningless} and compiles no source at all "
+                                  "(EnableDefaultCompileItems is off), so it states something about a "
+                                  "compilation that never happens")
+
     def check_no_project_leaves_the_central_contract(self) -> None:
         """A project may not take itself out of the repository's build contract.
 
@@ -1524,7 +1585,8 @@ class Policy:
                      self.check_required_steps_are_the_canonical_invocation,
                      self.check_no_step_masks_its_own_outcome,
                      self.check_no_command_begins_with_an_option,
-                     self.check_no_project_leaves_the_central_contract):
+                     self.check_no_project_leaves_the_central_contract,
+                     self.check_framework_exceptions_belong_to_named_projects):
             rule()
 
         if self.failures:

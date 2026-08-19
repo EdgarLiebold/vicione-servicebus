@@ -1,18 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Not a compiler host and not a Roslyn component: this project compiles nothing, ships no
-         build output and loads into nothing. Its framework is the one thing a consumer sees, because
-         an analyzer package carries no lib/ folder and NuGet decides from the framework group of the
-         nuspec which projects may reference it at all. Measured on 2026-08-19: switching this project
-         to net10.0 leaves the package contents byte identical - both analyzer assemblies, the readme
-         and the two tool scripts - and changes exactly one line of the nuspec, the empty dependency
-         group, from .NETStandard2.0 to net10.0. That line is the package's consumer surface, so the
-         target stays and the exception is named for what it is rather than called a compiler host. -->
+    <!-- The framework of this project is the consumer surface of the package: an analyzer package
+         carries no lib/ folder, so the framework group of its nuspec decides which projects may
+         reference it. Directory.Build.targets grants that exception by path; see docs/build.md for
+         the rule and record-0097 for the pack comparison behind it.
+
+         No LangVersion and no WarningLevel: EnableDefaultCompileItems is off, this project compiles
+         no source at all, and a compiler setting on a project that compiles nothing says something
+         about a compilation that never happens. -->
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ViciOneAnalyzerPackageSurface>true</ViciOneAnalyzerPackageSurface>
-    <LangVersion>14.0</LangVersion>
-    <WarningLevel>10</WarningLevel>
 
     <!-- This project carries no logic. It exists so that the analyzer assembly and the code fix
          assembly, which must not live together, still ship as the one package they always were. -->

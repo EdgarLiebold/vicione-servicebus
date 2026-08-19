@@ -528,6 +528,96 @@ class PolicyTestCase(unittest.TestCase):
 
         self.assert_rejected("canonical-invocation")
 
+    # -- who may leave the product's target framework ---------------------------------------------
+    #
+    # The exception used to be a property a project set about itself, so any project could hand itself
+    # one: a copy of an analyzer project carried the marker with it and the central rule agreed. It is
+    # granted by exact repository relative path now, in Directory.Build.targets and here.
+
+    ROSLYN_PROJECT = "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj"
+    PACKAGE_PROJECT = "src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj"
+
+    def add_project(self, relative: str, body: str) -> None:
+        """A project of the fixture repository, in a solution, with a lock file, so only this case's
+        mutation is what a rule can find."""
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f'<Project Sdk="Microsoft.NET.Sdk">\n{body}</Project>\n', encoding="utf-8")
+        (path.parent / "packages.lock.json").write_text("{}\n", encoding="utf-8")
+        directory = relative.rsplit("/", 1)[0]
+        model = json.loads(self.inventory().read_text(encoding="utf-8"))
+        classified = {project for capability in model["capabilities"]
+                      for key in ("sourceProjects", "testProjects", "supportProjects", "toolProjects")
+                      for project in capability.get(key, [])}
+        if directory not in classified:
+            model["capabilities"][0].setdefault("supportProjects", []).append(directory)
+            self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+    def test_accepts_the_two_roslyn_components_on_netstandard(self) -> None:
+        self.add_project(self.ROSLYN_PROJECT,
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <IsRoslynComponent>true</IsRoslynComponent>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assertEqual([], self.failures())
+
+    def test_rejects_a_fourth_project_on_netstandard(self) -> None:
+        self.add_project("src/ViciOne.ServiceBus.Somewhere/ViciOne.ServiceBus.Somewhere.csproj",
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_copy_of_an_analyzer_project_that_carries_the_marker(self) -> None:
+        """A copy is a new project, and it gets no exception by carrying the marker of an old one."""
+        self.add_project("src/ViciOne.ServiceBus.Analyzers.Copy/ViciOne.ServiceBus.Analyzers.Copy.csproj",
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <IsRoslynComponent>true</IsRoslynComponent>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_renamed_analyzer_project(self) -> None:
+        """The path is the identity, so moving the project is losing the exception."""
+        self.add_project("src/Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <IsRoslynComponent>true</IsRoslynComponent>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_the_retired_self_marker(self) -> None:
+        self.add_project(self.PACKAGE_PROJECT,
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <ViciOneAnalyzerPackageSurface>true</ViciOneAnalyzerPackageSurface>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_the_older_self_marker_too(self) -> None:
+        self.add_project(self.PACKAGE_PROJECT,
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <ViciOneCompilerHost>true</ViciOneCompilerHost>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
+    def test_rejects_a_compiler_setting_on_the_project_that_compiles_nothing(self) -> None:
+        self.add_project(self.PACKAGE_PROJECT,
+                         "  <PropertyGroup>\n"
+                         "    <TargetFramework>netstandard2.0</TargetFramework>\n"
+                         "    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>\n"
+                         "    <LangVersion>14.0</LangVersion>\n"
+                         "  </PropertyGroup>\n")
+
+        self.assert_rejected("framework-exception")
+
     # -- the central build contract a project may not leave ---------------------------------------
     #
     # This rule searched exact XML text. Three executed counterexamples walked past it: RestoreLockedMode
