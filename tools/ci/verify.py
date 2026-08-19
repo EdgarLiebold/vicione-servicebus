@@ -39,6 +39,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_ownership  # noqa: E402  (repository local, resolved from this file's folder)
 import run_test_category  # noqa: E402
+import verification_model  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MODEL_FILE = REPO_ROOT / "build/verification/VERIFICATION_MODEL.json"
@@ -73,45 +74,20 @@ def load_model() -> tuple[dict, str]:
 
 
 def resolve_selection(model: dict, name: str) -> list[str]:
-    """The categories a selection names, transitively, in a stable order.
+    """The categories a selection names, transitively.
 
-    A member is either another selection or a category. Cycles and unknown members are refused rather
-    than silently resolving to a smaller scope, because a scope that quietly shrinks is exactly how a
-    narrow run comes to look like a complete one.
+    The resolution itself lives in verification_model, because the policy validator has to reach the
+    same answer this entry point does and two implementations of one rule are two rules.
     """
-    selections = model.get("selections") or {}
-    if name not in selections:
-        raise VerificationError(
-            f"'{name}' is not a selection of this repository. It knows: {', '.join(sorted(selections))}")
+    try:
+        resolved = verification_model.resolve_selection(model, name)
+    except verification_model.SelectionError as error:
+        raise VerificationError(str(error)) from error
 
-    categories = {run.get("category") for capability in model.get("capabilities", [])
-                  for run in capability.get("runs", [])}
-
-    resolved: list[str] = []
-
-    def walk(member: str, path: tuple[str, ...]) -> None:
-        # A member is a category when the model declares one by that name. A selection may carry the
-        # name of the single category it stands for - 'diagnostics' is both - and that is not a cycle.
-        if member in categories:
-            if member not in resolved:
-                resolved.append(member)
-            return
-        if member not in selections:
-            raise VerificationError(
-                f"selection '{path[-1]}' names '{member}', which is neither a selection nor a category "
-                "the model declares")
-        if member in path:
-            raise VerificationError(
-                f"selection '{name}' resolves in a circle: {' -> '.join(path + (member,))}")
-        for nested in selections[member].get("members", []):
-            walk(nested, path + (member,))
-
-    for member in selections[name].get("members", []):
-        walk(member, (name,))
     if not resolved:
         raise VerificationError(f"selection '{name}' resolves to no category at all")
 
-    return sorted(resolved)
+    return resolved
 
 
 def declared_run(model: dict, category: str) -> dict:

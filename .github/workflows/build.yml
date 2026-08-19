@@ -1,23 +1,21 @@
 #
-# The required ViciOne CI profile. Every job here must really run and must prove a positive test
-# count; a category that executes nothing is rejected by tools/ci/run_test_category.py rather than
-# passing silently. Upstream repository and branch guards are gone: they were structurally false in
-# this fork and made the whole publish chain disappear while the run still looked green.
+# The required ViciOne CI profile. Every required job is one call to the canonical verification entry
+# point, and nothing else: what a selection contains, which categories it runs, which brokers they
+# need, how long they may take and which cases they are expected to execute all live in
+# build/verification/VERIFICATION_MODEL.json. Orchestration written twice is orchestration that can
+# disagree with itself, and it did: a step once lost a line continuation and the required RabbitMQ job
+# could not run at all while every token a rule looked for was still present.
 #
 # Every retained capability that can run on the build machine runs here. What needs a real cloud
-# resource is named in build/verification/VERIFICATION_MODEL.json as an open proof and has no
-# job at all: a selectable target without an executing job ends green on an inventory print, which is
-# false green. The extended and nightly workflows that offered exactly that are gone.
+# resource is named in the model as an open proof and has no job at all: a selectable target without
+# an executing job ends green on an inventory print, which is false green.
 #
 # Linux only. REQ-CLEAN-002 makes the required profile Linux, and nothing in this product is built or
 # supported for Windows.
 name: Required CI
 
-# No path filter. The rule below it rejects a job level condition because an unsatisfiable one makes
-# a required category vanish while the run still reports success; a path allowlist on the trigger does
-# the same thing to every job at once, and for every change outside the list. The delivered list left
-# .editorconfig, signing.props, .gitattributes, .devcontainer/** and everything under tools/ outside
-# tools/ci/** without any required gate. A required profile runs on every push and pull request.
+# No path filter. A path allowlist on the trigger removes every required job at once, and for every
+# change outside the list. A required profile runs on every push and pull request.
 on:
   push:
     branches:
@@ -30,12 +28,8 @@ permissions:
 
 # Actions are pinned to the commit each tag pointed at, with the tag beside it so a reader can see
 # which release was chosen. A tag is a moving reference: whoever can move it can change what runs in
-# this repository, and the pinned SDK and the pinned images would then be the only bound inputs left.
-# Automated updates stay possible - each new SHA is reviewed like any other change.
-#
-# The runner image is named rather than left to ubuntu-latest, which moves to the next LTS whenever
-# GitHub decides. A build that changes because a label was repointed is not reproducible, and the SDK
-# this repository pins is the one thing that must not meet an unexpected base image.
+# this repository. The runner image is named rather than left to ubuntu-latest, which moves to the next
+# LTS whenever GitHub decides.
 
 env:
   # Exactly what global.json releases. A floating '10.0.x' can resolve to an SDK the
@@ -60,7 +54,6 @@ jobs:
         run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
       - name: Identity tool self-tests
         run: python3 -m unittest discover -s tools/identity -p 'test_*.py'
-
   build:
     name: "Required: Build"
     runs-on: ubuntu-24.04
@@ -74,7 +67,10 @@ jobs:
         run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
       - name: Build
         run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
-
+      - name: Restore the engineering solution
+        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
+      - name: Build the engineering solution
+        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
   analyzer:
     name: "Required: Analyzer"
     runs-on: ubuntu-24.04
@@ -84,77 +80,33 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Analyzer tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category analyzer \
-            --project tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj \
-            --evidence-dir artifacts/required/analyzer
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection analyzer
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-analyzer
           path: |
-            artifacts/required/analyzer
+            artifacts/verification
             artifacts/run-output
-
   core-unit:
     name: "Required: Core/Unit"
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Core tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category core \
-            --project tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj \
-            --evidence-dir artifacts/required/core
-      - name: Abstractions tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category abstractions \
-            --project tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj \
-            --evidence-dir artifacts/required/core
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection core
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-core-unit
           path: |
-            artifacts/required/core
+            artifacts/verification
             artifacts/run-output
-
-  rabbitmq:
-    name: "Required: RabbitMQ"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      # One run path for local and CI: the runner starts the pinned fixture, reads the ephemeral
-      # loopback ports back from Docker, generates the run-scoped account, hands both to the test
-      # process alone and tears the fixture down in a finally block.
-      - name: RabbitMQ tests
-        run: |
-          python3 tools/ci/run_broker_category.py \
-            --broker rabbitmq \
-            --category rabbitmq \
-            --project tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj \
-            --evidence-dir artifacts/required/rabbitmq \
-            --one-refusal-per-vhost 'test-exclusive-*'
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-rabbitmq
-          path: |
-            artifacts/required/rabbitmq
-            artifacts/run-output
-
   signalr:
     name: "Required: SignalR"
     runs-on: ubuntu-24.04
@@ -164,20 +116,15 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: SignalR tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category signalr \
-            --project tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj \
-            --evidence-dir artifacts/required/signalr
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection signalr
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-signalr
           path: |
-            artifacts/required/signalr
+            artifacts/verification
             artifacts/run-output
-
   quartz:
     name: "Required: Quartz"
     runs-on: ubuntu-24.04
@@ -187,123 +134,73 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Quartz tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category quartz \
-            --project tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj \
-            --evidence-dir artifacts/required/quartz
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection quartz
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-quartz
           path: |
-            artifacts/required/quartz
+            artifacts/verification
             artifacts/run-output
-
-  activemq:
-    name: "Required: ActiveMQ"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      # Two brokers: the ActiveMQ specs are parameterized over an Artemis flavor that addresses a
-      # second, separate broker. Both are pinned fixtures, so both belong to the required profile.
-      - name: ActiveMQ tests
-        run: |
-          python3 tools/ci/run_broker_category.py \
-            --broker activemq \
-            --broker artemis \
-            --allow-broker-outage activemq \
-            --category activemq \
-            --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj \
-            --evidence-dir artifacts/required/activemq
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-activemq
-          path: |
-            artifacts/required/activemq
-            artifacts/run-output
-
-  sql-transport:
-    name: "Required: SQL Transport"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    env:
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: SQL transport tests
-        run: |
-          python3 tools/ci/run_broker_category.py \
-            --broker mssql \
-            --broker postgres \
-            --category sql-transport \
-            --project tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj \
-            --evidence-dir artifacts/required/sql-transport
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-sql-transport
-          path: |
-            artifacts/required/sql-transport
-            artifacts/run-output
-
   benchmarks:
-    name: "Required: Benchmarks"
+    name: "Required: Engineering"
     runs-on: ubuntu-24.04
     timeout-minutes: 30
-    # The benchmark solution is the second one in this repository. A green main build hides a broken
-    # benchmark project entirely, so its compile belongs to the required profile. No benchmark is run
-    # and no performance bound is asserted here.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Restore
-        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
-      - name: Build
-        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
-      - name: Benchmark harness tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category benchmarks \
-            --project benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj \
-            --evidence-dir artifacts/required/benchmarks
-      # The correctness cases of the diagnostics tool. The measurements it can take stay on demand and
-      # gate nothing; these are its deterministic code and its command line, and the repository said
-      # they gated the tool while no required job ever started them.
-      - name: Diagnostics tool tests
-        run: |
-          python3 tools/ci/run_test_category.py \
-            --category diagnostics \
-            --project tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj \
-            --evidence-dir artifacts/required/diagnostics
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection engineering
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-benchmarks
           path: |
-            artifacts/required/benchmarks
-            artifacts/required/diagnostics
+            artifacts/verification
             artifacts/run-output
-
-  entity-framework:
-    name: "Required: EntityFrameworkCore"
+  rabbitmq:
+    name: "Required: RabbitMQ"
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    # No service containers here. The databases come from the same pinned compose definition a developer
-    # uses locally, started through the canonical runner, with a secret generated for this run. A
-    # service container with a moving image tag and a fixed account would make the runner a different
-    # fixture from the local one, and its account would not be run-scoped.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection rabbitmq
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: required-rabbitmq
+          path: |
+            artifacts/verification
+            artifacts/run-output
+  activemq:
+    name: "Required: ActiveMQ"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection activemq
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: required-activemq
+          path: |
+            artifacts/verification
+            artifacts/run-output
+  sql-transport:
+    name: "Required: SQL Transport"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     steps:
@@ -311,20 +208,34 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: EntityFrameworkCore tests
-        run: |
-          python3 tools/ci/run_broker_category.py \
-            --broker mssql \
-            --broker postgres \
-            --category entity-framework-core \
-            --project tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj \
-            --evidence-dir artifacts/required/entity-framework
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection sql-transport
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: required-sql-transport
+          path: |
+            artifacts/verification
+            artifacts/run-output
+  entity-framework:
+    name: "Required: EntityFrameworkCore"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Verify
+        run: python3 tools/ci/verify.py --selection entity-framework
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: required-entity-framework
           path: |
-            artifacts/required/entity-framework
+            artifacts/verification
             artifacts/run-output
   pack:
     name: "Required: Pack"

@@ -31,6 +31,47 @@ REQUIRED_RUN_CLASSES = frozenset({"LOCAL_REQUIRED_RUN", "PINNED_FIXTURE_REQUIRED
 
 PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjects")
 
+# Jobs of the required profile that verify nothing, so the model's job map does not name them.
+NON_VERIFYING_JOBS = ("policy", "build", "pack")
+
+
+class SelectionError(RuntimeError):
+    """A selection that cannot be resolved to a set of categories."""
+
+
+def resolve_selection(model: dict, name: str) -> list[str]:
+    """The categories a selection names, transitively.
+
+    A member is a category when the model declares one by that name, and a selection otherwise. A
+    selection may carry the name of the single category it stands for, which is not a circle. Unknown
+    members and real circles are refused rather than resolving to a smaller scope, because a scope that
+    quietly shrinks is how a narrow run comes to look like a complete one.
+    """
+    selections = model.get("selections") or {}
+    if name not in selections:
+        raise SelectionError(f"'{name}' is not a selection this model declares")
+
+    categories = {run.get("category") for run in runs(model)}
+    resolved: list[str] = []
+
+    def walk(member: str, path: tuple[str, ...]) -> None:
+        if member in categories:
+            if member not in resolved:
+                resolved.append(member)
+            return
+        if member not in selections:
+            raise SelectionError(
+                f"selection '{path[-1]}' names '{member}', which is neither a selection nor a category")
+        if member in path:
+            raise SelectionError(f"selection '{name}' resolves in a circle: {' -> '.join(path + (member,))}")
+        for nested in selections[member].get("members", []):
+            walk(nested, path + (member,))
+
+    for member in selections[name].get("members", []):
+        walk(member, (name,))
+
+    return sorted(resolved)
+
 
 class ModelError(RuntimeError):
     pass
@@ -359,7 +400,7 @@ def findings(root: Path) -> list[str]:
         problems.append(f"the required workflow cannot be read: {error}")
         return problems
 
-    explained: set[str] = {"policy", "build", "pack"}
+    explained: set[str] = set(NON_VERIFYING_JOBS)
 
     # A category is started by exactly one run. A job may hold several distinct categories - core-unit
     # runs core and abstractions - but two runs of one category are two truths about the same thing.
@@ -371,21 +412,35 @@ def findings(root: Path) -> list[str]:
     for entry in sorted({tuple(t) for t in tuples if tuples.count(t) > 1}):
         problems.append(f"the run {entry} is declared more than once")
 
-    for run in runs(model):
-        job = run.get("job")
+    # The workflow names a selection and nothing else, so what is compared here is the map from job to
+    # selection, not the text of a step. Checking a job body for '--category x' was a second copy of the
+    # model inside YAML, and two copies of one truth are two truths.
+    job_of_selection = model.get("jobs") or {}
+    reached: dict[str, list[str]] = {}
+    for job, selection in sorted(job_of_selection.items()):
         explained.add(job)
         if job not in jobs:
-            problems.append(f"category '{run.get('category')}' names job '{job}', which the workflow does not have")
+            problems.append(f"the model gives job '{job}' the selection '{selection}', and the workflow "
+                            "has no such job")
             continue
+        try:
+            for category in resolve_selection(model, selection):
+                reached.setdefault(category, []).append(job)
+        except SelectionError as error:
+            problems.append(str(error))
 
-        body = jobs[job]
-        if f"--category {run.get('category')}" not in body:
-            problems.append(f"job '{job}' does not start category '{run.get('category')}'")
-        if run.get("project") and run["project"] not in body:
-            problems.append(f"job '{job}' does not run '{run.get('project')}' for category '{run.get('category')}'")
+    for run in runs(model):
+        category = run.get("category")
+        jobs_reaching = reached.get(category, [])
+        if not jobs_reaching:
+            problems.append(f"category '{category}' is declared and no required job's selection reaches "
+                            "it, so nothing runs it")
+        elif len(jobs_reaching) > 1:
+            problems.append(f"category '{category}' is reached by {jobs_reaching}, so two required jobs "
+                            "run it and its result belongs to neither")
 
     for job in sorted(set(jobs) - explained):
-        problems.append(f"the workflow has job '{job}', which no capability in the model explains")
+        problems.append(f"the workflow has job '{job}', which the model's job map does not explain")
 
     return problems
 

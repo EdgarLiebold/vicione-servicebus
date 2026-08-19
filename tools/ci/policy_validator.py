@@ -38,6 +38,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_broker_category  # noqa: E402  (repository local, resolved from this file's folder)
+import verify  # noqa: E402
 import run_test_category  # noqa: E402
 import verification_model  # noqa: E402
 from xml.etree import ElementTree
@@ -67,6 +68,17 @@ FIXED_LOOPBACK_PORT = re.compile(r'"127\.0\.0\.1:\d+:\d+"')
 BARE_PORT = re.compile(r'"\d+:\d+"')
 WILDCARD_PORT = re.compile(r'"0\.0\.0\.0:')
 CANONICAL_RUNNER = "tools/ci/run_broker_category.py"
+
+# The one command a required job runs. Everything that decides what it verifies lives in the model.
+CANONICAL_ENTRY_POINT = "tools/ci/verify.py"
+
+# The exact shape of that call. A required step is compared against this rather than parsed, which is
+# why no shell program has to be understood: echo, a wrapper, chaining, a pipe, a redirection, a
+# command substitution and '|| true' all produce something that is not this vector.
+CANONICAL_INVOCATION = ("python3", CANONICAL_ENTRY_POINT, "--selection")
+
+# Jobs of the required profile that verify nothing and are therefore not in the model's job map.
+NON_VERIFYING_JOBS = ("policy", "build", "pack")
 BROKER_CATEGORIES = ("rabbitmq", "activemq")
 KNOWN_CREDENTIALS = ("guest", "admin")
 
@@ -229,13 +241,9 @@ def run_scripts(body: str) -> list[tuple[int, str]]:
     return scripts
 
 
-def effective_commands(script: str) -> list[list[str]]:
-    """The commands a shell really builds from one step, with continuations joined and quotes honoured.
 
-    This is the whole point of the rule below. A step is text until the shell has joined its
-    continuation lines, and a rule that looks for expected substrings agrees with a step whose
-    continuation is missing exactly as readily as with one that works.
-    """
+def joined_lines(script: str) -> list[str]:
+    """The logical lines of a step, with its continuations joined the way a shell joins them."""
     joined: list[str] = []
     pending = ""
     for line in script.splitlines():
@@ -251,8 +259,46 @@ def effective_commands(script: str) -> list[list[str]]:
     if pending:
         joined.append(pending)
 
+    return joined
+
+
+
+# What turns a failure into a success without changing anything else about a step.
+OUTCOME_MASKS = (("||", "true"), ("||", ":"), ("||", "exit"))
+
+
+def masked_outcomes(script: str) -> list[str]:
+    """Every place in this step where a failure is turned into a success.
+
+    Read with the operators kept, because the masking is the pair - the operator and what follows it -
+    rather than either half on its own. The build and pack jobs chain commands legitimately, so an
+    operator by itself says nothing.
+    """
+    found = []
+    for logical in joined_lines(script):
+        lexer = shlex.shlex(logical, posix=True, punctuation_chars=True)
+        lexer.whitespace_split = True
+        try:
+            tokens = list(lexer)
+        except ValueError:
+            continue
+        for index, token in enumerate(tokens[:-1]):
+            if (token, tokens[index + 1]) in OUTCOME_MASKS:
+                tail = " ".join(tokens[index:index + 3])
+                found.append(tail if tokens[index + 1] == "exit" else " ".join(tokens[index:index + 2]))
+
+    return found
+
+
+def effective_commands(script: str) -> list[list[str]]:
+    """The commands a shell really builds from one step, with continuations joined and quotes honoured.
+
+    This is the whole point of the rule below. A step is text until the shell has joined its
+    continuation lines, and a rule that looks for expected substrings agrees with a step whose
+    continuation is missing exactly as readily as with one that works.
+    """
     commands: list[list[str]] = []
-    for logical in joined:
+    for logical in joined_lines(script):
         if not logical.strip() or logical.lstrip().startswith("#"):
             continue
 
@@ -405,25 +451,48 @@ class Policy:
                 self.fail("credentials", f"{variable} may fall back silently; it must use the ':?' required form")
 
     def check_canonical_runner(self) -> None:
-        """A broker category must go through the one run path that resolves the ephemeral ports."""
-        workflow = self.read(".github/workflows/build.yml")
-        if workflow is None:
+        """A category with a fixture is started by the runner that owns that fixture.
+
+        This routing used to be written into the workflow, where it was a second copy of what the model
+        already said and could disagree with it. It is now a decision of the canonical entry point, so
+        it is checked where it is made: for every category the model declares brokers for, the command
+        the entry point builds has to be the broker runner, and it has to name every one of those
+        brokers. A category that started its own Compose fixture would have to guess the ephemeral
+        ports, which is how fourteen green tests once measured a foreign broker.
+        """
+        try:
+            model = verification_model.load(self.root)
+        except verification_model.ModelError as error:
+            self.fail("canonical-runner", str(error))
             return
-        body = strip_comments(workflow)
-        for category in BROKER_CATEGORIES:
-            marker = f"\n  {category}:"
-            if marker not in body:
+
+        body = self.read(".github/workflows/build.yml")
+        if body is not None:
+            for pattern in (r"docker\s+compose", r"docker\s+run", r"docker\s+build"):
+                if re.search(pattern, strip_comments(body)):
+                    self.fail("canonical-runner",
+                              f"the required profile runs docker itself ('{pattern}'). The fixture "
+                              "belongs to the runner that resolves its ephemeral ports; a job that "
+                              "starts one has to guess them")
+
+        for run in sorted(verification_model.runs(model), key=lambda entry: str(entry.get("category"))):
+            brokers = run.get("brokers") or []
+            command = verify.child_command(run, Path("run"), Path("evidence"))
+            names = [command[index + 1] for index, token in enumerate(command) if token == "--broker"]
+            if not brokers:
+                if CANONICAL_RUNNER in " ".join(command):
+                    self.fail("canonical-runner",
+                              f"category '{run.get('category')}' declares no broker and is still routed "
+                              "through the broker runner")
                 continue
-            # Cut at the next job, which is a two-space indented key at column three, not at the
-            # next indented line of any kind.
-            section = self.job_section(body, category)
-            if CANONICAL_RUNNER not in section:
+            if CANONICAL_RUNNER not in " ".join(command):
                 self.fail("canonical-runner",
-                          f"broker category '{category}' does not go through {CANONICAL_RUNNER}; "
-                          "the fixture endpoints would have to be guessed")
-            if "docker compose" in section and CANONICAL_RUNNER not in section:
+                          f"category '{run.get('category')}' needs {', '.join(brokers)} and does not go "
+                          f"through {CANONICAL_RUNNER}; the fixture endpoints would have to be guessed")
+            if names != brokers:
                 self.fail("canonical-runner",
-                          f"broker category '{category}' starts the fixture on its own instead of using the runner")
+                          f"category '{run.get('category')}' declares the brokers {brokers} and would be "
+                          f"started with {names}")
 
     def check_no_effective_known_credentials(self) -> None:
         """A well known account must never be usable against the fixture."""
@@ -618,8 +687,10 @@ class Policy:
         for guard in ("refs/heads/master", "refs/heads/develop", "ViciOne.ServiceBus/ViciOne.ServiceBus"):
             if guard in body:
                 self.fail("required-profile", f"an upstream repository or branch guard returned: {guard}")
-        if "run_test_category.py" not in body:
-            self.fail("required-profile", "required categories do not go through the test count gate")
+        if CANONICAL_ENTRY_POINT not in body:
+            self.fail("required-profile",
+                      f"no required job calls {CANONICAL_ENTRY_POINT}, so nothing in this profile "
+                      "verifies anything")
 
         # A job level condition was rejected while the trigger above it was never read. A path or
         # branch filter on the workflow itself removes every required job at once and for every change
@@ -633,52 +704,109 @@ class Policy:
                           f"the required profile filters its own trigger with '{keyword}'; a change outside that "
                           "list would run no required job at all")
 
-    def check_workflow_steps_are_the_commands_they_look_like(self) -> None:
-        """A required step is judged by the command the shell builds from it, not by its text.
+    def check_required_steps_are_the_canonical_invocation(self) -> None:
+        """A required job runs one exact command, and it is compared rather than parsed.
 
-        The RabbitMQ step lost the backslash after its --evidence-dir line. Every token the other
-        rules look for was still there, so the whole Python suite stayed green - while the shell built
-        two commands out of it: the runner without --one-refusal-per-vhost, and a second command whose
-        program name was '--one-refusal-per-vhost'. The required RabbitMQ job could not run at all.
+        Directive 0096 replaced the parser design: there is no general reader for arbitrary shell
+        programs here, because there is nothing arbitrary left to read. A verifying job's step is
+        exactly 'python3 tools/ci/verify.py --selection <name>' and the selection has to be the one the
+        model gives that job. Everything a step could otherwise do - echo instead of the runner, a
+        wrapper, a second command, a pipe, a redirection, a command substitution, '|| true' - produces
+        a token vector that is not this one, so all of it is refused by the same comparison.
 
-        Two things are held here. A command may not begin with an option, which is what a missing
-        continuation always produces, and every reconstructed call of a repository runner is parsed
-        against that runner's own command line, so a vector it would refuse is refused here first.
+        The reader is still needed to say what "the command" is at all: a step is text until its line
+        continuations are joined, which is how the RabbitMQ job once lost its --one-refusal-per-vhost
+        and could not run while every expected token was still present.
+        """
+        body = self.read(".github/workflows/build.yml")
+        if body is None:
+            return
+        try:
+            model = verification_model.load(self.root)
+        except verification_model.ModelError as error:
+            self.fail("canonical-invocation", str(error))
+            return
+
+        job_of_selection = model.get("jobs") or {}
+        try:
+            jobs = verification_model.workflow_jobs(self.root)
+        except verification_model.WorkflowShapeError as error:
+            self.fail("canonical-invocation", f"the required workflow cannot be read: {error}")
+            return
+
+        for job, selection in sorted(job_of_selection.items()):
+            section = jobs.get(job)
+            if section is None:
+                continue
+            try:
+                commands = [command for _, script in run_scripts(section)
+                            for command in effective_commands(script)]
+            except WorkflowScriptError as error:
+                self.fail("canonical-invocation", f"job '{job}': {error}")
+                continue
+
+            if len(commands) != 1:
+                self.fail("canonical-invocation",
+                          f"job '{job}' runs {len(commands)} command(s); a verifying job runs exactly "
+                          f"one: {' '.join(CANONICAL_INVOCATION)} {selection}")
+                continue
+
+            expected = [*CANONICAL_INVOCATION, selection]
+            if commands[0] != expected:
+                self.fail("canonical-invocation",
+                          f"job '{job}' runs '{shlex.join(commands[0])}' and the model gives it the "
+                          f"selection '{selection}', so its step has to be '{shlex.join(expected)}'")
+
+    def check_no_step_masks_its_own_outcome(self) -> None:
+        """No step of the required profile may turn a failure into a success.
+
+        '|| true' after a required command is the shortest way to make a red gate green, and it leaves
+        every other rule satisfied. The build and pack jobs legitimately chain commands, so this is
+        checked for the masking itself rather than for the presence of an operator.
         """
         for relative in sorted(self.workflow_files()):
             body = self.read(relative)
             if body is None:
                 continue
+            try:
+                scripts = run_scripts(body)
+            except WorkflowScriptError as error:
+                self.fail("outcome-masking", f"{relative}: {error}")
+                continue
+            for line, script in scripts:
+                for masking in masked_outcomes(script):
+                    self.fail("outcome-masking",
+                              f"{relative} line {line}: '{masking}' turns whatever ran before it into a "
+                              "success, so the step reports green whatever happened")
 
+    def check_no_command_begins_with_an_option(self) -> None:
+        """A command that begins with an option is a line continuation that went missing.
+
+        This is what made the required RabbitMQ job unexecutable: the backslash after its
+        --evidence-dir line was gone, so the shell built two commands and the second one's program
+        name was '--one-refusal-per-vhost'. Every token the other rules looked for was still there.
+        """
+        for relative in sorted(self.workflow_files()):
+            body = self.read(relative)
+            if body is None:
+                continue
             try:
                 scripts = run_scripts(body)
             except WorkflowScriptError as error:
                 self.fail("workflow-command", f"{relative}: {error}")
                 continue
-
             for line, script in scripts:
                 try:
                     commands = effective_commands(script)
                 except WorkflowScriptError as error:
                     self.fail("workflow-command", f"{relative} line {line}: {error}")
                     continue
-
                 for command in commands:
                     if command[0].startswith("-"):
                         self.fail("workflow-command",
                                   f"{relative} line {line}: the shell builds '{shlex.join(command)}' as a "
                                   "command of its own, so the line before it is missing its continuation "
                                   "and the option never reaches the program it was written for")
-                        continue
-
-                    named = [token for token in command if token in RUNNER_MODULES]
-                    for script_path in named:
-                        vector = command[command.index(script_path) + 1:]
-                        problem = refusal(RUNNER_MODULES[script_path], vector)
-                        if problem:
-                            self.fail("workflow-command",
-                                      f"{relative} line {line}: {script_path} would be called as "
-                                      f"'{shlex.join(vector)}', which it does not accept: {problem}")
 
     def check_pack(self) -> None:
         workflow = self.read(".github/workflows/build.yml")
@@ -1393,7 +1521,9 @@ class Policy:
                      self.check_every_project_belongs_to_a_solution,
                      self.check_central_build_targets_are_effective,
                      self.check_workflow_inputs_are_pinned,
-                     self.check_workflow_steps_are_the_commands_they_look_like,
+                     self.check_required_steps_are_the_canonical_invocation,
+                     self.check_no_step_masks_its_own_outcome,
+                     self.check_no_command_begins_with_an_option,
                      self.check_no_project_leaves_the_central_contract):
             rule()
 

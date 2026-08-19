@@ -138,6 +138,11 @@ def fixture_model() -> dict:
                 "project": project,
                 "testProjectDirectory": RABBITMQ_TEST_PROJECT,
                 "minimumExecutedCases": 1,
+                "budgetSeconds": 60,
+                "brokers": [BROKER_OF[category]] if category in BROKER_OF else [],
+                "allowBrokerOutage": None,
+                "oneRefusalPerVhost": None,
+                "expectedIdentities": None,
                 "explicitAttributeCount": 1,
                 "notExecuted": [
                     {
@@ -165,6 +170,8 @@ def fixture_model() -> dict:
     return {
         "schemaVersion": 1,
         "kind": "SERVICEBUS_VERIFICATION_MODEL",
+        "selections": {category: {"members": [category]} for _, category, _ in FIXTURE_RUNS},
+        "jobs": dict(JOB_SELECTION),
         "verificationClasses": {
             "LOCAL_REQUIRED_RUN": "runs locally in the required profile",
             "PINNED_FIXTURE_REQUIRED_RUN": "runs against a pinned fixture in the required profile",
@@ -174,18 +181,18 @@ def fixture_model() -> dict:
     }
 
 
-def runner_step(category: str, project: str) -> str:
-    """The one canonical invocation of a category, as one line.
+# Which required job of the fixture verifies which selection. One line per job, and nothing about
+# categories, projects or brokers: that is the model's business now.
+JOB_SELECTION = {job: category for job, category, _ in FIXTURE_RUNS}
+
+
+def runner_step(selection: str) -> str:
+    """The one canonical invocation, as one line.
 
     Written once here because the workflow of the fixture and the cases that mutate it have to say the
     same thing; two spellings of it would let a case mutate a step the workflow never carried.
     """
-    if category in BROKER_OF:
-        return (f"python3 tools/ci/run_broker_category.py --broker {BROKER_OF[category]} "
-                f"--category {category} --project {project} --evidence-dir artifacts/required/{category}")
-
-    return (f"python3 tools/ci/run_test_category.py --category {category} --project {project} "
-            f"--evidence-dir artifacts/required/{category}")
+    return f"python3 tools/ci/verify.py --selection {selection}"
 
 
 JOB = """\
@@ -215,7 +222,7 @@ jobs:
 """
     + JOB % ("policy", "python3 -m unittest discover -s tools/ci -p 'test_*.py'")
     + JOB % ("build", "dotnet build ViciOne.ServiceBus.slnx -c Release")
-    + "".join(JOB % (job, runner_step(category, project)) for job, category, project in FIXTURE_RUNS)
+    + "".join(JOB % (job, runner_step(category)) for job, category, _ in FIXTURE_RUNS)
     + """\
   pack:
     runs-on: ubuntu-24.04
@@ -429,166 +436,97 @@ class PolicyTestCase(unittest.TestCase):
     def test_accepts_a_conforming_repository(self) -> None:
         self.assertEqual([], self.failures())
 
-    # -- the command a step really becomes ------------------------------------------------------
+    # -- the one command a required job runs ------------------------------------------------------
     #
-    # The RabbitMQ step lost the backslash after its --evidence-dir line, so the shell built two
-    # commands out of it and the required job could not run at all. Every token the other rules look
-    # for was still present, which is why the whole Python suite stayed green. What these cases hold is
-    # the command the shell builds, and the argument vector the runner would really receive.
+    # Directive 0096 replaced the parser design: a verifying job's step is compared against one allowed
+    # shape rather than read as a shell program. Both counterexamples the Lead executed are here - echo
+    # instead of the runner, and '|| true' after it - together with the shapes that would have walked
+    # past a token check.
 
-    def rewrite_the_rabbitmq_step(self, script: str) -> None:
-        """Replaces the one line step of the fixture with a block, and proves the anchor was there."""
-        one_line = "      - run: " + runner_step("rabbitmq", RABBITMQ_PROJECT_FILE) + "\n"
+    def rewrite_step(self, job: str, script: str) -> None:
+        """Replaces the canonical step of one job, and proves the anchor was there."""
+        one_line = "      - run: " + runner_step(JOB_SELECTION[job]) + "\n"
         body = self.workflow().read_text(encoding="utf-8")
-        self.assertIn(one_line, body, "the fixture no longer carries the step these cases mutate")
+        self.assertIn(one_line, body, f"the fixture no longer carries the step of job '{job}'")
         self.workflow().write_text(body.replace(one_line, script), encoding="utf-8")
 
-    def mutated_step(self, old: str, new: str) -> str:
-        """One change to the canonical step, with proof that it really changed something.
+    def test_accepts_the_canonical_invocation(self) -> None:
+        self.assertEqual([], self.failures())
 
-        A mutation whose anchor has drifted replaces nothing, and the case then asserts that a
-        conforming repository is rejected - which it is not, so the case fails for the wrong reason or,
-        worse, passes because a different rule fired.
-        """
-        self.assertIn(old, CONTINUED_RABBITMQ_STEP, "the canonical step no longer carries this line")
+    def test_rejects_echo_instead_of_the_runner(self) -> None:
+        self.rewrite_step("signalr", "      - run: echo tools/ci/verify.py --selection signalr\n")
 
-        return CONTINUED_RABBITMQ_STEP.replace(old, new)
+        self.assert_rejected("canonical-invocation")
 
-    def test_accepts_a_block_whose_continuations_are_complete(self) -> None:
-        self.rewrite_the_rabbitmq_step(CONTINUED_RABBITMQ_STEP)
+    def test_rejects_a_masked_outcome_after_the_runner(self) -> None:
+        self.rewrite_step("signalr",
+                          "      - run: python3 tools/ci/verify.py --selection signalr || true\n")
+
+        self.assert_rejected("outcome-masking")
+
+    def test_rejects_a_masked_outcome_anywhere_in_the_profile(self) -> None:
+        """The build job chains commands legitimately, so the masking itself is what is refused."""
+        body = self.workflow().read_text(encoding="utf-8")
+        self.workflow().write_text(
+            body.replace("      - run: dotnet build ViciOne.ServiceBus.slnx -c Release\n",
+                         "      - run: dotnet build ViciOne.ServiceBus.slnx -c Release || true\n"),
+            encoding="utf-8")
+
+        self.assert_rejected("outcome-masking")
+
+    def test_rejects_a_wrapper_around_the_runner(self) -> None:
+        self.rewrite_step("quartz",
+                          "      - run: sh -c 'python3 tools/ci/verify.py --selection quartz'\n")
+
+        self.assert_rejected("canonical-invocation")
+
+    def test_rejects_a_redirection_that_hides_what_it_said(self) -> None:
+        self.rewrite_step("quartz",
+                          "      - run: python3 tools/ci/verify.py --selection quartz > /dev/null\n")
+
+        self.assert_rejected("canonical-invocation")
+
+    def test_rejects_a_second_command_in_the_same_step(self) -> None:
+        self.rewrite_step("quartz",
+                          "      - run: python3 tools/ci/verify.py --selection quartz; echo done\n")
+
+        self.assert_rejected("canonical-invocation")
+
+    def test_rejects_a_selection_the_model_does_not_give_that_job(self) -> None:
+        """A job that verifies a narrower scope than the model says it does."""
+        self.rewrite_step("core-unit", "      - run: python3 tools/ci/verify.py --selection signalr\n")
+
+        self.assert_rejected("canonical-invocation")
+
+    def test_accepts_the_canonical_call_written_across_two_lines(self) -> None:
+        self.rewrite_step("rabbitmq",
+                          "      - run: |\n"
+                          "          python3 tools/ci/verify.py \\\n"
+                          "            --selection rabbitmq\n")
 
         self.assertEqual([], self.failures())
 
-    def test_rejects_a_block_whose_continuation_is_missing(self) -> None:
-        """The executed defect, permanently. Without the backslash the option becomes a command."""
-        self.rewrite_the_rabbitmq_step(self.mutated_step(
-            "            --evidence-dir artifacts/required/rabbitmq \\\n",
-            "            --evidence-dir artifacts/required/rabbitmq\n"))
-
-        self.assert_rejected("workflow-command")
-
-    def test_rejects_a_continuation_that_is_missing_in_the_middle_of_the_call(self) -> None:
-        """The same defect one line earlier, where the split leaves the runner without its project."""
-        self.rewrite_the_rabbitmq_step(self.mutated_step(
-            "            --category rabbitmq \\\n", "            --category rabbitmq\n"))
-
-        self.assert_rejected("workflow-command")
-
-    def test_rejects_a_call_the_runner_would_refuse(self) -> None:
-        """Reconstruction, not presence: the vector is parsed by the runner that would receive it."""
-        self.rewrite_the_rabbitmq_step(self.mutated_step(
-            f"            --project {RABBITMQ_PROJECT_FILE} \\\n", ""))
-
-        self.assert_rejected("workflow-command")
-
-    def test_rejects_a_call_that_mixes_the_two_runner_modes(self) -> None:
-        """Its own parser accepts this vector; the runner's closing rule is what refuses it."""
-        self.rewrite_the_rabbitmq_step(self.mutated_step(
-            "            --one-refusal-per-vhost 'test-exclusive-*'\n", "            --command -- true\n"))
-
-        self.assert_rejected("workflow-command")
-
-    def test_rejects_an_outage_for_a_broker_the_step_does_not_start(self) -> None:
-        self.rewrite_the_rabbitmq_step(self.mutated_step(
-            "            --broker rabbitmq \\\n",
-            "            --broker rabbitmq \\\n            --allow-broker-outage activemq \\\n"))
+    def test_rejects_a_continuation_that_went_missing(self) -> None:
+        """The defect that made the required RabbitMQ job unexecutable, in its new shape."""
+        self.rewrite_step("rabbitmq",
+                          "      - run: |\n"
+                          "          python3 tools/ci/verify.py\n"
+                          "            --selection rabbitmq\n")
 
         self.assert_rejected("workflow-command")
 
     def test_rejects_a_step_with_an_unbalanced_quote(self) -> None:
-        self.rewrite_the_rabbitmq_step(self.mutated_step("'test-exclusive-*'", "'test-exclusive-*"))
+        self.rewrite_step("quartz", "      - run: python3 tools/ci/verify.py --selection 'quartz\n")
 
-        self.assert_rejected("workflow-command")
+        self.assert_rejected("canonical-invocation")
 
     def test_rejects_a_folded_script_the_reader_cannot_reconstruct(self) -> None:
         """A folded scalar joins its lines by rules this reader does not implement, so it is refused
         rather than read as something it may not be."""
-        self.rewrite_the_rabbitmq_step(self.mutated_step("      - run: |\n", "      - run: >\n"))
+        self.rewrite_step("quartz",
+                          "      - run: >\n          python3 tools/ci/verify.py --selection quartz\n")
 
-        self.assert_rejected("workflow-command")
-
-    # -- what an indirect anchor has to be ------------------------------------------------------
-    #
-    # A capability without a test project of its own may say it is verified through the run of another.
-    # That link was prose plus a name searched for in raw source text, so a source file containing
-    # nothing but words satisfied it, and the anchor in use was a whole namespace holding many
-    # unrelated tests. Each mutation below is one shape that used to pass.
-
-    def anchor(self, value) -> None:
-        model = fixture_model()
-        for capability in model["capabilities"]:
-            if capability.get("verifiedThroughCapability"):
-                capability["testAnchors"] = value
-        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
-
-    def test_accepts_an_anchor_on_a_fixture_the_category_runs(self) -> None:
-        self.anchor([{"category": "rabbitmq", "fixture": ANCHOR_FIXTURE}])
-
-        self.assertEqual([], self.failures())
-
-    def test_rejects_an_anchor_on_a_namespace(self) -> None:
-        self.anchor([{"category": "rabbitmq", "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests"}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_on_a_class_that_carries_no_test(self) -> None:
-        self.rabbitmq_spec("Helpers.cs").write_text(
-            "namespace ViciOne.ServiceBus.RabbitMqTransport.Tests\n{\n"
-            "    public class WordsOnly\n    {\n    }\n}\n", encoding="utf-8")
-        self.anchor([{"category": "rabbitmq",
-                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.WordsOnly"}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_that_appears_only_in_a_comment(self) -> None:
-        self.rabbitmq_spec("Delivery_Specs.cs").write_text(
-            REQUIRED_SPEC + "\n// [TestFixture] public class Ghost_Specs { [Test] public void Should_haunt() { } }\n",
-            encoding="utf-8")
-        self.anchor([{"category": "rabbitmq",
-                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Ghost_Specs"}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_on_a_fixture_that_does_not_exist(self) -> None:
-        self.anchor([{"category": "rabbitmq",
-                      "fixture": "ViciOne.ServiceBus.RabbitMqTransport.Tests.Was_removed_last_week"}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_on_a_fixture_of_another_project(self) -> None:
-        """The name exists in the repository, just not in the project of the run that is supposed to
-        prove it."""
-        self.anchor([{"category": "rabbitmq", "fixture": "Some.Other.Project.Tests.Delivering_a_message"}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_in_a_category_the_terminal_capability_does_not_run(self) -> None:
-        self.anchor([{"category": "quartz", "fixture": ANCHOR_FIXTURE}])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_an_anchor_that_does_not_say_which_run_executes_it(self) -> None:
-        """The bare name was the old form. It leaves open which of the terminal capability's runs is
-        meant, and a run cannot bind what it does not know is its own."""
-        self.anchor([ANCHOR_FIXTURE])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_a_capability_that_leans_on_a_run_and_names_no_anchor(self) -> None:
-        self.anchor([])
-
-        self.assert_rejected("verification-model")
-
-    def test_rejects_a_run_without_an_executed_floor(self) -> None:
-        """This rule read a top level 'categories' object the model has not had since it replaced the
-        two files before it, so its loop ran over nothing and it passed for every repository."""
-        model = fixture_model()
-        for capability in model["capabilities"]:
-            for run in capability.get("runs", []):
-                run.pop("minimumExecutedCases", None)
-        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
-
-        self.assert_rejected("executed-floor")
+        self.assert_rejected("canonical-invocation")
 
     # -- the central build contract a project may not leave ---------------------------------------
     #
@@ -780,11 +718,14 @@ class PolicyTestCase(unittest.TestCase):
 
     # -- canonical runner and masking, required by lead directives 0007 and 0009 -----------------
 
-    def test_rejects_bypassing_the_canonical_broker_runner(self) -> None:
+    def test_rejects_a_job_that_starts_the_fixture_itself(self) -> None:
+        """The fixture belongs to the runner that resolves its ephemeral ports. A job that starts one
+        has to guess them, which is how fourteen green tests once measured a foreign broker."""
+        step = "      - run: " + runner_step("rabbitmq") + "\n"
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("python3 tools/ci/run_broker_category.py --broker rabbitmq --category rabbitmq",
-                                   "docker compose up -d rabbitmq && python3 tools/ci/run_test_category.py --category rabbitmq"),
+            BUILD_WORKFLOW.replace(step, "      - run: docker compose up -d rabbitmq\n" + step),
             encoding="utf-8")
+
         self.assert_rejected("canonical-runner")
 
     # -- hardcoded broker endpoints in specs ---------------------------------------------------
@@ -851,7 +792,7 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_filtering_a_category_out_of_the_required_path(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("--category rabbitmq", '--category rabbitmq -- --filter "Category!=Flaky"'),
+            BUILD_WORKFLOW.replace("--selection rabbitmq", '--selection rabbitmq -- --filter "Category!=Flaky"'),
             encoding="utf-8")
         self.assert_rejected("test-masking")
 
@@ -860,21 +801,21 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_a_single_quoted_category_filter(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("--category rabbitmq", "--category rabbitmq -- --filter 'Category!=Flaky'"),
+            BUILD_WORKFLOW.replace("--selection rabbitmq", "--selection rabbitmq -- --filter 'Category!=Flaky'"),
             encoding="utf-8")
         self.assert_rejected("test-masking")
 
     def test_rejects_a_fully_qualified_name_filter(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("--category rabbitmq",
-                                   '--category rabbitmq -- --filter "FullyQualifiedName!~KillSwitch"'),
+            BUILD_WORKFLOW.replace("--selection rabbitmq",
+                                   '--selection rabbitmq -- --filter "FullyQualifiedName!~KillSwitch"'),
             encoding="utf-8")
         self.assert_rejected("test-masking")
 
     def test_rejects_an_nunit_selector(self) -> None:
         self.workflow().write_text(
-            BUILD_WORKFLOW.replace("--category rabbitmq",
-                                   '--category rabbitmq -- -- NUnit.Where="cat != Flaky"'),
+            BUILD_WORKFLOW.replace("--selection rabbitmq",
+                                   '--selection rabbitmq -- -- NUnit.Where="cat != Flaky"'),
             encoding="utf-8")
         self.assert_rejected("test-masking")
 
@@ -996,7 +937,7 @@ class PolicyTestCase(unittest.TestCase):
         self.assert_rejected("test-endpoint")
 
     def test_rejects_blame_hang_masking(self) -> None:
-        self.workflow().write_text(BUILD_WORKFLOW.replace("--category core", "--category core -- --blame-hang-timeout 5m"),
+        self.workflow().write_text(BUILD_WORKFLOW.replace("--selection core", "--selection core -- --blame-hang-timeout 5m"),
                                    encoding="utf-8")
         self.assert_rejected("test-masking")
 
@@ -1022,7 +963,8 @@ class PolicyTestCase(unittest.TestCase):
 
     def test_rejects_removing_a_required_category(self) -> None:
         job, category, project = next(entry for entry in FIXTURE_RUNS if entry[1] == "rabbitmq")
-        removed = (JOB % (job, runner_step(category, project))).format(sdk=APPROVED_SDK)
+        del project
+        removed = (JOB % (job, runner_step(category))).format(sdk=APPROVED_SDK)
         self.assertIn(removed, BUILD_WORKFLOW, "the anchor for the removed job is gone")
         body = BUILD_WORKFLOW.replace(removed, "")
         self.workflow().write_text(body, encoding="utf-8")
@@ -1159,10 +1101,18 @@ class PolicyTestCase(unittest.TestCase):
 
         self.assert_rejected("verification-model")
 
-    def test_rejects_an_invented_job(self) -> None:
-        """A job name nobody runs used to stay green, so the model could point at nothing."""
+    def test_rejects_a_job_map_entry_the_workflow_does_not_have(self) -> None:
+        """The model may not give a selection to a job nobody runs."""
         model = fixture_model()
-        model["capabilities"][0]["runs"][0]["job"] = "a-job-that-does-not-exist"
+        model["jobs"]["a-job-that-does-not-exist"] = "rabbitmq"
+        self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("verification-model")
+
+    def test_rejects_a_category_no_required_job_reaches(self) -> None:
+        """A declared category that no job's selection contains is a category nothing runs."""
+        model = fixture_model()
+        del model["jobs"]["quartz"]
         self.matrix().write_text(json.dumps(model, indent=2), encoding="utf-8")
 
         self.assert_rejected("verification-model")
@@ -1439,9 +1389,12 @@ class PolicyTestCase(unittest.TestCase):
             encoding="utf-8")
         self.assert_rejected("required-profile")
 
-    def test_rejects_bypassing_the_test_count_gate(self) -> None:
-        self.workflow().write_text(BUILD_WORKFLOW.replace("python3 tools/ci/run_test_category.py --category",
-                                                          "dotnet test --filter Category!="), encoding="utf-8")
+    def test_rejects_a_profile_that_verifies_nothing(self) -> None:
+        """Every required job goes through the one entry point, or the profile proves nothing."""
+        self.workflow().write_text(
+            BUILD_WORKFLOW.replace("python3 tools/ci/verify.py --selection", "dotnet test --filter Category!="),
+            encoding="utf-8")
+
         self.assert_rejected("required-profile")
 
     # -- pack ----------------------------------------------------------------------------------

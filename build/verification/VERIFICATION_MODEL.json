@@ -82,7 +82,25 @@
       "members": [
         "entity-framework-core"
       ]
+    },
+    "engineering": {
+      "members": [
+        "benchmarks",
+        "diagnostics"
+      ],
+      "note": "the engineering solution's own tests: the benchmark harness and the diagnostics tool"
     }
+  },
+  "jobs": {
+    "analyzer": "analyzer",
+    "core-unit": "core",
+    "signalr": "signalr",
+    "quartz": "quartz",
+    "rabbitmq": "rabbitmq",
+    "activemq": "activemq",
+    "sql-transport": "sql-transport",
+    "entity-framework": "entity-framework",
+    "benchmarks": "engineering"
   },
   "verificationClasses": {
     "LOCAL_REQUIRED_RUN": "A behaviour suite that runs in the required profile on the build machine alone. It needs no container and no credential.",
