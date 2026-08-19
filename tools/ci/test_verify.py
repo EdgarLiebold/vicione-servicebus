@@ -313,6 +313,49 @@ class Comparing_the_set_a_run_executed(VerifyFixture):
         self.assertIn("survived it", " ".join(result["findings"]))
 
 
+class Recording_an_expected_set(VerifyFixture):
+    """Recording resolves a difference from the previous expectation. It may not bake in a defect."""
+
+    def record(self, cases, expected=None, **outcome) -> dict:
+        model = self.write_model(expectedIdentities=expected)
+        with mock.patch.object(run_test_category, "run_child",
+                               side_effect=self.child_writing(cases, **outcome)), \
+                contextlib.redirect_stdout(io.StringIO()):
+            result = verify.verify_category(verify.declared_run(model, "core"),
+                                            self.root / "artifacts/verification/run")
+            verify.record_expected(model, result)
+
+        return result
+
+    def test_records_a_set_that_differs_from_the_previous_one(self) -> None:
+        """A case added or removed on purpose lands exactly here, and that is not a defect of the run."""
+        expected = self.expect([f"{FIXTURE}.Should_arrive"])
+
+        self.record(THREE_CASES, expected=expected)
+
+        written = (self.root / "build/verification/expected/core.txt").read_text(encoding="utf-8")
+
+        self.assertIn(f"{FIXTURE}.Should_retry", written)
+
+    def test_refuses_to_record_from_a_run_with_a_failed_case(self) -> None:
+        with self.assertRaises(verify.VerificationError) as raised:
+            self.record([(FIXTURE, "Should_arrive", "Failed")])
+
+        self.assertIn("cannot record", str(raised.exception))
+
+    def test_refuses_to_record_from_a_run_that_was_taken_down(self) -> None:
+        with self.assertRaises(verify.VerificationError):
+            self.record(THREE_CASES, timedOut=True, exitCode=1)
+
+    def test_refuses_to_record_from_a_run_that_left_a_process_behind(self) -> None:
+        with self.assertRaises(verify.VerificationError):
+            self.record(THREE_CASES, survivingOwnedProcesses=[4711])
+
+    def test_refuses_to_record_from_a_run_with_an_unapproved_skip(self) -> None:
+        with self.assertRaises(verify.VerificationError):
+            self.record([(FIXTURE, "Should_arrive", "NotExecuted")])
+
+
 class Owning_what_a_run_writes(VerifyFixture):
     """Two runs of one selection share no mutable file, and each child gets its own proven root."""
 

@@ -175,6 +175,93 @@ public class Writing_the_result_where_the_caller_asked_for_it
     }
 
     [Test]
+    public async Task Should_write_the_result_to_stdout_when_the_sink_cannot_be_written()
+    {
+        // A directory that is not there. The failure path used to report the failure to the very sink
+        // that had just failed, so the run ended on the second exception rather than on its result.
+        var unwritable = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}", "nested", "out.json");
+
+        var code = await Program.Main(["publish-load", "--messages", "0", "--output", unwritable]);
+
+        Assert.That(code, Is.EqualTo(1), "the run has to end on its own result, not on a second failure");
+        Assert.That(File.Exists(unwritable), Is.False);
+    }
+
+    [Test]
+    public void Should_not_throw_when_the_sink_is_a_directory()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            Assert.DoesNotThrowAsync(
+                () => Program.Report(new { status = "failed" }, directory, CancellationToken.None),
+                "writing to a path that is a directory ended the process instead of the run");
+        }
+        finally
+        {
+            Directory.Delete(directory, true);
+        }
+    }
+
+
+    [Test]
+    public void Should_remove_the_cancellation_handler_it_subscribed()
+    {
+        var subscribed = 0;
+        var removed = 0;
+        using var cancellation = new CancellationTokenSource();
+
+        IDisposable interrupt = Program.HandleCancellation(cancellation, _ => subscribed++, _ => removed++);
+
+        Assert.That(subscribed, Is.EqualTo(1));
+        Assert.That(removed, Is.EqualTo(0));
+
+        interrupt.Dispose();
+
+        Assert.That(removed, Is.EqualTo(1),
+            "the handler stayed subscribed, so every invocation in one process leaves one behind and "
+            + "each of them holds a cancellation source that has already been disposed");
+    }
+
+    [Test]
+    public void Should_remove_the_cancellation_handler_once_however_often_it_is_disposed()
+    {
+        var removed = 0;
+        using var cancellation = new CancellationTokenSource();
+
+        IDisposable interrupt = Program.HandleCancellation(cancellation, _ => { }, _ => removed++);
+        interrupt.Dispose();
+        interrupt.Dispose();
+
+        Assert.That(removed, Is.EqualTo(1),
+            "a second dispose would remove a handler somebody else subscribed in the meantime");
+    }
+
+    [Test]
+    public void Should_cancel_the_run_and_keep_the_process_alive_on_an_interrupt()
+    {
+        ConsoleCancelEventHandler? captured = null;
+        using var cancellation = new CancellationTokenSource();
+        using IDisposable interrupt = Program.HandleCancellation(
+            cancellation, handler => captured = handler, _ => { });
+
+        ConsoleCancelEventArgs eventArgs = ConsoleCancelEventArgsFactory();
+        captured!(null, eventArgs);
+
+        Assert.That(cancellation.IsCancellationRequested, Is.True);
+        Assert.That(eventArgs.Cancel, Is.True, "the process would have been terminated instead of the run");
+    }
+
+    /// <summary>ConsoleCancelEventArgs has no public constructor, so one is made the way the runtime does.</summary>
+    static ConsoleCancelEventArgs ConsoleCancelEventArgsFactory()
+    {
+        return (ConsoleCancelEventArgs)System.Runtime.CompilerServices.RuntimeHelpers
+            .GetUninitializedObject(typeof(ConsoleCancelEventArgs));
+    }
+
+    [Test]
     public async Task Should_report_an_unknown_scenario_without_a_sink_it_never_read()
     {
         var code = await Program.Main(["not-a-scenario"]);

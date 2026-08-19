@@ -17,11 +17,17 @@ using ViciOne.ServiceBus.RabbitMqTransport;
 /// <para>
 /// Three steps stand between the wait and the verdict, and the result names all three. An observation
 /// window, because a duplicate the broker delivers a moment after the last first-seen identity would
-/// otherwise be reported as an exact run. Then quiescence: the bus is stopped within a bound, and that
-/// stop returns only once the consumer reports zero activity, so no handler can still be counting.
-/// Only then the snapshot. Reading it while a handler could still run made the verdict a race - a
-/// scan that has already passed an identity does not see the duplicate that arrives behind it, and the
-/// reported total belongs to no single moment of the run.
+/// otherwise be reported as an exact run. Then a bounded stop of the bus. Then the snapshot. Reading
+/// it while a handler could still run made the verdict a race - a scan that has already passed an
+/// identity does not see the duplicate that arrives behind it, and the reported total belongs to no
+/// single moment of the run.
+/// <para>
+/// What that stop proves is stated exactly, because the transport does not support a stronger
+/// sentence: a stop that <em>finished while its budget still held</em> is interpreted as quiescence,
+/// since the consumer agent awaits its delivery-complete signal in that case. A stop whose budget
+/// expired proves nothing - the same method catches that cancellation, cancels the pending consumers
+/// and completes anyway - and is reported as inconclusive, which can never be exact.
+/// </para>
 /// </para>
 /// <para>
 /// Publisher confirmation is off on purpose: the subject is the endpoint under a burst, and
@@ -107,9 +113,10 @@ static class PublishLoadScenario
                 outcome,
                 observationBoundary =
                     $"every identity arrived at least once, then {DrainWindow.TotalSeconds:0} s of further "
-                    + "observation with the consumer attached, then a bounded stop of the bus which returns only "
-                    + "once no handler is running, and the snapshot after that; nothing that a later run of the "
-                    + "same queue might see is claimed",
+                    + "observation with the consumer attached, then a bounded stop of the bus, then the "
+                    + "snapshot. A stop that finished inside its budget is interpreted as quiescence; a stop "
+                    + "whose budget expired is reported as inconclusive and can never be exact. Nothing that "
+                    + "a later run of the same queue might see is claimed",
                 quiesced,
                 handedOverMilliseconds = (long)handedOver.TotalMilliseconds,
                 publishedMilliseconds = (long)published.TotalMilliseconds,
@@ -159,12 +166,14 @@ static class PublishLoadScenario
     }
 
     /// <summary>
-    /// Brings the consumer to a standstill within a bound, and says whether it really came to one.
+    /// Stops the consumer within a bound, and says whether that stop may be read as a standstill.
     /// <para>
     /// Measured against this transport rather than assumed. A stop reaches
     /// <c>ConsumerAgent.ActiveAndActualAgentsCompleted</c>, which awaits the delivery-complete signal
-    /// the dispatcher raises when its active dispatch count reaches zero. So a stop that finished while
-    /// its budget still held proves that no handler is running any more.
+    /// the dispatcher raises when its active dispatch count reaches zero. A stop that finished while
+    /// its budget still held therefore went through that wait, and this scenario interprets it as
+    /// quiescence for the snapshot that follows. That is the exact claim; it is not a general
+    /// statement that a bounded stop drains every handler.
     /// </para>
     /// <para>
     /// What it does not prove is the cancelled case, and that is why the budget is read rather than the

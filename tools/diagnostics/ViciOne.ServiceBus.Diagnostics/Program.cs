@@ -33,11 +33,12 @@ internal static class Program
         };
 
         using var cancellation = new CancellationTokenSource();
-        Console.CancelKeyPress += (_, eventArgs) =>
-        {
-            eventArgs.Cancel = true;
-            cancellation.Cancel();
-        };
+        // Unsubscribed again before this method returns, and before the source above is disposed. An
+        // anonymous handler stood here and was never removed, so every invocation in one process left
+        // one behind, each holding a cancellation source that had already been disposed; the next
+        // Ctrl+C would have reached all of them.
+        using IDisposable interrupt = HandleCancellation(cancellation, handler => Console.CancelKeyPress += handler,
+            handler => Console.CancelKeyPress -= handler);
 
         // Resolved as soon as the options are complete, and used by every exit below. The failure paths
         // used to build a fresh empty option set of their own, so a --output that had already been
@@ -93,15 +94,76 @@ internal static class Program
         }
     }
 
-    /// <summary>The one place a result leaves this process, whether the run succeeded or failed.</summary>
+    /// <summary>
+    /// Subscribes a cancellation handler and gives back the way to remove it again.
+    /// <para>
+    /// The two event operations are parameters so that this can be shown to subscribe once and
+    /// unsubscribe once without touching the real console of the test process.
+    /// </para>
+    /// </summary>
+    internal static IDisposable HandleCancellation(CancellationTokenSource cancellation,
+        Action<ConsoleCancelEventHandler> subscribe, Action<ConsoleCancelEventHandler> unsubscribe)
+    {
+        void Requested(object? sender, ConsoleCancelEventArgs eventArgs)
+        {
+            eventArgs.Cancel = true;
+            cancellation.Cancel();
+        }
+
+        subscribe(Requested);
+
+        return new Unsubscribe(() => unsubscribe(Requested));
+    }
+
+
+    sealed class Unsubscribe :
+        IDisposable
+    {
+        Action? _remove;
+
+        public Unsubscribe(Action remove)
+        {
+            _remove = remove;
+        }
+
+        public void Dispose()
+        {
+            // Once, whatever the caller does: a second dispose would remove a handler somebody else
+            // subscribed in the meantime.
+            Interlocked.Exchange(ref _remove, null)?.Invoke();
+        }
+    }
+
+
+    /// <summary>
+    /// The one place a result leaves this process, whether the run succeeded or failed.
+    /// <para>
+    /// The fallback is bounded and not recursive. A sink that cannot be written is itself a failure,
+    /// and the failure path used to report it to the very sink that had just failed; the run then
+    /// ended on the second exception instead of on its own result.
+    /// </para>
+    /// </summary>
     internal static async Task Report(object result, string? sink, CancellationToken cancellationToken)
     {
         var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
 
         if (sink is null)
+        {
             Console.WriteLine(json);
-        else
+
+            return;
+        }
+
+        try
+        {
             await File.WriteAllTextAsync(sink, json + Environment.NewLine, cancellationToken);
+        }
+        catch (Exception unwritable) when (unwritable is IOException or UnauthorizedAccessException
+                                               or NotSupportedException or ArgumentException)
+        {
+            Console.Error.WriteLine($"the result could not be written to '{sink}': {unwritable.Message}");
+            Console.WriteLine(json);
+        }
     }
 
     /// <summary>

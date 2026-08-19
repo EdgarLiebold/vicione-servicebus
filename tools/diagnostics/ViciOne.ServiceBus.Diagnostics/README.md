@@ -69,8 +69,12 @@ duplicated a message invites the wrong conclusion.
 
 Between the wait and the verdict there are three steps, in this order, and `observationBoundary` names
 all three. The three second window after the last first seen identity, which is why a duplicate
-delivered a moment later is still counted. Then a bounded stop of the bus, which returns only once the
-consumer reports zero activity, so no handler can still be counting. Then the snapshot. The ledger is
+delivered a moment later is still counted. Then a bounded stop of the bus. Then the snapshot.
+
+What the stop proves is stated exactly, because the transport does not support a stronger sentence. A
+stop that finished *while its budget still held* went through the consumer agent's delivery-complete
+wait, and is interpreted as quiescence. A stop whose budget expired proves nothing: the same method
+catches that cancellation, cancels the pending consumers and completes anyway. The ledger is
 scanned without a lock - a lock would put contention into the path this diagnostic measures - so a
 snapshot read while handlers were still running belongs to no single moment of the run, and that is
 what `inconclusive` says: the stop did not finish inside its budget, so exactness is not claimed even

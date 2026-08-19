@@ -288,8 +288,15 @@ def record_expected(model: dict, result: dict) -> str:
     The set comes from the test platform's own result file. Nothing in a test declares that it ran.
     """
     category = result["category"]
+    # A difference from the previous expectation is not a defect of this run - it is exactly what
+    # recording resolves, and a test that was legitimately added or removed lands here. A defect of the
+    # run is something else: a case that failed, a skip nobody approved, a result the file never
+    # reported, a child that was taken down or a process that outlived it. Recording from one of those
+    # would bake that state in as the expectation, and every later run would then agree with it.
+    difference = ("no expected identity set", "missing identity", "unexpected identity",
+                  "duplicate identity")
     blocking = [finding for finding in result["findings"]
-                if not finding.startswith("no expected identity set")]
+                if not any(finding.startswith(kind) or kind in finding for kind in difference)]
     if blocking:
         raise VerificationError(
             f"category '{category}' cannot record an expected set from this run: {'; '.join(blocking)}")
@@ -431,7 +438,9 @@ def main(argv: list[str] | None = None) -> int:
                 path = record_expected(model, result)
                 print(f"recorded {len(result['executed'])} expected identities in {path}")
                 result["findings"] = [finding for finding in result["findings"]
-                                      if not finding.startswith("no expected identity set")]
+                                      if not finding.startswith("no expected identity set")
+                                      and "identity/identities" not in finding]
+                result["missing"], result["unexpected"], result["duplicate"] = [], [], []
                 result["expectedRecorded"] = True
                 result["expected"] = sorted(result["executed"])
                 result["terminal"] = "PASS" if not result["findings"] else "FAIL"
