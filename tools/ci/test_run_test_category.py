@@ -14,6 +14,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import os
 import tempfile
 import shutil
 import subprocess
@@ -48,30 +49,272 @@ def write_trx(path: Path, cases: list[tuple[str, str, str]]) -> Path:
     return path
 
 
-class IdentityContractTestCase(unittest.TestCase):
-    def setUp(self) -> None:
-        self._directory = tempfile.TemporaryDirectory()
-        self.root = Path(self._directory.name)
-        self.addCleanup(self._directory.cleanup)
 
-    def inventory(self, identities: list[str], category: str = "core") -> None:
-        path = self.root / "model.json"
+MODEL_PROJECT = "tests/Some.Tests/Some.Tests.csproj"
+
+
+class RunnerFixture(unittest.TestCase):
+    """A repository of this case alone, with every global and every variable restored afterwards.
+
+    The suite used to swap runner.VERIFICATION_MODEL without a guaranteed restoration, so the order of
+    the cases decided what a later one read, and it patched the environment while leaving every
+    unrelated ambient variable in place. Both are how a case can pass on real global state rather than
+    on the fixture it claims to test. Here every global the runner reads is bound to this case's own
+    temporary repository and put back in a cleanup, and the environment starts cleared.
+    """
+
+    def setUp(self) -> None:
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+
+        for name in ("RAW_RUN_OUTPUT_DIR", "REPOSITORY_ROOT", "REPO_ROOT", "VERIFICATION_MODEL"):
+            self.addCleanup(setattr, runner, name, getattr(runner, name))
+        runner.RAW_RUN_OUTPUT_DIR = self.root / "artifacts/run-output"
+        runner.REPOSITORY_ROOT = self.root
+        runner.REPO_ROOT = self.root
+        runner.VERIFICATION_MODEL = self.root / "build/verification/VERIFICATION_MODEL.json"
+
+        # Cleared, not merged: an ambient VICIONE_SERVICEBUS_RUN_ROOT from the developer's shell would
+        # otherwise decide where a run under test writes.
+        cleared = mock.patch.dict(os.environ, {}, clear=True)
+        cleared.start()
+        self.addCleanup(cleared.stop)
+
+        (self.root / MODEL_PROJECT).parent.mkdir(parents=True, exist_ok=True)
+        (self.root / MODEL_PROJECT).write_text("<Project />\n", encoding="utf-8")
+
+    def write_model(self, **changes) -> None:
+        """A model this fixture's category is declared in, with one field changed per case."""
+        run = {
+            "job": "some", "category": "core", "project": MODEL_PROJECT,
+            "minimumExecutedCases": 1, "budgetSeconds": 60, "notExecuted": [],
+            "testProjectDirectory": "tests/Some.Tests", "explicitAttributeCount": 0,
+        }
+        run.update({k: v for k, v in changes.items() if v is not runner})
+        for key, value in changes.items():
+            if value is runner:
+                run.pop(key, None)
+
+        path = runner.VERIFICATION_MODEL
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps({
-            "schemaVersion": 1,
-            "kind": "SERVICEBUS_VERIFICATION_MODEL",
-            "capabilities": [{
-                "id": f"capability-{category}",
-                "class": "LOCAL_REQUIRED_RUN",
-                "runs": [{
-                    "job": category,
-                    "category": category,
-                    "project": "tests/Some.Tests/Some.Tests.csproj",
-                    "minimumExecutedCases": 1,
-                    "notExecuted": [{"identity": identity} for identity in identities],
-                }],
-            }],
+            "schemaVersion": 1, "kind": "SERVICEBUS_VERIFICATION_MODEL",
+            "capabilities": [{"id": "capability-core", "class": "LOCAL_REQUIRED_RUN", "runs": [run]}],
         }, indent=2), encoding="utf-8")
-        runner.VERIFICATION_MODEL = path
+
+
+class Refusing_a_category_the_model_does_not_close(RunnerFixture):
+    """The canonical runner is also the local entry point, so it may not lean on a policy gate.
+
+    Every reader this replaced answered None for a missing model, an unknown category, an unreadable
+    file or an absent floor, and the runner then skipped the check that None stood for. A category the
+    model does not know ran with no floor and no inventory, and nothing said so.
+    """
+
+    ABSENT = runner  # a sentinel that means "leave this field out"
+
+    def refuses(self, what: str, **changes) -> None:
+        self.write_model(**changes)
+        with self.assertRaises(runner.CategoryError) as raised:
+            runner.category_contract("core", MODEL_PROJECT)
+
+        self.assertIn(what, str(raised.exception))
+
+    def test_accepts_the_category_the_model_declares(self) -> None:
+        self.write_model()
+
+        self.assertEqual(60, runner.category_contract("core", MODEL_PROJECT)["budgetSeconds"])
+
+    def test_refuses_a_missing_model(self) -> None:
+        with self.assertRaises(runner.CategoryError) as raised:
+            runner.category_contract("core", MODEL_PROJECT)
+
+        self.assertIn("missing", str(raised.exception))
+
+    def test_refuses_a_malformed_model(self) -> None:
+        runner.VERIFICATION_MODEL.parent.mkdir(parents=True, exist_ok=True)
+        runner.VERIFICATION_MODEL.write_text("{ not json", encoding="utf-8")
+
+        with self.assertRaises(runner.CategoryError) as raised:
+            runner.category_contract("core", MODEL_PROJECT)
+
+        self.assertIn("not readable", str(raised.exception))
+
+    def test_refuses_a_category_the_model_does_not_declare(self) -> None:
+        self.write_model(category="something-else")
+
+        with self.assertRaises(runner.CategoryError) as raised:
+            runner.category_contract("core", MODEL_PROJECT)
+
+        self.assertIn("declares no run", str(raised.exception))
+
+    def test_refuses_a_project_the_category_is_not_declared_against(self) -> None:
+        self.write_model()
+
+        with self.assertRaises(runner.CategoryError) as raised:
+            runner.category_contract("core", "tests/Another.Tests/Another.Tests.csproj")
+
+        self.assertIn("was invoked against", str(raised.exception))
+
+    def test_refuses_a_project_that_is_not_there(self) -> None:
+        (self.root / MODEL_PROJECT).unlink()
+
+        self.refuses("not a project file")
+
+    def test_refuses_an_absent_floor(self) -> None:
+        self.refuses("no executed floor", minimumExecutedCases=self.ABSENT)
+
+    def test_refuses_a_floor_that_is_not_a_positive_number(self) -> None:
+        self.refuses("no executed floor", minimumExecutedCases=0)
+
+    def test_refuses_an_absent_budget(self) -> None:
+        self.refuses("no budget", budgetSeconds=self.ABSENT)
+
+    def test_refuses_a_budget_that_is_not_a_positive_number(self) -> None:
+        self.refuses("no budget", budgetSeconds=-1)
+
+
+class Claiming_a_run_root(RunnerFixture):
+    """A directory name is not a claim, and an environment variable is a name.
+
+    Any process on this machine can set VICIONE_SERVICEBUS_RUN_ROOT. A run that adopted it would write
+    into, and later clean up, a directory belonging to somebody else, so a handed-down root is
+    accepted only against the token its owner wrote into it.
+    """
+
+    def test_mints_its_own_root_when_none_was_handed_down(self) -> None:
+        root = runner.claim_run_root()
+
+        self.assertTrue(root.is_dir())
+        self.assertTrue((root / runner.RUN_TOKEN_FILE).is_file())
+        self.assertTrue(root.name.startswith("vicione-"))
+
+    def test_two_runs_mint_different_roots_and_different_tokens(self) -> None:
+        first, second = runner.claim_run_root(), runner.claim_run_root()
+
+        self.assertNotEqual(first, second)
+        self.assertNotEqual((first / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8"),
+                            (second / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8"))
+
+    def test_accepts_a_handed_down_root_with_its_token(self) -> None:
+        owned = runner.claim_run_root()
+        token = (owned / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(owned),
+                                          runner.RUN_TOKEN_VARIABLE: token}):
+            self.assertEqual(owned, runner.claim_run_root())
+
+    def test_refuses_a_handed_down_root_without_a_token(self) -> None:
+        stranger = self.root / "somebody-elses-run"
+        stranger.mkdir()
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(stranger)}):
+            with self.assertRaises(runner.CategoryError) as raised:
+                runner.claim_run_root()
+
+        self.assertIn("without a valid ownership token", str(raised.exception))
+
+    def test_refuses_another_runs_root_even_with_a_token_variable(self) -> None:
+        """The variable is the attacker's; the file is the owner's. They have to agree."""
+        theirs = runner.claim_run_root()
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(theirs),
+                                          runner.RUN_TOKEN_VARIABLE: "a token I made up"}):
+            with self.assertRaises(runner.CategoryError):
+                runner.claim_run_root()
+
+    def test_neither_of_two_concurrent_runs_can_claim_the_other(self) -> None:
+        first, second = runner.claim_run_root(), runner.claim_run_root()
+        first_token = (first / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(second),
+                                          runner.RUN_TOKEN_VARIABLE: first_token}):
+            with self.assertRaises(runner.CategoryError):
+                runner.claim_run_root()
+
+
+class Bounding_the_test_process(RunnerFixture):
+    """A child that never returns may not hold the run for as long as the machine stays up.
+
+    Three process trees of this repository survived more than thirteen hours on this machine because
+    nothing ever asked them to stop. The child runs in a session of its own so the whole tree can be
+    signalled, and the budget is what ends it.
+    """
+
+    def test_a_child_that_finishes_inside_its_budget_is_reported_as_it_is(self) -> None:
+        child = runner.run_child(["sh", "-c", "echo done; exit 3"], dict(os.environ), 30)
+
+        self.assertEqual(3, child["exitCode"])
+        self.assertFalse(child["timedOut"])
+        self.assertIn("done", child["stdout"])
+        self.assertEqual([], child["survivingOwnedProcesses"])
+
+    def test_a_child_that_never_ends_is_taken_down_with_its_whole_tree(self) -> None:
+        # A shell that spawns a sleeping grandchild and then waits forever: signalling only the
+        # process that was started would leave the grandchild running, which is exactly what happened
+        # to the real runs.
+        with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 3), \
+                mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 6):
+            # 60 s rather than something endless: with the budget in place the child is taken down
+            # after two seconds, and a probe that removes the budget then ends in a minute instead of
+            # holding the suite. A mutation probe may not need the very defect it is proving.
+            child = runner.run_child(["sh", "-c", "sleep 60 & sleep 60"], dict(os.environ), 2)
+
+        self.assertTrue(child["timedOut"], "the budget did not end the child")
+        self.assertNotEqual(0, child["exitCode"], "a run that had to be taken down is not a success")
+        self.assertEqual([], child["survivingOwnedProcesses"],
+                         "a process of this run's own tree outlived the run that started it")
+
+    def test_the_child_gets_a_session_of_its_own(self) -> None:
+        child = runner.run_child(["sh", "-c", "ps -o pgid= -p $$"], dict(os.environ), 30)
+
+        self.assertNotEqual(str(os.getpgid(0)), child["stdout"].strip(),
+                            "the child shares this process's group, so signalling its tree would "
+                            "signal the runner as well")
+
+
+class Reading_every_result_the_run_defined(RunnerFixture):
+    """A counter cannot show a case whose result entry is simply absent."""
+
+    def test_a_definition_without_a_result_is_reported(self) -> None:
+        trx = self.root / "gap.trx"
+        trx.write_text(
+            TRX_HEADER
+            + "  <TestDefinitions>\n"
+            + '    <UnitTest id="00000000-0000-0000-0000-000000000000" name="Should_run">\n'
+            + '      <TestMethod className="Suite.Fixture" name="Should_run" />\n'
+            + "    </UnitTest>\n"
+            + '    <UnitTest id="00000000-0000-0000-0000-000000000001" name="Should_also_run">\n'
+            + '      <TestMethod className="Suite.Fixture" name="Should_also_run" />\n'
+            + "    </UnitTest>\n"
+            + "  </TestDefinitions>\n"
+            + "  <Results>\n"
+            + '    <UnitTestResult testId="00000000-0000-0000-0000-000000000000" testName="Should_run" outcome="Passed" />\n'
+            + "  </Results>\n</TestRun>\n", encoding="utf-8")
+
+        self.assertEqual(["Suite.Fixture.Should_also_run"], runner.omitted_results(trx))
+
+    def test_a_complete_result_file_reports_nothing(self) -> None:
+        trx = write_trx(self.root / "whole.trx", [("Suite.Fixture", "Should_run", "Passed"),
+                                                  ("Suite.Fixture", "Should_skip", "NotExecuted")])
+
+        self.assertEqual([], runner.omitted_results(trx))
+
+
+class IdentityContractTestCase(RunnerFixture):
+    """The identity of one case, and what a permission to skip it does and does not cover.
+
+    It writes the model through the fixture, which restores the global afterwards. The version before
+    this assigned runner.VERIFICATION_MODEL and never put it back, so the order of the suite decided
+    what a later case read, and one of its cases assigned a runner.NOT_EXECUTED_INVENTORY attribute
+    that production does not read at all - it could only ever have passed on real global state.
+    """
+
+    def permit(self, identities: list[str]) -> list[str]:
+        """The model permits these identities to stay unexecuted, and returns what that authorises."""
+        self.write_model(notExecuted=[{"identity": identity} for identity in identities])
+
+        return runner.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
 
     def test_the_same_fixture_and_case_name_in_two_namespaces_are_two_identities(self):
         trx = write_trx(self.root / "a.trx", [
@@ -103,9 +346,9 @@ class IdentityContractTestCase(unittest.TestCase):
             ("Suite.Middleware.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
             ("Suite.Pipeline.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
         ])
-        self.inventory(["Suite.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"])
+        permitted = self.permit(["Suite.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), runner.inventoried_cases("core"))
+        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
 
         self.assertEqual(unlisted, ["Suite.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"])
 
@@ -114,9 +357,9 @@ class IdentityContractTestCase(unittest.TestCase):
             ("Suite.Benchmarks.Throughput", "Just_how_fast_are_you", "NotExecuted"),
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
-        self.inventory(["Suite.Benchmarks.Throughput.Just_how_fast_are_you"])
+        permitted = self.permit(["Suite.Benchmarks.Throughput.Just_how_fast_are_you"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), runner.inventoried_cases("core"))
+        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
@@ -125,25 +368,31 @@ class IdentityContractTestCase(unittest.TestCase):
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
-        self.inventory(["Suite.Behaviour.Delivery.Should_deliver_the_message"])
+        permitted = self.permit(["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), runner.inventoried_cases("core"))
+        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"],
                          "One permission covers one case, so the second occurrence stays unauthorised")
 
     def test_a_short_form_entry_authorises_nothing(self):
+        """A permission without a full identity permits nothing.
+
+        Written against the model the runner really reads. The version before this wrote an obsolete
+        shape into a file it then assigned to an attribute production does not have, so whatever it
+        proved, it was not this.
+        """
         trx = write_trx(self.root / "f.trx", [
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
-        path = self.root / "short.json"
-        path.write_text(json.dumps({"categories": {"core": {"cases": [
+        self.write_model(notExecuted=[
             {"fixture": "Delivery", "test": "Should_deliver_the_message", "mechanism": "EXPLICIT",
-             "dueness": "NOT_DUE_BENCHMARK", "reason": "no identity given"}
-        ]}}}), encoding="utf-8")
-        runner.NOT_EXECUTED_INVENTORY = path
+             "dueness": "NOT_DUE_BENCHMARK", "reason": "no identity given"}])
+        permitted = runner.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), runner.inventoried_cases("core"))
+        self.assertEqual([], permitted, "an entry without an identity is not a permission")
+
+        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
@@ -217,33 +466,32 @@ class Keeping_the_invocation_closed(unittest.TestCase):
                         contextlib.redirect_stderr(io.StringIO()):
                     runner.build_parser().parse_args(self.CANONICAL + extra)
 
-    def test_the_command_dotnet_test_receives_is_exactly_the_canonical_one(self):
-        """Not only that nothing is accepted, but that nothing is passed on either."""
+
+
+class Passing_nothing_on_to_dotnet_test(RunnerFixture):
+    """Not only that nothing is accepted on the command line, but that nothing is passed on either."""
+
+    def test_the_command_dotnet_test_receives_is_exactly_the_canonical_one(self) -> None:
+        self.write_model()
         seen = {}
 
-        def record(command, **kwargs):
+        def child(command, environment, budget):
             seen["command"] = command
-            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
 
-        root = Path(tempfile.mkdtemp())
-        self.addCleanup(shutil.rmtree, root, ignore_errors=True)
-        self.addCleanup(setattr, runner, "RAW_RUN_OUTPUT_DIR", runner.RAW_RUN_OUTPUT_DIR)
-        self.addCleanup(setattr, runner, "REPOSITORY_ROOT", runner.REPOSITORY_ROOT)
-        runner.RAW_RUN_OUTPUT_DIR = root / "run-output"
-        runner.REPOSITORY_ROOT = root
+            return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
+                    "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
-        with mock.patch.object(runner.subprocess, "run", side_effect=record), \
-                mock.patch.dict(runner.os.environ, {runner.RUN_ROOT_VARIABLE: ""}, clear=False), \
+        with mock.patch.object(runner, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             with self.assertRaises(runner.CategoryError):
-                runner.run_category("core", "tests/Core/Core.csproj", root / "evidence")
+                runner.run_category("core", MODEL_PROJECT, self.root / "evidence")
 
         options = [token for token in seen["command"] if token.startswith("-")]
         self.assertEqual(["-c", "--logger"], options,
                          "dotnet test received an option this runner does not own")
 
 
-class Owning_the_output_of_one_run(unittest.TestCase):
+class Owning_the_output_of_one_run(RunnerFixture):
     """Two invocations of the same category must not meet in any file.
 
     This is the case the earlier parallel proof did not cover: it started two command children against
@@ -251,30 +499,27 @@ class Owning_the_output_of_one_run(unittest.TestCase):
     written to one fixed name each.
     """
 
-    def setUp(self) -> None:
-        self.root = Path(tempfile.mkdtemp())
-        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
-        self.addCleanup(setattr, runner, "RAW_RUN_OUTPUT_DIR", runner.RAW_RUN_OUTPUT_DIR)
-        self.addCleanup(setattr, runner, "REPOSITORY_ROOT", runner.REPOSITORY_ROOT)
-        runner.RAW_RUN_OUTPUT_DIR = self.root / "run-output"
-        runner.REPOSITORY_ROOT = self.root
-
-    def run_category(self, evidence: Path, run_root: str | None = None) -> dict:
+    def run_category(self, evidence: Path, run_root: Path | None = None) -> dict:
         """Runs one category with the process boundary replaced, so no test starts dotnet."""
-        environment = {runner.RUN_ROOT_VARIABLE: run_root} if run_root else {}
+        self.write_model()
 
-        def fake_run(command, **kwargs):
+        environment = {}
+        if run_root is not None:
+            environment = {runner.RUN_ROOT_VARIABLE: str(run_root),
+                           runner.RUN_TOKEN_VARIABLE:
+                               (run_root / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()}
+
+        def child(command, environment, budget):
             trx = Path([part for part in command if part.startswith("trx;LogFileName=")][0].split("=", 1)[1])
             trx.parent.mkdir(parents=True, exist_ok=True)
             trx.write_text(TRX_WITH_ONE_PASSING_CASE, encoding="utf-8")
 
-            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
+            return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
+                    "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
-        with mock.patch.dict(runner.os.environ, environment, clear=False), \
-                mock.patch.object(runner.subprocess, "run", side_effect=fake_run), \
-                mock.patch.object(runner, "minimum_executed", return_value=None), \
-                mock.patch.object(runner, "inventoried_cases", return_value=[]):
-            return runner.run_category("core", "some.csproj", evidence)
+        with mock.patch.dict(os.environ, environment, clear=False), \
+                mock.patch.object(runner, "run_child", side_effect=child):
+            return runner.run_category("core", MODEL_PROJECT, evidence)
 
     def test_two_runs_of_one_category_write_different_files(self) -> None:
         evidence = self.root / "artifacts/required/core"
@@ -288,19 +533,30 @@ class Owning_the_output_of_one_run(unittest.TestCase):
         self.assertTrue((self.root / second["trxPath"]).is_file())
 
     def test_a_caller_path_is_a_parent_and_not_a_file(self) -> None:
-        evidence = self.root / "artifacts/required/core"
-
-        record = self.run_category(evidence)
+        record = self.run_category(self.root / "artifacts/required/core")
 
         self.assertTrue(record["evidenceDir"].startswith("artifacts/required/core/"),
                         f"the caller's directory has to stay a parent: {record['evidenceDir']}")
 
-    def test_a_run_root_handed_down_is_used_rather_than_a_new_one(self) -> None:
-        handed = self.root / "run-output" / "vicione-fromtherunner"
+    def test_a_run_root_handed_down_with_its_token_is_used_rather_than_a_new_one(self) -> None:
+        handed = runner.claim_run_root()
 
-        record = self.run_category(self.root / "artifacts/required/core", run_root=str(handed))
+        record = self.run_category(self.root / "artifacts/required/core", run_root=handed)
 
-        self.assertTrue(record["trxPath"].endswith("vicione-fromtherunner/core.trx"), record["trxPath"])
+        self.assertTrue(record["trxPath"].endswith(f"{handed.name}/core.trx"), record["trxPath"])
+
+    def test_a_run_root_handed_down_without_a_token_is_refused(self) -> None:
+        """The ambient variable alone is not a claim, and a run that believed it would write into and
+        clean up a directory belonging to somebody else."""
+        self.write_model()
+        stranger = self.root / "somebody-elses-run"
+        stranger.mkdir()
+
+        with mock.patch.dict(os.environ, {runner.RUN_ROOT_VARIABLE: str(stranger)}, clear=False):
+            with self.assertRaises(runner.CategoryError) as raised:
+                runner.run_category("core", MODEL_PROJECT, self.root / "artifacts/required/core")
+
+        self.assertIn("without a valid ownership token", str(raised.exception))
 
     def test_an_interrupted_run_leaves_the_other_run_untouched(self) -> None:
         evidence = self.root / "artifacts/required/core"

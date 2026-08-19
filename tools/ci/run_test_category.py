@@ -17,6 +17,7 @@ import os
 import re
 import secrets
 import shlex
+import signal
 import subprocess
 import sys
 import time
@@ -32,9 +33,26 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_RUN_OUTPUT_DIR = REPOSITORY_ROOT / "artifacts" / "run-output"
 
-# Handed down by tools/ci/run_broker_category.py when it started the fixture. A category started
-# directly creates its own, so nothing this run writes can be a path another run deletes.
+# Handed down by the caller that started the fixture. A category started directly mints its own, so
+# nothing this run writes can be a path another run deletes.
 RUN_ROOT_VARIABLE = "VICIONE_SERVICEBUS_RUN_ROOT"
+
+# The proof that goes with it. A directory name is not a claim: any process on this machine can set an
+# environment variable, and a run that adopted a root on that basis alone would write into - and clean
+# up - a directory belonging to somebody else. The caller writes the secret into the root before
+# starting this process, so a handed-down root can be checked rather than believed.
+RUN_TOKEN_VARIABLE = "VICIONE_SERVICEBUS_RUN_TOKEN"
+RUN_TOKEN_FILE = "run-root.token"
+
+# How long the whole owned process tree is given to end after it was asked to, before the ask becomes
+# a kill.
+TERMINATION_GRACE_SECONDS = 20
+
+# How long a green run's own process group is given to drain before a process still in it counts as a
+# survivor. Measured: on a green core run an MSBuild node was still in the group the instant the child
+# returned and was gone a moment later, so a census taken at that instant reports a survivor every
+# time.
+SURVIVOR_GRACE_SECONDS = 15
 
 
 class CategoryError(RuntimeError):
@@ -112,60 +130,71 @@ def read_not_executed(trx_path: Path) -> list[str]:
     return sorted(names)
 
 
-def minimum_executed(category: str) -> int | None:
-    """The number of cases this category executed when it was last recorded, as a floor.
+def category_contract(category: str, project: str) -> dict:
+    """The one run of the model this invocation is allowed to be, or a refusal naming what is wrong.
 
-    Coverage can fall without a single failure: a new exclusion, a renamed fixture, a filter that
-    matches less than it used to. The counters would still read green, so the floor is what turns a
-    shrinking category red.
-    """
-    try:
-        data = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-
-    run = declared_run(data, category)
-    if run is None:
-        return None
-
-    floor = run.get("minimumExecutedCases")
-
-    return floor if isinstance(floor, int) and floor > 0 else None
-
-
-def declared_run(model: dict, category: str) -> dict | None:
-    """The one run of the model that starts this category, or None if it declares none."""
-    for capability in model.get("capabilities", []):
-        for run in capability.get("runs", []):
-            if run.get("category") == category:
-                return run
-
-    return None
-
-
-def inventoried_cases(category: str) -> list[str] | None:
-    """The cases the model permits this category to leave unexecuted, as full identities.
-
-    None means the model could not be read at all, which is itself a failure: without it there
-    is no statement about what the category skips, and a required category may not skip silently.
-    An entry without a full identity is not a permission either; naming a case by its short form
-    would authorise every case that happens to share that form.
+    Fail closed in every direction. The three readers this replaced returned None for a missing model,
+    an unknown category, an unreadable file or an absent floor, and the runner then skipped the very
+    check that None stood for - so a category the model does not know ran without a floor, without an
+    inventory and without anyone noticing. A policy gate would have caught most of it, but this runner
+    is also the canonical local entry point and may not depend on another gate having run first.
     """
     if not VERIFICATION_MODEL.is_file():
-        return None
+        raise CategoryError(
+            f"the verification model {VERIFICATION_MODEL.relative_to(REPO_ROOT)} is missing, so nothing "
+            "states what this category is or what it may skip")
     try:
-        data = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return None
-    run = declared_run(data, category)
-    if run is None:
-        # A category the model does not declare is a category nothing authorises to skip.
-        return []
+        model = json.loads(VERIFICATION_MODEL.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise CategoryError(f"the verification model is not readable: {error}") from error
+
+    declared = [run for capability in model.get("capabilities", [])
+                for run in capability.get("runs", [])
+                if run.get("category") == category]
+    if not declared:
+        raise CategoryError(
+            f"the verification model declares no run for category '{category}', so this invocation is "
+            "not a required category of this repository")
+    if len(declared) > 1:
+        raise CategoryError(
+            f"the verification model declares {len(declared)} runs for category '{category}', so which "
+            "one this invocation is meant to be is undecided")
+
+    run = declared[0]
+    if run.get("project") != project:
+        raise CategoryError(
+            f"category '{category}' is declared against '{run.get('project')}' and was invoked against "
+            f"'{project}'")
+    if not (REPO_ROOT / project).is_file():
+        raise CategoryError(f"category '{category}' names '{project}', which is not a project file")
+
+    floor = run.get("minimumExecutedCases")
+    if not isinstance(floor, int) or floor <= 0:
+        raise CategoryError(
+            f"category '{category}' declares no executed floor, so its case count could fall without a "
+            "single failure")
+
+    budget = run.get("budgetSeconds")
+    if not isinstance(budget, (int, float)) or budget <= 0:
+        raise CategoryError(
+            f"category '{category}' declares no budget, so a test process that never returns would hold "
+            "this run for as long as the machine stays up")
+
+    return run
+
+
+def permitted_not_executed(run: dict) -> list[str]:
+    """The cases the model permits this category to leave unexecuted, as full identities.
+
+    An entry without a full identity is not a permission: naming a case by its short form would
+    authorise every case that happens to share it.
+    """
     permitted = []
     for case in run.get("notExecuted", []):
         identity = case.get("identity") if isinstance(case, dict) else None
         if isinstance(identity, str) and identity:
             permitted.append(identity)
+
     return permitted
 
 
@@ -324,14 +353,148 @@ def parse_trx_time(value: str | None) -> datetime | None:
         return None
 
 
+def claim_run_root() -> Path:
+    """The root this run owns. It is one this process minted, or one handed to it with proof.
+
+    An ambient VICIONE_SERVICEBUS_RUN_ROOT is not a claim. Any process on the machine can set that
+    variable, and a run that adopted it on that basis would write into - and later clean up - a
+    directory belonging to somebody else. A handed-down root is accepted only when it carries the
+    token file whose content matches the token variable, which the caller wrote into the root before
+    starting this process. Anything else is refused rather than worked around.
+    """
+    handed = (os.environ.get(RUN_ROOT_VARIABLE) or "").strip()
+    if handed:
+        root = Path(handed)
+        token = (os.environ.get(RUN_TOKEN_VARIABLE) or "").strip()
+        proof = root / RUN_TOKEN_FILE
+        if not token or not proof.is_file() or proof.read_text(encoding="utf-8").strip() != token:
+            raise CategoryError(
+                f"{RUN_ROOT_VARIABLE} names '{handed}' without a valid ownership token, so this run "
+                "cannot show that the directory is its own. A run root is handed down with proof or it "
+                "is not handed down at all.")
+        return root
+
+    root = RAW_RUN_OUTPUT_DIR / f"vicione-{secrets.token_hex(6)}"
+    root.mkdir(parents=True, exist_ok=False)
+    (root / RUN_TOKEN_FILE).write_text(secrets.token_hex(16) + "\n", encoding="utf-8")
+
+    return root
+
+
+def terminate_tree(child: subprocess.Popen) -> bool:
+    """Asks the whole owned process tree to end, waits, and kills what is left. True when it killed.
+
+    Signalled as a process group, which is why the child is started in a session of its own: dotnet
+    test is a tree of MSBuild nodes, a vstest console and a test host, and signalling only the process
+    that was started leaves the rest of them running. Three such trees survived more than thirteen
+    hours on this machine because nothing ever asked them to stop.
+    """
+    try:
+        os.killpg(child.pid, signal.SIGTERM)
+    except (ProcessLookupError, PermissionError):
+        return False
+
+    deadline = time.monotonic() + TERMINATION_GRACE_SECONDS
+    while time.monotonic() < deadline:
+        if child.poll() is not None:
+            return False
+        time.sleep(0.2)
+
+    try:
+        os.killpg(child.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        return False
+
+    return True
+
+
+def surviving_owned_processes(group: int) -> list[int]:
+    """Processes still in this run's own process group, read after a grace period.
+
+    The grace period is what makes this a finding rather than noise. Measured on a green core run: an
+    MSBuild node was still in the group the instant the child returned and was gone shortly after, so
+    a census taken at that moment reports a survivor on every successful run.
+    """
+    deadline = time.monotonic() + SURVIVOR_GRACE_SECONDS
+    survivors: list[int] = []
+    while True:
+        listing = subprocess.run(["ps", "-Ao", "pid,pgid"], capture_output=True, text=True, check=False)
+        survivors = [int(pid) for pid, pgid in
+                     (line.split() for line in listing.stdout.splitlines()[1:] if len(line.split()) == 2)
+                     if int(pgid) == group and int(pid) != group]
+        if not survivors or time.monotonic() >= deadline:
+            return survivors
+        time.sleep(0.5)
+
+
+def run_child(command: list[str], environment: dict[str, str], budget: float) -> dict[str, object]:
+    """Runs the test process under a finite budget, in a session it alone owns.
+
+    The budget is the point. This runner is the canonical local entry point as well as the one CI
+    calls, and a job level timeout in a workflow does nothing for a developer machine. Without it a
+    test process that never returns holds the run for as long as the machine stays up.
+    """
+    started = time.monotonic()
+    child = subprocess.Popen(command, env=environment, text=True, start_new_session=True,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    timed_out = False
+    killed = False
+    try:
+        out, err = child.communicate(timeout=budget)
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        killed = terminate_tree(child)
+        try:
+            out, err = child.communicate(timeout=TERMINATION_GRACE_SECONDS)
+        except subprocess.TimeoutExpired:
+            child.kill()
+            out, err = "", ""
+
+    return {
+        "exitCode": child.returncode,
+        "stdout": out or "",
+        "stderr": err or "",
+        "timedOut": timed_out,
+        "escalatedToKill": killed,
+        "seconds": round(time.monotonic() - started, 3),
+        "survivingOwnedProcesses": surviving_owned_processes(child.pid),
+    }
+
+
+def omitted_results(trx_path: Path) -> list[str]:
+    """Cases the result file defines and never reports a result for.
+
+    A counter cannot show this: total counts definitions, and a definition whose result entry is
+    missing is neither passed, failed nor not-executed. It is simply absent, and every count above it
+    still adds up.
+    """
+    if not trx_path.is_file():
+        return []
+    try:
+        root = ElementTree.parse(trx_path).getroot()
+    except ElementTree.ParseError:
+        return []
+
+    defined = {}
+    for definition in root.findall("t:TestDefinitions/t:UnitTest", TRX_NAMESPACE):
+        method = definition.find("t:TestMethod", TRX_NAMESPACE)
+        if method is not None:
+            defined[definition.attrib.get("id")] = identity_of(method)
+
+    reported = {result.attrib.get("testId") for result in root.findall("t:Results/t:UnitTestResult", TRX_NAMESPACE)}
+
+    return sorted(identity for test_id, identity in defined.items() if test_id not in reported)
+
+
 def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, object]:
-    # Everything this run writes lives under one root that belongs to it alone. The broker runner
-    # hands one down when it started the fixture; a category started directly creates its own, so a
-    # direct run is no less isolated than a brokered one.
-    run_root = Path(os.environ.get(RUN_ROOT_VARIABLE) or "")
-    if not run_root.name:
-        run_root = RAW_RUN_OUTPUT_DIR / f"vicione-{secrets.token_hex(6)}"
-    run_root.mkdir(parents=True, exist_ok=True)
+    # What this category is, before anything runs. An unknown category, a project the model does not
+    # declare for it, a malformed model, a missing floor or a missing budget each end the run here
+    # rather than after a green looking result.
+    contract = category_contract(category, project)
+
+    # Everything this run writes lives under one root that belongs to it alone, minted here or handed
+    # down with a token this run can check.
+    run_root = claim_run_root()
 
     # An explicit --evidence-dir is a parent, never the file. Two runs of one category pointed at the
     # same directory would otherwise overwrite each other's record, which is exactly what a caller
@@ -365,14 +528,14 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
     environment = dict(os.environ)
     environment.setdefault("TZ", TEST_TIMEZONE)
 
-    started = time.monotonic()
-    completed = subprocess.run(command, text=True, capture_output=True, env=environment)
-    process_seconds = round(time.monotonic() - started, 3)
+    child = run_child(command, environment, float(contract["budgetSeconds"]))
+    process_seconds = child["seconds"]
 
     counters = read_counters(trx_path)
     skipped = read_not_executed(trx_path)
-    permitted = inventoried_cases(category)
-    unlisted = unauthorised_not_executed(skipped, permitted) if permitted is not None else skipped
+    permitted = permitted_not_executed(contract)
+    unlisted = unauthorised_not_executed(skipped, permitted)
+    omitted = omitted_results(trx_path)
 
     executed = read_executed(trx_path)
     anchors = required_anchors(category)
@@ -395,7 +558,11 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
         "command": shlex.join(command),
         "environment": {"TZ": environment["TZ"]},
         "timezone": environment["TZ"],
-        "exitCode": completed.returncode,
+        "exitCode": child["exitCode"],
+        "budgetSeconds": contract["budgetSeconds"],
+        "timedOut": child["timedOut"],
+        "escalatedToKill": child["escalatedToKill"],
+        "survivingOwnedProcesses": child["survivingOwnedProcesses"],
         "counters": counters,
         "processWallDurationSeconds": process_seconds,
         "trxRunDurationSeconds": read_run_duration(trx_path),
@@ -406,6 +573,7 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
         if evidence_dir.is_relative_to(REPOSITORY_ROOT) else str(evidence_dir),
         "notExecuted": skipped,
         "notExecutedUnlisted": unlisted,
+        "resultsOmitted": omitted,
         "verifiedAnchors": proof_of_anchor,
         "unprovenAnchors": unproven,
     }
@@ -414,24 +582,39 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
         json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
-    sys.stdout.write(completed.stdout)
-    sys.stderr.write(completed.stderr)
+    sys.stdout.write(child["stdout"])
+    sys.stderr.write(child["stderr"])
 
+    if child["timedOut"]:
+        raise CategoryError(
+            f"Required category '{category}' did not finish within its budget of "
+            f"{contract['budgetSeconds']} s. The whole owned process tree was taken down"
+            + (" and had to be killed" if child["escalatedToKill"] else "")
+            + f"; {len(child['survivingOwnedProcesses'])} process(es) of it survived that."
+        )
+    if child["survivingOwnedProcesses"]:
+        raise CategoryError(
+            f"Required category '{category}' left {len(child['survivingOwnedProcesses'])} of its own "
+            f"process(es) behind: {child['survivingOwnedProcesses']}. A run that outlives itself holds "
+            "ports, files and a fixture that the next run then meets."
+        )
     if counters["total"] <= 0:
         raise CategoryError(f"Required category '{category}' executed 0 tests; a required category may never be empty.")
     if counters["executed"] <= 0:
         raise CategoryError(f"Required category '{category}' executed no test at all; every test was skipped or filtered.")
     if counters["failed"] > 0:
         raise CategoryError(f"Required category '{category}' reported {counters['failed']} failing test(s).")
-    # A green category says nothing about the cases it never started. Every one of those has to be
-    # named in the inventory, with a reason, before the category may be read as a proof.
-    if permitted is None:
+    # A result file may define a case and never report a result for it. No counter shows that: total
+    # counts definitions, and such a case is neither passed, failed nor not-executed, so every number
+    # above it still adds up.
+    if omitted:
         raise CategoryError(
-            f"Required category '{category}' has no readable not-executed inventory at "
-            f"{VERIFICATION_MODEL.relative_to(REPO_ROOT)}; a required category may not skip silently."
+            f"Required category '{category}' defines {len(omitted)} case(s) the result file reports no "
+            f"result for: {', '.join(omitted[:5])}{' …' if len(omitted) > 5 else ''}. A counter cannot "
+            "show an omitted result, so it is compared here."
         )
-    floor = minimum_executed(category)
-    if floor is not None and counters["executed"] < floor:
+    floor = contract["minimumExecutedCases"]
+    if counters["executed"] < floor:
         raise CategoryError(
             f"Required category '{category}' executed {counters['executed']} case(s) but the inventory "
             f"records a floor of {floor}. A category that executes fewer cases than it did before has "
@@ -449,8 +632,8 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
             f"capability is verified through: {', '.join(unproven)}. A capability that leans on this run "
             "is proven by the cases that ran in it, not by a name that appears in a source file."
         )
-    if completed.returncode != 0:
-        raise CategoryError(f"Required category '{category}' exited with {completed.returncode}.")
+    if child["exitCode"] != 0:
+        raise CategoryError(f"Required category '{category}' exited with {child['exitCode']}.")
 
     return record
 

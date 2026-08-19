@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_TEST_IDENTITY_MEASUREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0096-lead-directive, 'measure the framework's discovery/listing behavior first'",
+  "platform": {
+    "nunit": "4.6.1",
+    "adapter": "NUnit3TestAdapter 6.1.0",
+    "vstest": "18.6.0",
+    "sdk": "10.0.302"
+  },
+  "discoveryListing": {
+    "command": "dotnet test <project> -c Release --no-build --list-tests",
+    "result": "display names only - no namespace, no fixture, no arguments",
+    "sample": [
+      "nothing arrived and nothing stood still",
+      "Should_call_the_exact_set_exact"
+    ],
+    "usableAsExpectedSet": false,
+    "reason": "two fixtures with the same case name are indistinguishable in it"
+  },
+  "resultFile": {
+    "source": "TRX TestMethod@className + '.' + TestMethod@name",
+    "parameterisedFixture": "arguments appear in className, e.g. ViciOne.ServiceBus.ActiveMqTransport.Tests.A_serialization_exception(\"activemq\")",
+    "parameterisedCase": "arguments appear in name, e.g. Should_connect_locally(\"amqp\")",
+    "usableAsExpectedSet": true
+  },
+  "uniqueness": [
+    {
+      "category": "activemq",
+      "definitions": 154,
+      "distinctIdentities": 154,
+      "duplicates": 0
+    },
+    {
+      "category": "core",
+      "definitions": 1873,
+      "distinctIdentities": 1873,
+      "duplicates": 0,
+      "note": "from the complete clean run of 2026-08-19, 1873 passed, 0 failed, 0 not executed"
+    }
+  ],
+  "measuredAmbiguity": {
+    "what": "a [TestCase] that declares TestName replaces the case name with that text, and the method name disappears from the identity entirely",
+    "example": {
+      "className": "ViciOne.ServiceBus.Diagnostics.Tests.Bringing_the_consumer_to_a_standstill_before_the_snapshot",
+      "name": "nothing arrived and nothing stood still",
+      "methodItBelongsTo": "Should_name_the_verdict_of_a_run"
+    },
+    "alternativeMeasured": "NUnit.DisplayName=FullName passed as a run configuration parameter changes nothing: an explicit TestName wins",
+    "platformLimitation": false,
+    "reading": "This is a repository choice, not something the platform withholds, so the stop-and-ask condition of 0096 is not met. It is closed on our side: the expected set is generated from a run of the same commit, so a collision appears as a duplicate expected identity and the model is red before any run is judged by it."
+  }
+}

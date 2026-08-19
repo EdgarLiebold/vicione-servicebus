@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_PROCESS_CENSUS",
+  "phase": "before and after",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "0095-lead-directive section 2, retained by 0096",
+  "totalProcesses": 633,
+  "ownedByThisTeam": [
+    {
+      "processGroup": 14273,
+      "reason": "the Python category runner of this session: its --evidence-dir carries the session id 67923822-39dc-4e5f-9371-193dc2519317, so this group is this Team's beyond doubt",
+      "members": [
+        {
+          "pid": 14540,
+          "ppid": 1,
+          "elapsed": "13:34:00",
+          "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_test_category.py --category activemq --project tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj --evidence-dir /tmp/"
+        },
+        {
+          "pid": 14542,
+          "ppid": 14540,
+          "elapsed": "13:34:00",
+          "command": "dotnet test tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/activemq.trx"
+        },
+        {
+          "pid": 14556,
+          "ppid": 14542,
+          "elapsed": "13:33:59",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 14558,
+          "ppid": 14542,
+          "elapsed": "13:33:59",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 14560,
+          "ppid": 14542,
+          "elapsed": "13:33:59",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 14565,
+          "ppid": 14542,
+          "elapsed": "13:33:57",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 14572,
+          "ppid": 14556,
+          "elapsed": "13:33:54",
+          "command": "/usr/local/share/dotnet/dotnet exec /usr/local/share/dotnet/sdk/10.0.302/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --logger:trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/activemq.trx /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTran"
+        },
+        {
+          "pid": 14575,
+          "ppid": 14572,
+          "elapsed": "13:33:53",
+          "command": "/usr/local/share/dotnet/dotnet exec --runtimeconfig /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.runtimeconfig.json --depsfile /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveM"
+        }
+      ]
+    },
+    {
+      "processGroup": 27382,
+      "reason": "a dotnet test of repositories/vicione-servicebus' ActiveMQ test project, writing its TRX into that repository's own artifacts/run-output",
+      "members": [
+        {
+          "pid": 27855,
+          "ppid": 1,
+          "elapsed": "13:12:29",
+          "command": "dotnet test tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj -c Release --logger trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/activemq.trx"
+        },
+        {
+          "pid": 27872,
+          "ppid": 27855,
+          "elapsed": "13:12:29",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 27878,
+          "ppid": 27855,
+          "elapsed": "13:12:29",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 27883,
+          "ppid": 27855,
+          "elapsed": "13:12:28",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 27913,
+          "ppid": 27855,
+          "elapsed": "13:12:27",
+          "command": "/usr/local/share/dotnet/dotnet /usr/local/share/dotnet/sdk/10.0.302/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false"
+        },
+        {
+          "pid": 27965,
+          "ppid": 27878,
+          "elapsed": "13:12:24",
+          "command": "/usr/local/share/dotnet/dotnet exec /usr/local/share/dotnet/sdk/10.0.302/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --logger:trx;LogFileName=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/activemq.trx /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTran"
+        },
+        {
+          "pid": 27966,
+          "ppid": 27965,
+          "elapsed": "13:12:24",
+          "command": "/usr/local/share/dotnet/dotnet exec --runtimeconfig /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.runtimeconfig.json --depsfile /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveM"
+        }
+      ]
+    },
+    {
+      "processGroup": 36970,
+      "reason": "a vstest.console run of the same repository's ActiveMQ test assembly, filtered to Reconnecting_Specs, from this Team's reconnect work",
+      "members": [
+        {
+          "pid": 37012,
+          "ppid": 1,
+          "elapsed": "12:53:26",
+          "command": "/usr/local/share/dotnet/dotnet exec /usr/local/share/dotnet/sdk/10.0.302/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~Reconnecting_Specs --logger:console;verbosity=detailed /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTr"
+        },
+        {
+          "pid": 37026,
+          "ppid": 37012,
+          "elapsed": "12:53:25",
+          "command": "/usr/local/share/dotnet/dotnet exec --runtimeconfig /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.runtimeconfig.json --depsfile /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveM"
+        }
+      ]
+    }
+  ],
+  "leftAlone": [
+    {
+      "what": "the editor and its dotnet language services",
+      "processGroups": [
+        3978,
+        15977,
+        15980,
+        20897,
+        21065
+      ],
+      "reason": "not this Team's, and the directive forbids touching editor processes"
+    },
+    {
+      "what": "the vicione-replacement-review stream",
+      "processGroups": [
+        3081,
+        3978
+      ],
+      "reason": "a different work stream that only shares the word 'vicione' in its path"
+    },
+    {
+      "what": "the vicione-webpage node processes",
+      "processGroups": [
+        3978,
+        8154,
+        80482
+      ],
+      "reason": "unrelated to this repository"
+    }
+  ],
+  "terminationStatus": "Performed with the Product Owner's explicit release. SIGTERM was sent to exactly the three process groups named above, in one call, addressed as process groups so the whole owned tree received it. After eight seconds no member of any of them was left, so no SIGKILL escalation was needed. No signal was sent to any other process on this machine.",
+  "after": {
+    "totalProcesses": 615,
+    "survivingOwnedProcesses": [],
+    "result": "clean",
+    "remainingProcessesNamingTheRepository": []
+  },
+  "decisionPerGroup": [
+    {
+      "processGroup": 14273,
+      "members": [
+        14540,
+        14542,
+        14556,
+        14558,
+        14560,
+        14565,
+        14572,
+        14575
+      ],
+      "decision": "terminated",
+      "reason": "the Python category runner of this session: its --evidence-dir carries the session id 67923822-39dc-4e5f-9371-193dc2519317, so this group is this Team's beyond doubt",
+      "outcome": "gone after SIGTERM within 8 s"
+    },
+    {
+      "processGroup": 27382,
+      "members": [
+        27855,
+        27872,
+        27878,
+        27883,
+        27913,
+        27965,
+        27966
+      ],
+      "decision": "terminated",
+      "reason": "a dotnet test of repositories/vicione-servicebus' ActiveMQ test project, writing its TRX into that repository's own artifacts/run-output",
+      "outcome": "gone after SIGTERM within 8 s"
+    },
+    {
+      "processGroup": 36970,
+      "members": [
+        37012,
+        37026
+      ],
+      "decision": "terminated",
+      "reason": "a vstest.console run of the same repository's ActiveMQ test assembly, filtered to Reconnecting_Specs, from this Team's reconnect work",
+      "outcome": "gone after SIGTERM within 8 s"
+    }
+  ]
+}
