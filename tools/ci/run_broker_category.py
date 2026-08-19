@@ -31,6 +31,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import run_ownership  # noqa: E402  (repository local, resolved from this file's folder)
+
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
 # under artifacts/, which .gitignore covers; tools/ci/policy_validator.py rejects one under evidence/.
@@ -53,7 +56,7 @@ COMPOSE_FILE = REPO_ROOT / "build/test-infrastructure/compose.yaml"
 # run on the same machine.
 PROJECT_VARIABLE = "VICIONE_SERVICEBUS_COMPOSE_PROJECT"
 
-RUN_ROOT_VARIABLE = "VICIONE_SERVICEBUS_RUN_ROOT"
+RUN_ROOT_VARIABLE = run_ownership.RUN_ROOT_VARIABLE
 
 # Container ports each broker exposes, mapped onto the environment variable the tests read.
 BROKER_PORTS = {
@@ -128,10 +131,22 @@ def compose(*args: str, capture: bool = False, environment: dict[str, str] | Non
 
 
 def start(brokers: list[str], environment: dict[str, str]) -> None:
-    # Clean slate before starting, not only afterwards. A database image applies its credentials only
-    # when it initialises an empty data directory, so a volume left behind by an earlier run keeps the
-    # old secret and the run fails authentication against its own fixture.
-    compose("down", "-v", capture=True, environment=environment)
+    """Brings the fixture up, and refuses to run against one it could not clean first.
+
+    Clean slate before starting, not only afterwards. A database image applies its credentials only
+    when it initialises an empty data directory, so a volume left behind by an earlier run keeps the
+    old secret and the run fails authentication against its own fixture.
+
+    The result of that pre-clean used to be discarded. A failed one followed by a successful 'up'
+    then read as a healthy start, and the tests ran against a fixture still holding another run's
+    state - a database with an earlier secret, or a broker with an earlier queue. It is a startup
+    failure now, and no test command executes after it.
+    """
+    cleaned = compose("down", "-v", "--remove-orphans", capture=True, environment=environment)
+    if cleaned.returncode != 0:
+        raise RunnerError(
+            "the fixture of an earlier run could not be removed before this one started: "
+            f"{cleaned.stderr.strip() or cleaned.stdout.strip()}")
 
     result = compose("up", "-d", "--wait", *brokers, capture=True, environment=environment)
     if result.returncode != 0:
@@ -535,10 +550,28 @@ class OutageController:
         self._environment = environment
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._serve, name="outage-controller", daemon=True)
+        self._started = False
         self.error: BaseException | None = None
 
-    def start(self) -> None:
-        self._thread.start()
+    def start(self) -> list[str]:
+        """Starts the control thread. Returns findings instead of raising, and is idempotent.
+
+        The teardown has to be able to shut this object down whatever state it reached, including the
+        state where the thread was never started at all - a Thread.join() on one of those raises, and
+        that exception used to travel out of a teardown which promises not to raise and skip the
+        restore, the logs and the fixture removal behind it.
+        """
+        if self._started:
+            return []
+        try:
+            self._thread.start()
+        except RuntimeError as error:
+            self._stop.set()
+            return [f"outage-controller: the control thread could not be started: {error}"]
+
+        self._started = True
+
+        return []
 
     def _serve(self) -> None:
         try:
@@ -547,20 +580,35 @@ class OutageController:
             self.error = error
 
     def shutdown(self) -> list[str]:
-        """Stops the thread and says what it found. Never raises: this runs inside the teardown."""
-        self._stop.set()
-        self._thread.join(timeout=CONTROLLER_JOIN_SECONDS)
+        """Stops the thread and says what it found. Never raises, in any state it can be in.
 
+        Idempotent and safe before a start: a controller that never ran is nothing to wait for, and a
+        second shutdown finds a thread that has already ended.
+        """
+        self._stop.set()
         findings: list[str] = []
-        if self._thread.is_alive():
-            findings.append(
-                f"outage-controller: the control thread did not end within {CONTROLLER_JOIN_SECONDS} s, so "
-                "it can still issue Docker actions against a fixture that is being removed")
+
+        if self._started:
+            try:
+                self._thread.join(timeout=CONTROLLER_JOIN_SECONDS)
+            except RuntimeError as error:
+                findings.append(f"outage-controller: the control thread could not be joined: {error}")
+
+            if self._thread.is_alive():
+                findings.append(
+                    f"outage-controller: the control thread did not end within {CONTROLLER_JOIN_SECONDS} s, "
+                    "so it can still issue Docker actions against a fixture that is being removed")
+
         if self.error is not None:
             findings.append(
                 f"outage-controller: the control thread ended with {type(self.error).__name__}: {self.error}")
 
         return findings
+
+    @property
+    def stopped(self) -> bool:
+        """Whether this controller has been told to stop. Read by the teardown before it removes."""
+        return self._stop.is_set()
 
 
 class RunState:
@@ -603,8 +651,14 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
         control.mkdir(parents=True)
         environment[OUTAGE_CONTROL_VARIABLE] = str(control)
 
-        state.controller = OutageController(args.allow_broker_outage, control, dict(environment))
-        state.controller.start()
+        controller = OutageController(args.allow_broker_outage, control, dict(environment))
+        problems = controller.start()
+        # Published to the teardown either way, because a controller that failed to start still has to
+        # be shut down and still has findings to report. What it must not do is reach that state as a
+        # half-built object, so it is constructed, started and only then handed over.
+        state.controller = controller
+        if problems:
+            raise RunnerError("; ".join(problems))
         print(f"outage control ready for {args.allow_broker_outage} at {control}")
 
     # Always under this run's own root. A caller supplied path was a file two runs of one
@@ -642,6 +696,20 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
     return completed.returncode
 
 
+def guarded(stage: str, findings: list[str], action) -> None:
+    """Runs one cleanup stage and turns anything it raises into a finding of that stage.
+
+    Every stage is guarded on its own, so one that fails cannot take the ones behind it with it. That
+    is what happened when the controller shutdown raised out of a teardown that promised not to: the
+    restore, the broker logs and the Compose removal after it were all skipped, and the run reported
+    the exception rather than the fixture it had left standing.
+    """
+    try:
+        action()
+    except Exception as error:  # noqa: BLE001 - the stage is named with it
+        findings.append(f"{stage}: {type(error).__name__}: {error}")
+
+
 def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str, str],
              state: RunState) -> list[str]:
     """Removes the fixture and returns every cleanup finding. Never raises.
@@ -651,29 +719,42 @@ def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str
     still alive each printed FAIL, each filled the slot the primary failure was read from, and the
     verdict at the end then found that slot occupied and returned 0.
 
-    Each step is also independent of the one before it. A restore that fails may not be the reason the
-    fixture is left standing, so the steps do not stop at the first finding.
+    Every stage is attempted, whatever the ones before it did, and each is guarded on its own.
     """
     findings: list[str] = []
 
-    # The control thread first. A thread still answering outage requests while the fixture is being
-    # removed acts on containers that are on their way out.
+    # The control thread first, and its own shutdown decides whether anything after this may touch
+    # Docker at all. A thread still answering outage requests while the fixture is being removed acts
+    # on containers that are on their way out.
+    controller_alive = False
     if state.controller is not None:
-        findings.extend(state.controller.shutdown())
+        guarded("outage-controller", findings, lambda: findings.extend(state.controller.shutdown()))
+        controller_alive = any(finding.startswith("outage-controller") and "did not end" in finding
+                               for finding in findings)
+
+    if controller_alive:
+        # A hard failure, and the reason the two stages below are skipped rather than raced: removing
+        # the fixture while a live thread still issues 'compose stop' and 'compose start' against it
+        # is two writers on one project, and whichever wins, the next run meets the loser's state.
+        findings.append(
+            "broker-fixture: the outage controller is still alive, so this run does not remove the "
+            "fixture underneath it. The containers of compose project "
+            f"{environment.get(PROJECT_VARIABLE, '<unnamed>')} are left for a human to remove")
+
+        return findings
 
     # An outage is undone before anything else, and unconditionally. A child that hung or was killed
     # leaves the broker stopped, and a stopped container survives a failed teardown: the next run
     # then meets a fixture that is up and answers nothing.
     if args.allow_broker_outage:
-        try:
+        def restore() -> None:
             restored = compose("start", args.allow_broker_outage, capture=True, environment=environment)
-        except OSError as error:
-            findings.append(f"broker-restore: {args.allow_broker_outage} could not be started again: {error}")
-        else:
             if restored.returncode != 0:
                 findings.append(
                     f"broker-restore: {args.allow_broker_outage} could not be started again: "
                     f"{restored.stderr.strip() or restored.stdout.strip()}")
+
+        guarded("broker-restore", findings, restore)
 
     # The log is collected before the teardown, or it does not exist any more. Brokers whose log the
     # refusal check already collected are not fetched a second time: that would overwrite the very
@@ -683,17 +764,12 @@ def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str
         remaining = [broker for broker in brokers if broker not in state.captured]
         if remaining:
             capture_logs(remaining, environment)
-    except OSError as error:
+    except Exception as error:  # noqa: BLE001 - evidence about a verdict that already exists
         print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
 
     # Trap equivalent: the fixture is removed on success, on failure and on an exception alike, and a
     # teardown that fails says so.
-    try:
-        stop(environment)
-    except TeardownError as error:
-        findings.append(f"broker-teardown: {error}")
-    except OSError as error:
-        findings.append(f"broker-teardown: the fixture could not be removed: {error}")
+    guarded("broker-teardown", findings, lambda: stop(environment))
 
     return findings
 
@@ -715,12 +791,23 @@ def main(argv: list[str] | None = None) -> int:
 
     # One identity for this run, and everything that can collide is derived from it: the compose
     # project that decides which containers a command addresses, and the root every output and control
-    # file of this run lives under. Two runs on one machine now share nothing at all.
-    identity = f"vicione-{secrets.token_hex(6)}"
-    run_root = RAW_RUN_OUTPUT_DIR / identity
-    run_root.mkdir(parents=True, exist_ok=True)
+    # file of this run lives under. Two runs on one machine share nothing at all.
+    #
+    # The root is claimed rather than adopted. The canonical entry point hands one down together with
+    # the token that proves it minted it; a direct call mints its own. A bare path in the environment
+    # is refused, because a run that believed one would write into, and later clean up, a directory
+    # belonging to somebody else.
+    try:
+        run_root = run_ownership.claim_run_root(RAW_RUN_OUTPUT_DIR)
+    except run_ownership.OwnershipError as error:
+        print(f"FAIL broker-category {args.category or 'command'}: {error}", file=sys.stderr)
+        return 1
+
+    identity = run_root.name
     environment[PROJECT_VARIABLE] = identity
     environment[RUN_ROOT_VARIABLE] = str(run_root)
+    environment[run_ownership.RUN_TOKEN_VARIABLE] = (
+        (run_root / run_ownership.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip())
     print(f"run identity {identity}, output under {run_root.relative_to(REPO_ROOT)}")
 
     state = RunState()
