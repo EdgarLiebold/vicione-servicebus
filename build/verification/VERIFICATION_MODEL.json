@@ -249,7 +249,7 @@
           "job": "benchmarks",
           "category": "diagnostics",
           "project": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
-          "minimumExecutedCases": 40,
+          "minimumExecutedCases": 44,
           "notExecuted": [],
           "testProjectDirectory": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
           "explicitAttributeCount": 0,
