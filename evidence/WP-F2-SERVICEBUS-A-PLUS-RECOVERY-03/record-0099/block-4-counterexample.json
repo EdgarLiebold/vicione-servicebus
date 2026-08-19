@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_COUNTEREXAMPLE_MEASUREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "LEAD_DIRECTIVE 0098",
+  "block": "4 - the diagnostics output contract (section F)",
+  "measuredAgainstCommit": "ee9d5ef57e2c04defc617a749a47b7496ba89865",
+  "note": "The line that writes the result where the caller can still read it is removed from the fallback, and the fixture that is supposed to hold that contract is run. Measured against the code of commit ee9d5ef5 and against the code of this block.",
+  "before": {
+    "mutation": "the fallback no longer writes the result anywhere the caller can read it",
+    "casesPassed": 8,
+    "suiteExitCode": 0,
+    "verdict": "SILENTLY DISCARDS THE RESULT AND STAYS GREEN"
+  },
+  "after": {
+    "mutation": "the fallback no longer writes the result anywhere the caller can read it",
+    "casesPassed": 10,
+    "suiteExitCode": 1,
+    "verdict": "the cases refuse it"
+  }
+}

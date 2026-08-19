@@ -71,9 +71,7 @@ internal static class Program
                 _ => throw new ArgumentException($"unknown scenario '{args[0]}'")
             };
 
-            await Report(result, sink, cancellation.Token);
-
-            return 0;
+            return await Deliver(result, sink, cancellation.Token);
         }
         catch (OperationCanceledException)
         {
@@ -143,26 +141,65 @@ internal static class Program
     /// ended on the second exception instead of on its own result.
     /// </para>
     /// </summary>
-    internal static async Task Report(object result, string? sink, CancellationToken cancellationToken)
+    /// <summary>
+    /// The exit code of a run whose scenario measured what it was asked to measure.
+    /// <para>
+    /// The scenario succeeding and the caller receiving the result are two things, and this is the
+    /// second one: a run that could not write the file it was told to write did not do what was asked,
+    /// whatever it measured. Named rather than written into the success path, because both scenarios of
+    /// this tool need the pinned fixture, so there is no run without a broker in which the scenario
+    /// succeeds - and a decision no case can reach is a decision nobody has checked.
+    /// </para>
+    /// </summary>
+    internal static async Task<int> Deliver(object result, string? sink, CancellationToken cancellationToken,
+        TextWriter? output = null, TextWriter? error = null)
     {
+        return await Report(result, sink, cancellationToken, output, error) ? 0 : 1;
+    }
+
+    /// <summary>
+    /// Writes the result where the caller asked for it, and says whether that is where it went.
+    /// <para>
+    /// The two writers are the seam. They defaulted to the real console, so a case could observe that
+    /// this method did not throw and nothing else: the fallback could have dropped the result on the
+    /// floor and every case about it stayed green. Measured - removing the line that writes the result
+    /// left the whole fixture passing.
+    /// </para>
+    /// <para>
+    /// A caller that asked for a file and did not get one has not had its request carried out, whatever
+    /// the scenario itself measured, so the answer here is the delivery and not the measurement. The
+    /// result is still written to the output the caller can read, because losing it as well would
+    /// help nobody.
+    /// </para>
+    /// </summary>
+    /// <returns>True when the result reached the place the caller named.</returns>
+    internal static async Task<bool> Report(object result, string? sink, CancellationToken cancellationToken,
+        TextWriter? output = null, TextWriter? error = null)
+    {
+        TextWriter destination = output ?? Console.Out;
+        TextWriter diagnostics = error ?? Console.Error;
         var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
 
         if (sink is null)
         {
-            Console.WriteLine(json);
+            await destination.WriteLineAsync(json);
 
-            return;
+            return true;
         }
 
         try
         {
             await File.WriteAllTextAsync(sink, json + Environment.NewLine, cancellationToken);
+
+            return true;
         }
         catch (Exception unwritable) when (unwritable is IOException or UnauthorizedAccessException
                                                or NotSupportedException or ArgumentException)
         {
-            Console.Error.WriteLine($"the result could not be written to '{sink}': {unwritable.Message}");
-            Console.WriteLine(json);
+            await diagnostics.WriteLineAsync($"the result could not be written to '{sink}': {unwritable.Message}");
+            await destination.WriteLineAsync(json);
+
+            return false;
         }
     }
 

@@ -188,21 +188,107 @@ public class Writing_the_result_where_the_caller_asked_for_it
     }
 
     [Test]
-    public void Should_not_throw_when_the_sink_is_a_directory()
+    public async Task Should_write_the_result_it_could_not_file_to_the_output_the_caller_reads()
     {
+        // What this case is really about is that the result still exists. Both cases here used to
+        // observe that Report did not throw and nothing else, so the fallback could have dropped the
+        // result on the floor and they would both have stayed green. Measured: it could.
         var directory = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}");
         Directory.CreateDirectory(directory);
+        var output = new StringWriter();
+        var error = new StringWriter();
 
         try
         {
-            Assert.DoesNotThrowAsync(
-                () => Program.Report(new { status = "failed" }, directory, CancellationToken.None),
-                "writing to a path that is a directory ended the process instead of the run");
+            var delivered = await Program.Report(new { status = "failed", error = "a reason" },
+                directory, CancellationToken.None, output, error);
+
+            Assert.That(delivered, Is.False, "a result that never reached the file the caller named was "
+                + "reported as delivered");
+            Assert.That(output.ToString(), Is.Not.Empty,
+                "the result was lost: the file could not be written and nothing was written instead");
+
+            using JsonDocument written = JsonDocument.Parse(output.ToString());
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(written.RootElement.GetProperty("status").GetString(), Is.EqualTo("failed"));
+                Assert.That(written.RootElement.GetProperty("error").GetString(), Is.EqualTo("a reason"));
+                Assert.That(error.ToString(), Does.Contain("the result could not be written to"),
+                    "nothing said where the result was supposed to go");
+                Assert.That(error.ToString(), Does.Contain(directory));
+            });
         }
         finally
         {
             Directory.Delete(directory, true);
         }
+    }
+
+    [Test]
+    public async Task Should_write_the_result_to_the_output_when_no_file_was_asked_for()
+    {
+        var output = new StringWriter();
+
+        var delivered = await Program.Report(new { status = "ok" }, null, CancellationToken.None, output);
+
+        Assert.That(delivered, Is.True, "a caller that asked for no file got everything it asked for");
+
+        using JsonDocument written = JsonDocument.Parse(output.ToString());
+
+        Assert.That(written.RootElement.GetProperty("status").GetString(), Is.EqualTo("ok"));
+    }
+
+    [Test]
+    public async Task Should_report_a_delivered_result_when_the_file_was_written()
+    {
+        using var sink = new TemporaryFile();
+        var output = new StringWriter();
+
+        var delivered = await Program.Report(new { status = "ok" }, sink.Path, CancellationToken.None,
+            output);
+
+        Assert.That(delivered, Is.True);
+        Assert.That(output.ToString(), Is.Empty,
+            "the result went to the file and was printed as well, so a caller reading both sees it twice");
+        Assert.That(File.Exists(sink.Path), Is.True);
+    }
+
+    [Test]
+    public async Task Should_fail_a_run_that_measured_its_result_and_could_not_deliver_it()
+    {
+        // The exit code of the success path, on its own. Both scenarios of this tool need the pinned
+        // fixture, so there is no run here in which the scenario succeeds and only the delivery fails;
+        // the decision is reached directly instead of being re-implemented in the case.
+        var directory = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        var output = new StringWriter();
+
+        try
+        {
+            var code = await Program.Deliver(new { status = "ok" }, directory, CancellationToken.None,
+                output, new StringWriter());
+
+            Assert.That(code, Is.Not.EqualTo(0),
+                "the file the caller asked for was never written and the run reported success");
+            Assert.That(output.ToString(), Does.Contain("\"status\""),
+                "the result was withheld as well as undelivered");
+        }
+        finally
+        {
+            Directory.Delete(directory, true);
+        }
+    }
+
+    [Test]
+    public async Task Should_pass_a_run_whose_result_reached_the_file_it_was_asked_for()
+    {
+        using var sink = new TemporaryFile();
+
+        var code = await Program.Deliver(new { status = "ok" }, sink.Path, CancellationToken.None,
+            new StringWriter(), new StringWriter());
+
+        Assert.That(code, Is.EqualTo(0), "a run that delivered what it was asked for was called a failure");
     }
 
 
