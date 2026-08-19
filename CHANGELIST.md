@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1221 |
+| Added | 1225 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -6839,6 +6839,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/fixtures/compose_fixture.py` | Added |  |
 | `tools/ci/fixtures/outage_protocol.py` | Added |  |
 | `tools/ci/policies/__init__.py` | Added |  |
+| `tools/ci/policies/fixtures.py` | Added |  |
+| `tools/ci/policies/model.py` | Added |  |
+| `tools/ci/policies/msbuild.py` | Added |  |
+| `tools/ci/policies/workflow.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
 | `tools/ci/record_expected.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |

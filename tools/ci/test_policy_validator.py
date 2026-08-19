@@ -2064,8 +2064,19 @@ class Every_rule_this_validator_can_report(unittest.TestCase):
     def source(self, name: str) -> str:
         return (Path(__file__).resolve().parent / name).read_text(encoding="utf-8")
 
+    def policy_sources(self) -> str:
+        """Every module a rule can live in, found rather than listed.
+
+        The rules moved out of the entry point into policies/, and this case went on reading the entry
+        point: it found no rule at all and would have passed on an empty set. It says so now, and it
+        reads whatever is there.
+        """
+        directory = Path(__file__).resolve().parent / "policies"
+
+        return "\n".join(path.read_text(encoding="utf-8") for path in sorted(directory.glob("*.py")))
+
     def test_has_a_case_that_makes_it_report(self) -> None:
-        reported = rule_names_reported_by(self.source("policy_validator.py"))
+        reported = rule_names_reported_by(self.policy_sources())
         proven = rule_names_proven_by(self.source("test_policy_validator.py"))
 
         self.assertTrue(reported, "no rule was found at all, so this case proves nothing")
@@ -2115,6 +2126,27 @@ class Every_rule_this_validator_has_runs(unittest.TestCase):
 
         self.assertEqual(defined, set(policy.rules()),
                          "a rule of this validator is defined and never called")
+
+    def test_every_rule_of_every_policy_module_is_one_this_validator_composes(self) -> None:
+        """A whole module can be left out of the composition, and nothing else would say so.
+
+        The rules are discovered on the object, so a policy class that is not one of its bases simply
+        contributes nothing: every rule it holds disappears and every remaining rule still has its
+        case. This is the only place that compares what is written with what is composed.
+        """
+        directory = Path(__file__).resolve().parent / "policies"
+        written = set()
+        for path in sorted(directory.glob("*.py")):
+            for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+                if isinstance(node, ast.FunctionDef) and node.name.startswith("check_"):
+                    written.add(node.name)
+
+        composed = set(Policy(Path("/nowhere")).rules())
+
+        self.assertTrue(written, "no policy module holds a rule, so this case proves nothing")
+        self.assertEqual(set(), written - composed,
+                         "these rules are written in a policy module and this validator does not "
+                         "compose the class that holds them, so they never run")
 
     def test_a_rule_added_after_this_was_written_still_runs(self) -> None:
         """Not the list as it is today, but what happens to the next rule somebody writes."""
