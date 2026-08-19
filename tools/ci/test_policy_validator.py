@@ -12,6 +12,7 @@ when the repository legitimately changes.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -399,14 +400,21 @@ class PolicyTestCase(unittest.TestCase):
         body = "<Solution>\n" + "".join(f'  <Project Path="{path}" />\n' for path in projects) + "</Solution>\n"
         (self.root / "ViciOne.ServiceBus.slnx").write_text(body, encoding="utf-8")
 
-    def failures(self) -> list[str]:
-        self.write_solution()
+    def failures(self, regenerate_solution: bool = True) -> list[str]:
+        """Every finding of the validator against this fixture.
+
+        The solution is regenerated first so that a case which adds a project does not also trip the
+        orphan rule. A case about the solution file itself asks for that to be left alone, or its own
+        mutation would be written over before the validator ever saw it.
+        """
+        if regenerate_solution:
+            self.write_solution()
         policy = Policy(self.root)
         policy.run()
         return policy.failures
 
-    def assert_rejected(self, rule: str) -> None:
-        found = self.failures()
+    def assert_rejected(self, rule: str, regenerate_solution: bool = True) -> None:
+        found = self.failures(regenerate_solution)
         self.assertTrue(found, f"the mutation was accepted; rule '{rule}' never fired")
         self.assertTrue(
             any(failure.startswith(rule) for failure in found),
@@ -527,6 +535,44 @@ class PolicyTestCase(unittest.TestCase):
                           "      - run: >\n          python3 tools/ci/verify.py --selection quartz\n")
 
         self.assert_rejected("canonical-invocation")
+
+    # -- rules that had no case at all ------------------------------------------------------------
+    #
+    # Found by the meta case at the end of this file, not by a reviewer. One of these had a case and
+    # lost it when this file was restructured: a suite stays green when a test disappears, so nothing
+    # said so, and the rule went back to being one nobody had proven can report.
+
+    def test_rejects_a_run_without_an_executed_floor(self) -> None:
+        """This rule read a top level 'categories' object the model has not had since it replaced the
+        two files before it, so its loop ran over nothing and it passed for every repository."""
+        model = fixture_model()
+        for capability in model["capabilities"]:
+            for run in capability.get("runs", []):
+                run.pop("minimumExecutedCases", None)
+        self.inventory().write_text(json.dumps(model, indent=2), encoding="utf-8")
+
+        self.assert_rejected("executed-floor")
+
+    def test_rejects_a_project_without_a_lock_file(self) -> None:
+        """Locked mode alone does not carry this: a restore with --locked-mode and no lock file writes
+        one and succeeds, so a deleted lock file would reopen the package graph silently."""
+        for lock in self.root.rglob("packages.lock.json"):
+            lock.unlink()
+
+        self.assert_rejected("restore-lock")
+
+    def test_rejects_a_solution_that_names_a_project_which_is_not_there(self) -> None:
+        body = (self.root / "ViciOne.ServiceBus.slnx").read_text(encoding="utf-8")
+        (self.root / "ViciOne.ServiceBus.slnx").write_text(
+            body.replace("</Solution>", '  <Project Path="src/Gone/Gone.csproj" />\n</Solution>'),
+            encoding="utf-8")
+
+        self.assert_rejected("solution", regenerate_solution=False)
+
+    def test_rejects_a_solution_that_is_not_parsable(self) -> None:
+        (self.root / "ViciOne.ServiceBus.slnx").write_text("<Solution>", encoding="utf-8")
+
+        self.assert_rejected("solution", regenerate_solution=False)
 
     # -- who may leave the product's target framework ---------------------------------------------
     #
@@ -1677,6 +1723,28 @@ class PolicyTestCase(unittest.TestCase):
         self.nuget_config().write_text("<configuration><packageSources>", encoding="utf-8")
         self.assert_rejected("restore-sources")
 
+
+
+class Every_rule_this_validator_can_report(unittest.TestCase):
+    """A rule nobody has made fire is a rule nobody has proven works.
+
+    The dead executed-floor loop was exactly that shape: it read a key the model has not had since it
+    replaced the two files before it, so it passed for every repository, and no case would have noticed.
+    A second one is subtler - a rule can have a case and then lose it, because a suite stays green when
+    a test disappears. This case is the thing that says so.
+    """
+
+    def test_has_a_case_that_makes_it_report(self) -> None:
+        here = Path(__file__).resolve().parent
+        reported = set(re.findall(r'self\.fail\(\s*"([a-z0-9-]+)"',
+                                  (here / "policy_validator.py").read_text(encoding="utf-8")))
+        cases = (here / "test_policy_validator.py").read_text(encoding="utf-8")
+        proven = set(re.findall(r'assert_rejected\(\s*"([a-z0-9-]+)"', cases))
+        proven |= set(re.findall(r'failure\.startswith\("([a-z0-9-]+)"\)', cases))
+
+        self.assertEqual(set(), reported - proven,
+                         "these rules can report something and no case in this file ever makes them "
+                         "do it, so nothing has shown that they work")
 
 
 class Turning_a_step_into_the_commands_a_shell_would_run(unittest.TestCase):
