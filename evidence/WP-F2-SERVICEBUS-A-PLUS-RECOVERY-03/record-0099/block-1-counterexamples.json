@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "SERVICEBUS_COUNTEREXAMPLE_MEASUREMENT",
+  "workPackageId": "WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03",
+  "directive": "LEAD_DIRECTIVE 0098",
+  "block": "1 - receipt and fixture truth boundary (sections A and B)",
+  "measuredAgainstCommit": "2615a1719aa23ac03171e635022520e95ff9d03e",
+  "note": "The two counterexamples section A and B of the directive reproduced, measured against the code as commit 2615a171 left it and against the code of this block. Same process shape, same repository, same model; only tools/ci differs.",
+  "before": {
+    "fabricatedReceiptVerdict": "BELIEVED",
+    "fabricatedReceiptFindings": [],
+    "fabricatedReceiptFindingCount": 0,
+    "brokerCategoryDeclaredBrokers": [
+      "activemq",
+      "artemis"
+    ],
+    "brokerCategoryExpectedIdentities": 178,
+    "brokerCategoryExecutedIdentities": 178,
+    "brokerCategoryFixtureRecordPresent": false,
+    "brokerCategoryTerminal": "PASS",
+    "brokerCategoryFindings": []
+  },
+  "after": {
+    "fabricatedReceiptVerdict": "REFUSED",
+    "fabricatedReceiptFindings": [
+      "category 'abstractions' has no 'allowBrokerOutage'",
+      "category 'abstractions' has no 'approvedNotExecuted'",
+      "category 'abstractions' has no 'brokerLogSha256'",
+      "category 'abstractions' has no 'brokers'"
+    ],
+    "fabricatedReceiptFindingCount": 165,
+    "brokerCategoryDeclaredBrokers": [
+      "activemq",
+      "artemis"
+    ],
+    "brokerCategoryExpectedIdentities": 178,
+    "brokerCategoryExecutedIdentities": 178,
+    "brokerCategoryFixtureRecordPresent": false,
+    "brokerCategoryTerminal": "FAIL",
+    "brokerCategoryFindings": [
+      "fixture: this category runs against activemq, artemis and no fixture record was written, so nothing shows that the fixture was started, was the declared one, or was returned"
+    ]
+  }
+}

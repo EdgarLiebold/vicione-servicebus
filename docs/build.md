@@ -178,7 +178,11 @@ rather than falling back to a default host or secret. A fixture it could not cle
 startup failure, and a control thread that is still alive after its bounded join stops the fixture from
 being removed underneath it.
 
-## The receipt
+## The receipt, and what it is worth
+
+What authorises a pass is the exit status of `tools/ci/verify.py` inside the required check. The
+receipt is derived audit evidence, and it is worth being precise about the difference: a JSON document
+cannot show that a test process ever started, whoever wrote it.
 
 Every run writes one, under its run root and beside the caller's evidence. It binds the commit, the
 tree, the hash of the model it was read against, the selection and its resolved categories, and it
@@ -188,10 +192,21 @@ carries the full identity lists rather than summaries.
 python3 tools/ci/validate_receipt.py --receipt <file> --selection all
 ```
 
-The reader refuses a receipt of another commit, of another model, from a working tree that was not
-clean, a narrower selection presented as a wider one, or one whose own numbers do not hold. It is an
-engineering completeness proof; it is not, and does not claim to be, protection against somebody with
-administrative rights over this repository.
+The reader refuses a receipt of another commit, of another model, of another schema, from a working
+tree that was not clean, and a narrower selection presented as a wider one. Beyond that it refuses one
+whose numbers do not follow from its own facts: every derived field - passed, missing, unexpected,
+duplicate, the unapproved skips, the findings and the terminal result - is recomputed from the
+expected, executed, failed and skipped sets the record states, and the record has to agree. The shape
+is closed in both directions, so a missing field and a field this reader does not check are both
+refusals. What the record says it ran is compared with the model: the project, the brokers, the outage
+permission and the whole child command.
+
+Where the native result files are still beside the receipt they are hashed and parsed again, and the
+record has to agree with them. That part, and only that part, is evidence from outside the receipt,
+and the reader says how much of it there was. A receipt handed over without those files is a
+consistency checked record of what a run reported - it is not independent proof that the run happened,
+and it does not claim to be. Nothing here is protection against somebody with administrative rights
+over this repository; branch protection, the required check and review are.
 
 `REAL_EPHEMERAL_CLOUD` capabilities - Azure Service Bus, Event Hubs, Amazon SQS, S3, Azure Table,
 Azure Blob and DynamoDB - are not verified locally and are not verified in the required profile

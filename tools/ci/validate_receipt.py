@@ -3,14 +3,19 @@
 
     python3 tools/ci/validate_receipt.py --receipt <file> --selection all
 
-A receipt is the machine-readable claim that a scope was verified. This is the small reader that
-decides whether the claim may be believed: it has to be about this commit, this tree, this
-verification model and the selection that was asked for, and its own numbers have to satisfy the
-exact-set rules. A stale receipt, a partial one, one produced for a narrower selection and presented
-as a wider one, or one written by hand is rejected here rather than read as a pass.
+A receipt is the machine-readable record of a verification run. What authorises a pass is the exit
+status of the canonical verifier inside the required check; this reader decides something narrower and
+still worth deciding: whether the record may be believed at all. It has to be about this commit, this
+tree, this verification model and the selection that was asked for, its shape has to be exactly the
+shape of a receipt, and every number it derives has to follow from the facts it states. A stale
+receipt, a partial one, one produced for a narrower selection and presented as a wider one, and one
+whose own arithmetic does not add up are all refused here rather than read as a pass.
 
-It proves engineering completeness. It does not, and cannot, make somebody with administrative rights
-over this repository harmless, and it does not claim to.
+Where the native result files this receipt was produced from are still beside it, they are hashed and
+parsed again and the record has to agree with them. That is the only part of this that is evidence
+from outside the receipt, and the output says how much of it there was. A receipt handed over without
+those files is a consistency checked record of what a run reported; it cannot show that the run
+happened, and this reader does not pretend otherwise.
 
 Standard library only.
 """
@@ -42,6 +47,9 @@ def main(argv: list[str] | None = None) -> int:
     except json.JSONDecodeError as error:
         print(f"FAIL receipt: {args.receipt} is not readable: {error}", file=sys.stderr)
         return 1
+    if not isinstance(receipt, dict):
+        print(f"FAIL receipt: {args.receipt} does not hold a receipt", file=sys.stderr)
+        return 1
 
     try:
         model, model_hash = verify.load_model()
@@ -51,14 +59,24 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     problems = verify.receipt_findings(receipt, args.selection, verify.git("rev-parse", "HEAD"),
-                                       verify.git("rev-parse", "HEAD^{tree}"), model_hash, categories)
+                                       verify.git("rev-parse", "HEAD^{tree}"), model_hash, categories,
+                                       model)
     if problems:
         for problem in problems:
             print(f"FAIL receipt {problem}", file=sys.stderr)
         return 1
 
+    # Said out loud rather than left to a reader's assumption. The two states are not the same claim,
+    # and a record that was only checked against itself must not be reported as if a result file had
+    # been read again.
+    evidence = verify.accompanying_evidence(receipt)
+    read_again = evidence["withNativeResult"]
+    standing = ("consistent and reparsed against every native result file"
+                if read_again == evidence["categories"] and read_again
+                else f"consistent; {read_again}/{evidence['categories']} native result file(s) were "
+                     "still there to be read again")
     print(f"PASS receipt {args.receipt.name} selection={args.selection} "
-          f"categories={len(categories)} commit={receipt.get('commit', '')[:12]}")
+          f"categories={len(categories)} commit={receipt.get('commit', '')[:12]}: {standing}")
 
     return 0
 

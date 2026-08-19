@@ -489,7 +489,7 @@ class Policy:
 
         for run in sorted(verification_model.runs(model), key=lambda entry: str(entry.get("category"))):
             brokers = run.get("brokers") or []
-            command = verify.child_command(run, Path("run"), Path("evidence"))
+            command = verify.child_command(run, Path("evidence"))
             names = [command[index + 1] for index, token in enumerate(command) if token == "--broker"]
             if not brokers:
                 if CANONICAL_RUNNER in " ".join(command):
