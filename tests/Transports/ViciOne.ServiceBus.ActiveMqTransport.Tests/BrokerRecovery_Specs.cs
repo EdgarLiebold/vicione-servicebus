@@ -41,15 +41,15 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         [TestCase(ActiveMqHostAddress.AmqpScheme, TestName = "AMQP")]
         public async Task Should_deliver_again_after_the_broker_came_back(string protocol)
         {
-            if (!BrokerFaultController.Available)
+            if (!BrokerOutageClient.Available)
             {
-                Assert.Fail($"{BrokerFaultController.ControlVariable} is not set, so this run cannot take the "
+                Assert.Fail($"{BrokerOutageClient.ControlVariable} is not set, so this run cannot take the "
                     + "broker away. Start the fixture with --allow-broker-outage activemq.");
             }
 
             var queue = $"recovery-input-{NewId.Next().ToString("N")}";
             var received = new ConcurrentQueue<string>();
-            var observer = new EndpointStateObserver();
+            var observer = new RecoverySequenceObserver(queue);
 
             var harness = new ActiveMqTestHarness(protocol, queue);
             harness.OnConfigureActiveMqReceiveEndpoint += configurator =>
@@ -75,7 +75,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
                 try
                 {
-                    await BrokerFaultController.Interrupt();
+                    await BrokerOutageClient.Interrupt();
 
                     Assert.That(await observer.Faulted(FaultBudget), Is.True,
                         "the receive endpoint never reported a fault while the broker was stopped, so "
@@ -85,7 +85,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 {
                     // Unconditionally, and outside anything this case can cancel: a broker left stopped
                     // is a broker every later case blocks against.
-                    await BrokerFaultController.Restore();
+                    await BrokerOutageClient.Restore();
                 }
 
                 Assert.That(await observer.ReadyAfterTheFault(ReadyBudget), Is.True,

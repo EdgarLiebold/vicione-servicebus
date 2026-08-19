@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
 
     /// <summary>
-    /// What the receive endpoint said about itself, in order.
+    /// Whether one receive endpoint went through a recovery sequence, in order.
     /// <para>
     /// Recovery is a sequence, not two independent signals. Resetting both and waiting for either
     /// lets a Ready that arrives before the Fault satisfy the recovery: the endpoint that was
@@ -15,14 +15,40 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     /// after the Fault that this outage caused.
     /// </para>
     /// </summary>
-    sealed class EndpointStateObserver :
+    sealed class RecoverySequenceObserver :
         IReceiveEndpointObserver
     {
         readonly object _gate = new();
+        readonly string _endpoint;
         TaskCompletionSource<bool> _faulted = Fresh();
         TaskCompletionSource<bool> _recovered = Fresh();
         bool _watching;
         bool _faultSeen;
+
+        /// <summary>
+        /// Binds this observer to one receive endpoint, by the last segment of its input address.
+        /// <para>
+        /// A bus has more than one receive endpoint - the harness adds its own, and a fault handler
+        /// gets one too - and every one of them reports to every observer. Without this binding a
+        /// Ready from an endpoint that has nothing to do with the outage completes the recovery of the
+        /// endpoint that was actually taken away.
+        /// </para>
+        /// </summary>
+        public RecoverySequenceObserver(string endpoint)
+        {
+            _endpoint = endpoint;
+        }
+
+        bool Mine(ReceiveEndpointEvent observed)
+        {
+            var address = observed.InputAddress;
+            if (address is null)
+                return false;
+
+            var segments = address.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            return segments.Length > 0 && segments[^1] == _endpoint;
+        }
 
         /// <summary>
         /// Starts watching one outage. Everything before this - including the readiness of the
@@ -69,6 +95,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
         public Task Ready(ReceiveEndpointReady ready)
         {
+            if (!Mine(ready))
+                return Task.CompletedTask;
+
             lock (_gate)
             {
                 // A Ready before the Fault is the endpoint that never went away. It is not a
@@ -86,6 +115,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
         public Task Faulted(ReceiveEndpointFaulted faulted)
         {
+            if (!Mine(faulted))
+                return Task.CompletedTask;
+
             lock (_gate)
             {
                 if (!_watching)

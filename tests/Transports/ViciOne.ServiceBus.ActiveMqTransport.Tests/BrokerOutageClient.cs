@@ -10,7 +10,11 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
 
     /// <summary>
-    /// Asks the canonical runner to take the broker away and bring it back.
+    /// The test process's client for the outage service of the canonical runner.
+    /// <para>
+    /// Named for what it does. It does not control the broker: it publishes a request into the control
+    /// directory the runner handed it and waits for the runner's answer. The runner owns Docker.
+    /// </para>
     /// <para>
     /// The test process never touches Docker. It publishes a request into the control directory the
     /// runner handed it and waits for the runner's answer, and that answer reports what the runner
@@ -25,12 +29,26 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
     /// while the broker behind them genuinely goes away and comes back.
     /// </para>
     /// </summary>
-    static class BrokerFaultController
+    static class BrokerOutageClient
     {
         public const string ControlVariable = "VICIONE_SERVICEBUS_FIXTURE_CONTROL";
 
         /// <summary>The schema both sides write and read. A mismatch is a mismatch, not a guess.</summary>
         public const int SchemaVersion = 1;
+
+        /// <summary>
+        /// What the runner has to have observed before an action counts as done.
+        /// <para>
+        /// An interrupt is done when the container is really gone from the running set; a restore is
+        /// done when the fixture's own health check says so, because a container that is running is
+        /// not yet a broker that answers. Anything else - a missing field, an unknown state, or the
+        /// state of the opposite action - is a failed answer.
+        /// </para>
+        /// </summary>
+        static string[] ObservedFor(string action)
+        {
+            return action == "interrupt" ? new[] { "exited", "stopped", "absent" } : new[] { "healthy" };
+        }
 
         /// <summary>How long the runner is given to establish or undo an outage, plus its own slack.</summary>
         public static readonly TimeSpan Budget = TimeSpan.FromMinutes(3);
@@ -157,7 +175,29 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var status = root.TryGetProperty("status", out var reported) ? reported.GetString() : null;
             var error = root.TryGetProperty("error", out var reason) ? reason.GetString() : null;
 
-            return new Answer(status ?? "failed", error);
+            if (status != "ok")
+                return new Answer(status ?? "failed", error);
+
+            // A success has to say what the runner observed, and it has to be a state that means the
+            // action really happened. Reading status alone accepted a syntactically fine answer about a
+            // broker that never went away, and the case then went on to call whatever followed a
+            // recovery.
+            var observed = root.TryGetProperty("observed", out var seen) ? seen.GetString() : null;
+            if (string.IsNullOrEmpty(observed))
+            {
+                return new Answer("failed",
+                    $"the runner reported success for '{action}' without saying what it observed");
+            }
+
+            string[] accepted = ObservedFor(action);
+            if (Array.IndexOf(accepted, observed) < 0)
+            {
+                return new Answer("failed",
+                    $"the runner reported success for '{action}' after observing '{observed}', and that "
+                    + $"action is only done when it observes one of: {string.Join(", ", accepted)}");
+            }
+
+            return new Answer("ok", null);
         }
 
 

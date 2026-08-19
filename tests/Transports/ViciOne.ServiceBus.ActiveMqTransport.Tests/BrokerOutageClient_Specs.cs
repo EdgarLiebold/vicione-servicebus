@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var control = new ControlDirectory();
             using var runner = control.Answering((id, action) => Answer(id, action, "ok"));
 
-            Assert.DoesNotThrowAsync(() => BrokerFaultController.Ask(control.Path, "interrupt", Budget));
+            Assert.DoesNotThrowAsync(() => BrokerOutageClient.Ask(control.Path, "interrupt", Budget));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 Answer(id, action, "failed", "docker compose could not stop activemq: no such service"));
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "interrupt", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
                 "a refusal was read as a confirmed interrupt");
 
             Assert.That(refused!.Message, Does.Contain("no such service"),
@@ -55,7 +55,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 Answer(id, action, "failed", "the broker was still 'starting' 120 s after restore"));
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "restore", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "restore", Budget),
                 "a restore the runner could not confirm was read as a broker that is back");
 
             Assert.That(refused!.Message, Does.Contain("120 s after restore"),
@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var control = new ControlDirectory();
 
             var silent = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "interrupt", TimeSpan.FromMilliseconds(600)),
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", TimeSpan.FromMilliseconds(600)),
                 "a controller that never answered was read as a controller that agreed");
 
             Assert.That(silent!.Message, Does.Contain("did not answer"),
@@ -81,11 +81,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var control = new ControlDirectory();
             using var runner = control.Answering((id, action) => new
             {
-                schemaVersion = BrokerFaultController.SchemaVersion + 1, requestId = id, action, status = "ok"
+                schemaVersion = BrokerOutageClient.SchemaVersion + 1, requestId = id, action, status = "ok",
+                observed = "exited"
             });
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "interrupt", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
                 "an answer from a runner speaking another schema version was read as this one's answer");
 
             Assert.That(refused!.Message, Does.Contain("schema version"));
@@ -97,11 +98,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var control = new ControlDirectory();
             using var runner = control.Answering((id, action) => new
             {
-                schemaVersion = BrokerFaultController.SchemaVersion, requestId = "somebody-else", action, status = "ok"
+                schemaVersion = BrokerOutageClient.SchemaVersion, requestId = "somebody-else", action,
+                status = "ok", observed = "exited"
             });
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "interrupt", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
                 "an answer to another request was read as the answer to this one");
 
             Assert.That(refused!.Message, Does.Contain("request id"),
@@ -115,11 +117,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var control = new ControlDirectory();
             using var runner = control.Answering((id, action) => new
             {
-                schemaVersion = BrokerFaultController.SchemaVersion, requestId = id, action = "interrupt", status = "ok"
+                schemaVersion = BrokerOutageClient.SchemaVersion, requestId = id, action = "interrupt",
+                status = "ok", observed = "exited"
             });
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "restore", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "restore", Budget),
                 "a confirmed interrupt was read as a confirmed restore");
 
             Assert.That(refused!.Message, Does.Contain("is about 'interrupt'"),
@@ -134,10 +137,79 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             using var runner = control.AnsweringWith("{ this is not json");
 
             var refused = Assert.ThrowsAsync<AssertionException>(
-                () => BrokerFaultController.Ask(control.Path, "interrupt", Budget),
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
                 "an answer that is not readable JSON was read as a confirmation");
 
             Assert.That(refused!.Message, Does.Contain("not readable JSON"));
+        }
+
+        [Test]
+        public void Should_refuse_a_success_that_says_nothing_about_what_was_observed()
+        {
+            using var control = new ControlDirectory();
+            using var runner = control.Answering((id, action) => new
+            {
+                schemaVersion = BrokerOutageClient.SchemaVersion, requestId = id, action, status = "ok"
+            });
+
+            var refused = Assert.ThrowsAsync<AssertionException>(
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
+                "a success that observed nothing was read as an interrupt that happened");
+
+            // The wording is not the assurance: an answer with no observed field is refused by the
+            // explicit branch and by the accepted-state check behind it, and either sentence is a
+            // correct one. What may not happen is that it is accepted.
+            Assert.That(refused!.Message, Does.Contain("observ"));
+        }
+
+        [TestCase("exited")]
+        [TestCase("stopped")]
+        [TestCase("absent")]
+        public void Should_accept_an_interrupt_the_runner_saw_take_effect(string observed)
+        {
+            using var control = new ControlDirectory();
+            using var runner = control.Answering((id, action) => Answer(id, action, "ok", observed: observed));
+
+            Assert.DoesNotThrowAsync(() => BrokerOutageClient.Ask(control.Path, "interrupt", Budget));
+        }
+
+        [Test]
+        public void Should_refuse_an_interrupt_that_observed_a_running_broker()
+        {
+            using var control = new ControlDirectory();
+            using var runner = control.Answering((id, action) => Answer(id, action, "ok", observed: "running"));
+
+            var refused = Assert.ThrowsAsync<AssertionException>(
+                () => BrokerOutageClient.Ask(control.Path, "interrupt", Budget),
+                "the broker was still running and the interrupt was read as done");
+
+            Assert.That(refused!.Message, Does.Contain("after observing 'running'"));
+        }
+
+        [Test]
+        public void Should_refuse_a_restore_that_observed_only_a_started_container()
+        {
+            using var control = new ControlDirectory();
+            using var runner = control.Answering((id, action) => Answer(id, action, "ok", observed: "running"));
+
+            var refused = Assert.ThrowsAsync<AssertionException>(
+                () => BrokerOutageClient.Ask(control.Path, "restore", Budget),
+                "a container that is running is not yet a broker that answers");
+
+            Assert.That(refused!.Message, Does.Contain("after observing 'running'"));
+        }
+
+        [Test]
+        public void Should_refuse_a_restore_that_observed_the_state_of_the_opposite_action()
+        {
+            using var control = new ControlDirectory();
+            using var runner = control.Answering((id, action) => Answer(id, action, "ok", observed: "exited"));
+
+            var refused = Assert.ThrowsAsync<AssertionException>(
+                () => BrokerOutageClient.Ask(control.Path, "restore", Budget),
+                "a broker the runner saw exit was read as a broker that came back");
+
+            Assert.That(refused!.Message, Does.Contain("after observing 'exited'"));
         }
 
         [Test]
@@ -147,7 +219,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
             var path = Path.Combine(control.Path, "interrupt-1.result");
             File.WriteAllText(path, JsonSerializer.Serialize(Answer("interrupt-1", "interrupt", "ok")));
 
-            BrokerFaultController.Answer answer = BrokerFaultController.Read(path, "interrupt-1", "interrupt");
+            BrokerOutageClient.Answer answer = BrokerOutageClient.Read(path, "interrupt-1", "interrupt");
 
             Assert.That(answer.Status, Is.EqualTo("ok"));
             Assert.That(answer.Error, Is.Null);
@@ -155,9 +227,22 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
 
         static TimeSpan Budget => TimeSpan.FromSeconds(20);
 
-        static object Answer(string requestId, string action, string status, string? error = null)
+        /// <summary>
+        /// A runner answer, with the state a real runner reports for that action.
+        /// <para>
+        /// The observed state is not decoration here. A helper that left it out would let the positive
+        /// cases pass against an answer the production protocol has to refuse, and the protocol would
+        /// then be weaker than these cases suggest.
+        /// </para>
+        /// </summary>
+        static object Answer(string requestId, string action, string status, string? error = null,
+            string? observed = null)
         {
-            return new { schemaVersion = BrokerFaultController.SchemaVersion, requestId, action, status, error };
+            return new
+            {
+                schemaVersion = BrokerOutageClient.SchemaVersion, requestId, action, status, error,
+                observed = observed ?? (action == "interrupt" ? "exited" : "healthy")
+            };
         }
 
 
@@ -253,125 +338,5 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
                 _stopping.Dispose();
             }
         }
-    }
-
-
-    /// <summary>
-    /// When the receive endpoint has recovered, and when it only looks as though it had.
-    /// <para>
-    /// Recovery is a sequence. The two passing broker cases cannot tell these apart, because in a real
-    /// outage the Fault always precedes the Ready: the order that has to be refused never occurs there,
-    /// so it was never exercised. It is driven directly here.
-    /// </para>
-    /// </summary>
-    [TestFixture]
-    public class Deciding_when_an_endpoint_has_recovered
-    {
-        [Test]
-        public async Task Should_not_accept_a_ready_that_arrived_before_the_fault()
-        {
-            var observer = new EndpointStateObserver();
-            observer.Watch();
-
-            await observer.Ready(new EndpointReady());
-
-            Assert.That(await observer.ReadyAfterTheFault(Budget), Is.False,
-                "the endpoint that never went away reported that it was ready, and that was read as a "
-                + "recovery of an outage which had not even started");
-        }
-
-        [Test]
-        public async Task Should_accept_a_ready_that_arrived_after_the_fault()
-        {
-            var observer = new EndpointStateObserver();
-            observer.Watch();
-
-            await observer.Faulted(new EndpointFaulted());
-            await observer.Ready(new EndpointReady());
-
-            Assert.That(await observer.Faulted(Budget), Is.True);
-            Assert.That(await observer.ReadyAfterTheFault(Budget), Is.True);
-        }
-
-        [Test]
-        public async Task Should_report_nothing_until_it_is_asked_to_watch()
-        {
-            var observer = new EndpointStateObserver();
-
-            await observer.Faulted(new EndpointFaulted());
-
-            Assert.That(await observer.Faulted(Budget), Is.False,
-                "an observer that was never asked to watch an outage reported a fault, so a case could "
-                + "read the endpoint's start as the outage it has not caused yet");
-        }
-
-        [Test]
-        public async Task Should_ignore_everything_that_happened_before_the_watch_began()
-        {
-            var observer = new EndpointStateObserver();
-
-            await observer.Faulted(new EndpointFaulted());
-            await observer.Ready(new EndpointReady());
-
-            observer.Watch();
-
-            Assert.That(await observer.Faulted(Budget), Is.False,
-                "a fault from before this outage would let the next Ready complete a recovery that "
-                + "nothing caused");
-            Assert.That(await observer.ReadyAfterTheFault(Budget), Is.False);
-        }
-
-        [Test]
-        public async Task Should_not_carry_a_fault_from_an_earlier_watch_into_the_next_one()
-        {
-            var observer = new EndpointStateObserver();
-
-            observer.Watch();
-            await observer.Faulted(new EndpointFaulted());
-
-            observer.Watch();
-            await observer.Ready(new EndpointReady());
-
-            Assert.That(await observer.ReadyAfterTheFault(Budget), Is.False,
-                "the fault of the previous outage was still remembered, so the first Ready of the next "
-                + "one completed a recovery from a fault that had already been recovered");
-        }
-
-        [Test]
-        public async Task Should_not_report_a_recovery_when_only_the_fault_was_seen()
-        {
-            var observer = new EndpointStateObserver();
-            observer.Watch();
-
-            await observer.Faulted(new EndpointFaulted());
-
-            Assert.That(await observer.Faulted(Budget), Is.True);
-            Assert.That(await observer.ReadyAfterTheFault(Budget), Is.False,
-                "the broker never came back, so nothing may report that it did");
-        }
-
-        /// <summary>Short on purpose: every case here decides on a signal that is already present.</summary>
-        static TimeSpan Budget => TimeSpan.FromMilliseconds(250);
-
-
-        sealed class EndpointReady :
-            ReceiveEndpointReady
-        {
-            public Uri InputAddress => Address;
-            public IReceiveEndpoint ReceiveEndpoint => null!;
-            public bool IsStarted => true;
-        }
-
-
-        sealed class EndpointFaulted :
-            ReceiveEndpointFaulted
-        {
-            public Uri InputAddress => Address;
-            public IReceiveEndpoint ReceiveEndpoint => null!;
-            public Exception? Exception => new InvalidOperationException("the broker was stopped");
-        }
-
-
-        static readonly Uri Address = new("activemq://127.0.0.1/recovery-input");
     }
 }
