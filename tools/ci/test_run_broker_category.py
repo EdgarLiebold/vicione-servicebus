@@ -29,7 +29,8 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import run_broker_category as runner  # noqa: E402
+import run_broker_category as runner
+from fixtures import broker_logs, compose_fixture, outage_protocol  # noqa: E402
 
 
 class Refusing_a_contradictory_command_line(unittest.TestCase):
@@ -85,17 +86,17 @@ class Reporting_a_teardown_that_did_not_happen(unittest.TestCase):
     def test_a_failed_down_raises_instead_of_being_ignored(self) -> None:
         refused = subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="network is in use")
 
-        with mock.patch.object(runner, "compose", return_value=refused):
-            with self.assertRaises(runner.TeardownError) as raised:
-                runner.stop({})
+        with mock.patch.object(compose_fixture, "compose", return_value=refused):
+            with self.assertRaises(compose_fixture.TeardownError) as raised:
+                compose_fixture.stop({})
 
         self.assertIn("network is in use", str(raised.exception))
 
     def test_a_successful_down_says_nothing(self) -> None:
         removed = subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
 
-        with mock.patch.object(runner, "compose", return_value=removed):
-            runner.stop({})
+        with mock.patch.object(compose_fixture, "compose", return_value=removed):
+            compose_fixture.stop({})
 
 
 class Deciding_whether_a_broker_is_ready(unittest.TestCase):
@@ -108,8 +109,8 @@ class Deciding_whether_a_broker_is_ready(unittest.TestCase):
     def health(self, stdout: str, returncode: int = 0) -> bool:
         answer = subprocess.CompletedProcess(args=[], returncode=returncode, stdout=stdout, stderr="")
 
-        with mock.patch.object(runner, "compose", return_value=answer):
-            return runner.broker_is_healthy("activemq", {})
+        with mock.patch.object(compose_fixture, "compose", return_value=answer):
+            return compose_fixture.broker_is_healthy("activemq", {})
 
     def test_no_record_is_not_healthy(self) -> None:
         self.assertFalse(self.health(""))
@@ -146,9 +147,9 @@ class Answering_an_outage_request(unittest.TestCase):
         healthy = subprocess.CompletedProcess(
             args=[], returncode=0, stdout='{"State": "exited", "Health": ""}', stderr="")
 
-        with mock.patch.object(runner, "compose", side_effect=[performed, healthy] * 40):
+        with mock.patch.object(compose_fixture, "compose", side_effect=[performed, healthy] * 40):
             thread = threading.Thread(
-                target=runner.serve_outage_requests, args=("activemq", self.control, {}, stop), daemon=True)
+                target=outage_protocol.serve_outage_requests, args=("activemq", self.control, {}, stop), daemon=True)
             thread.start()
 
             result = self.control / f"{request_id}.result"
@@ -214,9 +215,9 @@ class Answering_an_outage_request(unittest.TestCase):
             json.dumps({"schemaVersion": 1, "requestId": "interrupt-0", "action": "interrupt"}), encoding="utf-8")
 
         stop = threading.Event()
-        with mock.patch.object(runner, "compose", return_value=refused):
+        with mock.patch.object(compose_fixture, "compose", return_value=refused):
             thread = threading.Thread(
-                target=runner.serve_outage_requests, args=("activemq", self.control, {}, stop), daemon=True)
+                target=outage_protocol.serve_outage_requests, args=("activemq", self.control, {}, stop), daemon=True)
             thread.start()
 
             result = self.control / "interrupt-0.result"
@@ -270,14 +271,14 @@ class Separating_the_primary_outcome_from_the_cleanup(unittest.TestCase):
     def run_main(self, argv: list[str], *, restore: int = 0, stop_raises: bool = False) -> tuple[int, str]:
         def stop(environment=None):
             if stop_raises:
-                raise runner.TeardownError("the fixture could not be removed: network is in use")
+                raise compose_fixture.TeardownError("the fixture could not be removed: network is in use")
 
         errors = io.StringIO()
-        with mock.patch.object(runner, "start"), \
-                mock.patch.object(runner, "resolve_ports", return_value={}), \
-                mock.patch.object(runner, "capture_logs"), \
-                mock.patch.object(runner, "compose", side_effect=self.compose(restore)), \
-                mock.patch.object(runner, "stop", side_effect=stop), \
+        with mock.patch.object(compose_fixture, "start"), \
+                mock.patch.object(compose_fixture, "resolve_ports", return_value={}), \
+                mock.patch.object(broker_logs, "capture_logs"), \
+                mock.patch.object(compose_fixture, "compose", side_effect=self.compose(restore)), \
+                mock.patch.object(compose_fixture, "stop", side_effect=stop), \
                 contextlib.redirect_stdout(io.StringIO()), \
                 contextlib.redirect_stderr(errors):
             code = runner.main(argv)
@@ -305,8 +306,8 @@ class Separating_the_primary_outcome_from_the_cleanup(unittest.TestCase):
         def deaf(broker, control, environment, stop_serving) -> None:
             released.wait(30)
 
-        with mock.patch.object(runner, "serve_outage_requests", deaf), \
-                mock.patch.object(runner, "CONTROLLER_JOIN_SECONDS", 0.2):
+        with mock.patch.object(outage_protocol, "serve_outage_requests", deaf), \
+                mock.patch.object(outage_protocol, "CONTROLLER_JOIN_SECONDS", 0.2):
             code, errors = self.run_main([*self.OUTAGE, "true"])
 
         self.assertNotEqual(0, code, "a control thread that never ended left the run green")
@@ -325,7 +326,7 @@ class Separating_the_primary_outcome_from_the_cleanup(unittest.TestCase):
         def explode(broker, control, environment, stop_serving) -> None:
             raise RuntimeError("the control directory vanished under the thread")
 
-        with mock.patch.object(runner, "serve_outage_requests", explode):
+        with mock.patch.object(outage_protocol, "serve_outage_requests", explode):
             code, errors = self.run_main([*self.OUTAGE, "true"])
 
         self.assertNotEqual(0, code, "the control thread died of an exception and the run stayed green")
@@ -371,11 +372,11 @@ class Ending_the_control_thread_while_it_waits(unittest.TestCase):
             return subprocess.CompletedProcess(args=list(args), returncode=0, stdout="", stderr="")
 
         stop = threading.Event()
-        with mock.patch.object(runner, "compose", side_effect=never_healthy), \
-                mock.patch.object(runner, "broker_is_healthy", return_value=False), \
-                mock.patch.object(runner, "broker_state", return_value="starting"):
+        with mock.patch.object(compose_fixture, "compose", side_effect=never_healthy), \
+                mock.patch.object(compose_fixture, "broker_is_healthy", return_value=False), \
+                mock.patch.object(compose_fixture, "broker_state", return_value="starting"):
             thread = threading.Thread(
-                target=runner.serve_outage_requests, args=("activemq", control, {}, stop), daemon=True)
+                target=outage_protocol.serve_outage_requests, args=("activemq", control, {}, stop), daemon=True)
             thread.start()
 
             self.assertTrue(started.wait(5), "the controller never started working on the request")
@@ -417,9 +418,9 @@ class Making_startup_and_teardown_total(unittest.TestCase):
     def test_a_failed_pre_clean_stops_the_run_before_any_test(self) -> None:
         """A fixture that could not be cleaned still holds another run's volumes, and a database image
         applies its credentials only to an empty data directory."""
-        with mock.patch.object(runner, "compose", side_effect=self.answers(down=1)):
-            with self.assertRaises(runner.RunnerError) as raised:
-                runner.start(["rabbitmq"], {})
+        with mock.patch.object(compose_fixture, "compose", side_effect=self.answers(down=1)):
+            with self.assertRaises(compose_fixture.RunnerError) as raised:
+                compose_fixture.start(["rabbitmq"], {})
 
         self.assertIn("could not be removed before this one started", str(raised.exception))
 
@@ -432,27 +433,27 @@ class Making_startup_and_teardown_total(unittest.TestCase):
             return subprocess.CompletedProcess(args=list(args), returncode=1 if args[0] == "down" else 0,
                                                stdout="", stderr="volume is in use")
 
-        with mock.patch.object(runner, "compose", side_effect=compose):
-            with self.assertRaises(runner.RunnerError):
-                runner.start(["rabbitmq"], {})
+        with mock.patch.object(compose_fixture, "compose", side_effect=compose):
+            with self.assertRaises(compose_fixture.RunnerError):
+                compose_fixture.start(["rabbitmq"], {})
 
         self.assertNotIn("up", calls, "the fixture was started on top of the one it could not remove")
 
     def test_a_controller_that_was_never_started_can_still_be_shut_down(self) -> None:
         """Thread.join() raises on a thread that never ran, and that exception used to travel out of a
         teardown which promises not to raise."""
-        controller = runner.OutageController("activemq", self.control, {})
+        controller = outage_protocol.OutageController("activemq", self.control, {})
 
         self.assertEqual([], controller.shutdown())
 
     def test_shutting_a_controller_down_twice_says_the_same_thing(self) -> None:
-        controller = runner.OutageController("activemq", self.control, {})
+        controller = outage_protocol.OutageController("activemq", self.control, {})
         controller.shutdown()
 
         self.assertEqual([], controller.shutdown())
 
     def test_a_controller_that_cannot_start_reports_it_instead_of_raising(self) -> None:
-        controller = runner.OutageController("activemq", self.control, {})
+        controller = outage_protocol.OutageController("activemq", self.control, {})
         with mock.patch.object(controller._thread, "start",
                                side_effect=RuntimeError("can only be started once")):
             problems = controller.start()
@@ -462,8 +463,8 @@ class Making_startup_and_teardown_total(unittest.TestCase):
         self.assertTrue(controller.stopped, "a controller that failed to start is not left running")
 
     def test_starting_a_controller_twice_starts_one_thread(self) -> None:
-        controller = runner.OutageController("activemq", self.control, {})
-        with mock.patch.object(runner, "serve_outage_requests", lambda *_: None):
+        controller = outage_protocol.OutageController("activemq", self.control, {})
+        with mock.patch.object(outage_protocol, "serve_outage_requests", lambda *_: None):
             self.assertEqual([], controller.start())
             self.assertEqual([], controller.start())
         self.assertEqual([], controller.shutdown())
@@ -494,9 +495,9 @@ class Guarding_every_cleanup_stage(unittest.TestCase):
             if logs_raise:
                 raise RuntimeError("the log could not be read")
 
-        with mock.patch.object(runner, "compose", side_effect=compose), \
-                mock.patch.object(runner, "stop", side_effect=stop), \
-                mock.patch.object(runner, "capture_logs", side_effect=capture_logs), \
+        with mock.patch.object(compose_fixture, "compose", side_effect=compose), \
+                mock.patch.object(compose_fixture, "stop", side_effect=stop), \
+                mock.patch.object(broker_logs, "capture_logs", side_effect=capture_logs), \
                 mock.patch("sys.stderr", io.StringIO()):
             return runner.teardown(self.args, ["activemq"], {}, self.state)
 
@@ -507,10 +508,10 @@ class Guarding_every_cleanup_stage(unittest.TestCase):
             removed.append(True)
 
         self.state.controller = None
-        with mock.patch.object(runner, "compose",
+        with mock.patch.object(compose_fixture, "compose",
                                side_effect=lambda *a, **k: (_ for _ in ()).throw(OSError("no docker"))), \
-                mock.patch.object(runner, "stop", side_effect=stop), \
-                mock.patch.object(runner, "capture_logs"), \
+                mock.patch.object(compose_fixture, "stop", side_effect=stop), \
+                mock.patch.object(broker_logs, "capture_logs"), \
                 mock.patch("sys.stderr", io.StringIO()):
             findings = runner.teardown(self.args, ["activemq"], {}, self.state)
 
@@ -533,16 +534,16 @@ class Guarding_every_cleanup_stage(unittest.TestCase):
         the next run meets the loser's state. So the removal is refused and said out loud."""
         released = threading.Event()
         self.addCleanup(released.set)
-        controller = runner.OutageController("activemq", self.root, {})
-        with mock.patch.object(runner, "serve_outage_requests", lambda *_: released.wait(30)), \
-                mock.patch.object(runner, "CONTROLLER_JOIN_SECONDS", 0.2):
+        controller = outage_protocol.OutageController("activemq", self.root, {})
+        with mock.patch.object(outage_protocol, "serve_outage_requests", lambda *_: released.wait(30)), \
+                mock.patch.object(outage_protocol, "CONTROLLER_JOIN_SECONDS", 0.2):
             controller.start()
             removed = []
-            with mock.patch.object(runner, "compose",
+            with mock.patch.object(compose_fixture, "compose",
                                    side_effect=lambda *a, **k: subprocess.CompletedProcess(
                                        args=list(a), returncode=0, stdout="", stderr="")), \
-                    mock.patch.object(runner, "stop", side_effect=lambda environment=None: removed.append(True)), \
-                    mock.patch.object(runner, "capture_logs"), \
+                    mock.patch.object(compose_fixture, "stop", side_effect=lambda environment=None: removed.append(True)), \
+                    mock.patch.object(broker_logs, "capture_logs"), \
                     mock.patch("sys.stderr", io.StringIO()):
                 self.state.controller = controller
                 findings = runner.teardown(self.args, ["activemq"], {}, self.state)
@@ -557,7 +558,7 @@ class Naming_the_project_of_this_run(unittest.TestCase):
 
     def test_every_compose_call_names_the_project_from_the_environment(self) -> None:
         with mock.patch.object(runner.subprocess, "run") as run:
-            runner.compose("ps", environment={runner.PROJECT_VARIABLE: "vicione-abc123"})
+            compose_fixture.compose("ps", environment={compose_fixture.PROJECT_VARIABLE: "vicione-abc123"})
 
         command = run.call_args.args[0]
         self.assertIn("-p", command)
@@ -565,7 +566,7 @@ class Naming_the_project_of_this_run(unittest.TestCase):
 
     def test_a_call_without_an_identity_does_not_invent_one(self) -> None:
         with mock.patch.object(runner.subprocess, "run") as run:
-            runner.compose("ps", environment={})
+            compose_fixture.compose("ps", environment={})
 
         self.assertNotIn("-p", run.call_args.args[0])
 

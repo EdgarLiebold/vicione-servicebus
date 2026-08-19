@@ -33,167 +33,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from verification import run_scope  # noqa: E402  (repository local, resolved from this file's folder)
+from fixtures import broker_logs, compose_fixture, outage_protocol  # noqa: E402
+from verification import run_scope  # noqa: E402
 
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
 # under artifacts/, which .gitignore covers; tools/ci/policy_validator.py rejects one under evidence/.
 RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
-
-
-def broker_log_path(broker: str, environment: dict[str, str]) -> Path:
-    """Under this run's own root. A shared file name means a second run overwrites the log the first
-    one's verdict was read from."""
-    root = environment.get(RUN_ROOT_VARIABLE)
-
-    return (Path(root) if root else RAW_RUN_OUTPUT_DIR) / f"{broker}-broker.log"
-
-
-COMPOSE_FILE = REPO_ROOT / "build/test-infrastructure/compose.yaml"
-
-# What separates one run from another. The compose project name decides which containers, networks and
-# volumes a command addresses, and the run root decides where output and control files land. Both are
-# derived from one identity so that nothing this run writes can collide with, or be removed by, another
-# run on the same machine.
-PROJECT_VARIABLE = "VICIONE_SERVICEBUS_COMPOSE_PROJECT"
-
-RUN_ROOT_VARIABLE = run_scope.RUN_ROOT_VARIABLE
-
-# Container ports each broker exposes, mapped onto the environment variable the tests read.
-BROKER_PORTS = {
-    "rabbitmq": {
-        5672: "VICIONE_SERVICEBUS_RMQ_PORT",
-        15672: "VICIONE_SERVICEBUS_RMQ_MGMT_PORT",
-    },
-    "activemq": {
-        61616: "VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT",
-        5672: "VICIONE_SERVICEBUS_AMQ_AMQP_PORT",
-        8161: "VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT",
-    },
-    # Artemis is a separate broker behind the 'artemis' flavor of a few ActiveMQ specs. It is not a
-    # required gate; it is listed here so the branch has a run-scoped endpoint instead of a fixed port.
-    "artemis": {
-        61616: "VICIONE_SERVICEBUS_ARTEMIS_OPENWIRE_PORT",
-        8161: "VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT",
-    },
-    # Not brokers, but the Entity Framework specs need them and they obey the same rules.
-    "mssql": {1433: "VICIONE_SERVICEBUS_MSSQL_PORT"},
-    "postgres": {5432: "VICIONE_SERVICEBUS_PG_PORT"},
-}
-
-BROKER_HOST_VARIABLE = {
-    "rabbitmq": "VICIONE_SERVICEBUS_RMQ_HOST",
-    "activemq": "VICIONE_SERVICEBUS_AMQ_HOST",
-    "artemis": "VICIONE_SERVICEBUS_ARTEMIS_HOST",
-    "mssql": "VICIONE_SERVICEBUS_MSSQL_HOST",
-    "postgres": "VICIONE_SERVICEBUS_PG_HOST",
-}
-
-BROKER_CREDENTIAL_VARIABLES = {
-    "rabbitmq": ("VICIONE_SERVICEBUS_RMQ_USER", "VICIONE_SERVICEBUS_RMQ_PASS"),
-    "activemq": ("VICIONE_SERVICEBUS_AMQ_USER", "VICIONE_SERVICEBUS_AMQ_PASS"),
-    "artemis": ("VICIONE_SERVICEBUS_ARTEMIS_USER", "VICIONE_SERVICEBUS_ARTEMIS_PASS"),
-    "postgres": ("VICIONE_SERVICEBUS_PG_USER", "VICIONE_SERVICEBUS_PG_PASS"),
-}
-
-# SQL Server cannot rename 'sa', so only the secret is run-scoped. It must also satisfy the engine's
-# complexity rules, which a plain hex secret does not. The account name is published all the same: the
-# fixtures read every part of an endpoint from the runner contract and hold no default of their own.
-MSSQL_USER_VARIABLE = "VICIONE_SERVICEBUS_MSSQL_USER"
-MSSQL_PASSWORD_VARIABLE = "VICIONE_SERVICEBUS_MSSQL_PASS"
-MSSQL_ACCOUNT_NAME = "sa"
-
-# The account name is fixed because ActiveMQ authorises its web console by role and that binding
-# lives in a config file. A name alone grants nothing; the secret below is new on every run.
-ACCOUNT_NAME = "vicione_ci"
-
-
-class RunnerError(RuntimeError):
-    pass
-
-
-class TeardownError(RuntimeError):
-    """Raised when the fixture could not be removed. Never replaces the failure that came first."""
-
-
-def compose(*args: str, capture: bool = False, environment: dict[str, str] | None = None) -> subprocess.CompletedProcess:
-    """Every call names the compose project of this run.
-
-    Without it two runs share one project: the second one's 'down -v' removes the first one's
-    containers, and both write the same volumes. The name comes from the environment so that the
-    teardown in the finally block addresses exactly the project the start created, even when the
-    start itself failed.
-    """
-    project = (environment or os.environ).get(PROJECT_VARIABLE)
-    identity = ["-p", project] if project else []
-
-    command = ["docker", "compose", "-f", str(COMPOSE_FILE), *identity, *args]
-    return subprocess.run(command, text=True, capture_output=capture, check=False, env=environment)
-
-
-def start(brokers: list[str], environment: dict[str, str]) -> None:
-    """Brings the fixture up, and refuses to run against one it could not clean first.
-
-    Clean slate before starting, not only afterwards. A database image applies its credentials only
-    when it initialises an empty data directory, so a volume left behind by an earlier run keeps the
-    old secret and the run fails authentication against its own fixture.
-
-    The result of that pre-clean used to be discarded. A failed one followed by a successful 'up'
-    then read as a healthy start, and the tests ran against a fixture still holding another run's
-    state - a database with an earlier secret, or a broker with an earlier queue. It is a startup
-    failure now, and no test command executes after it.
-    """
-    cleaned = compose("down", "-v", "--remove-orphans", capture=True, environment=environment)
-    if cleaned.returncode != 0:
-        raise RunnerError(
-            "the fixture of an earlier run could not be removed before this one started: "
-            f"{cleaned.stderr.strip() or cleaned.stdout.strip()}")
-
-    result = compose("up", "-d", "--wait", *brokers, capture=True, environment=environment)
-    if result.returncode != 0:
-        raise RunnerError(f"the {', '.join(brokers)} fixture did not become ready: {result.stderr.strip()}")
-
-
-def stop(environment: dict[str, str] | None = None) -> None:
-    """Removes this run's fixture, and says so when it could not.
-
-    A teardown that ignores the exit code leaves containers and volumes behind while the run reports
-    success. The next run then meets a database that still holds an earlier secret, or a broker that
-    is up and answers nothing, and the failure surfaces somewhere else entirely.
-    """
-    result = compose("down", "-v", "--remove-orphans", capture=True, environment=environment)
-    if result.returncode != 0:
-        raise TeardownError(f"the fixture could not be removed: {result.stderr.strip() or result.stdout.strip()}")
-
-
-# The fixture boundary a test asks for an outage through. The test writes a request file and waits for
-# a result file; this runner is the only thing that ever touches Docker.
-#
-# The broker is really stopped and really started again. What keeps the client's address stable across
-# that is the proxy in front of it, not the broker: compose publishes an ephemeral loopback port per
-# container start, so a restarted broker comes back on a different port every time - measured twice,
-# 32955 to 32958 here and 33002 to 33005 by the Lead. The proxy is never restarted, so the three
-# addresses the test process was given stay valid, and what changes behind them is a broker that was
-# genuinely gone.
-OUTAGE_CONTROL_VARIABLE = "VICIONE_SERVICEBUS_FIXTURE_CONTROL"
-
-OUTAGE_ACTIONS = ("interrupt", "restore")
-
-# The relay in front of a broker, for runs that take that broker away. Only a broker listed here can be
-# interrupted, because only it has an address that survives its own restart.
-OUTAGE_PROXY = {"activemq": "activemq-proxy"}
-
-# How long the runner waits for a broker to reach the state it was asked for.
-OUTAGE_BUDGET_SECONDS = 120
-
-# The exchange between the child and this runner. Both sides write into a temporary file beside the
-# target and publish it with an atomic rename on the same filesystem, so no reader can ever meet a
-# half written JSON document.
-CONTROL_SCHEMA_VERSION = 1
-
-
-# What the fixture side of a run leaves behind for its caller, beside the raw output it already writes.
-FIXTURE_FINDINGS_FILE = "fixture-findings.json"
 
 
 def digest_of(path: Path) -> str | None:
@@ -204,258 +50,6 @@ def digest_of(path: Path) -> str | None:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def publish_json(target: Path, payload: dict[str, object]) -> None:
-    temporary = target.with_name(target.name + ".partial")
-    temporary.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
-    temporary.replace(target)
-
-
-def broker_state(broker: str, environment: dict[str, str]) -> str:
-    """What Docker says about the container, which is the only honest answer about the broker.
-
-    Not a TCP handshake: the proxy in front of the broker accepts connections whether or not anything
-    is behind it, so a successful connect would report the proxy's health and call it the broker's.
-    """
-    result = compose("ps", "--format", "json", broker, capture=True, environment=environment)
-    if result.returncode != 0:
-        raise RunnerError(f"docker compose ps failed for {broker}: {result.stderr.strip()}")
-
-    states = []
-    for line in result.stdout.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        entry = json.loads(line)
-        for record in entry if isinstance(entry, list) else [entry]:
-            states.append(str(record.get("State", "")).casefold())
-
-    if not states:
-        return "absent"
-
-    return states[0]
-
-
-def broker_is_healthy(broker: str, environment: dict[str, str]) -> bool:
-    """Running is not ready, and no answer is not health.
-
-    A broker that has just been started accepts nothing for a while, and the compose health check is
-    the fixture's own definition of when it does. Zero records means compose knows nothing about that
-    service, which is the opposite of healthy - answering true there would have reported a container
-    that does not exist as ready.
-    """
-    result = compose("ps", "--format", "json", broker, capture=True, environment=environment)
-    if result.returncode != 0:
-        return False
-
-    records = []
-    for line in result.stdout.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        entry = json.loads(line)
-        records.extend(entry if isinstance(entry, list) else [entry])
-
-    if not records:
-        return False
-
-    for record in records:
-        health = str(record.get("Health", "")).casefold()
-        state = str(record.get("State", "")).casefold()
-        if state != "running":
-            return False
-        # A service without a health check reports an empty string; running is then all there is.
-        if health not in ("", "healthy"):
-            return False
-
-    return True
-
-
-def serve_outage_requests(broker: str, control: Path, environment: dict[str, str],
-                          stop_serving: threading.Event) -> None:
-    """Answers one outage request at a time, with what it observed rather than with what it was asked.
-
-    A request whose effect cannot be confirmed is a failed request. 'interrupt' stops the broker and
-    waits until Docker reports it stopped; 'restore' starts it and waits for the fixture's own health
-    check, because a container that is running is not yet a broker that answers.
-    """
-    while not stop_serving.is_set():
-        for request in sorted(control.glob("*.request")):
-            # Checked per request rather than per pass. A directory holding several requests would
-            # otherwise be worked to the end after the teardown already asked this thread to stop.
-            if stop_serving.is_set():
-                break
-
-            result = request.with_suffix(".result")
-            if result.exists():
-                continue
-
-            # Initialised per request: a value carried over from the previous one would be reported
-            # as this request's action in a failure answer.
-            answer: dict[str, object]
-            request_id = request.stem
-            action: str | None = None
-            try:
-                asked = json.loads(request.read_text(encoding="utf-8"))
-                if not isinstance(asked, dict):
-                    raise ValueError("the request is not an object")
-
-                version = asked.get("schemaVersion")
-                if version != CONTROL_SCHEMA_VERSION:
-                    raise ValueError(
-                        f"the request speaks schema version {version!r}, this runner speaks "
-                        f"{CONTROL_SCHEMA_VERSION}")
-
-                if asked.get("requestId") != request_id:
-                    raise ValueError(
-                        f"the request carries id {asked.get('requestId')!r} in a file named {request_id!r}")
-
-                action = asked.get("action")
-                if action not in OUTAGE_ACTIONS:
-                    raise ValueError(f"unknown action {action!r}, expected one of {OUTAGE_ACTIONS}")
-
-                performed = compose("stop" if action == "interrupt" else "start", broker,
-                                    capture=True, environment=environment)
-                if performed.returncode != 0:
-                    raise RunnerError(
-                        f"docker compose could not {action} {broker}: "
-                        f"{performed.stderr.strip() or performed.stdout.strip()}")
-
-                deadline = time.monotonic() + OUTAGE_BUDGET_SECONDS
-                observed = ""
-                while time.monotonic() < deadline:
-                    # The readiness wait is the long one, and it is the one the teardown collides
-                    # with: a thread that sleeps through its stop request keeps asking Docker about a
-                    # service the teardown is already removing, and the two then race over the same
-                    # compose project. Asked before every Docker call, so the last thing this thread
-                    # does after the request is to answer, not to act.
-                    if stop_serving.is_set():
-                        raise RunnerError(
-                            f"the fixture is being torn down while the {action} was still being "
-                            "confirmed, so this runner issues no further Docker action for it")
-
-                    if action == "interrupt":
-                        observed = broker_state(broker, environment)
-                        if observed in ("exited", "stopped", "absent"):
-                            break
-                    else:
-                        if broker_is_healthy(broker, environment):
-                            observed = "healthy"
-                            break
-                        observed = broker_state(broker, environment)
-
-                    # Ends the moment the stop is requested; time.sleep did not.
-                    stop_serving.wait(0.5)
-                else:
-                    raise TimeoutError(
-                        f"the broker was still '{observed}' {OUTAGE_BUDGET_SECONDS} s after {action}, so "
-                        "the outage was not established")
-
-                answer = {"schemaVersion": CONTROL_SCHEMA_VERSION, "requestId": request_id,
-                          "action": action, "status": "ok", "observed": observed}
-            except Exception as error:  # noqa: BLE001 - the answer carries the reason
-                answer = {"schemaVersion": CONTROL_SCHEMA_VERSION, "requestId": request_id,
-                          "action": action, "status": "failed",
-                          "error": f"{type(error).__name__}: {error}"}
-
-            publish_json(result, answer)
-
-        stop_serving.wait(0.1)
-
-
-def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
-    """Write each broker's own log next to the test results, before the fixture is torn down.
-
-    A broker states things no test process can observe about itself: that it took a delivery back
-    because the acknowledgement timed out, that it refused an exclusive queue, which channel it closed
-    and why. Once 'down -v' has run, that record is gone for good, so it is collected here rather than
-    reconstructed from assertions afterwards. Failure to collect it does not fail the run -- the log is
-    evidence about a run that has already produced its verdict.
-    """
-    for broker in brokers:
-        result = compose("logs", "--no-color", "--timestamps", broker, capture=True, environment=environment)
-        if result.returncode != 0:
-            print(f"WARN broker-log {broker}: not collected ({result.stderr.strip()})", file=sys.stderr)
-            continue
-        target = broker_log_path(broker, environment)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(result.stdout, encoding="utf-8")
-        print(f"broker log {broker}: {target} ({len(result.stdout.splitlines())} lines)")
-
-
-# A vhost the broker created, and a channel exception it answered with, as the broker itself writes
-# them. Both are matched loosely on purpose: the surrounding wording differs between RabbitMQ versions,
-# the quoted vhost name does not.
-VHOST_CREATED = re.compile(r"Adding vhost '([^']+)'")
-RESOURCE_LOCKED = re.compile(r"resource_locked.*?vhost '([^']+)'")
-
-
-def assert_one_refusal_per_vhost(log_path: Path, pattern: str) -> bool:
-    """Fail the run when a virtual host saw anything other than exactly one exclusivity refusal.
-
-    Reply code 405 is permanent: asking a second time cannot change the answer, so a second refusal in
-    the same virtual host is a retry loop that should not exist, and no refusal at all is a spec whose
-    precondition never came about. Both were previously invisible to the suite -- the specs counted
-    endpoint faults and watched a quiet window, which says nothing about how often the broker was
-    actually asked. Counted here from the broker's own log, freshly collected and never reused, so the
-    rule fails the run by itself instead of depending on someone reading the log afterwards.
-    """
-    if not log_path.exists():
-        print(f"FAIL one-refusal: {log_path} was not collected, so the rule could not be checked", file=sys.stderr)
-        return False
-
-    log = log_path.read_text(encoding="utf-8", errors="replace")
-
-    expected = {name for name in VHOST_CREATED.findall(log) if fnmatch.fnmatch(name, pattern)}
-
-    counted: dict[str, int] = {name: 0 for name in expected}
-    for name in RESOURCE_LOCKED.findall(log):
-        if fnmatch.fnmatch(name, pattern):
-            counted[name] = counted.get(name, 0) + 1
-
-    if not counted:
-        print(f"FAIL one-refusal: no virtual host matching '{pattern}' appears in {log_path.name}, "
-              "so the rule matched nothing and would pass vacuously", file=sys.stderr)
-        return False
-
-    if not expected:
-        print(f"WARN one-refusal: no vhost creation matching '{pattern}' was found in {log_path.name}; "
-              "a virtual host that saw no refusal at all cannot be detected in this run", file=sys.stderr)
-
-    wrong = {name: count for name, count in sorted(counted.items()) if count != 1}
-    if wrong:
-        for name, count in wrong.items():
-            reason = "no refusal, so the conflict never happened" if count == 0 else f"{count} refusals, so it was retried"
-            print(f"FAIL one-refusal {name}: {reason}", file=sys.stderr)
-        return False
-
-    print(f"one-refusal: {len(counted)} virtual host(s) matching '{pattern}', exactly one refusal each")
-    return True
-
-
-def resolve_ports(broker: str, environment: dict[str, str], service: str | None = None) -> dict[str, str]:
-    """Ask Docker for the ports it actually bound, and refuse anything outside loopback.
-
-    The variables always belong to the broker; the service they are read from may be its relay. In a
-    recovery run that is the difference between an address the client can keep and one that changes
-    every time the broker restarts.
-    """
-    source = service or broker
-    resolved: dict[str, str] = {}
-    for container_port, variable in BROKER_PORTS[broker].items():
-        result = compose("port", source, str(container_port), capture=True, environment=environment)
-        binding = result.stdout.strip()
-        if result.returncode != 0 or not binding:
-            raise RunnerError(f"container port {container_port} of {source} is not published")
-
-        host, _, port = binding.rpartition(":")
-        if host not in ("127.0.0.1", "[::1]"):
-            raise RunnerError(
-                f"container port {container_port} of {source} is published on '{host}' instead of loopback"
-            )
-        resolved[variable] = port
-    return resolved
-
-
 def build_environment() -> dict[str, str]:
     """Generate a fresh account for every broker in the compose file, not only the started one.
 
@@ -464,12 +58,12 @@ def build_environment() -> dict[str, str]:
     placeholder with a known value; the idle service is never started, so the secret is never used.
     """
     environment: dict[str, str] = {}
-    for user_variable, pass_variable in BROKER_CREDENTIAL_VARIABLES.values():
-        environment[user_variable] = ACCOUNT_NAME
+    for user_variable, pass_variable in broker_logs.BROKER_CREDENTIAL_VARIABLES.values():
+        environment[user_variable] = broker_logs.ACCOUNT_NAME
         # 32 hex characters from the OS CSPRNG, new on every run and never written to disk.
         environment[pass_variable] = secrets.token_hex(16)
-    environment[MSSQL_USER_VARIABLE] = MSSQL_ACCOUNT_NAME
-    environment[MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
+    environment[broker_logs.MSSQL_USER_VARIABLE] = broker_logs.MSSQL_ACCOUNT_NAME
+    environment[broker_logs.MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
     return environment
 
 
@@ -514,7 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
     # A suite may legitimately span more than one broker: the ActiveMQ specs are parameterized over an
     # 'artemis' flavor that addresses a second, separate broker. Repeating --broker starts each of them,
     # so no spec has to fall back to a fixed port because its fixture was not started.
-    parser.add_argument("--broker", required=True, action="append", choices=sorted(BROKER_PORTS))
+    parser.add_argument("--broker", required=True, action="append", choices=sorted(compose_fixture.BROKER_PORTS))
     parser.add_argument("--category")
     parser.add_argument("--project")
     parser.add_argument("--evidence-dir", type=Path, default=Path("artifacts/run-output"))
@@ -548,87 +142,11 @@ def build_parser() -> argparse.ArgumentParser:
 CONTROLLER_JOIN_SECONDS = 10
 
 
-class OutageController:
-    """The runner side of the outage control directory, and the only thing that touches Docker for it.
-
-    It is an object rather than a bare thread because a thread that dies of an exception dies quietly:
-    the interpreter prints a traceback into the log and the run keeps whatever exit code it had. The
-    failure is kept here instead and reported as a cleanup finding, so an outage service that stopped
-    answering cannot leave a green run behind it.
-    """
-
-    def __init__(self, broker: str, control: Path, environment: dict[str, str]) -> None:
-        self._broker = broker
-        self._control = control
-        self._environment = environment
-        self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._serve, name="outage-controller", daemon=True)
-        self._started = False
-        self.error: BaseException | None = None
-
-    def start(self) -> list[str]:
-        """Starts the control thread. Returns findings instead of raising, and is idempotent.
-
-        The teardown has to be able to shut this object down whatever state it reached, including the
-        state where the thread was never started at all - a Thread.join() on one of those raises, and
-        that exception used to travel out of a teardown which promises not to raise and skip the
-        restore, the logs and the fixture removal behind it.
-        """
-        if self._started:
-            return []
-        try:
-            self._thread.start()
-        except RuntimeError as error:
-            self._stop.set()
-            return [f"outage-controller: the control thread could not be started: {error}"]
-
-        self._started = True
-
-        return []
-
-    def _serve(self) -> None:
-        try:
-            serve_outage_requests(self._broker, self._control, self._environment, self._stop)
-        except BaseException as error:  # noqa: BLE001 - kept so the run can report it as its own
-            self.error = error
-
-    def shutdown(self) -> list[str]:
-        """Stops the thread and says what it found. Never raises, in any state it can be in.
-
-        Idempotent and safe before a start: a controller that never ran is nothing to wait for, and a
-        second shutdown finds a thread that has already ended.
-        """
-        self._stop.set()
-        findings: list[str] = []
-
-        if self._started:
-            try:
-                self._thread.join(timeout=CONTROLLER_JOIN_SECONDS)
-            except RuntimeError as error:
-                findings.append(f"outage-controller: the control thread could not be joined: {error}")
-
-            if self._thread.is_alive():
-                findings.append(
-                    f"outage-controller: the control thread did not end within {CONTROLLER_JOIN_SECONDS} s, "
-                    "so it can still issue Docker actions against a fixture that is being removed")
-
-        if self.error is not None:
-            findings.append(
-                f"outage-controller: the control thread ended with {type(self.error).__name__}: {self.error}")
-
-        return findings
-
-    @property
-    def stopped(self) -> bool:
-        """Whether this controller has been told to stop. Read by the teardown before it removes."""
-        return self._stop.is_set()
-
-
 class RunState:
     """What the teardown has to know about a run that may have failed anywhere inside it."""
 
     def __init__(self) -> None:
-        self.controller: OutageController | None = None
+        self.controller: outage_protocol.OutageController | None = None
         self.captured: set[str] = set()
 
 
@@ -640,16 +158,16 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
     the teardown's work, and keeping the two apart is what stops a cleanup finding from occupying the
     slot the primary failure is read from.
     """
-    proxy = OUTAGE_PROXY.get(args.allow_broker_outage or "")
-    start(brokers + ([proxy] if proxy else []), environment)
+    proxy = compose_fixture.OUTAGE_PROXY.get(args.allow_broker_outage or "")
+    compose_fixture.start(brokers + ([proxy] if proxy else []), environment)
 
     endpoints: dict[str, str] = {}
     for broker in brokers:
         # In a recovery run the addresses of the fronted broker come from its relay. That is the
         # whole point: the client keeps one address while the broker behind it restarts.
         source = proxy if proxy and broker == args.allow_broker_outage else broker
-        endpoints.update(resolve_ports(broker, environment, service=source))
-        endpoints[BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
+        endpoints.update(compose_fixture.resolve_ports(broker, environment, service=source))
+        endpoints[broker_logs.BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
     environment.update(endpoints)
 
     if proxy:
@@ -662,16 +180,16 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
         # Under this run's own root, so it is never the path another run deletes.
         control = run_root / "fixture-control"
         control.mkdir(parents=True)
-        environment[OUTAGE_CONTROL_VARIABLE] = str(control)
+        environment[compose_fixture.OUTAGE_CONTROL_VARIABLE] = str(control)
 
-        controller = OutageController(args.allow_broker_outage, control, dict(environment))
+        controller = outage_protocol.OutageController(args.allow_broker_outage, control, dict(environment))
         problems = controller.start()
         # Published to the teardown either way, because a controller that failed to start still has to
         # be shut down and still has findings to report. What it must not do is reach that state as a
         # half-built object, so it is constructed, started and only then handed over.
         state.controller = controller
         if problems:
-            raise RunnerError("; ".join(problems))
+            raise compose_fixture.RunnerError("; ".join(problems))
         print(f"outage control ready for {args.allow_broker_outage} at {control}")
 
     # Always under this run's own root. A caller supplied path was a file two runs of one
@@ -699,11 +217,11 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
         # Before the teardown, and on the log this run produced. The check runs even when the tests
         # already failed: a retry loop is worth naming either way, and it must never be the reason a
         # red run looks green.
-        capture_logs(brokers, environment)
+        broker_logs.capture_logs(brokers, environment)
         state.captured.update(brokers)
 
         for broker in brokers:
-            if not assert_one_refusal_per_vhost(broker_log_path(broker, environment), args.one_refusal_per_vhost):
+            if not broker_logs.assert_one_refusal_per_vhost(broker_logs.broker_log_path(broker, environment), args.one_refusal_per_vhost):
                 return completed.returncode or 1
 
     return completed.returncode
@@ -752,7 +270,7 @@ def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str
         findings.append(
             "broker-fixture: the outage controller is still alive, so this run does not remove the "
             "fixture underneath it. The containers of compose project "
-            f"{environment.get(PROJECT_VARIABLE, '<unnamed>')} are left for a human to remove")
+            f"{environment.get(compose_fixture.PROJECT_VARIABLE, '<unnamed>')} are left for a human to remove")
 
         return findings
 
@@ -761,7 +279,7 @@ def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str
     # then meets a fixture that is up and answers nothing.
     if args.allow_broker_outage:
         def restore() -> None:
-            restored = compose("start", args.allow_broker_outage, capture=True, environment=environment)
+            restored = compose_fixture.compose("start", args.allow_broker_outage, capture=True, environment=environment)
             if restored.returncode != 0:
                 findings.append(
                     f"broker-restore: {args.allow_broker_outage} could not be started again: "
@@ -776,13 +294,13 @@ def teardown(args: argparse.Namespace, brokers: list[str], environment: dict[str
     try:
         remaining = [broker for broker in brokers if broker not in state.captured]
         if remaining:
-            capture_logs(remaining, environment)
+            broker_logs.capture_logs(remaining, environment)
     except Exception as error:  # noqa: BLE001 - evidence about a verdict that already exists
         print(f"WARN broker-log: not collected ({error})", file=sys.stderr)
 
     # Trap equivalent: the fixture is removed on success, on failure and on an exception alike, and a
     # teardown that fails says so.
-    guarded("broker-teardown", findings, lambda: stop(environment))
+    guarded("broker-teardown", findings, lambda: compose_fixture.stop(environment))
 
     return findings
 
@@ -817,8 +335,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     identity = run_root.name
-    environment[PROJECT_VARIABLE] = identity
-    environment[RUN_ROOT_VARIABLE] = str(run_root)
+    environment[compose_fixture.PROJECT_VARIABLE] = identity
+    environment[broker_logs.RUN_ROOT_VARIABLE] = str(run_root)
     environment[run_scope.RUN_TOKEN_VARIABLE] = (
         (run_root / run_scope.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip())
     print(f"run identity {identity}, output under {run_root.relative_to(REPO_ROOT)}")
@@ -829,7 +347,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         primary = execute(args, brokers, environment, run_root, state)
-    except RunnerError as error:
+    except compose_fixture.RunnerError as error:
         print(f"FAIL broker-category {args.category or 'command'}: {error}", file=sys.stderr)
         primary = 1
     except BaseException as error:  # noqa: BLE001 - re-raised once the fixture is cleaned up
@@ -842,13 +360,13 @@ def main(argv: list[str] | None = None) -> int:
     # Written where the caller can read it rather than left in this process's output. A caller that had
     # to recognise a cleanup failure by matching prose in stderr would be reading a sentence, and a
     # sentence is not a contract: the canonical entry point puts these into its receipt.
-    publish_json(run_root / FIXTURE_FINDINGS_FILE, {
+    compose_fixture.publish_json(run_root / compose_fixture.FIXTURE_FINDINGS_FILE, {
         "schemaVersion": 1,
         "kind": "SERVICEBUS_FIXTURE_FINDINGS",
         "brokers": brokers,
         "allowedBrokerOutage": args.allow_broker_outage,
         "findings": findings,
-        "logs": {broker: digest_of(broker_log_path(broker, environment)) for broker in brokers},
+        "logs": {broker: digest_of(broker_logs.broker_log_path(broker, environment)) for broker in brokers},
     })
 
     # The exception a reader has to see is the one that came first, and the cleanup findings are
