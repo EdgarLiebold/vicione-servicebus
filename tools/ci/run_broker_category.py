@@ -33,7 +33,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import run_ownership  # noqa: E402  (repository local, resolved from this file's folder)
+from verification import run_scope  # noqa: E402  (repository local, resolved from this file's folder)
 
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
@@ -57,7 +57,7 @@ COMPOSE_FILE = REPO_ROOT / "build/test-infrastructure/compose.yaml"
 # run on the same machine.
 PROJECT_VARIABLE = "VICIONE_SERVICEBUS_COMPOSE_PROJECT"
 
-RUN_ROOT_VARIABLE = run_ownership.RUN_ROOT_VARIABLE
+RUN_ROOT_VARIABLE = run_scope.RUN_ROOT_VARIABLE
 
 # Container ports each broker exposes, mapped onto the environment variable the tests read.
 BROKER_PORTS = {
@@ -811,16 +811,16 @@ def main(argv: list[str] | None = None) -> int:
     # is refused, because a run that believed one would write into, and later clean up, a directory
     # belonging to somebody else.
     try:
-        run_root = run_ownership.claim_run_root(RAW_RUN_OUTPUT_DIR)
-    except run_ownership.OwnershipError as error:
+        run_root = run_scope.claim_run_root(RAW_RUN_OUTPUT_DIR)
+    except run_scope.OwnershipError as error:
         print(f"FAIL broker-category {args.category or 'command'}: {error}", file=sys.stderr)
         return 1
 
     identity = run_root.name
     environment[PROJECT_VARIABLE] = identity
     environment[RUN_ROOT_VARIABLE] = str(run_root)
-    environment[run_ownership.RUN_TOKEN_VARIABLE] = (
-        (run_root / run_ownership.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip())
+    environment[run_scope.RUN_TOKEN_VARIABLE] = (
+        (run_root / run_scope.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip())
     print(f"run identity {identity}, output under {run_root.relative_to(REPO_ROOT)}")
 
     state = RunState()

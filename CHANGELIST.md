@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1208 |
+| Added | 1217 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -268,6 +268,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097/test-identity-measurement.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-1-counterexamples.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-2-counterexamples.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-3-counterexamples.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/block-4-counterexample.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0099/diagnostics-removal-approval.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/GIT_BASELINE_PROOF.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/GIT_BASELINE_PROOF.json` | Added |  |
@@ -6831,10 +6834,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/api_surface.cs` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
+| `tools/ci/fixtures/__init__.py` | Added |  |
+| `tools/ci/policies/__init__.py` | Added |  |
 | `tools/ci/policy_validator.py` | Added |  |
 | `tools/ci/record_expected.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
-| `tools/ci/run_ownership.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
 | `tools/ci/test_locked_restore.py` | Added |  |
 | `tools/ci/test_policy_validator.py` | Added |  |
@@ -6843,7 +6847,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/test_run_test_category.py` | Added |  |
 | `tools/ci/test_verify.py` | Added |  |
 | `tools/ci/validate_receipt.py` | Added |  |
-| `tools/ci/verification_model.py` | Added |  |
+| `tools/ci/verification/__init__.py` | Added |  |
+| `tools/ci/verification/model.py` | Added |  |
+| `tools/ci/verification/process_tree.py` | Added |  |
+| `tools/ci/verification/receipt.py` | Added |  |
+| `tools/ci/verification/run_scope.py` | Added |  |
+| `tools/ci/verification/trx.py` | Added |  |
 | `tools/ci/verify.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/AssemblyInfo.cs` | Added |  |

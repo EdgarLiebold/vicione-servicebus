@@ -41,7 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_broker_category  # noqa: E402  (repository local, resolved from this file's folder)
 import verify  # noqa: E402
 import run_test_category  # noqa: E402
-import verification_model  # noqa: E402
+from verification import model as verification_model  # noqa: E402
 from xml.etree import ElementTree
 
 RESTORE_CONFIG = "NuGet.config"

@@ -32,8 +32,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import verify  # noqa: E402  (repository local, resolved from this file's folder)
+from verification import receipt as receipts  # noqa: E402
 
-REPO_ROOT = verify.REPO_ROOT
+# Read at the moment it is used rather than captured here: a module level copy taken at
+# import time is a different repository from the one a caller later binds.
 EXPECTED_DIR = "build/verification/expected"
 
 APPROVAL_KIND = "SERVICEBUS_EXPECTED_REMOVAL_APPROVAL"
@@ -59,14 +61,14 @@ def removal_digest(identities: list[str]) -> str:
 
 def approval_findings(approval: dict, category: str, removed: list[str]) -> list[str]:
     """Everything that stops this document from being an approval of exactly these removals."""
-    findings = verify.shape_findings(approval, {
-        "schemaVersion": (verify.number, "a number"),
-        "kind": (verify.text, "a string"),
-        "category": (verify.text, "a string"),
-        "reference": (verify.text, "a string"),
-        "referenceSha256": (verify.text, "a string"),
-        "removedIdentities": (verify.identity_list, "a list of identities"),
-        "removedIdentitiesSha256": (verify.text, "a string"),
+    findings = receipts.shape_findings(approval, {
+        "schemaVersion": (receipts.number, "a number"),
+        "kind": (receipts.text, "a string"),
+        "category": (receipts.text, "a string"),
+        "reference": (receipts.text, "a string"),
+        "referenceSha256": (receipts.text, "a string"),
+        "removedIdentities": (receipts.identity_list, "a list of identities"),
+        "removedIdentitiesSha256": (receipts.text, "a string"),
     }, "the approval")
     if findings:
         return findings
@@ -145,7 +147,7 @@ def blocking_findings(result: dict) -> list[str]:
 
 
 def write_expected(category: str, identities: list[str]) -> Path:
-    target = REPO_ROOT / EXPECTED_DIR / f"{category}.txt"
+    target = verify.REPO_ROOT / EXPECTED_DIR / f"{category}.txt"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(HEADER.format(category=category)
                       + "".join(f"{identity}\n" for identity in sorted(identities)), encoding="utf-8")
@@ -210,7 +212,7 @@ def main(argv: list[str] | None = None) -> int:
         previous = verify.expected_identities(run) or []
 
         result = verify.verify_category(run, (args.evidence_dir if args.evidence_dir.is_absolute()
-                                              else REPO_ROOT / args.evidence_dir))
+                                              else verify.REPO_ROOT / args.evidence_dir))
         blocking = blocking_findings(result)
         if blocking:
             raise MaintenanceError(f"this run cannot be recorded from: {'; '.join(blocking)}")
@@ -220,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
         removed = sorted(set(previous) - set(executed))
         read_approval(args.approval, args.category, removed)
 
-        relative = write_expected(args.category, executed).relative_to(REPO_ROOT).as_posix()
+        relative = write_expected(args.category, executed).relative_to(verify.REPO_ROOT).as_posix()
         bind_to_model(model, args.category, relative, len(executed))
     except (MaintenanceError, verify.VerificationError) as error:
         print(f"REFUSED record-expected {args.category}: {error}", file=sys.stderr)

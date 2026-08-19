@@ -25,6 +25,7 @@ import unittest
 from pathlib import Path
 
 import run_test_category as runner
+from verification import process_tree, trx
 
 TRX_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n<TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">\n'
 
@@ -341,7 +342,7 @@ class Bounding_the_test_process(RunnerFixture):
     """
 
     def test_a_child_that_finishes_inside_its_budget_is_reported_as_it_is(self) -> None:
-        child = runner.run_child(["sh", "-c", "echo done; exit 3"], dict(os.environ), 30)
+        child = process_tree.run_child(["sh", "-c", "echo done; exit 3"], dict(os.environ), 30)
 
         self.assertEqual(3, child["exitCode"])
         self.assertFalse(child["timedOut"])
@@ -352,12 +353,12 @@ class Bounding_the_test_process(RunnerFixture):
         # A shell that spawns a sleeping grandchild and then waits forever: signalling only the
         # process that was started would leave the grandchild running, which is exactly what happened
         # to the real runs.
-        with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 3), \
-                mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 6):
+        with mock.patch.object(process_tree, "TERMINATION_GRACE_SECONDS", 3), \
+                mock.patch.object(process_tree, "SURVIVOR_GRACE_SECONDS", 6):
             # 60 s rather than something endless: with the budget in place the child is taken down
             # after two seconds, and a probe that removes the budget then ends in a minute instead of
             # holding the suite. A mutation probe may not need the very defect it is proving.
-            child = runner.run_child(["sh", "-c", "sleep 60 & sleep 60"], dict(os.environ), 2)
+            child = process_tree.run_child(["sh", "-c", "sleep 60 & sleep 60"], dict(os.environ), 2)
 
         self.assertTrue(child["timedOut"], "the budget did not end the child")
         self.assertNotEqual(0, child["exitCode"], "a run that had to be taken down is not a success")
@@ -370,8 +371,8 @@ class Bounding_the_test_process(RunnerFixture):
         # The leaked child closes the output pipes it inherited. One that keeps them open is waited
         # for by communicate() anyway - the run then takes as long as the leak, which is a different
         # shape and is covered by the budget.
-        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
-            child = runner.run_child(["sh", "-c", "sleep 30 >/dev/null 2>&1 & exit 0"],
+        with mock.patch.object(process_tree, "SURVIVOR_GRACE_SECONDS", 1):
+            child = process_tree.run_child(["sh", "-c", "sleep 30 >/dev/null 2>&1 & exit 0"],
                                      dict(os.environ), 30)
 
         self.assertEqual(1, len(child["survivingOwnedProcesses"]), child["survivingOwnedProcesses"])
@@ -386,8 +387,8 @@ class Bounding_the_test_process(RunnerFixture):
         would only turn a false finding into a slow one. Measured: this control fired on a green
         ActiveMQ category whose only survivor was exactly this process.
         """
-        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
-            child = runner.run_child(
+        with mock.patch.object(process_tree, "SURVIVOR_GRACE_SECONDS", 1):
+            child = process_tree.run_child(
                 ["sh", "-c", "sleep 30 >/dev/null 2>&1 & exec -a "
                              "/usr/local/share/dotnet/sdk/10.0.302/Roslyn/bincore/VBCSCompiler "
                              "sleep 30 >/dev/null 2>&1 & exit 0"],
@@ -413,18 +414,18 @@ class Bounding_the_test_process(RunnerFixture):
                                  stderr=subprocess.PIPE, text=True)
         try:
             child.stderr.readline()                       # the grandchild is up and in the group
-            self.assertEqual(2, len(runner.group_members(child.pid)))
+            self.assertEqual(2, len(process_tree.group_members(child.pid)))
 
-            with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 2), \
-                    mock.patch.object(runner, "KILL_GRACE_SECONDS", 5):
-                takedown = runner.terminate_tree(child)
+            with mock.patch.object(process_tree, "TERMINATION_GRACE_SECONDS", 2), \
+                    mock.patch.object(process_tree, "KILL_GRACE_SECONDS", 5):
+                takedown = process_tree.terminate_tree(child)
 
             self.assertEqual([], takedown["survivors"],
                              "the takedown returned while the run's own process group was still "
                              "running, because the process it started had already exited")
             self.assertTrue(takedown["escalatedToKill"],
                             "the group ignored the ask and was never killed")
-            self.assertEqual([], runner.group_members(child.pid),
+            self.assertEqual([], process_tree.group_members(child.pid),
                              "the takedown reported an empty group and the group was not empty")
         finally:
             try:
@@ -439,8 +440,8 @@ class Bounding_the_test_process(RunnerFixture):
         child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"],
                                  start_new_session=True)
         try:
-            with mock.patch.object(runner, "TERMINATION_GRACE_SECONDS", 10):
-                takedown = runner.terminate_tree(child)
+            with mock.patch.object(process_tree, "TERMINATION_GRACE_SECONDS", 10):
+                takedown = process_tree.terminate_tree(child)
 
             self.assertEqual([], takedown["survivors"])
             self.assertFalse(takedown["escalatedToKill"],
@@ -454,7 +455,7 @@ class Bounding_the_test_process(RunnerFixture):
 
     def test_a_child_that_cannot_be_started_is_a_result_and_not_an_exception(self) -> None:
         """A run that ends on a traceback ends before it writes the record saying what happened."""
-        child = runner.run_child([str(self.root / "not-a-program")], dict(os.environ), 30)
+        child = process_tree.run_child([str(self.root / "not-a-program")], dict(os.environ), 30)
 
         self.assertIsNone(child["exitCode"])
         self.assertIn("could not be started", child["stderr"])
@@ -471,8 +472,8 @@ class Bounding_the_test_process(RunnerFixture):
         holder = self.root / "hold_port.py"
         holder.write_text("import time\ntime.sleep(25)\n", encoding="utf-8")
 
-        with mock.patch.object(runner, "SURVIVOR_GRACE_SECONDS", 1):
-            child = runner.run_child(
+        with mock.patch.object(process_tree, "SURVIVOR_GRACE_SECONDS", 1):
+            child = process_tree.run_child(
                 ["sh", "-c", f"{sys.executable} {holder} --label VBCSCompiler >/dev/null 2>&1 & exit 0"],
                 dict(os.environ), 30)
 
@@ -486,7 +487,7 @@ class Bounding_the_test_process(RunnerFixture):
         os.kill(int(pid), signal.SIGKILL)
 
     def test_the_child_gets_a_session_of_its_own(self) -> None:
-        child = runner.run_child(["sh", "-c", "ps -o pgid= -p $$"], dict(os.environ), 30)
+        child = process_tree.run_child(["sh", "-c", "ps -o pgid= -p $$"], dict(os.environ), 30)
 
         self.assertNotEqual(str(os.getpgid(0)), child["stdout"].strip(),
                             "the child shares this process's group, so signalling its tree would "
@@ -506,37 +507,37 @@ class Knowing_the_shared_compiler_by_what_it_is(unittest.TestCase):
     ASSEMBLY = "/usr/local/share/dotnet/sdk/6.0.300/Roslyn/bincore/VBCSCompiler.dll"
 
     def test_the_apphost_the_sdk_really_starts_is_the_compiler(self) -> None:
-        self.assertTrue(runner.is_shared_compiler(f"{self.APPHOST} -pipename:VBCSCompiler-abc"))
+        self.assertTrue(process_tree.is_shared_compiler(f"{self.APPHOST} -pipename:VBCSCompiler-abc"))
 
     def test_the_assembly_started_through_the_host_is_the_compiler(self) -> None:
-        self.assertTrue(runner.is_shared_compiler(
+        self.assertTrue(process_tree.is_shared_compiler(
             f"/usr/local/share/dotnet/dotnet exec {self.ASSEMBLY} -pipename:x"))
-        self.assertTrue(runner.is_shared_compiler(f"/usr/local/share/dotnet/dotnet {self.ASSEMBLY}"))
+        self.assertTrue(process_tree.is_shared_compiler(f"/usr/local/share/dotnet/dotnet {self.ASSEMBLY}"))
 
     def test_a_command_that_merely_mentions_the_compiler_is_not_the_compiler(self) -> None:
         for command in ("python hold-port.py --label VBCSCompiler",
                         "/usr/bin/sleep 30 # VBCSCompiler",
                         "dotnet test --filter VBCSCompiler"):
             with self.subTest(command=command):
-                self.assertFalse(runner.is_shared_compiler(command),
+                self.assertFalse(process_tree.is_shared_compiler(command),
                                  "a process would be invisible to the census because of a word in "
                                  "its command line")
 
     def test_the_compiler_name_somewhere_else_is_not_the_compiler(self) -> None:
-        self.assertFalse(runner.is_shared_compiler("/tmp/VBCSCompiler -pipename:x"))
-        self.assertFalse(runner.is_shared_compiler("/tmp/bincore/VBCSCompiler"))
+        self.assertFalse(process_tree.is_shared_compiler("/tmp/VBCSCompiler -pipename:x"))
+        self.assertFalse(process_tree.is_shared_compiler("/tmp/bincore/VBCSCompiler"))
 
     def test_a_command_line_that_carries_nothing_is_not_the_compiler(self) -> None:
-        self.assertFalse(runner.is_shared_compiler(""))
-        self.assertFalse(runner.is_shared_compiler("   "))
+        self.assertFalse(process_tree.is_shared_compiler(""))
+        self.assertFalse(process_tree.is_shared_compiler("   "))
 
 
 class Reading_every_result_the_run_defined(RunnerFixture):
     """A counter cannot show a case whose result entry is simply absent."""
 
     def test_a_definition_without_a_result_is_reported(self) -> None:
-        trx = self.root / "gap.trx"
-        trx.write_text(
+        trx_path = self.root / "gap.trx"
+        trx_path.write_text(
             TRX_HEADER
             + "  <TestDefinitions>\n"
             + '    <UnitTest id="00000000-0000-0000-0000-000000000000" name="Should_run">\n'
@@ -550,13 +551,13 @@ class Reading_every_result_the_run_defined(RunnerFixture):
             + '    <UnitTestResult testId="00000000-0000-0000-0000-000000000000" testName="Should_run" outcome="Passed" />\n'
             + "  </Results>\n</TestRun>\n", encoding="utf-8")
 
-        self.assertEqual(["Suite.Fixture.Should_also_run"], runner.omitted_results(trx))
+        self.assertEqual(["Suite.Fixture.Should_also_run"], trx.omitted_results(trx_path))
 
     def test_a_complete_result_file_reports_nothing(self) -> None:
-        trx = write_trx(self.root / "whole.trx", [("Suite.Fixture", "Should_run", "Passed"),
+        trx_path = write_trx(self.root / "whole.trx", [("Suite.Fixture", "Should_run", "Passed"),
                                                   ("Suite.Fixture", "Should_skip", "NotExecuted")])
 
-        self.assertEqual([], runner.omitted_results(trx))
+        self.assertEqual([], trx.omitted_results(trx_path))
 
 
 class IdentityContractTestCase(RunnerFixture):
@@ -575,23 +576,23 @@ class IdentityContractTestCase(RunnerFixture):
         return runner.permitted_not_executed(runner.category_contract("core", MODEL_PROJECT))
 
     def test_the_same_fixture_and_case_name_in_two_namespaces_are_two_identities(self):
-        trx = write_trx(self.root / "a.trx", [
+        trx_path = write_trx(self.root / "a.trx", [
             ("Suite.Middleware.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
             ("Suite.Pipeline.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
         ])
 
-        self.assertEqual(runner.read_not_executed(trx), [
+        self.assertEqual(trx.read_not_executed(trx_path), [
             "Suite.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
             "Suite.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval",
         ])
 
     def test_parameterised_fixture_arguments_stay_distinct(self):
-        trx = write_trx(self.root / "b.trx", [
+        trx_path = write_trx(self.root / "b.trx", [
             ("Suite.Serializer_performance(Suite.BsonSerializer)", "Just_how_fast_are_you", "NotExecuted"),
             ("Suite.Serializer_performance(Suite.JsonSerializer)", "Just_how_fast_are_you", "NotExecuted"),
         ])
 
-        skipped = runner.read_not_executed(trx)
+        skipped = trx.read_not_executed(trx_path)
 
         self.assertEqual(len(skipped), 2, "Two parameterised cases are two identities, not one")
         self.assertEqual(skipped, [
@@ -600,35 +601,35 @@ class IdentityContractTestCase(RunnerFixture):
         ])
 
     def test_inventorying_one_colliding_identity_does_not_authorise_the_other(self):
-        trx = write_trx(self.root / "c.trx", [
+        trx_path = write_trx(self.root / "c.trx", [
             ("Suite.Middleware.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
             ("Suite.Pipeline.Specifying_a_rate_limit", "Should_only_do_n_messages_per_interval", "NotExecuted"),
         ])
         permitted = self.permit(["Suite.Middleware.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
+        unlisted = runner.unauthorised_not_executed(trx.read_not_executed(trx_path), permitted)
 
         self.assertEqual(unlisted, ["Suite.Pipeline.Specifying_a_rate_limit.Should_only_do_n_messages_per_interval"])
 
     def test_an_additional_not_executed_identity_is_reported(self):
-        trx = write_trx(self.root / "d.trx", [
+        trx_path = write_trx(self.root / "d.trx", [
             ("Suite.Benchmarks.Throughput", "Just_how_fast_are_you", "NotExecuted"),
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
         permitted = self.permit(["Suite.Benchmarks.Throughput.Just_how_fast_are_you"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
+        unlisted = runner.unauthorised_not_executed(trx.read_not_executed(trx_path), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
     def test_a_repeated_identity_is_not_authorised_twice_by_one_entry(self):
-        trx = write_trx(self.root / "e.trx", [
+        trx_path = write_trx(self.root / "e.trx", [
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
         permitted = self.permit(["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
+        unlisted = runner.unauthorised_not_executed(trx.read_not_executed(trx_path), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"],
                          "One permission covers one case, so the second occurrence stays unauthorised")
@@ -640,7 +641,7 @@ class IdentityContractTestCase(RunnerFixture):
         shape into a file it then assigned to an attribute production does not have, so whatever it
         proved, it was not this.
         """
-        trx = write_trx(self.root / "f.trx", [
+        trx_path = write_trx(self.root / "f.trx", [
             ("Suite.Behaviour.Delivery", "Should_deliver_the_message", "NotExecuted"),
         ])
         self.write_model(notExecuted=[
@@ -650,39 +651,39 @@ class IdentityContractTestCase(RunnerFixture):
 
         self.assertEqual([], permitted, "an entry without an identity is not a permission")
 
-        unlisted = runner.unauthorised_not_executed(runner.read_not_executed(trx), permitted)
+        unlisted = runner.unauthorised_not_executed(trx.read_not_executed(trx_path), permitted)
 
         self.assertEqual(unlisted, ["Suite.Behaviour.Delivery.Should_deliver_the_message"])
 
     def test_passed_and_failed_cases_are_not_reported_as_not_executed(self):
-        trx = write_trx(self.root / "g.trx", [
+        trx_path = write_trx(self.root / "g.trx", [
             ("Suite.Behaviour.Delivery", "Should_pass", "Passed"),
             ("Suite.Behaviour.Delivery", "Should_fail", "Failed"),
             ("Suite.Behaviour.Delivery", "Should_skip", "NotExecuted"),
         ])
 
-        self.assertEqual(runner.read_not_executed(trx), ["Suite.Behaviour.Delivery.Should_skip"])
+        self.assertEqual(trx.read_not_executed(trx_path), ["Suite.Behaviour.Delivery.Should_skip"])
 
     def test_an_assembly_qualified_class_name_keeps_its_argument_list(self):
-        self.assertEqual(runner.type_name("Suite.Fixture(1, 2), Suite.Tests"), "Suite.Fixture(1, 2)")
-        self.assertEqual(runner.type_name("Suite.Fixture"), "Suite.Fixture")
-        self.assertEqual(runner.type_name("Suite.Fixture(a, b)"), "Suite.Fixture(a, b)")
+        self.assertEqual(trx.type_name("Suite.Fixture(1, 2), Suite.Tests"), "Suite.Fixture(1, 2)")
+        self.assertEqual(trx.type_name("Suite.Fixture"), "Suite.Fixture")
+        self.assertEqual(trx.type_name("Suite.Fixture(a, b)"), "Suite.Fixture(a, b)")
 
 
 class RunDurationTestCase(unittest.TestCase):
     def test_seven_fractional_digits_are_parsed(self):
         # The writer emits seven digits, which fromisoformat rejects. Returning None there silently
         # recorded the run duration as null on every single run.
-        start = runner.parse_trx_time("2026-08-16T06:31:08.9712660+00:00")
-        finish = runner.parse_trx_time("2026-08-16T06:38:43.6651310+00:00")
+        start = trx.parse_trx_time("2026-08-16T06:31:08.9712660+00:00")
+        finish = trx.parse_trx_time("2026-08-16T06:38:43.6651310+00:00")
 
         self.assertIsNotNone(start)
         self.assertIsNotNone(finish)
         self.assertAlmostEqual((finish - start).total_seconds(), 454.694, places=3)
 
     def test_an_unparsable_stamp_is_reported_as_absent(self):
-        self.assertIsNone(runner.parse_trx_time("not a timestamp"))
-        self.assertIsNone(runner.parse_trx_time(None))
+        self.assertIsNone(trx.parse_trx_time("not a timestamp"))
+        self.assertIsNone(trx.parse_trx_time(None))
 
 
 class Keeping_the_invocation_closed(unittest.TestCase):
@@ -739,7 +740,7 @@ class Passing_nothing_on_to_dotnet_test(RunnerFixture):
             return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
-        with mock.patch.object(runner, "run_child", side_effect=child), \
+        with mock.patch.object(process_tree, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             with self.assertRaises(runner.CategoryError):
                 runner.run_category("core", MODEL_PROJECT, self.root / "evidence")
@@ -768,15 +769,15 @@ class Owning_the_output_of_one_run(RunnerFixture):
                                (run_root / runner.RUN_TOKEN_FILE).read_text(encoding="utf-8").strip()}
 
         def child(command, environment, budget):
-            trx = Path([part for part in command if part.startswith("trx;LogFileName=")][0].split("=", 1)[1])
-            trx.parent.mkdir(parents=True, exist_ok=True)
-            trx.write_text(TRX_WITH_ONE_PASSING_CASE, encoding="utf-8")
+            trx_path = Path([part for part in command if part.startswith("trx;LogFileName=")][0].split("=", 1)[1])
+            trx_path.parent.mkdir(parents=True, exist_ok=True)
+            trx_path.write_text(TRX_WITH_ONE_PASSING_CASE, encoding="utf-8")
 
             return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
         with mock.patch.dict(os.environ, environment, clear=False), \
-                mock.patch.object(runner, "run_child", side_effect=child):
+                mock.patch.object(process_tree, "run_child", side_effect=child):
             return runner.run_category("core", MODEL_PROJECT, evidence)
 
     def test_two_runs_of_one_category_write_different_files(self) -> None:
@@ -892,9 +893,9 @@ class Binding_an_indirect_anchor_to_a_case_that_ran(unittest.TestCase):
         runner.VERIFICATION_MODEL = path
 
     def unproven(self, cases: list[tuple[str, str, str]], category: str = "core") -> list[str]:
-        trx = write_trx(self.root / "run.trx", cases)
+        trx_path = write_trx(self.root / "run.trx", cases)
 
-        return runner.unproven_anchors(runner.required_anchors(category), runner.read_executed(trx))
+        return runner.unproven_anchors(runner.required_anchors(category), trx.read_executed(trx_path))
 
     def test_an_anchor_whose_fixture_executed_a_case_is_proven(self) -> None:
         self.model([{"category": "core", "fixture": self.ANCHOR}])
@@ -940,12 +941,12 @@ class Binding_an_indirect_anchor_to_a_case_that_ran(unittest.TestCase):
         self.assertEqual([], runner.required_anchors("core"))
 
     def test_the_record_names_the_cases_that_carried_each_anchor(self) -> None:
-        trx = write_trx(self.root / "run.trx", [
+        trx_path = write_trx(self.root / "run.trx", [
             (self.ANCHOR, "Should_render_the_graph", "Passed"),
             (self.ANCHOR, "Should_render_the_composite", "Passed"),
             ("Suite.Other.Delivering", "Should_arrive", "Passed"),
         ])
-        executed = runner.read_executed(trx)
+        executed = trx.read_executed(trx_path)
 
         carried = sorted(identity for fixture, identity in executed if fixture == self.ANCHOR)
 

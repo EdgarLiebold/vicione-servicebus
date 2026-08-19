@@ -29,8 +29,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import verify  # noqa: E402  (repository local, resolved from this file's folder)
+from verification import receipt as receipts  # noqa: E402
 
-REPO_ROOT = verify.REPO_ROOT
+# Read at the moment it is used rather than captured here: a module level copy taken at
+# import time is a different repository from the one a caller later binds.
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -58,9 +60,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"FAIL receipt: {error}", file=sys.stderr)
         return 1
 
-    problems = verify.receipt_findings(receipt, args.selection, verify.git("rev-parse", "HEAD"),
-                                       verify.git("rev-parse", "HEAD^{tree}"), model_hash, categories,
-                                       model)
+    problems = receipts.receipt_findings(receipt, args.selection, verify.git("rev-parse", "HEAD"),
+                                         verify.git("rev-parse", "HEAD^{tree}"), model_hash,
+                                         categories, model, verify.REPO_ROOT)
     if problems:
         for problem in problems:
             print(f"FAIL receipt {problem}", file=sys.stderr)
@@ -69,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
     # Said out loud rather than left to a reader's assumption. The two states are not the same claim,
     # and a record that was only checked against itself must not be reported as if a result file had
     # been read again.
-    evidence = verify.accompanying_evidence(receipt)
+    evidence = receipts.accompanying_evidence(receipt, verify.REPO_ROOT)
     read_again = evidence["withNativeResult"]
     standing = ("consistent and reparsed against every native result file"
                 if read_again == evidence["categories"] and read_again

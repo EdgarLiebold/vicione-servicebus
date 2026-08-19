@@ -39,16 +39,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import run_ownership  # noqa: E402  (repository local, resolved from this file's folder)
+from verification import process_tree, receipt as receipts, run_scope, trx  # noqa: E402
 import run_test_category  # noqa: E402
-import verification_model  # noqa: E402
+from verification import model as verification_model  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MODEL_FILE = REPO_ROOT / "build/verification/VERIFICATION_MODEL.json"
 RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
-RECEIPT_NAME = "verification-receipt.json"
-RECEIPT_KIND = "SERVICEBUS_VERIFICATION_RECEIPT"
-RECEIPT_SCHEMA_VERSION = 2
+# Re-exported for the callers and cases that name them: what a receipt is lives in
+# verification/receipt.py, and there is one definition of it.
+RECEIPT_NAME = receipts.RECEIPT_NAME
+RECEIPT_KIND = receipts.RECEIPT_KIND
+RECEIPT_SCHEMA_VERSION = receipts.RECEIPT_SCHEMA_VERSION
 
 FIXTURE_RECORD_NAME = "fixture-findings.json"
 FIXTURE_RECORD_KIND = "SERVICEBUS_FIXTURE_FINDINGS"
@@ -79,6 +81,19 @@ def load_model() -> tuple[dict, str]:
     return model, hashlib.sha256(raw).hexdigest()
 
 
+def declared_run(model: dict, category: str) -> dict:
+    """The one run of this category, with the entry point's own refusal on top of the model's."""
+    try:
+        return verification_model.declared_run(model, category)
+    except verification_model.ModelError as error:
+        raise VerificationError(str(error)) from error
+
+
+def child_command(run: dict, evidence_dir: Path) -> list[str]:
+    """The exact command for this category, bound to this repository."""
+    return verification_model.child_command(run, REPO_ROOT, evidence_dir)
+
+
 def resolve_selection(model: dict, name: str) -> list[str]:
     """The categories a selection names, transitively.
 
@@ -94,17 +109,6 @@ def resolve_selection(model: dict, name: str) -> list[str]:
         raise VerificationError(f"selection '{name}' resolves to no category at all")
 
     return resolved
-
-
-def declared_run(model: dict, category: str) -> dict:
-    runs = [run for capability in model.get("capabilities", [])
-            for run in capability.get("runs", []) if run.get("category") == category]
-    if len(runs) != 1:
-        raise VerificationError(
-            f"the model declares {len(runs)} runs for category '{category}', so which one is meant is "
-            "undecided")
-
-    return runs[0]
 
 
 # -- expected identities -------------------------------------------------------------------------
@@ -139,124 +143,6 @@ def expected_identities(run: dict) -> list[str] | None:
 
 
 # -- the native result file ------------------------------------------------------------------------
-
-RESULT_COUNTER_NAMES = ("total", "executed", "passed", "failed", "notExecuted")
-
-
-def unread_result(findings: list[str], present: bool, sha256: str | None) -> dict[str, object]:
-    return {"present": present, "sha256": sha256, "executed": [], "failed": [], "skipped": [],
-            "omitted": [], "counters": {}, "findings": findings}
-
-
-def parse_result_file(trx_path: Path) -> dict[str, object]:
-    """Everything the test platform's own result file says, and everything wrong with it as a file.
-
-    Read fail closed, because every shape rejected here is a way for a set to look complete while it
-    is not. A result naming a test id the file defines no case for belongs to nothing and used to be
-    passed over in silence. A definition id that appears twice leaves the case a result belongs to
-    undecided. A summary whose counters disagree with the results underneath it is either not about
-    this run or not about these cases, and either way its numbers may not be repeated.
-
-    notExecuted is carried into the record and deliberately not compared with it: measured on a real
-    run of the rabbitmq category, the writer reported notExecuted="0" for a file holding twenty
-    NotExecuted results. That counter carries no information, which is why every identity here is read
-    from the results themselves.
-    """
-    if not trx_path.is_file():
-        return unread_result(
-            [f"'{trx_path.name}' was never written, so this run left no native result to read"],
-            present=False, sha256=None)
-
-    raw = trx_path.read_bytes()
-    sha256 = hashlib.sha256(raw).hexdigest()
-    try:
-        root = ElementTree.fromstring(raw)
-    except ElementTree.ParseError as error:
-        return unread_result([f"the native result file is not readable: {error}"], True, sha256)
-
-    namespace = run_test_category.TRX_NAMESPACE
-    findings: list[str] = []
-
-    definitions: dict[str, str] = {}
-    for definition in root.findall("t:TestDefinitions/t:UnitTest", namespace):
-        test_id = definition.attrib.get("id")
-        method = definition.find("t:TestMethod", namespace)
-        if not test_id or method is None:
-            findings.append("a case is defined without an id or without a method, so no result can be "
-                            "attributed to it")
-            continue
-        if test_id in definitions:
-            findings.append(f"test id {test_id} is defined more than once, so which case a result "
-                            "naming it belongs to is undecided")
-            continue
-        definitions[test_id] = run_test_category.identity_of(method)
-
-    executed: list[str] = []
-    failed: list[str] = []
-    skipped: list[str] = []
-    reported: Counter = Counter()
-    outcomes: Counter = Counter()
-    results = root.findall("t:Results/t:UnitTestResult", namespace)
-    for result in results:
-        test_id = result.attrib.get("testId") or ""
-        outcome = result.attrib.get("outcome")
-        outcomes[outcome] += 1
-        identity = definitions.get(test_id)
-        if identity is None:
-            findings.append(f"a result names test id '{test_id}', which this file defines no case for")
-            continue
-        reported[test_id] += 1
-        if outcome == "NotExecuted":
-            skipped.append(identity)
-            continue
-        executed.append(identity)
-        if outcome != "Passed":
-            failed.append(identity)
-
-    for test_id, count in sorted(reported.items()):
-        if count > 1:
-            findings.append(f"'{definitions[test_id]}' is reported {count} times under one test id")
-
-    summary = root.find("t:ResultSummary/t:Counters", namespace)
-    counters: dict[str, int] = {}
-    if summary is None:
-        findings.append("the result file carries no counter summary at all")
-    else:
-        try:
-            counters = {name: int(summary.attrib.get(name, "0")) for name in RESULT_COUNTER_NAMES}
-        except ValueError:
-            findings.append("the result file's counters are not numbers")
-        else:
-            measured = {"total": len(results),
-                        "executed": len(results) - outcomes["NotExecuted"],
-                        "passed": outcomes["Passed"],
-                        "failed": outcomes["Failed"]}
-            for name, value in sorted(measured.items()):
-                if counters[name] != value:
-                    findings.append(f"the summary counts {counters[name]} {name} and the file carries "
-                                    f"{value}")
-
-    omitted = sorted(identity for test_id, identity in definitions.items() if test_id not in reported)
-
-    return {"present": True, "sha256": sha256, "executed": executed, "failed": failed,
-            "skipped": skipped, "omitted": omitted, "counters": counters, "findings": findings}
-
-
-def compare_identities(expected: list[str], executed: list[str]) -> dict[str, list[str]]:
-    """The exact set comparison the terminal answer is read from.
-
-    Counted rather than set-subtracted, so a case that ran twice is visible. A plain set difference
-    would report nothing for a run that executed one identity twice and another not at all while the
-    total stayed the same.
-    """
-    wanted, ran = Counter(expected), Counter(executed)
-
-    return {
-        "missing": sorted((wanted - ran).elements()),
-        "unexpected": sorted((ran - wanted).elements()),
-        "duplicate": sorted(identity for identity, count in ran.items() if count > 1),
-    }
-
 
 # -- the fixture side of a run ---------------------------------------------------------------------
 
@@ -335,7 +221,7 @@ def fixture_evidence(run_root: Path, run: dict) -> dict[str, object]:
 
         return {"recorded": False, "sha256": None, "logs": {}, "findings": []}
 
-    sha256 = digest(path)
+    sha256 = trx.digest(path)
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
@@ -353,134 +239,19 @@ def fixture_evidence(run_root: Path, run: dict) -> dict[str, object]:
 
 # -- running one category ------------------------------------------------------------------------
 
-EVIDENCE_DIR_OPTION = "--evidence-dir"
-
-
-def child_command(run: dict, evidence_dir: Path) -> list[str]:
-    """The exact command for this category, built from the model rather than from a workflow.
-
-    A category with no broker goes straight to the category runner. One with brokers goes through the
-    broker runner, which owns the fixture and hands the same run root down again.
-    """
-    category, project = run["category"], run["project"]
-    if not run.get("brokers"):
-        return [sys.executable, str(REPO_ROOT / "tools/ci/run_test_category.py"),
-                "--category", category, "--project", project, EVIDENCE_DIR_OPTION, str(evidence_dir)]
-
-    command = [sys.executable, str(REPO_ROOT / "tools/ci/run_broker_category.py")]
-    for broker in run["brokers"]:
-        command += ["--broker", broker]
-    if run.get("allowBrokerOutage"):
-        command += ["--allow-broker-outage", run["allowBrokerOutage"]]
-    command += ["--category", category, "--project", project, EVIDENCE_DIR_OPTION, str(evidence_dir)]
-    if run.get("oneRefusalPerVhost"):
-        command += ["--one-refusal-per-vhost", run["oneRefusalPerVhost"]]
-
-    return command
-
-
-def without_evidence_dir(command: list[str]) -> list[str]:
-    """The command without the one value a caller chooses, so two of them can be compared."""
-    remaining = list(command)
-    if EVIDENCE_DIR_OPTION in remaining:
-        index = remaining.index(EVIDENCE_DIR_OPTION)
-        del remaining[index:index + 2]
-
-    return remaining
-
-
-def command_findings(command: list[str], run: dict) -> list[str]:
-    """Whether the command a receipt reports is the command this category is declared to run.
-
-    Compared with the model rather than believed. Everything that decides what ran - the runner, the
-    category, the project, the brokers, the outage permission - comes from the model and has to match
-    it, so a record that says one category and ran another is refused instead of read.
-    """
-    reported = without_evidence_dir(command)[1:]
-    canonical = without_evidence_dir(child_command(run, Path("<evidence>")))[1:]
-    if reported != canonical:
-        return [f"the reported command is {reported} and this category is declared to run {canonical}"]
-
-    return []
-
-
-def category_findings(entry: dict) -> list[str]:
-    """Everything wrong with one category, read from what that category itself reports.
-
-    The single place a category's verdict is decided. The run that produces a receipt and the reader
-    that is handed one both come through here, so a receipt can never assert a conclusion its own
-    numbers do not carry: the reader recomputes this from the entry's primary facts and compares it
-    with what the entry claims.
-    """
-    findings: list[str] = []
-
-    if not entry["expectedRecorded"]:
-        findings.append("no expected identity set is recorded for this category, so its completeness "
-                        "is not proven by this run")
-    if entry["timedOut"]:
-        findings.append(f"the child did not finish within {entry['budgetSeconds']} s and its tree was "
-                        "taken down")
-    if entry["survivingOwnedProcesses"]:
-        findings.append(f"{len(entry['survivingOwnedProcesses'])} process(es) of this run survived it")
-    if entry["childExitCode"] is None:
-        findings.append("the child never reported an exit status, so nothing shows that it ran")
-    elif entry["childExitCode"] != 0:
-        findings.append(f"the child exited with {entry['childExitCode']}")
-    for name in ("missing", "unexpected", "duplicate"):
-        if entry[name]:
-            findings.append(f"{len(entry[name])} {name} identity/identities")
-    if entry["failed"]:
-        findings.append(f"{len(entry['failed'])} failed identity/identities")
-    if entry["unapprovedNotExecuted"]:
-        findings.append(f"{len(entry['unapprovedNotExecuted'])} unapproved not-executed "
-                        "identity/identities")
-    if entry["resultsOmitted"]:
-        findings.append(f"{len(entry['resultsOmitted'])} defined case(s) the result file reports no "
-                        "result for")
-    for problem in entry["resultFindings"]:
-        findings.append(f"result file: {problem}")
-    for problem in entry["fixtureFindings"]:
-        findings.append(f"fixture: {problem}")
-
-    return findings
-
-
-def derived_fields(entry: dict) -> dict[str, object]:
-    """The fields of a category record that are functions of its primary facts, recomputed.
-
-    passed, missing, unexpected, duplicate and unapprovedNotExecuted are named in the receipt so that a
-    reader does not have to subtract one list from another. Naming them also makes them assertable, and
-    an assertion nobody recomputes is where a fabricated receipt lives: expected three identities,
-    executed one, missing none.
-    """
-    expected, executed = entry["expected"], entry["executed"]
-    comparison = ({"missing": [], "unexpected": [], "duplicate": []} if expected is None
-                  else compare_identities(expected, executed))
-
-    return {
-        "passed": sorted((Counter(executed) - Counter(entry["failed"])).elements()),
-        "unapprovedNotExecuted": sorted(
-            (Counter(entry["skipped"]) - Counter(entry["approvedNotExecuted"])).elements()),
-        "expectedRecorded": expected is not None,
-        "missing": comparison["missing"],
-        "unexpected": comparison["unexpected"],
-        "duplicate": comparison["duplicate"],
-    }
-
-
 def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
     """Runs one category under its own root and budget, and compares its result set with the model."""
     category = run["category"]
-    run_root, token = run_ownership.mint_run_root(RAW_RUN_OUTPUT_DIR)
-    environment = run_ownership.handover(run_root, token, dict(os.environ))
+    run_root, token = run_scope.mint_run_root(RAW_RUN_OUTPUT_DIR)
+    environment = run_scope.handover(run_root, token, dict(os.environ))
     command = child_command(run, evidence_parent / category)
 
     print(f"verify {category}: {run_root.name}, budget {run['budgetSeconds']} s", flush=True)
-    child = run_test_category.run_child(command, environment, float(run["budgetSeconds"]))
+    child = process_tree.run_child(command, environment, float(run["budgetSeconds"]))
     sys.stdout.write(child["stdout"])
     sys.stderr.write(child["stderr"])
 
-    result = parse_result_file(run_root / f"{category}.trx")
+    result = trx.parse_result_file(run_root / f"{category}.trx")
     fixture = fixture_evidence(run_root, run)
     expected = expected_identities(run)
 
@@ -510,321 +281,11 @@ def verify_category(run: dict, evidence_parent: Path) -> dict[str, object]:
         "fixtureRecordSha256": fixture["sha256"],
         "brokerLogSha256": fixture["logs"],
     }
-    entry.update(derived_fields(entry))
-    entry["findings"] = category_findings(entry)
+    entry.update(receipts.derived_fields(entry))
+    entry["findings"] = receipts.category_findings(entry)
     entry["terminal"] = "PASS" if not entry["findings"] else "FAIL"
 
     return entry
-
-
-def digest(path: Path) -> str | None:
-    if not path.is_file():
-        return None
-
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-# -- the shape of a receipt --------------------------------------------------------------------
-
-def identity_list(value: object) -> bool:
-    return isinstance(value, list) and all(isinstance(entry, str) for entry in value)
-
-
-def optional_identity_list(value: object) -> bool:
-    return value is None or identity_list(value)
-
-
-def text(value: object) -> bool:
-    return isinstance(value, str)
-
-
-def optional_text(value: object) -> bool:
-    return value is None or isinstance(value, str)
-
-
-def flag(value: object) -> bool:
-    return isinstance(value, bool)
-
-
-def number(value: object) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
-
-
-def optional_number(value: object) -> bool:
-    return value is None or number(value)
-
-
-def counter_map(value: object) -> bool:
-    return isinstance(value, dict) and all(
-        isinstance(name, str) and isinstance(count, int) and not isinstance(count, bool)
-        for name, count in value.items())
-
-
-def digest_map(value: object) -> bool:
-    return isinstance(value, dict) and all(
-        isinstance(name, str) and optional_text(entry) for name, entry in value.items())
-
-
-def record_list(value: object) -> bool:
-    return isinstance(value, list) and all(isinstance(entry, dict) for entry in value)
-
-
-RECEIPT_FIELDS = {
-    "schemaVersion": (number, "a number"),
-    "kind": (text, "a string"),
-    "runId": (text, "a string"),
-    "commit": (text, "a string"),
-    "tree": (text, "a string"),
-    "worktreeClean": (flag, "true or false"),
-    "verificationModelSha256": (text, "a string"),
-    "selection": (text, "a string"),
-    "resolvedCategories": (identity_list, "a list of category names"),
-    "startedUtc": (text, "a string"),
-    "finishedUtc": (text, "a string"),
-    "categories": (record_list, "a list of category records"),
-    "terminal": (text, "a string"),
-}
-
-CATEGORY_FIELDS = {
-    "category": (text, "a string"),
-    "project": (text, "a string"),
-    "runRoot": (text, "a string"),
-    "command": (identity_list, "a list of command arguments"),
-    "budgetSeconds": (number, "a number"),
-    "brokers": (identity_list, "a list of broker names"),
-    "allowBrokerOutage": (optional_text, "a broker name or null"),
-    "childExitCode": (optional_number, "a number or null"),
-    "timedOut": (flag, "true or false"),
-    "escalatedToKill": (flag, "true or false"),
-    "survivingOwnedProcesses": (identity_list, "a list of survivors"),
-    "expectedRecorded": (flag, "true or false"),
-    "expected": (optional_identity_list, "a list of identities or null"),
-    "executed": (identity_list, "a list of identities"),
-    "passed": (identity_list, "a list of identities"),
-    "failed": (identity_list, "a list of identities"),
-    "skipped": (identity_list, "a list of identities"),
-    "approvedNotExecuted": (identity_list, "a list of identities"),
-    "unapprovedNotExecuted": (identity_list, "a list of identities"),
-    "missing": (identity_list, "a list of identities"),
-    "unexpected": (identity_list, "a list of identities"),
-    "duplicate": (identity_list, "a list of identities"),
-    "resultsOmitted": (identity_list, "a list of identities"),
-    "resultCounters": (counter_map, "a map of counter names to whole numbers"),
-    "resultFindings": (identity_list, "a list of sentences"),
-    "rawResultSha256": (optional_text, "a digest or null"),
-    "fixtureRecorded": (flag, "true or false"),
-    "fixtureFindings": (identity_list, "a list of sentences"),
-    "fixtureRecordSha256": (optional_text, "a digest or null"),
-    "brokerLogSha256": (digest_map, "a map of broker names to digests"),
-    "findings": (identity_list, "a list of sentences"),
-    "terminal": (text, "a string"),
-}
-
-DERIVED_FIELDS = ("duplicate", "expectedRecorded", "missing", "passed", "unapprovedNotExecuted",
-                  "unexpected")
-
-
-def shape_findings(mapping: dict, fields: dict, where: str) -> list[str]:
-    """A closed shape: every declared field present and of its kind, and no field beyond them.
-
-    Closed in both directions on purpose. A missing field cannot be checked at all, and an unknown one
-    is either a document of another schema being read as this one or a field somebody added to carry a
-    claim this reader does not check. Neither may pass quietly.
-    """
-    problems = []
-    for name, (accepts, description) in sorted(fields.items()):
-        if name not in mapping:
-            problems.append(f"{where} has no '{name}'")
-        elif not accepts(mapping[name]):
-            problems.append(f"{where} field '{name}' is not {description}")
-    for name in sorted(mapping):
-        if name not in fields:
-            problems.append(f"{where} carries an unknown field '{name}'")
-
-    return problems
-
-
-def summarise(value: object) -> str:
-    if isinstance(value, list) and len(value) > 3:
-        return f"{len(value)} entries"
-
-    return str(value)
-
-
-def derivation_findings(entry: dict) -> list[str]:
-    """Where a category record disagrees with itself.
-
-    This is the whole reason a receipt is worth reading. Every field a reader would otherwise take on
-    trust is a function of the primary ones, so it is recomputed and compared: a record claiming three
-    expected identities, one executed identity and nothing missing is refused here by arithmetic rather
-    than believed by shape.
-    """
-    category = entry["category"]
-    problems = []
-
-    recomputed = derived_fields(entry)
-    for name in DERIVED_FIELDS:
-        if entry[name] != recomputed[name]:
-            problems.append(f"category '{category}' declares {name}={summarise(entry[name])} and its "
-                            f"own expected, executed, failed and skipped sets give "
-                            f"{summarise(recomputed[name])}")
-
-    derived = category_findings({**entry, **recomputed})
-    if entry["findings"] != derived:
-        problems.append(f"category '{category}' declares {len(entry['findings'])} finding(s) and its "
-                        f"own facts give {len(derived)}")
-    terminal = "PASS" if not derived else "FAIL"
-    if entry["terminal"] != terminal:
-        problems.append(f"category '{category}' calls itself {entry['terminal']!r} and its own facts "
-                        f"make it {terminal}")
-    for finding in derived:
-        problems.append(f"category '{category}': {finding}")
-
-    return problems
-
-
-def declaration_findings(entry: dict, run: dict) -> list[str]:
-    """Where a category record disagrees with the model it claims to have run."""
-    category = entry["category"]
-    problems = []
-
-    if entry["project"] != run.get("project"):
-        problems.append(f"category '{category}' names project '{entry['project']}' and the model "
-                        f"declares '{run.get('project')}'")
-    if sorted(entry["brokers"]) != sorted(run.get("brokers") or []):
-        problems.append(f"category '{category}' names brokers {sorted(entry['brokers'])} and the model "
-                        f"declares {sorted(run.get('brokers') or [])}")
-    if entry["allowBrokerOutage"] != run.get("allowBrokerOutage"):
-        problems.append(f"category '{category}' names outage permission "
-                        f"{entry['allowBrokerOutage']!r} and the model declares "
-                        f"{run.get('allowBrokerOutage')!r}")
-    if entry["brokers"] and not entry["fixtureRecorded"]:
-        problems.append(f"category '{category}' runs against a fixture and reports no fixture record, "
-                        "so it carries no fixture proof")
-    problems.extend(f"category '{category}': {problem}"
-                    for problem in command_findings(entry["command"], run))
-
-    return problems
-
-
-def reparse_findings(entry: dict) -> tuple[list[str], bool]:
-    """The record checked against the native evidence, where that evidence is still beside the receipt.
-
-    This is the only part of reading a receipt that is not a consistency check. Where the result file
-    is still there it is hashed and parsed again and the record has to agree with it. Where it is not,
-    this returns no finding and says so, because a receipt on its own records what a run reported and
-    cannot show that the run happened.
-    """
-    category = entry["category"]
-    trx_path = REPO_ROOT / entry["runRoot"] / f"{category}.trx"
-    if not trx_path.is_file():
-        return [], False
-
-    if digest(trx_path) != entry["rawResultSha256"]:
-        return [f"category '{category}' names a result file whose bytes have changed since the receipt "
-                "was written"], True
-
-    problems = []
-    parsed = parse_result_file(trx_path)
-    for name in ("executed", "failed", "skipped"):
-        if sorted(parsed[name]) != sorted(entry[name]):
-            problems.append(f"category '{category}' reports {len(entry[name])} {name} "
-                            f"identity/identities and its result file carries {len(parsed[name])}")
-    if sorted(parsed["omitted"]) != sorted(entry["resultsOmitted"]):
-        problems.append(f"category '{category}' reports {len(entry['resultsOmitted'])} omitted "
-                        f"result(s) and its result file carries {len(parsed['omitted'])}")
-    if sorted(parsed["findings"]) != sorted(entry["resultFindings"]):
-        problems.append(f"category '{category}' reports {len(entry['resultFindings'])} finding(s) "
-                        f"about its result file and reading it again gives {len(parsed['findings'])}")
-
-    return problems, True
-
-
-def receipt_findings(receipt: dict, selection: str, commit: str, tree: str, model_hash: str,
-                     expected_categories: list[str], model: dict | None = None) -> list[str]:
-    """Everything wrong with this receipt, as sentences. Empty means it is internally sound.
-
-    Internally sound is what this can decide. Every derived number is recomputed from the primary facts
-    the receipt states, every field is checked against a closed shape, and every claim about what ran
-    is checked against the model. Where the native result files are still beside the receipt they are
-    hashed and parsed again as well; that part, and only that part, is evidence from outside the
-    receipt.
-    """
-    problems: list[str] = []
-
-    if receipt.get("kind") != RECEIPT_KIND:
-        problems.append(f"this is not a verification receipt: kind is {receipt.get('kind')!r}")
-        return problems
-    if receipt.get("schemaVersion") != RECEIPT_SCHEMA_VERSION:
-        problems.append(f"the receipt speaks schema version {receipt.get('schemaVersion')!r}, this "
-                        f"reader speaks {RECEIPT_SCHEMA_VERSION}")
-        return problems
-
-    problems.extend(shape_findings(receipt, RECEIPT_FIELDS, "the receipt"))
-    if problems:
-        return problems
-
-    if receipt["selection"] != selection:
-        problems.append(
-            f"the receipt is about selection '{receipt['selection']}' and was presented for "
-            f"'{selection}'. A narrower run can never satisfy a wider one")
-    if commit and receipt["commit"] != commit:
-        problems.append(f"the receipt was produced against commit {receipt['commit']}, and this is "
-                        f"{commit}")
-    if tree and receipt["tree"] != tree:
-        problems.append(f"the receipt was produced against tree {receipt['tree']}, and this is {tree}")
-    if receipt["worktreeClean"] is not True:
-        problems.append("the receipt was produced from a working tree that was not clean, so it is not "
-                        "about the committed state it names")
-    if model_hash and receipt["verificationModelSha256"] != model_hash:
-        problems.append("the receipt was produced against a different verification model than the one "
-                        "in this working tree")
-
-    if receipt["resolvedCategories"] != expected_categories:
-        problems.append(f"the receipt resolves '{selection}' to {receipt['resolvedCategories']}, and "
-                        f"this model resolves it to {expected_categories}")
-
-    reported = [entry.get("category") for entry in receipt["categories"]]
-    if sorted(str(name) for name in reported) != sorted(expected_categories):
-        problems.append(f"the receipt reports on {sorted(str(name) for name in reported)} while the "
-                        f"selection is {sorted(expected_categories)}")
-
-    for entry in receipt["categories"]:
-        where = f"category '{entry.get('category', '<unnamed>')}'"
-        shape = shape_findings(entry, CATEGORY_FIELDS, where)
-        if shape:
-            problems.extend(shape)
-            continue
-        problems.extend(derivation_findings(entry))
-        if model is not None:
-            try:
-                problems.extend(declaration_findings(entry, declared_run(model, entry["category"])))
-            except VerificationError as error:
-                problems.append(str(error))
-        reparsed, _ = reparse_findings(entry)
-        problems.extend(reparsed)
-
-    if receipt["terminal"] != "PASS":
-        problems.append(f"the receipt's own terminal result is {receipt['terminal']!r}")
-
-    return problems
-
-
-def accompanying_evidence(receipt: dict) -> dict[str, int]:
-    """How much of this receipt could be read against the files it was produced from.
-
-    A receipt whose result files are gone is still worth checking, and is worth exactly what it is: a
-    consistency checked record of what a run reported. This number is what tells a reader which of the
-    two they are holding, so it is printed rather than left to be assumed.
-    """
-    present = 0
-    for entry in receipt.get("categories", []):
-        category, run_root = entry.get("category"), entry.get("runRoot")
-        if isinstance(category, str) and isinstance(run_root, str):
-            if (REPO_ROOT / run_root / f"{category}.trx").is_file():
-                present += 1
-
-    return {"categories": len(receipt.get("categories", [])), "withNativeResult": present}
 
 
 def git(*arguments: str) -> str:
@@ -857,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"FAIL verify {args.selection}: {error}", file=sys.stderr)
         return 2
 
-    session_root, _ = run_ownership.mint_run_root(RAW_RUN_OUTPUT_DIR)
+    session_root, _ = run_scope.mint_run_root(RAW_RUN_OUTPUT_DIR)
     # A caller directory is a parent, never the file: two runs pointed at the same one would otherwise
     # overwrite each other's receipt, which is the one artefact that must not be shared.
     evidence_parent = (args.evidence_dir if args.evidence_dir.is_absolute()
@@ -897,9 +358,9 @@ def main(argv: list[str] | None = None) -> int:
     # command wrote can never be one that command would refuse. The dirty-worktree rule is left to the
     # reader: a developer verifying while editing is normal, and the reader is what CI and a handover
     # go through.
-    self_check = [problem for problem in receipt_findings(
-        receipt, args.selection, receipt["commit"], receipt["tree"], model_hash, categories, model)
-        if "working tree" not in problem]
+    self_check = [problem for problem in receipts.receipt_findings(
+        receipt, args.selection, receipt["commit"], receipt["tree"], model_hash, categories, model,
+        REPO_ROOT) if "working tree" not in problem]
 
     for entry in results:
         state = entry["terminal"]

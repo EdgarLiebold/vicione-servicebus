@@ -516,7 +516,9 @@ def findings(root: Path) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    # This module sits one directory deeper than the entry points, so the root is three levels up
+    # rather than two. A default that is off by one directory reads a model that is not there.
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     args = parser.parse_args(argv)
 
     problems = findings(args.root)
@@ -537,3 +539,67 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# -- what one category is, and the command that starts it -----------------------------------------
+
+EVIDENCE_DIR_OPTION = "--evidence-dir"
+
+
+def declared_run(model: dict, category: str) -> dict:
+    runs = [run for capability in model.get("capabilities", [])
+            for run in capability.get("runs", []) if run.get("category") == category]
+    if len(runs) != 1:
+        raise ModelError(
+            f"the model declares {len(runs)} runs for category '{category}', so which one is meant is "
+            "undecided")
+
+    return runs[0]
+
+
+def child_command(run: dict, repo_root: Path, evidence_dir: Path) -> list[str]:
+    """The exact command for this category, built from the model rather than from a workflow.
+
+    A category with no broker goes straight to the category runner. One with brokers goes through the
+    broker runner, which owns the fixture and hands the same run root down again.
+    """
+    category, project = run["category"], run["project"]
+    if not run.get("brokers"):
+        return [sys.executable, str(repo_root / "tools/ci/run_test_category.py"),
+                "--category", category, "--project", project, EVIDENCE_DIR_OPTION, str(evidence_dir)]
+
+    command = [sys.executable, str(repo_root / "tools/ci/run_broker_category.py")]
+    for broker in run["brokers"]:
+        command += ["--broker", broker]
+    if run.get("allowBrokerOutage"):
+        command += ["--allow-broker-outage", run["allowBrokerOutage"]]
+    command += ["--category", category, "--project", project, EVIDENCE_DIR_OPTION, str(evidence_dir)]
+    if run.get("oneRefusalPerVhost"):
+        command += ["--one-refusal-per-vhost", run["oneRefusalPerVhost"]]
+
+    return command
+
+
+def without_evidence_dir(command: list[str]) -> list[str]:
+    """The command without the one value a caller chooses, so two of them can be compared."""
+    remaining = list(command)
+    if EVIDENCE_DIR_OPTION in remaining:
+        index = remaining.index(EVIDENCE_DIR_OPTION)
+        del remaining[index:index + 2]
+
+    return remaining
+
+
+def command_findings(command: list[str], run: dict, repo_root: Path) -> list[str]:
+    """Whether the command a receipt reports is the command this category is declared to run.
+
+    Compared with the model rather than believed. Everything that decides what ran - the runner, the
+    category, the project, the brokers, the outage permission - comes from the model and has to match
+    it, so a record that says one category and ran another is refused instead of read.
+    """
+    reported = without_evidence_dir(command)[1:]
+    canonical = without_evidence_dir(child_command(run, repo_root, Path("<evidence>")))[1:]
+    if reported != canonical:
+        return [f"the reported command is {reported} and this category is declared to run {canonical}"]
+
+    return []

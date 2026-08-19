@@ -27,6 +27,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import run_test_category  # noqa: E402
+from verification import process_tree, receipt as receipts, trx  # noqa: E402
 import validate_receipt  # noqa: E402
 import verify  # noqa: E402
 
@@ -111,7 +112,7 @@ class VerifyFixture(unittest.TestCase):
     def child_writing(self, cases: list[tuple[str, str, str]], **outcome):
         """A child that produces this result file instead of starting a test platform."""
         def child(command, environment, budget):
-            trx = Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE]) / "core.trx"
+            trx = Path(environment[verify.run_scope.RUN_ROOT_VARIABLE]) / "core.trx"
             trx.write_text(trx_document(cases), encoding="utf-8")
 
             answer = {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
@@ -132,7 +133,7 @@ class VerifyFixture(unittest.TestCase):
 
     def run_verify(self, cases, expected=None, **outcome) -> dict:
         model = self.write_model(expectedIdentities=expected)
-        with mock.patch.object(run_test_category, "run_child",
+        with mock.patch.object(process_tree, "run_child",
                                side_effect=self.child_writing(cases, **outcome)), \
                 contextlib.redirect_stdout(io.StringIO()):
             return verify.verify_category(verify.declared_run(model, "core"),
@@ -142,14 +143,14 @@ class VerifyFixture(unittest.TestCase):
         """A run whose child leaves exactly this result file, however malformed, or none at all."""
         def child(command, environment, budget):
             if document is not None:
-                (Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE]) / "core.trx").write_text(
+                (Path(environment[verify.run_scope.RUN_ROOT_VARIABLE]) / "core.trx").write_text(
                     document, encoding="utf-8")
 
             return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
         model = self.write_model(expectedIdentities=expected, **changes)
-        with mock.patch.object(run_test_category, "run_child", side_effect=child), \
+        with mock.patch.object(process_tree, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             return verify.verify_category(verify.declared_run(model, "core"),
                                           self.root / "artifacts/verification/run")
@@ -265,7 +266,7 @@ class Comparing_the_set_a_run_executed(VerifyFixture):
                           "dueness": "NOT_DUE_MANUAL_OBSERVATION", "reason": "watched by hand"}])
         cases = [(FIXTURE, "Should_arrive", "Passed"), (FIXTURE, "Should_wait", "NotExecuted")]
 
-        with mock.patch.object(run_test_category, "run_child", side_effect=self.child_writing(cases)), \
+        with mock.patch.object(process_tree, "run_child", side_effect=self.child_writing(cases)), \
                 contextlib.redirect_stdout(io.StringIO()):
             result = verify.verify_category(verify.declared_run(model, "core"),
                                             self.root / "artifacts/verification/run")
@@ -288,7 +289,7 @@ class Comparing_the_set_a_run_executed(VerifyFixture):
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
         model = self.write_model(expectedIdentities=expected)
-        with mock.patch.object(run_test_category, "run_child", side_effect=child), \
+        with mock.patch.object(process_tree, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             result = verify.verify_category(verify.declared_run(model, "core"),
                                             self.root / "artifacts/verification/run")
@@ -348,7 +349,7 @@ class Verifying_writes_nothing_it_is_measured_against(VerifyFixture):
 
         # A run that disagrees with the expectation, which is the only run that would have a reason
         # to change it.
-        with mock.patch.object(run_test_category, "run_child",
+        with mock.patch.object(process_tree, "run_child",
                                side_effect=self.child_writing(THREE_CASES[:2])), \
                 contextlib.redirect_stdout(io.StringIO()):
             result = verify.verify_category(verify.declared_run(model, "core"),
@@ -384,20 +385,20 @@ class Owning_what_a_run_writes(VerifyFixture):
         seen = {}
 
         def child(command, environment, budget):
-            seen["root"] = environment[verify.run_ownership.RUN_ROOT_VARIABLE]
-            seen["token"] = environment[verify.run_ownership.RUN_TOKEN_VARIABLE]
+            seen["root"] = environment[verify.run_scope.RUN_ROOT_VARIABLE]
+            seen["token"] = environment[verify.run_scope.RUN_TOKEN_VARIABLE]
             (Path(seen["root"]) / "core.trx").write_text(trx_document(THREE_CASES), encoding="utf-8")
 
             return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
         model = self.write_model()
-        with mock.patch.object(run_test_category, "run_child", side_effect=child), \
+        with mock.patch.object(process_tree, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             verify.verify_category(verify.declared_run(model, "core"),
                                    self.root / "artifacts/verification/run")
 
-        proof = Path(seen["root"]) / verify.run_ownership.RUN_TOKEN_FILE
+        proof = Path(seen["root"]) / verify.run_scope.RUN_TOKEN_FILE
 
         self.assertEqual(seen["token"], proof.read_text(encoding="utf-8").strip(),
                          "the child was handed a root it cannot prove belongs to this run")
@@ -416,7 +417,7 @@ class Carrying_the_fixture_side_into_the_receipt(VerifyFixture):
 
     def child_with_fixture(self, record: dict | None):
         def child(command, environment, budget):
-            root = Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE])
+            root = Path(environment[verify.run_scope.RUN_ROOT_VARIABLE])
             (root / "core.trx").write_text(trx_document(THREE_CASES), encoding="utf-8")
             if record is not None:
                 (root / "fixture-findings.json").write_text(json.dumps(record), encoding="utf-8")
@@ -437,7 +438,7 @@ class Carrying_the_fixture_side_into_the_receipt(VerifyFixture):
     def verify_with(self, record: dict | None, **model_changes) -> dict:
         expected = self.expect(self.IDENTITIES)
         model = self.write_model(expectedIdentities=expected, brokers=["activemq"], **model_changes)
-        with mock.patch.object(run_test_category, "run_child",
+        with mock.patch.object(process_tree, "run_child",
                                side_effect=self.child_with_fixture(record)), \
                 contextlib.redirect_stdout(io.StringIO()):
             return verify.verify_category(verify.declared_run(model, "core"),
@@ -529,14 +530,14 @@ class Carrying_the_fixture_side_into_the_receipt(VerifyFixture):
         model = self.write_model(expectedIdentities=expected, brokers=["activemq"])
 
         def child(command, environment, budget):
-            root = Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE])
+            root = Path(environment[verify.run_scope.RUN_ROOT_VARIABLE])
             (root / "core.trx").write_text(trx_document(THREE_CASES), encoding="utf-8")
             (root / "fixture-findings.json").write_text("{not json", encoding="utf-8")
 
             return {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                     "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
 
-        with mock.patch.object(run_test_category, "run_child", side_effect=child), \
+        with mock.patch.object(process_tree, "run_child", side_effect=child), \
                 contextlib.redirect_stdout(io.StringIO()):
             result = verify.verify_category(verify.declared_run(model, "core"),
                                             self.root / "artifacts/verification/run")
@@ -704,7 +705,7 @@ class Reading_a_receipt(VerifyFixture):
 
     def receipt(self, entry: dict | None = None, **changes) -> dict:
         base = {
-            "schemaVersion": verify.RECEIPT_SCHEMA_VERSION, "kind": verify.RECEIPT_KIND,
+            "schemaVersion": receipts.RECEIPT_SCHEMA_VERSION, "kind": receipts.RECEIPT_KIND,
             "runId": "vicione-abcdef123456", "commit": "c" * 40, "tree": "t" * 40,
             "worktreeClean": True, "verificationModelSha256": "m" * 64,
             "selection": "core", "resolvedCategories": ["core"],
@@ -724,8 +725,8 @@ class Reading_a_receipt(VerifyFixture):
         return self.receipt(entry)
 
     def findings(self, receipt: dict, selection: str = "core") -> list[str]:
-        return verify.receipt_findings(receipt, selection, "c" * 40, "t" * 40, "m" * 64, ["core"],
-                                       self.model)
+        return receipts.receipt_findings(receipt, selection, "c" * 40, "t" * 40, "m" * 64, ["core"],
+                                         self.model, self.root)
 
     def test_accepts_the_receipt_of_a_run_that_really_was_exact(self) -> None:
         self.assertEqual([], self.findings(self.receipt()))
@@ -844,21 +845,21 @@ class Reading_a_receipt_against_the_file_it_was_produced_from(VerifyFixture):
         self.trx = self.root / self.entry["runRoot"] / "core.trx"
 
     def receipt(self, entry: dict) -> dict:
-        return {"schemaVersion": verify.RECEIPT_SCHEMA_VERSION, "kind": verify.RECEIPT_KIND,
+        return {"schemaVersion": receipts.RECEIPT_SCHEMA_VERSION, "kind": receipts.RECEIPT_KIND,
                 "runId": "vicione-abcdef123456", "commit": "c" * 40, "tree": "t" * 40,
                 "worktreeClean": True, "verificationModelSha256": "m" * 64, "selection": "core",
                 "resolvedCategories": ["core"], "startedUtc": "2026-08-19T00:00:00+00:00",
                 "finishedUtc": "2026-08-19T00:00:01+00:00", "categories": [entry], "terminal": "PASS"}
 
     def findings(self, entry: dict) -> list[str]:
-        return verify.receipt_findings(self.receipt(entry), "core", "c" * 40, "t" * 40, "m" * 64,
-                                       ["core"], self.model)
+        return receipts.receipt_findings(self.receipt(entry), "core", "c" * 40, "t" * 40, "m" * 64,
+                                         ["core"], self.model, self.root)
 
     def test_the_clean_receipt_is_read_against_its_own_result_file(self) -> None:
         self.assertTrue(self.trx.is_file())
         self.assertEqual([], self.findings(copy.deepcopy(self.entry)))
         self.assertEqual({"categories": 1, "withNativeResult": 1},
-                         verify.accompanying_evidence(self.receipt(self.entry)))
+                         receipts.accompanying_evidence(self.receipt(self.entry), self.root))
 
     def test_refuses_a_receipt_whose_result_file_has_changed_since_it_was_written(self) -> None:
         self.trx.write_text(trx_document(THREE_CASES[:2]), encoding="utf-8")
@@ -874,7 +875,7 @@ class Reading_a_receipt_against_the_file_it_was_produced_from(VerifyFixture):
         document = trx_document(THREE_CASES[:2])
         self.trx.write_text(document, encoding="utf-8")
         entry = copy.deepcopy(self.entry)
-        entry["rawResultSha256"] = verify.digest(self.trx)
+        entry["rawResultSha256"] = trx.digest(self.trx)
 
         problems = " ".join(self.findings(entry))
 
@@ -890,7 +891,7 @@ class Reading_a_receipt_against_the_file_it_was_produced_from(VerifyFixture):
 
         self.assertEqual([], self.findings(copy.deepcopy(self.entry)))
         self.assertEqual({"categories": 1, "withNativeResult": 0},
-                         verify.accompanying_evidence(self.receipt(self.entry)))
+                         receipts.accompanying_evidence(self.receipt(self.entry), self.root))
 
         path = self.root / "receipt.json"
         path.write_text(json.dumps(self.receipt(self.entry)), encoding="utf-8")

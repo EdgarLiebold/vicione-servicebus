@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import record_expected  # noqa: E402
 import run_test_category  # noqa: E402
+from verification import process_tree  # noqa: E402
 import verify  # noqa: E402
 from test_verify import FIXTURE, PROJECT, trx_document  # noqa: E402
 
@@ -42,12 +43,12 @@ class RecordingFixture(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
 
         for module, name in ((verify, "REPO_ROOT"), (verify, "MODEL_FILE"),
-                             (verify, "RAW_RUN_OUTPUT_DIR"), (record_expected, "REPO_ROOT"),
+                             (verify, "RAW_RUN_OUTPUT_DIR"),
                              (run_test_category, "REPO_ROOT"), (run_test_category, "REPOSITORY_ROOT"),
                              (run_test_category, "RAW_RUN_OUTPUT_DIR"),
                              (run_test_category, "VERIFICATION_MODEL")):
             self.addCleanup(setattr, module, name, getattr(module, name))
-        verify.REPO_ROOT = record_expected.REPO_ROOT = self.root
+        verify.REPO_ROOT = self.root
         verify.MODEL_FILE = self.root / "build/verification/VERIFICATION_MODEL.json"
         verify.RAW_RUN_OUTPUT_DIR = self.root / "artifacts/run-output"
         run_test_category.REPO_ROOT = run_test_category.REPOSITORY_ROOT = self.root
@@ -84,7 +85,7 @@ class RecordingFixture(unittest.TestCase):
 
     def child_writing(self, cases, **outcome):
         def child(command, environment, budget):
-            trx = Path(environment[verify.run_ownership.RUN_ROOT_VARIABLE]) / "core.trx"
+            trx = Path(environment[verify.run_scope.RUN_ROOT_VARIABLE]) / "core.trx"
             trx.write_text(trx_document(cases), encoding="utf-8")
             answer = {"exitCode": 0, "stdout": "", "stderr": "", "timedOut": False,
                       "escalatedToKill": False, "seconds": 0.1, "survivingOwnedProcesses": []}
@@ -96,7 +97,7 @@ class RecordingFixture(unittest.TestCase):
 
     def record(self, cases, *arguments, **outcome) -> tuple[int, str, str]:
         out, err = io.StringIO(), io.StringIO()
-        with mock.patch.object(run_test_category, "run_child",
+        with mock.patch.object(process_tree, "run_child",
                                side_effect=self.child_writing(cases, **outcome)), \
                 contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             code = record_expected.main(["--category", "core", "--evidence-dir",
