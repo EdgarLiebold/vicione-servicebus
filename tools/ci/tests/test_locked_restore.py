@@ -22,7 +22,9 @@ import unittest
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+# One directory deeper than the modules under test, so the repository root is three levels
+# up and the folder holding those modules is the parent of this one.
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 # A project small enough to restore quickly and real enough to have package references.
 PROBE_PROJECT = Path("src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj")

@@ -22,13 +22,15 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# One directory deeper than the modules under test, so the repository root is three levels
+# up and the folder holding those modules is the parent of this one.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import record_expected  # noqa: E402
 import run_test_category  # noqa: E402
 from verification import process_tree  # noqa: E402
 import verify  # noqa: E402
-from test_verify import FIXTURE, PROJECT, trx_document  # noqa: E402
+from tests.test_verify import FIXTURE, PROJECT, trx_document  # noqa: E402
 
 KEPT = [(FIXTURE, "Should_acknowledge", "Passed"), (FIXTURE, "Should_arrive", "Passed")]
 DROPPED = f"{FIXTURE}.Should_retry"

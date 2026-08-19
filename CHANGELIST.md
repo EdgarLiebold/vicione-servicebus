@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1225 |
+| Added | 1226 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -6847,13 +6847,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/record_expected.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
-| `tools/ci/test_locked_restore.py` | Added |  |
-| `tools/ci/test_module_names.py` | Added |  |
-| `tools/ci/test_policy_validator.py` | Added |  |
-| `tools/ci/test_record_expected.py` | Added |  |
-| `tools/ci/test_run_broker_category.py` | Added |  |
-| `tools/ci/test_run_test_category.py` | Added |  |
-| `tools/ci/test_verify.py` | Added |  |
+| `tools/ci/tests/__init__.py` | Added |  |
+| `tools/ci/tests/test_locked_restore.py` | Added |  |
+| `tools/ci/tests/test_module_names.py` | Added |  |
+| `tools/ci/tests/test_policy_validator.py` | Added |  |
+| `tools/ci/tests/test_record_expected.py` | Added |  |
+| `tools/ci/tests/test_run_broker_category.py` | Added |  |
+| `tools/ci/tests/test_run_test_category.py` | Added |  |
+| `tools/ci/tests/test_verify.py` | Added |  |
 | `tools/ci/validate_receipt.py` | Added |  |
 | `tools/ci/verification/__init__.py` | Added |  |
 | `tools/ci/verification/model.py` | Added |  |

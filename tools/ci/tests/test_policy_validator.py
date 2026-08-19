@@ -21,7 +21,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# One directory deeper than the modules under test, so the repository root is three levels
+# up and the folder holding those modules is the parent of this one.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from policy_validator import (ANALYZER_PACKAGE_PROJECT, Policy,  # noqa: E402
                               ROSLYN_COMPONENT_PROJECTS, effective_commands)
@@ -1902,6 +1904,38 @@ def rule_names_proven_by(source: str) -> set[str]:
     return names
 
 
+class Reaching_a_test_module_that_lives_in_a_package(PolicyFixture):
+    """Discovery descends into a package, and the rule has to know that or it demands a second command.
+
+    The cases of this repository were moved into tools/ci/tests, which `discover -s tools/ci` already
+    reaches. A rule that only looked at the module's own directory would have called every one of them
+    unstarted.
+    """
+
+    def place(self, relative: str, package_chain: bool) -> None:
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("import unittest\n", encoding="utf-8")
+        if package_chain:
+            (path.parent / "__init__.py").write_text('"""a package"""\n', encoding="utf-8")
+
+    def findings(self) -> list[str]:
+        return [failure for failure in self.failures() if failure.startswith("tool-test-not-run")]
+
+    def test_a_module_in_a_package_below_a_discovered_directory_is_started(self) -> None:
+        self.place("tools/ci/tests/test_something.py", package_chain=True)
+
+        self.assertEqual([], self.findings(),
+                         "a module discovery already reaches was reported as never started")
+
+    def test_a_module_in_a_plain_directory_below_a_discovered_one_is_not_started(self) -> None:
+        """Discovery stops where the package chain stops, and so does this."""
+        self.place("tools/ci/scratch/test_something.py", package_chain=False)
+
+        self.assertIn("tools/ci/scratch/test_something.py", " ".join(self.findings()),
+                      "a module discovery never reaches was counted as started")
+
+
 class The_expected_identity_manifests(PolicyFixture):
     """The sets a run is measured against are files of this repository, not claims about files."""
 
@@ -2062,6 +2096,7 @@ class Every_rule_this_validator_can_report(unittest.TestCase):
     """
 
     def source(self, name: str) -> str:
+        """A file of this suite, read beside this one."""
         return (Path(__file__).resolve().parent / name).read_text(encoding="utf-8")
 
     def policy_sources(self) -> str:
@@ -2071,7 +2106,7 @@ class Every_rule_this_validator_can_report(unittest.TestCase):
         point: it found no rule at all and would have passed on an empty set. It says so now, and it
         reads whatever is there.
         """
-        directory = Path(__file__).resolve().parent / "policies"
+        directory = Path(__file__).resolve().parents[1] / "policies"
 
         return "\n".join(path.read_text(encoding="utf-8") for path in sorted(directory.glob("*.py")))
 
@@ -2134,7 +2169,7 @@ class Every_rule_this_validator_has_runs(unittest.TestCase):
         contributes nothing: every rule it holds disappears and every remaining rule still has its
         case. This is the only place that compares what is written with what is composed.
         """
-        directory = Path(__file__).resolve().parent / "policies"
+        directory = Path(__file__).resolve().parents[1] / "policies"
         written = set()
         for path in sorted(directory.glob("*.py")):
             for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):

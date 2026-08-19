@@ -24,7 +24,9 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# One directory deeper than the modules under test, so the repository root is three levels
+# up and the folder holding those modules is the parent of this one.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import run_test_category  # noqa: E402
 from verification import process_tree, receipt as receipts, trx  # noqa: E402

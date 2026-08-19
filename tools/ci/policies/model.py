@@ -10,11 +10,13 @@ Standard library only.
 
 from __future__ import annotations
 
-from verification import model as verification_model
 import json
 import re
+from pathlib import Path
 
-from policies import (EXPECTED_IDENTITY_DIRECTORY, PolicyBase, VERIFICATION_MODEL, strip_comments)
+from policies import (EXPECTED_IDENTITY_DIRECTORY, PolicyBase, VERIFICATION_MODEL,
+                      strip_comments)
+from verification import model as verification_model
 
 
 class ModelPolicy(PolicyBase):
@@ -330,8 +332,26 @@ class ModelPolicy(PolicyBase):
         for module in sorted(self.root.glob("tools/**/test_*.py")):
             relative = module.relative_to(self.root).as_posix()
             directory = module.parent.relative_to(self.root).as_posix()
-            if relative in text or f"unittest discover -s {directory}" in text:
+            if relative in text or any(f"unittest discover -s {reached}" in text
+                                       for reached in self.discovering(module.parent)):
                 continue
             self.fail("tool-test-not-run",
                       f"{relative} is never started by a required job; name it or discover "
                       f"{directory}, or the module is an inventory entry rather than a proof")
+
+    def discovering(self, directory: Path) -> list[str]:
+        """Every directory whose discovery reaches this one, as unittest really walks them.
+
+        Discovery descends from the directory it was given into each subdirectory that is a package,
+        so a module under tools/ci/tests is started by `discover -s tools/ci` - the rule read only the
+        module's own directory and would have demanded a second command for a suite that already runs.
+        The chain has to be unbroken: a directory without an __init__.py stops the descent, and every
+        module below it with it.
+        """
+        reached = [directory.relative_to(self.root).as_posix()]
+        walking = directory
+        while (walking / "__init__.py").is_file() and walking != self.root:
+            walking = walking.parent
+            reached.append(walking.relative_to(self.root).as_posix())
+
+        return reached
