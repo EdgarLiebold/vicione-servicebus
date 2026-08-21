@@ -45,13 +45,16 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore
+  -c Release --no-build --no-restore --minimum-expected-tests 84
 ```
 
-The unfiltered process exit code is the verdict. `tests2/xunit.runner.json` turns skips and warnings
-into failures. Each executable test project references exactly one entry package,
+The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
+into failures, and MTP copies it into the artifact as `<AssemblyName>.testconfig.json`. Every
+executable test project sets `UseMicrosoftTestingPlatformRunner=true` and references exactly one entry package,
 `xunit.v3.mtp-v2`; NUnit, VSTest, test loggers, and ArchUnitNET framework adapters are forbidden in
 the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
+The minimum count is a lower bound for the accepted F1a foundation: adding tests does not require an
+update, but silently losing one of its 84 cases makes CI fail.
 
 The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:
@@ -62,7 +65,8 @@ MSBuild otherwise imports only the nearest directory file. Their build errors ar
 | `VOSBT002` | missing root `Directory.Build.targets` import |
 | `VOSBT003`–`VOSBT005` | dishonest or duplicate executable-test classification |
 | `VOSBT006` | a forbidden direct/global test package |
-| `VOSBT007`–`VOSBT009` | missing, duplicate, or noncanonical runner configuration |
+| `VOSBT007`–`VOSBT009` | missing, duplicate, or noncanonical MTP configuration |
+| `VOSBT010` | hybrid xUnit entry point instead of the required MTP-only runner |
 
 All build output is under `artifacts/sdk`; no test output is written beside source files.
 
@@ -86,7 +90,12 @@ Root `Directory.Build.props` and `Directory.Build.targets` enforce locked restor
 artifact root, package notices, and supported target frameworks. Runtime, test, benchmark, and tool
 projects target `net10.0`. Only the two Roslyn components and their source-free package surface use
 `netstandard2.0`; only the two compiling Roslyn projects pin C# 14 because the older target does not
-derive it from the SDK.
+derive it from the SDK. The native-test marker is derived from the repository-relative project path;
+projects cannot opt into test-only packages by setting the marker themselves.
+
+Product projects emit full symbols in Debug and embedded symbols in Release. Native MTP test
+applications emit portable PDBs in every configuration because xUnit/MTP discovery depends on that
+format; the evaluated build-graph tests enforce the exception.
 
 ## Inherited verification stack
 
@@ -95,6 +104,12 @@ transition material. They remain available solely as behavior evidence until eac
 and accepted. They are not the architecture, runner, inventory, completeness model, or final verdict
 of the native test estate. New tests and gates must not extend that Python/VSTest/NUnit stack.
 
+The Python policy validator (`tools/ci/policy_validator.py`, `tools/ci/policies/**`, and its self-test
+suite) was a discarded Team 1 detour, not imported behavior. It is permanently deleted. Do not
+reconstruct it. Any independently valid invariant is implemented once at its effective boundary: in
+MSBuild for build-graph rules, or in native xUnit/MTP architecture tests for repository and test-estate
+rules.
+
 No inherited test is removed until its behavior obligation has an accepted native replacement in the
 correct profile. The original bytes remain recoverable through Git.
 
@@ -102,4 +117,4 @@ correct profile. The original bytes remain recoverable through Git.
 
 Diagnostics under `tools/diagnostics` and benchmarks under `benchmarks` are engineering tools, not
 product packages and not correctness verdicts. Benchmark follow-up work is tracked in its own
-`TODO.md`; it must not be represented as test coverage.
+[`benchmarks/ToDo.md`](../benchmarks/ToDo.md); it must not be represented as test coverage.

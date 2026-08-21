@@ -3,11 +3,9 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageTags>ViciOne.ServiceBus;NUnit</PackageTags>
-    <Description>ViciOne.ServiceBus Test Framework (NUnit); $(Description)</Description>
+    <!-- Migration input only. Its behavior is replaced cohort by cohort in tests2 before this
+         inherited project is removed; it is never a distributable product package. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

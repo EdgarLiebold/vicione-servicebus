@@ -17,22 +17,52 @@ public sealed class TestConfigurationProvider
         string basePath,
         IEnumerable<KeyValuePair<string, string?>> environment,
         bool includeUserSecrets = false)
+        : this(
+            basePath,
+            environment,
+            builder =>
+            {
+                if (includeUserSecrets)
+                {
+                    builder.AddUserSecrets(
+                        typeof(TestConfigurationProvider).Assembly,
+                        optional: true,
+                        reloadOnChange: false);
+                }
+            })
+    {
+    }
+
+    /// <summary>
+    /// Supplies a deterministic in-memory equivalent of the User Secrets layer for precedence
+    /// tests. It is internal so production fixtures cannot replace the one configuration pipeline.
+    /// </summary>
+    internal TestConfigurationProvider(
+        string basePath,
+        IEnumerable<KeyValuePair<string, string?>> environment,
+        IEnumerable<KeyValuePair<string, string?>> userSecretValues)
+        : this(
+            basePath,
+            environment,
+            builder => builder.AddInMemoryCollection(
+                userSecretValues ?? throw new ArgumentNullException(nameof(userSecretValues))))
+    {
+    }
+
+    private TestConfigurationProvider(
+        string basePath,
+        IEnumerable<KeyValuePair<string, string?>> environment,
+        Action<IConfigurationBuilder> addUserSecretsLayer)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(basePath);
         ArgumentNullException.ThrowIfNull(environment);
+        ArgumentNullException.ThrowIfNull(addUserSecretsLayer);
 
         var builder = new ConfigurationBuilder()
             .SetBasePath(basePath)
             .AddJsonFile(SettingsFileName, optional: false, reloadOnChange: false);
 
-        if (includeUserSecrets)
-        {
-            builder.AddUserSecrets(
-                typeof(TestConfigurationProvider).Assembly,
-                optional: true,
-                reloadOnChange: false);
-        }
-
+        addUserSecretsLayer(builder);
         builder.AddInMemoryCollection(Normalize(environment));
         _configuration = builder.Build();
     }
@@ -43,9 +73,6 @@ public sealed class TestConfigurationProvider
     public static string? SharedUserSecretsId =>
         typeof(TestConfigurationProvider).Assembly
             .GetCustomAttribute<UserSecretsIdAttribute>()?.UserSecretsId;
-
-    public IReadOnlyList<string> SourceOrder =>
-        _configuration.Providers.Select(provider => provider.GetType().Name).ToArray();
 
     public ViciOneTestOptions GetOptions()
     {

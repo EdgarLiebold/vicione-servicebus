@@ -28,9 +28,14 @@ This is the executable plan. A green subset never authorizes a repository-wide c
 - Engineering contains every native test project;
 - every solution project path exists.
 
-Existing tests continue to prove parent imports, test-entry classification, runner configuration,
-compiled assembly direction, package closure, and typed configuration behavior. The external
-preflight test is structural only; concrete provider cohorts own behavioral access proof.
+Existing tests continue to prove parent imports, test-entry classification, MTP configuration,
+compiled assembly direction, package closure, and typed configuration behavior. Provider-specific
+preflight abstractions are introduced only with a concrete provider fixture and a behavioral access
+proof; F1a does not invent an unused interface for a later cohort.
+
+The runner gate admits only the MTP-only xUnit entry point and one central `testconfig.json`, deployed
+under MTP's assembly-specific name. Configuration precedence is proven through resolved option
+values, never by comparing provider implementation type names.
 
 ## 3. Required execution order
 
@@ -51,7 +56,7 @@ Each mutation is applied to an isolated copy and must fail for its named reason:
 
 - remove either nested parent import;
 - add `TngTech.ArchUnitNET.xUnitV3`;
-- alter or duplicate `xunit.runner.json`;
+- alter or duplicate `testconfig.json`;
 - add a skipped test;
 - pin `LangVersion` in a new unauthorized location;
 - add a product reference into `tests2`;
@@ -65,3 +70,7 @@ The canonical checkout is never mutated by a sabotage run.
 F1a is accepted only when all commands above are green, every changed file has been reviewed, no
 claim exceeds its measured evidence, and both independent reviewers pass the same frozen commit.
 F1b, behavior migration, inherited-test deletion, and push remain outside this correction.
+
+The Python policy validator was a discarded Team 1 detour, not inherited behavior evidence. It and its
+self-tests are deleted and must not be rebuilt. Any independently valid invariant is enforced at the
+effective MSBuild boundary or by native xUnit/MTP architecture tests.

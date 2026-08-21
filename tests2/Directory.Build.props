@@ -12,14 +12,6 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <!-- Read by Directory.Packages.props to keep the repository-wide GitHubActionsTestLogger
-         GlobalPackageReference out of this tree. A GlobalPackageReference has no per-project
-         opt-out, so the exclusion has to be expressed as a property the consuming item group can
-         see. Nothing else may switch this on. -->
-    <ViciOneNativeTestTree>true</ViciOneNativeTestTree>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <!-- One target framework for the whole tree. LangVersion is deliberately not pinned: the C#
          version follows the SDK.
 

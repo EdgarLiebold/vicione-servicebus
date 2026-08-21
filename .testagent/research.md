@@ -22,8 +22,9 @@ independent review.
   Every ArchUnitNET framework adapter is forbidden.
 - Shared support code is non-executable, non-packable, and framework-neutral under the distinct
   product-neutral identity `ViciOne.ServiceBus.Tests.Infrastructure`.
-- Test-only central package versions are conditional on `ViciOneNativeTestTree`; they do not modify
-  product lock-file classification.
+- Test-only central package versions are conditional on `ViciOneNativeTestTree`. The root build
+  derives that marker from the repository-relative project path and rejects later overrides, so a
+  product project cannot opt into the test-only package boundary.
 - A profile solution exists only after its first executable cohort. F1a materializes Unit only;
   invalid empty LocalIntegration/External solutions are forbidden.
 - The checked-in configuration contains no credentials. User Secrets and `VICIONE_TESTS__` may

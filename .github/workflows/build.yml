@@ -39,17 +39,14 @@ env:
   DOTNET_NOLOGO: 1
 
 jobs:
-  policy:
-    name: "Required: Policy"
+  legacy-tooling:
+    name: "Required: Legacy Test Tooling"
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Validate CI policy
-        run: python3 tools/ci/policy_validator.py
-      # Every Python test module in this repository, not only the policy self-tests. A module that no
-      # job starts is an inventory entry; check_every_tool_test_module_runs fails when one is added
-      # outside a directory that is discovered here.
+      # Temporary takeover runners remain executable until the behavior cohort they protect has an
+      # accepted native replacement. They are not extended with new test architecture.
       - name: CI tool self-tests
         run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
       - name: Identity tool self-tests
@@ -244,7 +241,7 @@ jobs:
     # Pack runs only after every required gate is green. It builds verifiable run artifacts and
     # publishes nothing: no nuget.org push, no registry, no external side effect of any kind.
     needs:
-      - policy
+      - legacy-tooling
       - build
       - analyzer
       - core-unit

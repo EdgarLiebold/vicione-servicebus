@@ -253,13 +253,3 @@ public sealed class AwsProviderOptions : IExternalProviderConfiguration
         }
     }
 }
-
-/// <summary>The fail-closed boundary every real-provider fixture implements before use.</summary>
-public interface IExternalAccessPreflight
-{
-    string ProviderName { get; }
-
-    /// <summary>Completes only after the provider identity and required resource access are proven.</summary>
-    /// <exception cref="InvalidOperationException">Access could not be proven.</exception>
-    Task EnsureAccessAsync(CancellationToken cancellationToken);
-}

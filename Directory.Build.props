@@ -6,6 +6,15 @@
          restated here. CS1591 is the one deliberate exception and is dispositioned against the
          package and documentation policy. -->
     <NoWarn>CS1591</NoWarn>
+
+    <!-- Package evaluation happens before Directory.Build.targets. Derive this boundary from the
+         repository-relative project path here, so a project cannot opt into test-only package
+         versions or opt out of the inherited test logger by setting a marker about itself. The late
+         build contract independently derives the expected value again and rejects any override. -->
+    <_ViciOneEarlyProjectIdentity>$([MSBuild]::MakeRelative($(MSBuildThisFileDirectory), $(MSBuildProjectFullPath)))</_ViciOneEarlyProjectIdentity>
+    <_ViciOneEarlyProjectIdentity>$(_ViciOneEarlyProjectIdentity.Replace('\','/'))</_ViciOneEarlyProjectIdentity>
+    <ViciOneNativeTestTree>false</ViciOneNativeTestTree>
+    <ViciOneNativeTestTree Condition="$([System.String]::Copy('$(_ViciOneEarlyProjectIdentity)').StartsWith('tests2/'))">true</ViciOneNativeTestTree>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,15 +41,6 @@
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts/sdk</ArtifactsPath>
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/packages</PackageOutputPath>
-  </PropertyGroup>
-
-  <!-- Full symbols while debugging, embedded symbols in shipped assemblies. -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
 </Project>

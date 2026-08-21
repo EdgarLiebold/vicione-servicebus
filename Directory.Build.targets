@@ -11,6 +11,23 @@
        errors is the same thing with a longer path, and a warning in one that does not is a note
        nobody reads. -->
 
+  <!-- Configuration and package-provided project classification are final when targets are imported.
+       Product assemblies use full symbols for Debug and embedded symbols for Release. Microsoft
+       Testing Platform applications are the deliberate exception: xUnit's MTP package requires a
+       portable PDB for discovery, so applying the product Release policy to a native test executable
+       produces a successful build whose MTP run discovers zero tests. -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' AND '$(IsTestingPlatformApplication)' != 'true' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND '$(IsTestingPlatformApplication)' != 'true' ">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsTestingPlatformApplication)' == 'true' ">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
   <!-- 1. Every project resolves against a tracked lock file, and it resolves in locked mode.
 
        Directory.Build.props sets both, and a project can turn either off in its own PropertyGroup.
@@ -59,6 +76,9 @@
     <ViciOneProjectIdentity>$([MSBuild]::MakeRelative($(MSBuildThisFileDirectory), $(MSBuildProjectFullPath)))</ViciOneProjectIdentity>
     <ViciOneProjectIdentity>$(ViciOneProjectIdentity.Replace('\','/'))</ViciOneProjectIdentity>
 
+    <_ViciOneExpectedNativeTestTree>false</_ViciOneExpectedNativeTestTree>
+    <_ViciOneExpectedNativeTestTree Condition="$([System.String]::Copy('$(ViciOneProjectIdentity)').StartsWith('tests2/'))">true</_ViciOneExpectedNativeTestTree>
+
     <!-- Loaded by the compiler rather than by the application, so it cannot be a net10.0 assembly. -->
     <ViciOneRoslynComponentProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj' ">true</ViciOneRoslynComponentProject>
     <ViciOneRoslynComponentProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj' ">true</ViciOneRoslynComponentProject>
@@ -68,6 +88,23 @@
          projects may reference it. -->
     <ViciOneAnalyzerPackageProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj' ">true</ViciOneAnalyzerPackageProject>
   </PropertyGroup>
+
+  <!-- The marker controls central package evaluation, but its authority is the path. Re-derive the
+       boundary after the project body and reject both marker spoofing and a native test entry in a
+       product or inherited-test project. -->
+  <Target Name="AssertNativeTestBoundaryIsIntact"
+          BeforeTargets="CollectPackageReferences">
+    <ItemGroup>
+      <_ViciOneNativeTestEntryReference Include="@(PackageReference)"
+                                        Condition=" '%(Identity)' == 'xunit.v3.mtp-v2' " />
+    </ItemGroup>
+    <Error Code="VOSB0009"
+           Text="$(ViciOneProjectIdentity) evaluates ViciOneNativeTestTree=$(ViciOneNativeTestTree), but its repository path requires $(_ViciOneExpectedNativeTestTree). The native test boundary is granted only to projects below tests2/."
+           Condition=" '$(ViciOneNativeTestTree)' != '$(_ViciOneExpectedNativeTestTree)' " />
+    <Error Code="VOSB0010"
+           Text="$(ViciOneProjectIdentity) references xunit.v3.mtp-v2 outside tests2/. Test entry packages must never enter the product or inherited-test project graph."
+           Condition=" '$(_ViciOneExpectedNativeTestTree)' != 'true' AND '@(_ViciOneNativeTestEntryReference)' != '' " />
+  </Target>
 
   <Target Name="AssertTargetFrameworkIsSupported"
           BeforeTargets="BeforeBuild"

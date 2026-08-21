@@ -32,7 +32,10 @@ public sealed class TestTreeIsolationTests
 
     private static void AssertHolds(IArchRule rule)
     {
-        var failures = rule.Evaluate(Model)
+        var results = rule.Evaluate(Model).ToArray();
+        Assert.NotEmpty(results);
+
+        var failures = results
             .Where(result => !result.Passed)
             .Select(result => result.Description)
             .ToArray();
@@ -91,6 +94,7 @@ public sealed class TestTreeIsolationTests
         Assert.DoesNotContain(references, name => name.StartsWith("xunit", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(references, name => name.StartsWith("ArchUnitNET", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(references, name => name.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

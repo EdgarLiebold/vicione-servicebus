@@ -1,0 +1,40 @@
+#
+# The native xUnit 4 / Microsoft Testing Platform 2 estate is deliberately independent from the
+# inherited NUnit/VSTest verification model in build.yml. Both workflows are required repository
+# checks. Keeping their execution contracts separate prevents the legacy model from becoming a
+# second source of truth for the replacement test architecture.
+#
+name: Native Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '10.0.302'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
+
+jobs:
+  unit-architecture:
+    name: "Required: Native Unit/Architecture"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore locked dependency graph
+        run: dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+      - name: Build release test binaries
+        run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+      - name: Run the complete profile without filters
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --minimum-expected-tests 84

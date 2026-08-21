@@ -4,12 +4,15 @@
     <!-- Microsoft Testing Platform test projects are executables: the artifact starts, runs the
          tests and owns the process exit code. -->
     <OutputType>Exe</OutputType>
+    <!-- This repository has one test host: Microsoft Testing Platform v2. Without this property,
+         xUnit generates a hybrid entry point whose direct execution uses the in-process runner;
+         that can make direct execution pass while `dotnet test` discovers no tests. -->
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <!-- Declared explicitly by the project that is one. tests2/Directory.Build.targets cross-checks
          this declaration against the direct xunit.v3.mtp-v2 reference in both directions, so neither
          the declaration nor the reference can be dropped without an error naming which one is
          missing. -->
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>ViciOne.ServiceBus.Architecture.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -172,7 +172,7 @@ class LockedRestoreTests(unittest.TestCase):
 
         With RestorePackagesWithLockFile on, a restore that finds no lock file writes one and succeeds
         even in locked mode. A deleted lock file would therefore reopen the package graph silently,
-        which is why policy_validator.check_restore_lock_files asserts the file is there before any
+        which is why the locked-restore contract requires the file before any
         restore runs. This case records the gap so nobody closes that rule believing locked mode
         already covers it.
         """

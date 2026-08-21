@@ -44,12 +44,17 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
-dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore
+dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --minimum-expected-tests 84
 ```
 
-Local-integration and external profiles appear only with their first executable cohort. The inherited
-NUnit/VSTest/Python verification stack remains behavior evidence during migration and is not extended
-or treated as the final test architecture.
+Local-integration and external profiles appear only with their first executable cohort. The legacy
+NUnit/VSTest tests and the remaining temporary takeover runners are behavior evidence during migration;
+they are not the final test architecture. The Python policy validator was a discarded Team 1 detour,
+not imported product or test behavior. It and its self-test suite are deleted and must not be recreated.
+Any independently valid invariant belongs in MSBuild or native xUnit/MTP architecture tests.
+The native test executable uses only the Microsoft Testing Platform entry point. Its single central
+`tests2/testconfig.json` makes skips and warnings fail and is copied into each artifact under MTP's
+assembly-specific configuration name.
 
 [docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
 and migration contract.

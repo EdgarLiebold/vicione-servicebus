@@ -19,7 +19,15 @@ public sealed class EvaluatedBuildGraphTests
     public void ExecutableTestProject_IsClassifiedAsTestProject()
     {
         Assert.Equal("true", MsBuildEvaluation.PropertyOf(TestProject, "IsTestProject"));
+        Assert.Equal("true", MsBuildEvaluation.PropertyOf(TestProject, "UseMicrosoftTestingPlatformRunner"));
         Assert.Equal("Exe", MsBuildEvaluation.PropertyOf(TestProject, "OutputType"));
+    }
+
+    [Fact]
+    public void ExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery()
+    {
+        Assert.Equal("true", MsBuildEvaluation.PropertyOf(TestProject, "IsTestingPlatformApplication"));
+        Assert.Equal("portable", MsBuildEvaluation.PropertyOf(TestProject, "DebugType"));
     }
 
     [Fact]
@@ -124,26 +132,48 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void ExecutableTestProject_CarriesExactlyOneCanonicalRunnerConfigurationItem()
+    public void ProductProjects_CannotEnterTheNativeTestTreeOrReferenceItsEntryPackage()
     {
-        var runnerConfigurations = MsBuildEvaluation.ItemMetadata(TestProject, "Content", "FullPath")
-            .Where(path => Path.GetFileName(path) == "xunit.runner.json")
-            .ToArray();
+        Assert.NotEmpty(RepositoryLayout.ProductProjects);
 
-        var canonical = Path.GetFullPath(RepositoryLayout.CanonicalRunnerConfiguration);
-
-        Assert.Single(runnerConfigurations);
-        Assert.Equal(canonical, Path.GetFullPath(runnerConfigurations[0]));
+        foreach (var project in RepositoryLayout.ProductProjects)
+        {
+            Assert.Equal("false", MsBuildEvaluation.PropertyOf(project, "ViciOneNativeTestTree"));
+            Assert.DoesNotContain(
+                "xunit.v3.mtp-v2",
+                MsBuildEvaluation.ItemIdentities(project, "PackageReference"));
+        }
     }
 
     [Fact]
-    public void SupportLibrary_DoesNotCarryTheRunnerConfiguration()
+    public void InheritedTestFramework_IsMigrationInputAndNotPackable()
     {
-        // It is not an executable test artifact, so the runner never reads a configuration from it.
-        var runnerConfigurations = MsBuildEvaluation.ItemMetadata(SupportLibrary, "Content", "FullPath")
-            .Where(path => Path.GetFileName(path) == "xunit.runner.json")
+        Assert.Equal(
+            "false",
+            MsBuildEvaluation.PropertyOf(RepositoryLayout.InheritedTestFrameworkProject, "IsPackable"));
+    }
+
+    [Fact]
+    public void ExecutableTestProject_CarriesExactlyOneCanonicalTestingPlatformConfigurationItem()
+    {
+        var testingPlatformConfigurations = MsBuildEvaluation.ItemMetadata(TestProject, "Content", "FullPath")
+            .Where(path => Path.GetFileName(path) == "testconfig.json")
             .ToArray();
 
-        Assert.Empty(runnerConfigurations);
+        var canonical = Path.GetFullPath(RepositoryLayout.CanonicalTestingPlatformConfiguration);
+
+        Assert.Single(testingPlatformConfigurations);
+        Assert.Equal(canonical, Path.GetFullPath(testingPlatformConfigurations[0]));
+    }
+
+    [Fact]
+    public void SupportLibrary_DoesNotCarryTheTestingPlatformConfiguration()
+    {
+        // It is not an executable test artifact, so MTP never reads a configuration from it.
+        var testingPlatformConfigurations = MsBuildEvaluation.ItemMetadata(SupportLibrary, "Content", "FullPath")
+            .Where(path => Path.GetFileName(path) == "testconfig.json")
+            .ToArray();
+
+        Assert.Empty(testingPlatformConfigurations);
     }
 }

@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Removed
 
+- The Python policy validator, its policy modules, and its validator self-test suite. They were a
+  discarded Team 1 detour rather than imported behavior. Independently valid safeguards move to their
+  effective MSBuild or native xUnit/MTP boundary; the validator must not be rebuilt.
 - The foreign licence check and the usage telemetry that reported host, bus, rider and endpoint data
   to a hard wired third party address on every bus start, together with their dependency injection
   and public API surface.
@@ -32,13 +35,20 @@ entry below records what the current work changed for anyone reading the source.
 - Test support code is framework-neutral under `ViciOne.ServiceBus.Tests.Infrastructure`; test-only
   package versions do not participate in product evaluation, and the inherited NUnit/VSTest/Python
   stack is transition evidence rather than the target test architecture.
-- `Directory.Build.targets` carries the late half of the build contract: six errors that refuse a
+- Product Release builds keep embedded symbols while native MTP test applications use portable PDBs,
+  as required for xUnit/MTP discovery. Applying the product symbol policy to the test executable had
+  produced a successful build followed by a zero-test MTP run.
+- Native xUnit executables set `UseMicrosoftTestingPlatformRunner=true`; the hybrid in-process entry
+  point is not supported. The MTP-only `testconfig.json` replaces `xunit.runner.json`, fails skips and
+  warnings, and CI rejects discovery below the accepted 84-case F1a foundation.
+- `Directory.Build.targets` carries the late half of the build contract: ten errors that refuse a
   project which drops its lock file or locked mode, packs without its licence or notice, targets a
   framework this product does not support, or reaches for `netstandard2.0` while being neither a
   Roslyn component nor the analyzer package project whose framework group decides which consumers may
-  reference it.
-- The inherited verification inventory was consolidated during takeover. It remains migration
-  evidence only and is replaced cohort by cohort by the native xUnit/MTP test estate.
+  reference it. The same contract prevents projects outside `tests2/` from claiming its package
+  boundary or referencing its native xUnit/MTP entry package.
+- The inherited verification inventory was consolidated during takeover. Its remaining runners are
+  migration evidence only and are replaced cohort by cohort by the native xUnit/MTP test estate.
 - The ActiveMQ publish topology is deployed to the broker. Resolving a destination name is a client
   side act and left the broker without the topic; `SessionContext.EnsureTopicExists` makes the broker
   hold it.

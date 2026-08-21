@@ -40,9 +40,13 @@ internal static class RepositoryLayout
     internal static string ProductComparisonProject => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.Abstractions", "ViciOne.ServiceBus.Abstractions.csproj");
 
-    /// <summary>The one central runner configuration of the tree.</summary>
-    internal static string CanonicalRunnerConfiguration => Path.Combine(
-        Root, "tests2", "xunit.runner.json");
+    /// <summary>The inherited test framework while its behavior is being migrated.</summary>
+    internal static string InheritedTestFrameworkProject => Path.Combine(
+        Root, "src", "ViciOne.ServiceBus.TestFramework", "ViciOne.ServiceBus.TestFramework.csproj");
+
+    /// <summary>The one central Microsoft Testing Platform configuration of the tree.</summary>
+    internal static string CanonicalTestingPlatformConfiguration => Path.Combine(
+        Root, "tests2", "testconfig.json");
 
     /// <summary>Every product project in the current source tree, derived from the filesystem.</summary>
     internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src");

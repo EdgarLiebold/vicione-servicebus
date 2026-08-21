@@ -53,14 +53,20 @@ public sealed class TestConfigurationTests
     [Fact]
     public void Sources_AreLayeredFileThenUserSecretsThenEnvironment()
     {
-        var withoutSecrets = ProviderWith().SourceOrder;
-        var withSecrets = new TestConfigurationProvider(
-            AppContext.BaseDirectory, [], includeUserSecrets: true).SourceOrder;
+        var userSecrets = new[]
+        {
+            new KeyValuePair<string, string?>("Profile", "LocalIntegration"),
+            new KeyValuePair<string, string?>("OperationTimeout", "00:00:45"),
+        };
+        var provider = new TestConfigurationProvider(
+            AppContext.BaseDirectory,
+            [new KeyValuePair<string, string?>("VICIONE_TESTS__Profile", "External")],
+            userSecrets);
 
-        Assert.Equal(["JsonConfigurationProvider", "MemoryConfigurationProvider"], withoutSecrets);
-        Assert.Equal(
-            ["JsonConfigurationProvider", "JsonConfigurationProvider", "MemoryConfigurationProvider"],
-            withSecrets);
+        var options = provider.GetOptions();
+
+        Assert.Equal(TestProfile.External, options.Profile);
+        Assert.Equal(TimeSpan.FromSeconds(45), options.OperationTimeout);
     }
 
     [Fact]
@@ -92,19 +98,39 @@ public sealed class TestConfigurationTests
     }
 
     [Theory]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "0")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65536")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlHost", "")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "0")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65536")]
-    public void LocalIntegrationProfile_RejectsAnInvalidEndpoint(string key, string value)
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "", "LocalInfrastructure:RabbitMqHost")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "0", "LocalInfrastructure:RabbitMqPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65536", "LocalInfrastructure:RabbitMqPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlHost", "", "LocalInfrastructure:PostgreSqlHost")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "0", "LocalInfrastructure:PostgreSqlPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65536", "LocalInfrastructure:PostgreSqlPort")]
+    public void LocalIntegrationProfile_RejectsAnInvalidEndpoint(
+        string key,
+        string value,
+        string expectedError)
     {
         var options = ProviderWith(
             ("VICIONE_TESTS__Profile", "LocalIntegration"),
             (key, value)).GetOptions();
 
-        Assert.NotEmpty(options.ValidateFor());
+        Assert.Contains(expectedError, options.ValidateFor());
+    }
+
+    [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "1", "LocalInfrastructure:RabbitMqPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65535", "LocalInfrastructure:RabbitMqPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "1", "LocalInfrastructure:PostgreSqlPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65535", "LocalInfrastructure:PostgreSqlPort")]
+    public void LocalIntegrationProfile_AcceptsPortBoundaries(
+        string key,
+        string value,
+        string errorKey)
+    {
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            (key, value)).GetOptions();
+
+        Assert.DoesNotContain(errorKey, options.ValidateFor());
     }
 
     [Fact]
@@ -212,11 +238,22 @@ public sealed class TestConfigurationTests
     public void ProviderContracts_ExposeOnlyTheApprovedNonSecretProperties()
     {
         Assert.Equal(
+            ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
+            PublicPropertyNames<ViciOneTestOptions>());
+        Assert.Equal(
+            ["PostgreSqlHost", "PostgreSqlPort", "RabbitMqHost", "RabbitMqPort"],
+            PublicPropertyNames<LocalInfrastructureOptions>());
+        Assert.Equal(
+            ["Aws", "Azure"],
+            PublicPropertyNames<ExternalProviderOptions>());
+        Assert.Equal(
             ["Location", "Mode", "Name", "ResourceGroup", "ResourceNamePrefix", "SubscriptionId"],
             PublicPropertyNames<AzureProviderOptions>());
         Assert.Equal(
             ["Mode", "Name", "Region", "ResourceNamePrefix"],
             PublicPropertyNames<AwsProviderOptions>());
+        Assert.Empty(PublicFields<ViciOneTestOptions>());
+        Assert.Empty(PublicFields<LocalInfrastructureOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
         Assert.Empty(PublicFields<AwsProviderOptions>());
         Assert.Empty(PublicFields<ExternalProviderOptions>());
@@ -235,18 +272,6 @@ public sealed class TestConfigurationTests
         Assert.Contains("ExternalProviders:Azure:SubscriptionId", failure.Message);
         Assert.Contains("External", failure.Message);
         Assert.Contains("Azure.Identity", failure.Message);
-    }
-
-    [Fact]
-    public void ExternalPreflightBoundary_ExposesAnAsynchronousAccessCheck()
-    {
-        var method = typeof(IExternalAccessPreflight).GetMethod(
-            nameof(IExternalAccessPreflight.EnsureAccessAsync));
-
-        Assert.NotNull(method);
-        Assert.Equal(typeof(Task), method!.ReturnType);
-        Assert.Equal([typeof(CancellationToken)],
-            method.GetParameters().Select(parameter => parameter.ParameterType).ToArray());
     }
 
     private static string[] PublicPropertyNames<T>() =>

@@ -108,8 +108,8 @@ def child_command(run: dict, evidence_dir: Path) -> list[str]:
 def resolve_selection(model: dict, name: str) -> list[str]:
     """The categories a selection names, transitively.
 
-    The resolution itself lives in verification_model, because the policy validator has to reach the
-    same answer this entry point does and two implementations of one rule are two rules.
+    The resolution itself lives in verification_model so this entry point has exactly one
+    implementation of the selection rule.
     """
     try:
         resolved = verification_model.resolve_selection(model, name)

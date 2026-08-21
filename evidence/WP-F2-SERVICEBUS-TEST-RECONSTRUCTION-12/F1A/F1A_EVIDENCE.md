@@ -1,108 +1,100 @@
-# F1a-Beleg — korrigierte native xUnit-4-/MTP-v2-Grundlage
+# F1a-Beleg — native xUnit-4-/MTP-v2-Grundlage
 
-Der erste Team-1-Kandidat `5996d10a` wurde nach vollständiger Lead-Prüfung nicht angenommen. Der PO
-hat die begrenzte F1a-Korrektur direkt dem Lead Architect übertragen. Produktverhalten unter
-`src/**` blieb unverändert.
+Der erste Team-1-Kandidat `5996d10a` wurde nicht angenommen. Der Product Owner übertrug die
+begrenzte Korrektur direkt an den Lead Architect. Produktverhalten unter `src/**` blieb unverändert.
 
-## 1. Behobene Ablehnungsgründe
+## 1. Ergebnis
 
-- Test-only CPM-Versionen sind auf `ViciOneNativeTestTree` begrenzt. Der bestehende Produkt-Lockfile
-  ist byteinhaltlich wieder identisch mit dem Zustand vor F1a; der vollständige Produkt-Restore ist
-  im Locked Mode grün.
-- Die ungültigen leeren Profil-Solutions wurden entfernt. Ein Profil wird erst mit seinem ersten
-  ausführbaren Testprojekt materialisiert.
-- Die frameworkneutrale Bibliothek heißt eindeutig
-  `ViciOne.ServiceBus.Tests.Infrastructure`; sie kollidiert nicht mehr mit der ausgelieferten
-  Produktoberfläche `ViciOne.ServiceBus.Testing`.
-- Profil, lokale Endpunkte und externe Provider werden fail-closed typisiert und validiert.
-- Alle ArchUnitNET-Frameworkadapter sind verboten; nur der Kern ist erlaubt.
-- Paketclosure und Projektreferenzen werden getrennt gezählt.
-- Projekt-, Solution-, Sprachversions- und Produkt→Test-Grenzen werden aus dem echten Graph geprüft.
-- Aktive Build-, Test- und Arbeitsdokumente beschreiben nur den gemessenen aktuellen Stand.
+- xUnit 4 läuft ausschließlich über den Microsoft-Testing-Platform-v2-Einstiegspunkt;
+- `tests2/testconfig.json` ist die einzige MTP-Konfiguration und wird als
+  `<AssemblyName>.testconfig.json` in das Testartefakt übernommen;
+- Skips und Testwarnungen sind echte Fehler;
+- die aktuelle F1a-Untergrenze von 84 Fällen wird vom CI-Aufruf fail-closed erzwungen;
+- native Testpakete und deren Versionen bleiben auf Projekte unter `tests2/**` begrenzt;
+- das gemeinsame Testkonfigurationsmodell ist typisiert, secret-frei und zentral änderbar;
+- das geerbte `ViciOne.ServiceBus.TestFramework` ist nicht paketierbare Migrationsquelle;
+- der fehlgeleitete Python-Policy-Validator von Team 1 ist vollständig entfernt und darf nicht
+  rekonstruiert werden.
 
-## 2. Vollständige Belegkette
+## 2. Vollständige Ausführung
 
-Alle Befehle liefen mit SDK `10.0.302`, deaktivierter Build-Server-Wiederverwendung und ohne
-Testfilter.
+Alle .NET-Befehle liefen am 21. August 2026 mit SDK `10.0.302`, deaktivierter
+Build-Server-Wiederverwendung, Locked Restore und ohne Testfilter.
 
 | Gegenstand | Ergebnis |
 |---|---|
-| `dotnet restore ViciOne.ServiceBus.slnx --locked-mode --disable-build-servers` | Exit 0 |
-| `dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode --disable-build-servers` | Exit 0 |
-| `dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode --disable-build-servers` | Exit 0 |
-| Produkt-Release-Build, `--no-restore --no-incremental` | Exit 0, 0 Warnungen, 0 Fehler |
-| Engineering-Release-Build, `--no-restore --no-incremental` | Exit 0, 0 Warnungen, 0 Fehler |
-| Unit-Release-Build, `--no-restore --no-incremental` | Exit 0, 0 Warnungen, 0 Fehler |
-| `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore` | Exit 0; 76 gesamt, 76 grün, 0 rot, 0 übersprungen |
+| Produkt-Locked-Restore | Exit 0 |
+| Engineering-Locked-Restore | Exit 0 |
+| Unit-Locked-Restore | Exit 0 |
+| Produkt-Release-Build, `--no-restore --no-incremental` | Exit 0; 0 Warnungen; 0 Fehler |
+| Engineering-Release-Build, `--no-restore --no-incremental` | Exit 0; 0 Warnungen; 0 Fehler |
+| Unit-Release-Build, `--no-restore --no-incremental` | Exit 0; 0 Warnungen; 0 Fehler |
+| unfiltrierter `dotnet test --solution ... --minimum-expected-tests 84` | Exit 0; 84 gesamt; 84 grün; 0 rot; 0 übersprungen |
 | `dotnet format ... --verify-no-changes --include tests2` | Exit 0 |
-| `git diff --check` | Exit 0 |
+| verbleibende Übergangs-Runner-Selbsttests | 206/206 grün |
 
-Der nicht auf `tests2` begrenzte Formatlauf meldet geerbte Produktformatierung; er ist kein Befund
-gegen den neuen Bestand und wurde nicht durch F1a verändert.
+Der native Lauf erzeugte zusätzlich einen maschinenlesbaren CTRF-Rohnachweis. Dessen Summary enthält
+`tests=84`, `passed=84`, `failed=0`, `pending=0`, `skipped=0` und `other=0`.
 
 ## 3. Rohhashes
 
 | Artefakt | SHA-256 |
 |---|---|
-| `artifacts/f1a-lead-correction/10-unit-locked-restore.binlog` | `929fa7acdd0515bb5fd3f3a1317d2fcccc231c489580b488a226c05c262faf6e` |
-| `artifacts/f1a-lead-correction/20-product-release-build.binlog` | `181bf0c40175a26f7920f228a9ad3acdf7b1a8352e3437a1431ae5ad0e368be9` |
-| `artifacts/f1a-lead-correction/21-engineering-release-build.binlog` | `bd651ac9e87fc40006745f60002af4626ba53ea5ea94bdd28c16ebfd99adc32b` |
-| `artifacts/f1a-lead-correction/22-unit-release-build.binlog` | `2f2a47ff51c61caba87835726534193c90fdb7d035e031f6f3c54fa8a9025553` |
-| `tests2/xunit.runner.json` | `c95b68567892731e43a8f3b70d160cb945f215e18a0d6fb27f250497e58a609e` |
+| `artifacts/f1a-lead-correction/00-product-locked-restore.binlog` | `38bb202b08240e69b6163f6dd6ad2ffdd4d5ddb157786ec1518646fa4ccedca0` |
+| `artifacts/f1a-lead-correction/01-engineering-locked-restore.binlog` | `3b1f6c60cf04dc59aadaaa5c3a3b1abd52698377997066cfded0077bb51e8a9c` |
+| `artifacts/f1a-lead-correction/02-unit-locked-restore.binlog` | `6bed47896cc51ab9a2522c16f050b30eb7524932e09ddc272d211a10e28da930` |
+| `artifacts/f1a-lead-correction/20-product-release-build.binlog` | `22fa144282f8dc72ce219ee6a6eac8269c06638dc0513a0724bb938b97fc23d6` |
+| `artifacts/f1a-lead-correction/21-engineering-release-build.binlog` | `a5b5d55010c9745059e8f603fad1de1a914d80f4eeac967f8314ec37e6212724` |
+| `artifacts/f1a-lead-correction/22-unit-release-build.binlog` | `bff190a8f8101295b83cb994ffa39a141708a445d59d331dab86eaa11bae9e0c` |
+| `artifacts/f1a-lead-correction/30-unit-native-test.ctrf.json` | `1b2bd84a31c6fc89e9b52680e1b378123fef67edac6c0782b71f65aae85af6cc` |
+| `tests2/testconfig.json` | `3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f` |
 | `tests2/testsettings.json` | `5976ece7528420ac54abafd5e9f18ad378174e78a11412bc0545fbf374b55a23` |
-| `tests2/Directory.Build.props` | `3fc9d92a50dbe913798e862d0f4ba64beed4ef4f6ee12e7113f671841261da2a` |
-| `tests2/Directory.Build.targets` | `b0de3c87bdb8e110fd8772cb6e124b77a5987acacbfafd2c9eab11e53056d07a` |
+| `tests2/Directory.Build.props` | `7ec422b68e85620c259ff11152784237ab5c97110174ced2f8cc5b3f8ca84de8` |
+| `tests2/Directory.Build.targets` | `085abce4579e6be5b35fc441c7b3e2e4b952b8f0c28e358ca6e961ea2b489522` |
 | Architektur-Lockfile | `1e0b30183aaed716fe8a5d2d7db2d57affad6dbab67f894dadcb81dbe5fde92b` |
 | Infrastruktur-Lockfile | `7c24c052dca12ec4b4ac0e3582eb9a68af0beaf2282f6ac296716d7442e1c14b` |
 
-Binlogs liegen absichtlich im ignorierten Artefaktbaum; ihre Hashes binden den ausgeführten Lauf.
+Binlogs und CTRF liegen absichtlich im ignorierten Artefaktbaum; ihre Hashes binden die ausgeführten
+Läufe, ohne generierte Dateien als Quellcode einzuchecken.
 
-## 4. Aufgelöste Graphen
+## 4. Paket- und Projektgraph
 
-| Projekt | echte Paketknoten | Projektknoten | verbotene Identitäten |
-|---|---:|---:|---:|
-| `ViciOne.ServiceBus.Architecture.Tests` | 41 | 3 | 0 |
-| `ViciOne.ServiceBus.Tests.Infrastructure` | 10 | 0 | 0 |
+| Projekt | aufgelöste Paketknoten | verbotene Identitäten |
+|---|---:|---:|
+| `ViciOne.ServiceBus.Architecture.Tests` | 41 | 0 |
+| `ViciOne.ServiceBus.Tests.Infrastructure` | 10 | 0 |
 
-Die drei Projektknoten sind Core, Abstractions und Testinfrastruktur; sie werden nicht mehr als
-NuGet-Pakete ausgegeben. Alle 22 aktuellen Projekte unter `src/**` werden auf fehlende Referenzen in
-`tests2/**` geprüft.
+Die Architekturtests prüfen zusätzlich alle aktuellen Projekte unter `src/**` auf eine unerlaubte
+Referenz nach `tests2/**` und auf den nativen Testpaketmarker. Der Supportcode enthält transitiv kein
+xUnit-, NUnit-, MTP- oder ArchUnitNET-Paket.
 
-## 5. Isolierte Gegenproben
+## 5. Fail-closed-Gegenproben
 
-Die Proben liefen ausschließlich in `/private/tmp/vsb-f1a-correction.HzLUUz`; der kanonische
-Arbeitsbaum wurde nicht für Sabotage verändert.
+Zwei temporäre C#-Mutationen wurden jeweils gebaut, ausgeführt und danach vollständig entfernt:
 
-| Eingriff | Erwartetes und gemessenes Scheitern |
+| Mutation | Gemessenes Ergebnis |
 |---|---|
-| `LangVersion` in Root-Props pinnen | `LanguageVersion_IsPinnedOnlyForTheTwoRoslynComponents`, MTP Exit 2 |
-| leeres `ViciOne.ServiceBus.Tests.External.slnx` hinzufügen | `EveryMaterializedProfileSolution_HasAnExecutableTestProject`, MTP Exit 2 |
-| Produktprojekt auf Testinfrastruktur referenzieren | `EveryProductProject_StaysIndependentOfTheNativeTestTree`, MTP Exit 2 |
-| `TngTech.ArchUnitNET.xUnitV3` direkt aufnehmen | `VOSBT006` |
-| Elternimport aus `tests2/Directory.Build.props` entfernen | `VOSBT001` |
-| Elternimport aus `tests2/Directory.Build.targets` entfernen | `VOSBT002` |
-| `failSkips` auf `false` setzen | zwei Runner-Konfigurationsprüfungen rot, MTP Exit 2 |
-| zweite Runnerkonfiguration aufnehmen | `VOSBT008` |
-| einen Test mit `Skip` markieren | `FAIL_SKIP`, 1 fehlgeschlagen, 0 übersprungen, MTP Exit 2 |
+| ein `[Fact(Skip=...)]` | `FAIL_SKIP`; 83 grün, 1 fehlgeschlagen; MTP Exit 2 |
+| `TestContext.Current.AddWarning(...)` | `FAIL_WARN`; 83 grün, 1 fehlgeschlagen; MTP Exit 2 |
 
-Konfigurationssabotage ist als gewöhnlicher xUnit-Test ausgeführt: unbekanntes Profil, nichtpositiver
-Timeout, leere Hosts, Ports 0/65536, externer Selektor im Unitprofil, External ohne Selektor,
-External mit Emulator, unbekannte oder doppelte Providerselektion sowie eine fehlende ausgewählte
-Providergruppe sind rot auf Vertragsebene.
+Der abschließende frische Build nach Entfernung beider Mutationen enthält wieder genau 84 reguläre
+Fälle. MSBuild- und Architekturregeln sichern außerdem Elternimports, Testprojektklassifikation,
+MTP-only-Einstieg, zentrale Konfiguration, verbotene Runner/Adapter, Paketclosure,
+Solutionmitgliedschaft, Produkt→Test-Richtung und SDK-Sprachversion ab.
 
-## 6. Testqualitätsprüfung
+## 6. Testqualität
 
-- 63 Fakten plus 13 ausgeführte Theory-Zeilen = 76 Fälle;
-- 103 explizite Assertions;
-- keine assertionfreien Tests, Skips, Sleeps, Zufalls-/Uhrzeitabhängigkeit, `.Result`/`.Wait()` oder
-  breite Exception-Fänger im neuen Bestand;
-- `find-untested-sources` wurde wie vom Microsoft-Skill verlangt ausgeführt. Sein lexikalischer
-  Repositoryscan meldete 3.888 Quellen, 1.083 Testdateien, 591 Paarungen und 3.297 Kandidaten. Diese
-  Werte enthalten geerbte/generierte Struktur und sind keine Coverage- oder Vollständigkeitswahrheit;
-  R0 bleibt die verbindliche Verhaltenspflichtmenge für die Kohortenmigration.
+- 67 `[Fact]`-Methoden plus 17 ausgeführte Datenzeilen aus vier `[Theory]`-Methoden ergeben 84 Fälle;
+- 125 statische xUnit-Assert-Aufrufstellen; delegierte ArchUnitNET-Regeln werden durch gewöhnliche
+  xUnit-Assertions ausgewertet;
+- der gesamte C#-Bestand unter `tests2/**` wurde gelesen;
+- keine assertionfreien Testkörper, Skips, Sleeps, Zufalls-/Uhrzeitabhängigkeit, `.Result`, `.Wait()`,
+  breite Exception-Fänger oder VSTest-/NUnit-Verdrängung im neuen Bestand;
+- Test- und Supportstruktur folgen den geprüften Produkt- und Architekturbereichen; F1a selbst
+  beansprucht noch keine vollständige Migration der geerbten Verhaltenskohorten.
 
 ## 7. Noch ausstehend
 
-F1a bleibt bis zu zwei unabhängigen read-only Reviews des eingefrorenen korrigierten Commits
-technisch grün, aber formal nicht angenommen. F1b, Verhaltenskohorten, Altbestandslöschung, Push und
-Cloudausführung wurden nicht begonnen.
+F1a ist technisch grün. Vor formeller Annahme folgen ein sauberer Commit und zwei unabhängige
+read-only Reviews genau dieses eingefrorenen Commits. F1b, Verhaltenskohorten, Löschung ersetzter
+Alt-Tests, Push und Cloudausführung wurden nicht begonnen.

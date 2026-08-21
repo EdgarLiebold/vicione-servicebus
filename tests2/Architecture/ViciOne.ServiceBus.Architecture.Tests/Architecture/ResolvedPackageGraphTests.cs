@@ -54,15 +54,20 @@ public sealed class ResolvedPackageGraphTests
     }
 
     [Fact]
-    public void SupportLibrary_ResolvesNoXunitPackageInItsWholeClosure()
+    public void SupportLibrary_ResolvesNoTestFrameworkOrPlatformPackage()
     {
         // Framework neutrality has to hold transitively too: a configuration package that happened
-        // to depend on xUnit would breach it just as thoroughly as a direct reference.
-        var xunit = ResolvedPackageGraph.PackagesOf(SupportLibrary)
-            .Where(package => package.StartsWith("xunit", StringComparison.OrdinalIgnoreCase))
+        // to depend on a framework, adapter, architecture library or test platform would breach it
+        // just as thoroughly as a direct reference.
+        var testPackages = ResolvedPackageGraph.PackagesOf(SupportLibrary)
+            .Where(package =>
+                package.StartsWith("xunit", StringComparison.OrdinalIgnoreCase) ||
+                package.StartsWith("nunit", StringComparison.OrdinalIgnoreCase) ||
+                package.StartsWith("TngTech.ArchUnitNET", StringComparison.OrdinalIgnoreCase) ||
+                package.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
-        Assert.Empty(xunit);
+        Assert.Empty(testPackages);
     }
 
     [Fact]

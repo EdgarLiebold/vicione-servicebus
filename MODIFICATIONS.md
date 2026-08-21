@@ -34,15 +34,3 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
 
 Which file each of these touched is not repeated here. The generated
 [CHANGELIST.md](CHANGELIST.md) is the section 4(b) record and holds the complete path inventory.
-
-## Exact changed-format exceptions
-
-The following changed baseline files cannot carry a syntax-valid in-file comment. Each entry is exact; this is not an extension- or directory-wide waiver.
-
-| Target path | Reason and modification |
-|---|---|
-| `ViciOne.ServiceBus.slnx` | Solution file; paths renamed, and the solution migrated to the SDK's XML solution format, which this repository does not annotate per file because CHANGELIST.md carries the section 4(b) record. |
-| `ViciOne.ServiceBus.snk` | Binary strong-name key; path renamed, bytes retained. |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt` | Commentless golden-vector fixture; path renamed, vector bytes retained. |
-| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json` | Strict JSON fixture; identity-bearing keys/values renamed. |
-| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Binary certificate fixture; path renamed, bytes retained. |

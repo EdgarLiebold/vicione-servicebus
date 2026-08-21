@@ -17,15 +17,17 @@
        own items and the SDK defaults are final here. That is why the classification lives at this
        point and not in Directory.Build.props, where OutputType is not yet a project's own value. -->
   <PropertyGroup>
-    <_ViciOneCanonicalRunnerConfiguration>$(MSBuildThisFileDirectory)xunit.runner.json</_ViciOneCanonicalRunnerConfiguration>
+    <_ViciOneCanonicalTestingPlatformConfiguration>$(MSBuildThisFileDirectory)testconfig.json</_ViciOneCanonicalTestingPlatformConfiguration>
   </PropertyGroup>
 
-  <!-- One runner configuration for the whole tree, taken from the canonical central path and linked
-       into every executable test artifact. A per-project copy is what lets one project silently
-       lose failSkips or failWarns while the others keep it. -->
+  <!-- One MTP configuration for the whole tree, taken from the canonical central path and linked
+       into every executable test artifact under the assembly-specific name that MTP discovers.
+       A per-project source file is what lets one project silently lose failSkips or failWarns while
+       the others keep it. -->
   <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
-    <Content Include="$(_ViciOneCanonicalRunnerConfiguration)"
-             Link="xunit.runner.json"
+    <Content Include="$(_ViciOneCanonicalTestingPlatformConfiguration)"
+             Link="$(AssemblyName).testconfig.json"
+             TargetPath="$(AssemblyName).testconfig.json"
              CopyToOutputDirectory="PreserveNewest" />
     <!-- Same reasoning for the checked-in, secret-free defaults the typed configuration owner reads
          at run time. -->
@@ -68,7 +70,7 @@
                                   Condition=" '%(Identity)' == 'xunit.v3.mtp-v2' " />
     </ItemGroup>
     <Error Code="VOSBT003"
-           Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 but does not declare IsTestProject=true. An executable test project must own that classification explicitly, and the runner configuration is linked in on that declaration."
+           Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 but does not declare IsTestProject=true. An executable test project must own that classification explicitly, and the MTP configuration is linked in on that declaration."
            Condition=" '@(_ViciOneTestEntryReference)' != '' AND '$(IsTestProject)' != 'true' " />
     <Error Code="VOSBT004"
            Text="$(MSBuildProjectName) declares IsTestProject=true but does not directly reference the test entry package xunit.v3.mtp-v2. Only a project that carries the Microsoft Testing Platform entry point is an executable test project."
@@ -76,6 +78,9 @@
     <Error Code="VOSBT005"
            Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 @(_ViciOneTestEntryReference->Count()) times. Exactly one direct test entry is allowed."
            Condition=" '@(_ViciOneTestEntryReference)' != '' AND '@(_ViciOneTestEntryReference->Count())' != '1' " />
+    <Error Code="VOSBT010"
+           Text="$(MSBuildProjectName) must set UseMicrosoftTestingPlatformRunner=true. The repository supports only the native Microsoft Testing Platform v2 entry point; xUnit's hybrid in-process entry point is not an allowed second runner path."
+           Condition=" '$(IsTestProject)' == 'true' AND '$(UseMicrosoftTestingPlatformRunner)' != 'true' " />
   </Target>
 
   <!-- Direct and global references only. This target cannot and does not speak about the transitive
@@ -109,29 +114,37 @@
            Condition=" '@(_ViciOneForbiddenDirectPackage)' != '' " />
   </Target>
 
-  <!-- The single runner configuration has to reach the artifact exactly once, and it has to be the
+  <!-- The single MTP configuration has to reach the artifact exactly once, and it has to be the
        canonical central file. A missing link would silently restore xUnit's defaults, so skips and
        warnings would stop being failures; a second item, or one pointing somewhere else, would let
        a same-named file elsewhere in the project decide the run instead. -->
-  <Target Name="AssertNativeTestTreeCarriesCanonicalRunnerConfiguration"
+  <Target Name="AssertNativeTestTreeCarriesCanonicalTestingPlatformConfiguration"
           BeforeTargets="BeforeBuild"
           Condition=" '$(IsTestProject)' == 'true' ">
     <ItemGroup>
-      <_ViciOneRunnerConfigurationItem Include="@(Content)"
-                                       Condition=" '%(Filename)%(Extension)' == 'xunit.runner.json'
-                                                OR '%(Link)' == 'xunit.runner.json' " />
-      <_ViciOneForeignRunnerConfigurationItem Include="@(_ViciOneRunnerConfigurationItem)"
-                                              Condition=" '%(FullPath)' != '$(_ViciOneCanonicalRunnerConfiguration)' " />
+      <!-- MTP automatically recognizes <AssemblyName>.testconfig.json. Inspect both common content
+           item types and every testconfig.json name, otherwise a project-local configuration can
+           silently turn failSkips and failWarns off while the canonical file still exists. -->
+      <_ViciOneTestingPlatformConfigurationItem Include="@(Content)"
+                                       Condition="$([System.String]::Copy('%(Content.Filename)%(Content.Extension)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(Content.Link)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(Content.TargetPath)').EndsWith('testconfig.json'))" />
+      <_ViciOneTestingPlatformConfigurationItem Include="@(None)"
+                                       Condition="$([System.String]::Copy('%(None.Filename)%(None.Extension)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(None.Link)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(None.TargetPath)').EndsWith('testconfig.json'))" />
+      <_ViciOneForeignTestingPlatformConfigurationItem Include="@(_ViciOneTestingPlatformConfigurationItem)"
+                                                       Condition=" '%(FullPath)' != '$(_ViciOneCanonicalTestingPlatformConfiguration)' " />
     </ItemGroup>
     <Error Code="VOSBT007"
-           Text="The canonical runner configuration $(_ViciOneCanonicalRunnerConfiguration) does not exist. It is the only place where skipped tests and warnings are turned into failures."
-           Condition=" !Exists('$(_ViciOneCanonicalRunnerConfiguration)') " />
+           Text="The canonical MTP configuration $(_ViciOneCanonicalTestingPlatformConfiguration) does not exist. It is the only place where skipped tests and warnings are turned into failures."
+           Condition=" !Exists('$(_ViciOneCanonicalTestingPlatformConfiguration)') " />
     <Error Code="VOSBT008"
-           Text="$(MSBuildProjectName) carries @(_ViciOneRunnerConfigurationItem->Count()) runner configuration items into its output; exactly one is allowed. A second one lets an arbitrary same-named file decide whether skips and warnings fail."
-           Condition=" '@(_ViciOneRunnerConfigurationItem->Count())' != '1' " />
+           Text="$(MSBuildProjectName) carries @(_ViciOneTestingPlatformConfigurationItem->Count()) MTP configuration items into its output; exactly one is allowed. A second one lets an arbitrary same-named file decide whether skips and warnings fail."
+           Condition=" '@(_ViciOneTestingPlatformConfigurationItem->Count())' != '1' " />
     <Error Code="VOSBT009"
-           Text="$(MSBuildProjectName) carries a runner configuration that is not the canonical central file: @(_ViciOneForeignRunnerConfigurationItem->'%(FullPath)', ', '). Expected $(_ViciOneCanonicalRunnerConfiguration)."
-           Condition=" '@(_ViciOneForeignRunnerConfigurationItem)' != '' " />
+           Text="$(MSBuildProjectName) carries an MTP configuration that is not the canonical central file: @(_ViciOneForeignTestingPlatformConfigurationItem->'%(FullPath)', ', '). Expected $(_ViciOneCanonicalTestingPlatformConfiguration)."
+           Condition=" '@(_ViciOneForeignTestingPlatformConfigurationItem)' != '' " />
   </Target>
 
 </Project>

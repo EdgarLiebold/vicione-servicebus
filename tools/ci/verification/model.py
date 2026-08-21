@@ -7,8 +7,8 @@ things: a capability matrix that classified only the source projects, and a not-
 listed the same categories a second time by hand. A second hand kept list is a second truth, and the
 two had already drifted.
 
-The invariants below are checked by tools/ci/policy_validator.py before any restore, and each of them
-has a sabotage case in tools/ci/test_policy_validator.py.
+This model belongs only to the inherited test estate. The replacement xUnit/MTP estate is independent
+and does not extend this model.
 
 Run it directly to print the model:
 
@@ -35,7 +35,7 @@ EXPECTED_DIRECTORY = "build/verification/expected"
 PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjects")
 
 # Jobs of the required profile that verify nothing, so the model's job map does not name them.
-NON_VERIFYING_JOBS = ("policy", "build", "pack")
+NON_VERIFYING_JOBS = ("legacy-tooling", "build", "pack")
 
 
 class SelectionError(RuntimeError):
@@ -439,10 +439,12 @@ def findings(root: Path) -> list[str]:
 
     problems.extend(resolve_indirect_verification(root, capabilities))
 
-    # Every project of this repository is classified exactly once. A project nobody classifies ships
-    # without anyone stating how it is verified.
+    # Every project owned by the inherited verification estate is classified exactly once. The
+    # replacement xUnit/MTP estate under tests2 is intentionally outside this model and runs through
+    # .github/workflows/native-tests.yml. Excluding that one path is a boundary, not an exemption:
+    # every product, inherited test, benchmark and tool project remains fail-closed here.
     present = {p.parent.relative_to(root).as_posix() for p in root.rglob("*.csproj")
-               if not p.relative_to(root).as_posix().startswith("artifacts/")}
+               if not p.relative_to(root).as_posix().startswith(("artifacts/", "tests2/"))}
     for project in sorted(present - set(owner_of_project)):
         problems.append(f"project '{project}' is retained but no capability classifies it")
     for project in sorted(set(owner_of_project) - present):

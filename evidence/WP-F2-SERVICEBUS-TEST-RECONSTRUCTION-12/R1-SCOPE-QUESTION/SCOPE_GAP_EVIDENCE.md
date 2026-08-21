@@ -1,5 +1,15 @@
 # Beleg zur Scope-Frage `WRITE_SCOPE_CHANGE`
 
+> **RESOLVED HISTORICAL EVIDENCE.** This document records the state when question record `0005`
+> was raised. Lead record `0006-reslice.json` resolved both gaps through revision 2 at
+> `revisions/0002/DEVELOPMENT_SLICE.json` (SHA-256
+> `4d3e3ebe55a2a6cfa07e647754723ecfc3436db2f91baf3b3a6d059328ea7d75`). The effective slice has
+> 92 write scopes and grants both `tests2/xunit.runner.json` and `tests2/Core/**`. Everything below
+> is retained only as the evidence that justified that resolved change; it is not current guidance.
+> A later Lead-owned technical correction removed `xunit.runner.json` and replaced it with the
+> MTP-only `tests2/testconfig.json`. No current implementation or future AI may derive the runner
+> design from the historical proposal below.
+
 Arbeitspaket `WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12`, Team `team-1-claude`.
 Erstellt als Pflichtbindung der Frage-Sequenz; es wurde keine vorhandene Evidencedatei geändert.
 

@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <!-- Shared, framework-neutral test infrastructure. It owns no test case and no verdict. -->
-    <RootNamespace>ViciOne.ServiceBus.Tests.Infrastructure</RootNamespace>
-  </PropertyGroup>
+  <!-- Shared, framework-neutral test infrastructure. It owns no test case and no verdict. -->
+
+  <ItemGroup>
+    <!-- The architecture project tests this internal infrastructure without making test-only
+         injection seams part of the reusable public surface. -->
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Architecture.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- Deliberately no xUnit, MTP or architecture-test adapter. -->

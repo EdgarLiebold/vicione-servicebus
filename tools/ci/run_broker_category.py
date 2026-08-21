@@ -38,7 +38,7 @@ from verification import run_scope  # noqa: E402
 
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
-# under artifacts/, which .gitignore covers; tools/ci/policy_validator.py rejects one under evidence/.
+# under artifacts/, which .gitignore covers; raw run output does not belong under evidence/.
 RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
 
 
@@ -100,7 +100,7 @@ def validate(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
 def build_parser() -> argparse.ArgumentParser:
     """The command line of this runner, as an object.
 
-    Separate from main so that tools/ci/policy_validator.py can reconstruct the argument vector a
+    Separate from main so callers can reconstruct the argument vector a
     workflow step really produces and parse it against this parser. Reading the workflow for expected
     substrings proved nothing about the command the shell would build from them.
     """

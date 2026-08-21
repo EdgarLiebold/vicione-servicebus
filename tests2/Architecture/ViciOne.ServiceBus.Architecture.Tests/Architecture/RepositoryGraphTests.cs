@@ -15,6 +15,8 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void EveryProductProject_StaysIndependentOfTheNativeTestTree()
     {
+        Assert.NotEmpty(RepositoryLayout.ProductProjects);
+
         var violations = RepositoryLayout.ProductProjects
             .SelectMany(project => ProjectReferences(project)
                 .Where(reference => RepositoryLayout.RelativeToRoot(reference)
@@ -29,6 +31,8 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void NativeTestProjects_DeclareNoLocalPackageVersion()
     {
+        Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
+
         var violations = RepositoryLayout.NativeTestProjects
             .SelectMany(project => XDocument.Load(project).Descendants("PackageReference")
                 .Where(reference =>
@@ -88,6 +92,9 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void EveryExecutableNativeTestProject_BelongsToExactlyOneProfile()
     {
+        Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
+        Assert.NotEmpty(RepositoryLayout.TestProfileSolutions);
+
         var memberships = RepositoryLayout.TestProfileSolutions
             .SelectMany(solution => SolutionProjects(solution)
                 .Select(project => (Project: Path.GetFullPath(project), Solution: Path.GetFileName(solution))))
@@ -125,6 +132,8 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void EngineeringSolution_ContainsEveryNativeTestProject()
     {
+        Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
+
         var engineering = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Engineering.slnx");
         var members = SolutionProjects(engineering)
             .Select(Path.GetFullPath)
@@ -141,7 +150,13 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void EverySolutionProjectPath_Exists()
     {
-        var missing = Directory.GetFiles(RepositoryLayout.Root, "*.slnx", SearchOption.TopDirectoryOnly)
+        var solutions = Directory.GetFiles(
+            RepositoryLayout.Root,
+            "*.slnx",
+            SearchOption.TopDirectoryOnly);
+        Assert.NotEmpty(solutions);
+
+        var missing = solutions
             .SelectMany(solution => SolutionProjects(solution)
                 .Where(project => !File.Exists(project))
                 .Select(project => $"{Path.GetFileName(solution)}:{RepositoryLayout.RelativeToRoot(project)}"))

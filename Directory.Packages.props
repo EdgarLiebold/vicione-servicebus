@@ -78,10 +78,11 @@
 
          GitHubActionsTestLogger is a VSTest logger and is forbidden in the native test tree, but the
          inherited NUnit/VSTest projects under tests/ still consume it. A GlobalPackageReference has
-         no per-project opt-out, so the item group itself is conditioned on the marker that only
-         tests2/Directory.Build.props sets. Item conditions evaluate after all properties, so the
-         marker is visible here (see the directory-build-organization skill, AP-21). Removing this
-         condition would silently pull a forbidden package into every tests2 project. -->
+         no per-project opt-out, so the item group itself is conditioned on the marker derived from
+         each repository-relative project path in Directory.Build.props. Item conditions evaluate
+         after all properties, so the marker is visible here (see the directory-build-organization
+         skill, AP-21). Removing this condition would silently pull a forbidden package into every
+         tests2 project. -->
     <GlobalPackageReference Include="GitHubActionsTestLogger" Version="3.0.5" />
   </ItemGroup>
 </Project>

@@ -173,7 +173,7 @@ def run_category(category: str, project: str, evidence_dir: Path) -> dict[str, o
     # The TRX is the raw output of one run: large, repetitive and reproducible by rerunning. It is
     # written under artifacts/, which .gitignore covers, so that it cannot accumulate in the tree the
     # way 434 MiB of it once did. What is kept beside the evidence is the record below, which names
-    # every counter the TRX carried. tools/ci/policy_validator.py rejects a raw artifact under evidence/.
+    # every counter the TRX carried. Raw artifacts belong under artifacts/, not evidence/.
     trx_path = run_root / f"{category}.trx"
     if trx_path.exists():
         trx_path.unlink()
@@ -310,7 +310,7 @@ def build_parser() -> argparse.ArgumentParser:
     """The command line of this runner, as an object, and a closed one.
 
     Closed in both directions: nothing is forwarded to dotnet test, and nothing unknown is accepted.
-    It is separate from main so that tools/ci/policy_validator.py can reconstruct the argument vector
+    It is separate from main so callers can verify the argument vector
     a workflow step really produces and parse it against exactly this parser.
     """
     parser = argparse.ArgumentParser(

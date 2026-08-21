@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1356 |
+| Added | 1350 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -23,6 +23,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.github/ISSUE_TEMPLATE/bug_report.yml` | Modified | `.github/ISSUE_TEMPLATE/bug_report.yml` |
 | `.github/ISSUE_TEMPLATE/config.yml` | Modified | `.github/ISSUE_TEMPLATE/config.yml` |
 | `.github/workflows/build.yml` | Modified | `.github/workflows/build.yml` |
+| `.github/workflows/native-tests.yml` | Added |  |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
 | `.testagent/plan.md` | Added |  |
@@ -6942,9 +6943,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/EvaluatedBuildGraphTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/RepositoryGraphTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/ResolvedPackageGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/RunnerConfigurationTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestConfigurationTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestTreeIsolationTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestingPlatformConfigurationTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/MsBuildEvaluation.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/RepositoryLayout.cs` | Added |  |
@@ -6958,8 +6959,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/testconfig.json` | Added |  |
 | `tests2/testsettings.json` | Added |  |
-| `tests2/xunit.runner.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |
@@ -6967,19 +6968,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/fixtures/broker_logs.py` | Added |  |
 | `tools/ci/fixtures/compose_fixture.py` | Added |  |
 | `tools/ci/fixtures/outage_protocol.py` | Added |  |
-| `tools/ci/policies/__init__.py` | Added |  |
-| `tools/ci/policies/fixtures.py` | Added |  |
-| `tools/ci/policies/model.py` | Added |  |
-| `tools/ci/policies/msbuild.py` | Added |  |
-| `tools/ci/policies/workflow.py` | Added |  |
-| `tools/ci/policy_validator.py` | Added |  |
 | `tools/ci/record_expected.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
 | `tools/ci/run_test_category.py` | Added |  |
 | `tools/ci/tests/__init__.py` | Added |  |
 | `tools/ci/tests/test_locked_restore.py` | Added |  |
 | `tools/ci/tests/test_module_names.py` | Added |  |
-| `tools/ci/tests/test_policy_validator.py` | Added |  |
 | `tools/ci/tests/test_record_expected.py` | Added |  |
 | `tools/ci/tests/test_run_broker_category.py` | Added |  |
 | `tools/ci/tests/test_run_test_category.py` | Added |  |

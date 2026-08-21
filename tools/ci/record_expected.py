@@ -159,7 +159,7 @@ def bind_to_model(model: dict, category: str, relative: str, count: int) -> None
     """The manifest and the floor are one statement, so they are written together.
 
     A floor that disagreed with the manifest it was recorded beside would be a second, weaker claim
-    about the same category, and the policy validator refuses that.
+    about the same category, so they are updated atomically.
     """
     for capability in model.get("capabilities", []):
         for run in capability.get("runs", []):
