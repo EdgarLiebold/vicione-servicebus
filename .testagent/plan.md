@@ -25,16 +25,13 @@ edited in the correction commit.
 
 ## 2. Execution-owner matrix
 
-44 cohorts, 3663 obligations, every executable target project in exactly one profile. Roles per
+41 cohorts, 3663 obligations, every executable target project in exactly one profile. Roles per
 cohort in section 3.
 
 | Cohort | Wave | Source owner | Inherited input | Target project | Profile | Obl. | Anchor |
 |---|---|---|---|---|---|---:|---|
 | `CO-ARCHITECTURE-TESTS` | F1 | `(repository-wide structure and graph rules)` | — (new work from gap analysis) | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests` | `UnitArchitecture` | 20 | none |
-| `CO-CORE-RUNTIME` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 518 | core |
-| `CO-CORE-CONTAINER` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 475 | core |
-| `CO-CORE-SAGA` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 406 | core, quartz |
-| `CO-CORE-SERIALIZATION` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 406 | core, entity-framework-core, quartz |
+| `CO-CORE` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 1805 | core, entity-framework-core, quartz |
 | `CO-RABBITMQTRANSPORT-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport` | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests` | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests` | `UnitArchitecture` | 125 | rabbitmq |
 | `CO-ANALYZERS-TESTS` | C1 | `src/ViciOne.ServiceBus.Analyzers`, `src/ViciOne.ServiceBus.Analyzers.CodeFixes`, `src/ViciOne.ServiceBus.Analyzers.Package` | `tests/ViciOne.ServiceBus.Analyzers.Tests` | `tests2/ViciOne.ServiceBus.Analyzers.Tests` | `UnitArchitecture` | 118 | analyzer |
 | `CO-ABSTRACTIONS-TESTS` | C1 | `src/ViciOne.ServiceBus.Abstractions` | `tests/ViciOne.ServiceBus.Abstractions.Tests`, `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Abstractions.Tests` | `UnitArchitecture` | 117 | abstractions, core |
@@ -91,45 +88,31 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/F1/CO-ARCHITECTURE-TESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
 - **Old-cohort deletion precondition**: every one of the 20 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ARCHITECTURE-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
 
-### `CO-CORE-RUNTIME`
+### `CO-CORE`
 
-- **Writer** `W-CORE-RUNTIME` — sole write access to `tests2/ViciOne.ServiceBus.Tests/**`; no other cohort writes there.
-- **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
-- **Reviewers** `RV-SEM-CORE-RUNTIME` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-CORE-RUNTIME` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
-- **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --minimum-expected-tests 518 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
-- **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-CORE-RUNTIME/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 518 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-CORE-RUNTIME` PASS; integrator confirms no source, solution, package or profile drift.
-
-### `CO-CORE-CONTAINER`
-
-- **Writer** `W-CORE-CONTAINER` — sole write access to `tests2/ViciOne.ServiceBus.Tests/**`; no other cohort writes there.
-- **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
-- **Reviewers** `RV-SEM-CORE-CONTAINER` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-CORE-CONTAINER` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
-- **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --minimum-expected-tests 475 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
-- **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-CORE-CONTAINER/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 475 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-CORE-CONTAINER` PASS; integrator confirms no source, solution, package or profile drift.
-
-### `CO-CORE-SAGA`
-
-- **Writer** `W-CORE-SAGA` — sole write access to `tests2/ViciOne.ServiceBus.Tests/**`; no other cohort writes there.
-- **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
-- **Reviewers** `RV-SEM-CORE-SAGA` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-CORE-SAGA` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
-- **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --minimum-expected-tests 406 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
-- **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-CORE-SAGA/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 406 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-CORE-SAGA` PASS; integrator confirms no source, solution, package or profile drift.
-
-### `CO-CORE-SERIALIZATION`
-
-- **Writer** `W-CORE-SERIALIZATION` — sole write access to `tests2/ViciOne.ServiceBus.Tests/**`; no other cohort writes there.
-- **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
-- **Reviewers** `RV-SEM-CORE-SERIALIZATION` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-CORE-SERIALIZATION` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
-- **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --minimum-expected-tests 406 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
-- **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-CORE-SERIALIZATION/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 406 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-CORE-SERIALIZATION` PASS; integrator confirms no source, solution, package or profile drift.
+- **Writer** `W-CORE` — sole write access to `tests2/ViciOne.ServiceBus.Tests/**`; no other cohort writes there. The four
+  census areas (saga and state machine; container, middleware, pipeline, initializers, configuration;
+  serialization, courier, message data, harness surface; observers, request/response, scheduling, job
+  service, batching) are **read-only analysis lanes** for specialist agents. Only `W-CORE` edits.
+- **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`,
+  `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`,
+  `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.gitattributes`,
+  `global.json`, `.testagent/**` and all evidence. Writers never touch these.
+- **Reviewers** `RV-SEM-CORE` (semantic loss and false green: every obligation against its ledger row
+  and its anchor identity) and `RV-STR-CORE` (structure, dependency direction, determinism, assertion
+  quality). Both read-only, both independent of the writer.
+- **Skills due before the first edit**: `code-testing-agent` as the mandatory entry, then
+  `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules
+  recorded in `SKILL_BINDING.md` before the cohort starts.
+- **Gate command**: `dotnet test --project tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --minimum-expected-tests 1805 --report-trx`
+  — **one unfiltered project gate over the complete 1805-obligation assembly projection**. Traits may
+  serve local diagnosis only; they never own completeness or release evidence, because a per-area
+  minimum count can be satisfied by tests from another area.
+- **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-CORE/` with command,
+  exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
+- **Old-cohort deletion precondition**: all 1805 obligations terminal; every named new test green in
+  `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-CORE` PASS; integrator
+  confirms no source, solution, package or profile drift.
 
 ### `CO-RABBITMQTRANSPORT-TESTS`
 
@@ -520,6 +503,26 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Gate command**: `dotnet test --project tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.ExternalTests/ViciOne.ServiceBus.RabbitMqTransport.ExternalTests.csproj --minimum-expected-tests 1 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.External.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C4a/CO-RABBITMQTRANSPORT-EXTERNALTESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
 - **Old-cohort deletion precondition**: every one of the 1 obligations terminal; all named new tests green in `External`; assertion and gap review without weakening; `RV-SEM-RABBITMQTRANSPORT-EXTERNALTESTS` PASS; integrator confirms no source, solution, package or profile drift.
+## 3b. Execution rules that bind every cohort
+
+These four are mandatory and are recorded here because a cohort may not start without them.
+
+1. **`dotnet-test:code-testing-agent` is the workflow entry.** It is invoked before every
+   test-writing cohort, ahead of any other skill and ahead of the first edit. This work package is
+   broad scope, so its full contract applies: `.testagent/research.md`, `plan.md` and `status.md`,
+   the requirement checklist quoted verbatim, and a final `Requirement | Evidence` table whose rows
+   cite exact test names from a run that exited 0.
+2. **Every analysis skill is paired with the applicable .NET extension guidance**, and both the
+   skill hash and the rules actually applied are recorded in `SKILL_BINDING.md` before the cohort's
+   first edit. A hash without applied rules is a binding, never a claim of compliance.
+3. **A new test project is registered in its exact profile solution immediately**, and
+   solution-level discovery is proven before the cohort may advance — a project that exists but is
+   not discovered contributes zero tests while looking complete, which is the failure the
+   minimum-count lock exists to catch.
+4. **Folders and namespaces inside a target project mirror the production structure** of its source
+   owner. The only exceptions are the explicitly named cross-cutting concerns: the architecture test
+   project and the test-infrastructure projects under `tests2/Testing/`.
+
 ## 4. Wave order
 
 Product Owner priority: everything locally provable is finished to A+ first; cloud follows.

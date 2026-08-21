@@ -4,20 +4,25 @@ Chronological. Superseded entries carry an explicit marker and a link to what re
 
 ## Current state
 
-**Wave R0 corrected under Lead directive `DIR-A0071-R0-CORRECTION-01`. Awaiting Lead approval before
-the first test edit.**
+**R0 converged under `DIR-A0071-R0-SECOND-REVIEW-02` and reslice `0008` (revision 0002). Awaiting
+Lead approval before the first test edit.**
 
-No C# test, product source, build implementation, old test file or `global.json` was created, changed,
-moved or deleted. The R0 evidence of the first checkpoint is **committed** at
-`0e58fa5c8fb4f15a2b812176130d76aa69ea1d4f`; this correction adds one further commit. The worktree is
-clean after each.
+No C# test or product implementation was created, changed or deleted. Two files entered the write
+scope through the reslice and are edited for the first time here: `.gitattributes` receives one
+exact-path whitespace exception for the immutable superseded list, and `global.json` receives the
+Microsoft Testing Platform selection beside its unchanged SDK pin.
 
-*(Superseded: the previous version of this file stated that the R0 evidence directory was untracked.
-That was written before the commit and never re-read afterwards. Replaced by the sentence above.)*
+The candidate is the convergence commit; the exchange record created after it binds its commit and
+tree. No file committed by that commit contains its own commit hash.
+
+Earlier intermediate commits are unaccepted history, not active truth: `0e58fa5c` (first checkpoint,
+not approved), `cf1f5bb4`, `caf3938f` and `d93d7757` (first correction round, not approved). The
+accepted evidence of those rounds keeps its bound bytes; the effective artefacts live under
+`R0-CONVERGENCE-02/`.
 
 | Wave | State |
 |---|---|
-| R0 research | complete and frozen; first checkpoint not approved, correction submitted |
+| R0 research | complete and frozen; converged after the second Lead review |
 | F1 foundation | blocked on the corrected approval |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
@@ -45,8 +50,8 @@ That was written before the commit and never re-read afterwards. Replaced by the
 
 ## Frozen obligation set
 
-3663 entries of obligation and variant, 0 duplicates: 2762 `UnitArchitecture`, 773
-`LocalIntegration`, 128 `External`, across 41 executable target projects, each in exactly one profile.
+3663 entries of obligation and variant, 0 duplicates, across **41 executable target projects in 41
+cohorts**, each project in exactly one profile and each with exactly one writer.
 
 **No disposition in R0 is terminal.** Every ledger row carries `dispositionState`, which is
 `PROPOSED` for semantic-ledger rows, `TOOLING_REGISTER` for the assurance promises of the removed
@@ -57,15 +62,17 @@ in the due profile, which cannot exist before F1.
 
 | # | Item | Owner | Blocks |
 |---|---|---|---|
-| B-1 | `global.json` write scope — the Lead adds it together with the approval | Lead | F1 and every profile run |
+| B-1 | *(closed by reslice 0008: `.gitattributes` and `global.json` are in the write scope, revision 0002)* | — | — |
 | B-2 | real cloud access | Product Owner | C4b, P1, G1 |
 
 ## Lead dispositions received
 
 All eleven technical questions of the first checkpoint were dispositioned in
-`DIR-A0071-R0-CORRECTION-01` section 6 and are applied; see
-`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`.
-No question of that set remains open and none is re-asked.
+`DIR-A0071-R0-CORRECTION-01` section 6 and are applied
+(`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review
+are applied in this convergence (`R0-CONVERGENCE-02/CONVERGENCE_EVIDENCE.md`). Question `0007` was
+answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. No question remains open and none is
+re-asked.
 
 ## Product Owner decisions taken
 
