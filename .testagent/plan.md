@@ -3,11 +3,14 @@
 Lead plan SHA-256 `6a4dd0237d574d264548d8a9d03c7a9d6f5ff6a11249354b58a8ff2d02e43776` — the sole target-architecture contract. This file is the team's execution
 plan only: ownership, sequence, commands, mappings, blockers. It changes no architecture.
 
-Current state: corrected under `DIR-A0071-R0-SECOND-REVIEW-02` and `DIR-A0071-R0-CONVERGENCE-03`,
-on Development Slice **revision 0002** bound by reslice `0008`. The effective evidence is
-`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/`. The earlier
-`R0-CORRECTION-01` and `R0-CONVERGENCE-02` directories are bound by exchange records and remain as
-historical evidence; they are not the effective result.
+Current state: corrected under `DIR-A0071-R0-CONVERGENCE-06`, on Development Slice **revision 0003**
+bound by reslice `0014`. The effective evidence is
+`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/`.
+
+*Historical, superseded: revision 0002 was bound by reslice `0008` under
+`DIR-A0071-R0-SECOND-REVIEW-02` and `DIR-A0071-R0-CONVERGENCE-03`; `R0-CORRECTION-01` and the
+convergence directories 02 to 05 are bound by exchange records and remain immutable historical
+evidence. They are not the effective result.*
 
 ## 1. Exact commands
 
@@ -23,7 +26,7 @@ Measured, not quoted — see `R0/MTP_COMMAND_FORM_PROBE.md`.
 | Crash / hang | `--blame-crash`, `--blame-hang-timeout` |
 
 MTP arguments pass **directly** — no `--` separator, no positional path. This needs the SDK 10 opt-in
-in `global.json`. Reslice `0008` put `global.json` in the write scope and it **already carries**
+in `global.json`. Reslice `0008` put `global.json` in the write scope (historical; revision 0003 keeps it) and it **already carries**
 `"test": { "runner": "Microsoft.Testing.Platform" }` beside its unchanged `10.0.302` SDK pin, so the
 prerequisite is met and needs no further change.
 
@@ -90,7 +93,7 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Skills due before the first edit**: `directory-build-organization`, `msbuild-antipatterns`, `binlog-generation`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
 - **Gate command**: `dotnet test --project tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj --minimum-expected-tests 21 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/F1/CO-ARCHITECTURE-TESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 20 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ARCHITECTURE-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
+- **Old-cohort deletion precondition**: every one of the 21 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ARCHITECTURE-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
 
 ### `CO-CORE`
 
@@ -216,7 +219,7 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
 - **Gate command**: `dotnet test --project tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj --minimum-expected-tests 55 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-ENTITYFRAMEWORKCOREINTEGRATION-TESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
-- **Old-cohort deletion precondition**: every one of the 52 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
+- **Old-cohort deletion precondition**: every one of the 55 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
 
 ### `CO-SIGNALR-TESTS`
 
@@ -561,7 +564,7 @@ cohort is removed under the precondition stated for it.
 |---|---|---|---|
 | B-2 | real cloud access | `C4b`, `P1`, `G1` wait by design | Product Owner |
 
-*(B-1, the `global.json` write scope, was closed by reslice `0008`; the opt-in is in the tree.)*
+*(Historical: blocker B-1, the `global.json` write scope, was closed by reslice `0008`; the opt-in is in the tree.)*
 
 ## 7. Requirement to evidence
 

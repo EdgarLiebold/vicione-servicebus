@@ -4,13 +4,14 @@ Chronological. Superseded entries carry an explicit marker and a link to what re
 
 ## Current state
 
-**R0 converged under reslice `0014` and `DIR-A0071-R0-CONVERGENCE-04`, on Development Slice revision 0002 bound by
-reslice `0008`. Awaiting Lead approval before the first test edit.**
+**R0 converged under reslice `0014` and `DIR-A0071-R0-CONVERGENCE-06`, on Development Slice revision
+0003. Awaiting Lead approval before the first test edit.**
 
 No C# test or product implementation was created, changed or deleted. Two files entered the write
-scope through the reslice and are edited for the first time here: `.gitattributes` receives one
-exact-path whitespace exception for the immutable superseded list, and `global.json` receives the
-Microsoft Testing Platform selection beside its unchanged SDK pin.
+scope through the reslice and are edited for the first time here: `.gitattributes` carries **two** exact-path whitespace exceptions, each for one immutable file bound
+by an exchange record and each with its own reason: `-blank-at-eol` for the superseded frozen list of
+`R0/`, and `-blank-at-eof` for the superseded proof table of `R0-CONVERGENCE-04/`. `global.json`
+carries the Microsoft Testing Platform selection beside its unchanged SDK pin.
 
 The candidate is the convergence commit; the exchange record created after it binds its commit and
 tree. No file committed by that commit contains its own commit hash.
@@ -18,7 +19,7 @@ tree. No file committed by that commit contains its own commit hash.
 Earlier intermediate commits are unaccepted history, not active truth: `0e58fa5c` (first checkpoint,
 not approved), `cf1f5bb4`, `caf3938f` and `d93d7757` (first correction round, not approved). The
 accepted evidence of those rounds keeps its bound bytes; the effective artefacts live under
-`R0-CONVERGENCE-05/`.
+`R0-CONVERGENCE-06/`.
 
 | Wave | State |
 |---|---|
@@ -62,7 +63,7 @@ in the due profile, which cannot exist before F1.
 
 | # | Item | Owner | Blocks |
 |---|---|---|---|
-| B-1 | *(closed by reslice 0008: `.gitattributes` and `global.json` are in the write scope, revision 0002)* | — | — |
+| B-1 | *(historical, closed by reslice `0008`; both paths remain in scope under revision 0003)* | — | — |
 | B-2 | real cloud access | Product Owner | C4b, P1, G1 |
 
 ## Lead dispositions received
@@ -70,12 +71,12 @@ in the due profile, which cannot exist before F1.
 All eleven technical questions of the first checkpoint were dispositioned in
 `DIR-A0071-R0-CORRECTION-01` section 6 and are applied
 (`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review and R0-C02-01 to R0-C03-02 of the third and
-fourth reviews are applied in `R0-CONVERGENCE-05/` (see its `CONVERGENCE_EVIDENCE.md` and
+fourth reviews are applied in `R0-CONVERGENCE-06/` (see its `CONVERGENCE_EVIDENCE.md` and
 `PROOF_MAPPING_TABLE.md`); the earlier convergence directories are bound historical evidence. Question `0007` was answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. Question `0013` was
 resolved by reslice `0014` with `OPT-B-DEFER-TO-C2`, which requires the missing behaviours to be
 recorded now as two dedicated obligations: `OBL-R0-BLD-0105` (the canonical assembly surfaces expose
 no removed fixed-database-name compatibility API, in the architecture project) and `OBL-R0-PER-0119`
-(the EF fixture database-name contract over its three fixture variants, planned for C2 and
+(the EF fixture database-name contract over its three fixture variants, due in C1 with the existing EF Unit cohort and
 non-terminal). No question remains open.
 
 ## Product Owner decisions taken
