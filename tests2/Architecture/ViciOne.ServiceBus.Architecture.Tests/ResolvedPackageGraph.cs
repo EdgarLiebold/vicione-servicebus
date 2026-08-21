@@ -45,48 +45,24 @@ internal static class ResolvedPackageGraph
             .ToArray();
     }
 
-    /// <summary>
-    /// Canonical NuGet identities that may never appear in the native test tree.
-    /// </summary>
-    /// <remarks>
-    /// Every entry is the exact package id as published, because a shortened or invented identity
-    /// can never match anything and would make the check look effective while proving nothing.
-    /// <para>
-    /// The list bans the VSTest, NUnit and MSTest adapters and the VSTest bridge, and deliberately
-    /// does not ban <c>Microsoft.Testing.Platform</c> or the other <c>Microsoft.Testing.*</c>
-    /// packages: those are what Microsoft Testing Platform v2 is made of, and this tree requires
-    /// them. What is forbidden is a second executor or a bridge back to VSTest, not the platform
-    /// itself.
-    /// </para>
-    /// <para>
-    /// That these names are the real published ids is not asserted here - a test cannot prove the
-    /// contents of nuget.org offline, and a test that claimed to would be asserting its own
-    /// constant list. The sabotage evidence installs the genuine TngTech.ArchUnitNET.xUnit package
-    /// and shows it is rejected; the rejection is raised by the build-level check VOSBT006, which
-    /// sees the declaration first. This closure check is the second, independent layer: it covers
-    /// the arrival the declaration cannot see, namely a forbidden package pulled in transitively by
-    /// someone else's dependency.
-    /// </para>
-    /// </remarks>
-    internal static IReadOnlyList<string> ForbiddenIdentities =>
-    [
-        "GitHubActionsTestLogger",
-        "Microsoft.NET.Test.Sdk",
-        "Microsoft.Testing.Extensions.VSTestBridge",
-        "Microsoft.TestPlatform.ObjectModel",
-        "Microsoft.TestPlatform.TestHost",
-        "MSTest",
-        "MSTest.TestAdapter",
-        "MSTest.TestFramework",
-        "NUnit",
-        "NUnit.Analyzers",
-        "NUnit3TestAdapter",
-        "NUnitLite",
-        "xunit.runner.visualstudio",
-    ];
+    /// <summary>Reads the one effective MSBuild package-policy source for the native test tree.</summary>
+    internal static IReadOnlyList<string> ForbiddenIdentitiesOf(string projectPath) =>
+        MsBuildEvaluation.ItemIdentities(projectPath, "ViciOneForbiddenNativeTestPackage")
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(identity => identity, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
     /// <summary>Returns whether a resolved identity introduces a forbidden test verdict path.</summary>
-    internal static bool IsForbidden(string packageIdentity) =>
-        ForbiddenIdentities.Contains(packageIdentity, StringComparer.OrdinalIgnoreCase) ||
-        packageIdentity.StartsWith("TngTech.ArchUnitNET.", StringComparison.OrdinalIgnoreCase);
+    internal static bool IsForbidden(string packageIdentity, IReadOnlyCollection<string> forbiddenIdentities) =>
+        forbiddenIdentities.Contains(packageIdentity, StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Returns whether a package belongs only to testing and may never enter product.</summary>
+    internal static bool IsTestDependency(string packageIdentity) =>
+        packageIdentity.StartsWith("xunit", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("nunit", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("MSTest", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("Microsoft.TestPlatform", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("TngTech.ArchUnitNET", StringComparison.OrdinalIgnoreCase) ||
+        packageIdentity.Equals("GitHubActionsTestLogger", StringComparison.OrdinalIgnoreCase);
 }

@@ -22,12 +22,6 @@
           "Apache.NMS": "2.2.0"
         }
       },
-      "GitHubActionsTestLogger": {
-        "type": "Direct",
-        "requested": "[3.0.5, )",
-        "resolved": "3.0.5",
-        "contentHash": "LM5IKPSylMYp42YC9bnL+JNUnQUS2y9TgoFLjnqeXLpDvqeyiTVc9fSh6m1KzhgLCKLGtUkpZxk9xI9/PHFaiw=="
-      },
       "AMQPNetLite.Core": {
         "type": "Transitive",
         "resolved": "2.4.3",

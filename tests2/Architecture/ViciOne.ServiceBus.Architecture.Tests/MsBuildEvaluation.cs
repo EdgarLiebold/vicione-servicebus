@@ -27,7 +27,8 @@ internal static class MsBuildEvaluation
     private const string Properties =
         "TargetFramework;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;LangVersion;ArtifactsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;UserSecretsId";
 
-    private const string Items = "PackageReference;ProjectReference;Content";
+    private const string Items =
+        "PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
 
     /// <summary>Evaluates a project once and returns the parsed MSBuild output.</summary>
     internal static JsonElement Evaluate(string projectPath)

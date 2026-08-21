@@ -34,4 +34,28 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <!-- One exact package-policy source for both the effective MSBuild gate and the resolved-closure
+       architecture tests. These are second verdict paths, framework adapters or VSTest artifacts;
+       Microsoft Testing Platform itself and the framework-neutral ArchUnitNET core are required. -->
+  <ItemGroup>
+    <ViciOneForbiddenNativeTestPackage Include="GitHubActionsTestLogger" />
+    <ViciOneForbiddenNativeTestPackage Include="Microsoft.NET.Test.Sdk" />
+    <ViciOneForbiddenNativeTestPackage Include="Microsoft.Testing.Extensions.VSTestBridge" />
+    <ViciOneForbiddenNativeTestPackage Include="Microsoft.TestPlatform.ObjectModel" />
+    <ViciOneForbiddenNativeTestPackage Include="Microsoft.TestPlatform.TestHost" />
+    <ViciOneForbiddenNativeTestPackage Include="MSTest" />
+    <ViciOneForbiddenNativeTestPackage Include="MSTest.TestAdapter" />
+    <ViciOneForbiddenNativeTestPackage Include="MSTest.TestFramework" />
+    <ViciOneForbiddenNativeTestPackage Include="NUnit" />
+    <ViciOneForbiddenNativeTestPackage Include="NUnit3TestAdapter" />
+    <ViciOneForbiddenNativeTestPackage Include="NUnit.Analyzers" />
+    <ViciOneForbiddenNativeTestPackage Include="NUnitLite" />
+    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.xUnit" />
+    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.xUnitV3" />
+    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.NUnit" />
+    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.MSTestV2" />
+    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.TUnit" />
+    <ViciOneForbiddenNativeTestPackage Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
 </Project>

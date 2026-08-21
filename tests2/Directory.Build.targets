@@ -90,24 +90,7 @@
   <Target Name="AssertNativeTestTreeDeclaresNoForbiddenPackage" BeforeTargets="BeforeBuild">
     <ItemGroup>
       <_ViciOneForbiddenDirectPackage Include="@(PackageReference)"
-                                      Condition=" '%(Identity)' == 'Microsoft.NET.Test.Sdk'
-                                               OR '%(Identity)' == 'Microsoft.Testing.Extensions.VSTestBridge'
-                                               OR '%(Identity)' == 'Microsoft.TestPlatform.ObjectModel'
-                                               OR '%(Identity)' == 'Microsoft.TestPlatform.TestHost'
-                                               OR '%(Identity)' == 'MSTest'
-                                               OR '%(Identity)' == 'MSTest.TestAdapter'
-                                               OR '%(Identity)' == 'MSTest.TestFramework'
-                                               OR '%(Identity)' == 'NUnit'
-                                               OR '%(Identity)' == 'NUnit3TestAdapter'
-                                               OR '%(Identity)' == 'NUnit.Analyzers'
-                                               OR '%(Identity)' == 'NUnitLite'
-                                               OR '%(Identity)' == 'GitHubActionsTestLogger'
-                                               OR '%(Identity)' == 'TngTech.ArchUnitNET.xUnit'
-                                               OR '%(Identity)' == 'TngTech.ArchUnitNET.xUnitV3'
-                                               OR '%(Identity)' == 'TngTech.ArchUnitNET.NUnit'
-                                               OR '%(Identity)' == 'TngTech.ArchUnitNET.MSTestV2'
-                                               OR '%(Identity)' == 'TngTech.ArchUnitNET.TUnit'
-                                               OR '%(Identity)' == 'xunit.runner.visualstudio' " />
+                                      Condition="$([System.String]::Copy(';@(ViciOneForbiddenNativeTestPackage);').Contains(';%(PackageReference.Identity);'))" />
     </ItemGroup>
     <Error Code="VOSBT006"
            Text="$(MSBuildProjectName) directly or globally references forbidden test packages: @(_ViciOneForbiddenDirectPackage, ', '). The native test tree has one verdict path - Microsoft Testing Platform executes and owns the exit code, xUnit owns discovery and individual results."

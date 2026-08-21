@@ -29,6 +29,30 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
+    public void EveryRepositoryProject_HasARestoreGraphBesideIt()
+    {
+        var projects = Directory.GetFiles(
+            RepositoryLayout.Root,
+            "*.csproj",
+            SearchOption.AllDirectories)
+            .Where(project => !RepositoryLayout.RelativeToRoot(project)
+                .StartsWith("artifacts/", StringComparison.Ordinal))
+            .ToArray();
+
+        Assert.NotEmpty(projects);
+
+        var missing = projects
+            .Where(project => !File.Exists(Path.Combine(
+                Path.GetDirectoryName(project)
+                    ?? throw new InvalidOperationException($"No directory for {project}."),
+                "packages.lock.json")))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .ToArray();
+
+        Assert.Empty(missing);
+    }
+
+    [Fact]
     public void NativeTestProjects_DeclareNoLocalPackageVersion()
     {
         Assert.NotEmpty(RepositoryLayout.NativeTestProjects);

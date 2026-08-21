@@ -123,8 +123,8 @@ public sealed class EvaluatedBuildGraphTests
     [Fact]
     public void BothProjects_AreMarkedAsPartOfTheNativeTestTree()
     {
-        // The marker is what keeps the repository-wide GitHubActionsTestLogger
-        // GlobalPackageReference out of this tree.
+        // The marker selects test-only package versions without allowing a project to classify
+        // itself. Test runners and loggers are never injected globally.
         foreach (var project in new[] { TestProject, SupportLibrary })
         {
             Assert.Equal("true", MsBuildEvaluation.PropertyOf(project, "ViciOneNativeTestTree"));
@@ -132,16 +132,18 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void ProductProjects_CannotEnterTheNativeTestTreeOrReferenceItsEntryPackage()
+    public void ProductProjects_CannotEnterTheNativeTestTreeOrDeclareAnyTestDependency()
     {
         Assert.NotEmpty(RepositoryLayout.ProductProjects);
 
         foreach (var project in RepositoryLayout.ProductProjects)
         {
             Assert.Equal("false", MsBuildEvaluation.PropertyOf(project, "ViciOneNativeTestTree"));
-            Assert.DoesNotContain(
-                "xunit.v3.mtp-v2",
-                MsBuildEvaluation.ItemIdentities(project, "PackageReference"));
+            var testDependencies = MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+                .Where(ResolvedPackageGraph.IsTestDependency)
+                .ToArray();
+
+            Assert.Empty(testDependencies);
         }
     }
 

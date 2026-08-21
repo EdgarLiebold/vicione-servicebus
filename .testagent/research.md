@@ -17,7 +17,8 @@ independent review.
 ## Platform decisions
 
 - Executable native test projects reference exactly `xunit.v3.mtp-v2` `4.0.0` as their entry
-  package. MTP owns discovery and the process verdict; xUnit owns cases and assertions.
+  package. MTP owns execution and the process verdict; xUnit owns discovery, cases, individual
+  results, and assertions.
 - Architecture rules use `TngTech.ArchUnitNET` core `0.13.4` through ordinary xUnit assertions.
   Every ArchUnitNET framework adapter is forbidden.
 - Shared support code is non-executable, non-packable, and framework-neutral under the distinct

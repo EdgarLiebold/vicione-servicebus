@@ -45,7 +45,7 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 84
+  -c Release --no-build --no-restore --minimum-expected-tests 86
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -54,7 +54,7 @@ executable test project sets `UseMicrosoftTestingPlatformRunner=true` and refere
 `xunit.v3.mtp-v2`; NUnit, VSTest, test loggers, and ArchUnitNET framework adapters are forbidden in
 the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
 The minimum count is a lower bound for the accepted F1a foundation: adding tests does not require an
-update, but silently losing one of its 84 cases makes CI fail.
+update, but silently losing one of its 86 cases makes CI fail.
 
 The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:

@@ -49,6 +49,16 @@
            Condition=" '$(RestoreLockedMode)' != 'true' AND '$(RestoreLockedModeFromCommandLine)' != 'true' " />
   </Target>
 
+  <!-- Build must consume a physical lock file already materialized by the explicit restore step.
+       Restore remains able to create a lock for a new project; a build cannot silently proceed
+       without the tracked graph that reviewers and CI inspect. -->
+  <Target Name="AssertProjectLockFileExists"
+          BeforeTargets="BeforeBuild">
+    <Error Code="VOSB0011"
+           Text="$(ViciOneProjectIdentity) has no packages.lock.json beside its project file. Restore explicitly, review the generated graph, and track the lock file before building."
+           Condition=" !Exists('$(MSBuildProjectDirectory)/packages.lock.json') " />
+  </Target>
+
   <!-- 2. A packable project carries the licence evidence Apache 2.0 section 4(b) asks for.
 
        The readme is added centrally in src/Directory.Build.props. A project that unsets PackageId or

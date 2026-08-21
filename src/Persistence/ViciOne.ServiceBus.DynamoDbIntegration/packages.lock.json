@@ -11,12 +11,6 @@
           "AWSSDK.Core": "[4.0.3.28, 5.0.0)"
         }
       },
-      "GitHubActionsTestLogger": {
-        "type": "Direct",
-        "requested": "[3.0.5, )",
-        "resolved": "3.0.5",
-        "contentHash": "LM5IKPSylMYp42YC9bnL+JNUnQUS2y9TgoFLjnqeXLpDvqeyiTVc9fSh6m1KzhgLCKLGtUkpZxk9xI9/PHFaiw=="
-      },
       "AWSSDK.Core": {
         "type": "Transitive",
         "resolved": "4.0.3.28",

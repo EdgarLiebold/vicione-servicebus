@@ -11,12 +11,6 @@
           "Azure.Core": "1.44.1"
         }
       },
-      "GitHubActionsTestLogger": {
-        "type": "Direct",
-        "requested": "[3.0.5, )",
-        "resolved": "3.0.5",
-        "contentHash": "LM5IKPSylMYp42YC9bnL+JNUnQUS2y9TgoFLjnqeXLpDvqeyiTVc9fSh6m1KzhgLCKLGtUkpZxk9xI9/PHFaiw=="
-      },
       "Azure.Core": {
         "type": "Transitive",
         "resolved": "1.44.1",

@@ -48,8 +48,14 @@ internal static class RepositoryLayout
     internal static string CanonicalTestingPlatformConfiguration => Path.Combine(
         Root, "tests2", "testconfig.json");
 
-    /// <summary>Every product project in the current source tree, derived from the filesystem.</summary>
-    internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src");
+    /// <summary>
+    /// Every shipped product project, derived from the source tree. The inherited test framework
+    /// temporarily remains under <c>src</c> only as migration input and is never classified as
+    /// product.
+    /// </summary>
+    internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src")
+        .Where(project => !PathComparer.Equals(project, InheritedTestFrameworkProject))
+        .ToArray();
 
     /// <summary>Every native-test project in the current replacement tree.</summary>
     internal static IReadOnlyList<string> NativeTestProjects => EnumerateProjects("tests2");

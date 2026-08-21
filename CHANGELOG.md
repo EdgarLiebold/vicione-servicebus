@@ -40,8 +40,8 @@ entry below records what the current work changed for anyone reading the source.
   produced a successful build followed by a zero-test MTP run.
 - Native xUnit executables set `UseMicrosoftTestingPlatformRunner=true`; the hybrid in-process entry
   point is not supported. The MTP-only `testconfig.json` replaces `xunit.runner.json`, fails skips and
-  warnings, and CI rejects discovery below the accepted 84-case F1a foundation.
-- `Directory.Build.targets` carries the late half of the build contract: ten errors that refuse a
+  warnings, and CI rejects discovery below the accepted 86-case F1a foundation.
+- `Directory.Build.targets` carries the late half of the build contract: eleven errors that refuse a
   project which drops its lock file or locked mode, packs without its licence or notice, targets a
   framework this product does not support, or reaches for `netstandard2.0` while being neither a
   Roslyn component nor the analyzer package project whose framework group decides which consumers may

@@ -20,9 +20,10 @@ public sealed class ResolvedPackageGraphTests
     public void ExecutableTestProject_ResolvesNoForbiddenPackage()
     {
         var resolved = ResolvedPackageGraph.PackagesOf(TestProject);
+        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(TestProject);
 
         var forbidden = resolved
-            .Where(ResolvedPackageGraph.IsForbidden)
+            .Where(package => ResolvedPackageGraph.IsForbidden(package, forbiddenIdentities))
             .ToArray();
 
         Assert.Empty(forbidden);
@@ -32,9 +33,10 @@ public sealed class ResolvedPackageGraphTests
     public void SupportLibrary_ResolvesNoForbiddenPackage()
     {
         var resolved = ResolvedPackageGraph.PackagesOf(SupportLibrary);
+        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(SupportLibrary);
 
         var forbidden = resolved
-            .Where(ResolvedPackageGraph.IsForbidden)
+            .Where(package => ResolvedPackageGraph.IsForbidden(package, forbiddenIdentities))
             .ToArray();
 
         Assert.Empty(forbidden);
@@ -76,8 +78,10 @@ public sealed class ResolvedPackageGraphTests
         // The policy has to separate two things that look alike. Microsoft.Testing.* is the platform
         // this tree runs on and must stay resolvable; the VSTest bridge is a second executor and
         // must not. Banning the prefix would break the tree, banning nothing would let the bridge in.
-        Assert.Contains("Microsoft.Testing.Extensions.VSTestBridge", ResolvedPackageGraph.ForbiddenIdentities);
-        Assert.DoesNotContain("Microsoft.Testing.Platform", ResolvedPackageGraph.ForbiddenIdentities);
+        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(TestProject);
+
+        Assert.Contains("Microsoft.Testing.Extensions.VSTestBridge", forbiddenIdentities);
+        Assert.DoesNotContain("Microsoft.Testing.Platform", forbiddenIdentities);
 
         var resolved = ResolvedPackageGraph.PackagesOf(TestProject);
 
@@ -91,9 +95,27 @@ public sealed class ResolvedPackageGraphTests
     [InlineData("TngTech.ArchUnitNET.MSTestV2")]
     [InlineData("TngTech.ArchUnitNET.TUnit")]
     public void ExclusionPolicy_BansEveryArchUnitFrameworkAdapter(string identity) =>
-        Assert.True(ResolvedPackageGraph.IsForbidden(identity));
+        Assert.True(ResolvedPackageGraph.IsForbidden(
+            identity,
+            ResolvedPackageGraph.ForbiddenIdentitiesOf(TestProject)));
 
     [Fact]
     public void ExclusionPolicy_AllowsOnlyTheArchUnitCore() =>
-        Assert.False(ResolvedPackageGraph.IsForbidden("TngTech.ArchUnitNET"));
+        Assert.False(ResolvedPackageGraph.IsForbidden(
+            "TngTech.ArchUnitNET",
+            ResolvedPackageGraph.ForbiddenIdentitiesOf(TestProject)));
+
+    [Fact]
+    public void ProductProjects_ResolveNoTestDependency()
+    {
+        Assert.NotEmpty(RepositoryLayout.ProductProjects);
+
+        var violations = RepositoryLayout.ProductProjects
+            .SelectMany(project => ResolvedPackageGraph.PackagesOf(project)
+                .Where(ResolvedPackageGraph.IsTestDependency)
+                .Select(package => $"{RepositoryLayout.RelativeToRoot(project)}: {package}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
 }

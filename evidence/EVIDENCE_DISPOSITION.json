@@ -35,7 +35,7 @@
     "tools/ci/run_test_category.py writes the TRX to artifacts/run-output and only the category record to the evidence directory.",
     "tools/ci/run_broker_category.py writes the collected broker log to artifacts/run-output.",
     "/artifacts/ is ignored by .gitignore, and *.trx and evidence/**/*.log are ignored as a second line.",
-    "check_no_raw_run_artifacts_in_evidence in tools/ci/policy_validator.py fails the run when a TRX or a log reaches evidence/. Three cases in tools/ci/test_policy_validator.py hold it, one of which proves the rule leaves the category summary alone.",
+    "The discarded Python policy validator is no longer an active gate. Ignore rules keep raw local run output out of normal commits; review of the staged Git change remains authoritative.",
     ".github/workflows/build.yml uploads artifacts/run-output beside each category record, so a failed CI run still hands out its raw output without the repository carrying it."
   ],
   "notDecidedHere": "Where raw artifacts are archived outside this repository, and for how long, is an infrastructure decision rather than a repository one. Nothing in this repository depends on an answer, because every removed file is still readable in git history."

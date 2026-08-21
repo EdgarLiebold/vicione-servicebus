@@ -73,16 +73,7 @@
     <!-- The only test-entry package in the native test tree. -->
     <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(ViciOneNativeTestTree)' != 'true' ">
-    <!-- SourceLink is not referenced: the .NET SDK provides it.
-
-         GitHubActionsTestLogger is a VSTest logger and is forbidden in the native test tree, but the
-         inherited NUnit/VSTest projects under tests/ still consume it. A GlobalPackageReference has
-         no per-project opt-out, so the item group itself is conditioned on the marker derived from
-         each repository-relative project path in Directory.Build.props. Item conditions evaluate
-         after all properties, so the marker is visible here (see the directory-build-organization
-         skill, AP-21). Removing this condition would silently pull a forbidden package into every
-         tests2 project. -->
-    <GlobalPackageReference Include="GitHubActionsTestLogger" Version="3.0.5" />
-  </ItemGroup>
+  <!-- SourceLink is not referenced: the .NET SDK provides it. Test runners and test loggers are
+       likewise never injected globally; doing so would contaminate product restore and publish
+       graphs. Executable test projects own their one test entry explicitly. -->
 </Project>
