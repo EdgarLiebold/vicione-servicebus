@@ -1,3 +1,6 @@
+using System.Text;
+using System.Text.Json.Nodes;
+using Microsoft.Extensions.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using Xunit;
 
@@ -15,11 +18,33 @@ public sealed class TestConfigurationTests
     public void CheckedInDefaults_AreBoundOntoTypedOptions()
     {
         var options = ProviderWith().GetOptions();
+        var localInfrastructure = Assert.IsType<LocalInfrastructureOptions>(options.LocalInfrastructure);
 
         Assert.Equal(TestProfile.UnitArchitecture, options.Profile);
         Assert.Equal(TimeSpan.FromSeconds(30), options.OperationTimeout);
-        Assert.Equal("localhost", options.LocalInfrastructure.RabbitMqHost);
-        Assert.Equal(5672, options.LocalInfrastructure.RabbitMqPort);
+        Assert.Equal("localhost", localInfrastructure.RabbitMqHost);
+        Assert.Equal(5672, localInfrastructure.RabbitMqPort);
+    }
+
+    [Theory]
+    [InlineData("Profile", "Profile")]
+    [InlineData("OperationTimeout", "OperationTimeout")]
+    [InlineData("LocalInfrastructure", "LocalInfrastructure")]
+    public void MissingRequiredCheckedInSetting_IsRejected(
+        string setting,
+        string expectedError)
+    {
+        var source = Path.Combine(RepositoryLayout.Root, "tests2", "testsettings.json");
+        var document = JsonNode.Parse(File.ReadAllText(source))?.AsObject()
+            ?? throw new InvalidOperationException($"Could not parse {source}.");
+
+        Assert.True(document.Remove(setting), $"expected {setting} in {source}");
+
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(document.ToJsonString()));
+        var configuration = new ConfigurationBuilder().AddJsonStream(stream).Build();
+        var options = TestConfigurationProvider.Bind(configuration);
+
+        Assert.Contains(expectedError, options.ValidateFor());
     }
 
     [Fact]
@@ -36,10 +61,11 @@ public sealed class TestConfigurationTests
         var options = ProviderWith(
             ("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "broker.internal"),
             ("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "5673")).GetOptions();
+        var localInfrastructure = Assert.IsType<LocalInfrastructureOptions>(options.LocalInfrastructure);
 
-        Assert.Equal("broker.internal", options.LocalInfrastructure.RabbitMqHost);
-        Assert.Equal(5673, options.LocalInfrastructure.RabbitMqPort);
-        Assert.Equal("localhost", options.LocalInfrastructure.PostgreSqlHost);
+        Assert.Equal("broker.internal", localInfrastructure.RabbitMqHost);
+        Assert.Equal(5673, localInfrastructure.RabbitMqPort);
+        Assert.Equal("localhost", localInfrastructure.PostgreSqlHost);
     }
 
     [Fact]
@@ -163,7 +189,9 @@ public sealed class TestConfigurationTests
     [InlineData(ExternalProvider.Aws)]
     public void ExternalProfile_RejectsEmulatorMode(ExternalProvider provider)
     {
-        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "External"),
+            ($"VICIONE_TESTS__ExternalProviders__{provider}__Mode", "Emulator")).GetOptions();
 
         var errors = options.ValidateFor(provider);
 
@@ -173,8 +201,10 @@ public sealed class TestConfigurationTests
     [Fact]
     public void ExternalProfile_RejectsANullSelectedProviderGroup()
     {
-        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
-        options.ExternalProviders.Azure = null!;
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "External"),
+            ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Emulator")).GetOptions();
+        options.ExternalProviders!.Azure = null;
 
         Assert.Contains("ExternalProviders:Azure", options.ValidateFor(ExternalProvider.Azure));
     }

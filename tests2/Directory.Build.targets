@@ -7,6 +7,22 @@
        carries no Exists() guard for the same reason: a required import must fail loudly. -->
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
 
+  <!-- One exact package-policy source for both the effective MSBuild gate and the resolved-closure
+       architecture tests. It lives in targets, after every project body, so a project cannot erase
+       or replace the policy after importing Directory.Build.props. Package identities are compared
+       case-insensitively because NuGet identities are case-insensitive. -->
+  <PropertyGroup>
+    <_ViciOneCanonicalForbiddenNativeTestPackageIds>GitHubActionsTestLogger;Microsoft.NET.Test.Sdk;Microsoft.Testing.Extensions.VSTestBridge;Microsoft.TestPlatform.ObjectModel;Microsoft.TestPlatform.TestHost;MSTest;MSTest.TestAdapter;MSTest.TestFramework;NUnit;NUnit3TestAdapter;NUnit.Analyzers;NUnitLite;TngTech.ArchUnitNET.xUnit;TngTech.ArchUnitNET.xUnitV3;TngTech.ArchUnitNET.NUnit;TngTech.ArchUnitNET.MSTestV2;TngTech.ArchUnitNET.TUnit;xunit.runner.visualstudio</_ViciOneCanonicalForbiddenNativeTestPackageIds>
+    <_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower>$([System.String]::Copy(';$(_ViciOneCanonicalForbiddenNativeTestPackageIds);').ToLowerInvariant())</_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower>
+  </PropertyGroup>
+
+  <!-- Remove any same-named project items before materializing the canonical set. C# reads these
+       evaluated items, while VOSBT006 consumes the same private canonical property directly. -->
+  <ItemGroup>
+    <ViciOneForbiddenNativeTestPackage Remove="@(ViciOneForbiddenNativeTestPackage)" />
+    <ViciOneForbiddenNativeTestPackage Include="$(_ViciOneCanonicalForbiddenNativeTestPackageIds)" />
+  </ItemGroup>
+
   <!-- What makes a project an executable test project is not a marker anyone can delete, it is the
        direct reference to the single test entry package: that reference is what produces the
        Microsoft Testing Platform entry point. Classifying on the reference means a project cannot
@@ -90,7 +106,7 @@
   <Target Name="AssertNativeTestTreeDeclaresNoForbiddenPackage" BeforeTargets="BeforeBuild">
     <ItemGroup>
       <_ViciOneForbiddenDirectPackage Include="@(PackageReference)"
-                                      Condition="$([System.String]::Copy(';$(ViciOneForbiddenNativeTestPackageIds);').Contains(';%(PackageReference.Identity);'))" />
+                                      Condition="$([System.String]::Copy('$(_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower)').Contains($([System.String]::Copy(';%(PackageReference.Identity);').ToLowerInvariant())))" />
     </ItemGroup>
     <Error Code="VOSBT006"
            Text="$(MSBuildProjectName) directly or globally references forbidden test packages: @(_ViciOneForbiddenDirectPackage, ', '). The native test tree has one verdict path - Microsoft Testing Platform executes and owns the exit code, xUnit owns discovery and individual results."

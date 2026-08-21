@@ -75,9 +75,15 @@ public sealed class TestConfigurationProvider
             .GetCustomAttribute<UserSecretsIdAttribute>()?.UserSecretsId;
 
     public ViciOneTestOptions GetOptions()
+        => Bind(_configuration);
+
+    /// <summary>Binds one configuration graph without adding a second source pipeline.</summary>
+    internal static ViciOneTestOptions Bind(IConfiguration configuration)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         var options = new ViciOneTestOptions();
-        _configuration.Bind(options);
+        configuration.Bind(options);
         return options;
     }
 

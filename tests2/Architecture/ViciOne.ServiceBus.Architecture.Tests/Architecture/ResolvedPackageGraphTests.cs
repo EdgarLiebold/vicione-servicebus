@@ -16,24 +16,28 @@ public sealed class ResolvedPackageGraphTests
     private static readonly string TestProject = RepositoryLayout.ArchitectureTestProject;
     private static readonly string SupportLibrary = RepositoryLayout.TestingSupportProject;
 
-    [Fact]
-    public void ExecutableTestProject_ResolvesNoForbiddenPackage()
+    public static TheoryData<string> NativeTestProjects
     {
-        var resolved = ResolvedPackageGraph.PackagesOf(TestProject);
-        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(TestProject);
+        get
+        {
+            var projects = new TheoryData<string>();
 
-        var forbidden = resolved
-            .Where(package => ResolvedPackageGraph.IsForbidden(package, forbiddenIdentities))
-            .ToArray();
+            foreach (var project in RepositoryLayout.NativeTestProjects)
+            {
+                projects.Add(RepositoryLayout.RelativeToRoot(project));
+            }
 
-        Assert.Empty(forbidden);
+            return projects;
+        }
     }
 
-    [Fact]
-    public void SupportLibrary_ResolvesNoForbiddenPackage()
+    [Theory]
+    [MemberData(nameof(NativeTestProjects))]
+    public void EveryNativeTestProject_ResolvesNoForbiddenPackage(string relativeProjectPath)
     {
-        var resolved = ResolvedPackageGraph.PackagesOf(SupportLibrary);
-        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(SupportLibrary);
+        var project = Path.Combine(RepositoryLayout.Root, relativeProjectPath);
+        var resolved = ResolvedPackageGraph.PackagesOf(project);
+        var forbiddenIdentities = ResolvedPackageGraph.ForbiddenIdentitiesOf(project);
 
         var forbidden = resolved
             .Where(package => ResolvedPackageGraph.IsForbidden(package, forbiddenIdentities))
