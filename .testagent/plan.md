@@ -29,12 +29,12 @@ prerequisite is met and needs no further change.
 
 ## 2. Execution-owner matrix
 
-41 cohorts, 3663 obligations, every executable target project in exactly one profile. Roles per
+41 cohorts, 3667 obligations, every executable target project in exactly one profile. Roles per
 cohort in section 3.
 
 | Cohort | Wave | Source owner | Inherited input | Target project | Profile | Obl. | Anchor |
 |---|---|---|---|---|---|---:|---|
-| `CO-ARCHITECTURE-TESTS` | F1 | `(repository-wide structure and graph rules)` | — (new work from gap analysis) | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests` | `UnitArchitecture` | 20 | none |
+| `CO-ARCHITECTURE-TESTS` | F1 | `(repository-wide structure and graph rules)` | — (new work from gap analysis) | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests` | `UnitArchitecture` | 21 | none |
 | `CO-CORE` | C1 | `src/ViciOne.ServiceBus` | `tests/ViciOne.ServiceBus.Tests` | `tests2/ViciOne.ServiceBus.Tests` | `UnitArchitecture` | 1805 | core, entity-framework-core, quartz |
 | `CO-RABBITMQTRANSPORT-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport` | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests` | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests` | `UnitArchitecture` | 125 | rabbitmq |
 | `CO-ANALYZERS-TESTS` | C1 | `src/ViciOne.ServiceBus.Analyzers`, `src/ViciOne.ServiceBus.Analyzers.CodeFixes`, `src/ViciOne.ServiceBus.Analyzers.Package` | `tests/ViciOne.ServiceBus.Analyzers.Tests` | `tests2/ViciOne.ServiceBus.Analyzers.Tests` | `UnitArchitecture` | 118 | analyzer |
@@ -45,7 +45,7 @@ cohort in section 3.
 | `CO-DIAGNOSTICS-TESTS` | C1 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics` | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests` | `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests` | `UnitArchitecture` | 60 | diagnostics |
 | `CO-SQLTRANSPORT-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql`, `src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer`, `src/ViciOne.ServiceBus/SqlTransport` | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests` | `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests` | `UnitArchitecture` | 59 | sql-transport |
 | `CO-ACTIVEMQTRANSPORT-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport` | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests` | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests` | `UnitArchitecture` | 54 | activemq |
-| `CO-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` | C1 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration` | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests` | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests` | `UnitArchitecture` | 52 | entity-framework-core |
+| `CO-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` | C1 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration` | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests` | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests` | `UnitArchitecture` | 55 | entity-framework-core |
 | `CO-SIGNALR-TESTS` | C1 | `src/ViciOne.ServiceBus.SignalR` | `tests/ViciOne.ServiceBus.SignalR.Tests` | `tests2/ViciOne.ServiceBus.SignalR.Tests` | `UnitArchitecture` | 34 | signalr |
 | `CO-AMAZONSQSTRANSPORT-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport` | `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests` | `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests` | `UnitArchitecture` | 32 | none |
 | `CO-AZURE-SERVICEBUS-CORE-TESTS` | C1 | `src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core` | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests` | `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests` | `UnitArchitecture` | 31 | none |
@@ -88,7 +88,7 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
 - **Reviewers** `RV-SEM-ARCHITECTURE-TESTS` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-ARCHITECTURE-TESTS` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
 - **Skills due before the first edit**: `directory-build-organization`, `msbuild-antipatterns`, `binlog-generation`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj --minimum-expected-tests 20 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
+- **Gate command**: `dotnet test --project tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj --minimum-expected-tests 21 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/F1/CO-ARCHITECTURE-TESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
 - **Old-cohort deletion precondition**: every one of the 20 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ARCHITECTURE-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
 
@@ -214,7 +214,7 @@ areas below are fixed now, and no test edit is permitted merely because a wave n
 - **Integrator** `INT-1` — the single owner of every shared file: `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, the five solutions, `tests2/Directory.Build.*`, `testconfig.json`, `testsettings.json`, `.editorconfig`, `.gitignore`, `.testagent/**` and all evidence. Writers never touch these.
 - **Reviewers** `RV-SEM-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` (semantic loss and false green: every obligation of this cohort against its ledger row and its anchor identity) and `RV-STR-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` (structure, dependency direction, determinism, assertion quality). Both read-only, both independent of the writer.
 - **Skills due before the first edit**: `code-testing-extensions` (.NET), `assertion-quality`, `test-gap-analysis`; hash and applied rules recorded in `SKILL_BINDING.md` before the cohort starts.
-- **Gate command**: `dotnet test --project tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj --minimum-expected-tests 52 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
+- **Gate command**: `dotnet test --project tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj --minimum-expected-tests 55 --report-trx` for the focused run; `dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --minimum-expected-tests <profile total> --report-trx` for the profile run.
 - **Evidence output**: `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/C1/CO-ENTITYFRAMEWORKCOREINTEGRATION-TESTS/` with command, exit code, TRX, binlog and the obligation projection plus its Lead-bound SHA-256.
 - **Old-cohort deletion precondition**: every one of the 52 obligations terminal; all named new tests green in `UnitArchitecture`; assertion and gap review without weakening; `RV-SEM-ENTITYFRAMEWORKCOREINTEGRATION-TESTS` PASS; integrator confirms no source, solution, package or profile drift.
 
@@ -531,7 +531,7 @@ These four are mandatory and are recorded here because a cohort may not start wi
 
 Product Owner priority: everything locally provable is finished to A+ first; cloud follows.
 
-`F1` foundation → `C1` hermetic (2762 obligations) → `C2` local persistence → `C3` local brokers
+`F1` foundation → `C1` hermetic (2766 obligations) → `C2` local persistence → `C3` local brokers
 (773 together) → `C4a` external written and emulator-proven (128) → `C4b` external executed, waits
 for access → `F2` TestFramework removal → `P1` promotion → `G1` freeze → `G2` independent review.
 

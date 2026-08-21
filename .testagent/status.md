@@ -4,7 +4,7 @@ Chronological. Superseded entries carry an explicit marker and a link to what re
 
 ## Current state
 
-**R0 converged under `DIR-A0071-R0-CONVERGENCE-04`, on Development Slice revision 0002 bound by
+**R0 converged under reslice `0014` and `DIR-A0071-R0-CONVERGENCE-04`, on Development Slice revision 0002 bound by
 reslice `0008`. Awaiting Lead approval before the first test edit.**
 
 No C# test or product implementation was created, changed or deleted. Two files entered the write
@@ -18,7 +18,7 @@ tree. No file committed by that commit contains its own commit hash.
 Earlier intermediate commits are unaccepted history, not active truth: `0e58fa5c` (first checkpoint,
 not approved), `cf1f5bb4`, `caf3938f` and `d93d7757` (first correction round, not approved). The
 accepted evidence of those rounds keeps its bound bytes; the effective artefacts live under
-`R0-CONVERGENCE-04/`.
+`R0-CONVERGENCE-05/`.
 
 | Wave | State |
 |---|---|
@@ -50,7 +50,7 @@ accepted evidence of those rounds keeps its bound bytes; the effective artefacts
 
 ## Frozen obligation set
 
-3663 entries of obligation and variant, 0 duplicates, across **41 executable target projects in 41
+3667 entries of obligation and variant, 0 duplicates, across **41 executable target projects in 41
 cohorts**, each project in exactly one profile and each with exactly one writer.
 
 **No disposition in R0 is terminal.** Every ledger row carries `dispositionState`, which is
@@ -70,10 +70,13 @@ in the due profile, which cannot exist before F1.
 All eleven technical questions of the first checkpoint were dispositioned in
 `DIR-A0071-R0-CORRECTION-01` section 6 and are applied
 (`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review and R0-C02-01 to R0-C03-02 of the third and
-fourth reviews are applied in `R0-CONVERGENCE-04/` (see its `CONVERGENCE_EVIDENCE.md` and
-`PROOF_MAPPING_TABLE.md`); the earlier convergence directories are bound historical evidence. Question `0007` was
-answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. No question remains open and none is
-re-asked.
+fourth reviews are applied in `R0-CONVERGENCE-05/` (see its `CONVERGENCE_EVIDENCE.md` and
+`PROOF_MAPPING_TABLE.md`); the earlier convergence directories are bound historical evidence. Question `0007` was answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. Question `0013` was
+resolved by reslice `0014` with `OPT-B-DEFER-TO-C2`, which requires the missing behaviours to be
+recorded now as two dedicated obligations: `OBL-R0-BLD-0105` (the canonical assembly surfaces expose
+no removed fixed-database-name compatibility API, in the architecture project) and `OBL-R0-PER-0119`
+(the EF fixture database-name contract over its three fixture variants, planned for C2 and
+non-terminal). No question remains open.
 
 ## Product Owner decisions taken
 
