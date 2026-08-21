@@ -1,9 +1,0 @@
-<Solution>
-  <!-- Profile LocalIntegration: tests against locally hosted infrastructure (broker, database).
-       Deliberately empty at the F1a checkpoint - F1a builds the foundation and migrates no
-       behavioural cohort, so this profile has no member yet. It is created now so the profile
-       boundary exists and is evaluable from the start rather than appearing with its first
-       consumer. Running it while empty is expected to fail with the Microsoft Testing Platform's
-       zero-test exit code 8; that failure is honest and must not be converted into success. -->
-  <Folder Name="/tests2/" />
-</Solution>

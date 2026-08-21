@@ -57,4 +57,6 @@ are deliberately absent here rather than listed as if they still shipped.
 * [ViciOne.ServiceBus.Analyzers](https://nuget.org/packages/ViciOne.ServiceBus.Analyzers/)
 * [ViciOne.ServiceBus.SignalR](https://nuget.org/packages/ViciOne.ServiceBus.SignalR/)
 * [ViciOne.ServiceBus.StateMachineVisualizer](https://nuget.org/packages/ViciOne.ServiceBus.StateMachineVisualizer/)
-* [ViciOne.ServiceBus.TestFramework](https://nuget.org/packages/ViciOne.ServiceBus.TestFramework/)
+
+The inherited `ViciOne.ServiceBus.TestFramework` source is migration input, not a future public
+package. Its behavior material moves into the native test estate before that source is retired.

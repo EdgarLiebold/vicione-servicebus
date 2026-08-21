@@ -15,14 +15,20 @@ dotnet build   ViciOne.ServiceBus.slnx -c Release --no-restore
 dotnet pack    ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 ```
 
-Two solutions sit at the repository root, so every command names the one it means; an unqualified
-`dotnet build` exits with MSB1011 and does nothing. The benchmarks and the diagnostics live in
+Separate product, engineering, and native-test profile targets sit at the repository root, so every
+command names the one it means. Benchmarks and diagnostics live in
 `ViciOne.ServiceBus.Engineering.slnx`.
 
-There is deliberately no `dotnet test` line here. A blanket run over the solution starts test
-projects whose fixtures are not running and cannot reach the capabilities that need a real cloud
-resource, so its result would describe what happened to be reachable rather than the product. Each
-category is started through its runner; see below and [docs/build.md](docs/build.md).
+The current native hermetic profile is xUnit 4 on Microsoft Testing Platform 2:
+
+```bash
+dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore
+```
+
+Do not extend the inherited NUnit/VSTest/Python verification stack. It remains read-only behavior
+evidence until its cohorts have accepted native replacements; see [docs/build.md](docs/build.md).
 
 ## Packages are locked
 
@@ -35,6 +41,7 @@ record. Updating a package is the one operation that may change it:
 # 2. resolve it and write the lock files
 dotnet restore ViciOne.ServiceBus.slnx -p:RestoreLockedMode=false --force-evaluate
 dotnet restore ViciOne.ServiceBus.Engineering.slnx -p:RestoreLockedMode=false --force-evaluate
+dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx -p:RestoreLockedMode=false --force-evaluate
 # 3. read the lock file diff before committing it
 git diff -- '**/packages.lock.json'
 ```
@@ -54,17 +61,10 @@ elsewhere. The claim is about where this repository's paths lead, not about what
 
 ## Tests that need infrastructure
 
-Nothing about a fixture is written into a command. A selection names a scope, and the verification
-model says which of its categories need which brokers:
-
-```bash
-python3 tools/ci/verify.py --selection sql-transport
-```
-
-The entry point starts the pinned fixture on a random loopback port, generates a fresh secret for the
-run, publishes the endpoints to the test process alone and removes the fixture afterwards. Nothing
-falls back to a default host, port, account or secret: a fixture that was not started makes the
-affected tests fail with the names of the missing variables, before any connection is attempted.
+A LocalIntegration or External solution is created only with its first executable cohort. Fixtures
+own their resources and credentials per run and clean them up afterward. Missing local endpoints,
+invalid ports, absent provider selection, emulator mode in an external run, or an unavailable official
+credential chain must fail before the affected test executes; none becomes a skip or fallback.
 
 ## What a change has to bring
 
@@ -80,5 +80,5 @@ affected tests fail with the names of the missing variables, before any connecti
 
 ## Review
 
-`git diff --check` has to be clean, the working tree has to be clean, and both solutions have to
-build without warnings before a change is offered for review.
+`git diff --check` has to be clean, the working tree has to be clean, and every affected product,
+engineering, and native-profile target has to build without warnings before review.

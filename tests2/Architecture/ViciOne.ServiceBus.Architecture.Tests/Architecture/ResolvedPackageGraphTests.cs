@@ -22,7 +22,7 @@ public sealed class ResolvedPackageGraphTests
         var resolved = ResolvedPackageGraph.PackagesOf(TestProject);
 
         var forbidden = resolved
-            .Intersect(ResolvedPackageGraph.ForbiddenIdentities, StringComparer.OrdinalIgnoreCase)
+            .Where(ResolvedPackageGraph.IsForbidden)
             .ToArray();
 
         Assert.Empty(forbidden);
@@ -34,7 +34,7 @@ public sealed class ResolvedPackageGraphTests
         var resolved = ResolvedPackageGraph.PackagesOf(SupportLibrary);
 
         var forbidden = resolved
-            .Intersect(ResolvedPackageGraph.ForbiddenIdentities, StringComparer.OrdinalIgnoreCase)
+            .Where(ResolvedPackageGraph.IsForbidden)
             .ToArray();
 
         Assert.Empty(forbidden);
@@ -78,4 +78,17 @@ public sealed class ResolvedPackageGraphTests
 
         Assert.Contains("Microsoft.Testing.Platform", resolved, StringComparer.OrdinalIgnoreCase);
     }
+
+    [Theory]
+    [InlineData("TngTech.ArchUnitNET.xUnit")]
+    [InlineData("TngTech.ArchUnitNET.xUnitV3")]
+    [InlineData("TngTech.ArchUnitNET.NUnit")]
+    [InlineData("TngTech.ArchUnitNET.MSTestV2")]
+    [InlineData("TngTech.ArchUnitNET.TUnit")]
+    public void ExclusionPolicy_BansEveryArchUnitFrameworkAdapter(string identity) =>
+        Assert.True(ResolvedPackageGraph.IsForbidden(identity));
+
+    [Fact]
+    public void ExclusionPolicy_AllowsOnlyTheArchUnitCore() =>
+        Assert.False(ResolvedPackageGraph.IsForbidden("TngTech.ArchUnitNET"));
 }

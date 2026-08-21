@@ -1,101 +1,29 @@
-# Status — ViciOne.ServiceBus test reconstruction
-
-Chronological. Superseded entries carry an explicit marker and a link to what replaced them.
+# Status — native test reconstruction
 
 ## Current state
 
-**R0 converged under reslice `0014` and `DIR-A0071-R0-CONVERGENCE-06`, on Development Slice revision
-0003. Awaiting Lead approval before the first test edit.**
+R0 is accepted and unchanged. The Product-Owner-authorized Lead correction of F1a is implemented and
+all local technical gates are green after the first Team-1 candidate was rejected for repository-wide
+restore failure, false-green rules, stale documentation, fail-open configuration, and a namespace
+collision.
 
-No C# test or product implementation was created, changed or deleted. Two files entered the write
-scope through the reslice and are edited for the first time here: `.gitattributes` carries **two** exact-path whitespace exceptions, each for one immutable file bound
-by an exchange record and each with its own reason: `-blank-at-eol` for the superseded frozen list of
-`R0/`, and `-blank-at-eof` for the superseded proof table of `R0-CONVERGENCE-04/`. `global.json`
-carries the Microsoft Testing Platform selection beside its unchanged SDK pin.
-
-The candidate is the convergence commit; the exchange record created after it binds its commit and
-tree. No file committed by that commit contains its own commit hash.
-
-Earlier intermediate commits are unaccepted history, not active truth: `0e58fa5c` (first checkpoint,
-not approved), `cf1f5bb4`, `caf3938f` and `d93d7757` (first correction round, not approved). The
-accepted evidence of those rounds keeps its bound bytes; the effective artefacts live under
-`R0-CONVERGENCE-06/`.
+No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected;
+F1b and all behavior-cohort migration remain stopped.
 
 | Wave | State |
 |---|---|
-| R0 research | complete and frozen; converged after the second Lead review |
-| F1 foundation | blocked on the corrected approval |
+| R0 analysis and obligation inventory | complete and remotely preserved |
+| F1a native foundation | technically green; awaiting two independent reviews and Lead acceptance |
+| F1b coverage and cohort infrastructure | not started |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
 | C3 local brokers | not started |
-| C4a external, written | not started |
-| C4b external, executed | waiting for access by design |
-| F2 TestFramework removal | not started |
-| P1 promotion | requires C4b |
-| G1 freeze | requires P1 |
-| G2 independent review | not started |
+| C4 external | not started |
+| inherited-stack removal and promotion | not started |
 
-## Requirement state
+## Acceptance still required
 
-| Requirement | State |
-|---|---|
-| `REQ-TEST-101` | complete — baseline, independence from the cancelled attempt, pre-edit record |
-| `REQ-TEST-102` | active |
-| `REQ-TEST-103` | active |
-| `REQ-TEST-104` | active |
-| `REQ-TEST-105` | active |
-| `REQ-TEST-106` | active |
-| `REQ-TEST-107` | active |
-| `REQ-TEST-108` | active — neither complete nor optional; governs the transition, the removal of the inherited stack and the single freeze commit |
-| `REQ-TEST-109` | active |
+- two independent read-only reviews of the frozen correction commit.
 
-## Frozen obligation set
-
-3667 entries of obligation and variant, 0 duplicates, across **41 executable target projects in 41
-cohorts**, each project in exactly one profile and each with exactly one writer.
-
-**No disposition in R0 is terminal.** Every ledger row carries `dispositionState`, which is
-`PROPOSED` for semantic-ledger rows, `TOOLING_REGISTER` for the assurance promises of the removed
-Python platform, and `TERMINAL` for nothing — a terminal disposition requires named new tests green
-in the due profile, which cannot exist before F1.
-
-## Open blockers
-
-| # | Item | Owner | Blocks |
-|---|---|---|---|
-| B-1 | *(historical, closed by reslice `0008`; both paths remain in scope under revision 0003)* | — | — |
-| B-2 | real cloud access | Product Owner | C4b, P1, G1 |
-
-## Lead dispositions received
-
-All eleven technical questions of the first checkpoint were dispositioned in
-`DIR-A0071-R0-CORRECTION-01` section 6 and are applied
-(`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review and R0-C02-01 to R0-C03-02 of the third and
-fourth reviews are applied in `R0-CONVERGENCE-06/` (see its `CONVERGENCE_EVIDENCE.md` and
-`PROOF_MAPPING_TABLE.md`); the earlier convergence directories are bound historical evidence. Question `0007` was answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. Question `0013` was
-resolved by reslice `0014` with `OPT-B-DEFER-TO-C2`, which requires the missing behaviours to be
-recorded now as two dedicated obligations: `OBL-R0-BLD-0105` (the canonical assembly surfaces expose
-no removed fixed-database-name compatibility API, in the architecture project) and `OBL-R0-PER-0119`
-(the EF fixture database-name contract over its three fixture variants, due in C1 with the existing EF Unit cohort and
-non-terminal). No question remains open.
-
-## Product Owner decisions taken
-
-`R0/PO_DECISIONS_R0.md`: the Azure namespace no longer exists and cloud infrastructure is rebuilt from
-scratch, so no key rotation is required; structurally delayed service effects are proven at the
-boundary we own; rebuilt tests assert intended behaviour, so inherited product defects are not encoded
-as expected behaviour; everything locally provable is finished to A+ first.
-
-## Not-executed register — obligations that cannot be green yet
-
-| Owner | Written | Emulator proof | Missing |
-|---|---|---|---|
-| Azure Service Bus, Event Hubs, Storage, Table | C4a | partial; capability matrix per named mechanism | real short-lived resources |
-| Amazon SQS/SNS, S3, DynamoDB | C4a | partial; LocalStack limits named per mechanism | real short-lived resources |
-| RabbitMQ via Amazon MQ | C4a | none | real Amazon MQ; the inherited verification model already records it as a real-cloud resource |
-| DynamoDB time-to-live, S3 lifecycle | C4a | configuration asserted at the service boundary | the provider-side sweep is a documented external limitation, not a ViciOne obligation |
-
-## Requirement to evidence
-
-Not yet started. Due before the freeze: every bound Product Owner requirement quoted verbatim and
-mapped to concrete test names, architecture rules, graph evidence and executed runs.
+Real cloud access remains a later C4 execution dependency. It does not weaken F1a and is not
+represented as passed.

@@ -24,7 +24,7 @@ internal static class ProductAssemblyFacts
 
     /// <summary>The shared framework-neutral test infrastructure assembly.</summary>
     internal static Assembly TestingInfrastructure =>
-        typeof(ServiceBus.Testing.Configuration.TestConfigurationProvider).Assembly;
+        typeof(ServiceBus.Tests.Infrastructure.Configuration.TestConfigurationProvider).Assembly;
 
     /// <summary>This test assembly.</summary>
     internal static Assembly ArchitectureTests => typeof(ProductAssemblyFacts).Assembly;

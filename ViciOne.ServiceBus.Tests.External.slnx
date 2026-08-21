@@ -1,6 +1,0 @@
-<Solution>
-  <!-- Profile External: tests against real external services (Azure, AWS, hosted brokers).
-       Deliberately empty at the F1a checkpoint, for the same reason as LocalIntegration. Missing
-       infrastructure stays visibly open here and never produces a green gate. -->
-  <Folder Name="/tests2/" />
-</Solution>

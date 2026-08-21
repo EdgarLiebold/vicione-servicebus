@@ -3,7 +3,7 @@
        profile the F1a checkpoint runs unfiltered, and the one a change has to keep green. -->
   <Folder Name="/tests2/">
     <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
-    <Project Path="tests2/Testing/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
   </Folder>
   <!-- The product projects the tests inspect are members, not merely referenced.
 

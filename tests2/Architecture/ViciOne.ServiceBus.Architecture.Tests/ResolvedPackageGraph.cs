@@ -36,6 +36,9 @@ internal static class ResolvedPackageGraph
 
         return dependencies.EnumerateObject()
             .SelectMany(framework => framework.Value.EnumerateObject())
+            .Where(dependency =>
+                !dependency.Value.TryGetProperty("type", out var type) ||
+                !string.Equals(type.GetString(), "Project", StringComparison.OrdinalIgnoreCase))
             .Select(package => package.Name)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
@@ -79,7 +82,11 @@ internal static class ResolvedPackageGraph
         "NUnit.Analyzers",
         "NUnit3TestAdapter",
         "NUnitLite",
-        "TngTech.ArchUnitNET.xUnit",
         "xunit.runner.visualstudio",
     ];
+
+    /// <summary>Returns whether a resolved identity introduces a forbidden test verdict path.</summary>
+    internal static bool IsForbidden(string packageIdentity) =>
+        ForbiddenIdentities.Contains(packageIdentity, StringComparer.OrdinalIgnoreCase) ||
+        packageIdentity.StartsWith("TngTech.ArchUnitNET.", StringComparison.OrdinalIgnoreCase);
 }

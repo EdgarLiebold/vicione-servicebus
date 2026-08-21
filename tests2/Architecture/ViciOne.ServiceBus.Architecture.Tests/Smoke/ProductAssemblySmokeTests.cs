@@ -7,9 +7,10 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Smoke;
 /// Structural smoke checks over the real compiled product assemblies.
 /// </summary>
 /// <remarks>
-/// Every subject here is an assembly that this build actually produced and loaded, reached through
-/// a compile-verified type anchor. Nothing in this file consults a checked-in list of names, so a
-/// product assembly cannot disappear or change framework while the tests keep passing.
+/// Every subject here is one of the two F1a anchor assemblies that this build actually produced and
+/// loaded, reached through a compile-verified type anchor. The repository-wide graph is owned by
+/// <see cref="Architecture.RepositoryGraphTests"/>; this class deliberately makes no completeness
+/// claim beyond the foundation anchors.
 /// </remarks>
 public sealed class ProductAssemblySmokeTests
 {

@@ -1,108 +1,61 @@
-# Research — F1a native xUnit-4-/MTP-v2-Testgrundlage
+# Research — native xUnit 4 / Microsoft Testing Platform 2 foundation
 
-Arbeitspaket `WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12`, Direktive `DIR-A0071-START-F1A-03`,
-wirksamer Slice `revisions/0002/DEVELOPMENT_SLICE.json` (SHA-256 `4d3e3ebe…7d75`, 92 Schreibscopes).
-Ausgangscommit `09512522157898afe4eef2f5708fcb1a9a5e9b1d`, Nachkomme der R0-Baseline
-`a6b205c9fc2a29d81968069936148f1ee0a6e1d1`. Arbeitsbaum sauber, `tests2` abwesend.
+Scope: F1a of `WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12`. The implementation follows the mandatory
+Microsoft testing and MSBuild skills using the sequence research → plan → implementation → test →
+independent review.
 
-Vorgehen nach dem Microsoft-Skill `dotnet-test:code-testing-agent`, Kette Research → Plan →
-Implement. Umfang ist **broad**, deshalb sind `research.md`, `plan.md` und `status.md` Pflichtbelege.
+## Baseline
 
-## 1. Umgebung und zentrale Buildwahrheit
+- SDK `10.0.302`, pinned with roll-forward disabled.
+- `global.json` selects Microsoft Testing Platform.
+- Root MSBuild owns locked restore and the common `artifacts/sdk` output.
+- Product target is `net10.0`; only the two Roslyn components and their source-free package surface
+  retain their documented `netstandard2.0` exception.
+- The inherited `tests/**` and Python verification stack are behavior evidence only. They are not a
+  design template and are not extended.
 
-| Gegenstand | Feststellung |
-|---|---|
-| SDK | `10.0.302`, identisch mit dem Pin in `global.json` |
-| Testrunner-Auswahl | `global.json` enthält `"test": { "runner": "Microsoft.Testing.Platform" }` |
-| Aufrufform | SDK 10 ⇒ `dotnet test --solution …`, MTP-Argumente direkt, **kein** `--`-Trenner |
-| Buildausgabe | `UseArtifactsOutput=true`, `ArtifactsPath=artifacts/sdk`; `/artifacts/` ist ignoriert |
-| Restore | `RestorePackagesWithLockFile=true`, `RestoreLockedMode=true` als Wurzelvorgabe |
-| Wurzel-`Directory.Build.targets` | erzwingt Lockfile, Lockmode, Paketnotice und TFM-Grenze (`VOSB0001`–`VOSB0008`) |
+## Platform decisions
 
-Die Wurzel-`Directory.Build.targets` setzt `ViciOneProjectIdentity`; die Wurzel-`Directory.Build.props`
-setzt `ArtifactsPath`. Beide Eigenschaften eignen sich als Nachweisanker dafür, dass der jeweilige
-Elternimport tatsächlich stattgefunden hat.
+- Executable native test projects reference exactly `xunit.v3.mtp-v2` `4.0.0` as their entry
+  package. MTP owns discovery and the process verdict; xUnit owns cases and assertions.
+- Architecture rules use `TngTech.ArchUnitNET` core `0.13.4` through ordinary xUnit assertions.
+  Every ArchUnitNET framework adapter is forbidden.
+- Shared support code is non-executable, non-packable, and framework-neutral under the distinct
+  product-neutral identity `ViciOne.ServiceBus.Tests.Infrastructure`.
+- Test-only central package versions are conditional on `ViciOneNativeTestTree`; they do not modify
+  product lock-file classification.
+- A profile solution exists only after its first executable cohort. F1a materializes Unit only;
+  invalid empty LocalIntegration/External solutions are forbidden.
+- The checked-in configuration contains no credentials. User Secrets and `VICIONE_TESTS__` may
+  provide non-secret resource coordinates; Azure.Identity and AWS SDK chains remain credential
+  owners.
 
-**Wichtig:** MSBuild importiert nur die *erste* `Directory.Build.props`/`.targets` auf dem Weg nach
-oben. Für Projekte unter `tests2/**` ist das die Datei in `tests2/`, nicht die der Wurzel. Der
-Elternimport ist deshalb Pflicht und kein Komfort.
+## Lead rejection of the first Team-1 candidate
 
-## 2. Fallstrick aus dem Bestand — repositoryweiter Testlogger
+The first candidate provided a useful native xUnit/MTP core but was not acceptable as a completed
+foundation. Independent reproduction found:
 
-`Directory.Packages.props` enthält
+1. full product locked restore failed because test-only CPM versions changed product lock files;
+2. empty profile solutions failed as invalid solutions, not as MTP zero-test runs;
+3. two claimed rules survived direct mutations: a root `LangVersion` pin and a no-op external
+   preflight implementation;
+4. the real package `TngTech.ArchUnitNET.xUnitV3` was not denied;
+5. the free-string profile and external defaults allowed fail-open configuration;
+6. support namespace/project identity collided with the shipped `ViciOne.ServiceBus.Testing`
+   namespace;
+7. the resolved package count mixed package nodes with project nodes;
+8. active documents named nonexistent tests and described the superseded Python stack as active;
+9. repository-wide project/profile graph rules were absent.
 
-```xml
-<GlobalPackageReference Include="GitHubActionsTestLogger" Version="3.0.5" />
-```
+The Product Owner therefore assigned the bounded F1a correction directly to the Lead Architect.
+No product behavior is changed.
 
-ohne Bedingung. Ein `GlobalPackageReference` gilt für **jedes** Projekt des Repositorys. Ohne
-Gegenmaßnahme gelangte damit ein nach `REQ-TEST-203` verbotenes Paket automatisch in jedes neue
-`tests2`-Projekt. Der geerbte Baum unter `tests/**` benötigt es weiterhin, es darf also nicht
-ersatzlos entfallen. Lösung: Die Itemgruppe wird an eine Eigenschaft gebunden, die ausschließlich
-`tests2/Directory.Build.props` setzt. Itembedingungen werten spät aus und sehen diese Eigenschaft
-(Skill `dotnet-msbuild:directory-build-organization`, Abschnitt AP-21).
+## Required proof surfaces
 
-## 3. Geerbter Testbestand — nur Kontext, keine Vorlage
-
-`tests/**` verwendet NUnit 4 mit `Microsoft.NET.Test.Sdk` und `NUnit3TestAdapter`, also VSTest.
-Das ist genau die Kombination, die im neuen Baum verboten ist. Der Bestand bleibt in F1a
-**unverändert**; er dient nur als Verhaltensevidenz für spätere Kohorten, niemals als Bauform.
-
-Bestehende Quellprojekte: 22 unter `src/**`. Bestehende Testprojekte: 16 unter `tests/**`.
-
-## 4. Paketprüfung am Feed
-
-| Paket | Feststellung |
-|---|---|
-| `xunit.v3.mtp-v2` `4.0.0` | stabil vorhanden; Metapaket über `xunit.v3.core.mtp-v2` `[4.0.0]`, `xunit.v3.assert` `[4.0.0]`, `xunit.analyzers` `2.0.0`; Zielgruppe `net8.0`, kompatibel zu `net10.0` |
-| `TngTech.ArchUnitNET` | letzte **stabile** Version `0.13.4` mit `lib/netstandard2.0`; `2.1.0-draft` ist Prerelease und scheidet wegen des Verbots offener/instabiler Versionen aus |
-
-Damit ist genau ein Testeinstiegspaket je ausführbarem Projekt erfüllbar. Ein xUnit-Adapter für
-ArchUnitNET wird nicht referenziert.
-
-## 5. Abgrenzung des F1a-Umfangs
-
-Enthalten: zentrale CPM-/MSBuild-/MTP-Konfiguration, eine zentrale `tests2/xunit.runner.json`,
-`tests2/Testing/ViciOne.ServiceBus.Testing` (frameworkneutral, nicht ausführbar, nicht packbar, ohne
-xUnit), `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests` (ausführbar, xUnit 4 auf MTP v2,
-ArchUnitNET-Kern, kleiner struktureller Smoke-Satz), drei Profil-Solutions, Engineering-Solution,
-secret-freie Testkonfiguration, Builddokumentation und F1a-Evidence.
-
-Nicht enthalten: jede Verhaltenskohorte, `tests2/Core/**`-Bebauung, Coveragebindung,
-`RequirementCoverageAttribute`, Löschung von `tests/**` oder `src/ViciOne.ServiceBus.TestFramework/**`,
-F1b- und C1-Arbeit, Push.
-
-**Disposition zu `dotnet-test:find-untested-sources`:** Das Werkzeug beantwortet, welche Quelldatei
-als Nächstes einen Test braucht. F1a erzeugt bewusst **keinen** quellbezogenen Verhaltenstest; sein
-Ergebnis hätte in diesem Checkpoint keinen zulässigen Abnehmer, und danach zu handeln wäre die in
-F1a verbotene Kohortenmigration. Der Lauf gehört deshalb an den Beginn der ersten Kohortenwelle und
-ist dort Pflicht. Das ist eine begründete Terminierung, kein Auslassen.
-
-## 5a. Befund während der Umsetzung — Konfiguration im Solution-Build
-
-Ein Projekt, das eine Solution nur über eine `ProjectReference` erreicht, nimmt nicht an der
-Konfigurationszuordnung der Solution teil. Der Build der Profil-Solution mit `-c Release` erzeugte
-dadurch ein Release-Testartefakt mit **Debug**-Produktassemblies: Das Profil hätte Release behauptet
-und gegen Debug-Code gemessen. Reparaturpunkt ist die Mitgliedschaft der referenzierten
-Produktprojekte in der Profil-Solution; der Regressionsschutz liest die
-`AssemblyConfigurationAttribute` der geladenen Assemblies und vergleicht sie mit der Testassembly.
-
-## 6. Akzeptanzcheckliste
-
-| # | Anforderung | Quelle |
-|---|---|---|
-| A1 | Jedes ausführbare Testprojekt referenziert direkt und ausschließlich `xunit.v3.mtp-v2` `4.0.0` als Testeinstieg | 0007, `REQ-TEST-203` |
-| A2 | `GitHubActionsTestLogger`, `Microsoft.NET.Test.Sdk`, NUnit, VSTest, ArchUnitNET-xUnit-Adapter fehlen im **ausgewerteten** `tests2`-Graph | 0007, `REQ-TEST-203` |
-| A3 | Genau eine zentrale `tests2/xunit.runner.json` gelangt über die verschachtelte MSBuild-Konfiguration in jedes ausführbare Testartefakt; keine Projektkopie | 0007 Nr. 2, `REQ-TEST-203` |
-| A4 | Übersprungene Tests und Warnungen sind Fehler | Vertrag §2, `REQ-TEST-203` |
-| A5 | Verschachtelte `Directory.Build.props`/`.targets` importieren die Eltern ohne stillen `Exists`-Fallback; Entfernen jedes Imports scheitert aus **eigenem** Grund | 0007, Vertrag §5 |
-| A6 | Paketversionen ausschließlich in der Wurzel-`Directory.Packages.props` | Vertrag §5, `REQ-TEST-205` |
-| A7 | Testprojekte sind `net10.0`, nicht packbar; `LangVersion` kommt als `14.0` aus dem SDK und wird nirgends gepinnt | Vertrag §5, `REQ-TEST-205`, 0009 Nr. 1 |
-| A8 | `ViciOne.ServiceBus.Testing` ist nicht ausführbar, nicht packbar, ohne xUnit und ohne handgepflegten Produkt-Assembly-Katalog | 0004 Nr. 6, 0007 Nr. 3 |
-| A9 | Kein Testartefakt gelangt in einen Produktgraph (Pack/Publish) | `REQ-TEST-205` |
-| A10 | Ein typisierter Konfigurationsowner, **ein** zentral deklarierter User-Secrets-Store, `__` wird in den Konfigurationspfad übersetzt, Anforderungen über typisierte Gruppen statt freier Schlüssel; kein Test mutiert Prozessumgebung | `REQ-TEST-206`, 0009 Nr. 2/3, 0010 Nr. 1 |
-| A11 | Jede Architektur-/Smokeprüfung untersucht eine reale kompilierte Assembly oder einen tatsächlich ausgewerteten MSBuild-Graphen | 0004 Nr. 5, 0007 Nr. 4 |
-| A12 | Keine zweite Bestands-, Runner-, Zähl- oder Verdictwahrheit; MTP-Exitcode und xUnit sind alleinige Urteilsquelle | 0007, `REQ-TEST-202/203` |
-| A13 | Belegkette: locked Restore → Release-Build `--no-restore --no-incremental` → unfiltrierter Test `--no-build --no-restore`, je mit eindeutigem Binlogpfad und Exitcode | 0007 |
-| A14 | Graphauswertung über `-graphBuild` beziehungsweise gezielte `-getItem`/`-getProperty`, nicht über `-graph` | 0007 |
-| A15 | Kein `tests/**`, kein `src/**`-Produktverhalten, keine Kohorte, kein F1b/C1, kein Push | 0007 |
+- full locked restore and Release build of product, Engineering, and Unit targets;
+- unfiltered Unit profile through native MTP;
+- evaluated MSBuild graph plus parsed project/solution graph;
+- full resolved package closures from tracked lock files;
+- isolated mutations for every fail-closed rule;
+- assertion-quality, anti-pattern, gap, and untested-source reviews;
+- two independent read-only reviews after the corrected integrated commit.

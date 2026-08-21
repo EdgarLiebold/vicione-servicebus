@@ -73,7 +73,7 @@ public sealed class TestTreeIsolationTests
         {
             var references = ProductAssemblyFacts.ReferencedAssemblyNames(product);
 
-            Assert.DoesNotContain("ViciOne.ServiceBus.Testing", references);
+            Assert.DoesNotContain("ViciOne.ServiceBus.Tests.Infrastructure", references);
             Assert.DoesNotContain("ViciOne.ServiceBus.Architecture.Tests", references);
             Assert.DoesNotContain(references, name => name.StartsWith("xunit", StringComparison.OrdinalIgnoreCase));
             Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
@@ -83,7 +83,7 @@ public sealed class TestTreeIsolationTests
     [Fact]
     public void CompiledSupportLibrary_ReferencesNoTestFramework()
     {
-        // Framework neutrality of ViciOne.ServiceBus.Testing, read off what it actually compiled
+        // Framework neutrality of ViciOne.ServiceBus.Tests.Infrastructure, read off what it actually compiled
         // against rather than off the absence of a package reference alone.
         var references = ProductAssemblyFacts.ReferencedAssemblyNames(
             ProductAssemblyFacts.TestingInfrastructure);
@@ -104,7 +104,7 @@ public sealed class TestTreeIsolationTests
             .ResideInAssembly(ProductAssemblyFacts.TestingInfrastructure)
             .And().ArePublic()
             .Should()
-            .ResideInNamespaceMatching("^ViciOne\\.ServiceBus\\.Testing($|\\.)"));
+            .ResideInNamespaceMatching("^ViciOne\\.ServiceBus\\.Tests\\.Infrastructure($|\\.)"));
     }
 
     [Fact]
@@ -117,6 +117,8 @@ public sealed class TestTreeIsolationTests
             ProductAssemblyFacts.ArchitectureTests);
 
         Assert.Contains("ArchUnitNET", references);
-        Assert.DoesNotContain("ArchUnitNET.xUnit", references);
+        Assert.DoesNotContain(
+            references,
+            name => name.StartsWith("ArchUnitNET.", StringComparison.OrdinalIgnoreCase));
     }
 }

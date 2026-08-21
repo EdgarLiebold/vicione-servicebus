@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1231 |
+| Added | 1356 |
 | Modified | 4507 |
 | Deleted | 1140 |
 | Renamed | 3 |
@@ -25,6 +25,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.github/workflows/build.yml` | Modified | `.github/workflows/build.yml` |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
+| `.testagent/plan.md` | Added |  |
+| `.testagent/research.md` | Added |  |
+| `.testagent/status.md` | Added |  |
 | `AGENTS.md` | Modified | `AGENTS.md` |
 | `CHANGELIST.md` | Added |  |
 | `CHANGELOG.md` | Added |  |
@@ -44,6 +47,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `README.md` | Modified | `README.md` |
 | `SECURITY.md` | Modified | `SECURITY.md` |
 | `ViciOne.ServiceBus.Engineering.slnx` | Added |  |
+| `ViciOne.ServiceBus.Tests.Unit.slnx` | Added |  |
 | `ViciOne.ServiceBus.slnx` | Added |  |
 | `ViciOne.ServiceBus.snk` | Renamed | `MassTransit.snk` |
 | `benchmarks/ToDo.md` | Added |  |
@@ -710,6 +714,106 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/TEXT_PATH_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/TOOL_TEST_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/generation-result.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-02/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-02/CONVERGENCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-02/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-02/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/CONVERGENCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/CONVERGENCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/PROOF_MAPPING_TABLE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/CONVERGENCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/PROOF_MAPPING_TABLE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/CONVERGENCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/PROOF_MAPPING_TABLE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/CENSUS_RECONCILIATION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/CORRECTION_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/PROFILE_PROJECT_REALIGNMENT.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/R0_FROZEN_RESULT.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/ANCHOR_IDENTITY_TO_OBLIGATION.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/BASELINE_TRACKED_FILE_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/COHORT_READING_RULES.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/COMBINED_SEMANTIC_LEDGER.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/FIND_UNTESTED_SOURCES.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/GIT_BASELINE_STATE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/INTEGRATOR_DECISIONS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/MTP_COMMAND_FORM_PROBE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/OBLIGATION_SET_FROZEN.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/PARENT_IMPORT_PROBE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/PO_DECISIONS_R0.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/PROVENANCE_FLAG_PROBE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/R0_FROZEN_RESULT.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SECURITY_DISPOSITION_AZURE_SAS_FALLBACK.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SECURITY_DISPOSITION_CLIENT_P12.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SENTINEL_FEASIBILITY_PROBE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SKILL_BINDING.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SOURCE_OWNER_MAP.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SUPERSEDED.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BLD/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BLD/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BLD/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BLD/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BRK/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BRK/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BRK/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BRK/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CLOUD/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CLOUD/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CLOUD/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CLOUD/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-A/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-A/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-A/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-A/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-B/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-B/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-B/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-B/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-D/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-D/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-D/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-D/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PER/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PER/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PER/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PER/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PY/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PY/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PY/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PY/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SML/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SML/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SML/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SML/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SQL/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SQL/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SQL/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-SQL/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/FINDINGS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/LEDGER_DRAFT.jsonl` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/READ_MANIFEST.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/R1-SCOPE-QUESTION/SCOPE_GAP_EVIDENCE.md` | Added |  |
 | `global.json` | Added |  |
 | `mt-logo-small.png` | Deleted | `mt-logo-small.png` |
 | `signing.props` | Modified | `signing.props` |
@@ -6835,6 +6939,27 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/TypeCastRetry_Specs.cs` | Modified | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/EvaluatedBuildGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/RepositoryGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/ResolvedPackageGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/RunnerConfigurationTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestConfigurationTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestTreeIsolationTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/MsBuildEvaluation.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/RepositoryLayout.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ResolvedPackageGraph.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
+| `tests2/Directory.Build.props` | Added |  |
+| `tests2/Directory.Build.targets` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/testsettings.json` | Added |  |
+| `tests2/xunit.runner.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |
 | `tools/ci/collect_api_assemblies.py` | Added |  |
 | `tools/ci/compare_api_surface.py` | Added |  |

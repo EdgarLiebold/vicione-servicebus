@@ -34,34 +34,35 @@ dotnet build   ViciOne.ServiceBus.slnx -c Release --no-restore
 dotnet pack    ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 ```
 
-Two solutions sit at the root, so every command names the one it means. Every project resolves
-against a tracked `packages.lock.json`; updating a package is the single documented exception.
+The repository has separate product, engineering, and materialized native-test profile targets, so
+every command names the one it means. Every project resolves against a tracked `packages.lock.json`;
+updating a package is the single documented exception.
 
-One command verifies this product, and it takes a named scope:
+The native replacement test estate uses xUnit 4 on Microsoft Testing Platform 2. Its currently
+materialized hermetic profile runs directly through the .NET 10 CLI:
 
-```sh
-python3 tools/ci/verify.py --selection all
-python3 tools/ci/verify.py --selection activemq
+```bash
+dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore
 ```
 
-A blanket `dotnet test` would start test projects whose fixtures are not running, and the capabilities
-that need a real cloud resource have no local fixture at all. What a selection contains, which
-categories need which fixture and which cases each of them is expected to execute live in
-[the verification model](build/verification/VERIFICATION_MODEL.json); the entry point owns the run
-root, the budget, the fixture and the receipt it writes at the end.
+Local-integration and external profiles appear only with their first executable cohort. The inherited
+NUnit/VSTest/Python verification stack remains behavior evidence during migration and is not extended
+or treated as the final test architecture.
 
-[docs/build.md](docs/build.md) carries the whole contract - the two solutions, the locked restore and
-how a package is updated, the three projects that are the `netstandard2.0` exception and why the third
-of them is not a Roslyn component, the central build gates, the verification model and how a selection
-is run.
+[docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
+and migration contract.
 
 ## Scope
 
 The fork keeps in-memory messaging, the RabbitMQ, ActiveMQ, Azure Service Bus, Amazon SQS and SQL
 transports, the Azure Event Hubs rider, saga persistence on EF Core, Azure Table and DynamoDB,
 message body storage on Amazon S3 and Azure Blob Storage, Quartz scheduling, the job service,
-SignalR, MessagePack serialization, the state machine visualizer, the analyzer, the test framework
-and the benchmarks.
+SignalR, MessagePack serialization, the state machine visualizer, the analyzer and the benchmarks.
+
+The inherited TestFramework source remains only as migration input until every behavior obligation
+has moved into the native test estate. It is not part of the future public package surface.
 
 Capabilities removed by an explicit product decision are recorded in
 [MODIFICATIONS.md](MODIFICATIONS.md) and are not part of this source scope.

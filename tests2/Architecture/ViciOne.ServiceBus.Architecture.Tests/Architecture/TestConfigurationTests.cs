@@ -1,15 +1,9 @@
-using ViciOne.ServiceBus.Testing.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
 
-/// <summary>
-/// The typed configuration owner: layering, nested binding and profile-dependent validation.
-/// </summary>
-/// <remarks>
-/// Every case injects its environment, so no test mutates the process it runs in and two of them
-/// can run beside each other without one observing the other's variable.
-/// </remarks>
+/// <summary>Tests the one typed and secret-free configuration boundary.</summary>
 public sealed class TestConfigurationTests
 {
     private static TestConfigurationProvider ProviderWith(params (string Key, string Value)[] environment) =>
@@ -22,7 +16,7 @@ public sealed class TestConfigurationTests
     {
         var options = ProviderWith().GetOptions();
 
-        Assert.Equal(TestProfiles.UnitArchitecture, options.Profile);
+        Assert.Equal(TestProfile.UnitArchitecture, options.Profile);
         Assert.Equal(TimeSpan.FromSeconds(30), options.OperationTimeout);
         Assert.Equal("localhost", options.LocalInfrastructure.RabbitMqHost);
         Assert.Equal(5672, options.LocalInfrastructure.RabbitMqPort);
@@ -31,59 +25,34 @@ public sealed class TestConfigurationTests
     [Fact]
     public void PrefixedEnvironmentEntry_OverridesTheCheckedInDefault()
     {
-        var options = ProviderWith(("VICIONE_TESTS__Profile", TestProfiles.LocalIntegration)).GetOptions();
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "LocalIntegration")).GetOptions();
 
-        Assert.Equal(TestProfiles.LocalIntegration, options.Profile);
+        Assert.Equal(TestProfile.LocalIntegration, options.Profile);
     }
 
     [Fact]
-    public void DoubleUnderscore_BindsToANestedOption()
+    public void DoubleUnderscore_BindsNestedValuesWithoutResettingNeighbours()
     {
-        // The key correction: stripping the prefix is not enough. Without translating the remaining
-        // double underscore into the configuration path separator this key binds to nothing, and the
-        // checked-in default silently wins while the run looks configured.
-        var options = ProviderWith(("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "broker.internal")).GetOptions();
+        var options = ProviderWith(
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "broker.internal"),
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "5673")).GetOptions();
 
         Assert.Equal("broker.internal", options.LocalInfrastructure.RabbitMqHost);
-        // A neighbouring value must survive the override rather than be reset by it.
-        Assert.Equal(5672, options.LocalInfrastructure.RabbitMqPort);
-    }
-
-    [Fact]
-    public void DoubleUnderscore_BindsTheDocumentedPortVariable()
-    {
-        // Exactly the form the documentation tells an operator to export. The value also has to
-        // survive binding as an int, so a translation that produced the wrong path would leave the
-        // checked-in 5672 in place and the run would silently talk to the wrong port.
-        var options = ProviderWith(("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "5673")).GetOptions();
-
         Assert.Equal(5673, options.LocalInfrastructure.RabbitMqPort);
-        Assert.Equal("localhost", options.LocalInfrastructure.RabbitMqHost);
-    }
-
-    [Fact]
-    public void DoubleUnderscore_BindsTwoLevelsDeep()
-    {
-        var options = ProviderWith(("VICIONE_TESTS__ExternalProviders__Azure__SubscriptionId", "sub-1")).GetOptions();
-
-        Assert.Equal("sub-1", options.ExternalProviders.Azure.SubscriptionId);
+        Assert.Equal("localhost", options.LocalInfrastructure.PostgreSqlHost);
     }
 
     [Fact]
     public void UnprefixedEnvironmentEntry_IsIgnored()
     {
-        // Without the prefix filter an unrelated ambient variable named Profile would steer the run.
-        var options = ProviderWith(("Profile", TestProfiles.External)).GetOptions();
+        var options = ProviderWith(("Profile", "External")).GetOptions();
 
-        Assert.Equal(TestProfiles.UnitArchitecture, options.Profile);
+        Assert.Equal(TestProfile.UnitArchitecture, options.Profile);
     }
 
     [Fact]
     public void Sources_AreLayeredFileThenUserSecretsThenEnvironment()
     {
-        // Proven on the provider order rather than by writing into a real User Secrets store, which
-        // would mutate state outside the repository and make the result machine-dependent. The
-        // observable half of the same ordering is asserted by the override tests above.
         var withoutSecrets = ProviderWith().SourceOrder;
         var withSecrets = new TestConfigurationProvider(
             AppContext.BaseDirectory, [], includeUserSecrets: true).SourceOrder;
@@ -95,85 +64,126 @@ public sealed class TestConfigurationTests
     }
 
     [Fact]
-    public void SharedUserSecretsStore_IsTheOneDeclaredForTheTree()
-    {
-        // The id is declared once centrally. Reading it from the assembly that owns configuration is
-        // what makes every test project resolve the same store.
+    public void SharedUserSecretsStore_IsDeclaredOnceForTheTree() =>
         Assert.Equal("vicione-servicebus-native-tests", TestConfigurationProvider.SharedUserSecretsId);
+
+    [Fact]
+    public void UnitProfile_DefaultsAreValidWithoutInfrastructureSelectors()
+    {
+        var options = ProviderWith().GetOptions();
+
+        Assert.Empty(options.ValidateFor());
     }
 
     [Fact]
-    public void CommonValidation_AsksForNoProviderSettingAtAll()
+    public void UnknownProfile_IsRejected()
     {
-        // External is an execution profile, not a vendor. Common validation covers what every
-        // profile needs; provider settings are only ever demanded by a run that says which provider
-        // it uses.
-        var external = ProviderWith(("VICIONE_TESTS__Profile", TestProfiles.External)).GetOptions();
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "99")).GetOptions();
 
-        Assert.Empty(external.Validate());
+        Assert.Contains(nameof(ViciOneTestOptions.Profile), options.ValidateFor());
     }
 
     [Fact]
-    public void TypedContract_CarriesNoCredentialProperty()
+    public void NonPositiveTimeout_IsRejected()
     {
-        // The vendor SDKs own credentials: Azure through the Azure.Identity chain, AWS through the
-        // AWS SDK provider chain, both with short-lived workload or OIDC identities in CI. A secret
-        // copied into this model would replace those chains with a ViciOne-specific one and would
-        // put a durable credential where configuration is meant to be inspectable.
-        var azure = typeof(AzureProviderOptions).GetProperties().Select(property => property.Name).ToArray();
-        var aws = typeof(AwsProviderOptions).GetProperties().Select(property => property.Name).ToArray();
+        var options = ProviderWith(("VICIONE_TESTS__OperationTimeout", "00:00:00")).GetOptions();
 
-        foreach (var forbidden in new[] { "TenantId", "ClientId", "ClientSecret", "AccessKeyId", "SecretAccessKey", "Password", "ConnectionString" })
-        {
-            Assert.DoesNotContain(forbidden, azure);
-            Assert.DoesNotContain(forbidden, aws);
-        }
+        Assert.Contains(nameof(ViciOneTestOptions.OperationTimeout), options.ValidateFor());
+    }
+
+    [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "0")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65536")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlHost", "")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "0")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65536")]
+    public void LocalIntegrationProfile_RejectsAnInvalidEndpoint(string key, string value)
+    {
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            (key, value)).GetOptions();
+
+        Assert.NotEmpty(options.ValidateFor());
     }
 
     [Fact]
-    public void EmulatorMode_NeedsNoProvisioningSettings()
+    public void NonExternalProfile_RejectsAnExternalProviderSelection()
     {
-        // An emulator run addresses nothing in a subscription. Demanding provisioning settings there
-        // would fail a run that is correctly configured for what it actually does.
-        var options = ProviderWith(("VICIONE_TESTS__Profile", TestProfiles.External)).GetOptions();
+        var options = ProviderWith().GetOptions();
 
-        Assert.Equal(ExternalResourceMode.Emulator, options.ExternalProviders.Azure.Mode);
-        Assert.Empty(options.ValidateFor(external => external.Azure));
+        Assert.Contains(nameof(ViciOneTestOptions.ExternalProviders),
+            options.ValidateFor(ExternalProvider.Azure));
+    }
+
+    [Fact]
+    public void ExternalProfile_RequiresAtLeastOneProviderSelection()
+    {
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
+
+        Assert.Contains("ExternalProviders:Selection", options.ValidateFor());
+    }
+
+    [Fact]
+    public void ExternalProfile_RejectsAnUnknownProviderSelection()
+    {
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
+
+        Assert.Contains("ExternalProviders:Selection", options.ValidateFor((ExternalProvider)99));
+    }
+
+    [Theory]
+    [InlineData(ExternalProvider.Azure)]
+    [InlineData(ExternalProvider.Aws)]
+    public void ExternalProfile_RejectsEmulatorMode(ExternalProvider provider)
+    {
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
+
+        var errors = options.ValidateFor(provider);
+
+        Assert.Contains($"ExternalProviders:{provider}:Mode", errors);
+    }
+
+    [Fact]
+    public void ExternalProfile_RejectsANullSelectedProviderGroup()
+    {
+        var options = ProviderWith(("VICIONE_TESTS__Profile", "External")).GetOptions();
+        options.ExternalProviders.Azure = null!;
+
+        Assert.Contains("ExternalProviders:Azure", options.ValidateFor(ExternalProvider.Azure));
     }
 
     [Fact]
     public void AwsOnlyRun_DoesNotRequireAzureResourceConfiguration()
     {
-        // The case a blanket vendor rule gets wrong: a run that never touches Azure was failed for a
-        // missing Azure setting it never uses.
         var options = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
+            ("VICIONE_TESTS__Profile", "External"),
             ("VICIONE_TESTS__ExternalProviders__Aws__Mode", "Real"),
             ("VICIONE_TESTS__ExternalProviders__Aws__Region", "eu-central-1"),
             ("VICIONE_TESTS__ExternalProviders__Aws__ResourceNamePrefix", "run-1")).GetOptions();
 
-        Assert.Empty(options.ValidateFor(external => external.Aws));
+        Assert.Empty(options.ValidateFor(ExternalProvider.Aws));
     }
 
     [Fact]
     public void AzureOnlyRun_DoesNotRequireAwsResourceConfiguration()
     {
         var options = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
+            ("VICIONE_TESTS__Profile", "External"),
             ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Real"),
             ("VICIONE_TESTS__ExternalProviders__Azure__SubscriptionId", "sub-1"),
             ("VICIONE_TESTS__ExternalProviders__Azure__ResourceGroup", "rg-1"),
             ("VICIONE_TESTS__ExternalProviders__Azure__Location", "westeurope"),
             ("VICIONE_TESTS__ExternalProviders__Azure__ResourceNamePrefix", "run-1")).GetOptions();
 
-        Assert.Empty(options.ValidateFor(external => external.Azure));
+        Assert.Empty(options.ValidateFor(ExternalProvider.Azure));
     }
 
     [Fact]
     public void RealAzureRun_NamesEveryMissingResourceSetting()
     {
         var options = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
+            ("VICIONE_TESTS__Profile", "External"),
             ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Real")).GetOptions();
 
         Assert.Equal(
@@ -183,59 +193,71 @@ public sealed class TestConfigurationTests
                 "ExternalProviders:Azure:Location",
                 "ExternalProviders:Azure:ResourceNamePrefix",
             ],
-            options.ValidateFor(external => external.Azure));
+            options.ValidateFor(ExternalProvider.Azure));
     }
 
     [Fact]
-    public void RealAzureRun_NamesOnlyWhatIsActuallyMissing()
+    public void DuplicateProviderSelection_IsRejected()
     {
         var options = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
-            ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Real"),
-            ("VICIONE_TESTS__ExternalProviders__Azure__SubscriptionId", "sub-1"),
-            ("VICIONE_TESTS__ExternalProviders__Azure__ResourceGroup", "rg-1"),
-            ("VICIONE_TESTS__ExternalProviders__Azure__Location", "westeurope")).GetOptions();
-
-        Assert.Equal(["ExternalProviders:Azure:ResourceNamePrefix"], options.ValidateFor(external => external.Azure));
-    }
-
-    [Fact]
-    public void SelectingTwoGroups_ReportsBothVendorsSeparately()
-    {
-        var options = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
-            ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Real"),
+            ("VICIONE_TESTS__Profile", "External"),
             ("VICIONE_TESTS__ExternalProviders__Aws__Mode", "Real")).GetOptions();
 
-        var missing = options.ValidateFor(external => external.Azure, external => external.Aws);
-
-        Assert.Contains("ExternalProviders:Azure:SubscriptionId", missing);
-        Assert.Contains("ExternalProviders:Aws:Region", missing);
+        Assert.Contains(
+            "ExternalProviders:Aws:DuplicateSelection",
+            options.ValidateFor(ExternalProvider.Aws, ExternalProvider.Aws));
     }
 
     [Fact]
-    public void GetValidatedOptions_FailsBeforeExecutionNamingTheMissingSettings()
+    public void ProviderContracts_ExposeOnlyTheApprovedNonSecretProperties()
+    {
+        Assert.Equal(
+            ["Location", "Mode", "Name", "ResourceGroup", "ResourceNamePrefix", "SubscriptionId"],
+            PublicPropertyNames<AzureProviderOptions>());
+        Assert.Equal(
+            ["Mode", "Name", "Region", "ResourceNamePrefix"],
+            PublicPropertyNames<AwsProviderOptions>());
+        Assert.Empty(PublicFields<AzureProviderOptions>());
+        Assert.Empty(PublicFields<AwsProviderOptions>());
+        Assert.Empty(PublicFields<ExternalProviderOptions>());
+    }
+
+    [Fact]
+    public void GetValidatedOptions_FailsBeforeExecutionAndNamesTheProblem()
     {
         var provider = ProviderWith(
-            ("VICIONE_TESTS__Profile", TestProfiles.External),
+            ("VICIONE_TESTS__Profile", "External"),
             ("VICIONE_TESTS__ExternalProviders__Azure__Mode", "Real"));
 
         var failure = Assert.Throws<InvalidOperationException>(
-            () => provider.GetValidatedOptions(external => external.Azure));
+            () => provider.GetValidatedOptions(ExternalProvider.Azure));
 
         Assert.Contains("ExternalProviders:Azure:SubscriptionId", failure.Message);
-        Assert.Contains(TestProfiles.External, failure.Message);
+        Assert.Contains("External", failure.Message);
+        Assert.Contains("Azure.Identity", failure.Message);
     }
 
     [Fact]
-    public void PreflightBoundary_IsFailClosedByContract()
+    public void ExternalPreflightBoundary_ExposesAnAsynchronousAccessCheck()
     {
-        // F1a fixes the boundary and implements no cloud test. What matters here is the shape: the
-        // preflight reports access by completing or by throwing, so a provider cannot signal
-        // "no access" as a skip or as success and quietly drop an external obligation.
-        var method = typeof(IExternalAccessPreflight).GetMethod(nameof(IExternalAccessPreflight.EnsureAccessAsync));
+        var method = typeof(IExternalAccessPreflight).GetMethod(
+            nameof(IExternalAccessPreflight.EnsureAccessAsync));
 
         Assert.NotNull(method);
         Assert.Equal(typeof(Task), method!.ReturnType);
+        Assert.Equal([typeof(CancellationToken)],
+            method.GetParameters().Select(parameter => parameter.ParameterType).ToArray());
     }
+
+    private static string[] PublicPropertyNames<T>() =>
+        typeof(T).GetProperties()
+            .Select(property => property.Name)
+            .OrderBy(name => name, StringComparer.Ordinal)
+            .ToArray();
+
+    private static string[] PublicFields<T>() =>
+        typeof(T).GetFields()
+            .Select(field => field.Name)
+            .OrderBy(name => name, StringComparer.Ordinal)
+            .ToArray();
 }

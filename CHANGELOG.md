@@ -25,16 +25,20 @@ entry below records what the current work changed for anyone reading the source.
   caller's own evidence parent, in its own `<run>` child. Saying that every file a run writes lives
   below the run-output root was false: the record is the one file meant to outlive the run, which is
   why it is written where the caller asked for it. Two runs on one machine still share no file.
-- `.slnx` is the canonical solution; the mechanical configuration matrix is gone. There are two:
-  `ViciOne.ServiceBus.slnx` for the product and `ViciOne.ServiceBus.Engineering.slnx` for the
-  benchmarks, the diagnostics and their tests.
+- `.slnx` is the canonical solution format. Product and engineering have named targets; native test
+  profiles are additional named targets and are materialized only when they contain an executable
+  cohort. The current Unit profile uses xUnit 4 on Microsoft Testing Platform 2. Empty profile
+  solutions are forbidden.
+- Test support code is framework-neutral under `ViciOne.ServiceBus.Tests.Infrastructure`; test-only
+  package versions do not participate in product evaluation, and the inherited NUnit/VSTest/Python
+  stack is transition evidence rather than the target test architecture.
 - `Directory.Build.targets` carries the late half of the build contract: six errors that refuse a
   project which drops its lock file or locked mode, packs without its licence or notice, targets a
   framework this product does not support, or reaches for `netstandard2.0` while being neither a
   Roslyn component nor the analyzer package project whose framework group decides which consumers may
   reference it.
-- `build/verification/VERIFICATION_MODEL.json` is the single verification truth. It replaced a
-  capability matrix and a not-executed inventory that described the same categories twice.
+- The inherited verification inventory was consolidated during takeover. It remains migration
+  evidence only and is replaced cohort by cohort by the native xUnit/MTP test estate.
 - The ActiveMQ publish topology is deployed to the broker. Resolving a destination name is a client
   side act and left the broker without the topic; `SessionContext.EnsureTopicExists` makes the broker
   hold it.

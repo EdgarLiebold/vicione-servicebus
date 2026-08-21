@@ -1,0 +1,178 @@
+using System.Xml.Linq;
+using Xunit;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+
+/// <summary>Repository-wide architecture rules derived from the actual project and solution graph.</summary>
+public sealed class RepositoryGraphTests
+{
+    private static readonly HashSet<string> AllowedLanguageVersionPins =
+    [
+        "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
+        "src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj",
+    ];
+
+    [Fact]
+    public void EveryProductProject_StaysIndependentOfTheNativeTestTree()
+    {
+        var violations = RepositoryLayout.ProductProjects
+            .SelectMany(project => ProjectReferences(project)
+                .Where(reference => RepositoryLayout.RelativeToRoot(reference)
+                    .StartsWith("tests2/", RepositoryLayout.PathComparison))
+                .Select(reference =>
+                    $"{RepositoryLayout.RelativeToRoot(project)} -> {RepositoryLayout.RelativeToRoot(reference)}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void NativeTestProjects_DeclareNoLocalPackageVersion()
+    {
+        var violations = RepositoryLayout.NativeTestProjects
+            .SelectMany(project => XDocument.Load(project).Descendants("PackageReference")
+                .Where(reference =>
+                    reference.Attribute("Version") is not null ||
+                    reference.Attribute("VersionOverride") is not null ||
+                    reference.Element("Version") is not null ||
+                    reference.Element("VersionOverride") is not null)
+                .Select(reference =>
+                    $"{RepositoryLayout.RelativeToRoot(project)}:{reference.Attribute("Include")?.Value}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void LanguageVersion_IsPinnedOnlyForTheTwoRoslynComponents()
+    {
+        var buildFiles = Directory.EnumerateFiles(RepositoryLayout.Root, "*", SearchOption.AllDirectories)
+            .Where(path =>
+                path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".props", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".targets", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !RepositoryLayout.RelativeToRoot(path)
+                .StartsWith("artifacts/", StringComparison.Ordinal));
+
+        var actualPins = buildFiles
+            .Where(path => XDocument.Load(path).Descendants("LangVersion").Any())
+            .Select(RepositoryLayout.RelativeToRoot)
+            .ToHashSet(StringComparer.Ordinal);
+
+        Assert.Equal(
+            AllowedLanguageVersionPins.OrderBy(path => path, StringComparer.Ordinal),
+            actualPins.OrderBy(path => path, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void EveryMaterializedProfileSolution_HasAnExecutableTestProject()
+    {
+        Assert.NotEmpty(RepositoryLayout.TestProfileSolutions);
+
+        foreach (var solution in RepositoryLayout.TestProfileSolutions)
+        {
+            var executableProjects = SolutionProjects(solution)
+                .Where(path => path.StartsWith(
+                    Path.Combine(RepositoryLayout.Root, "tests2") + Path.DirectorySeparatorChar,
+                    RepositoryLayout.PathComparison))
+                .Where(File.Exists)
+                .Where(path => MsBuildEvaluation.PropertyOf(path, "IsTestProject") == "true")
+                .ToArray();
+
+            Assert.True(
+                executableProjects.Length > 0,
+                $"{Path.GetFileName(solution)} must not exist before its first executable cohort.");
+        }
+    }
+
+    [Fact]
+    public void EveryExecutableNativeTestProject_BelongsToExactlyOneProfile()
+    {
+        var memberships = RepositoryLayout.TestProfileSolutions
+            .SelectMany(solution => SolutionProjects(solution)
+                .Select(project => (Project: Path.GetFullPath(project), Solution: Path.GetFileName(solution))))
+            .ToLookup(entry => entry.Project, entry => entry.Solution, RepositoryLayout.PathComparer);
+
+        var violations = RepositoryLayout.NativeTestProjects
+            .Where(project => MsBuildEvaluation.PropertyOf(project, "IsTestProject") == "true")
+            .Where(project => memberships[Path.GetFullPath(project)].Count() != 1)
+            .Select(project =>
+                $"{RepositoryLayout.RelativeToRoot(project)}: {memberships[Path.GetFullPath(project)].Count()} profiles")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void UnitProfile_HasExactlyTheF1aProjectClosure()
+    {
+        var solution = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Tests.Unit.slnx");
+        var actual = SolutionProjects(solution)
+            .Select(RepositoryLayout.RelativeToRoot)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(
+            [
+                "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+                "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+                "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+                "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+            ],
+            actual);
+    }
+
+    [Fact]
+    public void EngineeringSolution_ContainsEveryNativeTestProject()
+    {
+        var engineering = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Engineering.slnx");
+        var members = SolutionProjects(engineering)
+            .Select(Path.GetFullPath)
+            .ToHashSet(RepositoryLayout.PathComparer);
+
+        var missing = RepositoryLayout.NativeTestProjects
+            .Where(project => !members.Contains(Path.GetFullPath(project)))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .ToArray();
+
+        Assert.Empty(missing);
+    }
+
+    [Fact]
+    public void EverySolutionProjectPath_Exists()
+    {
+        var missing = Directory.GetFiles(RepositoryLayout.Root, "*.slnx", SearchOption.TopDirectoryOnly)
+            .SelectMany(solution => SolutionProjects(solution)
+                .Where(project => !File.Exists(project))
+                .Select(project => $"{Path.GetFileName(solution)}:{RepositoryLayout.RelativeToRoot(project)}"))
+            .ToArray();
+
+        Assert.Empty(missing);
+    }
+
+    private static IReadOnlyList<string> ProjectReferences(string project)
+    {
+        var fullPaths = MsBuildEvaluation.ItemMetadata(project, "ProjectReference", "FullPath");
+
+        if (fullPaths.Count > 0)
+        {
+            return fullPaths.Select(Path.GetFullPath).ToArray();
+        }
+
+        var directory = Path.GetDirectoryName(project)
+            ?? throw new InvalidOperationException($"No directory for {project}.");
+
+        return MsBuildEvaluation.ItemIdentities(project, "ProjectReference")
+            .Select(reference => Path.GetFullPath(reference, directory))
+            .ToArray();
+    }
+
+    private static IReadOnlyList<string> SolutionProjects(string solution) =>
+        XDocument.Load(solution)
+            .Descendants("Project")
+            .Select(project => project.Attribute("Path")?.Value)
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => Path.GetFullPath(path!, RepositoryLayout.Root))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+}

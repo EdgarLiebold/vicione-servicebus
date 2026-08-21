@@ -15,6 +15,14 @@ internal static class RepositoryLayout
     /// <summary>Absolute path of the repository root.</summary>
     internal static string Root => RootDirectory.Value.FullName;
 
+    /// <summary>Filesystem path equality for the current operating system.</summary>
+    internal static StringComparer PathComparer =>
+        OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+    /// <summary>Filesystem path comparison for the current operating system.</summary>
+    internal static StringComparison PathComparison =>
+        OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
     /// <summary>The executable architecture test project.</summary>
     internal static string ArchitectureTestProject => Path.Combine(
         Root, "tests2", "Architecture", "ViciOne.ServiceBus.Architecture.Tests",
@@ -22,8 +30,8 @@ internal static class RepositoryLayout
 
     /// <summary>The framework-neutral, xUnit-free support library.</summary>
     internal static string TestingSupportProject => Path.Combine(
-        Root, "tests2", "Testing", "ViciOne.ServiceBus.Testing",
-        "ViciOne.ServiceBus.Testing.csproj");
+        Root, "tests2", "Testing", "ViciOne.ServiceBus.Tests.Infrastructure",
+        "ViciOne.ServiceBus.Tests.Infrastructure.csproj");
 
     /// <summary>
     /// A product project outside tests2, used as the comparison point for settings that must come
@@ -35,6 +43,27 @@ internal static class RepositoryLayout
     /// <summary>The one central runner configuration of the tree.</summary>
     internal static string CanonicalRunnerConfiguration => Path.Combine(
         Root, "tests2", "xunit.runner.json");
+
+    /// <summary>Every product project in the current source tree, derived from the filesystem.</summary>
+    internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src");
+
+    /// <summary>Every native-test project in the current replacement tree.</summary>
+    internal static IReadOnlyList<string> NativeTestProjects => EnumerateProjects("tests2");
+
+    /// <summary>Every currently materialized native test-profile solution.</summary>
+    internal static IReadOnlyList<string> TestProfileSolutions =>
+        Directory.GetFiles(Root, "ViciOne.ServiceBus.Tests.*.slnx", SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+    internal static string RelativeToRoot(string path) =>
+        Path.GetRelativePath(Root, path).Replace('\\', '/');
+
+    private static IReadOnlyList<string> EnumerateProjects(string directory) =>
+        Directory.GetFiles(Path.Combine(Root, directory), "*.csproj", SearchOption.AllDirectories)
+            .Where(path => !RelativeToRoot(path).StartsWith("artifacts/", StringComparison.Ordinal))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
 
     private static DirectoryInfo Locate()
     {
