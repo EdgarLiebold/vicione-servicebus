@@ -19,4 +19,8 @@
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
   </Folder>
+  <Folder Name="/tests2/">
+    <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
+  </Folder>
 </Solution>

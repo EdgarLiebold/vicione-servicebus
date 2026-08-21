@@ -1,0 +1,11 @@
+{
+  "$comment": "Checked-in defaults for the native test tree. Secret-free by contract: local service credentials are generated per run and external provider credentials come from the User Secrets store or the VICIONE_TESTS__ environment namespace, never from this file.",
+  "Profile": "UnitArchitecture",
+  "OperationTimeout": "00:00:30",
+  "LocalInfrastructure": {
+    "RabbitMqHost": "localhost",
+    "RabbitMqPort": 5672,
+    "PostgreSqlHost": "localhost",
+    "PostgreSqlPort": 5432
+  }
+}

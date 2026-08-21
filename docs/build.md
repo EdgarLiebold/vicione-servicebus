@@ -216,3 +216,29 @@ either. The model says so per capability; nothing claims otherwise.
 
 Two deliberately started scenarios live in `tools/diagnostics/ViciOne.ServiceBus.Diagnostics` and
 gate nothing. See their [README](../tools/diagnostics/ViciOne.ServiceBus.Diagnostics/README.md).
+
+## Native test tree (tests2)
+
+The native test estate builds and runs through the Microsoft Testing Platform. `global.json` selects
+the runner, so the .NET 10 SDK form applies: a named target and no `--` separator.
+
+```bash
+dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx /bl:{}
+dotnet build   ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental /bl:{}
+dotnet test    --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore
+```
+
+The test run is unfiltered and its exit code is the verdict. Skipped tests and warnings are failures
+through the single `tests2/xunit.runner.json`, and zero discovered tests stays the platform's exit
+code 8 rather than becoming success.
+
+Three profiles exist: `ViciOne.ServiceBus.Tests.Unit.slnx` runs without external infrastructure and
+is the profile the foundation checkpoint runs; `...Tests.LocalIntegration.slnx` and
+`...Tests.External.slnx` carry no project yet and are expected to report exit code 8 until their
+cohorts arrive.
+
+Test configuration has one owner. Checked-in, secret-free defaults live in `tests2/testsettings.json`;
+local overrides go into the single User Secrets store of the tree; CI supplies values through the
+`VICIONE_TESTS__` namespace, where a double underscore separates configuration levels, for example
+`VICIONE_TESTS__LocalInfrastructure__RabbitMqPort=5673`. Cloud credentials are never part of this:
+Azure authenticates through the `Azure.Identity` chain and AWS through the AWS SDK provider chain.

@@ -1,0 +1,19 @@
+<Solution>
+  <!-- Profile UnitArchitecture: everything that runs without external infrastructure. This is the
+       profile the F1a checkpoint runs unfiltered, and the one a change has to keep green. -->
+  <Folder Name="/tests2/">
+    <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
+  </Folder>
+  <!-- The product projects the tests inspect are members, not merely referenced.
+
+       A project that a solution only reaches through a ProjectReference does not take part in the
+       solution configuration mapping: building this solution with -c Release produced a Release test
+       artifact containing Debug product assemblies, so the profile would have been asserting Release
+       while running against Debug code. Membership is what makes one configuration apply to the
+       whole closure. They carry no test and are never executed by the runner. -->
+  <Folder Name="/src/">
+    <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,55 @@
+namespace ViciOne.ServiceBus.Architecture.Tests;
+
+/// <summary>
+/// Locates the repository and the project files the evaluated-graph tests inspect.
+/// </summary>
+/// <remarks>
+/// The root is found by walking up from the running artifact until the two marker files that only
+/// the repository root carries are both present. Nothing here is a checked-in path list, and the
+/// tests never write below the located root: the canonical checkout stays read-only to this suite.
+/// </remarks>
+internal static class RepositoryLayout
+{
+    private static readonly Lazy<DirectoryInfo> RootDirectory = new(Locate);
+
+    /// <summary>Absolute path of the repository root.</summary>
+    internal static string Root => RootDirectory.Value.FullName;
+
+    /// <summary>The executable architecture test project.</summary>
+    internal static string ArchitectureTestProject => Path.Combine(
+        Root, "tests2", "Architecture", "ViciOne.ServiceBus.Architecture.Tests",
+        "ViciOne.ServiceBus.Architecture.Tests.csproj");
+
+    /// <summary>The framework-neutral, xUnit-free support library.</summary>
+    internal static string TestingSupportProject => Path.Combine(
+        Root, "tests2", "Testing", "ViciOne.ServiceBus.Testing",
+        "ViciOne.ServiceBus.Testing.csproj");
+
+    /// <summary>
+    /// A product project outside tests2, used as the comparison point for settings that must come
+    /// from the SDK rather than from this tree.
+    /// </summary>
+    internal static string ProductComparisonProject => Path.Combine(
+        Root, "src", "ViciOne.ServiceBus.Abstractions", "ViciOne.ServiceBus.Abstractions.csproj");
+
+    /// <summary>The one central runner configuration of the tree.</summary>
+    internal static string CanonicalRunnerConfiguration => Path.Combine(
+        Root, "tests2", "xunit.runner.json");
+
+    private static DirectoryInfo Locate()
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory);
+             directory is not null;
+             directory = directory.Parent)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "global.json")) &&
+                File.Exists(Path.Combine(directory.FullName, "ViciOne.ServiceBus.slnx")))
+            {
+                return directory;
+            }
+        }
+
+        throw new InvalidOperationException(
+            $"No repository root above {AppContext.BaseDirectory}: expected a directory holding both global.json and ViciOne.ServiceBus.slnx.");
+    }
+}

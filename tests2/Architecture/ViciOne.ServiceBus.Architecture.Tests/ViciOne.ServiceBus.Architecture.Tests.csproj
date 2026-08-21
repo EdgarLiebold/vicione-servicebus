@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Microsoft Testing Platform test projects are executables: the artifact starts, runs the
+         tests and owns the process exit code. -->
+    <OutputType>Exe</OutputType>
+    <!-- Declared explicitly by the project that is one. tests2/Directory.Build.targets cross-checks
+         this declaration against the direct xunit.v3.mtp-v2 reference in both directions, so neither
+         the declaration nor the reference can be dropped without an error naming which one is
+         missing. -->
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>ViciOne.ServiceBus.Architecture.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The single test entry package. It brings discovery, assertions and the Microsoft Testing
+         Platform v2 entry point; nothing else here may bring a runner, an adapter or a logger. -->
+    <PackageReference Include="xunit.v3.mtp-v2" />
+    <!-- Framework-neutral core only. The ArchUnitNET.xUnit adapter is deliberately not referenced:
+         its fluent Check() would be a second assertion path beside xUnit's own. -->
+    <PackageReference Include="TngTech.ArchUnitNET" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Real product projects. These references are what make the type anchors in
+         ProductAssemblyFacts compile-verified: if a product type moves or disappears, this project
+         stops compiling instead of silently asserting against a stale hand-written list. -->
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
+  </ItemGroup>
+
+</Project>

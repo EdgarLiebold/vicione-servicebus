@@ -24,6 +24,15 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.6.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+    <!-- The typed test configuration owner reads a checked-in JSON file, one User Secrets store and
+         the VICIONE_TESTS__ environment namespace. These are the framework building blocks for
+         exactly that; hand-rolling a configuration stack beside them would be a second mechanism.
+         Same 10.0.11 line as the other Microsoft.Extensions packages in this file. -->
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.11" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -57,9 +66,26 @@
     <PackageVersion Include="QuikGraph.Graphviz" Version="2.5.0" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+    <!-- Architecture rules are ordinary xUnit tests over the framework-neutral ArchUnitNET core.
+         The ArchUnitNET.xUnit adapter is deliberately absent: it would be a second assertion path
+         beside xUnit's own. 0.13.4 is the newest stable release; 2.1.0-draft is a prerelease and
+         this repository resolves no floating or prerelease version. -->
+    <PackageVersion Include="TngTech.ArchUnitNET" Version="0.13.4" />
+    <!-- The single test entry package of the native test tree. It is a metapackage over
+         xunit.v3.core.mtp-v2, xunit.v3.assert and xunit.analyzers, so one reference gives a test
+         project discovery, assertions and the Microsoft Testing Platform v2 entry point. Nothing
+         else may bring a runner in. -->
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <!-- SourceLink is not referenced: the .NET SDK provides it. -->
+  <ItemGroup Condition=" '$(ViciOneNativeTestTree)' != 'true' ">
+    <!-- SourceLink is not referenced: the .NET SDK provides it.
+
+         GitHubActionsTestLogger is a VSTest logger and is forbidden in the native test tree, but the
+         inherited NUnit/VSTest projects under tests/ still consume it. A GlobalPackageReference has
+         no per-project opt-out, so the item group itself is conditioned on the marker that only
+         tests2/Directory.Build.props sets. Item conditions evaluate after all properties, so the
+         marker is visible here (see the directory-build-organization skill, AP-21). Removing this
+         condition would silently pull a forbidden package into every tests2 project. -->
     <GlobalPackageReference Include="GitHubActionsTestLogger" Version="3.0.5" />
   </ItemGroup>
 </Project>
