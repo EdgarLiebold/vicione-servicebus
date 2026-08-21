@@ -53,8 +53,10 @@ into failures, and MTP copies it into the artifact as `<AssemblyName>.testconfig
 executable test project sets `UseMicrosoftTestingPlatformRunner=true` and references exactly one entry package,
 `xunit.v3.mtp-v2`; NUnit, VSTest, test loggers, and ArchUnitNET framework adapters are forbidden in
 the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
-The minimum count is a lower bound for the accepted F1a foundation: adding tests does not require an
-update, but silently losing one of its 89 cases makes CI fail.
+The minimum count is the current lower bound for the accepted F1a foundation plus the F1b reference
+cohort: adding tests does not require an update, but silently losing one of these 91 cases makes CI
+fail. The count protects the profile floor; the embedded F1b projection independently protects the
+six concrete requirement-to-method assignments.
 
 The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:
