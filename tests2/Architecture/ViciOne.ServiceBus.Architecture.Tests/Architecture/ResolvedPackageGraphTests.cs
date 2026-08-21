@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
@@ -33,6 +34,9 @@ public sealed class ResolvedPackageGraphTests
 
     [Theory]
     [MemberData(nameof(NativeTestProjects))]
+    [RequirementCoverage(
+        "REQ-TEST-205",
+        "resolved-native-test-graphs-contain-no-forbidden-package")]
     public void EveryNativeTestProject_ResolvesNoForbiddenPackage(string relativeProjectPath)
     {
         var project = Path.Combine(RepositoryLayout.Root, relativeProjectPath);

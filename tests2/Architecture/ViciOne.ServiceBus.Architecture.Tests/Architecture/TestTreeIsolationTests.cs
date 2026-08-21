@@ -1,5 +1,6 @@
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 using ArchitectureModel = ArchUnitNET.Domain.Architecture;
@@ -44,6 +45,9 @@ public sealed class TestTreeIsolationTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-TEST-205",
+        "core-and-abstractions-do-not-depend-on-f1a-test-types")]
     public void ProductTypes_DoNotDependOnTestTypes()
     {
         // The direction that must never invert. A product type reaching into test infrastructure
@@ -54,6 +58,18 @@ public sealed class TestTreeIsolationTests
             .NotDependOnAny(Types().That().ResideInAssembly(
                 ProductAssemblyFacts.TestingInfrastructure,
                 ProductAssemblyFacts.ArchitectureTests)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-TEST-205", "abstractions-do-not-depend-on-core-types")]
+    public void AbstractionsTypes_DoNotDependOnCoreTypes()
+    {
+        // Abstractions is the lower layer. A dependency on the core assembly would invert that
+        // direction and form a cycle with the core-to-abstractions reference.
+        AssertHolds(Types().That()
+            .ResideInAssembly(ProductAssemblyFacts.Abstractions)
+            .Should()
+            .NotDependOnAny(Types().That().ResideInAssembly(ProductAssemblyFacts.Core)));
     }
 
     [Fact]

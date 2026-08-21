@@ -45,7 +45,7 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 89
+  -c Release --no-build --no-restore --minimum-expected-tests 91
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings

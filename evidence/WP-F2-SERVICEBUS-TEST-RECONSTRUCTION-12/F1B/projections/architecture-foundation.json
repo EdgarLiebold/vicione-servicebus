@@ -1,0 +1,44 @@
+[
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "architecture-test-project-single-native-test-entry",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.EvaluatedBuildGraphTests",
+    "testMethod": "ExecutableTestProject_ReferencesTheSingleTestEntryExactlyOnce"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "architecture-test-project-single-canonical-platform-config-item",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.EvaluatedBuildGraphTests",
+    "testMethod": "ExecutableTestProject_CarriesExactlyOneCanonicalTestingPlatformConfigurationItem"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "core-and-abstractions-do-not-depend-on-f1a-test-types",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.TestTreeIsolationTests",
+    "testMethod": "ProductTypes_DoNotDependOnTestTypes"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "abstractions-do-not-depend-on-core-types",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.TestTreeIsolationTests",
+    "testMethod": "AbstractionsTypes_DoNotDependOnCoreTypes"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "evaluated-product-projects-cannot-enter-native-test-tree",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.EvaluatedBuildGraphTests",
+    "testMethod": "ProductProjects_CannotEnterTheNativeTestTreeOrDeclareAnyTestDependency"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "resolved-native-test-graphs-contain-no-forbidden-package",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Architecture.ResolvedPackageGraphTests",
+    "testMethod": "EveryNativeTestProject_ResolvesNoForbiddenPackage"
+  }
+]

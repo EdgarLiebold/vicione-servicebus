@@ -33,4 +33,12 @@
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Immutable Lead-owned migration evidence, embedded so the compiled test assembly contains
+         the exact projection it verifies without creating a second runtime configuration path. -->
+    <EmbeddedResource
+      Include="../../../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json"
+      LogicalName="ViciOne.ServiceBus.Architecture.Tests.Requirements.F1B.ArchitectureFoundation.json" />
+  </ItemGroup>
+
 </Project>

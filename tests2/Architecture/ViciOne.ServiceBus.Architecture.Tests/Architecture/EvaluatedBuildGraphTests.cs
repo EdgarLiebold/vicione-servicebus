@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
@@ -40,6 +41,7 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-TEST-203", "architecture-test-project-single-native-test-entry")]
     public void ExecutableTestProject_ReferencesTheSingleTestEntryExactlyOnce()
     {
         var testEntries = MsBuildEvaluation.ItemIdentities(TestProject, "PackageReference")
@@ -132,6 +134,9 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-TEST-205",
+        "evaluated-product-projects-cannot-enter-native-test-tree")]
     public void ProductProjects_CannotEnterTheNativeTestTreeOrDeclareAnyTestDependency()
     {
         Assert.NotEmpty(RepositoryLayout.ProductProjects);
@@ -156,6 +161,9 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-TEST-203",
+        "architecture-test-project-single-canonical-platform-config-item")]
     public void ExecutableTestProject_CarriesExactlyOneCanonicalTestingPlatformConfigurationItem()
     {
         var testingPlatformConfigurations = MsBuildEvaluation.ItemMetadata(TestProject, "Content", "FullPath")
