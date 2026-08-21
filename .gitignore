@@ -47,7 +47,12 @@ node_modules
 *.iml
 *.log*
 !src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml
-.testagent/
+**/.testagent/
+!/.testagent/
+/.testagent/*
+!/.testagent/plan.md
+!/.testagent/research.md
+!/.testagent/status.md
 .nuxt
 coverage
 dist

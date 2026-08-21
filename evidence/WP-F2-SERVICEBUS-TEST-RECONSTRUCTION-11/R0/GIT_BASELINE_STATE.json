@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "kind": "R0_GIT_BASELINE_STATE",
+  "workPackageId": "WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11",
+  "requirement": "REQ-TEST-101",
+  "recordedAtUtc": "2026-08-20T16:21:36Z",
+  "recordedBefore": "FIRST_EDIT_IN_TARGET_REPOSITORY",
+  "targetRepository": "repositories/vicione-servicebus",
+  "branch": "test/servicebus-xunit4-mtp2-a-plus-v2",
+  "headCommit": "ae73c6da748e3bc3257dffa4971ee8680e086207",
+  "headTree": "e5897e7632be4f491e01d51221ee59081d4d2aa0",
+  "tagsAtHead": ["servicebus-baseline-before-xunit-migration-2026-08-19"],
+  "worktreeDirtyEntries": 0,
+  "worktreeClean": true,
+  "cancelledAttemptBranch": "archive/servicebus-test-reconstruction-04",
+  "cancelledAttemptMerged": false,
+  "toolchain": {
+    "dotnetSdk": "10.0.302"
+  },
+  "verifiedContractBindings": [
+    {"path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/DEVELOPMENT_SLICE.json", "expectedSha256": "c1865362bd7f5c1754d2e42e2af1b521f4878b28c8e1bee49fc7ee397cca45f8", "match": true},
+    {"path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/A_PLUS_TEST_ARCHITECTURE_AND_RECONSTRUCTION_PLAN.md", "expectedSha256": "6a4dd0237d574d264548d8a9d03c7a9d6f5ff6a11249354b58a8ff2d02e43776", "match": true},
+    {"path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/BASELINE_ATTESTATION.json", "expectedContentSha256": "16b8fa1b1170d73609bd9f0cf65ad1713008c9292446df5689e549e172372f66", "match": true},
+    {"path": "vicione-architecture/work/teams/team-1-claude/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/development/inbox/0001-assignment.md", "expectedSha256": "5c879afad172e795f7cd50a40827020d0a79bca54178573a580cdbc81f561c91", "match": true},
+    {"path": "vicione-architecture/governance/TEAM_LEARNING_REGISTER.json", "expectedSha256": "05df55e58106cec340fe3c25b621c64bd06ec8e80ee03609ab3f3d666030cd5d", "match": true},
+    {"path": "vicione-architecture/work/waves/WAVE-A0071-SERVICEBUS-TEST-RECONSTRUCTION-11/WAVE_AUTHORIZATION.json", "expectedContentSha256": "5644ab7155e4f0a5bd31bc940afeb6931ccbbcce39686124b6e42193eda98383", "match": true}
+  ]
+}
