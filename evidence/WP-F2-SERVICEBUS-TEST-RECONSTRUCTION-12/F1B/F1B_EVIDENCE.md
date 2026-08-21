@@ -57,6 +57,51 @@ Release ohne Restore und ohne inkrementelle Wiederverwendung. Der native Testlau
 | unfiltrierter nativer Unit-Lauf mit Mindestzahl 91 | Exit 0; 91 gesamt; 91 grün; 0 rot; 0 übersprungen |
 | `dotnet format --verify-no-changes --include tests2` | Exit 0; 0 Dateien geändert |
 
+Restore lief je Ziel in dieser exakten Form, wobei `<target>` und `<name>` nacheinander Product,
+Engineering und Unit bezeichneten:
+
+```bash
+env DOTNET_ROOT=/usr/local/share/dotnet DOTNET_MULTILEVEL_LOOKUP=0 \
+  DOTNET_CLI_TELEMETRY_OPTOUT=1 MSBUILDDISABLENODEREUSE=1 \
+  dotnet restore <target>.slnx --locked-mode --disable-build-servers \
+  -m:1 -p:BuildInParallel=false /bl:artifacts/f1b-final/<name>-locked-restore.binlog
+```
+
+Release-Builds liefen je Ziel in dieser exakten Form:
+
+```bash
+env DOTNET_ROOT=/usr/local/share/dotnet DOTNET_MULTILEVEL_LOOKUP=0 \
+  DOTNET_CLI_TELEMETRY_OPTOUT=1 MSBUILDDISABLENODEREUSE=1 \
+  dotnet build <target>.slnx --configuration Release --no-restore --no-incremental \
+  --disable-build-servers -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false \
+  /bl:artifacts/f1b-final/<name>-release-build.binlog
+```
+
+Der abschließende Unit-Acceptance-Build verwendete denselben Befehl mit dem Binlognamen
+`unit-release-build-acceptance.binlog`. Die zwei nativen Testaufrufe waren:
+
+```bash
+env DOTNET_ROOT=/usr/local/share/dotnet DOTNET_MULTILEVEL_LOOKUP=0 \
+  DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+  dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release \
+  --no-build --no-restore --minimum-expected-tests 91 --max-parallel-test-modules 1
+
+./artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/\
+ViciOne.ServiceBus.Architecture.Tests \
+  --minimum-expected-tests 91 --results-directory artifacts/f1b-final \
+  --report-xunit-ctrf \
+  --report-xunit-ctrf-filename final-unit-native-test-after-acceptance-build.ctrf.json
+```
+
+Die Formatprüfung lief exakt als:
+
+```bash
+env DOTNET_ROOT=/usr/local/share/dotnet DOTNET_MULTILEVEL_LOOKUP=0 \
+  DOTNET_CLI_TELEMETRY_OPTOUT=1 MSBUILDDISABLENODEREUSE=1 \
+  dotnet format ViciOne.ServiceBus.Tests.Unit.slnx --verify-no-changes --no-restore \
+  --include tests2 --binarylog artifacts/f1b-final/format.binlog --verbosity diagnostic
+```
+
 Die lokale MSBuild-Ausführung verwendete `-m:1` und `BuildInParallel=false`, nachdem ein vollständiger
 Binlog ausschließlich einen lokalen Mehrknoten-Handshake von mehr als zehn Minuten ohne Compiler-
 oder Testfehler gezeigt hatte. Der identische serielle Gesamtgraph baute in 17 Sekunden. Das ist eine
@@ -98,7 +143,9 @@ kanonische Arbeitskopie blieb sauber.
 | eingebettete Projektion fehlt/ist umbenannt | Comparator rot; exakter Ressourcenname benannt |
 
 Alle sechs Gegenproben scheiterten aus ihrem jeweils vorgesehenen Grund; keine Mutation wurde in
-den technischen Commit übernommen.
+den technischen Commit übernommen. Exakte Mutationen, Befehlsformen, Exitcodes und Zielbefunde sind
+in `F1B_MUTATION_EVIDENCE.md` gebunden. `F1B_MUTATION_ARTIFACTS.sha256` bindet die Ergebnistabelle
+und alle 29 Rohlogs und Binlogs.
 
 ## 6. Statische Qualitätsprüfung
 
