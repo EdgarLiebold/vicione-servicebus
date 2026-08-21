@@ -4,10 +4,11 @@
 
 R0 is accepted and remotely preserved. The first frozen F1a correction was rejected by independent
 review because a VSTest logger still contaminated product package graphs and the dynamic run was not
-bound to the frozen commit. The Lead correction is frozen at technical commit
-`5b47c9ba9b9e30de0d48d268ef65856d63a6f724`, tree
-`781e7b8f805036e4637cc69fe9543bdfa22dee32`. Full locked restore, Release build, formatting and the
-unfiltered native 86-case run are green; formal F1a acceptance is not claimed before evidence review.
+bound to the frozen commit. The final Lead correction is frozen at technical commit
+`99c7e5a373bc3e56861e302675f8cc5fc34cb31d`, tree
+`e7e055d3b889a6be53baaf3dd0136aa79a1e5dfc`. Full locked restore, Release build, formatting and the
+unfiltered native 89-case run are green; formal F1a acceptance is not claimed before the targeted
+independent delta reviews close.
 
 No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected;
 F1b and all behavior-cohort migration remain stopped.
@@ -15,7 +16,7 @@ F1b and all behavior-cohort migration remain stopped.
 | Wave | State |
 |---|---|
 | R0 analysis and obligation inventory | complete and remotely preserved |
-| F1a native foundation | technical freeze green; evidence and independent reviews pending |
+| F1a native foundation | final technical freeze green; evidence commit and delta reviews pending |
 | F1b coverage and cohort infrastructure | not started |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
