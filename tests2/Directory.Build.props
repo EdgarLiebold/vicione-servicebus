@@ -37,25 +37,14 @@
   <!-- One exact package-policy source for both the effective MSBuild gate and the resolved-closure
        architecture tests. These are second verdict paths, framework adapters or VSTest artifacts;
        Microsoft Testing Platform itself and the framework-neutral ArchUnitNET core are required. -->
+  <PropertyGroup>
+    <ViciOneForbiddenNativeTestPackageIds>GitHubActionsTestLogger;Microsoft.NET.Test.Sdk;Microsoft.Testing.Extensions.VSTestBridge;Microsoft.TestPlatform.ObjectModel;Microsoft.TestPlatform.TestHost;MSTest;MSTest.TestAdapter;MSTest.TestFramework;NUnit;NUnit3TestAdapter;NUnit.Analyzers;NUnitLite;TngTech.ArchUnitNET.xUnit;TngTech.ArchUnitNET.xUnitV3;TngTech.ArchUnitNET.NUnit;TngTech.ArchUnitNET.MSTestV2;TngTech.ArchUnitNET.TUnit;xunit.runner.visualstudio</ViciOneForbiddenNativeTestPackageIds>
+  </PropertyGroup>
+
+  <!-- Expose the same property as evaluated items for native architecture tests. The MSBuild
+       declaration gate consumes the property directly; there is no second identity list. -->
   <ItemGroup>
-    <ViciOneForbiddenNativeTestPackage Include="GitHubActionsTestLogger" />
-    <ViciOneForbiddenNativeTestPackage Include="Microsoft.NET.Test.Sdk" />
-    <ViciOneForbiddenNativeTestPackage Include="Microsoft.Testing.Extensions.VSTestBridge" />
-    <ViciOneForbiddenNativeTestPackage Include="Microsoft.TestPlatform.ObjectModel" />
-    <ViciOneForbiddenNativeTestPackage Include="Microsoft.TestPlatform.TestHost" />
-    <ViciOneForbiddenNativeTestPackage Include="MSTest" />
-    <ViciOneForbiddenNativeTestPackage Include="MSTest.TestAdapter" />
-    <ViciOneForbiddenNativeTestPackage Include="MSTest.TestFramework" />
-    <ViciOneForbiddenNativeTestPackage Include="NUnit" />
-    <ViciOneForbiddenNativeTestPackage Include="NUnit3TestAdapter" />
-    <ViciOneForbiddenNativeTestPackage Include="NUnit.Analyzers" />
-    <ViciOneForbiddenNativeTestPackage Include="NUnitLite" />
-    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.xUnit" />
-    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.xUnitV3" />
-    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.NUnit" />
-    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.MSTestV2" />
-    <ViciOneForbiddenNativeTestPackage Include="TngTech.ArchUnitNET.TUnit" />
-    <ViciOneForbiddenNativeTestPackage Include="xunit.runner.visualstudio" />
+    <ViciOneForbiddenNativeTestPackage Include="$(ViciOneForbiddenNativeTestPackageIds)" />
   </ItemGroup>
 
 </Project>
