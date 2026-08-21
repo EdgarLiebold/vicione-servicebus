@@ -4,8 +4,8 @@ Chronological. Superseded entries carry an explicit marker and a link to what re
 
 ## Current state
 
-**R0 converged under `DIR-A0071-R0-SECOND-REVIEW-02` and reslice `0008` (revision 0002). Awaiting
-Lead approval before the first test edit.**
+**R0 converged under `DIR-A0071-R0-CONVERGENCE-04`, on Development Slice revision 0002 bound by
+reslice `0008`. Awaiting Lead approval before the first test edit.**
 
 No C# test or product implementation was created, changed or deleted. Two files entered the write
 scope through the reslice and are edited for the first time here: `.gitattributes` receives one
@@ -18,7 +18,7 @@ tree. No file committed by that commit contains its own commit hash.
 Earlier intermediate commits are unaccepted history, not active truth: `0e58fa5c` (first checkpoint,
 not approved), `cf1f5bb4`, `caf3938f` and `d93d7757` (first correction round, not approved). The
 accepted evidence of those rounds keeps its bound bytes; the effective artefacts live under
-`R0-CONVERGENCE-02/`.
+`R0-CONVERGENCE-04/`.
 
 | Wave | State |
 |---|---|
@@ -69,8 +69,9 @@ in the due profile, which cannot exist before F1.
 
 All eleven technical questions of the first checkpoint were dispositioned in
 `DIR-A0071-R0-CORRECTION-01` section 6 and are applied
-(`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review
-are applied in this convergence (`R0-CONVERGENCE-02/CONVERGENCE_EVIDENCE.md`). Question `0007` was
+(`R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`). Findings F-01 through F-09 of the second review and R0-C02-01 to R0-C03-02 of the third and
+fourth reviews are applied in `R0-CONVERGENCE-04/` (see its `CONVERGENCE_EVIDENCE.md` and
+`PROOF_MAPPING_TABLE.md`); the earlier convergence directories are bound historical evidence. Question `0007` was
 answered by reslice `0008` with `OPT-A-ADD-BOTH-PATHS`. No question remains open and none is
 re-asked.
 
