@@ -11,10 +11,15 @@ This file records only what is currently effective. Superseded findings are not 
 
 The complete inherited estate was read, not sampled. 5745 tracked files are bound by SHA-256 in
 `BASELINE_TRACKED_FILE_MANIFEST.tsv`; Git paths minus read paths and read paths minus Git paths are
-both empty. Twelve cohorts read 3377 files in depth — the inherited test projects, the packable
-TestFramework, the Python tooling, the benchmark and verification models, the build infrastructure,
-and for every cohort the owning product project. Every cohort manifest reconciles hash-for-hash
-against the baseline manifest with zero mismatches and zero unknown paths.
+both empty. Twelve cohorts produced read manifests holding **3377 physical lines**, of which **1 is a header line**
+in `R0-CORE-C/READ_MANIFEST.tsv`. They therefore carry **3376 file-read records over 3329 distinct
+paths**; the remaining **47 records are intentional cross-cohort rereads**, where a second cohort had to
+read a file another cohort also owned. Unknown-shape lines: 0. Paths outside the tracked baseline: 0.
+Hash mismatches: 0. Missing mandatory paths: 0. The scope covers the inherited test projects, the
+packable TestFramework, the Python tooling, the benchmark and verification models, the build
+infrastructure and, for every cohort, the owning product project. These values are stated separately and
+never collapsed into one figure — an earlier version of this file reported the 3377 physical lines as
+'files read', which was wrong.
 
 Two cohort self-corrections are recorded rather than hidden: one agent wrote a working file to the
 repository root through a relative path after `chdir` and relocated it; the same agent declared a
@@ -42,16 +47,19 @@ repository. That is a property of the inherited estate, not a census gap.
 
 ## 3. Combined obligation ledger
 
-`COMBINED_SEMANTIC_LEDGER.jsonl`, 3664 rows, 0 duplicate ids, all 19 contract fields present.
+`COMBINED_SEMANTIC_LEDGER.jsonl`, 3664 rows, 0 duplicate ids, all 19 contract fields present. Nine rows that
+declared themselves helper capabilities, project files or lock files were reclassified out of `OBLIGATION`
+during the correction, and three cross-owner fixture invariants became shared capabilities proven inside
+the owning integration projects; no anchor identity lost its backing.
 
 | Row kind | Rows |
 |---|---:|
-| `OBLIGATION` | 3367 |
-| `INFRASTRUCTURE_FILE` | 147 |
+| `OBLIGATION` | 3358 |
+| `INFRASTRUCTURE_FILE` | 149 |
 | `ASSURANCE_PROMISE` | 116 |
-| `SHARED_CAPABILITY` | 34 |
+| `SHARED_CAPABILITY` | 41 |
 
-Of the obligations, 2869 are anchor-backed and 498 are newly derived from current product behaviour.
+Of the obligations, 2869 are anchor-backed and 489 are newly derived from current product behaviour.
 The two counts stay separate so the Lead-bound 3114 remains checkable.
 
 ## 4. Quality of the inherited estate

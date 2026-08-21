@@ -4,14 +4,21 @@ Chronological. Superseded entries carry an explicit marker and a link to what re
 
 ## Current state
 
-**Wave R0 (research) complete. Awaiting Lead approval before the first test edit.**
-No test file has been created, changed or deleted. The candidate worktree carries zero tracked
-modifications; the only untracked path is the evidence directory of this work package.
+**Wave R0 corrected under Lead directive `DIR-A0071-R0-CORRECTION-01`. Awaiting Lead approval before
+the first test edit.**
+
+No C# test, product source, build implementation, old test file or `global.json` was created, changed,
+moved or deleted. The R0 evidence of the first checkpoint is **committed** at
+`0e58fa5c8fb4f15a2b812176130d76aa69ea1d4f`; this correction adds one further commit. The worktree is
+clean after each.
+
+*(Superseded: the previous version of this file stated that the R0 evidence directory was untracked.
+That was written before the commit and never re-read afterwards. Replaced by the sentence above.)*
 
 | Wave | State |
 |---|---|
-| R0 research | complete, frozen, submitted |
-| F1 foundation | blocked on Lead approval and on blocker B-1 |
+| R0 research | complete and frozen; first checkpoint not approved, correction submitted |
+| F1 foundation | blocked on the corrected approval |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
 | C3 local brokers | not started |
@@ -22,42 +29,59 @@ modifications; the only untracked path is the evidence directory of this work pa
 | G1 freeze | requires P1 |
 | G2 independent review | not started |
 
+## Requirement state
+
+| Requirement | State |
+|---|---|
+| `REQ-TEST-101` | complete — baseline, independence from the cancelled attempt, pre-edit record |
+| `REQ-TEST-102` | active |
+| `REQ-TEST-103` | active |
+| `REQ-TEST-104` | active |
+| `REQ-TEST-105` | active |
+| `REQ-TEST-106` | active |
+| `REQ-TEST-107` | active |
+| `REQ-TEST-108` | active — neither complete nor optional; governs the transition, the removal of the inherited stack and the single freeze commit |
+| `REQ-TEST-109` | active |
+
 ## Frozen obligation set
 
-3672 entries of obligation and variant, 0 duplicates: 2766 `UnitArchitecture`, 778
-`LocalIntegration`, 128 `External`. Bound in `R0_FROZEN_RESULT.md`.
+3663 entries of obligation and variant, 0 duplicates: 2762 `UnitArchitecture`, 773
+`LocalIntegration`, 128 `External`, across 41 executable target projects, each in exactly one profile.
+
+**No disposition in R0 is terminal.** Every ledger row carries `dispositionState`, which is
+`PROPOSED` for semantic-ledger rows, `TOOLING_REGISTER` for the assurance promises of the removed
+Python platform, and `TERMINAL` for nothing — a terminal disposition requires named new tests green
+in the due profile, which cannot exist before F1.
 
 ## Open blockers
 
 | # | Item | Owner | Blocks |
 |---|---|---|---|
-| B-1 | `global.json` outside the write scope | Lead | F1 and every profile run |
-| B-2 | no disposition for structurally unprovable service behaviour | Lead | terminal state of 2 obligations |
-| B-3 | retained Python tool has no admissible proof path | Lead | tooling assurance closure |
-| B-4 | real cloud access | Product Owner | C4b, P1, G1 |
+| B-1 | `global.json` write scope — the Lead adds it together with the approval | Lead | F1 and every profile run |
+| B-2 | real cloud access | Product Owner | C4b, P1, G1 |
 
-## Open Lead questions
+## Lead dispositions received
 
-Nine, itemised in `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/INTEGRATOR_DECISIONS.md`:
-write scope, disposition vocabulary (twice), Artemis identities inside a required anchor, the
-broker-log assurance without a successor, the retained-tool proof path, one tracked Python file under
-`evidence/`, the analyzer diagnostic that never fires, and the Protobuf descriptor still carrying its
-pre-rename identity.
+All eleven technical questions of the first checkpoint were dispositioned in
+`DIR-A0071-R0-CORRECTION-01` section 6 and are applied; see
+`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/LEAD_DISPOSITIONS_APPLIED.md`.
+No question of that set remains open and none is re-asked.
 
 ## Product Owner decisions taken
 
-Recorded in `PO_DECISIONS_R0.md`: the Azure namespace no longer exists and cloud infrastructure is
-rebuilt from scratch, so no key rotation is required; structurally unprovable service behaviour is
-proven at the boundary we own and documented as a limitation; rebuilt tests assert intended
-behaviour, so the four inherited product defects are not encoded as expected behaviour.
+`R0/PO_DECISIONS_R0.md`: the Azure namespace no longer exists and cloud infrastructure is rebuilt from
+scratch, so no key rotation is required; structurally delayed service effects are proven at the
+boundary we own; rebuilt tests assert intended behaviour, so inherited product defects are not encoded
+as expected behaviour; everything locally provable is finished to A+ first.
 
 ## Not-executed register — obligations that cannot be green yet
 
 | Owner | Written | Emulator proof | Missing |
 |---|---|---|---|
-| Azure Service Bus, Event Hubs, Storage, Table | C4a | partial, capability matrix in `R0-CLOUD/RECONCILIATION.md` | real short-lived resources |
-| Amazon SQS/SNS, S3, DynamoDB | C4a | partial, LocalStack limits named per mechanism | real short-lived resources |
-| DynamoDB time-to-live, S3 lifecycle deletion | C4a | not provable in any profile | service sweeper up to 48 h — documented limitation per Product Owner decision |
+| Azure Service Bus, Event Hubs, Storage, Table | C4a | partial; capability matrix per named mechanism | real short-lived resources |
+| Amazon SQS/SNS, S3, DynamoDB | C4a | partial; LocalStack limits named per mechanism | real short-lived resources |
+| RabbitMQ via Amazon MQ | C4a | none | real Amazon MQ; the inherited verification model already records it as a real-cloud resource |
+| DynamoDB time-to-live, S3 lifecycle | C4a | configuration asserted at the service boundary | the provider-side sweep is a documented external limitation, not a ViciOne obligation |
 
 ## Requirement to evidence
 
