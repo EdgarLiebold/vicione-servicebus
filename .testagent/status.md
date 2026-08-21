@@ -12,8 +12,8 @@ policy and configuration-default findings with PASS; F1a is accepted and remotel
 
 No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected.
 The Lead-owned F1b technical candidate is frozen at commit
-`87dd0fa3682dbfdc0fe1bf626d72747948eb0be1`, tree
-`e4e375303c0017cae1c10c1dd0dbea16c5ba3475`; all positive gates and six isolated mutations are
+`dbfd48d4111de7294dcf259c16f862ca7f80b3ab`, tree
+`41b5a9ad169be187a9b2f71fd4e350692609fab2`; all positive gates and six isolated mutations are
 complete. F1b awaits its two independent read-only reviews. All behavior-cohort migration remains
 stopped.
 

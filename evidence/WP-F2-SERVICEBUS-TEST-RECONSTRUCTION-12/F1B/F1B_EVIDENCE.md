@@ -1,8 +1,10 @@
 # F1b-Beleg — native Anforderungsbindung der Architektur-Referenzkohorte
 
-Technischer Prüfgegenstand ist ausschließlich Commit
-`87dd0fa3682dbfdc0fe1bf626d72747948eb0be1` mit Tree
-`e4e375303c0017cae1c10c1dd0dbea16c5ba3475`. Dieser Bericht wird nachgelagert committed und
+Technischer Prüfgegenstand ist Commit
+`dbfd48d4111de7294dcf259c16f862ca7f80b3ab` mit Tree
+`41b5a9ad169be187a9b2f71fd4e350692609fab2`. Er besteht aus dem unveränderten F1b-Codecommit
+`87dd0fa3682dbfdc0fe1bf626d72747948eb0be1` und genau einer nachgelagerten Klarstellung in
+`docs/build.md`. Dieser Bericht wird nachgelagert committed und
 attestiert seinen technischen Parent; er behauptet keinen selbstreferenziellen Test des späteren
 Belegcommits.
 
@@ -57,8 +59,9 @@ Release ohne Restore und ohne inkrementelle Wiederverwendung. Der native Testlau
 | unfiltrierter nativer Unit-Lauf mit Mindestzahl 91 | Exit 0; 91 gesamt; 91 grün; 0 rot; 0 übersprungen |
 | `dotnet format --verify-no-changes --include tests2` | Exit 0; 0 Dateien geändert |
 
-Restore lief je Ziel in dieser exakten Form, wobei `<target>` und `<name>` nacheinander Product,
-Engineering und Unit bezeichneten:
+Restore lief je Ziel in dieser exakten Form. Die drei Ersetzungen `<target>/<name>` waren exakt
+`ViciOne.ServiceBus/product`, `ViciOne.ServiceBus.Engineering/engineering` und
+`ViciOne.ServiceBus.Tests.Unit/unit`:
 
 ```bash
 env DOTNET_ROOT=/usr/local/share/dotnet DOTNET_MULTILEVEL_LOOKUP=0 \
@@ -130,8 +133,10 @@ Ausführung, ohne Buildausgaben als Quellcode einzuchecken.
 
 ## 5. Ein-Ursachen-Sabotagen
 
-Jede Mutation lief in einer eigenen, aus dem technischen Commit erzeugten Wegwerfkopie. Die
-kanonische Arbeitskopie blieb sauber.
+Jede Mutation lief in einer eigenen, aus dem F1b-Codecommit `87dd0fa3` erzeugten Wegwerfkopie. Der
+finale technische Commit `dbfd48d4` unterscheidet sich davon ausschließlich in `docs/build.md`; alle
+Build-, Produkt-, Test-, Projektions- und Mutationspfade sind bytegleich. Die kanonische
+Arbeitskopie blieb sauber.
 
 | Mutation | Gemessenes Ergebnis |
 |---|---|
