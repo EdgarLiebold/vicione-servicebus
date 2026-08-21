@@ -112,8 +112,12 @@ null Referenzen auf `GitHubActionsTestLogger`, `Microsoft.NET.Test.Sdk` oder
 - Test- und Supportstruktur folgen den geprüften Produkt- und Architekturbereichen; F1a selbst
   beansprucht noch keine vollständige Migration der geerbten Verhaltenskohorten.
 
-## 7. Noch ausstehend
+## 7. Abnahme und Grenze
 
-F1a ist auf dem technischen Prüfcommit dynamisch grün. Vor formeller Annahme folgen die
-Belegattestierung und zwei unabhängige read-only Reviews genau dieses eingefrorenen Commits. F1b,
-Verhaltenskohorten, Löschung ersetzter Alt-Tests, Push und Cloudausführung wurden nicht begonnen.
+Zwei voneinander unabhängige read-only Delta-Reviews prüften die zuvor roten Paketpolicy- und
+Konfigurationsdefaults-Befunde am technischen Prüfcommit. Beide endeten mit PASS ohne BLOCKER oder
+MAJOR. F1a ist damit lokal angenommen.
+
+F1b, Verhaltenskohorten, Löschung ersetzter Alt-Tests, Push und Cloudausführung wurden nicht
+begonnen. Die F1a-Abnahme behauptet ausdrücklich weder vollständige Produktabdeckung noch die
+Migration eines geerbten Verhaltenskohorten-Tests.
