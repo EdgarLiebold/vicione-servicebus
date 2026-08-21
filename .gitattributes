@@ -47,3 +47,9 @@ LICENSE -text
 # evidence file keeps the normal rules — including the effective list, which lives in the newest
 # convergence directory under evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/.
 evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/OBLIGATION_SET_FROZEN.tsv whitespace=-blank-at-eol
+
+# Same rule, second immutable file: exchange record 0013-question.json binds the SHA-256 of the
+# proof-mapping table below, so its blank line at end of file may be neither rewritten nor removed.
+# This is blank-at-eof, not blank-at-eol, and again one exact path — the superseding table in the
+# newest convergence directory keeps the normal rules.
+evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/PROOF_MAPPING_TABLE.md whitespace=-blank-at-eof
