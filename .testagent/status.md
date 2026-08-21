@@ -10,15 +10,18 @@ bound to the frozen commit. The final Lead correction is frozen at technical com
 unfiltered native 89-case run are green. Two independent targeted delta reviews closed the package
 policy and configuration-default findings with PASS; F1a is accepted and remotely preserved.
 
-No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected;
-the Lead-owned F1b reference implementation is in progress. All behavior-cohort migration remains
+No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected.
+The Lead-owned F1b technical candidate is frozen at commit
+`87dd0fa3682dbfdc0fe1bf626d72747948eb0be1`, tree
+`e4e375303c0017cae1c10c1dd0dbea16c5ba3475`; all positive gates and six isolated mutations are
+complete. F1b awaits its two independent read-only reviews. All behavior-cohort migration remains
 stopped.
 
 | Wave | State |
 |---|---|
 | R0 analysis and obligation inventory | complete and remotely preserved |
 | F1a native foundation | accepted and remotely preserved at technical commit `99c7e5a3` |
-| F1b coverage and cohort infrastructure | Lead implementation in progress |
+| F1b native requirement binding | frozen; independent review pending |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
 | C3 local brokers | not started |
@@ -28,7 +31,7 @@ stopped.
 ## Next work
 
 - preserve the accepted F1a technical commit and its evidence without modification;
-- complete and independently review the bounded six-entry F1b architecture reference cohort;
+- independently review and accept or reject the bounded six-entry F1b architecture reference cohort;
 - keep behavior-cohort migration, inherited-test deletion and profile promotion stopped until their
   own accepted slices.
 
