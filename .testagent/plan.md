@@ -3,8 +3,11 @@
 Lead plan SHA-256 `6a4dd0237d574d264548d8a9d03c7a9d6f5ff6a11249354b58a8ff2d02e43776` — the sole target-architecture contract. This file is the team's execution
 plan only: ownership, sequence, commands, mappings, blockers. It changes no architecture.
 
-Corrected under Lead directive `DIR-A0071-R0-CORRECTION-01`. Frozen research result:
-`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/R0_FROZEN_RESULT.md`.
+Current state: corrected under `DIR-A0071-R0-SECOND-REVIEW-02` and `DIR-A0071-R0-CONVERGENCE-03`,
+on Development Slice **revision 0002** bound by reslice `0008`. The effective evidence is
+`evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/`. The earlier
+`R0-CORRECTION-01` and `R0-CONVERGENCE-02` directories are bound by exchange records and remain as
+historical evidence; they are not the effective result.
 
 ## 1. Exact commands
 
@@ -20,8 +23,9 @@ Measured, not quoted — see `R0/MTP_COMMAND_FORM_PROBE.md`.
 | Crash / hang | `--blame-crash`, `--blame-hang-timeout` |
 
 MTP arguments pass **directly** — no `--` separator, no positional path. This needs the SDK 10 opt-in
-in `global.json`, which the Lead adds to the write scope together with the R0 approval. It is not
-edited in the correction commit.
+in `global.json`. Reslice `0008` put `global.json` in the write scope and it **already carries**
+`"test": { "runner": "Microsoft.Testing.Platform" }` beside its unchanged `10.0.302` SDK pin, so the
+prerequisite is met and needs no further change.
 
 ## 2. Execution-owner matrix
 
@@ -555,8 +559,9 @@ cohort is removed under the precondition stated for it.
 
 | # | Blocker | Effect | Owner |
 |---|---|---|---|
-| B-1 | `global.json` write scope | no release-relevant profile run; Lead adds it with the approval | Lead |
 | B-2 | real cloud access | `C4b`, `P1`, `G1` wait by design | Product Owner |
+
+*(B-1, the `global.json` write scope, was closed by reslice `0008`; the opt-in is in the tree.)*
 
 ## 7. Requirement to evidence
 

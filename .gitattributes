@@ -44,5 +44,6 @@ LICENSE -text
 # Exchange record 0002-progress.json binds the SHA-256 of the file below, so its 543 trailing
 # tabs may be neither rewritten nor removed. This single exact path is therefore exempt from the
 # blank-at-eol check. It is not a wildcard: every current source, test, build and corrected
-# evidence file — including the superseding list under R0-CORRECTION-01 — keeps the normal rules.
+# evidence file keeps the normal rules — including the effective list, which lives in the newest
+# convergence directory under evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/.
 evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/OBLIGATION_SET_FROZEN.tsv whitespace=-blank-at-eol
