@@ -35,7 +35,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   cases and one real in-memory core publication case;
 - the ambiguous inherited array-message case is replaced by an explicit single-message contract
   that preserves element count, order, and values through the real in-memory serialization path;
-- UnitArchitecture: 680 total, 680 passed, 0 failed, 0 skipped;
+- future-location round trips use fixed external input and malformed stored locations now expose one
+  stable format boundary instead of parser, LINQ, or null-reference implementation exceptions;
+- UnitArchitecture: 689 total, 689 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -67,6 +69,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   supported-message-type, and requirement-projection mutations before its final 679-case run;
 - the array-message cohort rejects a product mutation that invalidates arrays as message contracts,
   and its ordinary assertions prove the exact serialized element sequence;
+- the future-location cohort rejects endpoint-normalization, format-boundary, null-guard, and
+  requirement-projection mutations before its final 689-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

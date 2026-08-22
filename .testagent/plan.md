@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 680 unfiltered cases;
+- `UnitArchitecture`: 689 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -168,3 +168,13 @@ The ordinary xUnit case exercises the real in-memory publish, System.Text.Json e
 path and asserts the exact element count, order, and values. The UnitArchitecture floor rises from
 679 to 680. The remaining two tests in the inherited mixed fixture were already replaced by the C3
 MessageUrn source-owner cohort, so the inherited file is now fully removed.
+
+## Accepted cohort — future locations
+
+`Futures/FutureLocationTests.cs` mirrors its product source and replaces the inherited randomized
+round trip with a fixed external identifier. It proves exact ID preservation and short queue-address
+normalization, then closes the known missing-ID gap and hardens empty, malformed, duplicate, null,
+relative-URI, and missing-endpoint inputs. The product now exposes stable public exception boundaries
+instead of leaking parser, LINQ, or null-reference implementation exceptions. Nine ordinary xUnit
+cases raise
+the UnitArchitecture floor from 680 to 689; the fully replaced inherited fixture is removed.
