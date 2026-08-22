@@ -23,7 +23,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - Release builds: 0 warnings, 0 errors;
 - product C# behavior and inherited-test source: unchanged;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
-- targeted mutation review: passed for Abstractions and the Analyzer foundation, including product
+- targeted mutation review: passed for Abstractions, the Analyzer foundation, and MessagePack,
+  including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
   the local host-derived worker-id contract, message-contract scenario closure, exact diagnostics,
   exact CodeFix output, and required source forms.
