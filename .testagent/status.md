@@ -27,11 +27,13 @@ The accepted native foundation and MessageBody behavior are committed and remote
   `Configuration/EndpointNaming`, with literal naming oracles and exact reserved-type failures;
 - 15 inherited/current-product MessageUrn obligations are mapped to 17 source-owner cases under the
   Abstractions root and `Attributes`; both runtime overloads now share input validation;
-- UnitArchitecture: 652 total, 652 passed, 0 failed, 0 skipped;
+- seven request-rate algorithm obligations are assigned to eight deterministic source-owner cases;
+- UnitArchitecture: 660 predeclared minimum; request-rate cohort validation pending;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- inherited-test source: only fully replaced endpoint-name and MessageUrn fixtures have been
-  removed; `MessageType_Specs.cs` remains because its array transport behavior is still open;
+- inherited-test source: only fully replaced endpoint-name, MessageUrn, and request-rate fixtures
+  have been removed; `MessageType_Specs.cs` remains because its array transport behavior is still
+  open;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer, including product

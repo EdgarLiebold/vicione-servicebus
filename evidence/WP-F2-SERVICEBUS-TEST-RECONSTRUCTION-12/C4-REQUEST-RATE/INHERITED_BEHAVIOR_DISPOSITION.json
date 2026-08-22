@@ -1,0 +1,58 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-D-0300",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_be_able_to_control_the_request_flow",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.Run_RequestsConfiguredLimitAndProcessesEveryResult",
+    "rationale": "The native test replaces the assertion-free inherited body with exact assertions for requested limit, returned count, callback count, result identities, and completed request state."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0301",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_be_able_to_control_the_request_flow_by_group",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.GroupedRun_RepeatedFullBatchesReachConfiguredRequestConcurrency",
+    "rationale": "Task-completion barriers create exact request overlap for five deterministic passes; ten stable groups replace unseeded randomness and wall-clock sleeps."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0302",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_easily_configure",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.FullBatches_IncreaseRequestCountAlongStableCurve",
+    "rationale": "The complete public request-count curve is asserted as one external sequence oracle, together with exact per-request limits and no remaining active request."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0303",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_limit_results_to_prefetch_count",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.ResultLimit_IsClampedToPrefetchCount",
+    "rationale": "The replacement retains both externally visible limits at the prefetch-clamping boundary."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0304",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_one_ever_have_a_single_request",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.EqualPrefetchAndResultLimits_RemainSingleRequestAfterCompletion",
+    "rationale": "The full-result theory row proves both public limits before and after completion."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0305",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.A_reusable_polling_algorithm.Should_one_ever_have_a_single_request_even_when_empty",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.EqualPrefetchAndResultLimits_RemainSingleRequestAfterCompletion",
+    "rationale": "The zero-result theory row retains the empty lower boundary without duplicating the common single-request setup."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0475",
+    "sourceFile": "src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithm.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Util.RequestRateAlgorithm..ctor",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests.Constructor_RejectsZeroRequiredOptions",
+    "rationale": "Two theory rows prove both zero-value guards with exact exception type, public parameter identity, and stable product-owned reason."
+  }
+]

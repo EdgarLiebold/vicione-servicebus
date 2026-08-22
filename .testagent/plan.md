@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 652 unfiltered cases;
+- `UnitArchitecture`: 660 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -86,3 +86,19 @@ assertion/gap review, and five one-cause mutations for derived names, array attr
 runtime-overload validation, constructor validation, and deconstruction pass. Both complete Release
 profiles pass at 652/652 and 3/3. `MessageUrnSpecs.cs` was removed only after its 12 rows closed;
 `MessageType_Specs.cs` remains untouched while its array transport behavior is open.
+
+## Current cohort — request-rate algorithm
+
+Add `Util/RequestRateAlgorithmTests.cs` to the existing Abstractions test project. Six ordinary
+xUnit methods materialize eight cases: generic flow completion, deterministic grouped/ordered
+repetition, the exact request-growth curve, prefetch clamping, full/empty single-request boundaries,
+and both zero-option guards. One passive projection row per method and a terminal disposition map
+close the seven R0 obligations.
+
+The concurrency test uses a task-completion barrier sized from the algorithm's public RequestCount;
+it contains no `Task.Delay`, random input, polling, or environment dependency. Predeclare the
+UnitArchitecture floor as 660. After focused format/build/test and static assertion review, execute
+one-cause mutations for callback processing, grouped request overlap, scaling, result clamping,
+single-request stability, and constructor validation. Then run both complete Release profiles.
+Remove `PollingAlgorithm_Specs.cs` only after the focused replacement is green and its seven rows are
+terminally mapped.

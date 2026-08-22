@@ -60,6 +60,9 @@ entry below records what the current work changed for anyone reading the source.
 - Runtime `MessageUrn` overloads now share one fail-closed input validation path for null and open
   generic types. Native source-owner tests replace the complete inherited URN fixture and add the
   previously missing deconstruction contract without preserving static-cache exception wrappers.
+- Request-rate behavior now has deterministic source-owner tests for processing, grouped execution,
+  adaptive concurrency, limits, empty results, and invalid options. The replacement removes the
+  inherited assertion-free, random, and delay-based fixture.
 - Analyzers and code fixes are separate assemblies, so the analyzer no longer references
   `Microsoft.CodeAnalysis.Workspaces`, which a command line compilation does not provide. They still
   ship as the one package `ViciOne.ServiceBus.Analyzers`.

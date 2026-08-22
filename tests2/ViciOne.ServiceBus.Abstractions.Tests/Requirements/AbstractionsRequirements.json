@@ -481,5 +481,47 @@
       "testMethod" : "Constructor_InvalidCustomUri_IsRejected",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Attributes.MessageUrnAttributeTests",
       "variantKey" : "invalid-custom-uri-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-RUN",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Run_RequestsConfiguredLimitAndProcessesEveryResult",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "process-every-result"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-GROUPED-RUN",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GroupedRun_RepeatedFullBatchesReachConfiguredRequestConcurrency",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "deterministic-request-overlap"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-SCALING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FullBatches_IncreaseRequestCountAlongStableCurve",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "full-batch-growth-curve"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-LIMITS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ResultLimit_IsClampedToPrefetchCount",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "prefetch-clamps-result-limit"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-LIMITS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EqualPrefetchAndResultLimits_RemainSingleRequestAfterCompletion",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "single-request-full-and-empty-results"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_RejectsZeroRequiredOptions",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "zero-required-option-rejected"
    }
 ]

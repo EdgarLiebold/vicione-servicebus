@@ -118,3 +118,34 @@ Acceptance checklist:
 - change product code only if a predeclared native assertion first reproduces a real defect;
 - add exactly 17 materialized UnitArchitecture cases and raise its floor from 635 to 652 before the
   first cohort result exists.
+
+## Request-rate algorithm cohort
+
+Baseline `5d3e9602` is clean and byte-identical to its private remote branch. The complete product
+sources `Util/RequestRateAlgorithm.cs`, `Util/RequestRateAlgorithmOptions.cs`, and
+`Util/ActiveRequest.cs`, the complete inherited `PollingAlgorithm_Specs.cs`, and all seven relevant
+R0 obligations were read before implementation. Six obligations come from executing inherited
+tests; the seventh is the already recorded zero-value constructor gap.
+
+The inherited flow-control test contains no assertion. The grouped test uses unseeded randomness and
+wall-clock delays to make requests overlap. The native replacement must preserve their meaningful
+behavior without preserving either defect: explicit result sets and callback counts replace the
+assertion-free case, while task-completion barriers create deterministic request overlap without
+sleeping. Its result-capacity limit is deliberately higher than the request window, so asynchronous
+result-task teardown cannot contaminate the request-concurrency measurement. The source owner is
+`src/ViciOne.ServiceBus.Abstractions/Util`, so the replacement belongs under
+`tests2/ViciOne.ServiceBus.Abstractions.Tests/Util`.
+
+Acceptance checklist:
+
+- prove the generic `Run` overload requests the configured limit, returns the exact result count,
+  and processes every returned value;
+- execute the grouped/ordered overload five times with deterministic groups, prove every pass,
+  leave no active request, and reach the configured maximum concurrency of ten;
+- retain the exact full-batch scaling curve `1, 6, 8, 9, 10, 10`;
+- retain prefetch clamping and both full/empty single-request boundaries;
+- reject zero `PrefetchCount` and zero `RequestResultLimit` with the stable product-owned reason;
+- map all seven obligations to six native methods materializing eight cases;
+- remove only `PollingAlgorithm_Specs.cs` after all seven rows close;
+- add exactly eight UnitArchitecture cases and raise its floor from 652 to 660 before the first
+  cohort result exists.
