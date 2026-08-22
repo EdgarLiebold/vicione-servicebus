@@ -48,7 +48,7 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 368
+  -c Release --no-build --no-restore --minimum-expected-tests 402
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -64,8 +64,9 @@ The minimum count is the predeclared floor for the currently materialized profil
 part of an accepted cohort, never inferred from the result of the run it is meant to protect. The
 current Unit floor includes the architecture foundation, all currently reconstructed Abstractions
 behavior, the complete inherited Analyzer and CodeFix behavior, direct tests of the projection
-verifier, and project-driven architecture Theory rows. The LocalIntegration floor is independent
-and includes only host-resource tests in that profile.
+verifier, project-driven architecture Theory rows, and the complete hermetic SignalR backplane
+behavior including its multi-target and MessagePack boundaries. The LocalIntegration floor is
+independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in

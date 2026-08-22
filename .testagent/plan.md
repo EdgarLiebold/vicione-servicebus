@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 368 unfiltered cases;
+- `UnitArchitecture`: 402 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -32,10 +32,11 @@ closed; it is never the runtime test architecture.
 
 ## Current work
 
-The complete Abstractions owner is remotely preserved through `bbc270c4`. The active cohort now
-reconstructs all 115 inherited Analyzer-project obligations: 91 message-contract cases are expressed
-as 48 canonical semantic scenarios, with direct-argument and local-variable forms kept where the
-inherited behavior distinguished them. Analyzer verdicts, CodeFix verdicts, and framework-neutral
-Roslyn fixtures remain in separate owners. Product and inherited-test source remain unchanged. The
-accepted Git commit and tree, rather than a self-referential hash inside this file, are the review
-identity.
+The complete Abstractions and Analyzer owners are remotely preserved. The current cohort adds the
+complete hermetic SignalR owner: 26 executing behaviors replace the inherited local, scale-out, group,
+user, connection, failure-containment, and JSON-boundary cases; two fully commented inherited methods
+are explicitly disposed as non-executing. Five additional cases close the untested multi-target,
+empty-target, and MessagePack paths. The project uses the product's in-memory ServiceBus and a minimal
+owner-specific SignalR connection environment, with no dependency on the inherited TestFramework.
+Product and inherited-test source remain unchanged. The accepted Git commit and tree, rather than a
+self-referential hash inside this file, are the review identity.

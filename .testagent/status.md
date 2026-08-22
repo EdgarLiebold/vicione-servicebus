@@ -13,7 +13,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - Analyzer behavior and CodeFix behavior have separate source-owner projects;
 - the 91 message-contract obligations are preserved as 48 canonical scenarios and 91 native xUnit
   cases; applicable fixes run as separate native CodeFix cases;
-- UnitArchitecture: 368 total, 368 passed, 0 failed, 0 skipped;
+- all 26 executing inherited SignalR behaviors are reconstructed without the inherited TestFramework;
+- five greenfield SignalR hardening cases cover multi-target, empty-target, and MessagePack paths;
+- UnitArchitecture: 402 total, 402 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - product and inherited-test source: unchanged;
