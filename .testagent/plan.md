@@ -1,27 +1,40 @@
-# Plan — F1b native requirement binding
+# Plan — C1a Abstractions MessageBody contract
 
-F1a is accepted. F1b adds one small architecture reference cohort without changing product code,
-migrating inherited behavior, deleting old tests, or creating another runner or verdict path.
+## Frozen target
 
-## Implementation
+Implement exactly 17 new parameterless Facts under
+`tests2/Core/ViciOne.ServiceBus.Abstractions.Tests`: 13 inherited replacements, two Base64
+hardening cases, one concrete-type-set Assurance case, and one projection-comparison Assurance
+case. The unfiltered Unit lower bound is fixed before implementation at `91 + 17 = 108`.
 
-1. Add a passive, framework-neutral `RequirementCoverageAttribute`.
-2. Embed the immutable Lead-owned six-entry architecture projection in the architecture-test
-   assembly.
-3. Compare the projection with attributed compiled xUnit methods in one ordinary `[Fact]`.
-4. Add one real ArchUnitNET core rule for the Abstractions-to-Core dependency direction.
-5. Keep MTP as the sole process-verdict owner and xUnit as the sole test-verdict owner.
+The Lead-owned files below are the sole detailed truth and must be byte/hash bound in the active
+assignment:
 
-The projection contains only requirement ID, variant key, simple assembly name, `Type.FullName`,
-and `MethodInfo.Name`. It is compared ordinally without normalization. R0 and
-`VERIFICATION_MODEL.json` are never loaded or reproduced.
+- `C1A_ABSTRACTIONS_MESSAGE_BODY_IMPLEMENTATION_PLAN.md`;
+- `C1A_R0_MIGRATION_PROJECTION.json`;
+- `C1A_REQUIREMENT_COVERAGE_PROJECTION.json`.
 
-## Verification
+## Implementation order
 
-The Lead alone runs locked restore, zero-warning Release builds, the unfiltered Unit profile,
-format checks, static test-quality review, isolated one-cause mutations, and two independent
-read-only reviews of one frozen commit and tree. The native lower bound rises from 89 to 91 so the
-new comparison test and architecture rule cannot disappear behind the accepted F1a count.
+1. Extract the existing F1b five-field comparison into the specified framework-neutral verifier;
+   keep one ordinary xUnit assertion as the only verdict.
+2. Refactor the existing F1b Fact to that verifier without changing its six-entry semantics.
+3. Add the executable Abstractions test project, lock file, Unit/Engineering membership, and real
+   evaluated-graph rules.
+4. Add the six source-parallel test files with exactly the 17 named Facts and embed the immutable
+   C1a requirement projection.
+5. Update native CI minimum to 108 and update `docs/build.md` in English.
+6. Stop for Lead execution. Only the Lead may run restore, build, test, format, or any other .NET or
+   MSBuild process.
 
-F1b stops after this reference chain is accepted. Behavioral migration and inherited-test deletion
-remain outside this checkpoint.
+## Acceptance
+
+- product and inherited-test bytes unchanged;
+- exact 51-to-13 R0 closure and exact 16 attributed-method projection;
+- 17 new Facts discovered, green, and not skipped; unfiltered total at least 108;
+- accepted F1a/F1b behavior unchanged;
+- all specified C1a mutations and all six accepted F1b mutations fail from their own cause;
+- full assertion, anti-pattern, smell, gap, graph, package, lockfile, and two-review closure;
+- one clean technical commit/tree, evidence child, and remote ref.
+
+Do not delete any inherited test file or change product behavior in C1a.

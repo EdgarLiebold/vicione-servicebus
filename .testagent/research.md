@@ -1,63 +1,39 @@
-# Research — native xUnit 4 / Microsoft Testing Platform 2 foundation
+# Research — C1a Abstractions MessageBody contract
 
-Scope: F1a of `WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12`. The implementation follows the mandatory
-Microsoft testing and MSBuild skills using the sequence research → plan → implementation → test →
-independent review.
+Scope: first hermetic behavioral cohort after the accepted F1a/F1b native xUnit 4 / Microsoft
+Testing Platform 2 foundation. Product baseline is commit `2c38bbbbd6fc2ade1b7b42b6adf72a9bda53b03a`,
+tree `456000b16ba00a003dcb293074175027103f598d`.
 
-## Baseline
+## Sources read completely
 
-- SDK `10.0.302`, pinned with roll-forward disabled.
-- `global.json` selects Microsoft Testing Platform.
-- Root MSBuild owns locked restore and the common `artifacts/sdk` output.
-- Product target is `net10.0`; only the two Roslyn components and their source-free package surface
-  retain their documented `netstandard2.0` exception.
-- The inherited `tests/**` and Python verification stack are behavior evidence only. They are not a
-  design template and are not extended.
+- `MessageBody` and all five concrete implementations in `src/ViciOne.ServiceBus.Abstractions`;
+- inherited `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs`;
+- all 87 final R0 obligations for that inherited file;
+- the accepted native-test implementation contract and F1b projection implementation;
+- mandatory Microsoft .NET testing and MSBuild skills.
 
-## Platform decisions
+## Selected closure
 
-- Executable native test projects reference exactly `xunit.v3.mtp-v2` `4.0.0` as their entry
-  package. MTP owns execution and the process verdict; xUnit owns discovery, cases, individual
-  results, and assertions.
-- Architecture rules use `TngTech.ArchUnitNET` core `0.13.4` through ordinary xUnit assertions.
-  Every ArchUnitNET framework adapter is forbidden.
-- Shared support code is non-executable, non-packable, and framework-neutral under the distinct
-  product-neutral identity `ViciOne.ServiceBus.Tests.Infrastructure`.
-- Test-only central package versions are conditional on `ViciOneNativeTestTree`. The root build
-  derives that marker from the repository-relative project path and rejects later overrides, so a
-  product project cannot opt into the test-only package boundary.
-- A profile solution exists only after its first executable cohort. F1a materializes Unit only;
-  invalid empty LocalIntegration/External solutions are forbidden.
-- The checked-in configuration contains no credentials. User Secrets and `VICIONE_TESTS__` may
-  provide non-secret resource coordinates; Azure.Identity and AWS SDK chains remain credential
-  owners.
+C1a replaces exactly 51 Abstractions obligations. The other 36 obligations, including the global
+cross-assembly census, remain open and prevent deletion of the inherited file.
 
-## Lead rejection of the first Team-1 candidate
+The 51 rows consolidate into 13 replacement Facts. For each of eight inherited input variants,
+fresh subjects exercise Length, bytes, text, and stream as the first accessor plus a stability
+comparison. Exact external bytes and text are the oracles. Stream tests perform a real write,
+require `NotSupportedException`, and verify unchanged body bytes.
 
-The first candidate provided a useful native xUnit/MTP core but was not acceptable as a completed
-foundation. Independent reproduction found:
+Two additional Facts harden empty and invalid Base64. Two Assurance Facts verify the exact five-type
+set and the passive requirement projection. These four do not claim an inherited obligation.
 
-1. full product locked restore failed because test-only CPM versions changed product lock files;
-2. empty profile solutions failed as invalid solutions, not as MTP zero-test runs;
-3. two claimed rules survived direct mutations: a root `LangVersion` pin and a no-op external
-   preflight implementation;
-4. the real package `TngTech.ArchUnitNET.xUnitV3` was not denied;
-5. the free-string profile and external defaults allowed fail-open configuration;
-6. support namespace/project identity collided with the shipped `ViciOne.ServiceBus.Testing`
-   namespace;
-7. the resolved package count mixed package nodes with project nodes;
-8. active documents named nonexistent tests and described the superseded Python stack as active;
-9. repository-wide project/profile graph rules were absent.
+## Fixed architecture
 
-The Product Owner therefore assigned the bounded F1a correction directly to the Lead Architect.
-No product behavior is changed.
+- source-owner project `tests2/Core/ViciOne.ServiceBus.Abstractions.Tests`;
+- 17 parameterless xUnit Facts, no Theory and no Skip;
+- executable MTP project with exactly one direct `xunit.v3.mtp-v2` entry;
+- framework-neutral shared projection verifier returning diagnostics, never a test verdict;
+- one ordinary xUnit assertion owns each projection verdict;
+- no product edit, old-test edit, second runner, Python test platform, receipt, sentinel, time,
+  randomness, file, environment, network, or mutable global state.
 
-## Required proof surfaces
-
-- full locked restore and Release build of product, Engineering, and Unit targets;
-- unfiltered Unit profile through native MTP;
-- evaluated MSBuild graph plus parsed project/solution graph;
-- full resolved package closures from tracked lock files;
-- isolated mutations for every fail-closed rule;
-- assertion-quality, anti-pattern, gap, and untested-source reviews;
-- two independent read-only reviews after the corrected integrated commit.
+The detailed Lead plan and both immutable projections are authoritative for exact names and mapping.
+Two independent pre-start reviews passed after correction with no open blocker or major finding.
