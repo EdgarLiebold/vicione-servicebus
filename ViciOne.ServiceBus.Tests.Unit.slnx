@@ -12,6 +12,7 @@
     <Project Path="tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
+    <Project Path="tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj" />
   </Folder>
   <!-- The product projects the tests inspect are members, not merely referenced.
 
@@ -27,5 +28,6 @@
     <Project Path="src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
     <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
   </Folder>
 </Solution>

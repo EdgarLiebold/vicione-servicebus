@@ -45,3 +45,14 @@ obligations are mapped individually in
 `evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json` and
 `evidence/native-tests/messagepack/INHERITED_MESSAGE_BODY_DISPOSITION.json`. No inherited fixture,
 NUnit base class, or TestFramework helper is reused.
+
+## State-machine visualizer owner
+
+The entire three-file visualizer product source and all nine inherited obligations assigned to that
+owner were read before implementation. The replacement retains byte-exact Graphviz and Mermaid
+contracts with expected documents independent of the generator, exercises declarative and dynamic
+state-machine inputs, verifies all request-derived outcomes, proves composite-event edge filtering,
+and defines the empty-graph boundary. The inherited no-assertion console-output cases are replaced
+by behavioral assertions. Each obligation is mapped in
+`evidence/native-tests/state-machine-visualizer/INHERITED_BEHAVIOR_DISPOSITION.json`; no inherited
+fixture or TestFramework helper is reused.

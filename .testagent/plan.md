@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 453 unfiltered cases;
+- `UnitArchitecture`: 463 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -32,11 +32,13 @@ closed; it is never the runtime test architecture.
 
 ## Current work
 
-The complete Abstractions, Analyzer, SignalR, and MessagePack owners are reconstructed. MessagePack
+The complete Abstractions, Analyzer, SignalR, MessagePack, and StateMachineVisualizer owners are
+reconstructed. MessagePack
 owns 49 native cases that replace 67 inherited module obligations and the six MessagePack-body
 obligations previously assigned to the inherited mixed core fixture, including the
 real in-memory pipeline and redelivery boundaries. It does not reuse the inherited TestFramework or
 the old parameterized fixture hierarchy. Product behavior is unchanged; the only product-project
 change is the signed friend grant needed to inspect the internal hardened option owner directly.
 The accepted Git commit and tree, rather than a self-referential hash inside this file, are the review
-identity.
+identity. StateMachineVisualizer owns seven native behavior cases plus its projection case and maps
+all nine inherited visualizer obligations individually.

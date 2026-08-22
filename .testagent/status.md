@@ -18,12 +18,16 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - all 67 inherited MessagePack obligations plus six mixed-fixture body obligations are replaced by 49
   source-owner cases covering direct serialization, body accessors, architecture, configuration,
   in-memory dispatch, and delayed redelivery;
-- UnitArchitecture: 453 total, 453 passed, 0 failed, 0 skipped;
+- all nine inherited state-machine-visualizer obligations are replaced by seven source-owner behavior
+  cases plus one requirement-projection case, covering exact Graphviz and Mermaid output, declarative,
+  dynamic, request-derived, empty, and composite-event graphs;
+- UnitArchitecture: 463 total, 463 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - product C# behavior and inherited-test source: unchanged;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
-- targeted mutation review: passed for Abstractions, the Analyzer foundation, and MessagePack,
+- targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
+  state-machine visualizer,
   including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
   the local host-derived worker-id contract, message-contract scenario closure, exact diagnostics,
