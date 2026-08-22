@@ -1,48 +1,38 @@
-# Plan — C1a Abstractions MessageBody contract
+# Plan — native test reconstruction
 
-## Frozen target
+## Target
 
-Implement exactly 17 new behavior and assurance Facts under
-`tests2/ViciOne.ServiceBus.Abstractions.Tests`: 13 inherited replacements, two Base64
-hardening cases, one concrete-type-set Assurance case, and one projection-comparison Assurance
-case. Add 33 direct verifier-infrastructure cases and the project-driven architecture rows. The
-unfiltered Unit lower bound is fixed at the completely reconciled cohort result of `146`.
+Rebuild every meaningful inherited test purpose as a source-owner test under `tests2`, using xUnit 4
+on Microsoft Testing Platform 2. The permanent tree mirrors `src`; only `Architecture`, `Testing`,
+and `Tools` are non-product owners. No phase name, generic `Core` bucket, Python test platform,
+VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
-The shared projection verifier is completed together with ordinary tests in
-`tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests`. No test-framework behavior enters
-the framework-neutral infrastructure library.
+## Current profile floors
 
-The Lead-owned files below are the sole detailed truth and must be byte/hash bound in the active
-assignment:
+- `UnitArchitecture`: 213 unfiltered cases;
+- `LocalIntegration`: 3 unfiltered cases.
 
-- `C1A_ABSTRACTIONS_MESSAGE_BODY_IMPLEMENTATION_PLAN.md`;
-- `C1A_R0_MIGRATION_PROJECTION.json`;
-- `C1A_REQUIREMENT_COVERAGE_PROJECTION.json`.
+The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
+durable product-requirement projection and compares it with passive metadata compiled into the same
+assembly. The inherited semantic ledger remains the migration input until every disposition is
+closed; it is never the runtime test architecture.
 
 ## Implementation order
 
-1. Extract the existing five-field comparison into the specified framework-neutral verifier;
-   keep one ordinary xUnit assertion as the only verdict.
-2. Refactor the existing architecture requirement Fact to that verifier without changing its
-   six-entry semantics.
-3. Add a dedicated executable infrastructure-test project and prove the verifier positively,
-   negatively, and against false-green inputs.
-4. Add the executable Abstractions test project, lock file, Unit/Engineering membership, and real
-   evaluated-graph rules.
-5. Add the six source-parallel test files with exactly the 17 named Facts and embed the immutable
-   MessageBody requirement projection.
-6. Update the native CI minimum to 146 and update `docs/build.md` in English.
-7. Only the Lead runs restore, build, test, format, mutation, or any other .NET/MSBuild process.
+1. Complete one coherent source-owner cohort from product source, inherited behavior evidence, and
+   the semantic ledger.
+2. Keep unit, local-integration, broker/database, and external-resource profiles separate.
+3. Run locked restore, Release build, unfiltered MTP tests, bounded formatting, static test-quality
+   review, and targeted false-green mutations. Only the Lead starts .NET/MSBuild processes.
+4. Commit and push a stationary accepted cohort before beginning the next one.
+5. Remove an inherited file only when all meaningful behavior it owns has an accepted replacement
+   or an explicit non-product/non-executing disposition.
+6. Remove the inherited runner and TestFramework only after complete closure, then atomically rename
+   `tests2` to `tests` and update every solution, CI, documentation, and build path.
 
-## Acceptance
+## Current work
 
-- product and inherited-test bytes unchanged;
-- exact 51-to-13 R0 closure and exact 16 attributed-method projection;
-- 17 new behavior/assurance Facts and 33 infrastructure-verifier cases discovered, green, and not
-  skipped; the project-driven graph expansion remains present; unfiltered total at least 146;
-- accepted foundation behavior unchanged;
-- all specified MessageBody and architecture-foundation mutations fail from their own cause;
-- full assertion, anti-pattern, smell, gap, graph, package, lockfile, and two-review closure;
-- one clean technical commit/tree, evidence child, and remote ref.
-
-Do not delete any inherited test file or change product behavior in this cohort.
+The MessageBody cohort and native foundation are remotely preserved at `b3519291`. This source state
+adds the remaining Abstractions unit behavior and the local-host worker-id behavior. Product and
+inherited-test source remain unchanged. Its Git commit and tree, rather than a self-referential hash
+inside this file, are the review identity.

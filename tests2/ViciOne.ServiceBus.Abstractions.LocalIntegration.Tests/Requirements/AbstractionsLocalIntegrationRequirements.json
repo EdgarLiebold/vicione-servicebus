@@ -1,0 +1,16 @@
+[
+  {
+    "requirementId": "REQ-VSB-NEWID-WORKER-ID",
+    "variantKey": "host-name-hash",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.NewId.NewIdProviders.WorkerIdProviderTests",
+    "testMethod": "HostNameHashProvider_ReturnsOneStableSixByteValue"
+  },
+  {
+    "requirementId": "REQ-VSB-NEWID-WORKER-ID",
+    "variantKey": "network-adapter",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.NewId.NewIdProviders.WorkerIdProviderTests",
+    "testMethod": "NetworkAddressProvider_ReturnsOneSixBytePhysicalAddress"
+  }
+]

@@ -1,50 +1,29 @@
-# Research — C1a Abstractions MessageBody contract
+# Research — Abstractions test owner
 
-Scope: first hermetic behavioral cohort after the accepted F1a/F1b native xUnit 4 / Microsoft
-Testing Platform 2 foundation. Product baseline is commit `2c38bbbbd6fc2ade1b7b42b6adf72a9bda53b03a`,
-tree `456000b16ba00a003dcb293074175027103f598d`.
+## Sources read
 
-## Sources read completely
+- the relevant implementation under `src/ViciOne.ServiceBus.Abstractions`;
+- all 19 C# files and the 549-value formatter corpus under the inherited
+  `tests/ViciOne.ServiceBus.Abstractions.Tests` project;
+- all 78 final semantic-ledger entries owned by that inherited project;
+- the complete existing native test tree, its package graph, build rules, and requirement verifier;
+- the mandatory Microsoft .NET test and MSBuild work rules.
 
-- `MessageBody` and all five concrete implementations in `src/ViciOne.ServiceBus.Abstractions`;
-- inherited `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs`;
-- all 87 final R0 obligations for that inherited file;
-- the accepted native-test implementation contract and F1b projection implementation;
-- mandatory Microsoft .NET testing and MSBuild skills.
+## Disposition
 
-## Selected closure
+The product behavior is split by resource boundary:
 
-C1a replaces exactly 51 Abstractions obligations. The other 36 obligations, including the global
-cross-assembly census, remain open and prevent deletion of the inherited file.
+- deterministic exception-filter, type-extension, NewId value, formatting, parsing, generation,
+  ordering, interoperability, and concurrency behavior belongs to `UnitArchitecture`;
+- the two providers that read the actual host name or physical network interfaces belong to
+  `LocalIntegration`;
+- adapter enumeration/console-output cases, a BCL `ArgumentNullException.Message` observation, and
+  compile-disabled ordering experiments are not product verdicts and are not recreated as tests.
 
-The 51 rows consolidate into 13 replacement Facts. For each of eight inherited input variants,
-fresh subjects exercise Length, bytes, text, and stream as the first accessor plus a stability
-comparison. Exact external bytes and text are the oracles. Stream tests perform a real write,
-require `NotSupportedException`, and verify unchanged body bytes.
+The 549-value formatter corpus is embedded in the new assembly byte-for-byte. Random Guid and clock
+inputs were replaced with fixed external values. Generation tests use injected tick, worker, and
+process providers; the concurrency contract uses a private deterministic generator instead of
+mutating the process-wide static generator. All executable methods carry passive requirement
+metadata and are checked against one projection per assembly.
 
-Two additional Facts harden empty and invalid Base64. Two Assurance Facts verify the exact five-type
-set and the passive requirement projection. These four do not claim an inherited obligation.
-
-## Fixed architecture
-
-- source-owner project `tests2/ViciOne.ServiceBus.Abstractions.Tests`;
-- framework-neutral shared infrastructure under `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure`;
-- ordinary executable infrastructure tests under
-  `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests`;
-- 17 parameterless xUnit Facts, no Theory and no Skip;
-- executable MTP project with exactly one direct `xunit.v3.mtp-v2` entry;
-- framework-neutral shared projection verifier returning diagnostics, never a test verdict;
-- one ordinary xUnit assertion owns each projection verdict;
-- no product edit, old-test edit, second runner, Python test platform, receipt, sentinel, time,
-  randomness, file, environment, network, or mutable global state.
-
-The detailed Lead plan and both immutable projections are authoritative for exact names and mapping.
-Two independent pre-start reviews passed after correction with no open blocker or major finding.
-
-## Static source-to-test pairing
-
-The mandatory Roslyn pairing scan ran once from the repository root before the Lead implementation.
-It classified 3,888 source files and 1,093 inherited or native test files; 591 source files had a
-static symbol pairing and 3,297 did not. This is a syntax-only prioritization heuristic: reflection,
-extension methods, target-typed construction and runtime DI can make it under-report pairing. It is
-therefore used only to order later cohorts and never as semantic-coverage or deletion evidence.
+No production source or inherited test has been edited or deleted.

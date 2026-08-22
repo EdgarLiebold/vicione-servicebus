@@ -1,40 +1,23 @@
 # Status — native test reconstruction
 
-## Current state
+## Preserved baseline
 
-R0 is accepted and remotely preserved. The first frozen F1a correction was rejected by independent
-review because a VSTest logger still contaminated product package graphs and the dynamic run was not
-bound to the frozen commit. The final Lead correction is frozen at technical commit
-`99c7e5a373bc3e56861e302675f8cc5fc34cb31d`, tree
-`e7e055d3b889a6be53baaf3dd0136aa79a1e5dfc`. Full locked restore, Release build, formatting and the
-unfiltered native 89-case run are green. Two independent targeted delta reviews closed the package
-policy and configuration-default findings with PASS; F1a is accepted and remotely preserved.
+The accepted native foundation and MessageBody behavior are committed and remotely preserved at
+`b3519291c65026fd3714929d9b721dc4e52ea01d`.
 
-No product behavior under `src/**` is changed. The native xUnit/MTP basis is retained and corrected.
-The Lead-owned F1b technical candidate is frozen at commit
-`dbfd48d4111de7294dcf259c16f862ca7f80b3ab`, tree
-`41b5a9ad169be187a9b2f71fd4e350692609fab2`; all positive gates and six isolated mutations are
-complete. Two independent read-only reviews passed without blocker, major, or minor findings. F1b
-is accepted. All behavior-cohort migration remains stopped.
+## Current source state
 
-| Wave | State |
-|---|---|
-| R0 analysis and obligation inventory | complete and remotely preserved |
-| F1a native foundation | accepted and remotely preserved at technical commit `99c7e5a3` |
-| F1b native requirement binding | accepted |
-| C1 hermetic core | not started |
-| C2 local persistence | not started |
-| C3 local brokers | not started |
-| C4 external | not started |
-| inherited-stack removal and promotion | not started |
+- the remainder of the Abstractions unit behavior is reconstructed in the source-owner project;
+- host-dependent worker-id behavior is isolated in an independent LocalIntegration project;
+- UnitArchitecture: 213 total, 213 passed, 0 failed, 0 skipped;
+- LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
+- Release builds: 0 warnings, 0 errors;
+- product and inherited-test source: unchanged;
+- locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
+- targeted mutation review is the remaining acceptance activity before the next source owner begins.
 
-## Next work
+## Remaining program
 
-- preserve the accepted F1a technical commit and its evidence without modification;
-- preserve the accepted six-entry F1b architecture reference cohort without modification;
-- plan the first inherited behavioral cohort as a separate bounded slice;
-- keep behavior-cohort migration, inherited-test deletion and profile promotion stopped until their
-  own accepted slices.
-
-Real cloud access remains a later C4 execution dependency. It does not weaken F1a and is not
-represented as passed.
+All other source owners, database/broker/cloud profiles, inherited-stack deletion, TestFramework
+removal, and the atomic `tests2` to `tests` promotion remain open. No current result represents those
+future cohorts as complete.

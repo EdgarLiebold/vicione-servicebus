@@ -33,17 +33,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The immutable MessageBody requirement projection, embedded so the compiled test assembly
+    <!-- The immutable Abstractions requirement projection, embedded so the compiled test assembly
          contains the exact projection it verifies. Embedding rather than reading from disk is what
          keeps this a single artifact with no second runtime configuration path.
          The explicit None removal is not preventing a copy - a None item carries nothing into the
          output by itself. It keeps the file out of @(None), so the one file appears in exactly one
          item list and the evaluated item lists stay an honest answer to what this project does with
          it. -->
-    <None Remove="Requirements/MessageBodyRequirements.json" />
+    <None Remove="Requirements/AbstractionsRequirements.json" />
     <EmbeddedResource
-      Include="Requirements/MessageBodyRequirements.json"
-      LogicalName="ViciOne.ServiceBus.Abstractions.Tests.Requirements.MessageBodyRequirements.json" />
+      Include="Requirements/AbstractionsRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Abstractions.Tests.Requirements.AbstractionsRequirements.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="NewId/NewIdFormatters/ReferenceCorpus.json" />
+    <EmbeddedResource
+      Include="NewId/NewIdFormatters/ReferenceCorpus.json"
+      LogicalName="ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters.ReferenceCorpus.json" />
   </ItemGroup>
 
 </Project>

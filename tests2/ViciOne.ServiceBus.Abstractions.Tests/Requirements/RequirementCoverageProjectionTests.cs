@@ -5,7 +5,7 @@ using Xunit;
 namespace ViciOne.ServiceBus.Abstractions.Tests.Requirements;
 
 /// <summary>
-/// Compares the immutable MessageBody requirement projection with the passive metadata compiled
+/// Compares the immutable Abstractions requirement projection with the passive metadata compiled
 /// into this assembly.
 /// </summary>
 /// <remarks>
@@ -21,10 +21,10 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Requirements;
 public sealed class RequirementCoverageProjectionTests
 {
     private const string ProjectionResourceName =
-        "ViciOne.ServiceBus.Abstractions.Tests.Requirements.MessageBodyRequirements.json";
+        "ViciOne.ServiceBus.Abstractions.Tests.Requirements.AbstractionsRequirements.json";
 
     [Fact]
-    public void MessageBodyRequirements_MatchCompiledRequirementMetadata()
+    public void AbstractionsRequirements_MatchCompiledRequirementMetadata()
     {
         var assembly = typeof(RequirementCoverageProjectionTests).Assembly;
 
@@ -42,8 +42,8 @@ public sealed class RequirementCoverageProjectionTests
     /// </summary>
     /// <remarks>
     /// Counting rather than testing for presence is what rejects a method carrying two test
-    /// attributes. <c>TheoryAttribute</c> derives from <c>FactAttribute</c>; this cohort declares no
-    /// Theory, and a Theory that appeared would still count once here rather than slip past.
+    /// attributes. <c>TheoryAttribute</c> derives from <c>FactAttribute</c>, so a Fact and a Theory
+    /// are each counted exactly once while a method carrying both is rejected.
     /// </remarks>
     private static bool IsExactlyOneXunitTest(MethodInfo method) =>
         method.GetCustomAttributesData()

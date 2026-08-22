@@ -1,0 +1,10 @@
+<Solution>
+  <!-- Profile LocalIntegration: real local host resources, no cloud resources. -->
+  <Folder Name="/tests2/">
+    <Project Path="tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+  </Folder>
+</Solution>

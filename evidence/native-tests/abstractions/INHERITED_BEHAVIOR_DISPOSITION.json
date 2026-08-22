@@ -1,0 +1,67 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Abstractions.Tests",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "counts": {
+    "ledgerObligations": 78,
+    "replacedExecutableObligations": 70,
+    "nonProductOrNonExecutingObligations": 8
+  },
+  "replacements": [
+    { "obligationIds": ["OBL-R0-SML-0001"], "requirementId": "REQ-VSB-EXCEPTION-FILTER", "variantKey": "type-only" },
+    { "obligationIds": ["OBL-R0-SML-0002", "OBL-R0-SML-0003"], "requirementId": "REQ-VSB-EXCEPTION-FILTER", "variantKey": "type-and-predicate" },
+    { "obligationIds": ["OBL-R0-SML-0004"], "requirementId": "REQ-VSB-EXCEPTION-FILTER", "variantKey": "derived-exception" },
+    { "obligationIds": ["OBL-R0-SML-0006", "OBL-R0-SML-0007"], "requirementId": "REQ-VSB-TYPE-EXTENSIONS", "variantKey": "multiple-indexers" },
+    { "obligationIds": ["OBL-R0-SML-0008", "OBL-R0-SML-0009", "OBL-R0-SML-0010", "OBL-R0-SML-0011"], "requirementId": "REQ-VSB-NEWID-VALUE", "variantKey": "empty-guid-format-parity" },
+    { "obligationIds": ["OBL-R0-SML-0012"], "requirementId": "REQ-VSB-NEWID-VALUE", "variantKey": "byte-construction" },
+    { "obligationIds": ["OBL-R0-SML-0014"], "requirementId": "REQ-VSB-NEWID-WORKER-ID", "variantKey": "network-adapter" },
+    { "obligationIds": ["OBL-R0-SML-0015"], "requirementId": "REQ-VSB-NEWID-WORKER-ID", "variantKey": "host-name-hash" },
+    { "obligationIds": ["OBL-R0-SML-0017"], "requirementId": "REQ-VSB-NEWID-ORDERING", "variantKey": "advancing-ticks-sql-server" },
+    { "obligationIds": ["OBL-R0-SML-0018"], "requirementId": "REQ-VSB-NEWID-ORDERING", "variantKey": "batch-sql-server" },
+    { "obligationIds": ["OBL-R0-SML-0019"], "requirementId": "REQ-VSB-NEWID-ORDERING", "variantKey": "batch-sequential-guid" },
+    { "obligationIds": ["OBL-R0-SML-0024", "OBL-R0-SML-0025", "OBL-R0-SML-0026", "OBL-R0-SML-0027", "OBL-R0-SML-0028", "OBL-R0-SML-0029", "OBL-R0-SML-0030", "OBL-R0-SML-0031", "OBL-R0-SML-0032", "OBL-R0-SML-0033", "OBL-R0-SML-0034"], "requirementId": "REQ-VSB-NEWID-FORMATTER", "variantKey": "reference-corpus" },
+    { "obligationIds": ["OBL-R0-SML-0035", "OBL-R0-SML-0036"], "requirementId": "REQ-VSB-NEWID-PARSER", "variantKey": "formatter-round-trip" },
+    { "obligationIds": ["OBL-R0-SML-0037", "OBL-R0-SML-0038", "OBL-R0-SML-0039"], "requirementId": "REQ-VSB-NEWID-FORMATTER", "variantKey": "fixed-expected-output" },
+    { "obligationIds": ["OBL-R0-SML-0040"], "requirementId": "REQ-VSB-NEWID-PARSER", "variantKey": "human-readable-aliases" },
+    { "obligationIds": ["OBL-R0-SML-0041"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "known-guid" },
+    { "obligationIds": ["OBL-R0-SML-0042"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "known-sequential-guid" },
+    { "obligationIds": ["OBL-R0-SML-0043"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "known-sequential-batch" },
+    { "obligationIds": ["OBL-R0-SML-0044"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "guid-call-shapes" },
+    { "obligationIds": ["OBL-R0-SML-0045"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "sequential-guid-call-shapes" },
+    { "obligationIds": ["OBL-R0-SML-0046", "OBL-R0-SML-0047"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "equal-providers" },
+    { "obligationIds": ["OBL-R0-SML-0048", "OBL-R0-SML-0049", "OBL-R0-SML-0056"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "process-id-separates-generators" },
+    { "obligationIds": ["OBL-R0-SML-0050"], "requirementId": "REQ-VSB-NEWID-VALUE", "variantKey": "equality" },
+    { "obligationIds": ["OBL-R0-SML-0051"], "requirementId": "REQ-VSB-NEWID-VALUE", "variantKey": "strict-order" },
+    { "obligationIds": ["OBL-R0-SML-0052"], "requirementId": "REQ-VSB-NEWID-VALUE", "variantKey": "non-strict-order" },
+    { "obligationIds": ["OBL-R0-SML-0053"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "normal-layout" },
+    { "obligationIds": ["OBL-R0-SML-0054"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "sequential-layout" },
+    { "obligationIds": ["OBL-R0-SML-0055"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "timestamp" },
+    { "obligationIds": ["OBL-R0-SML-0057"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "parallel-uniqueness" },
+    { "obligationIds": ["OBL-R0-SML-0058"], "requirementId": "REQ-VSB-NEWID-GENERATOR", "variantKey": "sequential-uniqueness" },
+    { "obligationIds": ["OBL-R0-SML-0059"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "guid-to-newid" },
+    { "obligationIds": ["OBL-R0-SML-0060", "OBL-R0-SML-0061"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "newid-to-guid" },
+    { "obligationIds": ["OBL-R0-SML-0062"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "byte-round-trip" },
+    { "obligationIds": ["OBL-R0-SML-0063"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "guid-extension-round-trip" },
+    { "obligationIds": ["OBL-R0-SML-0064"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "sequential-guid-round-trip" },
+    { "obligationIds": ["OBL-R0-SML-0065"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "guid-constructor-parity" },
+    { "obligationIds": ["OBL-R0-SML-0066"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "from-guid-preserves-generated-value" },
+    { "obligationIds": ["OBL-R0-SML-0067"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "from-sequential-guid-preserves-generated-value" },
+    { "obligationIds": ["OBL-R0-SML-0068"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "standard-string-passthrough" },
+    { "obligationIds": ["OBL-R0-SML-0069"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "newid-byte-guid-round-trip" },
+    { "obligationIds": ["OBL-R0-SML-0071", "OBL-R0-SML-0072", "OBL-R0-SML-0073", "OBL-R0-SML-0074"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "sequential-format-parity" },
+    { "obligationIds": ["OBL-R0-SML-0075", "OBL-R0-SML-0076", "OBL-R0-SML-0077", "OBL-R0-SML-0078"], "requirementId": "REQ-VSB-NEWID-GUID-INTEROP", "variantKey": "standard-format-parity" }
+  ],
+  "nonProductOrNonExecuting": [
+    { "obligationIds": ["OBL-R0-SML-0005"], "reason": "BCL_ONLY", "explanation": "Observes ArgumentNullException.Message and no ViciOne behavior." },
+    { "obligationIds": ["OBL-R0-SML-0013", "OBL-R0-SML-0016"], "reason": "NO_PRODUCT_ASSERTION", "explanation": "Enumerates and prints host adapters without asserting ViciOne behavior." },
+    { "obligationIds": ["OBL-R0-SML-0020", "OBL-R0-SML-0021", "OBL-R0-SML-0022", "OBL-R0-SML-0023"], "reason": "NOT_COMPILED", "explanation": "Compile-disabled experiments never belonged to the executable test estate." },
+    { "obligationIds": ["OBL-R0-SML-0070"], "reason": "NO_PRODUCT_ASSERTION", "explanation": "Prints a value and has no assertion." }
+  ],
+  "nonTestSourceDisposition": {
+    "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/**",
+    "state": "RETAIN_UNTIL_SAMPLE_RECONSTRUCTION",
+    "explanation": "Compilation-only usage examples are sample input, not test cases. They remain until replaced in samples/."
+  }
+}

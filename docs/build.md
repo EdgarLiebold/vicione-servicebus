@@ -10,10 +10,11 @@ mapped by `NuGet.config`; no machine-level feed or credential participates.
 | `ViciOne.ServiceBus.slnx` | inherited product and inherited tests during the replacement period |
 | `ViciOne.ServiceBus.Engineering.slnx` | benchmarks, diagnostics, product dependencies, and every materialized native-test project |
 | `ViciOne.ServiceBus.Tests.Unit.slnx` | current hermetic unit and architecture profile |
+| `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | tests against real resources of the local host |
 
-A native profile solution is created only with its first executable cohort. Local-integration and
-external profiles are therefore not materialized yet. Empty solution files are not valid test runs
-and must never be used as zero-test sentinels.
+A native profile solution is created only with its first executable cohort. The external profile is
+therefore not materialized yet. Empty solution files are not valid test runs and must never be used
+as zero-test sentinels.
 
 ## Locked restore and Release build
 
@@ -23,10 +24,12 @@ Every project tracks `packages.lock.json`, and locked mode is the default:
 dotnet restore ViciOne.ServiceBus.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+dotnet restore ViciOne.ServiceBus.Tests.LocalIntegration.slnx --locked-mode
 
 dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore --no-incremental
 dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore --no-incremental
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore --no-incremental
 ```
 
 Only an intentional package update may rewrite lock files:
@@ -45,7 +48,11 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 146
+  -c Release --no-build --no-restore --minimum-expected-tests 213
+
+VICIONE_TESTS__Profile=LocalIntegration \
+dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
+  -c Release --no-build --no-restore --minimum-expected-tests 3
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -55,8 +62,9 @@ executable test project sets `UseMicrosoftTestingPlatformRunner=true` and refere
 the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
 The minimum count is the predeclared floor for the currently materialized profile. It is updated as
 part of an accepted cohort, never inferred from the result of the run it is meant to protect. The
-current floor includes the architecture foundation, the MessageBody behavior cohort, direct tests of
-the projection verifier, and project-driven architecture Theory rows.
+current Unit floor includes the architecture foundation, all currently reconstructed Abstractions
+behavior, direct tests of the projection verifier, and project-driven architecture Theory rows. The
+LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in

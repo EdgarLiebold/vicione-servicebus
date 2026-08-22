@@ -1,0 +1,394 @@
+[
+   {
+      "requirementId" : "REQ-VSB-ARRAY-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SegmentAccessors_ExposeOnlyTheSelectedBytes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
+      "variantKey" : "segment-accessors-consistent"
+   },
+   {
+      "requirementId" : "REQ-VSB-ARRAY-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
+      "variantKey" : "stream-read-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyText_ExposesAnEmptyBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "empty-text-empty-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InvalidText_ThrowsFormatExceptionForBinaryAccess",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "invalid-text-format-error"
+   },
+   {
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "stream-read-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-BASE64-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ValidText_ExposesDecodedBytesAndOriginalText",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+      "variantKey" : "valid-text-decoded-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Bytes_ExposeOneConsistentBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+      "variantKey" : "accessors-consistent"
+   },
+   {
+      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullInput_ExposesAnEmptyBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+      "variantKey" : "null-input-empty-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-BYTES-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Stream_RejectsWritesAndPreservesBothBodies",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+      "variantKey" : "stream-read-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-EMPTY-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Instance_ExposesAnEmptyBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
+      "variantKey" : "instance-empty-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-EMPTY-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Stream_RejectsWritesAndPreservesTheBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
+      "variantKey" : "stream-read-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "BaseTypeRegistration_MatchesDerivedExceptions",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters.ExceptionSpecificationTests",
+      "variantKey" : "derived-exception"
+   },
+   {
+      "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypedPredicate_DecidesWhetherTheExceptionMatches",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters.ExceptionSpecificationTests",
+      "variantKey" : "type-and-predicate"
+   },
+   {
+      "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypeOnlyRegistration_MatchesThatExceptionType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters.ExceptionSpecificationTests",
+      "variantKey" : "type-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-BODY-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
+      "variantKey" : "abstractions-concrete-type-set"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-FORMATTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FixedIdentifier_RendersTheExactExpectedText",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters.NewIdFormatterTests",
+      "variantKey" : "fixed-expected-output"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-FORMATTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Formatter_ReproducesEveryReferenceCorpusValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters.NewIdFormatterTests",
+      "variantKey" : "reference-corpus"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EqualProviders_ProduceEqualFirstValuesAcrossCallShapes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "equal-providers"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdAndGuidCallShapes_AdvanceOneSharedSequence",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "guid-call-shapes"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FixedInputs_ProduceTheKnownGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "known-guid"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialBatch_ContinuesAtTheExactKnownValues",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "known-sequential-batch"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FixedInputs_ProduceTheKnownSequentialGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "known-sequential-guid"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NormalGuidLayout_PreservesTickAndAdvancesSequence",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "normal-layout"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConcurrentGeneration_ProducesNoDuplicates",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "parallel-uniqueness"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "DifferentProcessIdentity_ProducesDifferentValues",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "process-id-separates-generators"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdAndSequentialGuidCallShapes_AdvanceOneSharedSequence",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "sequential-guid-call-shapes"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialGuidLayout_PreservesTickAndAdvancesSequence",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "sequential-layout"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialGeneration_ProducesNoDuplicates",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "sequential-uniqueness"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GENERATOR",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GeneratedValue_CarriesTheExactTickTimestamp",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGeneratorTests",
+      "variantKey" : "timestamp"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ByteRoundTrip_ReturnsTheOriginalGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "byte-round-trip"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FromGuid_ReturnsTheGeneratedValueAndReadableTimestamp",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "from-guid-preserves-generated-value"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FromSequentialGuid_ReturnsTheGeneratedValueAndReadableTimestamp",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "from-sequential-guid-preserves-generated-value"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ComponentConstructor_MatchesTheGuidConstructor",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "guid-constructor-parity"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidExtensionRoundTrip_ReturnsTheOriginalGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "guid-extension-round-trip"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidConversion_PreservesTheStandardRepresentation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "guid-to-newid"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdThroughGuidBytes_ReturnsTheOriginalValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "newid-byte-guid-round-trip"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NewIdConversion_PreservesTheStandardRepresentation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "newid-to-guid"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialFormats_ParseAsTheSequentialGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "sequential-format-parity"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SequentialGuidRoundTrip_ReturnsTheOriginalGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "sequential-guid-round-trip"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "StandardFormats_MatchGuid",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "standard-format-parity"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-GUID-INTEROP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "StandardStringPassthrough_ReturnsTheOriginalValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdGuidInteropTests",
+      "variantKey" : "standard-string-passthrough"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-ORDERING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "IncreasingTickIntervals_RemainStrictlyIncreasingInSqlServerGuidOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdOrderingTests",
+      "variantKey" : "advancing-ticks-sql-server"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-ORDERING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Batch_IsStrictlyIncreasingInSequentialGuidOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdOrderingTests",
+      "variantKey" : "batch-sequential-guid"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-ORDERING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Batch_IsStrictlyIncreasingInSqlServerGuidOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdOrderingTests",
+      "variantKey" : "batch-sql-server"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-PARSER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Parser_RoundTripsItsFormatter",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters.NewIdFormatterTests",
+      "variantKey" : "formatter-round-trip"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-PARSER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "HumanReadableParser_AcceptsTheDocumentedConfusableCharacters",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters.NewIdFormatterTests",
+      "variantKey" : "human-readable-aliases"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GuidBytes_PreserveTheGuidRepresentation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "byte-construction"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyValue_UsesGuidCompatibleFormatting",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "empty-guid-format-parity"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EqualValues_CompareEqual",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "equality"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EarlierValue_SatisfiesNonStrictOrdering",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "non-strict-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-NEWID-VALUE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EarlierValue_ComparesLower",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdValueTests",
+      "variantKey" : "strict-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyText_ExposesAnEmptyBody",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "empty-text-empty-body"
+   },
+   {
+      "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NonAsciiText_UsesUtf8ByteLength",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "non-ascii-utf8-length"
+   },
+   {
+      "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Stream_RejectsWritesAndPreservesAllBodies",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "stream-read-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-STRING-MESSAGE-BODY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "WhitespaceText_IsPreserved",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+      "variantKey" : "whitespace-preserved"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-EXTENSIONS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetAllProperties_EnumeratesTypesWithDifferentIndexerSignatures",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "multiple-indexers"
+   }
+]
