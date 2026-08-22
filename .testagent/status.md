@@ -16,8 +16,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - Release builds: 0 warnings, 0 errors;
 - product and inherited-test source: unchanged;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
-- targeted mutation review: passed for product behavior, sequence semantics, requirement projection,
-  omitted Theory data, and the local host-derived worker-id contract.
+- targeted mutation review: passed for Abstractions and the first Analyzer cohort, including product
+  behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
+  and the local host-derived worker-id contract.
 
 ## Remaining program
 
