@@ -36,6 +36,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   exact CodeFix output, and required source forms.
 - the Cron cohort independently rejects its product regression, a missing requirement projection
   row, and removal of its test project from the Unit profile.
+- the repository-wide retrospective [product-defect accommodation audit](../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md)
+  found no weakened, skipped, filtered, or defect-accommodating test in the reconstructed scope; it
+  explicitly excludes not-yet-reconstructed product areas from that verdict.
 
 ## Remaining program
 
