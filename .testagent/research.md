@@ -115,8 +115,8 @@ Acceptance checklist:
   non-message scheme;
 - require both runtime-type overloads to reject an open generic consistently;
 - map all 15 inherited/current-product obligations to concrete native methods;
-- delete only `MessageUrnSpecs.cs`; retain `MessageType_Specs.cs` until its independent array
-  publish/consume obligation is replaced;
+- delete only `MessageUrnSpecs.cs` in this cohort; retain `MessageType_Specs.cs` until its independent
+  array publish/consume obligation is replaced, which C9 subsequently completed;
 - change product code only if a predeclared native assertion first reproduces a real defect;
 - add exactly 17 materialized UnitArchitecture cases and raise its floor from 635 to 652 before the
   first cohort result exists.

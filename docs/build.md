@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 679
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 680
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -69,6 +69,8 @@ behavior, the complete inherited Analyzer and CodeFix behavior, direct tests of 
 verifier, project-driven architecture Theory rows, the complete hermetic SignalR backplane behavior,
 MessagePack serialization and transport behavior, the state-machine visualizer, Cron scheduling,
 endpoint-name formatting, message-URN contracts, and deterministic request-rate behavior. The
+profile also proves that a public one-dimensional array can be published and consumed as one
+ordered message contract; this compatibility feature is not a batch abstraction. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable

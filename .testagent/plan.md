@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 679 unfiltered cases;
+- `UnitArchitecture`: 680 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -85,7 +85,8 @@ inherited static-cache wrapper. The UnitArchitecture floor is 652. Bounded forma
 assertion/gap review, and five one-cause mutations for derived names, array attribute propagation,
 runtime-overload validation, constructor validation, and deconstruction pass. Both complete Release
 profiles pass at 652/652 and 3/3. `MessageUrnSpecs.cs` was removed only after its 12 rows closed;
-`MessageType_Specs.cs` remains untouched while its array transport behavior is open.
+at that cohort boundary `MessageType_Specs.cs` remained untouched. C9 later replaced its independent
+array-publication behavior and removed the now-fully-closed mixed fixture.
 
 ## Accepted cohort — request-rate algorithm
 
@@ -158,3 +159,12 @@ Three ordinary xUnit cases replace five inherited obligations and raise the Unit
 from 676 to 679. The test uses the public endpoint contract directly; it neither inherits from nor
 recreates the NUnit TestFramework fixture. The inherited mixed file is removed only after both
 source-owner projects and the complete profile pass.
+
+## Accepted cohort — array message publication
+
+`Serialization/ArrayMessageTypeTests.cs` resolves the inherited fixture's contradictory name by
+stating the actual supported contract: a public one-dimensional array is one message, not a batch.
+The ordinary xUnit case exercises the real in-memory publish, System.Text.Json envelope, and consume
+path and asserts the exact element count, order, and values. The UnitArchitecture floor rises from
+679 to 680. The remaining two tests in the inherited mixed fixture were already replaced by the C3
+MessageUrn source-owner cohort, so the inherited file is now fully removed.

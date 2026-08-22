@@ -33,13 +33,15 @@ The accepted native foundation and MessageBody behavior are committed and remote
   excluded base class as independent direct topology edges;
 - all five inherited polymorphic-fault obligations are replaced by two exact Abstractions metadata
   cases and one real in-memory core publication case;
-- UnitArchitecture: 679 total, 679 passed, 0 failed, 0 skipped;
+- the ambiguous inherited array-message case is replaced by an explicit single-message contract
+  that preserves element count, order, and values through the real in-memory serialization path;
+- UnitArchitecture: 680 total, 680 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
   and request-rate fixtures have been removed; the Abstractions compile-only usage examples now
-  live in the non-packable `samples/OrderWorkflow` project; `MessageType_Specs.cs` remains because
-  its array transport behavior is still open;
+  live in the non-packable `samples/OrderWorkflow` project; `MessageType_Specs.cs` is removed after
+  its array behavior and both already-migrated MessageUrn behaviors became terminal;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer, including product
@@ -63,6 +65,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   inherited file only after all five obligations close;
 - the polymorphic-fault cohort rejects independent hierarchy-metadata, exception-data,
   supported-message-type, and requirement-projection mutations before its final 679-case run;
+- the array-message cohort rejects a product mutation that invalidates arrays as message contracts,
+  and its ordinary assertions prove the exact serialized element sequence;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;
