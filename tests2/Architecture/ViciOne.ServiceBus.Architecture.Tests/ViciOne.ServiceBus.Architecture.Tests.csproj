@@ -34,11 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Immutable Lead-owned migration evidence, embedded so the compiled test assembly contains
-         the exact projection it verifies without creating a second runtime configuration path. -->
+    <!-- The durable architecture requirement projection is part of the test project itself. -->
+    <None Remove="Requirements/ArchitectureFoundationRequirements.json" />
     <EmbeddedResource
-      Include="../../../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json"
-      LogicalName="ViciOne.ServiceBus.Architecture.Tests.Requirements.F1B.ArchitectureFoundation.json" />
+      Include="Requirements/ArchitectureFoundationRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Architecture.Tests.Requirements.ArchitectureFoundationRequirements.json" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 using System.Text.Json;
 
-namespace ViciOne.ServiceBus.Architecture.Tests;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Dependencies;
 
 /// <summary>
 /// Reads the full resolved package closure of a project from its lock file.

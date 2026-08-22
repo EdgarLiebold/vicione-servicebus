@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.Architecture.Tests;
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 /// <summary>
 /// Locates the repository and the project files the evaluated-graph tests inspect.
@@ -40,8 +40,8 @@ internal static class RepositoryLayout
     internal static string ProductComparisonProject => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.Abstractions", "ViciOne.ServiceBus.Abstractions.csproj");
 
-    /// <summary>The inherited test framework while its behavior is being migrated.</summary>
-    internal static string InheritedTestFrameworkProject => Path.Combine(
+    /// <summary>The non-deliverable compatibility test framework awaiting semantic replacement.</summary>
+    internal static string TestFrameworkProject => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.TestFramework", "ViciOne.ServiceBus.TestFramework.csproj");
 
     /// <summary>The one central Microsoft Testing Platform configuration of the tree.</summary>
@@ -49,12 +49,11 @@ internal static class RepositoryLayout
         Root, "tests2", "testconfig.json");
 
     /// <summary>
-    /// Every shipped product project, derived from the source tree. The inherited test framework
-    /// temporarily remains under <c>src</c> only as migration input and is never classified as
-    /// product.
+    /// Every shipped product project, derived from the source tree. The compatibility test framework
+    /// temporarily remains under <c>src</c> for semantic comparison and is never product delivery.
     /// </summary>
     internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src")
-        .Where(project => !PathComparer.Equals(project, InheritedTestFrameworkProject))
+        .Where(project => !PathComparer.Equals(project, TestFrameworkProject))
         .ToArray();
 
     /// <summary>Every native-test project in the current replacement tree.</summary>

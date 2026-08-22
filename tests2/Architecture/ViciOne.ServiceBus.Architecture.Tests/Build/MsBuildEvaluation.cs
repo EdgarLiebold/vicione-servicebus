@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using ViciOne.ServiceBus.Architecture.Tests.Repository;
 
-namespace ViciOne.ServiceBus.Architecture.Tests;
+namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 
 /// <summary>
 /// Evaluates a real project with MSBuild and exposes the result.

@@ -83,7 +83,7 @@
          during evaluation. -->
     <ItemGroup>
       <_ViciOneTestEntryReference Include="@(PackageReference)"
-                                  Condition=" '%(Identity)' == 'xunit.v3.mtp-v2' " />
+                                  Condition=" $([System.String]::Copy('%(Identity)').ToLowerInvariant()) == 'xunit.v3.mtp-v2' " />
     </ItemGroup>
     <Error Code="VOSBT003"
            Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 but does not declare IsTestProject=true. An executable test project must own that classification explicitly, and the MTP configuration is linked in on that declaration."

@@ -5,7 +5,7 @@ using Xunit;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 using ArchitectureModel = ArchUnitNET.Domain.Architecture;
 
-namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 /// <summary>
 /// Isolation rules over the real compiled assemblies, expressed with the framework-neutral
@@ -47,7 +47,7 @@ public sealed class TestTreeIsolationTests
     [Fact]
     [RequirementCoverage(
         "REQ-TEST-205",
-        "core-and-abstractions-do-not-depend-on-f1a-test-types")]
+        "core-and-abstractions-do-not-depend-on-test-types")]
     public void ProductTypes_DoNotDependOnTestTypes()
     {
         // The direction that must never invert. A product type reaching into test infrastructure
@@ -75,8 +75,8 @@ public sealed class TestTreeIsolationTests
     [Fact]
     public void SupportLibraryTypes_DoNotDependOnTheTestProject()
     {
-        // Shared infrastructure may be used by a test project; it may never reach back into one.
-        // That inversion is how shared infrastructure quietly becomes a test-specific helper.
+        // Test infrastructure may be used by a test project; it may never reach back into one.
+        // That inversion would make reusable infrastructure depend on a specific consumer.
         AssertHolds(Types().That()
             .ResideInAssembly(ProductAssemblyFacts.TestingInfrastructure)
             .Should()
@@ -92,8 +92,8 @@ public sealed class TestTreeIsolationTests
         {
             var references = ProductAssemblyFacts.ReferencedAssemblyNames(product);
 
-            Assert.DoesNotContain("ViciOne.ServiceBus.Tests.Infrastructure", references);
-            Assert.DoesNotContain("ViciOne.ServiceBus.Architecture.Tests", references);
+            Assert.DoesNotContain(references, name =>
+                name.Contains(".Tests", StringComparison.OrdinalIgnoreCase));
             Assert.DoesNotContain(references, name => name.StartsWith("xunit", StringComparison.OrdinalIgnoreCase));
             Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
         }
@@ -102,8 +102,8 @@ public sealed class TestTreeIsolationTests
     [Fact]
     public void CompiledSupportLibrary_ReferencesNoTestFramework()
     {
-        // Framework neutrality of ViciOne.ServiceBus.Tests.Infrastructure, read off what it actually compiled
-        // against rather than off the absence of a package reference alone.
+        // Framework neutrality is read from the compiled assembly rather than inferred from the
+        // absence of a direct package reference.
         var references = ProductAssemblyFacts.ReferencedAssemblyNames(
             ProductAssemblyFacts.TestingInfrastructure);
 
@@ -111,12 +111,15 @@ public sealed class TestTreeIsolationTests
         Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(references, name => name.StartsWith("ArchUnitNET", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(references, name => name.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(references, name =>
+            name.Contains(".Tests", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(name, "ViciOne.ServiceBus.Tests.Infrastructure", StringComparison.Ordinal));
     }
 
     [Fact]
     public void SupportLibraryPublicTypes_StayInsideItsOwnNamespace()
     {
-        // A structural rule the reference table cannot express: shared infrastructure that leaks a
+        // A structural rule the reference table cannot express: test infrastructure that leaks a
         // public type into a product namespace looks like product API to every consumer and to every
         // later architecture rule. ArchUnitNET evaluates this over the compiled types of the real
         // assembly.

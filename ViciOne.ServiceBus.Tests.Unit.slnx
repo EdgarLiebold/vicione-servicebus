@@ -1,9 +1,10 @@
 <Solution>
-  <!-- Profile UnitArchitecture: everything that runs without external infrastructure. This is the
-       profile the F1a checkpoint runs unfiltered, and the one a change has to keep green. -->
+  <!-- Profile UnitArchitecture: everything that runs without external infrastructure. -->
   <Folder Name="/tests2/">
     <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj" />
+    <Project Path="tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj" />
   </Folder>
   <!-- The product projects the tests inspect are members, not merely referenced.
 

@@ -45,7 +45,7 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 91
+  -c Release --no-build --no-restore --minimum-expected-tests 146
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -53,10 +53,19 @@ into failures, and MTP copies it into the artifact as `<AssemblyName>.testconfig
 executable test project sets `UseMicrosoftTestingPlatformRunner=true` and references exactly one entry package,
 `xunit.v3.mtp-v2`; NUnit, VSTest, test loggers, and ArchUnitNET framework adapters are forbidden in
 the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
-The minimum count is the current lower bound for the accepted F1a foundation plus the F1b reference
-cohort: adding tests does not require an update, but silently losing one of these 91 cases makes CI
-fail. The count protects the profile floor; the embedded F1b projection independently protects the
-six concrete requirement-to-method assignments.
+The minimum count is the predeclared floor for the currently materialized profile. It is updated as
+part of an accepted cohort, never inferred from the result of the run it is meant to protect. The
+current floor includes the architecture foundation, the MessageBody behavior cohort, direct tests of
+the projection verifier, and project-driven architecture Theory rows.
+
+It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
+requirement projections under each owning test project. The framework-neutral verifier in
+`ViciOne.ServiceBus.Tests.Infrastructure` compares each projection with passive metadata compiled
+into the test assembly, returns deterministic diagnostics, and never owns a verdict. Each cohort
+uses one ordinary xUnit assertion over those diagnostics.
+Input the verifier cannot read at all - a wrong root, an unknown field, a non-canonical value, a
+projected type that does not exist - throws instead, because reporting "no differences" over
+unreadable input is how a broken projection passes.
 
 The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:
@@ -74,7 +83,9 @@ All build output is under `artifacts/sdk`; no test output is written beside sour
 
 ## Test configuration
 
-`ViciOne.ServiceBus.Tests.Infrastructure` is the framework-neutral owner. Precedence is:
+`ViciOne.ServiceBus.Tests.Infrastructure` is the framework-neutral owner of both the typed test
+configuration and the requirement-coverage projection verifier. It references no test
+framework and no test platform, directly or transitively. Configuration precedence is:
 
 1. secret-free `tests2/testsettings.json`;
 2. the one shared User Secrets store for non-secret local resource coordinates;
@@ -112,8 +123,11 @@ reconstruct it. Any independently valid invariant is implemented once at its eff
 MSBuild for build-graph rules, or in native xUnit/MTP architecture tests for repository and test-estate
 rules.
 
-No inherited test is removed until its behavior obligation has an accepted native replacement in the
-correct profile. The original bytes remain recoverable through Git.
+No inherited test is removed until every behavior obligation it owns has an accepted native
+replacement in the correct profile. The original bytes remain recoverable through Git. A file whose
+obligations are only partly replaced stays in full. For example, the abstractions MessageBody
+obligations already have native replacements, while the same inherited source file still owns open
+core, MessagePack, and cross-assembly obligations and therefore remains present.
 
 ## Diagnostics and benchmarks
 

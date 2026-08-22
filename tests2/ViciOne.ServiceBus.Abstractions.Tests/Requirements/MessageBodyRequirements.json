@@ -1,0 +1,114 @@
+[
+  {
+    "requirementId": "REQ-VSB-MESSAGE-BODY-CONTRACT",
+    "variantKey": "abstractions-concrete-type-set",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests",
+    "testMethod": "EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet"
+  },
+  {
+    "requirementId": "REQ-VSB-ARRAY-MESSAGE-BODY",
+    "variantKey": "segment-accessors-consistent",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
+    "testMethod": "SegmentAccessors_ExposeOnlyTheSelectedBytes"
+  },
+  {
+    "requirementId": "REQ-VSB-ARRAY-MESSAGE-BODY",
+    "variantKey": "stream-read-only",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests",
+    "testMethod": "Stream_RejectsWritesAndPreservesTheBody"
+  },
+  {
+    "requirementId": "REQ-VSB-BASE64-MESSAGE-BODY",
+    "variantKey": "valid-text-decoded-body",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+    "testMethod": "ValidText_ExposesDecodedBytesAndOriginalText"
+  },
+  {
+    "requirementId": "REQ-VSB-BASE64-MESSAGE-BODY",
+    "variantKey": "empty-text-empty-body",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+    "testMethod": "EmptyText_ExposesAnEmptyBody"
+  },
+  {
+    "requirementId": "REQ-VSB-BASE64-MESSAGE-BODY",
+    "variantKey": "invalid-text-format-error",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+    "testMethod": "InvalidText_ThrowsFormatExceptionForBinaryAccess"
+  },
+  {
+    "requirementId": "REQ-VSB-BASE64-MESSAGE-BODY",
+    "variantKey": "stream-read-only",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests",
+    "testMethod": "Stream_RejectsWritesAndPreservesTheBody"
+  },
+  {
+    "requirementId": "REQ-VSB-BYTES-MESSAGE-BODY",
+    "variantKey": "accessors-consistent",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+    "testMethod": "Bytes_ExposeOneConsistentBody"
+  },
+  {
+    "requirementId": "REQ-VSB-BYTES-MESSAGE-BODY",
+    "variantKey": "null-input-empty-body",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+    "testMethod": "NullInput_ExposesAnEmptyBody"
+  },
+  {
+    "requirementId": "REQ-VSB-BYTES-MESSAGE-BODY",
+    "variantKey": "stream-read-only",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests",
+    "testMethod": "Stream_RejectsWritesAndPreservesBothBodies"
+  },
+  {
+    "requirementId": "REQ-VSB-EMPTY-MESSAGE-BODY",
+    "variantKey": "instance-empty-body",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
+    "testMethod": "Instance_ExposesAnEmptyBody"
+  },
+  {
+    "requirementId": "REQ-VSB-EMPTY-MESSAGE-BODY",
+    "variantKey": "stream-read-only",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests",
+    "testMethod": "Stream_RejectsWritesAndPreservesTheBody"
+  },
+  {
+    "requirementId": "REQ-VSB-STRING-MESSAGE-BODY",
+    "variantKey": "non-ascii-utf8-length",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+    "testMethod": "NonAsciiText_UsesUtf8ByteLength"
+  },
+  {
+    "requirementId": "REQ-VSB-STRING-MESSAGE-BODY",
+    "variantKey": "whitespace-preserved",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+    "testMethod": "WhitespaceText_IsPreserved"
+  },
+  {
+    "requirementId": "REQ-VSB-STRING-MESSAGE-BODY",
+    "variantKey": "empty-text-empty-body",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+    "testMethod": "EmptyText_ExposesAnEmptyBody"
+  },
+  {
+    "requirementId": "REQ-VSB-STRING-MESSAGE-BODY",
+    "variantKey": "stream-read-only",
+    "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests",
+    "testType": "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests",
+    "testMethod": "Stream_RejectsWritesAndPreservesAllBodies"
+  }
+]

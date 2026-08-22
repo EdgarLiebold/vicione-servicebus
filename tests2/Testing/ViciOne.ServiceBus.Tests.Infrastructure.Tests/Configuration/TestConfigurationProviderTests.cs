@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+namespace ViciOne.ServiceBus.Tests.Infrastructure.Tests.Configuration;
 
 /// <summary>Tests the one typed and secret-free configuration boundary.</summary>
-public sealed class TestConfigurationTests
+public sealed class TestConfigurationProviderTests
 {
     private static TestConfigurationProvider ProviderWith(params (string Key, string Value)[] environment) =>
         new(
@@ -34,7 +34,7 @@ public sealed class TestConfigurationTests
         string setting,
         string expectedError)
     {
-        var source = Path.Combine(RepositoryLayout.Root, "tests2", "testsettings.json");
+        var source = Path.Combine(AppContext.BaseDirectory, TestConfigurationProvider.SettingsFileName);
         var document = JsonNode.Parse(File.ReadAllText(source))?.AsObject()
             ?? throw new InvalidOperationException($"Could not parse {source}.");
 

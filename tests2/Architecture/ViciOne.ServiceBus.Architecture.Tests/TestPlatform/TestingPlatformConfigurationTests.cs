@@ -1,7 +1,8 @@
 using System.Text.Json;
+using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 
 /// <summary>
 /// The single MTP configuration, checked in the canonical source and in the built artifact.

@@ -106,7 +106,7 @@
           BeforeTargets="CollectPackageReferences">
     <ItemGroup>
       <_ViciOneNativeTestEntryReference Include="@(PackageReference)"
-                                        Condition=" '%(Identity)' == 'xunit.v3.mtp-v2' " />
+                                        Condition=" $([System.String]::Copy('%(Identity)').ToLowerInvariant()) == 'xunit.v3.mtp-v2' " />
     </ItemGroup>
     <Error Code="VOSB0009"
            Text="$(ViciOneProjectIdentity) evaluates ViciOneNativeTestTree=$(ViciOneNativeTestTree), but its repository path requires $(_ViciOneExpectedNativeTestTree). The native test boundary is granted only to projects below tests2/."

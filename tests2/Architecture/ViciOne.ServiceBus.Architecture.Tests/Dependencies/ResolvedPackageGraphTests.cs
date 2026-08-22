@@ -1,10 +1,12 @@
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
+using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+namespace ViciOne.ServiceBus.Architecture.Tests.Dependencies;
 
 /// <summary>
-/// Assertions over the fully resolved package closure of both projects of this tree.
+/// Assertions over the fully resolved package closure of every project of this tree.
 /// </summary>
 /// <remarks>
 /// These are the checks that the MSBuild-level ones cannot make. A declaration says what a project
@@ -32,6 +34,23 @@ public sealed class ResolvedPackageGraphTests
         }
     }
 
+    public static TheoryData<string> ExecutableNativeTestProjects
+    {
+        get
+        {
+            var projects = new TheoryData<string>();
+
+            foreach (var project in RepositoryLayout.NativeTestProjects.Where(project =>
+                         MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+                             .Contains("xunit.v3.mtp-v2", StringComparer.OrdinalIgnoreCase)))
+            {
+                projects.Add(RepositoryLayout.RelativeToRoot(project));
+            }
+
+            return projects;
+        }
+    }
+
     [Theory]
     [MemberData(nameof(NativeTestProjects))]
     [RequirementCoverage(
@@ -50,18 +69,27 @@ public sealed class ResolvedPackageGraphTests
         Assert.Empty(forbidden);
     }
 
-    [Fact]
-    public void ExecutableTestProject_ResolvesTheTestEntryAndItsPlatform()
+    [Theory]
+    [MemberData(nameof(ExecutableNativeTestProjects))]
+    public void ExecutableTestProject_ResolvesTheTestEntryAndItsPlatform(string relativeProjectPath)
     {
         // The positive half. Without it the forbidden-package test would still pass on a project
         // that resolved no test platform at all, which is the state where nothing runs and nothing
         // complains.
-        var resolved = ResolvedPackageGraph.PackagesOf(TestProject);
+        var project = Path.Combine(RepositoryLayout.Root, relativeProjectPath);
+
+        var resolved = ResolvedPackageGraph.PackagesOf(project);
 
         Assert.Contains("xunit.v3.mtp-v2", resolved, StringComparer.OrdinalIgnoreCase);
         Assert.Contains("xunit.v3.core.mtp-v2", resolved, StringComparer.OrdinalIgnoreCase);
-        Assert.Contains("TngTech.ArchUnitNET", resolved, StringComparer.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public void ArchitectureTestProject_ResolvesTheArchUnitCore() =>
+        Assert.Contains(
+            "TngTech.ArchUnitNET",
+            ResolvedPackageGraph.PackagesOf(TestProject),
+            StringComparer.OrdinalIgnoreCase);
 
     [Fact]
     public void SupportLibrary_ResolvesNoTestFrameworkOrPlatformPackage()

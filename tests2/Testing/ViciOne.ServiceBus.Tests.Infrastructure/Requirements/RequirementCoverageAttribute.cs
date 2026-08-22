@@ -1,7 +1,7 @@
 namespace ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 
 /// <summary>
-/// Identifies the single Lead-bound requirement variant proved by a test method.
+/// Identifies the single requirement variant proved by a test method.
 /// </summary>
 /// <remarks>
 /// This attribute is passive metadata. It does not observe execution, collect results, or own a

@@ -27,7 +27,10 @@ set and the passive requirement projection. These four do not claim an inherited
 
 ## Fixed architecture
 
-- source-owner project `tests2/Core/ViciOne.ServiceBus.Abstractions.Tests`;
+- source-owner project `tests2/ViciOne.ServiceBus.Abstractions.Tests`;
+- framework-neutral shared infrastructure under `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure`;
+- ordinary executable infrastructure tests under
+  `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests`;
 - 17 parameterless xUnit Facts, no Theory and no Skip;
 - executable MTP project with exactly one direct `xunit.v3.mtp-v2` entry;
 - framework-neutral shared projection verifier returning diagnostics, never a test verdict;
@@ -37,3 +40,11 @@ set and the passive requirement projection. These four do not claim an inherited
 
 The detailed Lead plan and both immutable projections are authoritative for exact names and mapping.
 Two independent pre-start reviews passed after correction with no open blocker or major finding.
+
+## Static source-to-test pairing
+
+The mandatory Roslyn pairing scan ran once from the repository root before the Lead implementation.
+It classified 3,888 source files and 1,093 inherited or native test files; 591 source files had a
+static symbol pairing and 3,297 did not. This is a syntax-only prioritization heuristic: reflection,
+extension methods, target-typed construction and runtime DI can make it under-report pairing. It is
+therefore used only to order later cohorts and never as semantic-coverage or deletion evidence.

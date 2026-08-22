@@ -22,7 +22,7 @@ internal static class ProductAssemblyFacts
     /// <summary>The core assembly, anchored on its bus entry point.</summary>
     internal static Assembly Core => typeof(Bus).Assembly;
 
-    /// <summary>The shared framework-neutral test infrastructure assembly.</summary>
+    /// <summary>The framework-neutral test infrastructure assembly.</summary>
     internal static Assembly TestingInfrastructure =>
         typeof(ServiceBus.Tests.Infrastructure.Configuration.TestConfigurationProvider).Assembly;
 
@@ -30,12 +30,11 @@ internal static class ProductAssemblyFacts
     internal static Assembly ArchitectureTests => typeof(ProductAssemblyFacts).Assembly;
 
     /// <summary>
-    /// The two product assemblies this F1a checkpoint anchors its structural rules on.
+    /// The two product assemblies currently anchored by compiled structural rules.
     /// </summary>
     /// <remarks>
-    /// This is a deliberately small anchor set, not the complete product. F1a builds the foundation
-    /// and migrates no behavioural cohort, so it anchors on the two assemblies every other one
-    /// depends on. Calling it "all product assemblies" would be a completeness claim this set does
+    /// This is a deliberately small anchor set, not the complete product. It anchors the two
+    /// assemblies every other one depends on. Calling it "all product assemblies" would be a completeness claim this set does
     /// not carry: the repository has twenty-two product projects. A rule that needs the full set
     /// must derive it from the evaluated product graph rather than from this list.
     /// </remarks>

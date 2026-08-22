@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Shared, framework-neutral test infrastructure. It owns no test case and no verdict. -->
+  <!-- Framework-neutral test infrastructure. It owns no test case and no verdict. -->
 
   <ItemGroup>
-    <!-- The architecture project tests this internal infrastructure without making test-only
+    <!-- Dedicated infrastructure tests exercise internal behavior without making test-only
          injection seams part of the reusable public surface. -->
-    <InternalsVisibleTo Include="ViciOne.ServiceBus.Architecture.Tests" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Tests.Infrastructure.Tests" />
   </ItemGroup>
 
   <ItemGroup>

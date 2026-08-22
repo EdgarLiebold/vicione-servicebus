@@ -1,7 +1,8 @@
 using System.Xml.Linq;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
 using Xunit;
 
-namespace ViciOne.ServiceBus.Architecture.Tests.Architecture;
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 /// <summary>Repository-wide architecture rules derived from the actual project and solution graph.</summary>
 public sealed class RepositoryGraphTests
@@ -135,8 +136,12 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
-    public void UnitProfile_HasExactlyTheF1aProjectClosure()
+    public void UnitArchitectureProfile_HasExactlyTheExpectedProjectClosure()
     {
+        // Exact rather than "contains": a profile that quietly lost a cohort would still contain
+        // everything this list names, and the run would go green having executed less. The product
+        // projects are members rather than mere ProjectReference targets, because only membership
+        // puts them into the solution configuration mapping.
         var solution = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Tests.Unit.slnx");
         var actual = SolutionProjects(solution)
             .Select(RepositoryLayout.RelativeToRoot)
@@ -148,7 +153,9 @@ public sealed class RepositoryGraphTests
                 "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
                 "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
                 "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+                "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj",
                 "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+                "tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
             ],
             actual);
     }
