@@ -54,6 +54,9 @@ entry below records what the current work changed for anyone reading the source.
   hold it.
 - Cron expressions tolerate repeated spaces and tabs between fields without shifting subsequent
   values into the wrong fields.
+- Endpoint-name formatter behavior now has native source-owner xUnit/MTP coverage for snake-case
+  boundaries, namespaces, prefixes, generic consumers, instance identifiers, and reserved names;
+  the fully replaced inherited NUnit fixture was removed.
 - Analyzers and code fixes are separate assemblies, so the analyzer no longer references
   `Microsoft.CodeAnalysis.Workspaces`, which a command line compilation does not provide. They still
   ship as the one package `ViciOne.ServiceBus.Analyzers`.

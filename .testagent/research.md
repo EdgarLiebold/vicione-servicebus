@@ -56,3 +56,32 @@ and defines the empty-graph boundary. The inherited no-assertion console-output 
 by behavioral assertions. Each obligation is mapped in
 `evidence/native-tests/state-machine-visualizer/INHERITED_BEHAVIOR_DISPOSITION.json`; no inherited
 fixture or TestFramework helper is reused.
+
+## Endpoint-name formatter cohort
+
+Baseline `d06874d7` was clean before cohort research. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs`, all 17 final R0 ledger obligations owned by
+that file, and the complete current implementation boundary were read: the three endpoint-name
+formatters, `IEndpointNameFormatter`, type-name formatting, endpoint settings, the consumer endpoint
+definition, and `ConfigurationException`. The complete tracked native test estate and its effective
+MSBuild, package, MTP, configuration, solution, and CI files were already read and hash-checked by
+the immediately preceding retrospective audit; no test or build file changed after that audit.
+
+The source owner is `src/ViciOne.ServiceBus/Configuration`. Its native tests therefore belong under
+`tests2/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming`. The inherited instance-id case is a
+deliberate cross-assembly contract: `ConsumerEndpointDefinition` composes the concrete kebab
+formatter's separator and sanitizer. It remains in this cohort, while later standalone behavior of
+the abstract endpoint-definition hierarchy belongs to the Abstractions owner.
+
+Acceptance checklist:
+
+- preserve all 17 inherited naming behaviors with literal, implementation-independent string or
+  exact-exception oracles;
+- retain word, digit, acronym, nested-namespace, prefix, generic-consumer, message, instance-id, and
+  reserved-suffix boundaries;
+- use local deterministic contracts instead of the inherited TestFramework message types;
+- map every inherited obligation to a concrete native xUnit/MTP replacement;
+- never weaken an expected value to fit product behavior; a reproduced product defect is corrected
+  minimally in product code and protected by a positive regression plus a targeted mutation;
+- remove the inherited file only after all 17 obligations have terminal replacements;
+- raise the predeclared UnitArchitecture floor by exactly the 17 newly materialized cases.

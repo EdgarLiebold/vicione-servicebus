@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 618 unfiltered cases;
+- `UnitArchitecture`: 635 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -44,3 +44,27 @@ identity. StateMachineVisualizer owns seven native behavior cases plus its proje
 all nine inherited visualizer obligations individually. The Cron cohort maps all 58 inherited
 obligations, uses deterministic UTC or test-owned time zones, and hardens repeated-whitespace
 parsing with a minimal product correction.
+
+## Current cohort — endpoint-name formatters
+
+Create `Configuration/EndpointNaming/EndpointNameFormatterTests.cs` in the existing core-owner test
+project. Nine ordinary xUnit methods materialize 17 cases:
+
+1. three snake-case word/digit/acronym variants;
+2. nested namespace inclusion;
+3. namespace plus prefix;
+4. generic-consumer naming from its message type;
+5. namespaced message naming;
+6. four default/kebab/snake prefix-separator variants;
+7. the prefix-free kebab message name;
+8. the concrete consumer-definition plus kebab instance-id contract;
+9. four exact `ConfigurationException` boundaries for suffix-only consumer, saga, execute activity,
+   and compensate activity types.
+
+Extend the embedded core requirement projection by one row per method and create a 17-row inherited
+disposition. Run a focused locked restore/build/test first, then bounded format/analyzer checks,
+assertion and gap review, targeted one-cause mutations of formatting, generic ownership,
+instance-id sanitization, and suffix-only rejection. Finally run the full Release build and both
+unfiltered materialized profiles with a predeclared UnitArchitecture floor of 635. Delete only
+`tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` after all 17 rows are closed; do not change a
+product file unless a native test first reproduces a product defect.

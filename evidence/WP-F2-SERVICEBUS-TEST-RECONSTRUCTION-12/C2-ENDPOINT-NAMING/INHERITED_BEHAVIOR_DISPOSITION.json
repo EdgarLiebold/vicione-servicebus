@@ -1,0 +1,138 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-D-0124",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_convert_to_snake_case",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SnakeCaseConsumerName_PreservesWordDigitAndAcronymBoundaries",
+    "rationale": "The words data row retains the exact snake-case result and Consumer-suffix removal."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0125",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_convert_to_snake_case_with_digits",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SnakeCaseConsumerName_PreservesWordDigitAndAcronymBoundaries",
+    "rationale": "The digit data row retains the exact internal digit boundary."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0126",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_convert_to_snake_case_with_uppercase_ids",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SnakeCaseConsumerName_PreservesWordDigitAndAcronymBoundaries",
+    "rationale": "The acronym data row retains the exact consecutive-capital boundary."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0127",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_format_instance_id_properly",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.ConsumerEndpointDefinition_AppendsSanitizedInstanceId",
+    "rationale": "The concrete consumer endpoint definition still composes the formatted name with a sanitized mixed-case instance identifier."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0128",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_namespace",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.KebabCaseConsumerName_IncludesNestedNamespace",
+    "rationale": "The replacement retains namespace and nested declaring-type segments with an exact independent literal."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0129",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_namespace_and_prefix",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.KebabCaseConsumerName_PrependsPrefixToNestedNamespace",
+    "rationale": "The replacement retains the exact prefix-before-namespace composition."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0130",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_namespace_and_prefix_with_generic_consumer",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.GenericConsumerName_UsesItsMessageType",
+    "rationale": "The closed generic consumer is still named from its message type rather than its consumer type."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0131",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_namespace_and_prefix_with_message_name",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.MessageName_IncludesNestedNamespaceAndPrefix",
+    "rationale": "The message path retains the exact prefix and namespace composition independently of a consumer."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0132",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_prefix",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.ConsumerName_PreservesEachFormatterPrefixRule",
+    "rationale": "The kebab data row retains prefix-only naming with the formatter separator."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0133",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_prefix_default",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.ConsumerName_PreservesEachFormatterPrefixRule",
+    "rationale": "The default data row retains direct prefix concatenation without an injected separator."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0134",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_prefix_default_with_separator",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.ConsumerName_PreservesEachFormatterPrefixRule",
+    "rationale": "The default-separator data row retains a caller-supplied separator without duplication."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0135",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_include_the_prefix_snake_with_separator",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.ConsumerName_PreservesEachFormatterPrefixRule",
+    "rationale": "The snake data row retains the mixed caller/body separator contract exactly."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0136",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_only_include_the_message_name",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.DefaultKebabMessageName_ContainsOnlyTheMessageType",
+    "rationale": "The default kebab instance still emits only the message type when no prefix or namespace is requested."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0137",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_throw_exception_when_class_is_called_activity_for_compensate",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SuffixOnlyEndpointType_IsRejected",
+    "rationale": "The compensate-activity data row requires the exact product exception and its stable semantic reason."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0138",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_throw_exception_when_class_is_called_activity_for_execute",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SuffixOnlyEndpointType_IsRejected",
+    "rationale": "The execute-activity data row requires the exact product exception and its stable semantic reason."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0139",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_throw_exception_when_class_is_called_consumer",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SuffixOnlyEndpointType_IsRejected",
+    "rationale": "The consumer data row requires the exact product exception and its stable semantic reason."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0140",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.EndpointName_Specs.Should_throw_exception_when_class_is_called_saga",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.SuffixOnlyEndpointType_IsRejected",
+    "rationale": "The saga data row requires the exact product exception and its stable semantic reason."
+  }
+]

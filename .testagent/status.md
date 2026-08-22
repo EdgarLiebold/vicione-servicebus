@@ -23,7 +23,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   dynamic, request-derived, empty, and composite-event graphs;
 - all 58 inherited Cron-expression obligations are replaced by deterministic source-owner cases;
   repeated spaces and tabs now preserve field alignment instead of silently shifting the schedule;
-- UnitArchitecture: 618 total, 618 passed, 0 failed, 0 skipped;
+- all 17 inherited endpoint-name formatter obligations are replaced by 17 source-owner cases under
+  `Configuration/EndpointNaming`, with literal naming oracles and exact reserved-type failures;
+- UnitArchitecture: 635 predeclared minimum; final cohort-wide result pending;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: unchanged; the Cron parser has one bounded product correction for repeated
@@ -36,6 +38,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   exact CodeFix output, and required source forms.
 - the Cron cohort independently rejects its product regression, a missing requirement projection
   row, and removal of its test project from the Unit profile.
+- the endpoint-name formatter cohort has passed its focused 170-case project run; its targeted
+  mutation and final unfiltered profile evidence are still pending.
 - the repository-wide retrospective [product-defect accommodation audit](../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md)
   found no weakened, skipped, filtered, or defect-accommodating test in the reconstructed scope; it
   explicitly excludes not-yet-reconstructed product areas from that verdict.
