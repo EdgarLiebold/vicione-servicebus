@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 
 
 /// <summary>
-/// The successor to <see cref="ChannelExecutor" />, now with a more optimized execution pipeline resulting in
-/// lower memory usage and reduced overhead.
+/// Executes asynchronous work with a fixed concurrency limit and optional bounded queue capacity.
 /// </summary>
-public class TaskExecutor :
+public sealed class TaskExecutor :
     IAsyncDisposable
 {
     readonly Task _readerTask;
     readonly Channel<IFuture> _taskChannel;
-    bool _disposed;
+    int _disposeState;
 
     public TaskExecutor(int concurrencyLimit = 1)
     {
@@ -37,6 +36,9 @@ public class TaskExecutor :
 
     public TaskExecutor(int prefetchCount, int concurrencyLimit = 1)
     {
+        if (prefetchCount < 1)
+            throw new ArgumentOutOfRangeException(nameof(prefetchCount), prefetchCount, "Must be >= 1");
+
         if (concurrencyLimit < 1)
             throw new ArgumentOutOfRangeException(nameof(concurrencyLimit), concurrencyLimit, "Must be >= 1");
 
@@ -54,64 +56,114 @@ public class TaskExecutor :
 
     public async ValueTask DisposeAsync()
     {
-        if (_disposed)
-            return;
-
-        _taskChannel.Writer.TryComplete();
+        if (Interlocked.Exchange(ref _disposeState, 1) == 0)
+            _taskChannel.Writer.TryComplete();
 
         await _readerTask.ConfigureAwait(false);
-
-        _disposed = true;
     }
 
     public async Task Run(Action method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new ActionFuture(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
 
         await future.Completed.ConfigureAwait(false);
     }
 
     public async Task Run(Func<Task> method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new TaskFuture(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+
+        await future.Completed.ConfigureAwait(false);
+    }
+
+    public async Task RunValueTask(Func<ValueTask> method, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(method);
+        var future = new ValueTaskFuture(method, cancellationToken);
+
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
 
         await future.Completed.ConfigureAwait(false);
     }
 
     public async Task Push(Action method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new ActionFuture(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task Push(Func<Task> method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new TaskFuture(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task PushValueTask(Func<ValueTask> method, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(method);
+        var future = new ValueTaskFuture(method, cancellationToken);
+
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T> Run<T>(Func<T> method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new FuncFuture<T>(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
 
         return await future.Completed.ConfigureAwait(false);
     }
 
     public async Task<T> Run<T>(Func<Task<T>> method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         var future = new TaskFuture<T>(method, cancellationToken);
 
-        await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
 
         return await future.Completed.ConfigureAwait(false);
+    }
+
+    public async Task<T> RunValueTask<T>(Func<ValueTask<T>> method, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(method);
+        var future = new ValueTaskFuture<T>(method, cancellationToken);
+
+        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+
+        return await future.Completed.ConfigureAwait(false);
+    }
+
+    async ValueTask Enqueue(IFuture future, CancellationToken cancellationToken)
+    {
+        ThrowIfDisposed();
+
+        try
+        {
+            await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+        }
+        catch (ChannelClosedException) when (Volatile.Read(ref _disposeState) != 0)
+        {
+            throw new ObjectDisposedException(nameof(TaskExecutor));
+        }
+    }
+
+    void ThrowIfDisposed()
+    {
+        if (Volatile.Read(ref _disposeState) != 0)
+            throw new ObjectDisposedException(nameof(TaskExecutor));
     }
 
     async Task MultipleReader()
@@ -165,7 +217,7 @@ public class TaskExecutor :
     }
 
 
-    class BaseFuture<T>
+    abstract class BaseFuture<T>
     {
         protected readonly CancellationToken CancellationToken;
         protected readonly TaskCompletionSource<T> Source;
@@ -177,13 +229,28 @@ public class TaskExecutor :
             Source = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         }
 
-        protected bool IsCancellationRequested => CancellationToken.IsCancellationRequested;
-
         public Task<T> Completed => Source.Task;
+
+        protected bool TrySetCanceled()
+        {
+            if (!CancellationToken.IsCancellationRequested)
+                return false;
+
+            Source.TrySetCanceled(CancellationToken);
+            return true;
+        }
+
+        protected void SetException(Exception exception)
+        {
+            if (exception is OperationCanceledException canceled)
+                Source.TrySetCanceled(canceled.CancellationToken);
+            else
+                Source.TrySetException(exception);
+        }
     }
 
 
-    class BaseFuture :
+    abstract class BaseFuture :
         BaseFuture<bool>
     {
         protected BaseFuture(CancellationToken cancellationToken)
@@ -193,7 +260,7 @@ public class TaskExecutor :
     }
 
 
-    class TaskFuture<T> :
+    sealed class TaskFuture<T> :
         BaseFuture<T>,
         IFuture
     {
@@ -207,27 +274,55 @@ public class TaskExecutor :
 
         public async ValueTask Run()
         {
-            if (IsCancellationRequested)
-            {
-                Source.SetException(new OperationCanceledException(CancellationToken));
+            if (TrySetCanceled())
                 return;
-            }
 
             try
             {
                 var result = await _method().ConfigureAwait(false);
 
-                Source.SetResult(result);
+                Source.TrySetResult(result);
             }
             catch (Exception exception)
             {
-                Source.SetException(exception);
+                SetException(exception);
             }
         }
     }
 
 
-    class TaskFuture :
+    sealed class ValueTaskFuture<T> :
+        BaseFuture<T>,
+        IFuture
+    {
+        readonly Func<ValueTask<T>> _method;
+
+        public ValueTaskFuture(Func<ValueTask<T>> method, CancellationToken cancellationToken)
+            : base(cancellationToken)
+        {
+            _method = method;
+        }
+
+        public async ValueTask Run()
+        {
+            if (TrySetCanceled())
+                return;
+
+            try
+            {
+                var result = await _method().ConfigureAwait(false);
+
+                Source.TrySetResult(result);
+            }
+            catch (Exception exception)
+            {
+                SetException(exception);
+            }
+        }
+    }
+
+
+    sealed class TaskFuture :
         BaseFuture,
         IFuture
     {
@@ -241,27 +336,55 @@ public class TaskExecutor :
 
         public async ValueTask Run()
         {
-            if (IsCancellationRequested)
-            {
-                Source.SetException(new OperationCanceledException(CancellationToken));
+            if (TrySetCanceled())
                 return;
-            }
 
             try
             {
                 await _method().ConfigureAwait(false);
 
-                Source.SetResult(true);
+                Source.TrySetResult(true);
             }
             catch (Exception exception)
             {
-                Source.SetException(exception);
+                SetException(exception);
             }
         }
     }
 
 
-    class FuncFuture<T> :
+    sealed class ValueTaskFuture :
+        BaseFuture,
+        IFuture
+    {
+        readonly Func<ValueTask> _method;
+
+        public ValueTaskFuture(Func<ValueTask> method, CancellationToken cancellationToken)
+            : base(cancellationToken)
+        {
+            _method = method;
+        }
+
+        public async ValueTask Run()
+        {
+            if (TrySetCanceled())
+                return;
+
+            try
+            {
+                await _method().ConfigureAwait(false);
+
+                Source.TrySetResult(true);
+            }
+            catch (Exception exception)
+            {
+                SetException(exception);
+            }
+        }
+    }
+
+
+    sealed class FuncFuture<T> :
         BaseFuture<T>,
         IFuture
     {
@@ -273,29 +396,28 @@ public class TaskExecutor :
             _method = method;
         }
 
-        public async ValueTask Run()
+        public ValueTask Run()
         {
-            if (IsCancellationRequested)
-            {
-                Source.SetException(new OperationCanceledException(CancellationToken));
-                return;
-            }
+            if (TrySetCanceled())
+                return default;
 
             try
             {
                 var result = _method();
 
-                Source.SetResult(result);
+                Source.TrySetResult(result);
             }
             catch (Exception exception)
             {
-                Source.SetException(exception);
+                SetException(exception);
             }
+
+            return default;
         }
     }
 
 
-    class ActionFuture :
+    sealed class ActionFuture :
         BaseFuture,
         IFuture
     {
@@ -307,24 +429,23 @@ public class TaskExecutor :
             _method = method;
         }
 
-        public async ValueTask Run()
+        public ValueTask Run()
         {
-            if (IsCancellationRequested)
-            {
-                Source.SetException(new OperationCanceledException(CancellationToken));
-                return;
-            }
+            if (TrySetCanceled())
+                return default;
 
             try
             {
                 _method();
 
-                Source.SetResult(true);
+                Source.TrySetResult(true);
             }
             catch (Exception exception)
             {
-                Source.SetException(exception);
+                SetException(exception);
             }
+
+            return default;
         }
     }
 }

@@ -1,0 +1,35 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/TaskExecutor_Specs.cs",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-D-0438",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-TASK-EXECUTOR-RUN",
+      "variantKey": "value-task",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Util.TaskExecutorTests.RunValueTask_CompletesOnlyAfterTheAwaitedWorkCompleted"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0439",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-TASK-EXECUTOR-RUN",
+      "variantKey": "task",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Util.TaskExecutorTests.RunTask_CompletesOnlyAfterTheAwaitedWorkCompleted"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0474",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-TASK-EXECUTOR-CONSTRUCTION",
+      "variantKey": "positive-limits",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Util.TaskExecutorTests.NonPositiveLimits_AreRejected"
+    }
+  ],
+  "explanation": "The inherited ValueTask case accidentally selected the generic synchronous overload and awaited only Task<ValueTask>, so it never proved completion of the ValueTask body. The replacement exposes an unambiguous ValueTask API and observes actual completion. The Task case now uses deterministic coordination and a state assertion instead of a delay without assertions. The constructor gap is closed for both concurrency and bounded-capacity limits. Greenfield hardening also verifies result overloads, maximum concurrency, bounded backpressure, queued cancellation, unwrapped delegate faults, Push drain semantics, idempotent disposal, post-disposal rejection, and null-delegate validation."
+}

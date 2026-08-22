@@ -47,6 +47,15 @@ Acceptance requires a repository-wide formatter/analyzer gate, a path-complete r
 behavior or public-API changes, locked restore, zero-warning Release builds, and every applicable
 unfiltered native test profile.
 
+## Consolidate channel executors
+
+`src/ViciOne.ServiceBus/Util/ChannelExecutor.cs` and `TaskExecutor.cs` currently provide overlapping
+queue-execution capabilities. Consolidate them in a dedicated product slice after the native test
+reconstruction has captured both behavior sets. Preserve every meaningful capability, including
+bounded backpressure, concurrency, synchronous waiting where still required, cancellation, draining
+disposal, and the ActiveMQ call sites. Remove historical comparison language and the redundant type
+only after all consumers, benchmarks, public API, and package contents have explicit dispositions.
+
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in

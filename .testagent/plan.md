@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 689 unfiltered cases;
+- `UnitArchitecture`: 706 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -178,3 +178,14 @@ relative-URI, and missing-endpoint inputs. The product now exposes stable public
 instead of leaking parser, LINQ, or null-reference implementation exceptions. Nine ordinary xUnit
 cases raise
 the UnitArchitecture floor from 680 to 689; the fully replaced inherited fixture is removed.
+
+## Accepted cohort — task executor
+
+`Util/TaskExecutorTests.cs` mirrors the product utility and replaces the inherited delay-based,
+assertion-free cases with deterministic execution contracts. Seventeen native cases cover action,
+Task, and unambiguous ValueTask execution; synchronous and asynchronous results; constructor
+boundaries; maximum concurrency; bounded backpressure; queued cancellation; unwrapped faults; Push
+drain behavior; idempotent disposal; post-disposal rejection; and every public null-delegate
+boundary. The product adds explicit ValueTask entry points, stable validation and disposal behavior,
+and correct canceled-task completion. The UnitArchitecture floor rises from 689 to 706; the fully
+replaced inherited fixture is removed only after all three ledger obligations become terminal.
