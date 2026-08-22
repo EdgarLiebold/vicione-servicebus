@@ -20,8 +20,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions and the Analyzer foundation, including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
-  and the local host-derived worker-id contract; the consolidated message-contract catalog receives
-  its own final mutation pass before this cohort is accepted.
+  the local host-derived worker-id contract, message-contract scenario closure, exact diagnostics,
+  exact CodeFix output, and required source forms.
 
 ## Remaining program
 
