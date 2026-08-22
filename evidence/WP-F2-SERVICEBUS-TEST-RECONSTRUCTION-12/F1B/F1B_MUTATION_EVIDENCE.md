@@ -9,7 +9,7 @@ wurde nach dem Lauf vollständig gelöscht. Nur die ignorierten Rohlogs und Binl
 
 ## Gemeinsame Befehle
 
-Jede Kopie entstand durch:
+Die fünf gemeinsamen Kopien entstanden durch:
 
 ```bash
 git archive --format=tar --output=/private/tmp/vsb-f1b-evidence.3atzA4/source.tar \
@@ -17,6 +17,17 @@ git archive --format=tar --output=/private/tmp/vsb-f1b-evidence.3atzA4/source.ta
 mkdir -p /private/tmp/vsb-f1b-evidence.3atzA4/<case>
 tar -xf /private/tmp/vsb-f1b-evidence.3atzA4/source.tar \
   -C /private/tmp/vsb-f1b-evidence.3atzA4/<case>
+```
+
+Die präzisierte Methodenentfernung entstand separat durch:
+
+```bash
+git archive --format=tar \
+  --output=/private/tmp/vsb-f1b-missing-method-final.tar \
+  87dd0fa3682dbfdc0fe1bf626d72747948eb0be1
+mkdir -p /private/tmp/vsb-f1b-missing-method-final
+tar -xf /private/tmp/vsb-f1b-missing-method-final.tar \
+  -C /private/tmp/vsb-f1b-missing-method-final
 ```
 
 In jeder Kopie liefen anschließend exakt diese Restore- und Buildformen; `<case>` wurde durch den
@@ -72,6 +83,29 @@ RequirementCoverageProjectionTests.LeadBoundProjection_MatchesCompiledRequiremen
 | `duplicate-requirement-variant` | Variantenschlüssel des zweiten Eintrags durch `architecture-test-project-single-native-test-entry` ersetzt | 0 | 0 | 2 | doppelter Schlüssel `REQ-TEST-203/architecture-test-project-single-native-test-entry` |
 | `duplicate-coverage-attribute` | an `AbstractionsTypes_DoNotDependOnCoreTypes` zweites `[RequirementCoverage("REQ-TEST-205", "duplicate-attribute-mutant")]` angefügt | 0 | 1 | nicht ausgeführt | ausschließlich `CS0579`, 0 Warnungen, 1 Fehler |
 | `missing-embedded-resource` | `LogicalName` der Projektion von `...ArchitectureFoundation.json` auf `...Missing.json` geändert | 0 | 0 | 2 | erwarteter exakter Ressourcenname fehlt |
+
+Die mechanischen Änderungen wurden mit diesen exakten Befehlen ausgeführt; jeder absolute Pfad
+bezeichnet die zugehörige Wegwerfkopie:
+
+```bash
+perl -0pi -e 's/\n    \[Fact\]\n    \[RequirementCoverage\("REQ-TEST-203", "architecture-test-project-single-native-test-entry"\)\]\n    public void ExecutableTestProject_ReferencesTheSingleTestEntryExactlyOnce\(\)\n    \{.*?\n    \}\n(?=\n    \[Fact\]\n    public void SupportLibrary_ReferencesNoXunitPackageAtAll)//s' \
+  /private/tmp/vsb-f1b-missing-method-final/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/EvaluatedBuildGraphTests.cs
+
+perl -0pi -e 's/\A\[\n  \{.*?\n  \},\n/[\n/s' \
+  /private/tmp/vsb-f1b-evidence.3atzA4/missing-projection-entry/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json
+
+perl -0pi -e 's/    \[Fact\]\n    public void SupportLibrary_IsNotClassifiedAsTestProject/    [Fact]\n    [RequirementCoverage("REQ-TEST-999", "unprojected-mutant")]\n    public void SupportLibrary_IsNotClassifiedAsTestProject/' \
+  /private/tmp/vsb-f1b-evidence.3atzA4/unprojected-attributed-method/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/EvaluatedBuildGraphTests.cs
+
+perl -0pi -e 's/architecture-test-project-single-canonical-platform-config-item/architecture-test-project-single-native-test-entry/' \
+  /private/tmp/vsb-f1b-evidence.3atzA4/duplicate-requirement-variant/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json
+
+perl -0pi -e 's/    \[RequirementCoverage\("REQ-TEST-205", "abstractions-do-not-depend-on-core-types"\)\]/    [RequirementCoverage("REQ-TEST-205", "abstractions-do-not-depend-on-core-types")]\n    [RequirementCoverage("REQ-TEST-205", "duplicate-attribute-mutant")]/' \
+  /private/tmp/vsb-f1b-evidence.3atzA4/duplicate-coverage-attribute/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestTreeIsolationTests.cs
+
+perl -0pi -e 's/ViciOne\.ServiceBus\.Architecture\.Tests\.Requirements\.F1B\.ArchitectureFoundation\.json/ViciOne.ServiceBus.Architecture.Tests.Requirements.F1B.Missing.json/' \
+  /private/tmp/vsb-f1b-evidence.3atzA4/missing-embedded-resource/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj
+```
 
 Die Shell-Exitcodes stehen maschinenlesbar in `RESULTS.tsv`; die SHA-256 aller 29 Rohlogs/Binlogs
 und dieser Ergebnistabelle stehen in `F1B_MUTATION_ARTIFACTS.sha256`. Die Hashliste enthält relative
