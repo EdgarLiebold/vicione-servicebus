@@ -29,6 +29,7 @@ public sealed class TestTreeIsolationTests
             ProductAssemblyFacts.Core,
             ProductAssemblyFacts.TestingInfrastructure,
             ProductAssemblyFacts.RoslynTestingInfrastructure,
+            ProductAssemblyFacts.AnalyzerTestingInfrastructure,
             ProductAssemblyFacts.ArchitectureTests)
         .Build();
 
@@ -59,6 +60,7 @@ public sealed class TestTreeIsolationTests
             .NotDependOnAny(Types().That().ResideInAssembly(
                 ProductAssemblyFacts.TestingInfrastructure,
                 ProductAssemblyFacts.RoslynTestingInfrastructure,
+                ProductAssemblyFacts.AnalyzerTestingInfrastructure,
                 ProductAssemblyFacts.ArchitectureTests)));
     }
 
@@ -82,7 +84,8 @@ public sealed class TestTreeIsolationTests
         AssertHolds(Types().That()
             .ResideInAssembly(
                 ProductAssemblyFacts.TestingInfrastructure,
-                ProductAssemblyFacts.RoslynTestingInfrastructure)
+                ProductAssemblyFacts.RoslynTestingInfrastructure,
+                ProductAssemblyFacts.AnalyzerTestingInfrastructure)
             .Should()
             .NotDependOnAny(Types().That().ResideInAssembly(ProductAssemblyFacts.ArchitectureTests)));
     }
@@ -130,7 +133,8 @@ public sealed class TestTreeIsolationTests
         AssertHolds(Types().That()
             .ResideInAssembly(
                 ProductAssemblyFacts.TestingInfrastructure,
-                ProductAssemblyFacts.RoslynTestingInfrastructure)
+                ProductAssemblyFacts.RoslynTestingInfrastructure,
+                ProductAssemblyFacts.AnalyzerTestingInfrastructure)
             .And().ArePublic()
             .Should()
             .ResideInNamespaceMatching("^ViciOne\\.ServiceBus\\.Tests\\.Infrastructure($|\\.)"));

@@ -30,9 +30,13 @@ internal static class ProductAssemblyFacts
     internal static Assembly RoslynTestingInfrastructure =>
         typeof(ServiceBus.Tests.Infrastructure.Roslyn.RoslynTestHost).Assembly;
 
+    /// <summary>The analyzer-specific, assertion-framework-neutral fixture assembly.</summary>
+    internal static Assembly AnalyzerTestingInfrastructure =>
+        typeof(ServiceBus.Tests.Infrastructure.Analyzers.MessageContracts.MessageContractScenarioCatalog).Assembly;
+
     /// <summary>Every compiled support assembly anchored by architecture rules.</summary>
     internal static IReadOnlyList<Assembly> TestingInfrastructureAssemblies =>
-        [TestingInfrastructure, RoslynTestingInfrastructure];
+        [TestingInfrastructure, RoslynTestingInfrastructure, AnalyzerTestingInfrastructure];
 
     /// <summary>This test assembly.</summary>
     internal static Assembly ArchitectureTests => typeof(ProductAssemblyFacts).Assembly;

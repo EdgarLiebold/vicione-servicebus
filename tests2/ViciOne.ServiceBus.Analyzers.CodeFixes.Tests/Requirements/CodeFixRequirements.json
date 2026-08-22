@@ -19,5 +19,12 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
     "testMethod": "TaskRunFix_PreservesExistingTokenUseAndAddsTheMissingOne"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "canonical-scenario-catalog",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
+    "testMethod": "MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializers"
   }
 ]

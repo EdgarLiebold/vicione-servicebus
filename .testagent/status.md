@@ -9,16 +9,19 @@ The accepted native foundation and MessageBody behavior are committed and remote
 
 - the remainder of the Abstractions unit behavior is reconstructed in the source-owner project;
 - host-dependent worker-id behavior is isolated in an independent LocalIntegration project;
-- the framework-neutral Roslyn host and 24 of 115 inherited Analyzer obligations are reconstructed;
+- the framework-neutral Roslyn host and all 115 inherited Analyzer obligations are reconstructed;
 - Analyzer behavior and CodeFix behavior have separate source-owner projects;
-- UnitArchitecture: 250 total, 250 passed, 0 failed, 0 skipped;
+- the 91 message-contract obligations are preserved as 48 canonical scenarios and 91 native xUnit
+  cases; applicable fixes run as separate native CodeFix cases;
+- UnitArchitecture: 368 total, 368 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - product and inherited-test source: unchanged;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
-- targeted mutation review: passed for Abstractions and the first Analyzer cohort, including product
+- targeted mutation review: passed for Abstractions and the Analyzer foundation, including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
-  and the local host-derived worker-id contract.
+  and the local host-derived worker-id contract; the consolidated message-contract catalog receives
+  its own final mutation pass before this cohort is accepted.
 
 ## Remaining program
 

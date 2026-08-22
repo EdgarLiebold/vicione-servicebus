@@ -145,5 +145,19 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
     "testMethod": "DerivedStreamValue_SatisfiesTheMessageDataStreamContract"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "canonical-scenario-catalog",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractScenarioTests",
+    "testMethod": "MessageSource_ProducesItsExactContractDiagnostic"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "canonical-scenario-catalog-integrity",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractScenarioCatalogTests",
+    "testMethod": "Catalog_ContainsEveryCanonicalScenarioAndSourceFormExactlyOnce"
   }
 ]

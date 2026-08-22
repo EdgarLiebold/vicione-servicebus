@@ -325,6 +325,13 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.analyzers.tests.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.roslyn.tests.infrastructure": {
         "type": "Project",
         "dependencies": {

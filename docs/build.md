@@ -48,7 +48,7 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 250
+  -c Release --no-build --no-restore --minimum-expected-tests 368
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -63,8 +63,9 @@ the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary
 The minimum count is the predeclared floor for the currently materialized profile. It is updated as
 part of an accepted cohort, never inferred from the result of the run it is meant to protect. The
 current Unit floor includes the architecture foundation, all currently reconstructed Abstractions
-behavior, direct tests of the projection verifier, and project-driven architecture Theory rows. The
-LocalIntegration floor is independent and includes only host-resource tests in that profile.
+behavior, the complete inherited Analyzer and CodeFix behavior, direct tests of the projection
+verifier, and project-driven architecture Theory rows. The LocalIntegration floor is independent
+and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in
