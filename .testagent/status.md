@@ -25,11 +25,12 @@ The accepted native foundation and MessageBody behavior are committed and remote
   repeated spaces and tabs now preserve field alignment instead of silently shifting the schedule;
 - all 17 inherited endpoint-name formatter obligations are replaced by 17 source-owner cases under
   `Configuration/EndpointNaming`, with literal naming oracles and exact reserved-type failures;
-- UnitArchitecture: 635 predeclared minimum; final cohort-wide result pending;
+- UnitArchitecture: 635 total, 635 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- inherited-test source: unchanged; the Cron parser has one bounded product correction for repeated
-  field separators, covered by two native regression cases;
+- inherited-test source: only the fully replaced endpoint-name fixture was removed in this cohort;
+  this cohort changes no product file, while earlier bounded product corrections remain documented
+  with their own regression evidence;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer, including product
@@ -38,8 +39,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   exact CodeFix output, and required source forms.
 - the Cron cohort independently rejects its product regression, a missing requirement projection
   row, and removal of its test project from the Unit profile.
-- the endpoint-name formatter cohort has passed its focused 170-case project run; its targeted
-  mutation and final unfiltered profile evidence are still pending.
+- the endpoint-name formatter cohort passed its focused 170-case project run, all four targeted
+  product mutations, and the final 635-case unfiltered UnitArchitecture profile;
 - the repository-wide retrospective [product-defect accommodation audit](../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md)
   found no weakened, skipped, filtered, or defect-accommodating test in the reconstructed scope; it
   explicitly excludes not-yet-reconstructed product areas from that verdict.

@@ -45,10 +45,10 @@ all nine inherited visualizer obligations individually. The Cron cohort maps all
 obligations, uses deterministic UTC or test-owned time zones, and hardens repeated-whitespace
 parsing with a minimal product correction.
 
-## Current cohort — endpoint-name formatters
+## Accepted cohort — endpoint-name formatters
 
-Create `Configuration/EndpointNaming/EndpointNameFormatterTests.cs` in the existing core-owner test
-project. Nine ordinary xUnit methods materialize 17 cases:
+`Configuration/EndpointNaming/EndpointNameFormatterTests.cs` in the existing core-owner test project
+contains nine ordinary xUnit methods that materialize 17 cases:
 
 1. three snake-case word/digit/acronym variants;
 2. nested namespace inclusion;
@@ -61,10 +61,9 @@ project. Nine ordinary xUnit methods materialize 17 cases:
 9. four exact `ConfigurationException` boundaries for suffix-only consumer, saga, execute activity,
    and compensate activity types.
 
-Extend the embedded core requirement projection by one row per method and create a 17-row inherited
-disposition. Run a focused locked restore/build/test first, then bounded format/analyzer checks,
-assertion and gap review, targeted one-cause mutations of formatting, generic ownership,
-instance-id sanitization, and suffix-only rejection. Finally run the full Release build and both
-unfiltered materialized profiles with a predeclared UnitArchitecture floor of 635. Delete only
-`tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` after all 17 rows are closed; do not change a
-product file unless a native test first reproduces a product defect.
+The embedded core requirement projection has one row per method and the inherited disposition has
+one terminal row per old case. Focused and full Release checks, bounded formatting/analyzers, static
+assertion and gap review, and four targeted product mutations cover formatting, generic ownership,
+instance-id sanitization, and suffix-only rejection. The predeclared UnitArchitecture floor is 635.
+Only `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` was removed after all 17 rows closed; no
+product file changed.
