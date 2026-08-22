@@ -574,6 +574,20 @@
       "variantKey" : "private-setter"
    },
    {
+      "requirementId" : "REQ-VSB-FAULT-MESSAGE-TYPE-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ClassHierarchy_ExposesTheCompleteFaultTypeSet",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.FaultMessageTypeTests",
+      "variantKey" : "class-hierarchy"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-MESSAGE-TYPE-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InterfaceHierarchy_ExposesTheCompleteFaultTypeSet",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.FaultMessageTypeTests",
+      "variantKey" : "interface-hierarchy"
+   },
+   {
       "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY-CACHE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "PrivateSetter_IsWritableThroughItsPropertyName",

@@ -31,7 +31,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the ambiguous implemented-message-type cache is replaced by six exact topology cases; the product
   no longer depends on reflection enumeration order and retains interfaces inherited through an
   excluded base class as independent direct topology edges;
-- UnitArchitecture: 676 total, 676 passed, 0 failed, 0 skipped;
+- all five inherited polymorphic-fault obligations are replaced by two exact Abstractions metadata
+  cases and one real in-memory core publication case;
+- UnitArchitecture: 679 total, 679 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -56,6 +58,11 @@ The accepted native foundation and MessageBody behavior are committed and remote
   hands the formerly ambiguous implemented-message-type obligation to its topology cohort;
 - the implemented-message topology cohort closes that obligation with exact type/direct assertions,
   removes the inherited count-only fixture, and rejects five independent product mutations;
+- the polymorphic-fault cohort splits the inherited mixed fixture by source owner, proves exact
+  class/interface fault metadata and real derived-to-base in-memory publication, and removes the
+  inherited file only after all five obligations close;
+- the polymorphic-fault cohort rejects independent hierarchy-metadata, exception-data,
+  supported-message-type, and requirement-projection mutations before its final 679-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

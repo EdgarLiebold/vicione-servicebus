@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 676 unfiltered cases;
+- `UnitArchitecture`: 679 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -144,3 +144,17 @@ result. `ImplementedTypeCache_Specs.cs` is removed after its obligation is termi
 focused and unfiltered profiles are green, and one-cause mutations prove interface reduction,
 base-inherited interface preservation, polymorphic fault projection, invalid-interface filtering,
 and the direct-edge marker.
+
+## Accepted cohort — polymorphic faults
+
+The mixed inherited `FaultPoly_Specs.cs` fixture is split by the product sources it exercises.
+`Metadata/FaultMessageTypeTests.cs` in the Abstractions owner asserts the exact type and URN sets for
+class- and interface-derived `Fault<T>` contracts. `Contexts/ConsumeContextEndpointExtensionsTests.cs`
+in the core owner uses a real temporary in-memory receive endpoint to prove that a handler failure
+for a derived interface publishes a fault consumable through the base interface, preserving the
+message, supported message types, host, fault identity, and exception information.
+
+Three ordinary xUnit cases replace five inherited obligations and raise the UnitArchitecture floor
+from 676 to 679. The test uses the public endpoint contract directly; it neither inherits from nor
+recreates the NUnit TestFramework fixture. The inherited mixed file is removed only after both
+source-owner projects and the complete profile pass.
