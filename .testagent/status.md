@@ -25,12 +25,13 @@ The accepted native foundation and MessageBody behavior are committed and remote
   repeated spaces and tabs now preserve field alignment instead of silently shifting the schedule;
 - all 17 inherited endpoint-name formatter obligations are replaced by 17 source-owner cases under
   `Configuration/EndpointNaming`, with literal naming oracles and exact reserved-type failures;
-- UnitArchitecture: 635 total, 635 passed, 0 failed, 0 skipped;
+- 15 inherited/current-product MessageUrn obligations are mapped to 17 source-owner cases under the
+  Abstractions root and `Attributes`; both runtime overloads now share input validation;
+- UnitArchitecture: 652 predeclared minimum; MessageUrn cohort validation pending;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- inherited-test source: only the fully replaced endpoint-name fixture was removed in this cohort;
-  this cohort changes no product file, while earlier bounded product corrections remain documented
-  with their own regression evidence;
+- inherited-test source: only fully replaced endpoint-name and MessageUrn fixtures have been
+  removed; `MessageType_Specs.cs` remains because its array transport behavior is still open;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer, including product

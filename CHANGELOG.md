@@ -57,6 +57,9 @@ entry below records what the current work changed for anyone reading the source.
 - Endpoint-name formatter behavior now has native source-owner xUnit/MTP coverage for snake-case
   boundaries, namespaces, prefixes, generic consumers, instance identifiers, and reserved names;
   the fully replaced inherited NUnit fixture was removed.
+- Runtime `MessageUrn` overloads now share one fail-closed input validation path for null and open
+  generic types. Native source-owner tests replace the complete inherited URN fixture and add the
+  previously missing deconstruction contract without preserving static-cache exception wrappers.
 - Analyzers and code fixes are separate assemblies, so the analyzer no longer references
   `Microsoft.CodeAnalysis.Workspaces`, which a command line compilation does not provide. They still
   ship as the one package `ViciOne.ServiceBus.Analyzers`.

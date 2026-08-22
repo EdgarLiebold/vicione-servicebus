@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 635
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 652
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -68,7 +68,7 @@ current Unit floor includes the architecture foundation, all currently reconstru
 behavior, the complete inherited Analyzer and CodeFix behavior, direct tests of the projection
 verifier, project-driven architecture Theory rows, the complete hermetic SignalR backplane behavior,
 MessagePack serialization and transport behavior, the state-machine visualizer, Cron scheduling,
-and endpoint-name formatting. The
+endpoint-name formatting, and message-URN contracts. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable

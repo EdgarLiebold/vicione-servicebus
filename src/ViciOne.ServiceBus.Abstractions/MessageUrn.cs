@@ -32,15 +32,24 @@ namespace ViciOne.ServiceBus
 
         public static MessageUrn ForType(Type type)
         {
-            if (type.ContainsGenericParameters)
-                throw new ArgumentException("A message type may not contain generic parameters", nameof(type));
+            ValidateType(type);
 
             return _cache.GetOrAdd(type, ValueFactory).Urn;
         }
 
         public static string ForTypeString(Type type)
         {
+            ValidateType(type);
+
             return _cache.GetOrAdd(type, ValueFactory).UrnString;
+        }
+
+        static void ValidateType(Type type)
+        {
+            ArgumentNullException.ThrowIfNull(type);
+
+            if (type.ContainsGenericParameters)
+                throw new ArgumentException("A message type may not contain generic parameters", nameof(type));
         }
 
         static Cached ValueFactory(Type type)

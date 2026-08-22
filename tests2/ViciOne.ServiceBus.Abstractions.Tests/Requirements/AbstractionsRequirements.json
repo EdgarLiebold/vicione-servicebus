@@ -390,5 +390,96 @@
       "testMethod" : "GetAllProperties_EnumeratesTypesWithDifferentIndexerSignatures",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "multiple-indexers"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AttributedType_UsesDeclaredUrn",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "declared-default-urn"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AttributedArray_UsesElementUrnWithArraySuffix",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "attributed-array"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AttributedType_PreservesUnicodeAndPunctuation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "unicode-and-punctuation"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CustomSchemeAttribute_IsReturnedWithoutDefaultPrefix",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "custom-absolute-uri"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-DERIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PlainType_UsesNamespaceAndName",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "plain-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-DERIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NestedType_IncludesDeclaringType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "nested-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-DERIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ClosedGenericType_UsesNestedArgumentBrackets",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "closed-generic"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-DERIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RuntimeTypeOverloads_RejectNullAndOpenGenericTypes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "invalid-runtime-types-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-DECONSTRUCTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Deconstruct_ReturnsExpectedComponents",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageUrnTests",
+      "variantKey" : "all-supported-shapes"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_DefaultPrefixValue_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Attributes.MessageUrnAttributeTests",
+      "variantKey" : "default-prefix-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_EmptyOrWhitespaceValue_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Attributes.MessageUrnAttributeTests",
+      "variantKey" : "empty-or-whitespace-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_NullValue_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Attributes.MessageUrnAttributeTests",
+      "variantKey" : "null-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-URN-ATTRIBUTE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_InvalidCustomUri_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Attributes.MessageUrnAttributeTests",
+      "variantKey" : "invalid-custom-uri-rejected"
    }
 ]

@@ -85,3 +85,36 @@ Acceptance checklist:
   minimally in product code and protected by a positive regression plus a targeted mutation;
 - remove the inherited file only after all 17 obligations have terminal replacements;
 - raise the predeclared UnitArchitecture floor by exactly the 17 newly materialized cases.
+
+## Message URN cohort
+
+Baseline `4a51998f` is clean and byte-identical to its private remote branch. The complete product
+sources `MessageUrn.cs` and `Attributes/MessageUrnAttribute.cs`, the complete inherited
+`MessageUrnSpecs.cs` and `MessageType_Specs.cs`, and all 15 relevant final R0 ledger obligations were
+read before implementation. The set consists of 12 executing MessageUrn fixture behaviors, two
+attribute behaviors scattered into MessageType specs, and the explicit current-product gap for
+`MessageUrn.Deconstruct`. The array publish/consume behavior in `MessageType_Specs.cs` is not a URN
+derivation contract and remains outside this cohort.
+
+The source owner is `src/ViciOne.ServiceBus.Abstractions`. The native replacement is therefore split
+between project-root `MessageUrnTests.cs` and `Attributes/MessageUrnAttributeTests.cs` in
+`tests2/ViciOne.ServiceBus.Abstractions.Tests`, mirroring the two product files instead of copying the
+old core-test placement. Invalid attribute values are asserted directly against the public
+attribute constructor. The inherited `TypeInitializationException` wrapper came only from the
+generic static cache and is not a product validation contract.
+
+Acceptance checklist:
+
+- retain exact plain, nested, closed-generic, attributed, attributed-array, custom-scheme, Unicode,
+  punctuation, and open-generic behavior, with consistent null rejection on both runtime overloads;
+- retain null, empty, whitespace, duplicate-default-prefix, and invalid-custom-URI rejection with
+  exact exception types and stable product-owned details;
+- cover all four `Deconstruct` shapes: name only, namespace plus name, assembly-bearing, and a
+  non-message scheme;
+- require both runtime-type overloads to reject an open generic consistently;
+- map all 15 inherited/current-product obligations to concrete native methods;
+- delete only `MessageUrnSpecs.cs`; retain `MessageType_Specs.cs` until its independent array
+  publish/consume obligation is replaced;
+- change product code only if a predeclared native assertion first reproduces a real defect;
+- add exactly 17 materialized UnitArchitecture cases and raise its floor from 635 to 652 before the
+  first cohort result exists.

@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 635 unfiltered cases;
+- `UnitArchitecture`: 652 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -67,3 +67,22 @@ assertion and gap review, and four targeted product mutations cover formatting, 
 instance-id sanitization, and suffix-only rejection. The predeclared UnitArchitecture floor is 635.
 Only `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` was removed after all 17 rows closed; no
 product file changed.
+
+## Current cohort — message URNs
+
+Use the existing `ViciOne.ServiceBus.Abstractions.Tests` project and add two source-mirrored files:
+
+1. `MessageUrnTests.cs` owns attributed/default/custom URNs, attributed arrays, plain/nested/closed
+   generic names, consistent null/open-generic rejection, and four `Deconstruct` shapes;
+2. `Attributes/MessageUrnAttributeTests.cs` owns null, empty, whitespace, duplicate-default-prefix,
+   and invalid-custom-URI validation.
+
+Thirteen ordinary xUnit methods materialize 17 cases. Add one passive requirement-projection row per
+method and terminally map the 12 old MessageUrn fixture obligations, the two attribute obligations
+from `MessageType_Specs.cs`, and the existing Deconstruct gap. The validation methods assert the
+public exception contract directly and deliberately do not preserve the inherited static-cache
+wrapper. Predeclare the UnitArchitecture floor as 652. After focused validation, execute bounded
+format/analyzers, assertion/gap review, and one-cause mutations for derived names, array attribute
+propagation, open-generic rejection, constructor validation, and deconstruction. Then run the full
+Release build and both unfiltered profiles. Remove `MessageUrnSpecs.cs` only after its 12 rows close;
+do not remove or edit `MessageType_Specs.cs` while its array transport behavior remains open.
