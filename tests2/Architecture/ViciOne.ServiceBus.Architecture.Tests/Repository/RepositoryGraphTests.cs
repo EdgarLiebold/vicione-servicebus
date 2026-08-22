@@ -169,6 +169,7 @@ public sealed class RepositoryGraphTests
                 "tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj",
                 "tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
                 "tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj",
+                "tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
             ],
             actual);
     }

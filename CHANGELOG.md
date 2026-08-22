@@ -40,7 +40,7 @@ entry below records what the current work changed for anyone reading the source.
   produced a successful build followed by a zero-test MTP run.
 - Native xUnit executables set `UseMicrosoftTestingPlatformRunner=true`; the hybrid in-process entry
   point is not supported. The MTP-only `testconfig.json` replaces `xunit.runner.json`, fails skips and
-  warnings, and CI rejects discovery below the current 89-case F1a foundation.
+  warnings, and CI rejects discovery below the current native profile floor.
 - `Directory.Build.targets` carries the late half of the build contract: eleven errors that refuse a
   project which drops its lock file or locked mode, packs without its licence or notice, targets a
   framework this product does not support, or reaches for `netstandard2.0` while being neither a
@@ -52,6 +52,8 @@ entry below records what the current work changed for anyone reading the source.
 - The ActiveMQ publish topology is deployed to the broker. Resolving a destination name is a client
   side act and left the broker without the topic; `SessionContext.EnsureTopicExists` makes the broker
   hold it.
+- Cron expressions tolerate repeated spaces and tabs between fields without shifting subsequent
+  values into the wrong fields.
 - Analyzers and code fixes are separate assemblies, so the analyzer no longer references
   `Microsoft.CodeAnalysis.Workspaces`, which a command line compilation does not provide. They still
   ship as the one package `ViciOne.ServiceBus.Analyzers`.

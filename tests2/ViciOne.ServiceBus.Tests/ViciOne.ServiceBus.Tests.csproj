@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/CoreRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/CoreRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json" />
+  </ItemGroup>
+
+</Project>

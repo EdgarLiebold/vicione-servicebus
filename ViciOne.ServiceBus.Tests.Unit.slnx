@@ -13,6 +13,7 @@
     <Project Path="tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj" />
+    <Project Path="tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj" />
   </Folder>
   <!-- The product projects the tests inspect are members, not merely referenced.
 

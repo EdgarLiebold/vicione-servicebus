@@ -44,7 +44,8 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
-dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --minimum-expected-tests 89
+dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 618
 ```
 
 Local-integration and external profiles appear only with their first executable cohort. The legacy
@@ -57,7 +58,8 @@ The native test executable uses only the Microsoft Testing Platform entry point.
 assembly-specific configuration name.
 
 [docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
-and migration contract.
+and migration contract. Bounded work deliberately deferred from the active slice is visible in
+[TODO.md](TODO.md); it is not a second architecture or feature catalog.
 
 ## Scope
 

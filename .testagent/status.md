@@ -21,10 +21,13 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - all nine inherited state-machine-visualizer obligations are replaced by seven source-owner behavior
   cases plus one requirement-projection case, covering exact Graphviz and Mermaid output, declarative,
   dynamic, request-derived, empty, and composite-event graphs;
-- UnitArchitecture: 463 total, 463 passed, 0 failed, 0 skipped;
+- all 58 inherited Cron-expression obligations are replaced by deterministic source-owner cases;
+  repeated spaces and tabs now preserve field alignment instead of silently shifting the schedule;
+- UnitArchitecture: 618 total, 618 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- product C# behavior and inherited-test source: unchanged;
+- inherited-test source: unchanged; the Cron parser has one bounded product correction for repeated
+  field separators, covered by two native regression cases;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer,

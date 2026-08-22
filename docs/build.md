@@ -48,11 +48,13 @@ the native MTP command form and no VSTest argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 463
+  -c Release --no-build --no-restore \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 618
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
-  -c Release --no-build --no-restore --minimum-expected-tests 3
+  -c Release --no-build --no-restore \
+  --results-directory artifacts/test-results/local-integration --minimum-expected-tests 3
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings

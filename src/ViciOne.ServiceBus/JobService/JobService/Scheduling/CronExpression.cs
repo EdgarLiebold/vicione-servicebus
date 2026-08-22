@@ -137,6 +137,12 @@ public sealed class CronExpression :
 
             foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.SpanSplit(' ', '\t'))
             {
+                // Consecutive separators do not denote empty cron fields. Treating an empty span as
+                // a field advanced the parser index and shifted every following value into the
+                // wrong position, even though padded expressions were accepted by the constructor.
+                if (expr.IsEmpty)
+                    continue;
+
                 if (index > CronExpressionConstants.Year)
                     break;
 
@@ -253,36 +259,36 @@ public sealed class CronExpression :
         switch (type)
         {
             case CronExpressionConstants.DayOfMonth:
-            {
-                _lastDayOfMonth = true;
-                if (span.Length > index)
                 {
-                    var ch = span[index];
-                    if (ch == '-')
-                    {
-                        (_lastDayOffset, index) = GetValue(0, span, index + 1);
-                        if (_lastDayOffset > 30)
-                            throw new FormatException("Offset from last day must be <= 30");
-                    }
-
+                    _lastDayOfMonth = true;
                     if (span.Length > index)
                     {
-                        ch = span[index];
-                        if (ch == 'W')
-                            _nearestWeekday = true;
-
-                        var match = _offsetRegex.Match(span.ToString());
-                        if (match.Success)
+                        var ch = span[index];
+                        if (ch == '-')
                         {
-                            var offSetGroup = match.Groups["offset"];
-                            if (offSetGroup.Success)
-                                _lastWeekdayOffset = int.Parse(offSetGroup.Value);
+                            (_lastDayOffset, index) = GetValue(0, span, index + 1);
+                            if (_lastDayOffset > 30)
+                                throw new FormatException("Offset from last day must be <= 30");
+                        }
+
+                        if (span.Length > index)
+                        {
+                            ch = span[index];
+                            if (ch == 'W')
+                                _nearestWeekday = true;
+
+                            var match = _offsetRegex.Match(span.ToString());
+                            if (match.Success)
+                            {
+                                var offSetGroup = match.Groups["offset"];
+                                if (offSetGroup.Success)
+                                    _lastWeekdayOffset = int.Parse(offSetGroup.Value);
+                            }
                         }
                     }
-                }
 
-                break;
-            }
+                    break;
+                }
 
             case CronExpressionConstants.DayOfWeek:
                 AddToSet(7, 7, 0, type);

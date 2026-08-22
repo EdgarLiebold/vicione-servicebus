@@ -24,7 +24,8 @@ The current native hermetic profile is xUnit 4 on Microsoft Testing Platform 2:
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
-dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore
+dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
+  --results-directory artifacts/test-results/unit
 ```
 
 Do not extend the inherited NUnit/VSTest/Python verification stack. It remains read-only behavior
