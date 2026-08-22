@@ -149,3 +149,23 @@ Acceptance checklist:
 - remove only `PollingAlgorithm_Specs.cs` after all seven rows close;
 - add exactly eight UnitArchitecture cases and raise its floor from 652 to 660 before the first
   cohort result exists.
+
+## Reflection accessor and static-property cohort
+
+The complete product sources `ReadWriteProperty.cs`, `ReadWritePropertyCache.cs`, and the static-
+property portion of `TypeExtensions.cs`, both duplicated inherited `FastProperty_Specs.cs` files,
+the complete inherited `StaticProperty_Specs.cs`, and their ten R0 rows were read before editing.
+The duplicate FastProperty fixture does not justify duplicate tests: both source pairs map to the
+same two behavior carriers. The five static-property cases stay separate because each fixes a
+different accessibility or inheritance boundary.
+
+R0 gap `OBL-R0-CORE-D-0477` describes a `KeyNotFoundException` from `TryGetValue`, but that contradicts
+the established .NET Try pattern and the method's actual public behavior. `Dictionary.TryGetValue`
+does not throw for a missing key, so the catch in the product method is unreachable. The A+ contract
+is `false` plus a null output; the dead catch is removed and that contract receives an executable
+negative test. No existing behavior changes.
+
+`ImplementedTypeCache_Specs.cs` was deliberately excluded. Its lone count assertion does not prove
+which implemented interface or `direct` value is semantically correct, and the current algorithm is
+sensitive to interface-enumeration order. Freezing a guessed topology contract would be worse than
+leaving the obligation visibly open for its own topology cohort.

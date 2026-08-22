@@ -523,5 +523,61 @@
       "testMethod" : "Constructor_RejectsZeroRequiredOptions",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
       "variantKey" : "zero-required-option-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PrivateSetter_CanBeWrittenAndRead",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyTests",
+      "variantKey" : "private-setter"
+   },
+   {
+      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PrivateSetter_IsWritableThroughItsPropertyName",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyCacheTests",
+      "variantKey" : "private-setter-by-name"
+   },
+   {
+      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetValue_MissingPropertyReturnsFalseAndNull",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyCacheTests",
+      "variantKey" : "missing-key-try-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetAllStaticProperties_IncludesPrivateGetterAndInheritedProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "private-getter-plus-inherited"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetAllStaticProperties_IncludesPrivateAndInheritedProperties",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "private-property-plus-inherited"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetAllStaticProperties_StandaloneTypeReturnsItsStaticProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "standalone-static-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetAllStaticProperties_DerivedTypeReturnsInheritedStaticProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "inherited-static-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetStaticProperties_ExcludesInheritedStaticProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "declared-only-static-property"
    }
 ]

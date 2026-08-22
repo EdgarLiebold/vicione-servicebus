@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 660 unfiltered cases;
+- `UnitArchitecture`: 668 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -103,3 +103,15 @@ one-cause mutations for callback processing, grouped request overlap, scaling, r
 single-request stability, and constructor validation pass. Both complete Release profiles pass at
 660/660 and 3/3. `PollingAlgorithm_Specs.cs` was removed only after all seven rows were terminally
 mapped.
+
+## Accepted cohort — reflection accessors and static-property metadata
+
+The Abstractions owner adds eight ordinary xUnit cases under the source-mirrored
+`Internals/Reflection` and `Internals/Extensions` paths. They preserve private-setter access through
+the compiled accessor and cache, the five inherited static-property reflection boundaries, and the
+standard .NET missing-key Try contract. The last item corrects an invalid R0 gap: `TryGetValue`
+returns `false` and a null output for an absent name; it does not translate absence into an
+exception. The unreachable catch in the product implementation is removed without changing its
+observable behavior. Ten obligations close; the separate implemented-message-type fixture remains
+open until its topology semantics can be proved rather than guessed. The UnitArchitecture floor is
+raised to 668 before the first result.

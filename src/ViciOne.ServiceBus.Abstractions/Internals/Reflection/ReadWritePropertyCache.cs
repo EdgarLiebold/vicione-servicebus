@@ -37,14 +37,7 @@ namespace ViciOne.ServiceBus.Internals
 
         public bool TryGetValue(string key, [NotNullWhen(true)] out ReadWriteProperty<T>? value)
         {
-            try
-            {
-                return _properties.TryGetValue(key, out value);
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new KeyNotFoundException($"The read only property {key} was not found.");
-            }
+            return _properties.TryGetValue(key, out value);
         }
 
         public bool TryGetProperty(string propertyName, [NotNullWhen(true)] out ReadWriteProperty<T>? property)
