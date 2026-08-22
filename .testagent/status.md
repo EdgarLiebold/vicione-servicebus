@@ -27,7 +27,7 @@ The accepted native foundation and MessageBody behavior are committed and remote
   `Configuration/EndpointNaming`, with literal naming oracles and exact reserved-type failures;
 - 15 inherited/current-product MessageUrn obligations are mapped to 17 source-owner cases under the
   Abstractions root and `Attributes`; both runtime overloads now share input validation;
-- UnitArchitecture: 652 predeclared minimum; MessageUrn cohort validation pending;
+- UnitArchitecture: 652 total, 652 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: only fully replaced endpoint-name and MessageUrn fixtures have been
@@ -41,7 +41,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the Cron cohort independently rejects its product regression, a missing requirement projection
   row, and removal of its test project from the Unit profile.
 - the endpoint-name formatter cohort passed its focused 170-case project run, all four targeted
-  product mutations, and the final 635-case unfiltered UnitArchitecture profile;
+  product mutations, and its then-current 635-case unfiltered UnitArchitecture profile;
+- the MessageUrn cohort passed its focused 99-case project run, all five targeted product
+  mutations, and the current 652-case unfiltered UnitArchitecture profile;
 - the repository-wide retrospective [product-defect accommodation audit](../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md)
   found no weakened, skipped, filtered, or defect-accommodating test in the reconstructed scope; it
   explicitly excludes not-yet-reconstructed product areas from that verdict.

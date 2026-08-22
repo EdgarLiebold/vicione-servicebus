@@ -68,7 +68,7 @@ instance-id sanitization, and suffix-only rejection. The predeclared UnitArchite
 Only `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` was removed after all 17 rows closed; no
 product file changed.
 
-## Current cohort — message URNs
+## Accepted cohort — message URNs
 
 Use the existing `ViciOne.ServiceBus.Abstractions.Tests` project and add two source-mirrored files:
 
@@ -77,12 +77,12 @@ Use the existing `ViciOne.ServiceBus.Abstractions.Tests` project and add two sou
 2. `Attributes/MessageUrnAttributeTests.cs` owns null, empty, whitespace, duplicate-default-prefix,
    and invalid-custom-URI validation.
 
-Thirteen ordinary xUnit methods materialize 17 cases. Add one passive requirement-projection row per
-method and terminally map the 12 old MessageUrn fixture obligations, the two attribute obligations
-from `MessageType_Specs.cs`, and the existing Deconstruct gap. The validation methods assert the
-public exception contract directly and deliberately do not preserve the inherited static-cache
-wrapper. Predeclare the UnitArchitecture floor as 652. After focused validation, execute bounded
-format/analyzers, assertion/gap review, and one-cause mutations for derived names, array attribute
-propagation, open-generic rejection, constructor validation, and deconstruction. Then run the full
-Release build and both unfiltered profiles. Remove `MessageUrnSpecs.cs` only after its 12 rows close;
-do not remove or edit `MessageType_Specs.cs` while its array transport behavior remains open.
+Thirteen ordinary xUnit methods materialize 17 cases. One passive requirement-projection row per
+method and the terminal disposition map close the 12 old MessageUrn fixture obligations, the two
+attribute obligations from `MessageType_Specs.cs`, and the existing Deconstruct gap. The validation
+methods assert the public exception contract directly and deliberately do not preserve the
+inherited static-cache wrapper. The UnitArchitecture floor is 652. Bounded format/analyzer checks,
+assertion/gap review, and five one-cause mutations for derived names, array attribute propagation,
+runtime-overload validation, constructor validation, and deconstruction pass. Both complete Release
+profiles pass at 652/652 and 3/3. `MessageUrnSpecs.cs` was removed only after its 12 rows closed;
+`MessageType_Specs.cs` remains untouched while its array transport behavior is open.
