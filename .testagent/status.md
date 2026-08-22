@@ -14,14 +14,14 @@ No product behavior under `src/**` is changed. The native xUnit/MTP basis is ret
 The Lead-owned F1b technical candidate is frozen at commit
 `dbfd48d4111de7294dcf259c16f862ca7f80b3ab`, tree
 `41b5a9ad169be187a9b2f71fd4e350692609fab2`; all positive gates and six isolated mutations are
-complete. F1b awaits its two independent read-only reviews. All behavior-cohort migration remains
-stopped.
+complete. Two independent read-only reviews passed without blocker, major, or minor findings. F1b
+is accepted. All behavior-cohort migration remains stopped.
 
 | Wave | State |
 |---|---|
 | R0 analysis and obligation inventory | complete and remotely preserved |
 | F1a native foundation | accepted and remotely preserved at technical commit `99c7e5a3` |
-| F1b native requirement binding | frozen; independent review pending |
+| F1b native requirement binding | accepted |
 | C1 hermetic core | not started |
 | C2 local persistence | not started |
 | C3 local brokers | not started |
@@ -31,7 +31,8 @@ stopped.
 ## Next work
 
 - preserve the accepted F1a technical commit and its evidence without modification;
-- independently review and accept or reject the bounded six-entry F1b architecture reference cohort;
+- preserve the accepted six-entry F1b architecture reference cohort without modification;
+- plan the first inherited behavioral cohort as a separate bounded slice;
 - keep behavior-cohort migration, inherited-test deletion and profile promotion stopped until their
   own accepted slices.
 

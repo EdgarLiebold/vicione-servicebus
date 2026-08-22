@@ -165,6 +165,11 @@ und alle 29 Rohlogs und Binlogs.
 
 ## 7. Unabhängige Prüfung
 
-Zwei voneinander unabhängige, read-only Red-Teams prüfen diesen eingefrorenen technischen Commit,
-seinen vollständigen Delta, die Nachweise und die Manipulationsgrenzen. Bis beide ohne BLOCKER oder
-MAJOR enden, ist F1b noch nicht angenommen und es beginnt keine Verhaltenskohorte.
+Zwei voneinander unabhängige, read-only Red-Teams prüften den eingefrorenen technischen Commit,
+seinen vollständigen Delta, die korrigierten Nachweise und die Manipulationsgrenzen. Beide endeten
+mit PASS ohne BLOCKER, MAJOR oder MINOR. Geprüft wurden insbesondere die Plan-/Commit-/Tree-Bindung,
+der einzige technische Dokumentationsdelta nach dem Codefreeze, die echte Methodenentfernung bei
+unveränderter Projektion, alle sechs Ergebniszeilen und alle 30 Rohartefakthashes.
+
+F1b ist damit angenommen. Die erste Verhaltenskohorte bleibt eine neue, separat zu planende Arbeit;
+aus dieser Abnahme folgt weiterhin keine Erlaubnis zur Löschung geerbter Tests.
