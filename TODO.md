@@ -37,6 +37,16 @@ Acceptance requires:
 The repository groups `src/Persistence`, `src/Scheduling`, and `src/Transports` remain project-group
 boundaries. They are mirrored under `tests` but do not become C# namespace segments.
 
+## Normalize inherited formatting
+
+The inherited product tree contains pre-existing whitespace findings outside files changed by the
+native test reconstruction. Normalize them as a dedicated mechanical slice instead of mixing a broad
+rewrite into behavior cohorts.
+
+Acceptance requires a repository-wide formatter/analyzer gate, a path-complete reviewed diff, zero
+behavior or public-API changes, locked restore, zero-warning Release builds, and every applicable
+unfiltered native test profile.
+
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in

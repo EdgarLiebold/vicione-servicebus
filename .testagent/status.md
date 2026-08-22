@@ -30,11 +30,12 @@ The accepted native foundation and MessageBody behavior are committed and remote
   field separators, covered by two native regression cases;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
-  state-machine visualizer,
-  including product
+  state-machine visualizer, including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
   the local host-derived worker-id contract, message-contract scenario closure, exact diagnostics,
   exact CodeFix output, and required source forms.
+- the Cron cohort independently rejects its product regression, a missing requirement projection
+  row, and removal of its test project from the Unit profile.
 
 ## Remaining program
 
