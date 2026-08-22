@@ -59,6 +59,9 @@ internal static class RepositoryLayout
     /// <summary>Every native-test project in the current replacement tree.</summary>
     internal static IReadOnlyList<string> NativeTestProjects => EnumerateProjects("tests2");
 
+    /// <summary>Every compile-verified, non-deliverable sample project.</summary>
+    internal static IReadOnlyList<string> SampleProjects => EnumerateProjects("samples");
+
     /// <summary>Every currently materialized native test-profile solution.</summary>
     internal static IReadOnlyList<string> TestProfileSolutions =>
         Directory.GetFiles(Root, "ViciOne.ServiceBus.Tests.*.slnx", SearchOption.TopDirectoryOnly)

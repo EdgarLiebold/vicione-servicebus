@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 668 unfiltered cases;
+- `UnitArchitecture`: 670 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -115,3 +115,16 @@ exception. The unreachable catch in the product implementation is removed withou
 observable behavior. Ten obligations close; the separate implemented-message-type fixture remains
 open until its topology semantics can be proved rather than guessed. The UnitArchitecture floor is
 raised to 668 before the first result.
+
+## Accepted cleanup — inherited Abstractions project
+
+All 78 obligations owned by the inherited Abstractions test project have terminal dispositions:
+70 are replaced by native xUnit/MTP behavior and eight are non-product or non-executing. The old
+formatter corpus is byte-identical to the embedded replacement. The ten executable NUnit source
+files and their obsolete project are therefore removed.
+
+The nine compile-only usage files were never tests. Their public consumer, saga, routing-slip
+activity, definition, contract, topology, publish, response, header, and timestamp shapes now live
+in the non-packable `samples/OrderWorkflow` project with source-oriented folders and namespaces.
+Two repository architecture cases enforce non-packability and Engineering-solution membership,
+raising the UnitArchitecture floor from 668 to 670.

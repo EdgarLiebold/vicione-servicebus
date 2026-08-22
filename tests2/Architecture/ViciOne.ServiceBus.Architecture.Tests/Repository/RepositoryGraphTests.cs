@@ -54,6 +54,19 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
+    public void EverySampleProject_IsNotPackable()
+    {
+        Assert.NotEmpty(RepositoryLayout.SampleProjects);
+
+        var packable = RepositoryLayout.SampleProjects
+            .Where(project => MsBuildEvaluation.PropertyOf(project, "IsPackable") != "false")
+            .Select(RepositoryLayout.RelativeToRoot)
+            .ToArray();
+
+        Assert.Empty(packable);
+    }
+
+    [Fact]
     public void NativeTestProjects_DeclareNoLocalPackageVersion()
     {
         Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
@@ -185,6 +198,24 @@ public sealed class RepositoryGraphTests
             .ToHashSet(RepositoryLayout.PathComparer);
 
         var missing = RepositoryLayout.NativeTestProjects
+            .Where(project => !members.Contains(Path.GetFullPath(project)))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .ToArray();
+
+        Assert.Empty(missing);
+    }
+
+    [Fact]
+    public void EngineeringSolution_ContainsEverySampleProject()
+    {
+        Assert.NotEmpty(RepositoryLayout.SampleProjects);
+
+        var engineering = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Engineering.slnx");
+        var members = SolutionProjects(engineering)
+            .Select(Path.GetFullPath)
+            .ToHashSet(RepositoryLayout.PathComparer);
+
+        var missing = RepositoryLayout.SampleProjects
             .Where(project => !members.Contains(Path.GetFullPath(project)))
             .Select(RepositoryLayout.RelativeToRoot)
             .ToArray();

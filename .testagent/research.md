@@ -26,7 +26,9 @@ process providers; the concurrency contract uses a private deterministic generat
 mutating the process-wide static generator. All executable methods carry passive requirement
 metadata and are checked against one projection per assembly.
 
-That Abstractions cohort changed no production source or inherited test.
+The original behavior cohort changed no production source or inherited test. After its complete
+78/78 disposition was accepted, a separate cleanup removed the fully replaced NUnit project. Its
+compile-only usage types moved into the source-structured, non-packable OrderWorkflow sample.
 
 ## MessagePack owner
 

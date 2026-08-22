@@ -7,8 +7,8 @@ mapped by `NuGet.config`; no machine-level feed or credential participates.
 
 | Target | Purpose |
 |---|---|
-| `ViciOne.ServiceBus.slnx` | inherited product and inherited tests during the replacement period |
-| `ViciOne.ServiceBus.Engineering.slnx` | benchmarks, diagnostics, product dependencies, and every materialized native-test project |
+| `ViciOne.ServiceBus.slnx` | inherited product and inherited tests during the replacement period, plus compile-verified samples |
+| `ViciOne.ServiceBus.Engineering.slnx` | benchmarks, diagnostics, samples, product dependencies, and every materialized native-test project |
 | `ViciOne.ServiceBus.Tests.Unit.slnx` | current hermetic unit and architecture profile |
 | `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | tests against real resources of the local host |
 
@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 668
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 670
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -79,6 +79,10 @@ uses one ordinary xUnit assertion over those diagnostics.
 Input the verifier cannot read at all - a wrong root, an unknown field, a non-canonical value, a
 projected type that does not exist - throws instead, because reporting "no differences" over
 unreadable input is how a broken projection passes.
+
+Compile-time examples live under `samples`, never under a test project. Every sample is non-packable,
+has a tracked lock file, and belongs to the Engineering solution. Native architecture tests enforce
+both the delivery boundary and Engineering membership.
 
 The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:

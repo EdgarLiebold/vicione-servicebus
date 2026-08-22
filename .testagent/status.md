@@ -28,12 +28,13 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - 15 inherited/current-product MessageUrn obligations are mapped to 17 source-owner cases under the
   Abstractions root and `Attributes`; both runtime overloads now share input validation;
 - all seven request-rate algorithm obligations are mapped to eight deterministic source-owner cases;
-- UnitArchitecture: 668 total, 668 passed, 0 failed, 0 skipped;
+- UnitArchitecture: 670 predeclared total; acceptance run pending;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- inherited-test source: only fully replaced endpoint-name, MessageUrn, and request-rate fixtures
-  have been removed; `MessageType_Specs.cs` remains because its array transport behavior is still
-  open;
+- inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
+  and request-rate fixtures have been removed; the Abstractions compile-only usage examples now
+  live in the non-packable `samples/OrderWorkflow` project; `MessageType_Specs.cs` remains because
+  its array transport behavior is still open;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions, the Analyzer foundation, MessagePack, and the
   state-machine visualizer, including product

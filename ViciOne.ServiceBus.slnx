@@ -30,6 +30,9 @@
     <Project Path="src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj" />
     <Project Path="tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj" />
   </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/OrderWorkflow/ViciOne.ServiceBus.Samples.OrderWorkflow.csproj" />
+  </Folder>
   <Folder Name="/SignalR/">
     <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
     <Project Path="tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
@@ -55,7 +58,6 @@
   <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
   <Project Path="src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj" />
   <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
-  <Project Path="tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj" />
   <Project Path="tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj" />
   <Project Path="tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj" />
 </Solution>
