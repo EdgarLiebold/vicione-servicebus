@@ -49,6 +49,7 @@ public sealed class MessagePackTransportIntegrationTests
                 TestContext.Current.CancellationToken);
 
             Assert.Equal("preserved", context.Message.Value);
+            Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, context.ReceiveContext.ContentType);
             Assert.True(await harness.Consumed.Any<InterfaceDispatchMessage>(
                 TestContext.Current.CancellationToken));
         }
@@ -98,6 +99,9 @@ public sealed class MessagePackTransportIntegrationTests
             Assert.All(deliveries, delivery =>
             {
                 Assert.Equal("preserved", delivery.Context.Message.Value);
+                Assert.Equal(
+                    MessagePackMessageSerializer.MessagePackContentType,
+                    delivery.Context.ReceiveContext.ContentType);
                 Assert.Contains(
                     MessageUrn.ForTypeString<RetryMessage>(),
                     delivery.Context.SupportedMessageTypes);
