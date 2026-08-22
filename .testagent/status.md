@@ -28,7 +28,7 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - 15 inherited/current-product MessageUrn obligations are mapped to 17 source-owner cases under the
   Abstractions root and `Attributes`; both runtime overloads now share input validation;
 - all seven request-rate algorithm obligations are mapped to eight deterministic source-owner cases;
-- UnitArchitecture: 670 predeclared total; acceptance run pending;
+- UnitArchitecture: 670 total, 670 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -51,6 +51,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   mutations, and its 660-case unfiltered UnitArchitecture profile;
 - the reflection cohort adds eight source-owner cases, corrects the invalid missing-key gap, and
   leaves the ambiguous implemented-message-type obligation open for its topology cohort;
+- the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
+  byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
+  by the non-packable, Engineering-bound OrderWorkflow sample;
 - the repository-wide retrospective [product-defect accommodation audit](../evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md)
   found no weakened, skipped, filtered, or defect-accommodating test in the reconstructed scope; it
   explicitly excludes not-yet-reconstructed product areas from that verdict.
