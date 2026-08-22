@@ -1,0 +1,17 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/ImplementedTypeCache_Specs.cs",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "disposition": {
+    "obligationId": "OBL-R0-CORE-D-0174",
+    "state": "REPLACED_EXECUTING",
+    "requirementId": "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+    "variantKey": "interface-chain",
+    "targetProject": "tests2/ViciOne.ServiceBus.Abstractions.Tests",
+    "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests.InterfaceChain_ContainsOnlyTheImmediateParent",
+    "explanation": "The inherited count-only assertion is replaced by an exact type-and-direct-edge assertion. Five additional source-owner cases protect diamond inheritance, class/interface topology, polymorphic faults, invalid System interfaces, and the no-parent boundary."
+  }
+}

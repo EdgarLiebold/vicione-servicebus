@@ -98,6 +98,48 @@
       "variantKey" : "type-only"
    },
    {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ClassHierarchy_ContainsTheImmediateBaseAndItsMostSpecificInterface",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "class-base-and-interface"
+   },
+   {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Fault_ContainsTheNonGenericFaultAndEveryDirectPolymorphicFault",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "fault-polymorphism"
+   },
+   {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InterfaceChain_ContainsOnlyTheImmediateParent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "interface-chain"
+   },
+   {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InterfaceDiamond_ContainsEachImmediateParentOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "interface-diamond"
+   },
+   {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "StandaloneMessage_HasNoImplementedTopologyParent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "no-parent"
+   },
+   {
+      "requirementId" : "REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SystemInterface_IsNotAMessageTopologyParent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ImplementedMessageTypeCacheTests",
+      "variantKey" : "invalid-system-interface"
+   },
+   {
       "requirementId" : "REQ-VSB-MESSAGE-BODY-CONTRACT",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet",

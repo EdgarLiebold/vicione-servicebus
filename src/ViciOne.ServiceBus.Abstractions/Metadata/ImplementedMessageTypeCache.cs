@@ -41,63 +41,50 @@ namespace ViciOne.ServiceBus.Metadata
 
         static IEnumerable<ImplementedType> GetMessageTypes()
         {
-            return GetMessageTypes(new HashSet<Type>(), typeof(TMessage), true);
+            var emittedTypes = new HashSet<Type>();
+
+            foreach (var messageType in GetDirectTopologyTypes(typeof(TMessage)))
+            {
+                if (messageType != typeof(TMessage) && emittedTypes.Add(messageType))
+                    yield return new ImplementedType(messageType, true);
+            }
         }
 
-        static IEnumerable<ImplementedType> GetMessageTypes(HashSet<Type> used, Type messageType, bool direct)
+        /// <summary>
+        /// Returns the immediate edges of the message topology graph. A class contributes its
+        /// immediate base class and its most-specific valid interfaces. Interfaces inherited via
+        /// the base class intentionally remain direct topology edges: an excluded base-class
+        /// topology must not hide an independently valid message contract.
+        /// </summary>
+        static IEnumerable<Type> GetDirectTopologyTypes(Type messageType)
         {
             if (messageType.ClosesType(typeof(Fault<>), out Type[] arguments))
             {
-                foreach (var faultMessageType in GetMessageTypes(used, arguments[0], direct))
-                {
-                    var faultInterfaceType = typeof(Fault<>).MakeGenericType(faultMessageType.Type);
-                    if (faultInterfaceType != typeof(TMessage) && used.Add(faultInterfaceType))
-                        yield return new ImplementedType(faultInterfaceType, faultMessageType.Direct);
-                }
+                foreach (var implementedType in GetDirectTopologyTypes(arguments[0]))
+                    yield return typeof(Fault<>).MakeGenericType(implementedType);
             }
 
             var baseType = messageType.BaseType;
             if (baseType != null && baseType != typeof(object) && MessageTypeCache.IsValidMessageType(baseType))
-            {
-                if (used.Add(baseType))
-                    yield return new ImplementedType(baseType, direct);
+                yield return baseType;
 
-                HashSet<Type> baseUsed = [..used];
-                List<Type> implementedTypes = [];
+            var validInterfaces = messageType.GetInterfaces()
+                .Where(MessageTypeCache.IsValidMessageType)
+                .ToArray();
 
-                foreach (var baseMessageType in GetMessageTypes(baseUsed, baseType, false))
-                {
-                    var type = baseMessageType.Type;
+            var inheritedInterfaces = validInterfaces
+                .SelectMany(interfaceType => interfaceType.GetInterfaces())
+                .ToHashSet();
 
-                    if (baseUsed.Add(type))
-                        implementedTypes.Add(type);
-                }
+            foreach (var interfaceType in validInterfaces
+                         .Where(interfaceType => !inheritedInterfaces.Contains(interfaceType))
+                         .OrderBy(GetStableTypeName, StringComparer.Ordinal))
+                yield return interfaceType;
+        }
 
-                foreach (var implementedType in implementedTypes)
-                {
-                    if (used.Add(implementedType))
-                        yield return new ImplementedType(implementedType, direct);
-                }
-            }
-
-            Type[]? interfaces = messageType.GetInterfaces();
-
-            for (var index = 0; index < interfaces.Length; index++)
-            {
-                var interfaceType = interfaces[index];
-
-                if (MessageTypeCache.IsValidMessageType(interfaceType))
-                {
-                    foreach (var baseInterfaceType in GetMessageTypes(used, interfaceType, false))
-                    {
-                        if (used.Add(baseInterfaceType.Type))
-                            yield return new ImplementedType(baseInterfaceType.Type, direct);
-                    }
-
-                    if (used.Add(interfaceType))
-                        yield return new ImplementedType(interfaceType, direct);
-                }
-            }
+        static string GetStableTypeName(Type type)
+        {
+            return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
         }
 
 

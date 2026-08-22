@@ -171,3 +171,17 @@ negative test. No existing behavior changes.
 which implemented interface or `direct` value is semantically correct, and the current algorithm is
 sensitive to interface-enumeration order. Freezing a guessed topology contract would be worse than
 leaving the obligation visibly open for its own topology cohort.
+
+## Implemented-message topology cohort
+
+The topology contract is no longer guessed. The inherited regression originates in the MassTransit
+fix for interface faults hidden behind a base class: the base class and its independently valid,
+most-specific interfaces must remain direct topology edges. For an interface hierarchy, only the
+immediate most-specific parents are edges; for a diamond, their shared ancestor is reached through
+those parents and must not be duplicated. `Fault<T>` projects the same direct edges to `Fault<P>` and
+also retains the non-generic `Fault` contract.
+
+The inherited implementation achieved this through mutation of one shared set while iterating the
+unspecified order returned by reflection. The replacement computes the maximal valid interface set
+explicitly and orders it by stable type identity. Six source-owner cases bind exact types, uniqueness,
+and the `direct` bit; the former count-only obligation maps to the interface-chain case.

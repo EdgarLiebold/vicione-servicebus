@@ -128,3 +128,19 @@ activity, definition, contract, topology, publish, response, header, and timesta
 in the non-packable `samples/OrderWorkflow` project with source-oriented folders and namespaces.
 Two repository architecture cases enforce non-packability and Engineering-solution membership,
 raising the UnitArchitecture floor from 668 to 670.
+
+## Accepted cohort — implemented-message topology
+
+`Metadata/ImplementedMessageTypeCacheTests.cs` belongs to the Abstractions source owner. Six ordinary
+xUnit cases replace the inherited count-only assertion with exact topology contracts: immediate
+interface inheritance, diamonds without duplicate transitive edges, a class base plus an interface
+inherited through that base, the corresponding polymorphic `Fault<T>` edges, exclusion of invalid
+System interfaces, and the no-parent boundary.
+
+The product implementation is made independent of reflection enumeration order. It retains the
+interface edge inherited through a base class because an excluded base topology must not hide that
+separate message contract. The UnitArchitecture floor is raised from 670 to 676 before the first
+result. `ImplementedTypeCache_Specs.cs` is removed after its obligation is terminally mapped. The
+focused and unfiltered profiles are green, and one-cause mutations prove interface reduction,
+base-inherited interface preservation, polymorphic fault projection, invalid-interface filtering,
+and the direct-edge marker.

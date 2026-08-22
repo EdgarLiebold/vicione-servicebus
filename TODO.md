@@ -52,3 +52,17 @@ unfiltered native test profile.
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in
 [`benchmarks/ToDo.md`](benchmarks/ToDo.md). Complete them only with their real infrastructure and do
 not replace them with inventory-only or skipped green results.
+
+## Finalize solution composition after native-test promotion
+
+The inherited `ViciOne.ServiceBus.slnx` still contains old test projects. Three of them are not
+executable Microsoft Testing Platform projects and therefore correctly fail the xUnit 4 executable-
+project gate. Do not retrofit those projects merely to make the inherited solution green. Replace
+their meaningful behavior in the source-owner projects, remove them when their obligation sets are
+terminal, and then rebuild the root solution composition.
+
+The final product and engineering solution closure must include every retained `src/**` project and
+every promoted native test, sample, benchmark, and engineering tool that belongs to its declared
+role. Acceptance requires locked restore, zero-warning Release builds, all applicable unfiltered
+profiles, and an architecture test that fails when a retained project is omitted from the relevant
+solution.
