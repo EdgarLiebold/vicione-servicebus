@@ -87,18 +87,19 @@ runtime-overload validation, constructor validation, and deconstruction pass. Bo
 profiles pass at 652/652 and 3/3. `MessageUrnSpecs.cs` was removed only after its 12 rows closed;
 `MessageType_Specs.cs` remains untouched while its array transport behavior is open.
 
-## Current cohort — request-rate algorithm
+## Accepted cohort — request-rate algorithm
 
-Add `Util/RequestRateAlgorithmTests.cs` to the existing Abstractions test project. Six ordinary
+`Util/RequestRateAlgorithmTests.cs` belongs to the existing Abstractions test project. Six ordinary
 xUnit methods materialize eight cases: generic flow completion, deterministic grouped/ordered
 repetition, the exact request-growth curve, prefetch clamping, full/empty single-request boundaries,
 and both zero-option guards. One passive projection row per method and a terminal disposition map
 close the seven R0 obligations.
 
 The concurrency test uses a task-completion barrier sized from the algorithm's public RequestCount;
-it contains no `Task.Delay`, random input, polling, or environment dependency. Predeclare the
-UnitArchitecture floor as 660. After focused format/build/test and static assertion review, execute
+it contains no `Task.Delay`, random input, polling, or environment dependency. Its deliberately high
+result capacity isolates the named request-concurrency contract. The UnitArchitecture floor is 660.
+Focused format/build/test, three consecutive stability runs, static assertion review, and six
 one-cause mutations for callback processing, grouped request overlap, scaling, result clamping,
-single-request stability, and constructor validation. Then run both complete Release profiles.
-Remove `PollingAlgorithm_Specs.cs` only after the focused replacement is green and its seven rows are
-terminally mapped.
+single-request stability, and constructor validation pass. Both complete Release profiles pass at
+660/660 and 3/3. `PollingAlgorithm_Specs.cs` was removed only after all seven rows were terminally
+mapped.
