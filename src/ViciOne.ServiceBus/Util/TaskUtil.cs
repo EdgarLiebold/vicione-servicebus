@@ -9,8 +9,7 @@ namespace ViciOne.ServiceBus.Util
 
     public static class TaskUtil
     {
-        internal static Task Canceled => Cached<bool>.CanceledTask;
-        public static Task Completed => Cached.CompletedTask;
+        public static Task Completed => Task.CompletedTask;
         public static Task<bool> False => Cached.FalseTask;
         public static Task<bool> True => Cached.TrueTask;
 
@@ -25,32 +24,31 @@ namespace ViciOne.ServiceBus.Util
         }
 
         /// <summary>
-        /// Returns a faulted task with the specified exception (creating using a <see cref="TaskCompletionSource{T}" />)
+        /// Returns a faulted task with the specified exception.
         /// </summary>
         /// <param name="exception"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static Task<T> Faulted<T>(Exception exception)
         {
-            TaskCompletionSource<T> source = GetTask<T>();
-            source.TrySetException(exception);
+            ArgumentNullException.ThrowIfNull(exception);
 
-            return source.Task;
+            return Task.FromException<T>(exception);
         }
 
         /// <summary>
-        /// Returns a cancelled task for the specified type.
+        /// Returns a canceled task for the specified type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task<T> Cancelled<T>()
+        public static Task<T> Canceled<T>()
         {
             return Cached<T>.CanceledTask;
         }
 
         /// <summary>
-        /// Creates a new <see cref="TaskCompletionSource{T}" />, and ensures the TaskCreationOptions.RunContinuationsAsynchronously
-        /// flag is specified (if available).
+        /// Creates a new <see cref="TaskCompletionSource{T}" /> and ensures the TaskCreationOptions.RunContinuationsAsynchronously
+        /// flag is specified.
         /// </summary>
         /// <param name="options"></param>
         /// <typeparam name="T"></typeparam>
@@ -62,7 +60,7 @@ namespace ViciOne.ServiceBus.Util
 
         /// <summary>
         /// Creates a new TaskCompletionSource and ensures the TaskCreationOptions.RunContinuationsAsynchronously
-        /// flag is specified (if available).
+        /// flag is specified.
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
@@ -98,6 +96,8 @@ namespace ViciOne.ServiceBus.Util
 
         public static CancellationTokenRegistration RegisterIfCanBeCanceled(this CancellationToken cancellationToken, CancellationTokenSource source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             if (cancellationToken.CanBeCanceled)
                 return cancellationToken.Register(Cancel, source);
 
@@ -116,6 +116,8 @@ namespace ViciOne.ServiceBus.Util
         /// <param name="source"></param>
         public static void SetCompleted(this TaskCompletionSource<bool> source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             source.TrySetResult(true);
         }
 
@@ -127,16 +129,13 @@ namespace ViciOne.ServiceBus.Util
         /// read, captured, installed nor replaced, and nothing is posted to it.
         /// </para>
         /// <para>
-        /// This is not a deadlock free sync over async facility, and it does not claim to be. A task
-        /// whose own continuation captured the caller's context still needs that context to be pumped,
-        /// and the caller blocked here cannot pump it. Both halves are asserted in
-        /// <c>Awaiting_a_task_synchronously</c>.
+        /// This method does not pump the caller's synchronization context. The caller must therefore
+        /// ensure that the task does not depend on that blocked context for its own completion.
         /// </para>
         /// </summary>
         public static void Await(Func<Task> taskFactory, CancellationToken cancellationToken = default)
         {
-            if (taskFactory == null)
-                throw new ArgumentNullException(nameof(taskFactory));
+            ArgumentNullException.ThrowIfNull(taskFactory);
 
             var task = taskFactory();
             if (task == null)
@@ -150,8 +149,7 @@ namespace ViciOne.ServiceBus.Util
 
         public static void Await(Task task, CancellationToken cancellationToken = default)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             if (cancellationToken.CanBeCanceled)
                 task = task.OrCanceled(cancellationToken);
@@ -161,8 +159,7 @@ namespace ViciOne.ServiceBus.Util
 
         public static T Await<T>(Func<Task<T>> taskFactory, CancellationToken cancellationToken = default)
         {
-            if (taskFactory == null)
-                throw new ArgumentNullException(nameof(taskFactory));
+            ArgumentNullException.ThrowIfNull(taskFactory);
 
             Task<T>? task = taskFactory();
             if (task == null)
@@ -176,7 +173,6 @@ namespace ViciOne.ServiceBus.Util
 
         static class Cached
         {
-            public static readonly Task CompletedTask = Task.FromResult(true);
             public static readonly Task<bool> TrueTask = Task.FromResult(true);
             public static readonly Task<bool> FalseTask = Task.FromResult(false);
         }
@@ -189,9 +185,7 @@ namespace ViciOne.ServiceBus.Util
 
             static Task<T> GetCanceledTask()
             {
-                TaskCompletionSource<T> source = GetTask<T>();
-                source.SetCanceled();
-                return source.Task;
+                return Task.FromCanceled<T>(new CancellationToken(canceled: true));
             }
         }
     }

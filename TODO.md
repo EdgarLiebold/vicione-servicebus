@@ -56,6 +56,16 @@ bounded backpressure, concurrency, synchronous waiting where still required, can
 disposal, and the ActiveMQ call sites. Remove historical comparison language and the redundant type
 only after all consumers, benchmarks, public API, and package contents have explicit dispositions.
 
+## Normalize task-utility API names
+
+`src/ViciOne.ServiceBus/Util/TaskUtil.cs` still exposes inherited generic helper names such as
+`GetTask` and `Default`, and its `Util` location does not describe an architectural owner. Treat the
+complete utility surface and every call site as one dedicated product-normalization slice after the
+native reconstruction has captured all behavior. Select intent-revealing .NET names and a stable
+source owner, preserve every meaningful capability, and migrate all internal and public consumers
+atomically. Acceptance requires a public-API disposition, package comparison, zero stale names,
+locked restore, zero-warning Release builds, and every applicable unfiltered native test profile.
+
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in

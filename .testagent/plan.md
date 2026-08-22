@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 706 unfiltered cases;
+- `UnitArchitecture`: 724 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -189,3 +189,19 @@ drain behavior; idempotent disposal; post-disposal rejection; and every public n
 boundary. The product adds explicit ValueTask entry points, stable validation and disposal behavior,
 and correct canceled-task completion. The UnitArchitecture floor rises from 689 to 706; the fully
 replaced inherited fixture is removed only after all three ledger obligations become terminal.
+
+## Accepted cohort — task utilities
+
+`Util/TaskUtilTests.cs` mirrors the synchronous task utility and replaces the inherited NUnit
+fixture with 18 ordinary xUnit cases. Explicit barriers prove completed and later results,
+unwrapped generic and non-generic faults, caller-token cancellation, synchronization-context
+preservation, and the exact externally pumped captured-context boundary without fixed-time behavior
+assertions. The same cohort covers every remaining public utility capability: cached values,
+canceled-task state and token, asynchronous completion-source options, cancellation registrations,
+idempotent completion, invalid inputs, and the absence of desktop Windows framework references.
+
+Seven one-cause product mutations and one missing-requirement mutation are rejected. A surviving
+first version of the AggregateException mutation exposed an uncovered generic overload; the test
+was strengthened and the same mutant then failed for the intended reason. The UnitArchitecture
+floor rises from 706 to 724, and `AwaitSemantics_Specs.cs` is removed only after all nine inherited
+ledger obligations are terminally mapped.

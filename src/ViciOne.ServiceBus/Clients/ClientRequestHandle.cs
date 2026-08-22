@@ -185,7 +185,7 @@ public class ClientRequestHandle<TRequest> :
         configure?.Invoke(configurator);
 
         if (_cancellationToken.IsCancellationRequested)
-            return TaskUtil.Cancelled<Response<T>>();
+            return TaskUtil.Canceled<Response<T>>();
 
         HandlerConnectHandle<T> handle = configurator.Connect(_context, RequestId);
 
