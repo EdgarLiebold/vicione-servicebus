@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
+    <ProjectReference Include="../Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj" />
+    <ProjectReference Include="../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/CodeFixRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/CodeFixRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.Requirements.CodeFixRequirements.json" />
+  </ItemGroup>
+
+</Project>

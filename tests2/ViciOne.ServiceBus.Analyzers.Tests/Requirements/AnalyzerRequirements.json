@@ -1,0 +1,149 @@
+[
+  {
+    "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
+    "variantKey": "no-compilation-bound-fields",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "ProductAnalyzers_HoldNoCompilationBoundInstanceState"
+  },
+  {
+    "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
+    "variantKey": "compilation-bound-field-control",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "CompilationBoundFieldScan_DetectsDirectAndGenericSymbolState"
+  },
+  {
+    "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
+    "variantKey": "complete-analyzer-carrier-set",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "ProductAnalyzerAssembly_ContainsTheExplicitAnalyzerSet"
+  },
+  {
+    "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE",
+    "variantKey": "one-instance-multiple-compilations",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AnalyzerInstanceStateTests",
+    "testMethod": "OneAnalyzerInstance_ProducesIndependentResultsAcrossCompilations"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "publish-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "PublishWithoutAwaitOrCapture_ReportsMessageLossRisk"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "send-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "SendWithoutAwaitOrCapture_ReportsMessageLossRisk"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "request-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "GetResponseWithoutAwaitOrCapture_ReportsMessageLossRisk"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "response-must-be-observed",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "RespondWithoutAwaitOrCapture_ReportsMessageLossRisk"
+  },
+  {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "non-task-create-is-excluded",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "RequestHandleCreation_DoesNotReportAsyncMessageLossRisk"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "task-delay-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "TaskDelayWithoutToken_ReportsTheContextTokenOverload"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "state-machine-activity-overloads",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "StateMachineActivity_ReportsEachAvailableContextToken"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "later-task-run-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "ExistingTokenUse_DoesNotSuppressASeparateMissingToken"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "existing-token-is-silent",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "ExistingCancellationToken_DoesNotReport"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "servicebus-method-is-excluded",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "ServiceBusPublishMethod_DoesNotSuggestItsOwnContextToken"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "dictionary-missing-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.DictionaryInitializerTests",
+    "testMethod": "EmptyAnonymousValue_ReportsEveryMissingDictionaryContractProperty"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "dictionary-incompatible-value",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.DictionaryInitializerTests",
+    "testMethod": "ArrayInsteadOfDictionary_ReportsTheIncompatibleContractProperty"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "dictionary-compatible-value",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.DictionaryInitializerTests",
+    "testMethod": "DictionaryProjection_SatisfiesTheDictionaryContract"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-missing-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "EmptyAnonymousValue_ReportsEveryMissingMessageDataProperty"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-incompatible-values",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "ScalarValues_RejectMessageDataStringAndStreamContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-stream-compatible",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "StreamValue_SatisfiesTheMessageDataStreamContract"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "message-data-derived-stream-compatible",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageDataInitializerTests",
+    "testMethod": "DerivedStreamValue_SatisfiesTheMessageDataStreamContract"
+  }
+]

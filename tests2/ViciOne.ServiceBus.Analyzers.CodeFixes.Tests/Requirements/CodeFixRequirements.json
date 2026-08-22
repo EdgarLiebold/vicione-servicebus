@@ -1,0 +1,23 @@
+[
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "task-delay-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
+    "testMethod": "TaskDelayFix_AddsTheContextCancellationToken"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "state-machine-activity-overloads",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
+    "testMethod": "ActivityFix_AddsEachMatchingBehaviorContextToken"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "later-task-run-overload",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
+    "testMethod": "TaskRunFix_PreservesExistingTokenUseAndAddsTheMissingOne"
+  }
+]

@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 213 unfiltered cases;
+- `UnitArchitecture`: 250 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -32,7 +32,7 @@ closed; it is never the runtime test architecture.
 
 ## Current work
 
-The MessageBody cohort and native foundation are remotely preserved at `b3519291`. This source state
-adds the remaining Abstractions unit behavior and the local-host worker-id behavior. Product and
-inherited-test source remain unchanged. Its Git commit and tree, rather than a self-referential hash
-inside this file, are the review identity.
+The complete Abstractions owner is remotely preserved through `bbc270c4`. The active cohort adds the
+framework-neutral Roslyn host and the first 24 Analyzer obligations, split between their Analyzer,
+CodeFix, and Testing owners. Product and inherited-test source remain unchanged. The accepted Git
+commit and tree, rather than a self-referential hash inside this file, are the review identity.

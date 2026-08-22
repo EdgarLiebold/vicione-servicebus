@@ -1,0 +1,42 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Analyzers.Tests",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "counts": {
+    "sourceObligations": 115,
+    "replacedObligationsInThisCohort": 24,
+    "remainingObligations": 91,
+    "replacementBindings": 27
+  },
+  "replacements": [
+    { "obligationIds": ["OBL-R0-SML-0079"], "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE", "variantKey": "no-compilation-bound-fields" },
+    { "obligationIds": ["OBL-R0-SML-0080"], "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE", "variantKey": "compilation-bound-field-control" },
+    { "obligationIds": ["OBL-R0-SML-0081"], "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE", "variantKey": "complete-analyzer-carrier-set" },
+    { "obligationIds": ["OBL-R0-SML-0082"], "requirementId": "REQ-VSB-ANALYZER-INSTANCE-STATE", "variantKey": "one-instance-multiple-compilations" },
+    { "obligationIds": ["OBL-R0-SML-0083"], "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER", "variantKey": "publish-must-be-observed" },
+    { "obligationIds": ["OBL-R0-SML-0084"], "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER", "variantKey": "send-must-be-observed" },
+    { "obligationIds": ["OBL-R0-SML-0085"], "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER", "variantKey": "request-must-be-observed" },
+    { "obligationIds": ["OBL-R0-SML-0086"], "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER", "variantKey": "response-must-be-observed" },
+    { "obligationIds": ["OBL-R0-SML-0087"], "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER", "variantKey": "non-task-create-is-excluded" },
+    { "obligationIds": ["OBL-R0-SML-0088"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "variantKey": "task-delay-overload" },
+    { "obligationIds": ["OBL-R0-SML-0088"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX", "variantKey": "task-delay-overload" },
+    { "obligationIds": ["OBL-R0-SML-0089"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "variantKey": "state-machine-activity-overloads" },
+    { "obligationIds": ["OBL-R0-SML-0089"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX", "variantKey": "state-machine-activity-overloads" },
+    { "obligationIds": ["OBL-R0-SML-0090"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "variantKey": "later-task-run-overload" },
+    { "obligationIds": ["OBL-R0-SML-0090"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX", "variantKey": "later-task-run-overload" },
+    { "obligationIds": ["OBL-R0-SML-0091"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "variantKey": "existing-token-is-silent" },
+    { "obligationIds": ["OBL-R0-SML-0092"], "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "variantKey": "servicebus-method-is-excluded" },
+    { "obligationIds": ["OBL-R0-SML-0093"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "dictionary-missing-properties" },
+    { "obligationIds": ["OBL-R0-SML-0094"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "dictionary-incompatible-value" },
+    { "obligationIds": ["OBL-R0-SML-0095"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "dictionary-compatible-value" },
+    { "obligationIds": ["OBL-R0-SML-0096"], "requirementId": "REQ-VSB-ROSLYN-TEST-HOST", "variantKey": "invalid-fixture-fails-closed" },
+    { "obligationIds": ["OBL-R0-SML-0097"], "requirementId": "REQ-VSB-ROSLYN-TEST-HOST", "variantKey": "valid-fixture-binds" },
+    { "obligationIds": ["OBL-R0-SML-0098"], "requirementId": "REQ-VSB-ROSLYN-TEST-HOST", "variantKey": "trusted-platform-closure" },
+    { "obligationIds": ["OBL-R0-SML-0099"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "message-data-missing-properties" },
+    { "obligationIds": ["OBL-R0-SML-0100"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "message-data-incompatible-values" },
+    { "obligationIds": ["OBL-R0-SML-0101"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "message-data-stream-compatible" },
+    { "obligationIds": ["OBL-R0-SML-0102"], "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "variantKey": "message-data-derived-stream-compatible" }
+  ]
+}

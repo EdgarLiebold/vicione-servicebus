@@ -22,7 +22,10 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 public sealed class EvaluatedBuildGraphTests
 {
     private static readonly string TestProject = RepositoryLayout.ArchitectureTestProject;
-    private static readonly string SupportLibrary = RepositoryLayout.TestingSupportProject;
+    private static IReadOnlyList<string> SupportLibraries => RepositoryLayout.NativeTestProjects
+        .Where(project => !MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+            .Contains("xunit.v3.mtp-v2", StringComparer.OrdinalIgnoreCase))
+        .ToArray();
 
     /// <summary>
     /// Every project of this tree that carries the Microsoft Testing Platform entry point.
@@ -67,12 +70,15 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void SupportLibrary_IsNotClassifiedAsTestProject()
+    public void EverySupportLibrary_IsNotClassifiedAsTestProject()
     {
-        // The contrast is the point: a blanket IsTestProject for the whole tree would label this
-        // library a test project too, and the classification would stop meaning anything.
-        Assert.NotEqual("true", MsBuildEvaluation.PropertyOf(SupportLibrary, "IsTestProject"));
-        Assert.NotEqual("Exe", MsBuildEvaluation.PropertyOf(SupportLibrary, "OutputType"));
+        Assert.NotEmpty(SupportLibraries);
+
+        foreach (var project in SupportLibraries)
+        {
+            Assert.NotEqual("true", MsBuildEvaluation.PropertyOf(project, "IsTestProject"));
+            Assert.NotEqual("Exe", MsBuildEvaluation.PropertyOf(project, "OutputType"));
+        }
     }
 
     [Fact]
@@ -87,12 +93,14 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void SupportLibrary_ReferencesNoXunitPackageAtAll()
+    public void EverySupportLibrary_ReferencesNoXunitPackageAtAll()
     {
-        // Framework neutrality is not a comment, it is the absence of any xunit package in the
-        // evaluated references of this project.
-        var xunitReferences = MsBuildEvaluation.ItemIdentities(SupportLibrary, "PackageReference")
-            .Where(identity => identity.Contains("xunit", StringComparison.OrdinalIgnoreCase))
+        Assert.NotEmpty(SupportLibraries);
+
+        var xunitReferences = SupportLibraries
+            .SelectMany(project => MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+                .Where(identity => identity.Contains("xunit", StringComparison.OrdinalIgnoreCase))
+                .Select(identity => $"{RepositoryLayout.RelativeToRoot(project)}:{identity}"))
             .ToArray();
 
         Assert.Empty(xunitReferences);
@@ -230,11 +238,14 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void SupportLibrary_DoesNotCarryTheTestingPlatformConfiguration()
+    public void EverySupportLibrary_DoesNotCarryTheTestingPlatformConfiguration()
     {
-        // It is not an executable test artifact, so MTP never reads a configuration from it.
-        var testingPlatformConfigurations = MsBuildEvaluation.ItemMetadata(SupportLibrary, "Content", "FullPath")
-            .Where(path => Path.GetFileName(path) == "testconfig.json")
+        Assert.NotEmpty(SupportLibraries);
+
+        var testingPlatformConfigurations = SupportLibraries
+            .SelectMany(project => MsBuildEvaluation.ItemMetadata(project, "Content", "FullPath")
+                .Where(path => Path.GetFileName(path) == "testconfig.json")
+                .Select(path => $"{RepositoryLayout.RelativeToRoot(project)}:{path}"))
             .ToArray();
 
         Assert.Empty(testingPlatformConfigurations);

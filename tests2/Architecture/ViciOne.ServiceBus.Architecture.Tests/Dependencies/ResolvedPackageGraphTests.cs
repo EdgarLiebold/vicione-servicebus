@@ -17,7 +17,10 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Dependencies;
 public sealed class ResolvedPackageGraphTests
 {
     private static readonly string TestProject = RepositoryLayout.ArchitectureTestProject;
-    private static readonly string SupportLibrary = RepositoryLayout.TestingSupportProject;
+    private static IReadOnlyList<string> SupportLibraries => RepositoryLayout.NativeTestProjects
+        .Where(project => !MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+            .Contains("xunit.v3.mtp-v2", StringComparer.OrdinalIgnoreCase))
+        .ToArray();
 
     public static TheoryData<string> NativeTestProjects
     {
@@ -92,17 +95,18 @@ public sealed class ResolvedPackageGraphTests
             StringComparer.OrdinalIgnoreCase);
 
     [Fact]
-    public void SupportLibrary_ResolvesNoTestFrameworkOrPlatformPackage()
+    public void EverySupportLibrary_ResolvesNoTestFrameworkOrPlatformPackage()
     {
-        // Framework neutrality has to hold transitively too: a configuration package that happened
-        // to depend on a framework, adapter, architecture library or test platform would breach it
-        // just as thoroughly as a direct reference.
-        var testPackages = ResolvedPackageGraph.PackagesOf(SupportLibrary)
-            .Where(package =>
-                package.StartsWith("xunit", StringComparison.OrdinalIgnoreCase) ||
-                package.StartsWith("nunit", StringComparison.OrdinalIgnoreCase) ||
-                package.StartsWith("TngTech.ArchUnitNET", StringComparison.OrdinalIgnoreCase) ||
-                package.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase))
+        Assert.NotEmpty(SupportLibraries);
+
+        var testPackages = SupportLibraries
+            .SelectMany(project => ResolvedPackageGraph.PackagesOf(project)
+                .Where(package =>
+                    package.StartsWith("xunit", StringComparison.OrdinalIgnoreCase) ||
+                    package.StartsWith("nunit", StringComparison.OrdinalIgnoreCase) ||
+                    package.StartsWith("TngTech.ArchUnitNET", StringComparison.OrdinalIgnoreCase) ||
+                    package.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase))
+                .Select(package => $"{RepositoryLayout.RelativeToRoot(project)}:{package}"))
             .ToArray();
 
         Assert.Empty(testPackages);

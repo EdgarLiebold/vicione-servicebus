@@ -28,6 +28,7 @@ public sealed class TestTreeIsolationTests
             ProductAssemblyFacts.Abstractions,
             ProductAssemblyFacts.Core,
             ProductAssemblyFacts.TestingInfrastructure,
+            ProductAssemblyFacts.RoslynTestingInfrastructure,
             ProductAssemblyFacts.ArchitectureTests)
         .Build();
 
@@ -57,6 +58,7 @@ public sealed class TestTreeIsolationTests
             .Should()
             .NotDependOnAny(Types().That().ResideInAssembly(
                 ProductAssemblyFacts.TestingInfrastructure,
+                ProductAssemblyFacts.RoslynTestingInfrastructure,
                 ProductAssemblyFacts.ArchitectureTests)));
     }
 
@@ -78,7 +80,9 @@ public sealed class TestTreeIsolationTests
         // Test infrastructure may be used by a test project; it may never reach back into one.
         // That inversion would make reusable infrastructure depend on a specific consumer.
         AssertHolds(Types().That()
-            .ResideInAssembly(ProductAssemblyFacts.TestingInfrastructure)
+            .ResideInAssembly(
+                ProductAssemblyFacts.TestingInfrastructure,
+                ProductAssemblyFacts.RoslynTestingInfrastructure)
             .Should()
             .NotDependOnAny(Types().That().ResideInAssembly(ProductAssemblyFacts.ArchitectureTests)));
     }
@@ -100,31 +104,33 @@ public sealed class TestTreeIsolationTests
     }
 
     [Fact]
-    public void CompiledSupportLibrary_ReferencesNoTestFramework()
+    public void CompiledCoreTestingInfrastructure_ReferencesNoTestFramework()
     {
         // Framework neutrality is read from the compiled assembly rather than inferred from the
         // absence of a direct package reference.
-        var references = ProductAssemblyFacts.ReferencedAssemblyNames(
-            ProductAssemblyFacts.TestingInfrastructure);
+        foreach (var support in ProductAssemblyFacts.TestingInfrastructureAssemblies)
+        {
+            var references = ProductAssemblyFacts.ReferencedAssemblyNames(support);
 
-        Assert.DoesNotContain(references, name => name.StartsWith("xunit", StringComparison.OrdinalIgnoreCase));
-        Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
-        Assert.DoesNotContain(references, name => name.StartsWith("ArchUnitNET", StringComparison.OrdinalIgnoreCase));
-        Assert.DoesNotContain(references, name => name.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase));
-        Assert.DoesNotContain(references, name =>
-            name.Contains(".Tests", StringComparison.OrdinalIgnoreCase) &&
-            !string.Equals(name, "ViciOne.ServiceBus.Tests.Infrastructure", StringComparison.Ordinal));
+            Assert.DoesNotContain(references, name => name.StartsWith("xunit", StringComparison.OrdinalIgnoreCase));
+            Assert.DoesNotContain(references, name => name.StartsWith("nunit", StringComparison.OrdinalIgnoreCase));
+            Assert.DoesNotContain(references, name => name.StartsWith("ArchUnitNET", StringComparison.OrdinalIgnoreCase));
+            Assert.DoesNotContain(references, name => name.StartsWith("Microsoft.Testing", StringComparison.OrdinalIgnoreCase));
+            Assert.DoesNotContain(references, name => name.Contains(".Tests", StringComparison.OrdinalIgnoreCase));
+        }
     }
 
     [Fact]
-    public void SupportLibraryPublicTypes_StayInsideItsOwnNamespace()
+    public void CoreTestingInfrastructurePublicTypes_StayInsideItsOwnNamespace()
     {
         // A structural rule the reference table cannot express: test infrastructure that leaks a
         // public type into a product namespace looks like product API to every consumer and to every
         // later architecture rule. ArchUnitNET evaluates this over the compiled types of the real
         // assembly.
         AssertHolds(Types().That()
-            .ResideInAssembly(ProductAssemblyFacts.TestingInfrastructure)
+            .ResideInAssembly(
+                ProductAssemblyFacts.TestingInfrastructure,
+                ProductAssemblyFacts.RoslynTestingInfrastructure)
             .And().ArePublic()
             .Should()
             .ResideInNamespaceMatching("^ViciOne\\.ServiceBus\\.Tests\\.Infrastructure($|\\.)"));

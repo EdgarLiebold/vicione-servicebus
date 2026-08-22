@@ -9,7 +9,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 
 - the remainder of the Abstractions unit behavior is reconstructed in the source-owner project;
 - host-dependent worker-id behavior is isolated in an independent LocalIntegration project;
-- UnitArchitecture: 213 total, 213 passed, 0 failed, 0 skipped;
+- the framework-neutral Roslyn host and 24 of 115 inherited Analyzer obligations are reconstructed;
+- Analyzer behavior and CodeFix behavior have separate source-owner projects;
+- UnitArchitecture: 250 total, 250 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - product and inherited-test source: unchanged;

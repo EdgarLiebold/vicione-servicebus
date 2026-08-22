@@ -26,6 +26,14 @@ internal static class ProductAssemblyFacts
     internal static Assembly TestingInfrastructure =>
         typeof(ServiceBus.Tests.Infrastructure.Configuration.TestConfigurationProvider).Assembly;
 
+    /// <summary>The framework-neutral Roslyn test infrastructure assembly.</summary>
+    internal static Assembly RoslynTestingInfrastructure =>
+        typeof(ServiceBus.Tests.Infrastructure.Roslyn.RoslynTestHost).Assembly;
+
+    /// <summary>Every compiled support assembly anchored by architecture rules.</summary>
+    internal static IReadOnlyList<Assembly> TestingInfrastructureAssemblies =>
+        [TestingInfrastructure, RoslynTestingInfrastructure];
+
     /// <summary>This test assembly.</summary>
     internal static Assembly ArchitectureTests => typeof(ProductAssemblyFacts).Assembly;
 
