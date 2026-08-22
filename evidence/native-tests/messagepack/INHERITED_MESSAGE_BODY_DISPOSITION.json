@@ -1,0 +1,56 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-C-0198",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_match_the_bytes_when_the_length_is_asked_first",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The behavior belongs to the MessagePack body source owner, not the core test project named by the inherited mixed-body fixture."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0211",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_match_the_bytes_when_the_bytes_were_read_first",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The behavior belongs to the MessagePack body source owner, not the core test project named by the inherited mixed-body fixture."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0224",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_match_the_bytes_when_the_string_was_read_first",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The behavior belongs to the MessagePack body source owner, not the core test project named by the inherited mixed-body fixture."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0237",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_match_the_bytes_when_the_stream_was_read_first",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The behavior belongs to the MessagePack body source owner, not the core test project named by the inherited mixed-body fixture."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0250",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_report_one_length_whatever_ran_first",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The four theory rows use fresh bodies and prove the same externally encoded representation for every first accessor."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0265",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_length_a_message_body_reports.Should_hand_out_a_read_only_stream",
+    "sourceVariant": "message pack",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody",
+    "rationale": "The replacement asserts CanWrite false, performs a real rejected write, and proves the body bytes remain unchanged."
+  }
+]

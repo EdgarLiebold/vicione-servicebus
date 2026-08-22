@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 402 unfiltered cases;
+- `UnitArchitecture`: 453 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -32,11 +32,11 @@ closed; it is never the runtime test architecture.
 
 ## Current work
 
-The complete Abstractions and Analyzer owners are remotely preserved. The current cohort adds the
-complete hermetic SignalR owner: 26 executing behaviors replace the inherited local, scale-out, group,
-user, connection, failure-containment, and JSON-boundary cases; two fully commented inherited methods
-are explicitly disposed as non-executing. Five additional cases close the untested multi-target,
-empty-target, and MessagePack paths. The project uses the product's in-memory ServiceBus and a minimal
-owner-specific SignalR connection environment, with no dependency on the inherited TestFramework.
-Product and inherited-test source remain unchanged. The accepted Git commit and tree, rather than a
-self-referential hash inside this file, are the review identity.
+The complete Abstractions, Analyzer, SignalR, and MessagePack owners are reconstructed. MessagePack
+owns 49 native cases that replace 67 inherited module obligations and the six MessagePack-body
+obligations previously assigned to the inherited mixed core fixture, including the
+real in-memory pipeline and redelivery boundaries. It does not reuse the inherited TestFramework or
+the old parameterized fixture hierarchy. Product behavior is unchanged; the only product-project
+change is the signed friend grant needed to inspect the internal hardened option owner directly.
+The accepted Git commit and tree, rather than a self-referential hash inside this file, are the review
+identity.

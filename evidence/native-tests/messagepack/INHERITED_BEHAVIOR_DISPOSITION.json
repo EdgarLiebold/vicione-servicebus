@@ -1,0 +1,672 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-C-0153",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Byte_array",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.BinaryPayloads_RoundTripForConcreteAndInterfaceContracts"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0155",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Byte_interface_array",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.BinaryPayloads_RoundTripForConcreteAndInterfaceContracts"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0157",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Crazy_date_time",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.DateTimeValues_RoundTripWithTheirKinds"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0159",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.No_default_constructor",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ContractlessObjects_RoundTripWithoutPublicDefaultConstructorOrSetters"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0161",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Serialize_complex",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EnvelopeRoundTrip_PreservesMessageAndTransportMetadata"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0163",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Serialize_simple",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EmptyShapes_RoundTripWithoutInventingContent"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0165",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Given_a_variety_of_challenging_messages.Serialize_small_number",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.DecimalNearPrecisionFloor_RoundTripsExactly"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0167",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Deserializing_an_enumerable_property.Should_deserialize_the_enumerable_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0169",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Deserializing_a_list_of_key_value_pairs_with_duplicate_keys.Should_not_convert_to_a_dictionary",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0171",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Using_the_serializer_for_arrays.Should_deserialize_multi_dimensional_arrays",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0172",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_compile_once_and_never_again_for_the_same_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.SameConcreteType_IsCompiledOnce"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0173",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_compile_once_when_many_threads_arrive_on_a_cold_cache_together",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.ConcurrentColdCache_CompilesOneSharedEntry"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0174",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_compile_one_entry_per_concrete_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.DifferentConcreteTypes_OwnDifferentCompiledEntries"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0175",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_not_hold_the_type_of_an_entry_it_stores",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.Cache_DoesNotKeepItsOwnTypeKeyAlive"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0176",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_release_a_collectible_type_the_cache_never_saw",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.CollectibilityControl_ReleasesAnUncachedType"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0177",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_keep_serializing_correctly_through_the_cached_invoker",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.RuntimeConcreteFormatter_PreservesBothImplementations"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0178",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_write_through_the_formatter_of_the_runtime_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.RuntimeConcreteFormatter_PreservesBothImplementations"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0179",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Caching_the_interface_formatter_invokers.Should_stay_correct_when_many_threads_serialize_at_once",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.ParallelRoundTrips_PreserveEveryValue"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0180",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Deserializing_an_interface.Should_create_a_proxy_for_the_interface",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests.InterfaceContract_RoundTripsAllAccessorShapes"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0182",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Deserializing_an_interface.Should_dispatch_an_interface_via_the_pipeline",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests.InterfaceMessage_DispatchesThroughTheConfiguredInMemoryPipeline"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0184",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/JobDeserialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.JobDeserialization_Specs.Should_deserialize_the_job",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests.JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfaces"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0275",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageDataSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Serialization_a_message_data_property.Should_handle_a_string_null",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.MessageData_RoundTripsItsExternalReference"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0277",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_keep_the_payload_bytes_of_a_native_envelope",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.NativeEnvelopeClone_PreservesPayloadBytesWithoutAliasing"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0278",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_not_share_the_payload_array_with_the_source",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.NativeEnvelopeClone_PreservesPayloadBytesWithoutAliasing"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0279",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_stay_readable_after_being_cloned_twice",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.RepeatedClone_DoesNotAddEncodingLayers"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0280",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_keep_the_overlay_form_of_a_non_native_envelope",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.OverlayEnvelopeClone_PreservesDictionaryFormAndNativeFlag"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0281",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_still_encode_a_foreign_envelope",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.ForeignEnvelopeClone_EncodesTheForeignMessageOnce"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0282",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Cloning_a_message_pack_envelope.Should_carry_the_metadata_of_the_source",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests.Clone_CopiesMetadataAndOwnsItsHeaderDictionary"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0283",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_read_untrusted_data_with_the_hardened_security_mode",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InternalMessagePackResolverTests.Options_UseUntrustedDataSecurity"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0284",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_resist_hash_collisions_when_reading_dictionary_keys",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InternalMessagePackResolverTests.Options_UseUntrustedDataSecurity"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0285",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader.Should_read_a_string_keyed_dictionary_under_that_mode",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InternalMessagePackResolverTests.HardenedOptions_ReadTheOverlayDictionaryShape"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0286",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set.Should_name_the_serializer_only_in_the_type_that_owns_the_options",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.ProductAssembly_NamesSerializerOnlyInsideTheOptionsOwner"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0287",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set.Should_report_the_owner_itself_when_it_is_not_excluded",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_SeesTheRealOwnerWhenExclusionIsDisabled"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0288",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_a_direct_call_from_a_foreign_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_RejectsEveryStaticSerializerReferenceShape"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0289",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_a_type_of_the_owner_simple_name_in_another_namespace",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_DoesNotExcludeAnOwnerSimpleNameInAnotherNamespace"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0290",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_a_method_group_that_never_calls",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_RejectsEveryStaticSerializerReferenceShape"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0291",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_a_type_token_handed_to_reflection",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_RejectsEveryStaticSerializerReferenceShape"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0292",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_not_report_the_owner_itself",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_ExcludesOnlyTheQualifiedOwner"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0293",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_the_owner_when_the_exclusion_is_lifted",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_ExcludesOnlyTheQualifiedOwner"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0294",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.The_rule_that_guards_the_option_set.Should_report_nothing_for_an_assembly_that_never_names_the_serializer",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests.Scanner_AcceptsAnAssemblyWithoutSerializerReferences"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0296",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_collection_of_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0298",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_dictionary_of_no_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EmptyShapes_RoundTripWithoutInventingContent"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0300",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_dictionary_of_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0302",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_dictionary_of_one_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0304",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_hashset_of_integers_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0306",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_nested_object_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0308",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_primitive_array_of_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0310",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_primitive_array_of_objects_with_no_elements_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EmptyShapes_RoundTripWithoutInventingContent"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0312",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_primitive_array_of_objects_with_one_element_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0314",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_private_setter_should_be_serializable",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0316",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_readonly_dictionary_list_message",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ReadOnlyInterfaceCollections_RoundTripThroughTheirDeclaredContract"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0318",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_set_of_integers_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0320",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.An_array_of_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0322",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.An_empty_array_of_objects_should_be_properly_serialized",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EmptyShapes_RoundTripWithoutInventingContent"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0324",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.An_empty_class_should_not_break_the_mold",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.EmptyShapes_RoundTripWithoutInventingContent"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0326",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.An_enumeration_should_be_serializable",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0328",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.MoreSerialization_Specs.A_key_value_pair_list_should_be_serializable",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0333",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Serializing_a_property_of_type_char.Should_handle_a_missing_nullable_value",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0335",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Serializing_a_property_of_type_char.Should_handle_a_present_nullable_value",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0337",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Serializing_a_property_of_type_char.Should_handle_a_present_value",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0339",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Serializing_a_property_of_type_char.Should_handle_a_string_null",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.CharacterValues_RoundTrip"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0343",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/ReceiveFault_Serialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.ReceiveFault_Serialization_Specs.Should_serialize_fault_from_non_serializable_exception",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests.ReceiveFault_RoundTripsExceptionInformation"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0345",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/ReceiveFault_Serialization_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.ReceiveFault_Serialization_Specs.Should_serialize_fault_from_serializable_exception",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests.ReceiveFault_RoundTripsExceptionInformation"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0347",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Redelivery_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Redelivery_Specs.Should_include_the_required_headers",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests.DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDelivery"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0367",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Carrying_an_xml_document_as_payload.Should_return_a_string_payload_unchanged",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.XmlPayload_RemainsOpaqueTextAndBytes"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0369",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Carrying_an_xml_document_as_payload.Should_return_a_byte_payload_unchanged",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.XmlPayload_RemainsOpaqueTextAndBytes"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-C-0371",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Serialization.Carrying_an_xml_document_as_payload.Should_not_advertise_an_xml_content_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTests": [
+      "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.XmlPayload_RemainsOpaqueTextAndBytes"
+    ],
+    "rationale": "The replacement asserts the inherited product purpose through the source-owner MessagePack project without the inherited runner or TestFramework."
+  }
+]

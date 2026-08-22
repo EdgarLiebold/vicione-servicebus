@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- This test assembly verifies the hardened internal option owner directly. The signed product
+       assembly can grant that narrow friendship only to an assembly signed with the same key. -->
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
+    <ProjectReference Include="../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/MessagePackRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/MessagePackRequirements.json"
+      LogicalName="ViciOne.ServiceBus.MessagePack.Tests.Requirements.MessagePackRequirements.json" />
+  </ItemGroup>
+
+</Project>

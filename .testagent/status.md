@@ -15,10 +15,13 @@ The accepted native foundation and MessageBody behavior are committed and remote
   cases; applicable fixes run as separate native CodeFix cases;
 - all 26 executing inherited SignalR behaviors are reconstructed without the inherited TestFramework;
 - five greenfield SignalR hardening cases cover multi-target, empty-target, and MessagePack paths;
-- UnitArchitecture: 402 total, 402 passed, 0 failed, 0 skipped;
+- all 67 inherited MessagePack obligations plus six mixed-fixture body obligations are replaced by 49
+  source-owner cases covering direct serialization, body accessors, architecture, configuration,
+  in-memory dispatch, and delayed redelivery;
+- UnitArchitecture: 453 total, 453 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
-- product and inherited-test source: unchanged;
+- product C# behavior and inherited-test source: unchanged;
 - locked restores, bounded formatter/analyzer gates, mapping closure, and full static review pass;
 - targeted mutation review: passed for Abstractions and the Analyzer foundation, including product
   behavior, code-fix output, requirement projection, omitted tests, fail-closed Roslyn compilation,
