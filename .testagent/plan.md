@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 851 unfiltered cases;
+- `UnitArchitecture`: 854 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -567,3 +567,19 @@ round-trip format, loss of the concrete `GetObject<T>` fallback, and discarded `
 The unmutated project also passes under `ar_SA.UTF-8`. The UnitArchitecture floor is raised from 846
 to 851, and the two obsolete NUnit files are removed after the remaining inherited project builds
 cleanly.
+
+## Accepted cohort — serialization faults
+
+Replace the three fault obligations from `SerializationFault_Specs.cs` and
+`Serialization/DeserializerFault_Specs.cs` with three ordinary xUnit facts under the actual
+`Serialization` owner. Run real in-memory endpoints and assert the complete observable boundary:
+typed request faults preserve the request and exact consumer exception; unreadable unregistered
+content produces a `ReceiveFault` with message, endpoint, host, media type, and serialization
+identity; a nested Boolean-to-integer mismatch produces a JSON receive fault and never dispatches.
+
+Use only the central operation timeout and xUnit cancellation token, and retain no sleep, clock
+measurement, NUnit lifecycle, inherited TestFramework contract, assertion-free completion, or
+generic exception-only verdict. Three independent mutations remove the request failure, replace the
+unsupported media type, and repair the nested payload. The UnitArchitecture floor rises from 851
+to 854; delete both inherited files only after focused, old-project, unfiltered, formatting,
+static-quality, and mutation gates pass.

@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 851
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 854
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -88,6 +88,8 @@ endpoint-resource cache additionally proves deterministic single-flight recovery
 usage-aware retention, exact hit accounting, tracker churn, and TTL behavior through an injected
 `TimeProvider`. The native core test project has a distinct SDK artifact identity so restoring the
 remaining same-named NUnit project cannot overwrite its resolved package graph. The
+serialization-fault cohort proves request-fault propagation, unsupported-body receive faults, and
+deep contract-type mismatch without dispatch through three real in-memory pipelines. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable

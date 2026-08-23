@@ -626,3 +626,24 @@ Acceptance requires one passive requirement row, one terminal disposition, a foc
 unfiltered UnitArchitecture profile at 833, the unchanged LocalIntegration profile, a zero-warning
 Release build, and a one-cause mutation that replaces the projected object with an empty object and
 is rejected by the content assertions.
+
+## Serialization-fault cohort
+
+The complete inherited `SerializationFault_Specs.cs` and
+`Serialization/DeserializerFault_Specs.cs`, their three final ledger rows, the request-client fault
+handler, `GenerateFaultFilter`, `ReceiveFaultEvent`, CopyBodySerializer, the System.Text.Json
+envelope reader, and the real in-memory test harness were read before replacement.
+
+The source contains three independent contracts: a consumer-thrown `SerializationException`
+returned to a request caller; an unreadable body under an unregistered media type; and a readable
+System.Text.Json envelope whose nested Boolean cannot materialize an integer contract member. The
+first inherited verdict asserted only the outer exception type, the second already carried useful
+fault metadata, and the third was assertion-free. The native replacements retain the complete
+observable boundaries, use local contracts, and assert both exact fault identity and non-dispatch.
+
+Acceptance requires one ordinary xUnit fact and one passive requirement row per inherited
+obligation, real in-memory endpoints, central timeout and current-test cancellation on every wait,
+the three independent false-green mutations recorded in the cohort evidence, an unfiltered floor
+of 854, and successful compilation of the remaining inherited project after both old files are
+removed. No TestFramework message, NUnit lifecycle, wall clock, sleep, polling, broad exception,
+or assertion-free completion is retained.

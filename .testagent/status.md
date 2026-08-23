@@ -89,7 +89,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   hierarchy; mixed MessagePack rows retain their existing independent owner;
 - DateTime/DateTimeOffset invariant conversion and `JsonElement`/dictionary object transformation
   add five source-owner facts under their actual product paths;
-- UnitArchitecture: 851 total, 851 passed, 0 failed, 0 skipped;
+- three real in-memory fault paths now prove exact request-fault propagation, unsupported-body
+  receive faults, and nested contract-type mismatch without regular dispatch;
+- UnitArchitecture: 854 total, 854 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -184,6 +186,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the object/date-time conversion cohort maps five inherited rows to five source-owner facts,
   rejects three independent product mutations, passes under a non-gregorian process culture, and
   removes both obsolete NUnit files before the final 851-case run;
+- the serialization-fault cohort maps three inherited rows to three source-owner facts, rejects
+  successful request handling, a registered media type, and a repaired nested field before its
+  final 854-case run, and removes both obsolete NUnit files;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;
