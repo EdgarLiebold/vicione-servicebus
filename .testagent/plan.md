@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 772 unfiltered cases;
+- `UnitArchitecture`: 787 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -327,3 +327,28 @@ requirement metadata cannot drift from its embedded projection. Two exploratory 
 excluded: one hit a different already-covered converter path and one changed an unselected fallback.
 The actual C19 path was then identified and killed, and the overstated materialization wording was
 corrected before acceptance.
+
+## Accepted cohort — property-provider factory matrix
+
+Replace the 42 obligations from `PropertyProvider_Specs.cs` with 14 ordinary xUnit/MTP behavior
+facts grouped by the actual `Initializers/PropertyProviders` branches: asynchronous source values,
+task result values, arrays/enumerables, dictionaries, scalars/nullables/objects, enums, Uri values,
+nested message contracts, exception information, and initializer variables. Add one separate
+hardening fact for the public `TryGetPropertyProvider` false path.
+
+Use the public factory and the returned real provider for every case. A small shared reader may
+construct the `InitializeContext`, but it must not own discovery, results, coverage receipts,
+retries, timing, or verdicts. Preserve exact outputs and all unusual boundaries from the inherited
+matrix while consolidating only cases whose setup and semantic owner are genuinely the same. Add a
+42-row terminal disposition, raise the UnitArchitecture floor from 772 to 787, run focused and
+unfiltered gates plus independent one-cause mutations, and delete only the fully replaced inherited
+file.
+
+The 42 inherited obligations are terminally mapped to 14 behavior facts, and the factory false path
+is covered by one independent hardening fact. Twelve effective product mutations reject missing
+async conversion, task-result wrapping, converted-array output, dictionary-key conversion,
+message-contract initialization, scalar/type conversion, object boxing, variable result conversion,
+exception projection, Uri conversion, long-to-enum conversion, and false-positive provider
+creation. One additional metadata mutation proves that passive requirement metadata cannot drift
+from its embedded projection. An exploratory mutation of the exact array converter was excluded
+because exact arrays correctly use the matching input-provider branch instead of that converter.

@@ -1,0 +1,229 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProvider_Specs.cs",
+  "sourceSha256": "2533c60c873fdfd56629a8bb9c0b7d0864c839b9e99fda8809dca0bef2fe8b97",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0268",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.ArrayOfTasks_AwaitsEveryElementAndDefaultsNullElements"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0269",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.ArrayOfTasks_AwaitsEveryElementAndDefaultsNullElements"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0270",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedSequence_SupportsExactConvertedAndListResultShapes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0271",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedScalar_IsAwaitedBeforeExposure"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0272",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedSequence_SupportsExactConvertedAndListResultShapes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0273",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedSequence_SupportsExactConvertedAndListResultShapes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0274",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedSequence_SupportsExactConvertedAndListResultShapes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0275",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.AsyncPropertyProviderTests.TaskValuedSequence_SupportsExactConvertedAndListResultShapes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0276",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.TaskPropertyProviderTests.ScalarAndArrayValues_CanBeReturnedAsTasks"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0277",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.TaskPropertyProviderTests.ScalarAndArrayValues_CanBeReturnedAsTasks"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0278",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.ArraySource_SupportsExactConvertedNullableAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0279",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.StringAndEnumerableSources_PreserveNullableAndExactSequenceBoundaries"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0280",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.ArraySource_SupportsExactConvertedNullableAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0281",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.ArraySource_SupportsExactConvertedNullableAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0282",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.ArraySource_SupportsExactConvertedNullableAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0283",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0284",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryDictionaryTests.DictionarySource_SupportsExactAndIndependentKeyValueConversions"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0285",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryDictionaryTests.DictionarySource_SupportsExactAndIndependentKeyValueConversions"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0286",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryDictionaryTests.DictionarySource_SupportsExactAndIndependentKeyValueConversions"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0287",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryDictionaryTests.KeyValueEnumerableAndObjectDictionary_CreateExactDictionariesAndNestedContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0288",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValue"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0289",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValue"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0290",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValue"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0291",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValue"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0292",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryObjectGraphTests.ExceptionSource_ProducesObservableExceptionInformation"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0293",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryVariableTests.InitializerVariable_ProvidesExactGuidAndStringRepresentations"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0294",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryVariableTests.InitializerVariable_ProvidesExactGuidAndStringRepresentations"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0295",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryObjectGraphTests.AnonymousSources_InitializeSingleNestedAndArrayContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0296",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryObjectGraphTests.AnonymousSources_InitializeSingleNestedAndArrayContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0297",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryObjectGraphTests.AnonymousSources_InitializeSingleNestedAndArrayContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0298",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryDictionaryTests.KeyValueEnumerableAndObjectDictionary_CreateExactDictionariesAndNestedContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0299",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.ArraySource_SupportsExactConvertedNullableAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0300",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryArrayTests.StringAndEnumerableSources_PreserveNullableAndExactSequenceBoundaries"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0301",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0302",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0303",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0304",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0305",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0306",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.UriAndStringSources_PreserveExactAddressMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0307",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.UriAndStringSources_PreserveExactAddressMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0308",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.UriAndStringSources_PreserveExactAddressMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0309",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryScalarTests.ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets"
+    }
+  ],
+  "newHardening": [
+    {
+      "requirementId": "REQ-VSB-PROPERTY-PROVIDER-FACTORY",
+      "variantKey": "unsupported-source-target-pair",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryTests.UnsupportedSourceTargetPair_ReturnsFalseAndNoProvider"
+    }
+  ],
+  "explanation": "The inherited flat pairing matrix is replaced by fourteen independent behavior facts grouped by the actual property-provider factory branches. One separate hardening fact covers the previously untested public false path. The replacement preserves all 42 inherited source/target pairings and boundaries without reproducing the old one-test-per-pair structure."
+}

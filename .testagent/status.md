@@ -57,7 +57,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the public message-initializer capability matrix now covers request/response merging, missing
   values, nullable chains, collections, nested objects, exceptions, variables, and nested tasks in
   13 independent source-owner facts instead of one shared fixture;
-- UnitArchitecture: 772 total, 772 passed, 0 failed, 0 skipped;
+- the property-provider factory matrix now proves all supported task, array, enumerable,
+  dictionary, scalar, nullable, object, enum, Uri, contract, exception, and variable result shapes
+  in 14 source-owner facts plus one independent unsupported-pair hardening fact;
+- UnitArchitecture: 787 total, 787 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -116,6 +119,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the message-initializer capability cohort maps all 27 inherited rows to 13 facts and rejects
   independent pipeline, dictionary, array, list, Uri, duplicate-property, exception, variable,
   nested-task, and requirement-projection mutations before its final 772-case run;
+- the property-provider cohort maps all 42 inherited rows to 14 behavior facts, adds one independent
+  false-path hardening fact, and rejects twelve effective product mutations plus requirement drift
+  before its final 787-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

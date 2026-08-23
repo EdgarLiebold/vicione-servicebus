@@ -307,3 +307,48 @@ Acceptance checklist:
   requirement-projection paths;
 - raise the UnitArchitecture floor from 759 to 772 and remove only
   `MessageInitializer_Specs.cs` after all 27 ledger rows are terminally mapped.
+
+## Property-provider factory cohort
+
+Baseline `72dfdcb5` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProvider_Specs.cs`, its 42 final R0 ledger
+obligations, all 836 lines of `PropertyProviderFactory<TInput>`, every property-provider class, and
+the collection, nullable, type, object-initializer, task, and variable converters selected by the
+factory were read before the first test edit.
+
+The inherited file is a flat list of one test per source/target pairing. Its value is the complete
+pairing matrix, not that structure. A greenfield replacement groups the same observable cases by
+the factory branch and concrete provider that owns them:
+
+- four facts cover task-valued properties, arrays containing tasks, task-valued array/list shapes,
+  and task-valued result types;
+- two facts cover exact and converted arrays plus enumerable sources, including null/empty element
+  boundaries;
+- two facts cover dictionaries, independent key/value conversion, key/value-pair enumerables, and
+  dictionary-held nested contracts;
+- three facts cover exact/nullable/object/string scalar paths, all enum representations, and the
+  exact Uri/string round trip;
+- three facts cover direct and nested interface initialization, exception information, and
+  initializer-variable result conversion;
+- one additional hardening fact proves that an unsupported source/target pair returns `false` and
+  no provider instead of creating a false-positive provider.
+
+The replacement uses a single small test-only context reader that performs the public
+`TryGetPropertyProvider` call and executes the returned provider in a real `InitializeContext`. It
+is fixture plumbing only: no receipt, interceptor, test verdict, discovery, retry, clock, or hidden
+assertion mechanism. Each behavior fact keeps ordinary xUnit assertions and a passive requirement
+identity.
+
+Acceptance checklist:
+
+- map all 42 inherited obligations to 14 executing behavior facts and classify the unsupported-pair
+  fact independently as new hardening;
+- preserve every source/target shape, including array-of-task null defaulting, empty-string to
+  nullable element, all task result surfaces, multiple result types for one property, dictionary
+  key/value conversion, and nested interface collections;
+- keep exact values, cardinality, order, keys, nested members, and nullable boundaries observable;
+- place tests under `Initializers/PropertyProviders`, mirroring the owning product subtree;
+- kill independent one-cause mutations in the task, array, dictionary, scalar, enum, Uri, object,
+  exception, variable, unsupported-pair, and passive-requirement paths;
+- raise the UnitArchitecture floor from 772 to 787 and remove only
+  `PropertyProvider_Specs.cs` after all 42 ledger rows are terminally mapped.

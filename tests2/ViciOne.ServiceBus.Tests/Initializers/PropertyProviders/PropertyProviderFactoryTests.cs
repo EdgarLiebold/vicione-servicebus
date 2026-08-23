@@ -19,8 +19,24 @@ public sealed class PropertyProviderFactoryTests
         Assert.NotNull(converter);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-FACTORY", "unsupported-source-target-pair")]
+    public void UnsupportedSourceTargetPair_ReturnsFalseAndNoProvider()
+    {
+        var factory = new PropertyProviderFactory<UnsupportedInput>();
+        var property = typeof(UnsupportedInput).GetProperty(nameof(UnsupportedInput.Value));
+
+        Assert.NotNull(property);
+        bool found = factory.TryGetPropertyProvider(property, out IPropertyProvider<UnsupportedInput, ExceptionInfo> provider);
+
+        Assert.False(found);
+        Assert.Null(provider);
+    }
+
     public interface DictionaryContract
     {
         int Id { get; }
     }
+
+    public sealed record UnsupportedInput(int Value);
 }
