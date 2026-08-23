@@ -236,3 +236,17 @@ Five one-cause mutations are rejected: custom-name normalization, standard-heade
 validation, TTL-inspector omission, and missing requirement metadata. The UnitArchitecture floor
 rises from 739 to 741, and `HeaderInitializer_Specs.cs` is removed only after its sole inherited
 ledger obligation is terminally mapped.
+
+## Accepted cohort — state property conversion
+
+`Initializers/PropertyConverters/StatePropertyConverterTests.cs` mirrors the owning product source.
+One ordinary xUnit case replaces the inherited state-machine fixture through a real temporary
+in-memory endpoint. It proves that an integer-backed saga state is resolved after the transition,
+awaited by the message initializer, converted to the exact state name, serialized, published, and
+consumed together with its correlation ID and custom header. A fixed saga ID is behavioral input;
+the central operation timeout is only a safety boundary.
+
+Four effective one-cause mutations are rejected: wrong state-name conversion, skipped asynchronous
+property conversion, changed custom-header name, and missing requirement metadata. The
+UnitArchitecture floor rises from 741 to 742, and `State_Specs.cs` is removed only after its sole
+inherited ledger obligation is terminally mapped.

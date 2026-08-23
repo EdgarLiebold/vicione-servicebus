@@ -45,7 +45,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   nullable-value fallback contracts; all ten inherited behaviors are terminally mapped;
 - the header initializer convention now has an exact publish-context contract for standard and
   typed custom headers without wall-clock assertions;
-- UnitArchitecture: 741 total, 741 passed, 0 failed, 0 skipped;
+- integer-backed state conversion is now verified through the complete in-memory state-machine
+  publication path, including asynchronous projection and custom-header delivery;
+- UnitArchitecture: 742 total, 742 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -91,6 +93,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   final 739-case run;
 - the header initializer cohort rejects name-normalization, standard-prefix, null-validation,
   TTL-inspector, and requirement-projection mutations before its final 741-case run;
+- the state-property converter cohort rejects state-name, asynchronous-conversion, custom-header,
+  and requirement-projection mutations before its final 742-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

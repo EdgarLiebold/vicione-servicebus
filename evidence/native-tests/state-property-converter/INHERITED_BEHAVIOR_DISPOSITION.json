@@ -1,0 +1,19 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Initializers/State_Specs.cs",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0310",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-INITIALIZER-STATE-PROPERTY",
+      "variantKey": "integer-state-to-name-and-header",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.StatePropertyConverterTests.PublishInitializer_MapsTheCurrentIntegerStateToItsName"
+    }
+  ],
+  "explanation": "The replacement exercises the real in-memory state-machine, message-initializer, serialization, publish, and consume path. It proves integer-backed state resolution to the post-transition state name and custom-header delivery with fixed behavioral input, central timeout safety, and unconditional harness cleanup."
+}
