@@ -91,7 +91,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   add five source-owner facts under their actual product paths;
 - three real in-memory fault paths now prove exact request-fault propagation, unsupported-body
   receive faults, and nested contract-type mismatch without regular dispatch;
-- UnitArchitecture: 854 total, 854 passed, 0 failed, 0 skipped;
+- a minimal two-field System.Text.Json envelope now proves exact virtual delayed redelivery without
+  wall-clock waiting; the test exposed and the product removes a thread-pool registration race;
+- UnitArchitecture: 855 total, 855 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -189,6 +191,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the serialization-fault cohort maps three inherited rows to three source-owner facts, rejects
   successful request handling, a registered media type, and a repaired nested field before its
   final 854-case run, and removes both obsolete NUnit files;
+- the minimal-envelope cohort maps its compound inherited row to one real in-memory source-owner
+  fact, rejects interval and redelivery-count drift, fixes the delayed-registration race exposed by
+  the full profile, and removes the obsolete NUnit file before its final 855-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 854 unfiltered cases;
+- `UnitArchitecture`: 855 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -583,3 +583,20 @@ generic exception-only verdict. Three independent mutations remove the request f
 unsupported media type, and repair the nested payload. The UnitArchitecture floor rises from 851
 to 854; delete both inherited files only after focused, old-project, unfiltered, formatting,
 static-quality, and mutation gates pass.
+
+## Accepted cohort — minimal envelope and delayed redelivery
+
+Replace `MinimalBody_Specs.cs` with one ordinary source-owner fact under `Serialization`. Preserve
+the combined contract in one execution: a hand-written System.Text.Json envelope containing only
+`message` and `messageType` materializes the local interface contract, its first handler failure is
+scheduled for the exact one-hour interval, and virtual in-memory time releases exactly the second
+delivery with redelivery counts zero then one.
+
+The test uses the real DI-configured in-memory bus and its registered `IInMemoryDelayProvider`; it
+contains no wall-clock measurement, delay, polling, inherited TestFramework message, or NUnit
+lifecycle. The first complete-profile run exposed a product race: `MessageQueue` deferred delay
+registration to `Task.Run`, so virtual time could advance first. Remove only that unnecessary
+thread-pool boundary, retain asynchronous delivery and cancellation behavior, and prove the repair
+under the same unfiltered load. Raise the UnitArchitecture floor from 854 to 855 and delete the
+inherited file only after exact-interval, redelivery-count, focused-repeat, inherited-build, and
+unfiltered gates pass.

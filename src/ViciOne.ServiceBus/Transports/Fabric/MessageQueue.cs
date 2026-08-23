@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
                 return;
 
             if (context.EnqueueTime.HasValue)
-                DeliverWithDelay(context);
+                _ = DeliverWithDelay(context);
             else
             {
                 await _channel.Writer.WriteAsync(context, context.CancellationToken).ConfigureAwait(false);
@@ -92,39 +92,39 @@ namespace ViciOne.ServiceBus.Transports.Fabric
             await base.StopAgent(context).ConfigureAwait(false);
         }
 
-        void DeliverWithDelay(DeliveryContext<T> context)
+        async Task DeliverWithDelay(DeliveryContext<T> context)
         {
-            Task.Run(async () =>
+            var delayed = false;
+            try
             {
-                var delayed = false;
-                try
-                {
-                    var delay = context.EnqueueTime!.Value - DateTime.UtcNow;
-                    if (delay > TimeSpan.Zero)
-                    {
-                        _metrics.DelayedMessageCount.Add();
-                        delayed = true;
+                if (context.CancellationToken.IsCancellationRequested)
+                    return;
 
-                        await _delayProvider.Delay(delay, Stopping).ConfigureAwait(false);
-                    }
+                var delay = context.EnqueueTime!.Value - DateTime.UtcNow;
+                if (delay > TimeSpan.Zero)
+                {
+                    _metrics.DelayedMessageCount.Add();
+                    delayed = true;
 
-                    await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);
+                    await _delayProvider.Delay(delay, Stopping).ConfigureAwait(false);
+                }
 
-                    _metrics.MessageCount.Add();
-                }
-                catch (OperationCanceledException)
-                {
-                }
-                catch (Exception exception)
-                {
-                    LogContext.Error?.Log(exception, "Message delivery faulted: {Queue}", Name);
-                }
-                finally
-                {
-                    if (delayed)
-                        _metrics.DelayedMessageCount.Remove();
-                }
-            }, context.CancellationToken);
+                await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);
+
+                _metrics.MessageCount.Add();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception)
+            {
+                LogContext.Error?.Log(exception, "Message delivery faulted: {Queue}", Name);
+            }
+            finally
+            {
+                if (delayed)
+                    _metrics.DelayedMessageCount.Remove();
+            }
         }
 
         async Task StartDispatcher()

@@ -647,3 +647,19 @@ the three independent false-green mutations recorded in the cohort evidence, an 
 of 854, and successful compilation of the remaining inherited project after both old files are
 removed. No TestFramework message, NUnit lifecycle, wall clock, sleep, polling, broad exception,
 or assertion-free completion is retained.
+
+## Minimal envelope and delayed redelivery
+
+`MinimalBody_Specs.cs` owns one compound obligation. Its raw envelope actually contains only
+`message` and `messageType`; the correlation identifier belongs to the payload, not the envelope,
+despite the older ledger prose calling it a message id. The inherited test proved deserialization
+only indirectly and measured a one-second retry with `DateTime.Now`.
+
+The product already exposes its real in-memory virtual-time owner as `IInMemoryDelayProvider` from
+the same DI graph as the bus. The native replacement observes the actual delayed send, asserts its
+exact one-hour `SendContext.Delay`, advances virtual time, and verifies the exact payload, media
+type, message URN, and redelivery counts on both deliveries. A complete-profile run showed that
+`MessageQueue.DeliverWithDelay` could place `Advance` ahead of delay registration because the whole
+path began inside `Task.Run`. Starting the handled asynchronous method directly preserves
+fire-and-forget delivery while guaranteeing registration order and avoiding unnecessary thread-pool
+work. The corrected profile is 855/855 and the old fixture is terminally replaceable.
