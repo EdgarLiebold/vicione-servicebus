@@ -1,0 +1,32 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Middleware/Caching/TwoIndex_Specs.cs",
+  "sourceSha256": "4fa219ccc0c1c8cf6103f23f0ef2f815635fba88d148002c31e34c3924b2c7a5",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0338",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.MultipleIndexTests.Clear_EmptiesEveryIndexAndResetsTheVisibleCacheState"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0339",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.MultipleIndexTests.Clear_AllowsTheSameKeysToBeCreatedAndIndexedAgain"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0340",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.MultipleIndexTests.ValueCreatedThroughOneIndex_IsAvailableThroughTheOtherIndex"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0341",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.MultipleIndexTests.RemoveThroughOneIndex_RemovesTheValueFromAllIndexesAndVisibleCacheState"
+    }
+  ],
+  "explanation": "Four source-owner facts preserve the 100-value propagation, clear, reuse, and cross-index removal contracts. Real observer events replace every inherited delay, and removal additionally proves that the value leaves the visible cache rather than surviving as a ghost bucket node."
+}

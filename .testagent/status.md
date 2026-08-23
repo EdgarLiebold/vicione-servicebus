@@ -72,7 +72,11 @@ The accepted native foundation and MessageBody behavior are committed and remote
   cases synchronized through cache observer events and the central test timeout;
 - completed node factories now have an exact Core promotion contract covering the stored node,
   observer payload, value identity, and complete one-operation statistics delta;
-- UnitArchitecture: 805 total, 805 passed, 0 failed, 0 skipped;
+- cache insertion, index factories, pending-value arbitration, and coordinated multiple indexes now
+  have 13 deterministic source-owner facts; explicit removal atomically invalidates a stored node,
+  preserves the bucket traversal link until compaction, and never reports a pending factory as
+  removed;
+- UnitArchitecture: 818 total, 818 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -148,6 +152,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the node-tracker promotion cohort maps its single inherited obligation to one exact source-owner
   fact and rejects skipped promotion, incorrect hit/miss accounting, missing add accounting, lost
   observer output, and requirement drift before its final 805-case run;
+- the cache index/factory cohort terminally maps all fourteen inherited obligations to twelve
+  source-owner facts, adds one independent pending-removal hardening fact, and rejects missing
+  atomic eviction, a severed bucket chain, false pending-removal success, and requirement drift
+  before its final 818-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

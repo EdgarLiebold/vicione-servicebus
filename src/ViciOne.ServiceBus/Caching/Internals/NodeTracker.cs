@@ -90,7 +90,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
             AddValue(value);
         }
 
-        public void Remove(INode<TValue> node)
+        public void Remove(IBucketNode<TValue> node)
         {
             Task.Run(() => RemoveNode(node));
         }
@@ -180,13 +180,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
             _observers.ValueAdded(node, value);
         }
 
-        async Task RemoveNode(INode<TValue> node)
+        async Task RemoveNode(IBucketNode<TValue> node)
         {
             try
             {
-                var value = node.Value.IsCompletedSuccessfully()
-                    ? node.Value.GetAwaiter().GetResult()
-                    : await node.Value.ConfigureAwait(false);
+                if (!node.TryEvict(out TValue value))
+                    return;
 
                 Statistics.ValueRemoved();
 
@@ -327,13 +326,10 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         async Task EvictNode(IBucketNode<TValue> node)
         {
-            var value = node.Value.IsCompletedSuccessfully()
-                ? node.Value.GetAwaiter().GetResult()
-                : await node.Value.ConfigureAwait(false);
+            if (!node.TryEvict(out TValue value))
+                return;
 
             Statistics.ValueRemoved();
-
-            node.Evict();
 
             _observers.ValueRemoved(node, value);
 

@@ -1,0 +1,39 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Middleware/Caching/MissingValueFactory_Specs.cs",
+  "sourceSha256": "1db8482f4f85d9a9df1dc7fa26ff3c9533774c6a6f6bc5b8eda37af459523849",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0331",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.NodeValueFactoryTests.FaultedFirstValue_AllowsTheSecondPendingValueToSucceed"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0332",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.NodeValueFactoryTests.LoneFaultedValue_PropagatesTheExactFailureToBothResults"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0333",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.NodeValueFactoryTests.LoneFaultedValue_PropagatesTheExactFailureToBothResults",
+      "explanation": "The inherited row tested only its own faulty helper. The same exact failure shape is retained through the product-owned NodeValueFactory path instead of recreating a test-of-test-code."
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0334",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.NodeValueFactoryTests.HealthyValue_IsPublishedThroughThePendingValueAndFactoryAsTheSameInstance",
+      "explanation": "The inherited row tested only its own healthy helper. Exact values and identity are now asserted through the product-owned PendingValue and NodeValueFactory path."
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0335",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.NodeValueFactoryTests.HealthyValue_IsPublishedThroughThePendingValueAndFactoryAsTheSameInstance"
+    }
+  ],
+  "explanation": "Three product-owned facts preserve fallback, lone-failure, and healthy pending-value publication. The two inherited helper self-tests are folded into those real product paths without losing their observable success or failure evidence."
+}

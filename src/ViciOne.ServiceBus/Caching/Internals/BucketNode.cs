@@ -57,15 +57,26 @@ namespace ViciOne.ServiceBus.Caching.Internals
             _bucket = bucket;
         }
 
-        public void Evict()
+        public bool TryEvict(out TValue value)
         {
-            _bucket = null;
-            _next = null;
+            Task<TValue> storedValue = Interlocked.Exchange(ref _value, Cached.Removed);
+            if (storedValue.Status != TaskStatus.RanToCompletion)
+            {
+                value = null;
+                return false;
+            }
 
-            if (_value.Result is INotifyValueUsed notify)
+            value = storedValue.GetAwaiter().GetResult();
+
+            if (value is INotifyValueUsed notify)
                 notify.Used -= Used;
 
-            Interlocked.Exchange(ref _value, Cached.Removed);
+            _bucket = null;
+
+            // The owning bucket still needs the link to traverse past this tombstone.
+            // Pop clears it when the bucket is compacted.
+
+            return true;
         }
 
         public IBucketNode<TValue> Pop()

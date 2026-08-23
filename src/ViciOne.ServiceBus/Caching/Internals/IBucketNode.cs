@@ -30,10 +30,11 @@ namespace ViciOne.ServiceBus.Caching.Internals
         void AssignToBucket(Bucket<TValue> bucket);
 
         /// <summary>
-        /// Forcibly evicts the node by setting the internal state to
-        /// nothing.
+        /// Atomically evicts the node and returns the stored value to the caller that won the eviction.
         /// </summary>
-        void Evict();
+        /// <param name="value">The stored value when eviction succeeds; otherwise <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> only for the caller that evicted the node.</returns>
+        bool TryEvict(out TValue value);
 
         /// <summary>
         /// Remove the node from the bucket, and return the next node

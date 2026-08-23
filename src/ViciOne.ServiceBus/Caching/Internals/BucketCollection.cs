@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 while (node != null)
                 {
                     IBucketNode<TValue> next = node.Pop();
-                    node.Evict();
+                    node.TryEvict(out _);
                     node = next;
                 }
             }

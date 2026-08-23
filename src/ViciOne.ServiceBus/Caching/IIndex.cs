@@ -14,7 +14,8 @@ namespace ViciOne.ServiceBus.Caching
         Task<TValue> Get(TKey key, MissingValueFactory<TKey, TValue> missingValueFactory = null);
 
         /// <summary>
-        /// Forcibly removes the item from the cache, but disposal may occur asynchronously.
+        /// Forcibly removes a stored item from the cache, but disposal may occur asynchronously.
+        /// Returns <see langword="false"/> when the key is absent or its value is still being created.
         /// </summary>
         /// <param name="key">The value key</param>
         bool Remove(TKey key);

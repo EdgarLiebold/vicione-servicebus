@@ -496,3 +496,47 @@ Acceptance checklist:
 - add one passive Core projection row and one terminal disposition for `OBL-R0-CORE-B-0336`;
 - raise the UnitArchitecture floor from 804 to 805 and delete only `NodeTracker_Specs.cs` after
   focused, unfiltered, and independent one-cause mutation gates pass.
+
+## Cache indexes and pending-value factories cohort
+
+Baseline `ad7bf86b` is clean and byte-identical to its private remote branch. Before the first test
+edit, the complete inherited `Middleware/Caching/Tests.cs`, `Index_Specs.cs`,
+`MissingValueFactory_Specs.cs`, and `TwoIndex_Specs.cs`, all fourteen final R0 obligations, and the
+complete current `GreenCache`, `Index`, `NodeTracker`, `NodeValueFactory`, `FactoryNode`,
+`PendingValue`, bucket-node, statistics, settings, and observer boundary were read.
+
+The replacement follows the source owners rather than the inherited fixtures:
+
+- direct cache insertion and coordinated multiple-index behavior belong under `Caching`;
+- index lookup/factory behavior and pending-value arbitration belong under `Caching/Internals`;
+- the inherited `SimpleValueFactory` success/fault self-tests are not recreated as isolated tests
+  of test code. Their exact success and failure shapes are exercised through the corresponding
+  product paths and bound to those product tests in the terminal disposition.
+
+All concurrency is test-controlled. A completion source holds the first factory pending until the
+second request and concurrent plain read are registered. Multiple-index propagation and removal
+wait on real cache-observer events using the central operation timeout and the current xUnit
+cancellation token. No sleep, polling delay, current-clock assertion, random input, inherited
+fixture, or shared legacy TestFramework helper is allowed.
+
+Acceptance checklist:
+
+- preserve fault propagation and post-fault index cleanup with exact exception contracts;
+- preserve successful creation, exact returned values, identity on a later plain read, and exact
+  one-call factory accounting;
+- prove that a controlled failing first factory permits a second factory to supply one shared exact
+  value to the second request and an already-pending plain read;
+- prove `NodeValueFactory` fallback, lone-failure, and healthy `PendingValue` identity directly;
+- prove direct cache insertion updates its index, never invokes the supplied fallback factory, and
+  records one held value;
+- prove two-index propagation, clear, post-clear reuse, and removal consistency for the inherited
+  100-value boundary, including exact hit/miss/count and visible-value state;
+- map all fourteen ledger IDs to twelve ordinary xUnit facts, add twelve passive Core projection
+  rows, and give both inherited test-helper-only rows an explicit product-path disposition;
+- delete the four fully replaced inherited fixture files; retain or relocate any old support type
+  still required by a not-yet-migrated fixture rather than silently breaking that fixture;
+- add one native hardening case for truthful removal while a value factory is still pending, raising
+  the cohort from 12 inherited-behavior facts to 13 total facts without presenting it as inherited;
+- raise the UnitArchitecture floor from 805 to 818 and reject independent factory, cleanup,
+  identity, second-index, clear, remove, statistics, visible-value, and requirement-projection
+  mutations before closure.

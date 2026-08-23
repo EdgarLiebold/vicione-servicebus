@@ -35,8 +35,8 @@ namespace ViciOne.ServiceBus.Caching.Internals
         /// Remove a node from the cache, notifying all observers that it was removed
         /// (which updates the indices as well).
         /// </summary>
-        /// <param name="existingNode">The node being removed</param>
-        void Remove(INode<TValue> existingNode);
+        /// <param name="existingNode">The stored node being removed</param>
+        void Remove(IBucketNode<TValue> existingNode);
 
         /// <summary>
         /// Returns every known node in the cache from the valid buckets

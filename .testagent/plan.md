@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 787 unfiltered cases;
+- `UnitArchitecture`: 818 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -450,3 +450,26 @@ The inherited obligation is terminally mapped to one source-owner fact. Independ
 reject reporting a temporary node instead of the stored node, incorrect miss accounting, missing
 addition accounting, lost observer output, and requirement-projection drift before the final
 805-case run.
+
+## Current cohort — cache indexes and pending-value factories
+
+Replace the fourteen obligations from `Middleware/Caching/Tests.cs`, `Index_Specs.cs`,
+`MissingValueFactory_Specs.cs`, and `TwoIndex_Specs.cs` with twelve ordinary xUnit facts under the
+actual Core source owners `Caching/GreenCache`, `Caching/Internals/Index`, and
+`Caching/Internals/NodeValueFactory`. Do not preserve test-helper self-tests as an artificial API;
+bind their exact success/fault evidence to the product paths that consume equivalent local
+factories.
+
+Use controlled completion sources for pending factories and real `ICacheValueObserver<T>` events
+for asynchronous cache propagation. Bound every wait with the central typed operation timeout and
+current xUnit cancellation token. Preserve the inherited 100-value multiple-index boundary and
+assert exact identity, values, factory call counts, exceptions, cache statistics, both indexes, and
+`GetAll` visibility. A failing test that reveals a product defect is not weakened; the product is
+corrected minimally and the repaired invariant receives its own targeted mutation.
+
+Create the twelve passive requirement-projection rows and a fourteen-row terminal disposition,
+raise the UnitArchitecture floor from 805 to 818, run focused and unfiltered native MTP gates plus
+independent one-cause mutations, and remove each inherited fixture only after every row it owns is
+terminal. `Tests.cs` support still used by `CacheRecovery_Specs.cs` must first move API- and
+behavior-equivalently to a dedicated inherited support file; it is not copied into the new native
+test architecture.

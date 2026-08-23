@@ -131,14 +131,15 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 if (!TryGetExistingNode(key, out INode<TValue> existingNode))
                     return false;
 
-                var result = _index.Remove(key);
+                // A factory node is only a placeholder. Removing it would report success while
+                // the value creation continues and can publish the value back into every index.
+                if (existingNode is not IBucketNode<TValue> storedNode)
+                    return false;
 
-                // if the node is resolved, it's likely been notified, so remove it from
-                // the rest of the cache
-                if (existingNode.HasValue)
-                    _nodeTracker.Remove(existingNode);
+                _index.Remove(key);
+                _nodeTracker.Remove(storedNode);
 
-                return result;
+                return true;
             }
         }
 
