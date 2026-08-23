@@ -608,3 +608,21 @@ one terminal disposition, central timeout and current-test cancellation on every
 boundary, a focused test, the unfiltered UnitArchitecture profile at a floor of 832, the unchanged
 LocalIntegration profile, a zero-warning Release build, and an independent mutation that bypasses
 the endpoint cache and is rejected for endpoint-identity loss.
+
+## Raw System.Text.Json object-consumption cohort
+
+Baseline `19e14d90` is clean and byte-identical to its private remote branch. The inherited
+`ConsumeJsonObject_Specs.cs`, obligation `OBL-R0-CORE-D-0027`, the System.Text.Json serializer
+context, message-type validation, envelope path, and in-memory receive pipeline were read before the
+first edit. No Newtonsoft.Json path participates in this capability.
+
+The inherited fixture only waits for a `JsonObject` handler and never inspects what it receives.
+The native source-owner fact keeps the real in-memory serialization and dispatch path, sends a local
+three-property contract, and asserts the raw object's exact camel-case property set and typed values.
+It uses the central operation timeout and current test cancellation and introduces no second
+serializer, fixture framework, test double, sleep, or polling loop.
+
+Acceptance requires one passive requirement row, one terminal disposition, a focused run, the
+unfiltered UnitArchitecture profile at 833, the unchanged LocalIntegration profile, a zero-warning
+Release build, and a one-cause mutation that replaces the projected object with an empty object and
+is rejected by the content assertions.

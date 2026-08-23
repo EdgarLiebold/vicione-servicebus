@@ -82,7 +82,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   collection, and the old/new same-named test projects no longer share an SDK intermediate path;
 - the real send-endpoint provider resolves two distinct addresses concurrently and returns the
   exact cached endpoint instance for each warm lookup without merging the addresses;
-- UnitArchitecture: 832 total, 832 passed, 0 failed, 0 skipped;
+- real in-memory dispatch exposes a typed message body as an exact raw
+  `System.Text.Json.Nodes.JsonObject`, including its complete camel-case property set and values;
+- UnitArchitecture: 833 total, 833 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -168,6 +170,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   single-flight, requirement, and intermediate-artifact drift before its final 831-case run;
 - the send-endpoint cache cohort maps its sole inherited obligation to one real in-memory provider
   fact and rejects a direct-factory cache bypass before its final 832-case run;
+- the raw System.Text.Json object cohort maps its sole inherited obligation to one real in-memory
+  serialization/dispatch fact and rejects an empty-body projection before its final 833-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

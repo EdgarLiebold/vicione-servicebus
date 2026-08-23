@@ -1,0 +1,17 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/ConsumeJsonObject_Specs.cs",
+  "sourceSha256": "89fd7d018e2a802d71386cc530ecf5372fec3c8d612d9bf8220484521ac86438",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-D-0027",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Serialization.JsonObjectConsumptionTests.TypedMessage_IsDeliveredAsAnExactRawJsonObject",
+      "explanation": "The native fact preserves real in-memory delivery to a System.Text.Json JsonObject handler and strengthens the assertion-free predecessor by proving the complete raw body shape and values."
+    }
+  ]
+}

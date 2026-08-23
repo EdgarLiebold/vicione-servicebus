@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 832 unfiltered cases;
+- `UnitArchitecture`: 833 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -505,7 +505,7 @@ gates pass.
 The thirteen inherited obligations are terminally mapped, all eight independent mutations are
 rejected, and the complete accepted commit is preserved remotely at `37f468ad` with 831/831 cases.
 
-## Current cohort — send-endpoint cache consumer
+## Accepted cohort — send-endpoint cache consumer
 
 Replace `OBL-R0-CORE-D-0403` from `SendEndpointCache_Specs.cs` with one hermetic source-owner fact
 under `Transports`. Resolve two distinct loopback addresses concurrently through a running in-memory
@@ -516,3 +516,18 @@ token; no sleep, polling, exception-only verdict, or test double is allowed.
 Create one passive requirement row and one terminal disposition, raise the UnitArchitecture floor
 from 831 to 832, reject a direct-factory bypass mutation, and remove the inherited fixture only after
 the focused, old-project, unfiltered, static-quality, and mutation gates pass.
+
+The sole inherited obligation is terminally mapped, the direct-factory bypass is rejected, and the
+complete accepted commit is preserved remotely at `19e14d90` with 832/832 cases.
+
+## Current cohort — raw System.Text.Json object consumption
+
+Replace `OBL-R0-CORE-D-0027` from `ConsumeJsonObject_Specs.cs` with one hermetic source-owner fact
+under `Serialization`. Send a local three-property contract through a real running in-memory bus to
+a handler registered for `System.Text.Json.Nodes.JsonObject`. Assert the exact camel-case property
+set and every typed value. Do not preserve the inherited assertion-free completion, console output,
+NUnit lifecycle, or TestFramework message dependency.
+
+Create one passive requirement row and one terminal disposition, raise the UnitArchitecture floor
+from 832 to 833, reject an empty-object projection mutation, and remove the inherited fixture only
+after the focused, old-project, unfiltered, static-quality, and mutation gates pass.
