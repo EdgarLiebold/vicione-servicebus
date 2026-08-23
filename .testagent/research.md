@@ -705,3 +705,38 @@ even if bus shutdown fails. Both envelope and raw modes assert the exact content
 `JsonDerivedTypeAttribute` and preserve exact concrete values and collection order without accepting
 body-controlled legacy type metadata. The decimal case parses the emitted document and proves one
 camel-case property with a quoted lossless maximum value, then reads the exact wire form back.
+
+## System.Text.Json application-format compatibility
+
+Baseline `5f513c7d` is clean and byte-identical to its private remote branch. The complete inherited
+Protobuf and XML fixtures, their seven executable ledger rows, the cohort-wide serializer-format
+question, the generated Protobuf support files, and both retained System.Text.Json serializer paths
+were read before the first edit. Static source-to-test pairing was also executed once with the
+Microsoft-skill-provided Roslyn analyzer: it reports both System.Text.Json serializers as paired,
+but this parse-only result is only a navigation aid and says nothing about behavioral depth.
+
+`PO-2026-08-16-01` fixes the architectural boundary. XML and raw XML are application values carried
+as exact `string` and UTF-8 `byte[]` members; they are not bus wire formats and must never advertise
+an XML content type. The removed XML/Raw-XML product serializers remain removed. Protobuf likewise
+remains test-only input to the retained System.Text.Json serializers, not a product dependency or a
+third wire serializer.
+
+The old trade-domain fixture is much larger than the behavior it proves and checks only a repeated
+element count. The Greenfield replacement uses a minimal test-owned `.proto` schema generated at
+build time. One generated message deliberately combines a scalar, getter-only `RepeatedField<T>`,
+and the generated `Timestamp` well-known type. A probe also tested the broader R0 question's map
+idea: System.Text.Json recognizes `MapField<TKey,TValue>` through a converter that supports neither
+populate handling nor a replacement value for the generated getter-only property. A test-only full
+Protobuf converter would prove itself instead of the product path, so it is rejected. The governing
+PO decision requires the real getter-only `RepeatedField<T>` boundary, not map support. A local
+partial type annotation therefore remains the smallest standard solution and does not mutate the
+product's process-global options. Both the envelope and raw JSON serializers must restore every
+required value exactly. The current stable build-time packages selected from their official NuGet records are
+Google.Protobuf 3.36.0 and Grpc.Tools 2.83.0; both stay inside the native test tree, with Grpc.Tools
+private to the test build.
+
+The three MessagePack XML identities are already terminally replaced by the accepted MessagePack
+cohort. This cohort owns only the three System.Text.Json identities plus the Protobuf identity. The
+former R0 question `OBL-R0-CORE-C-0473` is resolved by the PO decision: envelope/raw JSON coverage is
+added for the generated Protobuf object and for opaque XML text/bytes, while no raw-XML wire
+serializer or XML media type is introduced.

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package vicione.servicebus.tests.serialization;
+
+option csharp_namespace = "ViciOne.ServiceBus.Tests.Serialization.Protobuf";
+
+import "google/protobuf/timestamp.proto";
+
+message ProtobufCompatibilityPayload {
+  string identifier = 1;
+  repeated string values = 2;
+  google.protobuf.Timestamp observed_at = 3;
+}

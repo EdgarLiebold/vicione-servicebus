@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "frozenLedger": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+  "governingDecision": "PO-2026-08-16-01",
+  "sourceFiles": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ProtoBufAsJson_Specs.cs",
+      "sha256": "a958dd0d32e052716404c28218b2d2bd1031c68f015b258144ffdadad8088e6c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs",
+      "sha256": "f7d7cf4b2a0709f14a15f478dd1ff7fb3f4286ba7078898a14aef9004b554a26"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto",
+      "sha256": "af9ad70d7110558050e694b55da42890d1c4b0dacf0d4d3f17c84f85aa280ad9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.proto",
+      "sha256": "52bcab3b51086fd304a96765a1ed4cb5db690065672eeb6179a662131b1a80d3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto.cs",
+      "sha256": "3d958d680002855415d7440329c7376335c0744baebe5182afb56f95eab4d2f3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.proto.cs",
+      "sha256": "3d7002c10802708d32d9c62e46d7f5f6758e628fcc8e126cfe00807dc68e51ae"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.Populate.cs",
+      "sha256": "ac768454f31226a2f5fc346f42986ac11f7e53bd7d631429292ec40816ba44ba"
+    }
+  ],
+  "sourceObligationCount": 8,
+  "dispositions": [
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0342"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.EnvelopeJson_GeneratedProtobufContractRoundTripsEveryShape",
+      "disposition": "REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0367", "OBL-R0-CORE-C-0369", "OBL-R0-CORE-C-0371"],
+      "replacementTest": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests.XmlPayload_RemainsOpaqueTextAndBytes",
+      "disposition": "ALREADY_REPLACED_EXECUTING",
+      "evidence": "evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0368", "OBL-R0-CORE-C-0370", "OBL-R0-CORE-C-0372"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.EnvelopeJson_XmlRemainsOpaqueTextAndBytes",
+      "disposition": "CONSOLIDATED_REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0473"],
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.EnvelopeJson_GeneratedProtobufContractRoundTripsEveryShape",
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.RawJson_GeneratedProtobufContractRoundTripsEveryShape",
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.EnvelopeJson_XmlRemainsOpaqueTextAndBytes",
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonApplicationFormatCompatibilityTests.RawJson_XmlRemainsOpaqueTextAndBytes"
+      ],
+      "disposition": "PO_RESOLVED_AND_HARDENED",
+      "resolution": "XML and raw XML are opaque application values over retained serializers. No XML wire serializer or XML media type is reintroduced. Protobuf is generated test input for envelope and raw System.Text.Json only. PO-2026-08-16-01 requires the generated getter-only RepeatedField boundary; it does not require generated MapField support, and no test-only full Protobuf converter is introduced."
+    }
+  ],
+  "closure": {
+    "listedObligationCount": 8,
+    "distinctObligationCount": 8,
+    "duplicateObligationIds": [],
+    "missingFrozenLedgerObligationIds": [],
+    "unexpectedObligationIds": [],
+    "verdict": "COMPLETE"
+  }
+}

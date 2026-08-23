@@ -40,11 +40,46 @@ internal static class SystemTextJsonRoundTrip
                 $"System.Text.Json did not return a supported message of type '{typeof(T)}'.");
         }
 
-        return new SystemTextJsonRoundTripResult<T>(roundTripped, body.GetBytes());
+        return new SystemTextJsonRoundTripResult<T>(roundTripped, body.GetBytes(), serializer.ContentType.MediaType);
+    }
+
+    internal static SystemTextJsonRawRoundTripResult<T> ExecuteRawWithContext<T>(T message)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(message);
+
+        var serializer = new SystemTextJsonRawMessageSerializer(RawSerializerOptions.AnyMessageType);
+        var sendContext = new MessageSendContext<T>(message)
+        {
+            Serializer = serializer,
+            SourceAddress = SourceAddress,
+            DestinationAddress = DestinationAddress,
+            ResponseAddress = ResponseAddress,
+            FaultAddress = FaultAddress,
+            RequestId = RequestId,
+        };
+
+        MessageBody body = serializer.GetMessageBody(sendContext);
+        SerializerContext serializerContext = serializer.Deserialize(body, EmptyHeaders.Instance, DestinationAddress);
+
+        if (!serializerContext.TryGetMessage<T>(out T? roundTripped) || roundTripped is null)
+        {
+            throw new InvalidDataException(
+                $"Raw System.Text.Json did not return a supported message of type '{typeof(T)}'.");
+        }
+
+        return new SystemTextJsonRawRoundTripResult<T>(roundTripped, body.GetBytes(), serializer.ContentType.MediaType);
     }
 }
 
 internal sealed record SystemTextJsonRoundTripResult<T>(
     T Message,
-    byte[] Bytes)
+    byte[] Bytes,
+    string ContentType)
+    where T : class;
+
+internal sealed record SystemTextJsonRawRoundTripResult<T>(
+    T Message,
+    byte[] Bytes,
+    string ContentType)
     where T : class;

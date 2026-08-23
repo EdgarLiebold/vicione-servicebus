@@ -450,7 +450,6 @@
       "vicione.servicebus.tests": {
         "type": "Project",
         "dependencies": {
-          "Google.Protobuf": "[3.34.1, )",
           "MathNet.Numerics": "[5.0.0, )",
           "Microsoft.Data.SqlClient": "[7.0.2, )",
           "Microsoft.Extensions.Caching.Memory": "[10.0.11, )",
@@ -466,12 +465,6 @@
           "ViciOne.ServiceBus.StateMachineVisualizer": "[1.0.0, )",
           "ViciOne.ServiceBus.TestFramework": "[1.0.0, )"
         }
-      },
-      "Google.Protobuf": {
-        "type": "CentralTransitive",
-        "requested": "[3.34.1, )",
-        "resolved": "3.34.1",
-        "contentHash": "212vdYxRuVopGE5bess6Jg5oXWyizA6hcLPTI7G+qA4PthQEvfeof3njT+7VSY5v/+O0P22xTydiP5fSJJpGEA=="
       },
       "MathNet.Numerics": {
         "type": "CentralTransitive",

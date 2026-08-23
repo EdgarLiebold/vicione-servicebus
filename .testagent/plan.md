@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 882 unfiltered cases;
+- `UnitArchitecture`: 886 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -657,3 +657,38 @@ Five one-cause mutations prove decimal-converter registration, per-message seria
 declared polymorphism, exact response values, and requirement projection. Raise the
 UnitArchitecture floor from 875 to 882 and remove all four inherited files only after the complete
 package gates pass.
+
+## Accepted cohort — System.Text.Json application-format compatibility
+
+Replace `OBL-R0-CORE-C-0342`, `-0368`, `-0370`, and `-0372` with four ordinary source-owner facts:
+generated Protobuf through envelope JSON, generated Protobuf through raw JSON, and opaque XML
+text/UTF-8 bytes through each retained JSON mode. The Protobuf fixture must be a new minimal schema
+generated under `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf`; it must prove scalar,
+getter-only repeated, and timestamp fields and use only a local standard System.Text.Json populate
+annotation. Do not add a test-only converter to claim unsupported generated-map compatibility.
+Google.Protobuf and Grpc.Tools are test-only dependencies;
+neither may enter `src/**`.
+
+Treat `OBL-R0-CORE-C-0473` as resolved by `PO-2026-08-16-01`: raw XML means an opaque application
+value transported through the retained serializers, never an XML wire serializer or XML media type.
+Reuse the accepted MessagePack dispositions for `-0367`, `-0369`, and `-0371`; do not create second
+tests for those already closed identities.
+
+Add four passive Core requirement rows and a terminal source-file closure. Delete both inherited
+fixtures and their five private Protobuf support files only after the four open executable rows are
+mapped, the remaining inherited project builds, and the accepted MessagePack dispositions are
+referenced explicitly. Remove the now-unused Google.Protobuf reference from the inherited project
+and refresh only lock files whose evaluated project graph actually changes. Raise the unfiltered
+UnitArchitecture floor from 882 to 886.
+
+Acceptance requires locked restore; zero-warning non-incremental Release build; focused and
+unfiltered native MTP runs; unchanged LocalIntegration; bounded formatter, assertion-quality,
+anti-pattern and pseudo-mutation review; and independent one-cause mutations for missing populate
+semantics, false XML media types on both JSON modes, and missing requirement projection. No product
+source or public API changes are authorized by this cohort.
+
+All acceptance gates pass. Four source-owner cases replace the four open executable identities and
+resolve the cross-format R0 question without reintroducing a wire serializer. The final unfiltered
+profile is 886/886, LocalIntegration remains 3/3, both Release builds contain zero warnings and zero
+errors, and all four one-cause mutations fail for their intended reason. The seven inherited source
+and private support files are deleted only after the old core test project also builds cleanly.

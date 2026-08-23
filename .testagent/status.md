@@ -100,7 +100,7 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - eight System.Text.Json contract-shape obligations are replaced by seven native cases covering
   immutable constructor binding, maximum-decimal precision, envelope/raw extension data, and
   declared polymorphism for scalar, array, and list properties;
-- UnitArchitecture: 882 total, 882 passed, 0 failed, 0 skipped;
+- UnitArchitecture: 886 total, 886 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -221,3 +221,19 @@ The accepted native foundation and MessageBody behavior are committed and remote
 All other source owners, database/broker/cloud profiles, inherited-stack deletion, TestFramework
 removal, and the atomic `tests2` to `tests` promotion remain open. No current result represents those
 future cohorts as complete.
+
+## Accepted: System.Text.Json application-format compatibility
+
+- Baseline: `5f513c7d44694d1e4f5f9a4be20c504672b32ef9`, clean and equal to the private remote.
+- Research and exact R0/PO boundary: complete.
+- Scope: four executable obligations plus resolution of `OBL-R0-CORE-C-0473`; three
+  MessagePack XML identities remain owned by their already accepted cohort.
+- Product boundary: unchanged; no XML/Raw-XML or Protobuf product serializer is permitted.
+- Four source-owner facts prove generated Protobuf and opaque XML application values over envelope
+  and raw System.Text.Json, including exact media types, wire shapes, scalar/repeated/timestamp
+  values, text, UTF-8 bytes, and non-aliasing.
+- Google.Protobuf 3.36.0 and Grpc.Tools 2.83.0 are confined to the native core test project; no
+  product project or surviving inherited test project references either package.
+- The four one-cause mutations fail for the intended reasons; focused 369/369, complete 886/886,
+  and LocalIntegration 3/3 pass with zero skipped tests. Release builds have zero warnings and zero
+  errors. Seven inherited files are terminally replaced and removed.

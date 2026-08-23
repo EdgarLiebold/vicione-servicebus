@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-import "Events/TradeBookedViciOneServiceBus.proto";
-
-package ViciOne.ServiceBus.Tests.Serialization;
-
-message TradesBookedViciOneServiceBus {
-    repeated TradeBookedViciOneServiceBus trades = 1;
-}

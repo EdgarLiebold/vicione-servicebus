@@ -22,8 +22,9 @@ namespace ViciOne.ServiceBus.Tests
     /// <para>
     /// XML and Protobuf are not message body serializers of their own here, which is not the same as
     /// saying they do not exist: they are payload shapes, and the retained serializers carry them.
-    /// XmlPayload_Specs and ProtoBufAsJson_Specs cover exactly that, so the scope of this fixture is
-    /// the serializer, not every format a message body can hold.
+    /// The native System.Text.Json application-format compatibility tests and MessagePack payload
+    /// tests cover exactly that, so the scope of this fixture is the serializer, not every format a
+    /// message body can hold.
     /// </para>
     /// <para>
     /// The specs were run once with the flag still emitted and once after it was dropped. The
