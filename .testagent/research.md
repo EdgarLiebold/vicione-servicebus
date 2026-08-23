@@ -185,3 +185,38 @@ The inherited implementation achieved this through mutation of one shared set wh
 unspecified order returned by reflection. The replacement computes the maximal valid interface set
 explicitly and orders it by stable type identity. Six source-owner cases bind exact types, uniqueness,
 and the `direct` bit; the former count-only obligation maps to the interface-chain case.
+
+## Message initializer object-graph cohort
+
+Baseline `0e993020` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Initializers/Class_Specs.cs`, its six final R0 ledger obligations,
+and the complete initializer path that selects property providers, creates dynamic interface
+implementations, recursively initializes nested values, and copies exact values were read before
+the first test edit. The fault projection additionally crosses the current `FaultEvent<T>` and
+`Fault<T>` contracts and therefore remains an end-to-end initializer test rather than a converter
+unit test.
+
+The inherited nested-object and fault cases contain useful assertions. Its four read-only-property
+cases merely await initialization and would remain green for wrong output. Their replacements use
+the same four source/target shapes but assert the actual writable and computed values. Anonymous
+input into an interface deliberately does not invent a value for an absent read-only source
+property; the test proves successful initialization and the supplied writable value without
+freezing the generated implementation's default backing value. Concrete input into an interface
+does expose the computed read-only property and must preserve it. Concrete targets preserve the
+computed value through their writable property. No reference-identity promise is inferred for
+recursively projected faults or messages.
+
+Acceptance checklist:
+
+- map all six inherited obligations one-to-one to six ordinary xUnit methods;
+- prove covariant fault projection from `Fault<Top>` into `Fault<Bottom>`, including deterministic
+  host values and nested message content;
+- prove recursive anonymous-object initialization into private setters;
+- prove observable interface and concrete-class results for anonymous and concrete inputs with a
+  read-only computed property;
+- use fixed external values and the central xUnit cancellation token; use no inherited fixture,
+  TestFramework helper, clock assertion, random value, sleep, or environment metadata;
+- reject independent nested-conversion, fault-projection, read-only-copy, and requirement-metadata
+  mutations before closing the cohort;
+- raise the predeclared UnitArchitecture floor from 747 to 753 and delete `Class_Specs.cs` only
+  after all six ledger obligations have terminal dispositions.

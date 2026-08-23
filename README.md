@@ -45,7 +45,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 747
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 753
 ```
 
 Local-integration and external profiles appear only with their first executable cohort. The legacy

@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 741 unfiltered cases;
+- `UnitArchitecture`: 753 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -265,3 +265,20 @@ nullable-source unwrapping, string-to-int conversion, nullable-target wrapping, 
 requirement metadata. The UnitArchitecture floor rises from 742 to 747, and
 `Initializer_Specs.cs` is removed only after all five inherited ledger obligations are terminally
 mapped.
+
+## Accepted cohort — message initializer object graphs
+
+`Initializers/MessageInitializerObjectGraphTests.cs` belongs to the existing core source-owner test
+project. Six ordinary xUnit methods retain the six independent inherited obligations: covariant
+fault projection, nested anonymous objects into private setters, interface targets from anonymous
+and concrete inputs, and concrete targets from anonymous and same-type inputs. Every method has a
+separate requirement projection row and explicit output assertions; the former assertion-free
+read-only-property cases are not copied.
+
+The cohort uses only deterministic test-owned contracts and host metadata. The fault test asserts
+projected values instead of generated IDs, timestamps, or reconstructed reference identity. The
+anonymous interface case asserts only supplied writable input; the concrete-source interface case
+also asserts its exposed computed read-only value. Concrete targets prove the computed property
+through the initialized writable property. Its six-row terminal disposition closes all inherited
+rows. The UnitArchitecture floor rises from 747 to 753; focused and unfiltered gates plus four
+one-cause mutations pass, and only the now fully replaced `Class_Specs.cs` is removed.
