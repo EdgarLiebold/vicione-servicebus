@@ -27,7 +27,9 @@ closed; it is never the runtime test architecture.
 4. Commit and push a stationary accepted cohort before beginning the next one.
 5. Remove an inherited file only when all meaningful behavior it owns has an accepted replacement
    or an explicit non-product/non-executing disposition.
-6. Remove the inherited runner and TestFramework only after complete closure, then atomically rename
+6. Remove every inherited directory under `tests/` as soon as its last file has been removed; empty
+   directories are never retained as placeholders.
+7. Remove the inherited runner and TestFramework only after complete closure, then atomically rename
    `tests2` to `tests` and update every solution, CI, documentation, and build path.
 
 Cohorts are sized by semantic cohesion rather than by individual file or obligation. Adjacent
@@ -692,3 +694,40 @@ resolve the cross-format R0 question without reintroducing a wire serializer. Th
 profile is 886/886, LocalIntegration remains 3/3, both Release builds contain zero warnings and zero
 errors, and all four one-cause mutations fail for their intended reason. The seven inherited source
 and private support files are deleted only after the old core test project also builds cleanly.
+
+## Accepted cohort — System.Text.Json collection compatibility
+
+Extend the existing source-mirrored `Serialization/SystemTextJsonCollectionTests.cs` with nine
+ordinary xUnit methods materializing thirteen new cases. They use the real envelope serializer and
+assert exact external values, collection counts, dictionary keys, set membership and sequence order;
+the inherited `Equals` implementations and wall clock are not test oracles.
+
+The terminal map is fixed before implementation:
+
+- nested object list: `OBL-R0-CORE-C-0297`;
+- empty/single/multiple dictionary: `-0299`, `-0301`, `-0303`;
+- concrete and interface sets: `-0305`, `-0319`;
+- nested object: `-0307`;
+- primitive arrays empty/single/many and the duplicate empty-array identity: `-0309`, `-0311`,
+  `-0313`, `-0323`;
+- constructor-bound type with a private setter: `-0315`, carried by the existing stronger
+  `SystemTextJsonScalarTests.ControlCharacterAndPrivateSetter_RoundTripExactly`;
+- read-only dictionary/list graph: `-0317`;
+- generic object array: `-0321`;
+- empty contract: `-0325`;
+- enum: `-0327`;
+- ordered key/value list: `-0329`, carried by the existing stronger
+  `SystemTextJsonCollectionTests.DuplicateKeyPairs_RemainAnOrderedListWithoutKeyCollapse`.
+
+Add one passive requirement row per native method, create a 34/34 source-file disposition that
+composes the 17 pre-existing MessagePack rows with these 17 Core rows, and remove
+`MoreSerialization_Specs.cs` only after focused and unfiltered verification. Remove every resulting
+empty directory under `tests/`. The predeclared UnitArchitecture floor is 899; LocalIntegration
+remains 3. At least four independent one-cause mutations must reject element loss, dictionary-value
+loss, constructor-bound private-setter value loss, and sequence reordering, plus
+requirement-projection drift.
+
+Outcome: the exact 34-row source closure is terminal; 13 new cases and two stronger existing
+carriers cover all 17 open Core identities. The inherited fixture is removed, all resulting empty
+`tests/` directories are removed, five independent mutations fail for their intended reasons, and
+the accepted floors are UnitArchitecture 899/899 and LocalIntegration 3/3 with no skipped tests.

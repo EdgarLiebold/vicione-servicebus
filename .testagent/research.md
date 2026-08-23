@@ -740,3 +740,32 @@ cohort. This cohort owns only the three System.Text.Json identities plus the Pro
 former R0 question `OBL-R0-CORE-C-0473` is resolved by the PO decision: envelope/raw JSON coverage is
 added for the generated Protobuf object and for opaque XML text/bytes, while no raw-XML wire
 serializer or XML media type is introduced.
+
+## System.Text.Json collection compatibility
+
+Baseline `952a1fa6` is clean and byte-identical to its private remote branch. The complete inherited
+`Serialization/MoreSerialization_Specs.cs`, its `SerializationTest` base, all 34 ledger rows, the
+existing native collection tests, requirement projection, and the complete envelope serializer path
+were read before the first edit. The Microsoft-skill Roslyn pairing analyzer was run once as a
+navigation aid; its parse-only pairing is not treated as behavioral coverage.
+
+The inherited file executes the same 17 scenarios once for MessagePack and once for System.Text.Json.
+All 17 MessagePack identities are already terminal in the accepted MessagePack disposition. The only
+open work is therefore the 17 interleaved Core identities `OBL-R0-CORE-C-0297` through `-0329`.
+They belong to one hermetic UnitArchitecture owner and exercise the retained System.Text.Json
+envelope path. No product change, additional serializer, test framework, clock, network, or inherited
+fixture hierarchy is required.
+
+The old equality implementations hide which member failed and one case embeds the current time.
+The Greenfield replacements use minimal test-owned contracts, fixed values, and member-level oracles.
+They preserve ordered nested object lists; empty, singleton and multi-entry dictionaries; concrete
+and interface sets; nested objects; empty, singleton and multi-element primitive arrays; generic
+object arrays; private setters; read-only dictionaries of read-only lists; empty contracts; enums;
+and ordered key/value pairs. The duplicate inherited empty-array identity remains explicitly mapped
+to the same stronger native carrier rather than creating a duplicate test.
+
+Two carriers already exist and are stronger than the inherited cases. The scalar test exercises a
+constructor-bound type with a private setter and a control character, and the collection test
+preserves an ordered key/value list even when keys repeat. Their methods are reused by the terminal
+disposition; duplicating either test would add maintenance without adding a distinguishable product
+verdict.

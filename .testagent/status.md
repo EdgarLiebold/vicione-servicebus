@@ -100,7 +100,7 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - eight System.Text.Json contract-shape obligations are replaced by seven native cases covering
   immutable constructor binding, maximum-decimal precision, envelope/raw extension data, and
   declared polymorphism for scalar, array, and list properties;
-- UnitArchitecture: 886 total, 886 passed, 0 failed, 0 skipped;
+- UnitArchitecture: 899 total, 899 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -209,6 +209,11 @@ The accepted native foundation and MessageBody behavior are committed and remote
   rejects five independent converter, contract, value, and projection mutations, isolates and
   restores mutable serializer options, and removes the four obsolete NUnit files before its final
   882-case run;
+- the System.Text.Json collection-compatibility cohort composes 17 accepted MessagePack identities
+  with 17 Core identities into one exact 34/34 source-file disposition; 13 new cases and two
+  stronger existing carriers preserve collection shapes, cardinality, values and order, reject five
+  independent behavior/projection mutations, and remove the inherited fixture before the final
+  899-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;
@@ -237,3 +242,18 @@ future cohorts as complete.
 - The four one-cause mutations fail for the intended reasons; focused 369/369, complete 886/886,
   and LocalIntegration 3/3 pass with zero skipped tests. Release builds have zero warnings and zero
   errors. Seven inherited files are terminally replaced and removed.
+
+## Accepted: System.Text.Json collection compatibility
+
+- Baseline: `952a1fa6d507309d71c6b163813f0c03c95b48c6`, clean and equal to the private
+  remote.
+- Exact closure: all 34 inherited identities are terminal, consisting of 17 accepted MessagePack
+  identities and 17 Core identities owned by 13 new cases plus two stronger existing facts.
+- The source-mirrored Core tests prove nested lists and objects, empty/single/multiple dictionaries
+  and arrays, concrete/interface sets, read-only graphs, generic arrays, empty contracts, enums,
+  constructor-bound private-setter values, and ordered duplicate-key pairs.
+- Five one-cause mutations fail for exact behavior or projection reasons; focused 17/17, native
+  Core 382/382, complete UnitArchitecture 899/899, and LocalIntegration 3/3 pass with zero skipped
+  tests. Release builds have zero warnings and zero errors.
+- `MoreSerialization_Specs.cs` is removed after its bounded inherited-project compile proof. No
+  empty directory remains below `tests/`.

@@ -1,0 +1,130 @@
+{
+  "cohort": "system-text-json-collection-compatibility",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "sources": [
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs",
+      "sourceSha256": "85f6a145ee2063db62e6710af5ffd3f1d962de3eec2933f0321d0d6f07422cfe",
+      "preexistingTerminalDisposition": "evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json",
+      "preexistingDispositionSha256": "fd19166d917a9245eb85aabaf75865efb4775cd19aebf6552d7848747aead10d",
+      "preexistingObligationIds": [
+        "OBL-R0-CORE-C-0296",
+        "OBL-R0-CORE-C-0298",
+        "OBL-R0-CORE-C-0300",
+        "OBL-R0-CORE-C-0302",
+        "OBL-R0-CORE-C-0304",
+        "OBL-R0-CORE-C-0306",
+        "OBL-R0-CORE-C-0308",
+        "OBL-R0-CORE-C-0310",
+        "OBL-R0-CORE-C-0312",
+        "OBL-R0-CORE-C-0314",
+        "OBL-R0-CORE-C-0316",
+        "OBL-R0-CORE-C-0318",
+        "OBL-R0-CORE-C-0320",
+        "OBL-R0-CORE-C-0322",
+        "OBL-R0-CORE-C-0324",
+        "OBL-R0-CORE-C-0326",
+        "OBL-R0-CORE-C-0328"
+      ],
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0297",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.NestedObjectList_RoundTripsEveryValueInOrder"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0299",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.Dictionary_RoundTripsEmptySingleAndMultipleEntries",
+          "explanation": "The zero-cardinality theory case is the exact carrier."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0301",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.Dictionary_RoundTripsEmptySingleAndMultipleEntries",
+          "explanation": "The two-entry theory case proves every key and nested value independently of enumeration order."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0303",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.Dictionary_RoundTripsEmptySingleAndMultipleEntries",
+          "explanation": "The one-entry theory case is the exact carrier."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0305",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.ConcreteAndInterfaceSets_RoundTripExactMembership"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0307",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.NestedObject_RoundTripsItsExactValue"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0309",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.PrimitiveArray_RoundTripsEmptySingleAndManyElements",
+          "explanation": "The ten-element theory case proves full order and every value."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0311",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.PrimitiveArray_RoundTripsEmptySingleAndManyElements",
+          "explanation": "The zero-element theory case is the exact carrier."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0313",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.PrimitiveArray_RoundTripsEmptySingleAndManyElements",
+          "explanation": "The one-element theory case is the exact carrier."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0315",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.ControlCharacterAndPrivateSetter_RoundTripExactly",
+          "explanation": "The accepted scalar fact is stronger because it preserves the value of a constructor-bound type with a private setter and a control character."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0317",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.ReadOnlyDictionaryOfLists_RoundTripsTheExactStructure"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0319",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.ConcreteAndInterfaceSets_RoundTripExactMembership"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0321",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.GenericObjectArray_RoundTripsEveryValueInOrder"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0323",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.PrimitiveArray_RoundTripsEmptySingleAndManyElements",
+          "explanation": "This inherited duplicate shares the stronger zero-element carrier instead of creating a duplicate test."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0325",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.EmptyContract_RoundTripsAsANewInstanceOfTheSameType"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0327",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.EnumValue_RoundTripsExactly"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0329",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.DuplicateKeyPairs_RemainAnOrderedListWithoutKeyCollapse",
+          "explanation": "The accepted carrier is stronger because it proves order and values while preserving a repeated key without collapsing the list."
+        }
+      ]
+    }
+  ]
+}
