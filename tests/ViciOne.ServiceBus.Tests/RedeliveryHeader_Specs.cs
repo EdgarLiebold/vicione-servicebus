@@ -4,8 +4,8 @@ namespace ViciOne.ServiceBus.Tests
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Testing;
     using Microsoft.Extensions.DependencyInjection;
-    using Middleware.Caching;
     using NUnit.Framework;
+    using TestFramework;
 
 
     [TestFixture]
@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.Tests
                             return;
                         }
 
-                        throw new TestException("Ouch!");
+                        throw new IntentionalTestException("Ouch!");
                     });
 
                     x.AddHandler(async (ConsumeContext<OutboundMessage> context) =>

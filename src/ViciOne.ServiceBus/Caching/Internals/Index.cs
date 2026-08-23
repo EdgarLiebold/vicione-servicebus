@@ -15,14 +15,14 @@ namespace ViciOne.ServiceBus.Caching.Internals
         readonly KeyProvider<TKey, TValue> _keyProvider;
         readonly object _lock = new object();
         readonly INodeTracker<TValue> _nodeTracker;
-        Dictionary<TKey, WeakReference<INode<TValue>>> _index;
+        Dictionary<TKey, INode<TValue>> _index;
 
         public Index(INodeTracker<TValue> nodeTracker, KeyProvider<TKey, TValue> keyProvider)
         {
             _nodeTracker = nodeTracker;
             _keyProvider = keyProvider;
 
-            _index = new Dictionary<TKey, WeakReference<INode<TValue>>>();
+            _index = new Dictionary<TKey, INode<TValue>>();
 
             _nodeTracker.Connect(this);
         }
@@ -46,11 +46,10 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             lock (_lock)
             {
-                if (!_index.TryGetValue(key, out WeakReference<INode<TValue>> existingReference)
-                    || !existingReference.TryGetTarget(out INode<TValue> existingNode)
-                    || existingNode.Value == null)
+                if (!_index.TryGetValue(key, out INode<TValue> existingNode)
+                    || !existingNode.IsValid)
                 {
-                    _index[key] = new WeakReference<INode<TValue>>(node, false);
+                    _index[key] = node;
                     return true;
                 }
 
@@ -71,7 +70,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
             var key = _keyProvider(value);
 
             lock (_lock)
-                _index[key] = new WeakReference<INode<TValue>>(node, false);
+                _index[key] = node;
         }
 
         public void ValueRemoved(INode<TValue> node, TValue value)
@@ -116,7 +115,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
                 var node = new FactoryNode<TValue>(nodeValueFactory);
 
-                _index[key] = new WeakReference<INode<TValue>>(node, false);
+                _index[key] = node;
 
                 _nodeTracker.Add(nodeValueFactory);
 
@@ -145,9 +144,9 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         bool TryGetExistingNode(TKey key, out INode<TValue> existingNode)
         {
-            if (_index.TryGetValue(key, out WeakReference<INode<TValue>> existingReference))
+            if (_index.TryGetValue(key, out existingNode))
             {
-                if (existingReference.TryGetTarget(out existingNode) && existingNode.IsValid)
+                if (existingNode.IsValid)
                     return true;
 
                 _index.Remove(key);
@@ -162,8 +161,8 @@ namespace ViciOne.ServiceBus.Caching.Internals
             lock (_lock)
             {
                 // this will throw an exception if there is a duplicate key, but until we support multi-value indices, that's okay
-                Dictionary<TKey, WeakReference<INode<TValue>>> updatedIndex = _nodeTracker.GetAll()
-                    .ToDictionary(node => _keyProvider(node.Value.Result), node => new WeakReference<INode<TValue>>(node, false));
+                Dictionary<TKey, INode<TValue>> updatedIndex = _nodeTracker.GetAll()
+                    .ToDictionary(node => _keyProvider(node.Value.Result));
 
                 _index = updatedIndex;
             }

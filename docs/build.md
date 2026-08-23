@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 818
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 831
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -83,7 +83,11 @@ custom-header delivery through a real in-memory state-machine publication. Scala
 tests cover exact copies, nullable wrapping and unwrapping, invariant round-trip strings, enums,
 object identity, and value-type-to-string conversion through the public initialization pipeline. The
 cache cohorts cover bucket retention, direct insertion, factory arbitration, multi-index propagation,
-clear/reuse, and truthful atomic removal without sleeps or wall-clock assertions. The
+clear/reuse, and truthful atomic removal without sleeps or wall-clock assertions. The production
+endpoint-resource cache additionally proves deterministic single-flight recovery, capacity and
+usage-aware retention, exact hit accounting, tracker churn, and TTL behavior through an injected
+`TimeProvider`. The native core test project has a distinct SDK artifact identity so restoring the
+remaining same-named NUnit project cannot overwrite its resolved package graph. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable

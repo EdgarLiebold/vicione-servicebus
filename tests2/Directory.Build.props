@@ -34,4 +34,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <!-- The inherited NUnit core project still has the same MSBuild project name. This property must
+       be set during Directory.Build.props evaluation, before the SDK fixes BaseIntermediateOutputPath;
+       setting it in the project body would be too late and both projects would overwrite the same
+       project.assets.json. The role-based artifact identity remains valid after final promotion. -->
+  <PropertyGroup Condition=" '$(MSBuildProjectName)' == 'ViciOne.ServiceBus.Tests' ">
+    <ArtifactsProjectName>ViciOne.ServiceBus.Tests.Unit</ArtifactsProjectName>
+  </PropertyGroup>
+
 </Project>

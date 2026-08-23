@@ -122,6 +122,29 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    public void SameNamedInheritedAndNativeCoreTests_UseDistinctIntermediateArtifactDirectories()
+    {
+        var inheritedProject = RepositoryLayout.InheritedCoreTestProject;
+        var nativeProject = RepositoryLayout.NativeCoreTestProject;
+
+        Assert.Equal(
+            Path.GetFileNameWithoutExtension(inheritedProject),
+            Path.GetFileNameWithoutExtension(nativeProject));
+        Assert.Equal(
+            "ViciOne.ServiceBus.Tests.Unit",
+            MsBuildEvaluation.PropertyOf(nativeProject, "ArtifactsProjectName"));
+
+        var inheritedIntermediate = Path.GetFullPath(
+            MsBuildEvaluation.PropertyOf(inheritedProject, "MSBuildProjectExtensionsPath"));
+        var nativeIntermediate = Path.GetFullPath(
+            MsBuildEvaluation.PropertyOf(nativeProject, "MSBuildProjectExtensionsPath"));
+
+        Assert.False(
+            RepositoryLayout.PathComparer.Equals(inheritedIntermediate, nativeIntermediate),
+            $"Both projects resolve MSBuildProjectExtensionsPath to {nativeIntermediate}.");
+    }
+
+    [Fact]
     public void EveryNativeTestProject_TargetsTheProductFrameworkAndIsNotPackable()
     {
         Assert.NotEmpty(RepositoryLayout.NativeTestProjects);

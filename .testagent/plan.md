@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 818 unfiltered cases;
+- `UnitArchitecture`: 831 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -451,7 +451,7 @@ reject reporting a temporary node instead of the stored node, incorrect miss acc
 addition accounting, lost observer output, and requirement-projection drift before the final
 805-case run.
 
-## Current cohort — cache indexes and pending-value factories
+## Accepted cohort — cache indexes and pending-value factories
 
 Replace the fourteen obligations from `Middleware/Caching/Tests.cs`, `Index_Specs.cs`,
 `MissingValueFactory_Specs.cs`, and `TwoIndex_Specs.cs` with twelve ordinary xUnit facts under the
@@ -473,3 +473,31 @@ independent one-cause mutations, and remove each inherited fixture only after ev
 terminal. `Tests.cs` support still used by `CacheRecovery_Specs.cs` must first move API- and
 behavior-equivalently to a dedicated inherited support file; it is not copied into the new native
 test architecture.
+
+The fourteen inherited rows are terminally mapped to twelve source-owner facts plus one independent
+pending-removal hardening fact. The final unfiltered profile is 818/818, four one-cause mutations
+are rejected, and the complete accepted commit is preserved remotely at `5a60d423`.
+
+## Current cohort — internal endpoint-resource cache
+
+Replace the thirteen obligations from `Caching/CacheRecovery_Specs.cs` and
+`Caching/Cache_Specs.cs` under the actual product owner `Internals/Caching`. The old cache remains
+production-critical for send-endpoint, ActiveMQ, Event Hubs, and Amazon SQS resource ownership, so
+this is a native reconstruction rather than a legacy deletion.
+
+Use ten cohesive behavior facts for failure cleanup, exact add/read identity, one- and two-failure
+recovery, concurrent single-flight creation, single-use capacity, usage-aware retention,
+deterministic distribution metrics, tracker churn, and sequential TTL-cache behavior. Duplicate old
+add/read obligations share the exact stronger carrier in the terminal disposition. Add two separate
+`NEW_HARDENING` facts for TTL configuration and timestamp-frequency correctness. Every concurrency boundary uses
+completion sources and the central operation timeout; no random generator, sleep, polling delay,
+elapsed-time assertion, or assertion-free stress test is allowed.
+
+Correct `TimeToLiveCachePolicy` minimally to use one injectable `TimeProvider` for both timestamp
+creation and elapsed-time calculation, defaulting to `TimeProvider.System`. Do not change consumer
+APIs or transport behavior. Create twelve passive requirement-projection rows, raise the behavior
+floor from 818 to 830, and add one architecture fact that prevents the inherited and native
+same-named core test projects from sharing an intermediate artifact directory. The resulting
+UnitArchitecture floor is 831. Remove both inherited fixtures plus their now-unneeded support files
+only after focused, unfiltered, old-project, static-quality, and independent one-cause mutation
+gates pass.

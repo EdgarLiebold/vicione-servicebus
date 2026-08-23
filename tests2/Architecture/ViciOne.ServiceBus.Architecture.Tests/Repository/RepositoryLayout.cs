@@ -44,6 +44,14 @@ internal static class RepositoryLayout
     internal static string TestFrameworkProject => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.TestFramework", "ViciOne.ServiceBus.TestFramework.csproj");
 
+    /// <summary>The inherited core test project while its behavior is being replaced cohort by cohort.</summary>
+    internal static string InheritedCoreTestProject => Path.Combine(
+        Root, "tests", "ViciOne.ServiceBus.Tests", "ViciOne.ServiceBus.Tests.csproj");
+
+    /// <summary>The native replacement of the inherited core test project.</summary>
+    internal static string NativeCoreTestProject => Path.Combine(
+        Root, "tests2", "ViciOne.ServiceBus.Tests", "ViciOne.ServiceBus.Tests.csproj");
+
     /// <summary>The one central Microsoft Testing Platform configuration of the tree.</summary>
     internal static string CanonicalTestingPlatformConfiguration => Path.Combine(
         Root, "tests2", "testconfig.json");

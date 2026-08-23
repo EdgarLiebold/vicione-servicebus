@@ -540,3 +540,52 @@ Acceptance checklist:
 - raise the UnitArchitecture floor from 805 to 818 and reject independent factory, cleanup,
   identity, second-index, clear, remove, statistics, visible-value, and requirement-projection
   mutations before closure.
+
+## Internal endpoint-resource cache cohort
+
+Baseline `5a60d423` is clean and byte-identical to its private remote branch. Before the first edit,
+the complete inherited `Caching/CacheRecovery_Specs.cs` and `Caching/Cache_Specs.cs`, their thirteen
+final R0 obligations, all twenty files under `src/ViciOne.ServiceBus/Internals/Caching`, and every
+production call site were read. This cache is not an unused predecessor of `GreenCache`: it remains
+the resource owner for core send endpoints and for ActiveMQ, Event Hubs, and Amazon SQS producer or
+topology resources. Its behavior therefore remains a product capability until a separate,
+fully-proved consolidation slice replaces those consumers.
+
+The inherited files mix duplicate add/read checks, `Task.Delay`, elapsed-time assertions, random
+Zipf samples, test-helper self-evidence, and assertion-free stress loops. The native replacement
+keeps every meaningful behavior but does not reproduce those mechanisms:
+
+- one exact add/read fact carries the four duplicate simple-add obligations;
+- controlled completion sources prove single-flight behavior and both one-failure and two-failure
+  recovery without sleeps or scheduler assumptions;
+- fixed key sequences prove capacity, usage preference, and hit-ratio accounting without random
+  input;
+- a direct tracker fact proves high-churn bounded eviction with observable removal counts rather
+  than merely completing without an exception;
+- a sequential TTL-cache fact preserves the inherited no-expiration distribution boundary;
+- two separate `NEW_HARDENING` facts prove invalid TTL configuration and expiration against a
+  manual `TimeProvider` whose timestamp frequency differs from `TimeSpan.TicksPerSecond`.
+
+The source inspection found a real unit defect: `TimeToLiveCachePolicy` compares a
+`Stopwatch.GetTimestamp()` delta with `TimeSpan.Ticks`. Those quantities use unrelated frequencies
+on supported systems. The minimal product correction is to use one injected `TimeProvider` for
+timestamp creation and `GetElapsedTime`; production defaults to `TimeProvider.System`, while the
+test advances a deterministic provider. This preserves all existing call sites and removes the
+wall-clock dependency.
+
+Acceptance checklist:
+
+- map all thirteen ledger IDs to ten ordinary behavior facts under the actual
+  `Internals/Caching` source owner, with duplicate inherited rows explicitly sharing a stronger
+  carrier rather than duplicating tests;
+- add two independent TTL-configuration/frequency hardening facts and twelve passive Core
+  requirement rows;
+- prove exact exception identity, cache absence after failure, exact value identity, one effective
+  concurrent factory, pending-reader recovery, count, hit ratio, capacity, usage preference,
+  tracker eviction, and TTL validity boundaries;
+- delete both inherited fixtures and their two support files only after their complete obligation
+  closure and after the remaining inherited project still builds;
+- raise the behavior floor from 818 to 830 and the final UnitArchitecture floor to 831 with the
+  independent same-named-project artifact-isolation fact;
+- reject independent fault-retention, duplicate-factory, usage-policy, capacity/eviction,
+  TTL-frequency, and requirement-projection mutations before closure.

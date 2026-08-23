@@ -1,28 +1,37 @@
 namespace ViciOne.ServiceBus.Internals.Caching
 {
     using System;
-    using System.Diagnostics;
 
 
     public class TimeToLiveCachePolicy<TValue> :
         ICachePolicy<TValue, ITimeToLiveCacheValue<TValue>>
         where TValue : class
     {
-        readonly long _timeToLive;
+        readonly TimeProvider _timeProvider;
+        readonly TimeSpan _timeToLive;
 
         public TimeToLiveCachePolicy(TimeSpan timeToLive)
+            : this(timeToLive, TimeProvider.System)
         {
-            _timeToLive = timeToLive.Ticks;
+        }
+
+        public TimeToLiveCachePolicy(TimeSpan timeToLive, TimeProvider timeProvider)
+        {
+            if (timeToLive < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(timeToLive), "Time to live must not be negative");
+
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+            _timeToLive = timeToLive;
         }
 
         public ITimeToLiveCacheValue<TValue> CreateValue(Action remove)
         {
-            return new TimeToLiveCacheValue<TValue>(remove, Stopwatch.GetTimestamp());
+            return new TimeToLiveCacheValue<TValue>(remove, _timeProvider.GetTimestamp());
         }
 
         public bool IsValid(ITimeToLiveCacheValue<TValue> value)
         {
-            return Stopwatch.GetTimestamp() - value.Timestamp <= _timeToLive;
+            return _timeProvider.GetElapsedTime(value.Timestamp) <= _timeToLive;
         }
 
         public int CheckValue(ITimeToLiveCacheValue<TValue> value)

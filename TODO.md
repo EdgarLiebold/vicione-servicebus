@@ -66,6 +66,22 @@ source owner, preserve every meaningful capability, and migrate all internal and
 atomically. Acceptance requires a public-API disposition, package comparison, zero stale names,
 locked restore, zero-warning Release builds, and every applicable unfiltered native test profile.
 
+## Consolidate the two cache engines
+
+`src/ViciOne.ServiceBus/Caching` and `src/ViciOne.ServiceBus/Internals/Caching` are two independent
+cache engines with overlapping factory, pending-value, capacity, usage, and expiration behavior.
+The second engine remains production-critical for core send endpoints and for ActiveMQ, Event Hubs,
+and Amazon SQS resources; it must not be removed as a naming cleanup.
+
+After the complete native reconstruction has captured both engines and all transport-specific call
+sites, select one coherent cache architecture and migrate consumers in a dedicated product slice.
+Preserve single-flight creation, queued fallback after factory faults, exact removal/disposal,
+capacity and usage-aware retention, deterministic TTL through `TimeProvider`, metrics, and every
+transport resource-lifetime contract. Acceptance requires explicit API and capability disposition,
+one engine and one naming model at the end, no compatibility wrapper left behind, all applicable
+native profiles, transport integration tests, package comparison, and targeted concurrency
+mutations.
+
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in
