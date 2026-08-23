@@ -250,3 +250,18 @@ Four effective one-cause mutations are rejected: wrong state-name conversion, sk
 property conversion, changed custom-header name, and missing requirement metadata. The
 UnitArchitecture floor rises from 741 to 742, and `State_Specs.cs` is removed only after its sole
 inherited ledger obligation is terminally mapped.
+
+## Accepted cohort — message initializer scalar conversion
+
+`Initializers/MessageInitializerScalarConversionTests.cs` mirrors the root initializer pipeline.
+Five ordinary xUnit cases replace the inherited conversion fixture with strongly typed,
+deterministic inputs. They cover value-type-to-string conversion, exact scalar and object copying,
+nullable-source unwrapping, invariant round-trip string conversion, and non-nullable-source
+wrapping into nullable targets across bool, integer widths, double, decimal, DateTime,
+DateTimeOffset, TimeSpan, enum, string, and object/URI values.
+
+Six one-cause mutations are rejected: value-to-string conversion, exact property copying,
+nullable-source unwrapping, string-to-int conversion, nullable-target wrapping, and missing
+requirement metadata. The UnitArchitecture floor rises from 742 to 747, and
+`Initializer_Specs.cs` is removed only after all five inherited ledger obligations are terminally
+mapped.
