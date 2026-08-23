@@ -85,7 +85,7 @@ public sealed class GreenCacheCapacityTests
             indexValue => advanceEveryAddition || indexValue % 2 == 0,
             startingIndex: 0);
 
-        await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
+        await observer.WaitForAddedCount(added, OperationTimeout, TestCancellationToken);
 
         AssertBoundedAndNonEmpty(cache, observer, added);
     }
@@ -122,6 +122,8 @@ public sealed class GreenCacheCapacityTests
                 return true;
             },
             startingIndex: Capacity);
+
+        await observer.WaitForAddedCount(added, OperationTimeout, TestCancellationToken);
 
         AssertBoundedAndNonEmpty(cache, observer, added);
         Assert.Same(first, await index.Get(first.Id));
@@ -182,9 +184,10 @@ public sealed class GreenCacheCapacityTests
         int count = cache.Statistics.Count;
         int visibleCount = cache.GetAll().Count();
 
-        Assert.True(observer.AddedCount >= 200);
+        Assert.True(observer.AddedCount >= added);
         Assert.True(observer.RemovedCount >= added - Capacity);
         Assert.True(observer.RemovedCount >= 100);
+        Assert.Equal(0, observer.RemovedWhileValidCount);
         Assert.InRange(count, 1, Capacity);
         Assert.InRange(visibleCount, 1, Capacity);
     }
@@ -218,9 +221,11 @@ public sealed class GreenCacheCapacityTests
         where TValue : class
     {
         private readonly TaskCompletionSource _added = NewCompletionSource(expectedAdded == 0);
+        private readonly SemaphoreSlim _addedSignal = new(initialCount: 0);
         private readonly TaskCompletionSource _removed = NewCompletionSource(expectedRemoved == 0);
         private int _addedCount;
         private int _removedCount;
+        private int _removedWhileValidCount;
 
         public Task Added => _added.Task;
 
@@ -230,20 +235,40 @@ public sealed class GreenCacheCapacityTests
 
         public int RemovedCount => Volatile.Read(ref _removedCount);
 
+        public int RemovedWhileValidCount => Volatile.Read(ref _removedWhileValidCount);
+
         public void ValueAdded(INode<TValue> node, TValue value)
         {
-            if (Interlocked.Increment(ref _addedCount) >= expectedAdded)
+            int addedCount = Interlocked.Increment(ref _addedCount);
+            _addedSignal.Release();
+
+            if (addedCount >= expectedAdded)
                 _added.TrySetResult();
         }
 
         public void ValueRemoved(INode<TValue> node, TValue value)
         {
+            if (node.IsValid)
+                Interlocked.Increment(ref _removedWhileValidCount);
+
             if (Interlocked.Increment(ref _removedCount) >= expectedRemoved)
                 _removed.TrySetResult();
         }
 
         public void CacheCleared()
         {
+        }
+
+        public async Task WaitForAddedCount(
+            int expectedCount,
+            TimeSpan timeout,
+            CancellationToken cancellationToken)
+        {
+            using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeoutSource.CancelAfter(timeout);
+
+            while (AddedCount < expectedCount)
+                await _addedSignal.WaitAsync(timeoutSource.Token);
         }
 
         private static TaskCompletionSource NewCompletionSource(bool completed)

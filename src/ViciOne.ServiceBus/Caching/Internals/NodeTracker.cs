@@ -333,9 +333,9 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             Statistics.ValueRemoved();
 
-            _observers.ValueRemoved(node, value);
-
             node.Evict();
+
+            _observers.ValueRemoved(node, value);
 
             try
             {
