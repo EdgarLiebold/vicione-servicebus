@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 855 unfiltered cases;
+- `UnitArchitecture`: 875 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -600,3 +600,32 @@ thread-pool boundary, retain asynchronous delivery and cancellation behavior, an
 under the same unfiltered load. Raise the UnitArchitecture floor from 854 to 855 and delete the
 inherited file only after exact-interval, redelivery-count, focused-repeat, inherited-build, and
 unfiltered gates pass.
+
+## Accepted cohort — Core MessageBody contract closure
+
+Close the remaining 30 obligations in `Serialization/MessageBodyLength_Specs.cs` after composing
+them with the 51 accepted Abstractions dispositions and six accepted MessagePack dispositions.
+Create source-parallel tests for `MemoryMessageBody`, the three System.Text.Json body types,
+`NotSupportedMessageBody`, and the default System.Text.Json serializer options. Add exact concrete
+MessageBody type-set facts to the Core and MessagePack owners so the original three-assembly census
+is preserved without introducing a cross-module reference into the Core tests.
+
+Each of the four serializing Core body tests executes all four first-accessor orders against exact
+external byte and text oracles. Every execution reads the full stream, proves it is read-only,
+performs a real rejected write, and rechecks the body after the failure. The envelope is fixed and
+clock-independent. The options fact proves compact output is smaller than an externally indented
+equivalent and round-trips the exact values. The unsupported body fact requires exact
+`NotSupportedException` results from all four members.
+
+Add seven Core projection rows and one MessagePack projection row. Add a self-contained terminal
+disposition whose groups cover all 87 inherited IDs without overlap or omission. Raise the
+UnitArchitecture floor from 855 to 875. Delete the inherited file only after focused project runs,
+the remaining inherited-project build, the unfiltered UnitArchitecture and LocalIntegration
+profiles, bounded formatting/static-quality checks, and independent mutations of length, accessor
+order, writable-stream, compact-options, unsupported-body, type-census, and requirement projection
+have all passed.
+
+The accepted implementation closes all 87 obligations exactly once, adds 20 native cases, and
+rejects ten valid one-cause mutations. Both source-owner projects and the remaining inherited
+project build cleanly; UnitArchitecture passes 875/875 and LocalIntegration passes 3/3. The fully
+replaced inherited fixture is removed.

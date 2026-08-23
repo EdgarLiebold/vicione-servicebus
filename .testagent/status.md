@@ -93,7 +93,11 @@ The accepted native foundation and MessageBody behavior are committed and remote
   receive faults, and nested contract-type mismatch without regular dispatch;
 - a minimal two-field System.Text.Json envelope now proves exact virtual delayed redelivery without
   wall-clock waiting; the test exposed and the product removes a thread-pool registration race;
-- UnitArchitecture: 855 total, 855 passed, 0 failed, 0 skipped;
+- the inherited mixed MessageBody fixture is terminally closed across its three source owners: all
+  87 obligations are mapped exactly once, Core and MessagePack own exact concrete-type censuses,
+  and four Core serializing bodies prove every first-accessor order against external byte and text
+  oracles, genuinely rejected writes, and unchanged bodies after the failed write;
+- UnitArchitecture: 875 total, 875 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -194,6 +198,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the minimal-envelope cohort maps its compound inherited row to one real in-memory source-owner
   fact, rejects interval and redelivery-count drift, fixes the delayed-registration race exposed by
   the full profile, and removes the obsolete NUnit file before its final 855-case run;
+- the MessageBody contract cohort composes 51 accepted Abstractions obligations, six accepted
+  MessagePack obligations, and 30 Core/cross-owner obligations into one exact 87/87 terminal
+  disposition; 20 new native cases reject ten independent behavior, census, and projection
+  mutations before the inherited mixed fixture is removed and the final 875-case run passes;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

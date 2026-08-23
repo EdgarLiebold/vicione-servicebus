@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 855 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 875 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -165,9 +165,9 @@ rules.
 
 No inherited test is removed until every behavior obligation it owns has an accepted native
 replacement in the correct profile. The original bytes remain recoverable through Git. A file whose
-obligations are only partly replaced stays in full. For example, the abstractions MessageBody
-obligations already have native replacements, while the same inherited source file still owns open
-core, MessagePack, and cross-assembly obligations and therefore remains present.
+obligations are only partly replaced stays in full. The mixed MessageBody fixture is the completed
+example: its Abstractions, Core, MessagePack, and cross-assembly obligations were composed into one
+exact 87/87 disposition before the inherited file was removed.
 
 ## Diagnostics and benchmarks
 

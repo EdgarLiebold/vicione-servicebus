@@ -663,3 +663,25 @@ type, message URN, and redelivery counts on both deliveries. A complete-profile 
 path began inside `Task.Run`. Starting the handled asynchronous method directly preserves
 fire-and-forget delivery while guaranteeing registration order and avoiding unnecessary thread-pool
 work. The corrected profile is 855/855 and the old fixture is terminally replaceable.
+
+## Core MessageBody contract closure
+
+`Serialization/MessageBodyLength_Specs.cs` contains 87 inherited obligations but mixes three
+product owners. The accepted Abstractions cohort already replaces 51 of them and the accepted
+MessagePack cohort replaces six. The remaining 30 belong to the Core assembly or to the original
+three-assembly completeness statement. The frozen source has SHA-256
+`2c3451a936c4c624f9be5a72e2d1f6232b1fff57db0bbfc4d22abbadb5d063ca`.
+
+The remaining behavior is carried by `MemoryMessageBody`, `NotSupportedMessageBody`,
+`SystemTextJsonMessageBody<T>`, `SystemTextJsonObjectMessageBody`,
+`SystemTextJsonRawMessageBody<T>`, and `SystemTextJsonMessageSerializer.Options`. Each serializing
+body must expose one exact external byte and text representation regardless of which accessor runs
+first, return a read-only stream that rejects a real write, and remain unchanged after that rejected
+write. The System.Text.Json envelope case uses a fixed explicit envelope so no assertion depends on
+generated identifiers, host metadata, or the clock.
+
+The inherited cross-assembly census is closed by three independent owner-local exact-set facts:
+the accepted Abstractions census, a new Core census, and a new MessagePack census. This avoids a
+cross-module reference in the Core test project while preserving the original complete boundary.
+The final source-file disposition composes all 87 IDs explicitly. All focused and complete gates
+pass, so the inherited fixture is now deleted.

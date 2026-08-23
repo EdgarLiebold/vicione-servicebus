@@ -13,6 +13,22 @@ public sealed class MessagePackMessageBodyTests
             .WithResolver(ContractlessStandardResolverAllowPrivate.Instance)
             .WithSecurity(MessagePackSecurity.UntrustedData);
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "messagepack-concrete-type-set")]
+    public void EveryConcreteMessagePackMessageBody_IsInTheExplicitContractSet()
+    {
+        string expected = IdentityOf(typeof(MessagePackMessageBody<>));
+        string[] actual = typeof(MessagePackMessageBody<>).Assembly.GetTypes()
+            .Where(type => !type.IsInterface && !type.IsAbstract && typeof(MessageBody).IsAssignableFrom(type))
+            .Select(Normalize)
+            .Distinct()
+            .Select(IdentityOf)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal([expected], actual);
+    }
+
     [Theory]
     [InlineData(FirstAccessor.Length)]
     [InlineData(FirstAccessor.Bytes)]
@@ -71,6 +87,14 @@ public sealed class MessagePackMessageBodyTests
                 throw new ArgumentOutOfRangeException(nameof(firstAccessor), firstAccessor, null);
         }
     }
+
+    private static Type Normalize(Type type) =>
+        type.IsGenericType && !type.IsGenericTypeDefinition
+            ? type.GetGenericTypeDefinition()
+            : type;
+
+    private static string IdentityOf(Type type) =>
+        type.FullName ?? throw new InvalidOperationException($"Type '{type.Name}' has no full name.");
 
     public enum FirstAccessor
     {

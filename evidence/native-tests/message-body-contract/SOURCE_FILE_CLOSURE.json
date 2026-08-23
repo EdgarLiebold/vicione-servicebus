@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs",
+  "sourceSha256": "2c3451a936c4c624f9be5a72e2d1f6232b1fff57db0bbfc4d22abbadb5d063ca",
+  "frozenLedger": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+  "sourceObligationCount": 87,
+  "evidenceInputs": [
+    {
+      "path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C1A_R0_MIGRATION_PROJECTION.json",
+      "sha256": "0e4885c688c9214dc3552928889b1b8c9ba5f30cd8b941c7fd3f1bd8da55cd2a",
+      "obligationCount": 51
+    },
+    {
+      "path": "evidence/native-tests/messagepack/INHERITED_MESSAGE_BODY_DISPOSITION.json",
+      "sha256": "0e23b63954c952a011122587dd425445ef8ca6beecb8e5067ca881f6348bb6f1",
+      "obligationCount": 6
+    }
+  ],
+  "dispositions": [
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests.SegmentAccessors_ExposeOnlyTheSelectedBytes"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0189",
+        "OBL-R0-CORE-C-0202",
+        "OBL-R0-CORE-C-0215",
+        "OBL-R0-CORE-C-0228",
+        "OBL-R0-CORE-C-0241"
+      ],
+      "rationale": "Length, bytes, text, and stream expose exactly the selected bytes for every first-accessor order and remain stable across fresh equivalent instances. Any prefix or suffix leakage, order-dependent cache result, or mismatched length fails an exact external oracle."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.ArrayMessageBodyTests.Stream_RejectsWritesAndPreservesTheBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0256"
+      ],
+      "rationale": "The stream rejects writing and the body remains byte-for-byte unchanged. WriteByte must throw NotSupportedException; any body mutation fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests.ValidText_ExposesDecodedBytesAndOriginalText"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0190",
+        "OBL-R0-CORE-C-0203",
+        "OBL-R0-CORE-C-0216",
+        "OBL-R0-CORE-C-0229",
+        "OBL-R0-CORE-C-0242",
+        "OBL-R0-CORE-C-0255"
+      ],
+      "rationale": "Length and binary accessors expose decoded bytes while GetString preserves the original text for every first-accessor order. Text-length counting, undecoded bytes, changed text, or order-dependent caching fails exact external oracles."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.Base64MessageBodyTests.Stream_RejectsWritesAndPreservesTheBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0257"
+      ],
+      "rationale": "The stream rejects writing and decoded body bytes remain unchanged. WriteByte must throw NotSupportedException; any decoded-body mutation fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests.Bytes_ExposeOneConsistentBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0192",
+        "OBL-R0-CORE-C-0205",
+        "OBL-R0-CORE-C-0218",
+        "OBL-R0-CORE-C-0231",
+        "OBL-R0-CORE-C-0244"
+      ],
+      "rationale": "Length, bytes, text, and stream agree for every first-accessor order and remain stable across fresh equivalent instances. Any accessor mismatch or order-dependent cache result fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests.NullInput_ExposesAnEmptyBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0191",
+        "OBL-R0-CORE-C-0204",
+        "OBL-R0-CORE-C-0217",
+        "OBL-R0-CORE-C-0230",
+        "OBL-R0-CORE-C-0243"
+      ],
+      "rationale": "Length, bytes, text, and stream expose one stable empty body for every first-accessor order. Any nonempty, null, throwing, or order-dependent result fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.BytesMessageBodyTests.Stream_RejectsWritesAndPreservesBothBodies"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0258",
+        "OBL-R0-CORE-C-0259"
+      ],
+      "rationale": "Both streams reject writing and both body values remain unchanged. WriteByte must throw NotSupportedException for each body; any mutation fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests.Instance_ExposesAnEmptyBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0193",
+        "OBL-R0-CORE-C-0206",
+        "OBL-R0-CORE-C-0219",
+        "OBL-R0-CORE-C-0232",
+        "OBL-R0-CORE-C-0245"
+      ],
+      "rationale": "Length, bytes, text, and stream expose one stable empty body; no resettable first-accessor state or object-identity guarantee is invented. Any nonempty, null, throwing, or state-dependent result fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.EmptyMessageBodyTests.Stream_RejectsWritesAndPreservesTheBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0260"
+      ],
+      "rationale": "The stream rejects writing and the body remains empty. WriteByte must throw NotSupportedException; any nonempty result fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests.NonAsciiText_UsesUtf8ByteLength"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0200",
+        "OBL-R0-CORE-C-0213",
+        "OBL-R0-CORE-C-0226",
+        "OBL-R0-CORE-C-0239",
+        "OBL-R0-CORE-C-0252",
+        "OBL-R0-CORE-C-0269"
+      ],
+      "rationale": "Length, bytes, text, and stream agree with exact UTF-8 oracles for every first-accessor order. Character counting, changed text, wrong bytes, or order-dependent caching fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests.WhitespaceText_IsPreserved"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0201",
+        "OBL-R0-CORE-C-0214",
+        "OBL-R0-CORE-C-0227",
+        "OBL-R0-CORE-C-0240",
+        "OBL-R0-CORE-C-0253",
+        "OBL-R0-CORE-C-0254"
+      ],
+      "rationale": "Length, bytes, text, and stream preserve both UTF-8 bytes for every first-accessor order. Trimming, normalization, empty conversion, or order-dependent caching fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests.EmptyText_ExposesAnEmptyBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0199",
+        "OBL-R0-CORE-C-0212",
+        "OBL-R0-CORE-C-0225",
+        "OBL-R0-CORE-C-0238",
+        "OBL-R0-CORE-C-0251"
+      ],
+      "rationale": "Length, bytes, text, and stream expose one stable empty body for every first-accessor order. Any nonempty, null, throwing, or order-dependent result fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.Abstractions",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Serialization.StringMessageBodyTests.Stream_RejectsWritesAndPreservesAllBodies"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0266",
+        "OBL-R0-CORE-C-0267",
+        "OBL-R0-CORE-C-0268"
+      ],
+      "rationale": "Every stream rejects writing and every text body remains byte-for-byte unchanged. WriteByte must throw NotSupportedException for each body; any mutation fails."
+    },
+    {
+      "owner": "ViciOne.ServiceBus.MessagePack",
+      "replacementTests": [
+        "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryAccessorOrder_DescribesTheSameReadOnlyBody"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0198",
+        "OBL-R0-CORE-C-0211",
+        "OBL-R0-CORE-C-0224",
+        "OBL-R0-CORE-C-0237",
+        "OBL-R0-CORE-C-0250",
+        "OBL-R0-CORE-C-0265"
+      ],
+      "rationale": "The accepted MessagePack owner test executes all four first-accessor orders against an external MessagePack oracle and proves a rejected stream write."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Abstractions.Tests.Contexts.MessageBodyContractTests.EveryConcreteAbstractionsMessageBody_IsInTheExplicitContractSet",
+        "ViciOne.ServiceBus.Tests.Serialization.CoreMessageBodyContractTests.EveryConcreteCoreMessageBody_IsInTheExplicitContractSet",
+        "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests.EveryConcreteMessagePackMessageBody_IsInTheExplicitContractSet"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0188"
+      ],
+      "rationale": "Three exact owner-local type censuses jointly preserve the inherited three-assembly completeness boundary without introducing a cross-module test dependency."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonMessageBodyTests.EveryAccessorOrder_ExposesTheExactReadOnlyEnvelope"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0194",
+        "OBL-R0-CORE-C-0207",
+        "OBL-R0-CORE-C-0220",
+        "OBL-R0-CORE-C-0233",
+        "OBL-R0-CORE-C-0246",
+        "OBL-R0-CORE-C-0261"
+      ],
+      "rationale": "Four executed first-accessor variants use a fixed external envelope oracle and include a real rejected stream write."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonObjectMessageBodyTests.EveryAccessorOrder_ExposesTheExactReadOnlyJsonObject"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0195",
+        "OBL-R0-CORE-C-0208",
+        "OBL-R0-CORE-C-0221",
+        "OBL-R0-CORE-C-0234",
+        "OBL-R0-CORE-C-0247",
+        "OBL-R0-CORE-C-0262",
+        "OBL-R0-CORE-C-0270"
+      ],
+      "rationale": "Four executed first-accessor variants prove exact UTF-8 bytes, non-ASCII byte length, text, stream content, and rejected writes."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonRawMessageBodyTests.EveryAccessorOrder_ExposesTheExactReadOnlyRawMessage"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0196",
+        "OBL-R0-CORE-C-0209",
+        "OBL-R0-CORE-C-0222",
+        "OBL-R0-CORE-C-0235",
+        "OBL-R0-CORE-C-0248",
+        "OBL-R0-CORE-C-0263"
+      ],
+      "rationale": "Four executed first-accessor variants prove the exact raw UTF-8 representation and a read-only stream."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.MemoryMessageBodyTests.EveryAccessorOrder_ExposesOnlyTheSelectedReadOnlyMemory"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0197",
+        "OBL-R0-CORE-C-0210",
+        "OBL-R0-CORE-C-0223",
+        "OBL-R0-CORE-C-0236",
+        "OBL-R0-CORE-C-0249",
+        "OBL-R0-CORE-C-0264"
+      ],
+      "rationale": "Four executed first-accessor variants use a sliced non-ASCII memory oracle and prove prefix/suffix exclusion plus rejected writes."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.NotSupportedMessageBodyTests.EveryMember_ThrowsNotSupportedException"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0271"
+      ],
+      "rationale": "All four public MessageBody members reject access with the exact exception type."
+    },
+    {
+      "owner": "ViciOne.ServiceBus",
+      "replacementTests": [
+        "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonMessageSerializerOptionsTests.DefaultOptions_ProduceCompactEquivalentJson"
+      ],
+      "obligationIds": [
+        "OBL-R0-CORE-C-0272",
+        "OBL-R0-CORE-C-0273",
+        "OBL-R0-CORE-C-0274"
+      ],
+      "rationale": "One cohesive fact proves the production default is compact, smaller than an equivalent indented form, and semantically exact after deserialization."
+    }
+  ],
+  "closure": {
+    "listedObligationCount": 87,
+    "distinctObligationCount": 87,
+    "duplicateObligationIds": [],
+    "missingFrozenLedgerObligationIds": [],
+    "unexpectedObligationIds": [],
+    "verdict": "COMPLETE"
+  }
+}
