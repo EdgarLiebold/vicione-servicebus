@@ -685,3 +685,23 @@ the accepted Abstractions census, a new Core census, and a new MessagePack censu
 cross-module reference in the Core test project while preserving the original complete boundary.
 The final source-file disposition composes all 87 IDs explicitly. All focused and complete gates
 pass, so the inherited fixture is now deleted.
+
+## System.Text.Json contract shapes
+
+Four remaining fixtures share one product concern and can be verified without retaining their NUnit
+or TestFramework structures: constructor-bound immutable messages, extension data, maximum decimal
+wire precision, and declared property polymorphism. Their eight ledger obligations become seven
+cohesive native cases under the existing `Serialization` source owner.
+
+The inherited `MisnamedProperty_Specs` explanation is factually wrong: its constructor parameters
+match the property names case-insensitively. Its useful contract is the real request/response round
+trip of getter-only values. The native case awaits the response task and asserts all three response
+properties, including the previously ignored `Cost` value.
+
+Extension-data configuration replaces the serializer's process-global options. The two cases must
+therefore run outside parallel collections, retain the original options identity, and restore it
+even if bus shutdown fails. Both envelope and raw modes assert the exact content type, key set,
+`JsonElement` kinds, and values. The polymorphism cases use the standard
+`JsonDerivedTypeAttribute` and preserve exact concrete values and collection order without accepting
+body-controlled legacy type metadata. The decimal case parses the emitted document and proves one
+camel-case property with a quoted lossless maximum value, then reads the exact wire form back.

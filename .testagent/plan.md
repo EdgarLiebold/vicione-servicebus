@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 875 unfiltered cases;
+- `UnitArchitecture`: 882 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -29,6 +29,14 @@ closed; it is never the runtime test architecture.
    or an explicit non-product/non-executing disposition.
 6. Remove the inherited runner and TestFramework only after complete closure, then atomically rename
    `tests2` to `tests` and update every solution, CI, documentation, and build path.
+
+Cohorts are sized by semantic cohesion rather than by individual file or obligation. Adjacent
+behaviors under one source owner should normally share one package-level restore, complete build,
+unfiltered profile, formatting pass, mutation review, and commit. As a planning range rather than a
+quota, prefer roughly 5–15 source files and 8–40 obligations when the product boundary supports it;
+split at source-owner, dependency, execution-profile, transport, or external-resource boundaries.
+Single-obligation cohorts are reserved for genuinely atomic behavior or for a final file-closure
+blocker.
 
 ## Current work
 
@@ -629,3 +637,23 @@ The accepted implementation closes all 87 obligations exactly once, adds 20 nati
 rejects ten valid one-cause mutations. Both source-owner projects and the remaining inherited
 project build cleanly; UnitArchitecture passes 875/875 and LocalIntegration passes 3/3. The fully
 replaced inherited fixture is removed.
+
+## Accepted cohort — System.Text.Json contract shapes
+
+Replace eight obligations from four related inherited files in one source-owner package. Seven
+ordinary native cases cover immutable constructor-bound request/response messages, exact compact
+`decimal.MaxValue` string representation, extension data through envelope and raw JSON, and
+declared polymorphism for scalar, array, and list properties. Every messaging case traverses the
+real in-memory serializer and receive path and distinguishes a successful message from a
+`ReceiveFault`.
+
+The global serializer-options configuration API is mutable product state. Its two configuration
+cases therefore run in one non-parallel xUnit collection and restore the original options in an
+unconditional nested `finally`; no state leaks into another test. The misleading inherited claim
+that constructor parameter names differ is corrected: the names match, and the retained contract is
+immutable constructor binding. The formerly ignored `Cost` value is now asserted.
+
+Five one-cause mutations prove decimal-converter registration, per-message serializer options,
+declared polymorphism, exact response values, and requirement projection. Raise the
+UnitArchitecture floor from 875 to 882 and remove all four inherited files only after the complete
+package gates pass.

@@ -97,7 +97,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
   87 obligations are mapped exactly once, Core and MessagePack own exact concrete-type censuses,
   and four Core serializing bodies prove every first-accessor order against external byte and text
   oracles, genuinely rejected writes, and unchanged bodies after the failed write;
-- UnitArchitecture: 875 total, 875 passed, 0 failed, 0 skipped;
+- eight System.Text.Json contract-shape obligations are replaced by seven native cases covering
+  immutable constructor binding, maximum-decimal precision, envelope/raw extension data, and
+  declared polymorphism for scalar, array, and list properties;
+- UnitArchitecture: 882 total, 882 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -202,6 +205,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
   MessagePack obligations, and 30 Core/cross-owner obligations into one exact 87/87 terminal
   disposition; 20 new native cases reject ten independent behavior, census, and projection
   mutations before the inherited mixed fixture is removed and the final 875-case run passes;
+- the System.Text.Json contract-shape cohort maps all eight obligations from four inherited files,
+  rejects five independent converter, contract, value, and projection mutations, isolates and
+  restores mutable serializer options, and removes the four obsolete NUnit files before its final
+  882-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

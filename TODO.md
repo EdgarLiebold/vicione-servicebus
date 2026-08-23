@@ -82,6 +82,25 @@ one engine and one naming model at the end, no compatibility wrapper left behind
 native profiles, transport integration tests, package comparison, and targeted concurrency
 mutations.
 
+## Scope System.Text.Json options per bus
+
+`SystemTextJsonMessageSerializer.Options` is mutable process-global state, and
+`ConfigureJsonSerializerOptions` replaces it while configuring one bus. Two independently
+configured buses or parallel consumers can therefore observe each other's serializer policy. The
+native compatibility tests isolate and restore that state, but a test boundary is not a product
+architecture solution.
+
+Replace the global mutable field with an immutable serializer-options snapshot owned by each bus
+configuration and passed to its serializer/deserializer instances. Preserve envelope and raw JSON,
+per-message options, custom converters, source-generated metadata, and every public configuration
+capability. Decide the obsolete/static API transition explicitly rather than retaining a hidden
+compatibility bridge.
+
+Acceptance requires concurrent buses with different naming and converter policies, proof of no
+cross-bus or post-start mutation leakage, all System.Text.Json and MessagePack compatibility tests,
+all applicable unfiltered native profiles, a public-API disposition, and targeted mutations that
+reintroduce shared state or late option replacement.
+
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in

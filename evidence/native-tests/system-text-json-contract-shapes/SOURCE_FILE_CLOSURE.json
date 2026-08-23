@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "frozenLedger": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+  "sourceFiles": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ExtensionData_Specs.cs",
+      "sha256": "df9e308e7693327a5cfb0fa3e1527c1e28dcbb56949cb390dff9ada720631d04"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs",
+      "sha256": "4a9bccdea8927e00c5a3e88537f0196a4dcdb283e6ebb782f274e078723f870e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/MisnamedProperty_Specs.cs",
+      "sha256": "22d037f2a4b0a9a7433179a554e3ff06ea3a345e2ea09ede27e0095035e89580"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PolymorphicProperty_Specs.cs",
+      "sha256": "71120161a68967d3a12a4c23cf2befbeef696c0faca70fffb05e76c72078dd25"
+    }
+  ],
+  "sourceObligationCount": 8,
+  "dispositions": [
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0149"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonExtensionDataTests.EnvelopeSerializer_PreservesEveryExtensionValue",
+      "disposition": "REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0150"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonExtensionDataTests.RawSerializer_PreservesEveryExtensionValue",
+      "disposition": "REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0186", "OBL-R0-CORE-C-0187"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonDecimalTests.MaximumValue_UsesTheExactQuotedCamelCaseWireContract",
+      "disposition": "CONSOLIDATED_REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0295"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonConstructorBindingTests.ConstructorBoundRequestAndResponse_RoundTripEveryValue",
+      "disposition": "REPLACED_EXECUTING",
+      "legacyCorrection": "The inherited constructor parameter names match their properties. The retained contract is immutable constructor-bound request/response round-trip, and the formerly unasserted Cost value is now part of the verdict."
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0330"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonPolymorphismTests.AbstractProperty_PreservesItsConcreteTypeAndValue",
+      "disposition": "REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0331"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonPolymorphismTests.AbstractArrayProperty_PreservesConcreteTypesOrderAndValues",
+      "disposition": "REPLACED_EXECUTING"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0332"],
+      "replacementTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonPolymorphismTests.AbstractListProperty_PreservesConcreteTypesOrderAndValues",
+      "disposition": "REPLACED_EXECUTING"
+    }
+  ],
+  "closure": {
+    "listedObligationCount": 8,
+    "distinctObligationCount": 8,
+    "duplicateObligationIds": [],
+    "missingFrozenLedgerObligationIds": [],
+    "unexpectedObligationIds": [],
+    "verdict": "COMPLETE"
+  }
+}
