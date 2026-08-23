@@ -352,3 +352,29 @@ exception projection, Uri conversion, long-to-enum conversion, and false-positiv
 creation. One additional metadata mutation proves that passive requirement metadata cannot drift
 from its embedded projection. An exploratory mutation of the exact array converter was excluded
 because exact arrays correctly use the matching input-provider branch instead of that converter.
+
+## Accepted cohort — agent lifecycle and pipe-context cache
+
+Replace the six obligations from `Middleware/Agents/Agent_Specs.cs` with six ordinary xUnit/MTP
+facts split by actual product owner. Put the four `Agent`/`Supervisor` lifecycle facts in the
+Abstractions test project under `Middleware`; put the two `PipeContextSupervisor` cache facts in
+the Core test project under `Agents`.
+
+The lifecycle cases must assert observable terminal state instead of relying on absence of an
+exception. Preserve the inherited 50-iteration ready-fault race exposure, but use the runner's
+cancellation token rather than local timeout values. The cache cases must prove exact context
+identity progression and disposal: both a pipeline failure and explicit invalidation dispose
+context `1`, after which the next send uses context `2`. This is the behavior actually asserted by
+the inherited code and implemented by the product; the contrary sentence in the frozen ledger is
+not copied.
+
+Add four Abstractions and two Core passive requirement-projection rows, add one six-row terminal
+disposition, raise the UnitArchitecture floor from 787 to 793, run both focused project gates and
+the unfiltered profiles, reject independent one-cause product and requirement mutations, and
+delete only the fully replaced inherited file.
+
+The six inherited obligations are terminally mapped one-to-one. Five independent product
+mutations reject lost ready faults, broken empty completion, skipped child shutdown, ignored agents
+added after readiness, and retained faulted contexts. One scenario mutation rejects omitted explicit
+invalidation, and one metadata mutation rejects requirement-projection drift. The final profile
+floor is 793.

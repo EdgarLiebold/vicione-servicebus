@@ -1,0 +1,47 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Middleware/Agents/Agent_Specs.cs",
+  "sourceSha256": "e44fdabe1f4caae44d6465b2581d1db61d9bdea67c79e750f0691ea3890d0120",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "semanticCorrection": {
+    "obligationId": "OBL-R0-CORE-B-0315",
+    "incorrectLedgerPhrase": "a fault inside the pipe does not invalidate the cached context",
+    "preservedExecutableBehavior": "The first and second sends use context 1; the second send faults and disposes that cached context; the third send uses newly created context 2."
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0311",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests.FaultedChildReadiness_FaultsSupervisorWhileShutdownStillCompletes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0312",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests.EmptySupervisor_StopsAndCompletes"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0313",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests.NestedSupervisors_StopTheirCompleteAgentChain"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0314",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests.AgentAddedAfterReadiness_IsStillStoppedAndCompleted"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0315",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorTests.PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSend"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0316",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorTests.ExplicitInvalidation_DiscardsTheContextBeforeTheNextSend"
+    }
+  ],
+  "explanation": "The inherited mixed fixture is split by actual product source owner. Four Abstractions lifecycle facts and two Core pipe-context cache facts preserve all six executable contracts while replacing assertion-free completion checks with explicit observable state."
+}

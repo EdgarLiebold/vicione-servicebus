@@ -635,5 +635,33 @@
       "testMethod" : "GetStaticProperties_ExcludesInheritedStaticProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "declared-only-static-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FaultedChildReadiness_FaultsSupervisorWhileShutdownStillCompletes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "ready-fault-propagation"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptySupervisor_StopsAndCompletes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "empty-stop-completion"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NestedSupervisors_StopTheirCompleteAgentChain",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "nested-shutdown"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AgentAddedAfterReadiness_IsStillStoppedAndCompleted",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "agent-added-after-ready"
    }
 ]

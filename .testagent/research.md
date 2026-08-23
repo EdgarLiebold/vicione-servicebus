@@ -352,3 +352,40 @@ Acceptance checklist:
   exception, variable, unsupported-pair, and passive-requirement paths;
 - raise the UnitArchitecture floor from 772 to 787 and remove only
   `PropertyProvider_Specs.cs` after all 42 ledger rows are terminally mapped.
+
+## Agent lifecycle and pipe-context cache cohort
+
+Baseline `27f782b2` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Middleware/Agents/Agent_Specs.cs`, its six final R0 ledger
+obligations, `Agent`, `Supervisor`, every `Agents/*PipeContext*` implementation, both supervisor
+extension surfaces, and the corresponding interfaces were read before the first test edit.
+
+The inherited file mixes two different source owners. A greenfield replacement therefore splits
+it without changing the six observable contracts:
+
+- four lifecycle facts belong to the Abstractions owner `Middleware`: ready failure propagation,
+  an empty supervisor stop, recursive supervisor/agent shutdown, and stopping an agent added after
+  readiness;
+- two cache facts belong to the Core owner `Agents/PipeContextSupervisor`: a pipeline exception and
+  an explicit context invalidation both dispose the cached context so the following send obtains a
+  new context.
+
+The frozen ledger prose says that a pipe fault does not invalidate the cache, but its own expected
+third-send value is `2`. The inherited code and product implementation prove the opposite: the
+fault calls `ActivePipeContextHandle.Faulted`, which disposes the underlying handle, and
+`GetContext` then creates context `2`. The replacement preserves the executable behavior and
+corrects only that contradictory sentence; no behavior is dropped.
+
+Acceptance checklist:
+
+- map all six inherited obligations one-to-one to six ordinary xUnit/MTP facts;
+- preserve the 50-iteration ready-fault race exposure without sleeps, random input, or wall-clock
+  assertions;
+- replace the three assertion-free lifecycle cases with explicit Ready, Completed, Stopping,
+  Stopped, count, and child-state assertions;
+- use deterministic context IDs and synchronous test-owned disposal accounting for both cache
+  invalidation paths;
+- place lifecycle tests under the Abstractions `Middleware` owner and cache tests under the Core
+  `Agents` owner;
+- raise the UnitArchitecture floor from 787 to 793 and remove only `Agent_Specs.cs` after all six
+  ledger rows are terminally mapped.
