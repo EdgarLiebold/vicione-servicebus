@@ -101,9 +101,11 @@ namespace ViciOne.ServiceBus.Initializers.Conventions
 
         public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer)
         {
-            if (propertyInfo.Name.StartsWith("__Header_") && propertyInfo.Name.Length > 9)
+            var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
+
+            if (propertyName.StartsWith("__Header_") && propertyName.Length > 9)
             {
-                var headerName = propertyInfo.Name.Substring(9).Replace("__", " ").Replace("_", "-").Replace(" ", "_");
+                var headerName = propertyName.Substring(9).Replace("__", " ").Replace("_", "-").Replace(" ", "_");
 
                 var inputPropertyType = propertyInfo.PropertyType;
 

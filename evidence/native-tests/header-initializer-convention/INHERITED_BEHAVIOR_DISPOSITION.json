@@ -1,0 +1,19 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Initializers/HeaderInitializer_Specs.cs",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0235",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-INITIALIZER-HEADERS",
+      "variantKey": "publish-context",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.Conventions.DefaultInitializerConventionTests.PublishInitializer_MapsStandardAndCustomHeaderProperties"
+    }
+  ],
+  "explanation": "The replacement exercises the real in-memory publish pipeline and observes the initialized PublishContext directly. ResponseAddress, RequestId, exact TimeToLive, typed custom headers, normalized header names, and delivered message content are preserved without using wall-clock time as a behavior oracle. A separate native case hardens the convention's null and empty-name boundaries."
+}

@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 739 unfiltered cases;
+- `UnitArchitecture`: 741 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -221,3 +221,18 @@ fallback branch inversions, eager invocation of all four factory overloads, sour
 wrapping, fallback-exception wrapping, and missing requirement metadata. The UnitArchitecture floor rises from 724 to 739, and
 `TaskExtension_Specs.cs` is removed only after all ten inherited ledger obligations are terminally
 mapped.
+
+## Accepted cohort — header initializer convention
+
+`Initializers/Conventions/DefaultInitializerConventionTests.cs` mirrors the owning product source.
+One ordinary xUnit case replaces the inherited publish behavior through a real temporary in-memory
+endpoint and observes the initialized `PublishContext` directly. It verifies ResponseAddress,
+RequestId, exact five-second TimeToLive, typed custom header values, single-underscore-to-dash and
+double-underscore-preserving name normalization, and delivered message content without a wall-clock
+assertion. A second case gives the public convention a stable null-property boundary and preserves
+the empty-header-name non-match.
+
+Five one-cause mutations are rejected: custom-name normalization, standard-header prefix, null
+validation, TTL-inspector omission, and missing requirement metadata. The UnitArchitecture floor
+rises from 739 to 741, and `HeaderInitializer_Specs.cs` is removed only after its sole inherited
+ledger obligation is terminally mapped.

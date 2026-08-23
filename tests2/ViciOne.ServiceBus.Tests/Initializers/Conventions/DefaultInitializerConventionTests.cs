@@ -1,0 +1,162 @@
+using ViciOne.ServiceBus.Initializers.Conventions;
+using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.Initializers.Conventions;
+
+public sealed class DefaultInitializerConventionTests
+{
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-HEADERS", "publish-context")]
+    public async Task PublishInitializer_MapsStandardAndCustomHeaderProperties()
+    {
+        TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        using var harness = new InMemoryTestHarness($"initializer-headers-{NewId.NextGuid():N}")
+        {
+            TestTimeout = operationTimeout,
+        };
+        harness.BeginTestScope();
+        var received = new TaskCompletionSource<ConsumeContext<HeaderInitializedMessage>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+            configurator.Handler<HeaderInitializedMessage>(context =>
+            {
+                received.TrySetResult(context);
+                return Task.CompletedTask;
+            });
+        var observer = new HeaderSnapshotObserver();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var requestId = new Guid("28c645e4-bc7c-4384-84b2-dc0b3367e16a");
+        var responseAddress = new Uri("loopback://localhost/client-queue");
+
+        try
+        {
+            await harness.Start(cancellationToken);
+            using ConnectHandle observerHandle = harness.Bus.ConnectPublishObserver(observer);
+
+            await harness.Bus.Publish<HeaderInitializedMessage>(
+                new
+                {
+                    __ResponseAddress = responseAddress,
+                    __RequestId = requestId,
+                    __TimeToLive = 5000,
+                    __Header_Custom_Header_Value = "Frankie Say Relax",
+                    __Header_Custom_Header_Value2 = 27,
+                    __Header_Preserved__Separator = "underscore",
+                    Text = "Hello",
+                },
+                cancellationToken);
+
+            HeaderSnapshot snapshot = await observer.Observed.WaitAsync(operationTimeout, cancellationToken);
+            ConsumeContext<HeaderInitializedMessage> context = await received.Task.WaitAsync(
+                operationTimeout,
+                cancellationToken);
+
+            Assert.Equal(responseAddress, snapshot.ResponseAddress);
+            Assert.Equal(requestId, snapshot.RequestId);
+            Assert.Equal(TimeSpan.FromSeconds(5), snapshot.TimeToLive);
+            Assert.True(snapshot.StringHeaderFound);
+            Assert.Equal("Frankie Say Relax", snapshot.StringHeader);
+            Assert.True(snapshot.IntegerHeaderFound);
+            Assert.IsType<int>(snapshot.IntegerHeader);
+            Assert.Equal(27, snapshot.IntegerHeader);
+            Assert.True(snapshot.PreservedSeparatorHeaderFound);
+            Assert.Equal("underscore", snapshot.PreservedSeparatorHeader);
+
+            Assert.Equal(responseAddress, context.ResponseAddress);
+            Assert.Equal(requestId, context.RequestId);
+            Assert.NotNull(context.ExpirationTime);
+            Assert.True(context.Headers.TryGetHeader("Custom-Header-Value", out object? receivedStringHeader));
+            Assert.Equal("Frankie Say Relax", receivedStringHeader);
+            Assert.True(context.TryGetHeader<int>("Custom-Header-Value2", out int? receivedIntegerHeader));
+            Assert.Equal(27, receivedIntegerHeader);
+            Assert.True(context.Headers.TryGetHeader("Preserved_Separator", out object? receivedPreservedSeparatorHeader));
+            Assert.Equal("underscore", receivedPreservedSeparatorHeader);
+            Assert.Equal("Hello", context.Message.Text);
+        }
+        finally
+        {
+            await harness.Stop();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-HEADER-CONVENTION", "invalid-property")]
+    public void HeaderConvention_RejectsNullAndIgnoresAnEmptyHeaderName()
+    {
+        var convention = new DefaultInitializerConvention<HeaderInitializedMessage, HeaderBoundaryInput>();
+        var emptyHeaderProperty = typeof(HeaderBoundaryInput).GetProperty(nameof(HeaderBoundaryInput.__Header_))!;
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() =>
+            convention.TryGetHeadersInitializer<string>(null!, out _));
+        bool found = convention.TryGetHeadersInitializer<string>(emptyHeaderProperty, out var initializer);
+
+        Assert.Equal("propertyInfo", exception.ParamName);
+        Assert.False(found);
+        Assert.Null(initializer);
+    }
+
+    private sealed class HeaderSnapshotObserver : IPublishObserver
+    {
+        private readonly TaskCompletionSource<HeaderSnapshot> _observed = new(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task<HeaderSnapshot> Observed => _observed.Task;
+
+        public Task PrePublish<T>(PublishContext<T> context)
+            where T : class
+        {
+            if (context.Message is HeaderInitializedMessage)
+            {
+                bool stringHeaderFound = context.Headers.TryGetHeader("Custom-Header-Value", out object? stringHeader);
+                bool integerHeaderFound = context.Headers.TryGetHeader("Custom-Header-Value2", out object? integerHeader);
+                bool preservedSeparatorHeaderFound = context.Headers.TryGetHeader(
+                    "Preserved_Separator",
+                    out object? preservedSeparatorHeader);
+                _observed.TrySetResult(new HeaderSnapshot(
+                    context.ResponseAddress,
+                    context.RequestId,
+                    context.TimeToLive,
+                    stringHeaderFound,
+                    stringHeader,
+                    integerHeaderFound,
+                    integerHeader,
+                    preservedSeparatorHeaderFound,
+                    preservedSeparatorHeader));
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task PostPublish<T>(PublishContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
+
+    private sealed record HeaderSnapshot(
+        Uri? ResponseAddress,
+        Guid? RequestId,
+        TimeSpan? TimeToLive,
+        bool StringHeaderFound,
+        object? StringHeader,
+        bool IntegerHeaderFound,
+        object? IntegerHeader,
+        bool PreservedSeparatorHeaderFound,
+        object? PreservedSeparatorHeader);
+
+    private sealed class HeaderBoundaryInput
+    {
+        public string? __Header_ { get; init; }
+    }
+}
+
+public interface HeaderInitializedMessage
+{
+    string Text { get; }
+}

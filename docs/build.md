@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 739
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 741
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -76,7 +76,8 @@ TaskExecutor and TaskUtil cohorts add deterministic concurrency, cancellation, s
 completion-source, and validation contracts without timing-based behavior assertions. The task
 initializer cohort adds type-safe reference and nullable-value projections, constant and lazy
 synchronous/asynchronous fallback contracts, exact source-state propagation, and strict public
-input boundaries. The
+input boundaries. Header-initializer convention tests verify standard and typed custom headers on
+the real in-memory publish path, with exact TTL state rather than wall-clock tolerance. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
