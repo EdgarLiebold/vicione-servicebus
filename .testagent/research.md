@@ -415,3 +415,29 @@ Acceptance checklist:
 - add two passive requirement-projection rows, one for each test method;
 - raise the UnitArchitecture floor from 793 to 796 and remove only `Authentication_Specs.cs` after
   both ledger obligations are terminally mapped.
+
+## Bound pipe-context cohort
+
+Baseline `5bd85752` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Middleware/Bind_Specs.cs`, its single final R0 ledger obligation,
+`UseBind`, both bind configurators, `BindPipeSpecification`, `PipeContextSourceBindFilter`,
+`BindContextProxy`, `BindContext`, and both `IPipeContextSource` contracts were read before the
+first test edit.
+
+The inherited test has no assertion and waits up to five seconds for a completion source. The
+product operation itself is synchronous with respect to the returned task: it awaits the source's
+bound pipe and then the following outer segment. A greenfield replacement therefore needs neither
+a completion source nor a timeout. Its source owner is the Core configuration surface, and its test
+belongs under `ViciOne.ServiceBus.Tests/Configuration`.
+
+Acceptance checklist:
+
+- replace `OBL-R0-CORE-B-0319` with one ordinary xUnit fact;
+- prove by exact identity and values that the bound filter receives both the original left context
+  and the right context created by the source;
+- prove exact order across the configured `ContextPipe`, the bound pipe, and the following outer
+  segment;
+- use no console output, sleep, timeout, completion source, random input, or wall-clock assertion;
+- add one passive Core requirement-projection row and one terminal disposition;
+- raise the UnitArchitecture floor from 796 to 797 and delete only `Bind_Specs.cs` after the single
+  ledger obligation is terminally mapped.

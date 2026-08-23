@@ -1,0 +1,22 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Middleware/Bind_Specs.cs",
+  "sourceSha256": "4b299f121f98acfdb662fa8da0ab3ab2044d828a42296ee78d7ca64267f817d0",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "sourceOwnerCorrection": {
+    "inheritedPlacement": "tests/ViciOne.ServiceBus.Tests/Middleware/Bind_Specs.cs",
+    "actualOwner": "src/ViciOne.ServiceBus/Configuration",
+    "reason": "UseBind and BindPipeSpecification own the composed public operation; the filter and context proxy are its runtime implementation details."
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0319",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Configuration.BindPipeSpecificationTests.SourceContext_IsBoundBeforeTheFollowingPipeSegment"
+    }
+  ],
+  "explanation": "The assertion-free timeout-based inherited fixture is replaced by one deterministic awaited fact with exact context, value, and order assertions."
+}

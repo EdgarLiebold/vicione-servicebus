@@ -66,7 +66,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the inherited authentication sample is replaced by the actual public custom-pipe-specification
   contract under its Abstractions configuration owner: validation rejects null and empty setup,
   while an accepted branch runs before the following pipe segment;
-- UnitArchitecture: 796 total, 796 passed, 0 failed, 0 skipped;
+- bound pipe contexts now have an assertion-bearing Core contract for exact left/right context
+  identity and ordered execution across `ContextPipe`, the bound pipe, and the following segment;
+- UnitArchitecture: 797 total, 797 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -133,6 +135,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the custom pipe-specification cohort maps both inherited rows to two source-owner methods with
   three execution cases, rejects missing validation, omitted specification application, broken
   continuation, invalid empty-role acceptance, and requirement drift before its final 796-case run;
+- the bound pipe-context cohort replaces its assertion-free timeout fixture with one deterministic
+  fact and rejects missing configured output, lost left or right contexts, broken outer
+  continuation, and requirement drift before its final 797-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

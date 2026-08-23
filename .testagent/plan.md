@@ -397,3 +397,20 @@ Both inherited obligations are terminally mapped to two source-owner methods wit
 cases. Independent mutations reject skipped validation, omitted specification application, a
 missing following segment, acceptance of empty roles, and requirement-projection drift before the
 final 796-case run.
+
+## Accepted cohort — bound pipe contexts
+
+Replace the single obligation from `Middleware/Bind_Specs.cs` with one deterministic source-owner
+fact under Core `Configuration`. The fact must observe the public `UseBind` path, the test-owned
+`IPipeContextSource`, `ContextPipe`, the resulting `BindContext<TLeft, TRight>`, and the following
+outer pipe segment as one awaited operation.
+
+Assert the exact left-context identity, right-context identity and value, and the exact ordered
+trace. Do not reproduce the inherited completion-source timeout or console output. Add one passive
+requirement row and one terminal disposition, raise the UnitArchitecture floor from 796 to 797,
+run the focused Core and unfiltered profiles plus independent one-cause product, scenario, and
+requirement mutations, and delete only the fully replaced inherited file.
+
+The inherited obligation is terminally mapped to one deterministic source-owner fact. Independent
+mutations reject missing configured output, lost left and right contexts, missing outer pipeline
+continuation, and requirement-projection drift before the final 797-case run.
