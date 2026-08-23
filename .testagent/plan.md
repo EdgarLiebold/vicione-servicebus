@@ -378,3 +378,22 @@ mutations reject lost ready faults, broken empty completion, skipped child shutd
 added after readiness, and retained faulted contexts. One scenario mutation rejects omitted explicit
 invalidation, and one metadata mutation rejects requirement-projection drift. The final profile
 floor is 793.
+
+## Accepted cohort — custom pipe specifications
+
+Replace the two obligations from `Middleware/Authentication_Specs.cs` under their actual
+Abstractions source owner `Middleware/Configuration`. Do not retain the misleading Authentication
+feature name: the inherited authentication filter is test-owned sample code whose purpose is to
+exercise the public custom-pipe-specification contract.
+
+Use one ordinary fact to prove exact ordered execution of the custom filter's selected branch and
+the following pipe segment. Use one two-row theory to prove that empty and null configuration both
+produce an exact failure result and prevent `Pipe.New` from returning a pipe. Add two passive
+requirement rows and one two-row terminal disposition, raise the UnitArchitecture floor from 793 to
+796, run the focused Abstractions and unfiltered profiles plus independent one-cause product,
+scenario, and requirement mutations, and delete only the fully replaced inherited file.
+
+Both inherited obligations are terminally mapped to two source-owner methods with three execution
+cases. Independent mutations reject skipped validation, omitted specification application, a
+missing following segment, acceptance of empty roles, and requirement-projection drift before the
+final 796-case run.

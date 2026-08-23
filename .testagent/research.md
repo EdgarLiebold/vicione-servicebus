@@ -389,3 +389,29 @@ Acceptance checklist:
   `Agents` owner;
 - raise the UnitArchitecture floor from 787 to 793 and remove only `Agent_Specs.cs` after all six
   ledger rows are terminally mapped.
+
+## Custom pipe-specification cohort
+
+Baseline `4c793038` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Middleware/Authentication_Specs.cs`, both final R0 ledger
+obligations, `Pipe.New`, `PipeConfigurator`, its builders, `IPipeSpecification`, validation result
+types and failure conversion, and delegate-filter configuration were read before the first test
+edit.
+
+The inherited authentication classes are test-owned sample code, not a product authentication
+feature. Their durable contract is the public Abstractions extension surface: a custom
+`IPipeSpecification<T>` validates before build, applies its filter in configured order, chooses its
+test-owned branch, and still invokes the following pipe segment. The greenfield owner is therefore
+`ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/PipeSpecificationTests.cs`; the old
+Core placement and authentication naming are not copied.
+
+Acceptance checklist:
+
+- replace the authenticated-path obligation with one deterministic ordered trace through a custom
+  specification, its allowed branch, and the following pipe segment;
+- replace the invalid-setup obligation with one two-row theory that proves both an empty and a null
+  role set yield an exact `ConfigurationException` failure result;
+- keep the role router entirely test-owned and make no product authentication claim;
+- add two passive requirement-projection rows, one for each test method;
+- raise the UnitArchitecture floor from 793 to 796 and remove only `Authentication_Specs.cs` after
+  both ledger obligations are terminally mapped.

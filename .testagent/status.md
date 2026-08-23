@@ -63,7 +63,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the agent cohort now proves ready-fault propagation, empty and recursive shutdown, agents added
   after readiness, and deterministic cache recreation after faults or explicit invalidation in six
   source-owner facts;
-- UnitArchitecture: 793 total, 793 passed, 0 failed, 0 skipped;
+- the inherited authentication sample is replaced by the actual public custom-pipe-specification
+  contract under its Abstractions configuration owner: validation rejects null and empty setup,
+  while an accepted branch runs before the following pipe segment;
+- UnitArchitecture: 796 total, 796 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -127,6 +130,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   before its final 787-case run;
 - the agent cohort maps all six inherited rows one-to-one and rejects five independent product
   mutations, one missing invalidation action, and requirement drift before its final 793-case run;
+- the custom pipe-specification cohort maps both inherited rows to two source-owner methods with
+  three execution cases, rejects missing validation, omitted specification application, broken
+  continuation, invalid empty-role acceptance, and requirement drift before its final 796-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

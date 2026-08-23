@@ -663,5 +663,19 @@
       "testMethod" : "AgentAddedAfterReadiness_IsStillStoppedAndCompleted",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
       "variantKey" : "agent-added-after-ready"
+   },
+   {
+      "requirementId" : "REQ-VSB-PIPE-SPECIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CustomSpecification_RunsItsSelectedBranchBeforeTheFollowingSegment",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.PipeSpecificationTests",
+      "variantKey" : "selected-branch-and-following-segment"
+   },
+   {
+      "requirementId" : "REQ-VSB-PIPE-SPECIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "MissingRoles_AreRejectedBeforeThePipeIsBuilt",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.PipeSpecificationTests",
+      "variantKey" : "missing-configuration-rejected"
    }
 ]

@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters;
 
-using Configuration;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
