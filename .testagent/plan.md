@@ -432,3 +432,21 @@ All seven obligations are terminally mapped to five source-owner methods and sev
 Independent mutations reject broken bucket back-links, disabled expiration and capacity cleanup,
 lost removal notifications, a missing usage signal, and requirement-projection drift before the
 final 804-case run.
+
+## Accepted cohort — completed node-factory promotion
+
+Replace the single obligation from `Middleware/Caching/NodeTracker_Specs.cs` with one deterministic
+fact under its actual Core owner `Caching/Internals/NodeTracker`. Construct one pending value,
+`NodeValueFactory`, and temporary `FactoryNode`; add the same factory to the tracker and wait only
+for its real observer event using the central typed timeout.
+
+Assert the exact produced value through the temporary and stored nodes, the observer's exact node
+and value payload, the promotion to a distinct `BucketNode`, and the complete one-operation
+statistics delta. Add one passive requirement row and one terminal disposition, raise the
+UnitArchitecture floor from 804 to 805, reject independent promotion/statistics/observer/projection
+mutations, and delete only the fully replaced inherited file.
+
+The inherited obligation is terminally mapped to one source-owner fact. Independent mutations
+reject reporting a temporary node instead of the stored node, incorrect miss accounting, missing
+addition accounting, lost observer output, and requirement-projection drift before the final
+805-case run.

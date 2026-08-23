@@ -473,3 +473,26 @@ Acceptance checklist:
   remove only `Bucket_Specs.cs` after closure;
 - raise the UnitArchitecture floor from 797 to 804 and reject independent bucket, expiration,
   capacity, observer, scenario, and requirement mutations.
+
+## Node-tracker promotion cohort
+
+Baseline `71128140` is clean and byte-identical to its private remote branch. The complete inherited
+`Middleware/Caching/NodeTracker_Specs.cs`, its single final R0 obligation, and the complete
+`NodeTracker`, `NodeValueFactory`, `FactoryNode`, `PendingValue`, `BucketNode`, observer, and
+statistics path were read before the first test edit.
+
+The inherited fixture proves only that the observer eventually sees a `BucketNode`. The complete
+observable contract is stronger: one completed pending factory resolves the temporary
+`FactoryNode`, the tracker stores and reports a distinct `BucketNode`, both paths expose the exact
+same value instance, and the tracker records exactly one miss, one total addition, and one current
+value. A private capturing observer is sufficient; it waits on the actual `ValueAdded` event and
+the central typed operation timeout, with no shared mutable test framework.
+
+Acceptance checklist:
+
+- prove temporary-factory resolution and exact value identity;
+- prove observer node type, distinct node identity, and exact observer payload;
+- prove exact current count, total count, miss, hit, and create-fault statistics;
+- add one passive Core projection row and one terminal disposition for `OBL-R0-CORE-B-0336`;
+- raise the UnitArchitecture floor from 804 to 805 and delete only `NodeTracker_Specs.cs` after
+  focused, unfiltered, and independent one-cause mutation gates pass.
