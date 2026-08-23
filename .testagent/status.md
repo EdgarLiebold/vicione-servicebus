@@ -87,7 +87,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - System.Text.Json collection, interface-metadata, date-time, scalar, private-setter, and payload
   type-marker behavior is reconstructed as 13 source-owner cases without the inherited fixture
   hierarchy; mixed MessagePack rows retain their existing independent owner;
-- UnitArchitecture: 846 total, 846 passed, 0 failed, 0 skipped;
+- DateTime/DateTimeOffset invariant conversion and `JsonElement`/dictionary object transformation
+  add five source-owner facts under their actual product paths;
+- UnitArchitecture: 851 total, 851 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -179,6 +181,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   through 16 new core dispositions and seven existing MessagePack dispositions; its 13 cases reject
   interface-attribute loss, list/dictionary confusion, and an absent hostile type marker before the
   final 846-case run;
+- the object/date-time conversion cohort maps five inherited rows to five source-owner facts,
+  rejects three independent product mutations, passes under a non-gregorian process culture, and
+  removes both obsolete NUnit files before the final 851-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

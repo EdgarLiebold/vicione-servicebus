@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 846 unfiltered cases;
+- `UnitArchitecture`: 851 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -554,3 +554,16 @@ MessagePack disposition. Three independent one-cause mutations prove attribute c
 list-versus-dictionary classification, and hostile-marker fixture integrity. The UnitArchitecture
 floor is raised from 833 to 846; the six inherited fixtures are removed only after the native
 project and remaining inherited project both build cleanly.
+
+## Accepted cohort — object and date-time conversion
+
+Move the three DateTime/DateTimeOffset conversion boundaries to their actual
+`Initializers/TypeConverters` owner and the two `JsonElement`/dictionary transformation boundaries
+to `Serialization`. Five ordinary xUnit facts assert exact values and invariant round-trip text;
+the UTC-MinValue case uses an explicit UTC kind and is therefore independent of the host time zone.
+
+The five inherited obligations are mapped one-to-one. Independent mutations reject loss of the
+round-trip format, loss of the concrete `GetObject<T>` fallback, and discarded `Transform<T>` input.
+The unmutated project also passes under `ar_SA.UTF-8`. The UnitArchitecture floor is raised from 846
+to 851, and the two obsolete NUnit files are removed after the remaining inherited project builds
+cleanly.
