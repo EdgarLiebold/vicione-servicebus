@@ -68,7 +68,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   while an accepted branch runs before the following pipe segment;
 - bound pipe contexts now have an assertion-bearing Core contract for exact left/right context
   identity and ordered execution across `ContextPipe`, the bound pipe, and the following segment;
-- UnitArchitecture: 797 total, 797 passed, 0 failed, 0 skipped;
+- cache bucket, age, capacity, and usage-sensitive retention now have seven deterministic source-owner
+  cases synchronized through cache observer events and the central test timeout;
+- UnitArchitecture: 804 total, 804 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -138,6 +140,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the bound pipe-context cohort replaces its assertion-free timeout fixture with one deterministic
   fact and rejects missing configured output, lost left or right contexts, broken outer
   continuation, and requirement drift before its final 797-case run;
+- the cache bucket/capacity cohort maps all seven inherited obligations to five methods and seven
+  cases; it rejects broken bucket links, disabled expiration or capacity cleanup, lost observer and
+  usage signals, and requirement drift before its final 804-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

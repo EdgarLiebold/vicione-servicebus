@@ -414,3 +414,21 @@ requirement mutations, and delete only the fully replaced inherited file.
 The inherited obligation is terminally mapped to one deterministic source-owner fact. Independent
 mutations reject missing configured output, lost left and right contexts, missing outer pipeline
 continuation, and requirement-projection drift before the final 797-case run.
+
+## Accepted cohort — cache buckets, age, and capacity
+
+Replace the seven obligations from `Middleware/Caching/Bucket_Specs.cs` with five ordinary xUnit
+methods and seven execution cases split between the actual Core owners `Caching/Internals/Bucket`
+and `Caching/GreenCache`. Keep frozen-clock, within-maximum-age, expired-value, over-capacity, and
+usage-aware-value scenarios semantically distinct.
+
+Synchronize asynchronous cleanup with exact cache observer events and the one typed repository
+operation timeout. Assert cache statistics, observer additions/removals, non-empty bounded
+`GetAll`, and the direct bucket's exact links. Add five passive requirement rows and a seven-row
+terminal disposition, raise the UnitArchitecture floor from 797 to 804, run focused and unfiltered
+profiles plus independent one-cause mutations, and delete only the fully replaced inherited file.
+
+All seven obligations are terminally mapped to five source-owner methods and seven native cases.
+Independent mutations reject broken bucket back-links, disabled expiration and capacity cleanup,
+lost removal notifications, a missing usage signal, and requirement-projection drift before the
+final 804-case run.

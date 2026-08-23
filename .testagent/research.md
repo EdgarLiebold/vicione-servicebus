@@ -441,3 +441,35 @@ Acceptance checklist:
 - add one passive Core requirement-projection row and one terminal disposition;
 - raise the UnitArchitecture floor from 796 to 797 and delete only `Bind_Specs.cs` after the single
   ledger obligation is terminally mapped.
+
+## Cache bucket and capacity cohort
+
+Baseline `1ce18a5d` is clean and byte-identical to its private remote branch. The complete inherited
+`Middleware/Caching/Bucket_Specs.cs`, all seven final R0 obligations, the complete `GreenCache`,
+`NodeTracker`, bucket collection/node implementation, statistics, observer, index/factory path,
+cache settings and usage-notification contracts were read before the first test edit.
+
+The inherited file mixes one direct `Bucket` invariant with public `GreenCache` capacity and age
+behavior. A greenfield replacement splits those source owners into `Caching/Internals/BucketTests`
+and `Caching/GreenCacheCapacityTests`. Seven inherited methods become five ordinary xUnit methods
+and seven execution cases: two pairs are cohesive parameterized scenarios, not hidden case loss.
+
+Background cache work is synchronized only through real `ICacheValueObserver<T>` events. The
+repository's single typed `OperationTimeout` and the current xUnit cancellation token bound a broken
+event path; no sleep, polling delay, wall-clock assertion, inherited `TaskUtil`, or arbitrary local
+timeout is allowed. `TestCacheSettings.CurrentTime` is fixed to `DateTime.UnixEpoch` before cache
+construction and advanced explicitly.
+
+Acceptance checklist:
+
+- prove exact bucket count, head, and node back-link after a push;
+- prove that a full cache retains every value when time is frozen and when all values remain within
+  maximum age;
+- prove that expired values are removed even when capacity alone would allow them;
+- prove that simple and usage-aware values above capacity shrink to a non-empty set at or below the
+  configured capacity;
+- assert observer counts and `GetAll` cardinality in addition to cache statistics;
+- map all seven ledger IDs to five methods/seven cases, add five passive Core projection rows, and
+  remove only `Bucket_Specs.cs` after closure;
+- raise the UnitArchitecture floor from 797 to 804 and reject independent bucket, expiration,
+  capacity, observer, scenario, and requirement mutations.

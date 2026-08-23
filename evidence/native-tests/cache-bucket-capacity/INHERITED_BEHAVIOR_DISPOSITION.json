@@ -1,0 +1,47 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Middleware/Caching/Bucket_Specs.cs",
+  "sourceSha256": "adc78966bbe3b04c9b5255e70e3f949690bc26cb959f4dd68250e901f5c8d7f4",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0320",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.Internals.BucketTests.Push_MakesTheNodeHeadAndLinksItBackToTheBucket"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0321",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ValuesAtCapacity_RemainWhenNoneAreExpired"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0322",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ValuesAtCapacity_RemainWhenNoneAreExpired"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0323",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ExpiredValues_AreRemovedEvenBeforeCapacityRequiresIt"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0324",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.SimpleValuesAboveCapacity_AreReducedToANonEmptyBoundedSet"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0325",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.SimpleValuesAboveCapacity_AreReducedToANonEmptyBoundedSet"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0326",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.UsageAwareValuesAboveCapacity_AreReducedToANonEmptyBoundedSet"
+    }
+  ],
+  "explanation": "Seven inherited cases are preserved as five source-owner methods and seven native execution cases. Background work is synchronized by cache events and the central test timeout, never by sleeps or wall-clock assertions."
+}
