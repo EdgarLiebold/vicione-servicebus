@@ -54,7 +54,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - dictionary and ExpandoObject initialization now proves enum/scalar conversion, explicit converter
   availability, exact concrete DTO preservation, nested dictionary contracts, and nested list
   materialization under their actual source owners;
-- UnitArchitecture: 759 total, 759 passed, 0 failed, 0 skipped;
+- the public message-initializer capability matrix now covers request/response merging, missing
+  values, nullable chains, collections, nested objects, exceptions, variables, and nested tasks in
+  13 independent source-owner facts instead of one shared fixture;
+- UnitArchitecture: 772 total, 772 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -110,6 +113,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the dictionary and ExpandoObject cohort rejects object-enum conversion, dictionary lookup,
   object-to-contract conversion, exact property copy, nested-list materialization, and requirement-
   projection mutations before its final 759-case run;
+- the message-initializer capability cohort maps all 27 inherited rows to 13 facts and rejects
+  independent pipeline, dictionary, array, list, Uri, duplicate-property, exception, variable,
+  nested-task, and requirement-projection mutations before its final 772-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

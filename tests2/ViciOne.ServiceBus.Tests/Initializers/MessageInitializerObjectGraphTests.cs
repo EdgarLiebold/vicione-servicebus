@@ -163,6 +163,53 @@ public sealed class MessageInitializerObjectGraphTests
         Assert.Equal("Token123", context.Message.Order.TokenizedCreditCard.Token["value"]?.GetValue<string>());
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "partial-exception-info")]
+    public async Task ExceptionInfoTarget_InitializesSuppliedPropertiesAndLeavesMissingPropertiesDefault()
+    {
+        InitializeContext<ExceptionInfo> context = await MessageInitializerCache<ExceptionInfo>.Initialize(
+            new
+            {
+                Message = "Hello",
+                ExceptionType = TypeCache<ArgumentException>.ShortName,
+            },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal("Hello", context.Message.Message);
+        Assert.Equal(TypeCache<ArgumentException>.ShortName, context.Message.ExceptionType);
+        Assert.Null(context.Message.InnerException);
+        Assert.Null(context.Message.StackTrace);
+        Assert.Null(context.Message.Source);
+        Assert.Null(context.Message.Data);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "most-derived-duplicate-property")]
+    public async Task NestedConcreteInput_UsesTheMostDerivedDuplicateProperty()
+    {
+        var nested = new DerivedProperty { NewProperty = "Derived value" };
+        ((BaseProperty)nested).NewProperty = "Base value";
+
+        InitializeContext<DuplicatePropertyMessage> context = await MessageInitializerCache<DuplicatePropertyMessage>.Initialize(
+            new { Value = nested },
+            TestContext.Current.CancellationToken);
+
+        Assert.NotNull(context.Message.Value);
+        Assert.Equal("Derived value", context.Message.Value.NewProperty);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "nested-interface")]
+    public async Task NestedAnonymousInput_InitializesAnInterfaceProperty()
+    {
+        InitializeContext<NestedInterfaceMessage> context = await MessageInitializerCache<NestedInterfaceMessage>.Initialize(
+            new { Value = new { Text = "Mary" } },
+            TestContext.Current.CancellationToken);
+
+        Assert.NotNull(context.Message.Value);
+        Assert.Equal("Mary", context.Message.Value.Text);
+    }
+
     private static void AssertHost(HostInfo expected, HostInfo actual)
     {
         Assert.Equal(expected.MachineName, actual.MachineName);
@@ -261,6 +308,36 @@ public sealed class MessageInitializerObjectGraphTests
         public required JsonObject PublicKey { get; init; }
 
         public required JsonObject Token { get; init; }
+    }
+
+    public interface DuplicatePropertyMessage
+    {
+        NamedProperty Value { get; }
+    }
+
+    public interface NamedProperty
+    {
+        string NewProperty { get; }
+    }
+
+    public class BaseProperty
+    {
+        public string? NewProperty { get; set; }
+    }
+
+    public sealed class DerivedProperty : BaseProperty
+    {
+        public new required string NewProperty { get; set; }
+    }
+
+    public interface NestedInterfaceMessage
+    {
+        TextValue Value { get; }
+    }
+
+    public interface TextValue
+    {
+        string Text { get; }
     }
 
     private sealed class FixedHostInfo : HostInfo

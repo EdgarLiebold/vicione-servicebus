@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 759 unfiltered cases;
+- `UnitArchitecture`: 772 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -301,3 +301,29 @@ mutants respectively break enum conversion, dictionary lookup, nested-contract c
 property copying, and list conversion; the requirement-projection mutant independently rejects
 unbound metadata. The first attempted direct-long enum mutant was correctly excluded because boxed
 dictionary values use the object overload and the mutation did not affect the exercised path.
+
+## Accepted cohort — message-initializer capabilities
+
+Replace the 27 obligations from `MessageInitializer_Specs.cs` with 13 ordinary xUnit/MTP facts
+split by actual product source owner. Retain three request/response behaviors on a real temporary
+in-memory bus; move pure dictionary, array, list, scalar, object-graph, exception, variable, and task
+behavior to their corresponding initializer subtrees. Do not reproduce the inherited one-time
+fixture, console output, or its shared response object.
+
+The result must preserve property merging and defaults, chained nullable conversion, partial
+interface initialization, dictionary key/value/nested conversion, scalar and Uri boundaries,
+array/list ordering, most-derived duplicate-property selection, nested interfaces, exception
+projection, initializer-variable consistency, and nested-task completion. All inputs are fixed
+except values whose generation is itself the contract; generated variables are asserted by captured
+value or invariant relationship, never by the wall clock. Add a 27-row terminal disposition, raise
+the UnitArchitecture floor from 759 to 772, run source-owner and unfiltered gates plus independent
+one-cause mutations, and delete only the fully replaced inherited file.
+
+The 27 inherited obligations are terminally mapped to 13 facts. Nine independent product mutations
+reject missing request/response merging, empty dictionary/array/list output, incorrect Uri
+conversion, base-property selection, missing exception projection, per-variable rather than
+per-context identifiers, and incomplete nested-task awaiting. A tenth mutation proves that passive
+requirement metadata cannot drift from its embedded projection. Two exploratory list mutations were
+excluded: one hit a different already-covered converter path and one changed an unselected fallback.
+The actual C19 path was then identified and killed, and the overstated materialization wording was
+corrected before acceptance.

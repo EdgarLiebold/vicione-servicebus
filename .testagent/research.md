@@ -259,3 +259,51 @@ Acceptance checklist:
   mutations before closure;
 - raise the predeclared UnitArchitecture floor from 753 to 759 and remove `Expando_Specs.cs` only
   after all six rows have terminal dispositions.
+
+## Message-initializer capability cohort
+
+Baseline `0461535b` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializer_Specs.cs`, its 27 final R0 ledger
+obligations, the public initializer/cache/factory/builder path, and the collection, task, variable,
+exception, scalar, and nested-object conversion owners were read before editing.
+
+The inherited file combines three genuinely end-to-end request/response cases with a large shared
+one-time fixture whose remaining 23 tests each assert one facet of the same initialized object. A
+greenfield replacement must retain the request/response boundary where it is the behavior, but must
+not retain shared mutable fixture state, console output, random/current-time assertions, or one old
+test per assertion. Pure conversion behavior is exercised directly through `MessageInitializerCache`
+under the actual converter or initializer source owner.
+
+Thirteen independent facts cover the 27 obligations without semantic loss:
+
+- three real in-memory request/response facts own value merging, missing response properties, and
+  nullable numeric round trips;
+- one object-graph fact owns partial `ExceptionInfo` initialization;
+- one dictionary-converter fact owns exact dictionaries, key/value conversion, and nested values;
+- one scalar matrix owns fixed DateTime, decimal/string round trips, enums, nullable numeric
+  boundaries, exact strings, and Uri/string conversion;
+- one array-converter fact owns scalar conversion, exact arrays, and nested interface elements;
+- one list-converter fact owns enumerable and array values exposed through list contracts;
+- separate object-graph facts own most-derived duplicate-property selection and nested interface
+  initialization;
+- exception, initializer-variable, and nested-task facts each live with their corresponding
+  converter owner.
+
+`InVar.Timestamp` is observed through the exact value captured by its returned variable; no
+before/after clock comparison is permitted. `InVar.Id` is asserted by non-default and equality
+relationships within one initialize context, which is the product behavior. All transport waits use
+the central operation timeout as a safety boundary only.
+
+Acceptance checklist:
+
+- map all 27 inherited obligations to the 13 executing source-owner facts;
+- use the real request client and response initializer for the three transport-bound behaviors;
+- use fixed external values for all ordinary inputs and never use sleep, polling, random test input,
+  or elapsed time as an oracle;
+- prove exact collection count, order, keys, values, and nested members;
+- prove exception information, duplicate-property selection, variable consistency, and nested-task
+  completion through observable output;
+- reject one-cause mutations across the pipeline, collection, scalar, object, variable, task, and
+  requirement-projection paths;
+- raise the UnitArchitecture floor from 759 to 772 and remove only
+  `MessageInitializer_Specs.cs` after all 27 ledger rows are terminally mapped.

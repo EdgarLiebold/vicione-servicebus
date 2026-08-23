@@ -1,0 +1,147 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializer_Specs.cs",
+  "sourceSha256": "4e5ddbbbca110e5a2348ea6e6d3b2aba428592cc99b2704857cf554c7bb8df71",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0241",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerRequestResponseTests.RequestAndResponseInitializers_MergeTheirSuppliedValues"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0242",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerObjectGraphTests.ExceptionInfoTarget_InitializesSuppliedPropertiesAndLeavesMissingPropertiesDefault"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0243",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerRequestResponseTests.MissingResponseValue_RemainsDefaultWhileTheRequestValueCarriesForward"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0244",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerRequestResponseTests.NullableNumericValues_RoundTripAcrossRequestAndResponseContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0245",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.DictionaryPropertyConverterTests.DictionaryProperties_PreserveExactValuesAndConvertKeysValuesAndNestedContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0246",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.DictionaryPropertyConverterTests.DictionaryProperties_PreserveExactValuesAndConvertKeysValuesAndNestedContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0247",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0248",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0249",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerObjectGraphTests.NestedConcreteInput_UsesTheMostDerivedDuplicateProperty"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0250",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.ListPropertyConverterTests.ListProperties_PreserveEnumerableAndArrayValuesInOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0251",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0252",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.TypeConverters.ExceptionTypeConverterTests.ExceptionInput_ProducesObservableExceptionInformation"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0253",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.VariablePropertyConverterTests.InitializerVariables_ShareTheContextIdAndPreserveTheCapturedTimestamp"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0254",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0255",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.ArrayPropertyConverterTests.ArrayProperties_ConvertScalarValuesAndNestedContractsWithoutLosingOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0256",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerObjectGraphTests.NestedAnonymousInput_InitializesAnInterfaceProperty"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0257",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.ArrayPropertyConverterTests.ArrayProperties_ConvertScalarValuesAndNestedContractsWithoutLosingOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0258",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.ListPropertyConverterTests.ListProperties_PreserveEnumerableAndArrayValuesInOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0259",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0260",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0261",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0262",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.DictionaryPropertyConverterTests.DictionaryProperties_PreserveExactValuesAndConvertKeysValuesAndNestedContracts"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0263",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0264",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.ArrayPropertyConverterTests.ArrayProperties_ConvertScalarValuesAndNestedContractsWithoutLosingOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0265",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.TaskPropertyConverterTests.NestedTaskInput_IsFullyAwaitedAndConvertedToTheTargetValue"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0266",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.PropertyConverters.VariablePropertyConverterTests.InitializerVariables_ShareTheContextIdAndPreserveTheCapturedTimestamp"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0267",
+      "state": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Initializers.MessageInitializerScalarConversionTests.ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning"
+    }
+  ],
+  "explanation": "The inherited mixed fixture is replaced by thirteen independent source-owner facts. Three retain the real in-memory request/response boundary; pure conversion paths execute directly through MessageInitializerCache. The replacement removes shared one-time state, console output, random input, and wall-clock comparisons while preserving all 27 observable behaviors with exact collection and nested-value assertions."
+}

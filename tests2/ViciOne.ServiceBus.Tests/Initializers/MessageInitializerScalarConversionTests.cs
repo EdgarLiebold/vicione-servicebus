@@ -104,6 +104,54 @@ public sealed class MessageInitializerScalarConversionTests
         Assert.Equal(source.DayValue, context.Message.DayValue);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "chained-numeric-enum-and-uri")]
+    public async Task ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning()
+    {
+        var timestamp = new DateTime(2024, 6, 7, 8, 9, 10, DateTimeKind.Utc);
+        var serviceAddress = new Uri("https://service.example.test/");
+        var otherAddress = new Uri("https://other.example.test/");
+        var stringAddress = new Uri("loopback://localhost/");
+        var source = new
+        {
+            DateTimeValue = timestamp,
+            Amount = 867.53m,
+            EngineStatus = ConversionStatus.Started,
+            NumberStatus = 12,
+            StringStatus = "Started",
+            IntValue = 27,
+            NotNullableValue = (int?)69,
+            NullableDecimalValue = 123.45m,
+            NullableValue = 42,
+            StringValue = "Hello",
+            ServiceAddress = serviceAddress,
+            OtherAddress = otherAddress.AbsoluteUri,
+            StringAddress = stringAddress,
+        };
+
+        InitializeContext<ScalarIntermediateMessage> intermediate =
+            await MessageInitializerCache<ScalarIntermediateMessage>.Initialize(
+                source,
+                TestContext.Current.CancellationToken);
+        InitializeContext<ChainedScalarMessage> result = await MessageInitializerCache<ChainedScalarMessage>.Initialize(
+            intermediate.Message,
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(timestamp, result.Message.DateTimeValue);
+        Assert.Equal(867.53m, result.Message.Amount);
+        Assert.Equal(ConversionStatus.Started, result.Message.EngineStatus);
+        Assert.Equal(ConversionStatus.Stopped, result.Message.NumberStatus);
+        Assert.Equal(ConversionStatus.Started, result.Message.StringStatus);
+        Assert.Equal(27, result.Message.IntValue);
+        Assert.Equal(69L, result.Message.NotNullableValue);
+        Assert.Equal(123.45m, result.Message.NullableDecimalValue);
+        Assert.Equal(42L, result.Message.NullableValue);
+        Assert.Equal("Hello", result.Message.StringValue);
+        Assert.Equal(serviceAddress, result.Message.ServiceAddress);
+        Assert.Equal(otherAddress, result.Message.OtherAddress);
+        Assert.Equal(stringAddress.AbsoluteUri, result.Message.StringAddress);
+    }
+
     private static ScalarValues CreateValues() => new()
     {
         StringValue = "Hello",
@@ -227,6 +275,71 @@ public sealed class MessageInitializerScalarConversionTests
         Sunday,
         Monday,
         Tuesday,
+    }
+
+    public enum ConversionStatus
+    {
+        Unknown = 0,
+        Started = 1,
+        Stopped = 12,
+    }
+
+    public interface ScalarIntermediateMessage
+    {
+        DateTime DateTimeValue { get; }
+
+        string Amount { get; }
+
+        ConversionStatus EngineStatus { get; }
+
+        ConversionStatus NumberStatus { get; }
+
+        ConversionStatus StringStatus { get; }
+
+        int IntValue { get; }
+
+        long NotNullableValue { get; }
+
+        decimal? NullableDecimalValue { get; }
+
+        long? NullableValue { get; }
+
+        string StringValue { get; }
+
+        Uri ServiceAddress { get; }
+
+        Uri OtherAddress { get; }
+
+        string StringAddress { get; }
+    }
+
+    public interface ChainedScalarMessage
+    {
+        DateTime DateTimeValue { get; }
+
+        decimal Amount { get; }
+
+        ConversionStatus EngineStatus { get; }
+
+        ConversionStatus NumberStatus { get; }
+
+        ConversionStatus StringStatus { get; }
+
+        int IntValue { get; }
+
+        long NotNullableValue { get; }
+
+        decimal? NullableDecimalValue { get; }
+
+        long? NullableValue { get; }
+
+        string StringValue { get; }
+
+        Uri ServiceAddress { get; }
+
+        Uri OtherAddress { get; }
+
+        string StringAddress { get; }
     }
 
     public interface StringMessage
