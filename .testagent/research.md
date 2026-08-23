@@ -589,3 +589,22 @@ Acceptance checklist:
   independent same-named-project artifact-isolation fact;
 - reject independent fault-retention, duplicate-factory, usage-policy, capacity/eviction,
   TTL-frequency, and requirement-projection mutations before closure.
+
+## Send-endpoint cache consumer cohort
+
+Baseline `37f468ad` is clean and byte-identical to its private remote branch. The sole inherited
+fixture `SendEndpointCache_Specs.cs`, obligation `OBL-R0-CORE-D-0403`, the complete
+`Transports/SendEndpointCache` implementation, its endpoint-provider call chain, and the underlying
+endpoint-resource cache were read before the first edit.
+
+The inherited test proves only that two parallel cold resolutions and two parallel warm resolutions
+do not throw. The native replacement keeps that exact two-address/two-round boundary through a real
+hermetic `InMemoryTestHarness` and strengthens the verdict to exact identity: both warm results must
+be the same instances as their cold results, while the two distinct addresses must never share an
+endpoint. No mock can replace the real provider/cache composition for this contract.
+
+Acceptance requires one ordinary source-owner fact under `Transports`, one passive requirement row,
+one terminal disposition, central timeout and current-test cancellation on every asynchronous
+boundary, a focused test, the unfiltered UnitArchitecture profile at a floor of 832, the unchanged
+LocalIntegration profile, a zero-warning Release build, and an independent mutation that bypasses
+the endpoint cache and is rejected for endpoint-identity loss.

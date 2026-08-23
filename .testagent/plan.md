@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 831 unfiltered cases;
+- `UnitArchitecture`: 832 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -478,7 +478,7 @@ The fourteen inherited rows are terminally mapped to twelve source-owner facts p
 pending-removal hardening fact. The final unfiltered profile is 818/818, four one-cause mutations
 are rejected, and the complete accepted commit is preserved remotely at `5a60d423`.
 
-## Current cohort — internal endpoint-resource cache
+## Accepted cohort — internal endpoint-resource cache
 
 Replace the thirteen obligations from `Caching/CacheRecovery_Specs.cs` and
 `Caching/Cache_Specs.cs` under the actual product owner `Internals/Caching`. The old cache remains
@@ -501,3 +501,18 @@ same-named core test projects from sharing an intermediate artifact directory. T
 UnitArchitecture floor is 831. Remove both inherited fixtures plus their now-unneeded support files
 only after focused, unfiltered, old-project, static-quality, and independent one-cause mutation
 gates pass.
+
+The thirteen inherited obligations are terminally mapped, all eight independent mutations are
+rejected, and the complete accepted commit is preserved remotely at `37f468ad` with 831/831 cases.
+
+## Current cohort — send-endpoint cache consumer
+
+Replace `OBL-R0-CORE-D-0403` from `SendEndpointCache_Specs.cs` with one hermetic source-owner fact
+under `Transports`. Resolve two distinct loopback addresses concurrently through a running in-memory
+bus, repeat the same concurrent pair against the warm cache, and assert exact per-address identity
+plus cross-address separation. Use the central operation timeout and current xUnit cancellation
+token; no sleep, polling, exception-only verdict, or test double is allowed.
+
+Create one passive requirement row and one terminal disposition, raise the UnitArchitecture floor
+from 831 to 832, reject a direct-factory bypass mutation, and remove the inherited fixture only after
+the focused, old-project, unfiltered, static-quality, and mutation gates pass.

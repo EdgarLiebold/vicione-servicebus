@@ -80,7 +80,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   hardening facts for invalid TTL configuration and timestamp-frequency correctness; its index
   keeps lifecycle-managed nodes strongly so successful creation cannot race with garbage
   collection, and the old/new same-named test projects no longer share an SDK intermediate path;
-- UnitArchitecture: 831 total, 831 passed, 0 failed, 0 skipped;
+- the real send-endpoint provider resolves two distinct addresses concurrently and returns the
+  exact cached endpoint instance for each warm lookup without merging the addresses;
+- UnitArchitecture: 832 total, 832 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -164,6 +166,8 @@ The accepted native foundation and MessageBody behavior are committed and remote
   facts, adds two TTL hardening facts, removes the two fixtures and their obsolete support types,
   and rejects cache-node lifetime, timestamp-frequency, capacity, usage-policy, recovery,
   single-flight, requirement, and intermediate-artifact drift before its final 831-case run;
+- the send-endpoint cache cohort maps its sole inherited obligation to one real in-memory provider
+  fact and rejects a direct-factory cache bypass before its final 832-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;
