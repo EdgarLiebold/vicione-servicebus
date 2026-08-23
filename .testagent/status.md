@@ -41,7 +41,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   bounded capacity, cancellation, faults, disposal, and validation have executable contracts;
 - TaskUtil synchronous waits now have deterministic context, completion, cancellation, fault, and
   validation contracts; no behavior assertion depends on elapsed wall-clock time;
-- UnitArchitecture: 724 total, 724 passed, 0 failed, 0 skipped;
+- task initializer projections now expose explicit asynchronous names and type-safe reference and
+  nullable-value fallback contracts; all ten inherited behaviors are terminally mapped;
+- UnitArchitecture: 739 total, 739 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -82,6 +84,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
   path, caller-token substitution, faulted-instead-of-canceled state, synchronous continuations,
   an invalid registration signal, caller-context mutation, and missing requirement metadata before
   its final 724-case run;
+- the task initializer cohort rejects null-source selector invocation, branch inversions, eager
+  fallback factories, source/delegate-state wrapping, and missing requirement metadata before its
+  final 739-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 724
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 739
 
 VICIONE_TESTS__Profile=LocalIntegration \
 dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
@@ -73,7 +73,10 @@ profile also proves that a public one-dimensional array can be published and con
 ordered message contract; this compatibility feature is not a batch abstraction. Future-location
 URI round trips and their malformed-input boundaries are also part of the profile. The
 TaskExecutor and TaskUtil cohorts add deterministic concurrency, cancellation, synchronous-wait,
-completion-source, and validation contracts without timing-based behavior assertions. The
+completion-source, and validation contracts without timing-based behavior assertions. The task
+initializer cohort adds type-safe reference and nullable-value projections, constant and lazy
+synchronous/asynchronous fallback contracts, exact source-state propagation, and strict public
+input boundaries. The
 LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable

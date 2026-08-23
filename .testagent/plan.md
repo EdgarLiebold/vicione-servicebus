@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 724 unfiltered cases;
+- `UnitArchitecture`: 739 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -205,3 +205,19 @@ first version of the AggregateException mutation exposed an uncovered generic ov
 was strengthened and the same mutant then failed for the intended reason. The UnitArchitecture
 floor rises from 706 to 724, and `AwaitSemantics_Specs.cs` is removed only after all nine inherited
 ledger obligations are terminally mapped.
+
+## Accepted cohort — task initializer projections
+
+`Initializers/TaskInitializerExtensionsTests.cs` mirrors the product initializer source and replaces
+the inherited NUnit fixture with 15 ordinary xUnit cases. The product API is normalized from eleven
+duplicated `Select` overloads to explicit asynchronous `SelectAsync` and
+`SelectOrFallbackAsync` contracts. Reference and nullable-value projections retain constant, lazy
+synchronous, and awaited asynchronous fallbacks; string-only duplicates are removed without losing
+a capability. Null source values, exact source/selector/fallback fault and cancellation state, input validation, null
+fallback results, and every selected-versus-fallback branch are explicit.
+
+Ten independent one-cause mutations are rejected: null-source selector invocation, both constant
+fallback branch inversions, eager invocation of all four factory overloads, source-exception
+wrapping, fallback-exception wrapping, and missing requirement metadata. The UnitArchitecture floor rises from 724 to 739, and
+`TaskExtension_Specs.cs` is removed only after all ten inherited ledger obligations are terminally
+mapped.

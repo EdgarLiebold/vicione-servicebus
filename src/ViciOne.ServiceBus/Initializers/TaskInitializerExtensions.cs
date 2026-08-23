@@ -1,297 +1,144 @@
-namespace ViciOne.ServiceBus.Initializers
+#nullable enable
+namespace ViciOne.ServiceBus.Initializers;
+
+using System;
+using System.Threading.Tasks;
+
+/// <summary>Projects an asynchronous initializer result and applies an optional fallback.</summary>
+public static class TaskInitializerExtensions
 {
-    using System;
-    using System.Threading.Tasks;
-
-
-    public static class TaskInitializerExtensions
+    /// <summary>Awaits the source and projects its value, or returns no value for a null source.</summary>
+    public static async Task<TResult?> SelectAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector)
     {
-        /// <summary>
-        /// Awaits the task and calls the selector to return a string property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<string> Select<T>(this Task<T> task, Func<T, string> selector)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+        ValidateProjectionArguments(source, selector);
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+        return await ProjectAsync(source, selector).ConfigureAwait(false);
+    }
 
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                return selector(taskResult);
+    /// <summary>
+    /// Awaits the source and projects its value, using <paramref name="fallback"/> when either the
+    /// source or the selected value is null.
+    /// </summary>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        TResult fallback)
+        where TResult : class
+    {
+        ValidateProjectionArguments(source, selector);
+        ArgumentNullException.ThrowIfNull(fallback);
 
-            return default;
-        }
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        return result is null ? fallback : result;
+    }
 
-        /// <summary>
-        /// Awaits the task and calls the selector to return a string property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="defaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<string> Select<T>(this Task<T> task, Func<T, string> selector, string defaultValue)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},TResult)"/>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        TResult fallback)
+        where TResult : struct
+    {
+        ValidateProjectionArguments(source, selector);
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        return result ?? fallback;
+    }
 
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                return selector(taskResult) ?? defaultValue;
+    /// <summary>
+    /// Awaits the source and projects its value, invoking <paramref name="fallbackFactory"/> only
+    /// when either the source or the selected value is null.
+    /// </summary>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        Func<TResult> fallbackFactory)
+        where TResult : class
+    {
+        ValidateProjectionArguments(source, selector);
+        ArgumentNullException.ThrowIfNull(fallbackFactory);
 
-            return defaultValue;
-        }
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        if (result is not null)
+            return result;
 
-        /// <summary>
-        /// Awaits the task and calls the selector to return a string property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<string> Select<T>(this Task<T> task, Func<T, string> selector, Func<string> getDefaultValue)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+        return fallbackFactory()
+            ?? throw new InvalidOperationException("The fallbackFactory must return a value.");
+    }
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{TResult})"/>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        Func<TResult> fallbackFactory)
+        where TResult : struct
+    {
+        ValidateProjectionArguments(source, selector);
+        ArgumentNullException.ThrowIfNull(fallbackFactory);
 
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        return result ?? fallbackFactory();
+    }
 
-            string result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
+    /// <summary>
+    /// Awaits the source and projects its value, invoking and awaiting
+    /// <paramref name="fallbackFactory"/> only when either the source or the selected value is null.
+    /// </summary>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        Func<Task<TResult>> fallbackFactory)
+        where TResult : class
+    {
+        ValidateProjectionArguments(source, selector);
+        ArgumentNullException.ThrowIfNull(fallbackFactory);
 
-            return result ?? getDefaultValue();
-        }
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        if (result is not null)
+            return result;
 
-        /// <summary>
-        /// Awaits the task and calls the selector to return a string property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async Task<string> Select<T>(this Task<T> task, Func<T, string> selector, Func<Task<string>> getDefaultValue)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+        Task<TResult> fallbackTask = fallbackFactory()
+            ?? throw new InvalidOperationException("The fallbackFactory must return a Task.");
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+        return await fallbackTask.ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The fallbackFactory task must produce a value.");
+    }
 
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{Task{TResult}})"/>
+    public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
+        this Task<TSource> source,
+        Func<TSource, TResult?> selector,
+        Func<Task<TResult>> fallbackFactory)
+        where TResult : struct
+    {
+        ValidateProjectionArguments(source, selector);
+        ArgumentNullException.ThrowIfNull(fallbackFactory);
 
-            string result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
+        TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
+        if (result is not null)
+            return result.Value;
 
-            return result ?? await getDefaultValue().ConfigureAwait(false);
-        }
+        Task<TResult> fallbackTask = fallbackFactory()
+            ?? throw new InvalidOperationException("The fallbackFactory must return a Task.");
 
-        /// <summary>
-        /// Awaits the task and calls the selector to return a string property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult> selector)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+        return await fallbackTask.ConfigureAwait(false);
+    }
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+    private static async Task<TResult?> ProjectAsync<TSource, TResult>(
+        Task<TSource> source,
+        Func<TSource, TResult?> selector)
+    {
+        TSource sourceValue = await source.ConfigureAwait(false);
+        return sourceValue is null ? default : selector(sourceValue);
+    }
 
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                return selector(taskResult);
-
-            return default;
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="defaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult> selector, TResult defaultValue)
-            where TResult : class
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                return selector(taskResult) ?? defaultValue;
-
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="defaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult?> selector, TResult defaultValue)
-            where TResult : struct
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                return selector(taskResult) ?? defaultValue;
-
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult> selector, Func<TResult> getDefaultValue)
-            where TResult : class
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
-
-            TResult result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
-
-            return result ?? getDefaultValue();
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult?> selector, Func<TResult> getDefaultValue)
-            where TResult : struct
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
-
-            TResult? result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
-
-            return result ?? getDefaultValue();
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult> selector, Func<Task<TResult>> getDefaultValue)
-            where TResult : class
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
-
-            TResult result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
-
-            return result ?? await getDefaultValue().ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Awaits the task and calls the selector to return a TResult property of the result
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="selector"></param>
-        /// <param name="getDefaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        public static async Task<TResult> Select<T, TResult>(this Task<T> task, Func<T, TResult?> selector, Func<Task<TResult>> getDefaultValue)
-            where TResult : struct
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (getDefaultValue == null)
-                throw new ArgumentNullException(nameof(getDefaultValue));
-
-            TResult? result = default;
-            var taskResult = await task.ConfigureAwait(false);
-            if (taskResult != null)
-                result = selector(taskResult);
-
-            return result ?? await getDefaultValue().ConfigureAwait(false);
-        }
+    private static void ValidateProjectionArguments<TSource, TResult>(
+        Task<TSource> source,
+        Func<TSource, TResult?> selector)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(selector);
     }
 }
