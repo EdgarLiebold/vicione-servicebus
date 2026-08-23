@@ -1,0 +1,144 @@
+{
+  "cohort": "system-text-json-serialization",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "sources": [
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Array_Specs.cs",
+      "sourceSha256": "9c4de77e2a2ddfc3ac1eefb0a0dc7960d6703efc9ca6691acd8638506401e21e",
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0137",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.NullArray_IsEncodedAndRestoredAsNull",
+          "explanation": "The native fact proves both the literal JSON null in the real envelope and the restored null array."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0138",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.NullArray_IsEncodedAndRestoredAsNull"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0139",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.SingleElementArrayAndCollection_RoundTripWithExactValues"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0140",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.SingleElementArrayAndCollection_RoundTripWithExactValues"
+        }
+      ]
+    },
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Attribute_Specs.cs",
+      "sourceSha256": "9940316467f7f240255fa81938b2c1565907623ba7eb1f4a0b642b88a363207c",
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0141",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonInterfaceMetadataTests.InterfacePropertyConverter_IsHonoredByTheGeneratedImplementation"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0142",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonInterfaceMetadataTests.NullableInterfaceCollection_DeserializesEmptyArrayAsANonNullEmptySequence"
+        }
+      ]
+    },
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/DateTimeFormat_Specs.cs",
+      "sourceSha256": "d359c10ba42a9723cb114b580e2637f050d548f04b7370c9457586d09dae9cf9",
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0146",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonDateTimeTests.IsoTimestampString_DeserializesWithoutChangingItsLiteralText"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0147",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonDateTimeTests.IsoTimestampDateTime_DeserializesAsTheExactUtcInstant",
+          "explanation": "The replacement strengthens the inherited kind-only assertion with the exact UTC instant."
+        }
+      ]
+    },
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs",
+      "sourceSha256": "e92422968a01455923d76374c9639f27322801f29d11053046aa56128b7081ba",
+      "preexistingTerminalDisposition": "evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json",
+      "preexistingObligationIds": [
+        "OBL-R0-CORE-C-0167",
+        "OBL-R0-CORE-C-0169",
+        "OBL-R0-CORE-C-0171"
+      ],
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0168",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.InterfaceEnumerable_RoundTripsWithExactOrderedItems",
+          "explanation": "The replacement asserts the exact ordered values instead of count alone."
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0170",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonCollectionTests.DuplicateKeyPairs_RemainAnOrderedListWithoutKeyCollapse",
+          "explanation": "The replacement proves order, duplicate-key multiplicity, and every value."
+        }
+      ]
+    },
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs",
+      "sourceSha256": "38f8d01a45a46e041cbbe8bbfcdd3c7f0cfb8559012a867891762bc565e77200",
+      "preexistingTerminalDisposition": "evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json",
+      "preexistingObligationIds": [
+        "OBL-R0-CORE-C-0333",
+        "OBL-R0-CORE-C-0335",
+        "OBL-R0-CORE-C-0337",
+        "OBL-R0-CORE-C-0339"
+      ],
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0334",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.CharacterValues_RoundTripExactly"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0336",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.CharacterValues_RoundTripExactly"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0338",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.CharacterValues_RoundTripExactly"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0340",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.CharacterValues_RoundTripExactly"
+        },
+        {
+          "obligationId": "OBL-R0-CORE-C-0341",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonScalarTests.ControlCharacterAndPrivateSetter_RoundTripExactly",
+          "explanation": "The source carries U+0001, not an empty string as the inherited ledger prose says. The replacement follows the source bytes and preserves the private-setter construction boundary."
+        }
+      ]
+    },
+    {
+      "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/TypeHandling_Specs.cs",
+      "sourceSha256": "88dcc3a777f9f1cb869de384a85ecd11cf7b283a53564015b4d1cb2b677aac40",
+      "dispositions": [
+        {
+          "obligationId": "OBL-R0-CORE-C-0366",
+          "state": "REPLACED_EXECUTING",
+          "targetTest": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonTypeSafetyTests.PayloadTypeMarker_CannotChooseTheInstantiatedType",
+          "explanation": "The native fact binds the hostile marker as input, proves exact payload values, and proves the requested interface rather than the marker controls materialization."
+        }
+      ]
+    }
+  ]
+}

@@ -84,7 +84,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
   exact cached endpoint instance for each warm lookup without merging the addresses;
 - real in-memory dispatch exposes a typed message body as an exact raw
   `System.Text.Json.Nodes.JsonObject`, including its complete camel-case property set and values;
-- UnitArchitecture: 833 total, 833 passed, 0 failed, 0 skipped;
+- System.Text.Json collection, interface-metadata, date-time, scalar, private-setter, and payload
+  type-marker behavior is reconstructed as 13 source-owner cases without the inherited fixture
+  hierarchy; mixed MessagePack rows retain their existing independent owner;
+- UnitArchitecture: 846 total, 846 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -172,6 +175,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
   fact and rejects a direct-factory cache bypass before its final 832-case run;
 - the raw System.Text.Json object cohort maps its sole inherited obligation to one real in-memory
   serialization/dispatch fact and rejects an empty-body projection before its final 833-case run;
+- the System.Text.Json serialization cohort terminally closes all 23 rows in six inherited files
+  through 16 new core dispositions and seven existing MessagePack dispositions; its 13 cases reject
+  interface-attribute loss, list/dictionary confusion, and an absent hostile type marker before the
+  final 846-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

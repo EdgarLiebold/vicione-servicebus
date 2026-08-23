@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 833 unfiltered cases;
+- `UnitArchitecture`: 846 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -520,7 +520,7 @@ the focused, old-project, unfiltered, static-quality, and mutation gates pass.
 The sole inherited obligation is terminally mapped, the direct-factory bypass is rejected, and the
 complete accepted commit is preserved remotely at `19e14d90` with 832/832 cases.
 
-## Current cohort — raw System.Text.Json object consumption
+## Accepted cohort — raw System.Text.Json object consumption
 
 Replace `OBL-R0-CORE-D-0027` from `ConsumeJsonObject_Specs.cs` with one hermetic source-owner fact
 under `Serialization`. Send a local three-property contract through a real running in-memory bus to
@@ -531,3 +531,26 @@ NUnit lifecycle, or TestFramework message dependency.
 Create one passive requirement row and one terminal disposition, raise the UnitArchitecture floor
 from 832 to 833, reject an empty-object projection mutation, and remove the inherited fixture only
 after the focused, old-project, unfiltered, static-quality, and mutation gates pass.
+
+The obligation is terminally mapped, the empty-body projection is rejected, and the complete
+accepted commit is preserved remotely at `908b4e79` with 833/833 cases.
+
+## Accepted cohort — System.Text.Json collections, metadata, scalars, and type safety
+
+Replace the 16 open System.Text.Json obligations from the six inherited array, attribute,
+date-time-format, enumerable, property-type, and type-handling fixtures under the `Serialization`
+source owner. Reuse the already accepted MessagePack dispositions for the seven independent rows in
+the two mixed fixtures; never duplicate those behaviors in the core owner.
+
+Eleven ordinary xUnit methods materialize 13 native cases. They prove literal and semantic null
+arrays, exact arrays and `ICollection<T>`, interface `IEnumerable<T>`, duplicate-key list order and
+values, interface-property converter metadata, nullable interface collections, ISO timestamp text
+and UTC identity, `char`/`char?` boundaries, U+0001 through a private setter, and payload type-marker
+safety. The common helper traverses the real System.Text.Json envelope serializer/deserializer and
+does not depend on the inherited TestFramework.
+
+All 23 rows owned by the six files are terminally closed: 16 here and seven in the accepted
+MessagePack disposition. Three independent one-cause mutations prove attribute copying,
+list-versus-dictionary classification, and hostile-marker fixture integrity. The UnitArchitecture
+floor is raised from 833 to 846; the six inherited fixtures are removed only after the native
+project and remaining inherited project both build cleanly.
