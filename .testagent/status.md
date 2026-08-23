@@ -51,7 +51,10 @@ The accepted native foundation and MessageBody behavior are committed and remote
   enums, and object identity across the full inherited type matrix;
 - object-graph initialization now proves covariant fault projection, recursive private setters,
   and observable read-only-property behavior for interface and concrete targets;
-- UnitArchitecture: 753 total, 753 passed, 0 failed, 0 skipped;
+- dictionary and ExpandoObject initialization now proves enum/scalar conversion, explicit converter
+  availability, exact concrete DTO preservation, nested dictionary contracts, and nested list
+  materialization under their actual source owners;
+- UnitArchitecture: 759 total, 759 passed, 0 failed, 0 skipped;
 - LocalIntegration: 3 total, 3 passed, 0 failed, 0 skipped;
 - Release builds: 0 warnings, 0 errors;
 - inherited-test source: the fully replaced Abstractions NUnit project, endpoint-name, MessageUrn,
@@ -104,6 +107,9 @@ The accepted native foundation and MessageBody behavior are committed and remote
 - the object-graph initializer cohort replaces four assertion-free inherited cases with observable
   contracts and rejects private-setter, getter-only projection, missing fault-message, and
   requirement-projection mutations before its final 753-case run;
+- the dictionary and ExpandoObject cohort rejects object-enum conversion, dictionary lookup,
+  object-to-contract conversion, exact property copy, nested-list materialization, and requirement-
+  projection mutations before its final 759-case run;
 - the inherited Abstractions NUnit project is retired after 78/78 terminal dispositions; its
   byte-identical formatter oracle remains embedded, and its compile-only usage surface is preserved
   by the non-packable, Engineering-bound OrderWorkflow sample;

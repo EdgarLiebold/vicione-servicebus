@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -115,6 +116,53 @@ public sealed class MessageInitializerObjectGraphTests
         Assert.Equal("Some Property Value", context.Message.ReadOnly);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "complex-concrete-dto")]
+    public async Task DynamicInterfaceTarget_PreservesAnExactConcreteNestedDto()
+    {
+        var correlationId = Guid.Parse("582bcb34-d08c-4b95-ad1a-ccff34e41419");
+        var timestamp = new DateTime(2024, 5, 6, 7, 8, 9, DateTimeKind.Utc);
+        var order = new OrderDto
+        {
+            Amount = 123.45m,
+            Id = 27,
+            CustomerId = "FRANK01",
+            ItemType = "Crayon",
+            OrderState = new OrderState { Status = OrderStatus.Validated },
+            TokenizedCreditCard = new TokenizedCreditCardDto
+            {
+                ExpirationMonth = "12",
+                ExpirationYear = "2031",
+                PublicKey = new JsonObject { ["key"] = "12345" },
+                Token = new JsonObject { ["value"] = "Token123" },
+            },
+        };
+
+        InitializeContext<PaymentGatewaySubmitted> context = await MessageInitializerCache<PaymentGatewaySubmitted>.Initialize(
+            new
+            {
+                Order = order,
+                CorrelationId = correlationId,
+                TimeStamp = timestamp,
+                ConsumerProcessed = true,
+            },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(correlationId, context.Message.CorrelationId);
+        Assert.Equal(timestamp, context.Message.TimeStamp);
+        Assert.True(context.Message.ConsumerProcessed);
+        Assert.Same(order, context.Message.Order);
+        Assert.Equal(27, context.Message.Order.Id);
+        Assert.Equal(123.45m, context.Message.Order.Amount);
+        Assert.Equal("FRANK01", context.Message.Order.CustomerId);
+        Assert.Equal("Crayon", context.Message.Order.ItemType);
+        Assert.Equal(OrderStatus.Validated, context.Message.Order.OrderState.Status);
+        Assert.Equal("12", context.Message.Order.TokenizedCreditCard.ExpirationMonth);
+        Assert.Equal("2031", context.Message.Order.TokenizedCreditCard.ExpirationYear);
+        Assert.Equal("12345", context.Message.Order.TokenizedCreditCard.PublicKey["key"]?.GetValue<string>());
+        Assert.Equal("Token123", context.Message.Order.TokenizedCreditCard.Token["value"]?.GetValue<string>());
+    }
+
     private static void AssertHost(HostInfo expected, HostInfo actual)
     {
         Assert.Equal(expected.MachineName, actual.MachineName);
@@ -167,6 +215,52 @@ public sealed class MessageInitializerObjectGraphTests
         public string? Street { get; private set; }
 
         public string? City { get; set; }
+    }
+
+    public interface PaymentGatewaySubmitted : CorrelatedBy<Guid>
+    {
+        DateTime TimeStamp { get; }
+
+        OrderDto Order { get; }
+
+        bool ConsumerProcessed { get; }
+    }
+
+    public sealed class OrderDto
+    {
+        public int Id { get; init; }
+
+        public decimal Amount { get; init; }
+
+        public required string ItemType { get; init; }
+
+        public required OrderState OrderState { get; init; }
+
+        public required TokenizedCreditCardDto TokenizedCreditCard { get; init; }
+
+        public required string CustomerId { get; init; }
+    }
+
+    public sealed class OrderState
+    {
+        public OrderStatus Status { get; init; }
+    }
+
+    public enum OrderStatus
+    {
+        ClientSubmitted,
+        Validated,
+    }
+
+    public sealed class TokenizedCreditCardDto
+    {
+        public required string ExpirationMonth { get; init; }
+
+        public required string ExpirationYear { get; init; }
+
+        public required JsonObject PublicKey { get; init; }
+
+        public required JsonObject Token { get; init; }
     }
 
     private sealed class FixedHostInfo : HostInfo

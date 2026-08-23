@@ -220,3 +220,42 @@ Acceptance checklist:
   mutations before closing the cohort;
 - raise the predeclared UnitArchitecture floor from 747 to 753 and delete `Class_Specs.cs` only
   after all six ledger obligations have terminal dispositions.
+
+## Dictionary and ExpandoObject initializer cohort
+
+Baseline `c9409009` is clean and byte-identical to its private remote branch. The complete inherited
+`tests/ViciOne.ServiceBus.Tests/Initializers/Expando_Specs.cs`, all six final R0 ledger obligations,
+and the owning initializer implementation were read before editing. The file contains three
+different source owners that must not be copied into one generic test class:
+
+- dictionary and `ExpandoObject` message initialization belongs to
+  `Initializers/Conventions/DictionaryInitializerConventionTests`;
+- explicit dictionary-to-contract converter availability belongs to
+  `Initializers/PropertyProviders/PropertyProviderFactoryTests`;
+- the concrete nested DTO case belongs to the existing root
+  `Initializers/MessageInitializerObjectGraphTests`.
+
+The inherited ExpandoObject scalar case covers long-to-enum and name-to-enum conversion as well as
+fixed scalar and Guid copying. The nested list case deliberately fixes the runtime input shape as
+`ExpandoObject` plus `List<object>` plus long scalar values; it must assert the list count and
+all exposed nested values, not merely presence. The large DTO case uses an exact concrete property
+type, so its observable A+ contract is exact object preservation across dynamic interface creation,
+not an invented deep-clone promise. All inherited random Guids and current-clock input are replaced
+by fixed external values.
+
+Acceptance checklist:
+
+- map all six inherited obligations one-to-one to six ordinary xUnit methods under their real
+  source owners;
+- preserve ExpandoObject scalar, enum-by-value, enum-by-name, and Guid initialization;
+- prove the public provider factory returns a usable object-to-contract converter for a dictionary
+  input type;
+- preserve the complete concrete nested DTO through a dynamic message interface with fixed
+  correlation and timestamp input;
+- preserve plain dictionary input and a dictionary-valued nested message property;
+- preserve the nested ExpandoObject/list runtime shape with exact list count, identifiers, scalar
+  values, and nested product values;
+- reject independent enum, dictionary lookup, nested-object, nested-list, and requirement-metadata
+  mutations before closure;
+- raise the predeclared UnitArchitecture floor from 753 to 759 and remove `Expando_Specs.cs` only
+  after all six rows have terminal dispositions.

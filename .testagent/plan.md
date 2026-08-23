@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 753 unfiltered cases;
+- `UnitArchitecture`: 759 unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -282,3 +282,22 @@ also asserts its exposed computed read-only value. Concrete targets prove the co
 through the initialized writable property. Its six-row terminal disposition closes all inherited
 rows. The UnitArchitecture floor rises from 747 to 753; focused and unfiltered gates plus four
 one-cause mutations pass, and only the now fully replaced `Class_Specs.cs` is removed.
+
+## Accepted cohort — dictionary and ExpandoObject initialization
+
+Split the six inherited `Expando_Specs.cs` obligations by actual product owner instead of retaining
+the old mixed fixture. Four dictionary/ExpandoObject behaviors belong in
+`Initializers/Conventions/DictionaryInitializerConventionTests.cs`; converter availability belongs
+in `Initializers/PropertyProviders/PropertyProviderFactoryTests.cs`; the exact concrete nested DTO
+behavior extends `Initializers/MessageInitializerObjectGraphTests.cs`.
+
+Each obligation receives one ordinary fact and one passive requirement-projection row. Fixed Guids
+and timestamps replace random and wall-clock input. Assertions cover all supplied scalar/enum/Guid
+values, exact concrete DTO preservation, converter presence, nested dictionary values, and every
+exposed value of the single nested ExpandoObject order. Add a six-row terminal disposition, raise
+the UnitArchitecture floor from 753 to 759, run focused and unfiltered gates plus one-cause
+mutations, and remove only `Expando_Specs.cs` after complete closure. The five effective product
+mutants respectively break enum conversion, dictionary lookup, nested-contract conversion, exact
+property copying, and list conversion; the requirement-projection mutant independently rejects
+unbound metadata. The first attempted direct-long enum mutant was correctly excluded because boxed
+dictionary values use the object overload and the mutation did not affect the exercised path.
