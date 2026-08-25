@@ -1,0 +1,17 @@
+^DAusführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.RabbitMqTransport.Tests.Requirements.RequirementCoverageProjectionTests.RabbitMqAddressRequirements_MatchCompiledRequirementMetadata (26ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64)
+  Compiled test method is not part of the requirement projection: [REQ-VSB-RABBITMQ-HOST-CONFIGURATION | host-settings-port-and-root-virtual-host | ViciOne.ServiceBus.RabbitMqTransport.Tests | ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.RabbitMqAddressExtensionsTests | HostSettings_PreserveTheCanonicalPortAndRootVirtualHost].
+    um ViciOne.ServiceBus.RabbitMqTransport.Tests.Requirements.RequirementCoverageProjectionTests.RabbitMqAddressRequirements_MatchCompiledRequirementMetadata() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs:21
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (459ms)
+Exitcode: 2
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 228ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)
