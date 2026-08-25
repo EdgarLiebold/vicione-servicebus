@@ -27,10 +27,22 @@ internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
         }
         catch (Exception exception)
         {
-            if (IsCallerCancellation(context, exception) || !_settings.ExceptionFilter.Match(exception))
+            bool isClassifiedFailure;
+            try
+            {
+                isClassifiedFailure = !IsCallerCancellation(context, exception)
+                    && _settings.ExceptionFilter.Match(exception);
+            }
+            catch
+            {
                 _stateMachine.ReleaseWithoutVerdict(lease);
-            else
+                throw;
+            }
+
+            if (isClassifiedFailure)
                 _stateMachine.RecordFailure(lease, exception);
+            else
+                _stateMachine.ReleaseWithoutVerdict(lease);
 
             throw;
         }
@@ -56,10 +68,7 @@ internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
 
     private static bool IsCallerCancellation(TContext context, Exception exception)
     {
-        if (exception is not OperationCanceledException cancellation || !context.CancellationToken.CanBeCanceled)
-            return false;
-
-        return context.CancellationToken.IsCancellationRequested
-            || cancellation.CancellationToken == context.CancellationToken;
+        return exception is OperationCanceledException
+            && context.CancellationToken.IsCancellationRequested;
     }
 }

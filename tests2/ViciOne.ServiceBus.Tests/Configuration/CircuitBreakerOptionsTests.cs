@@ -2,10 +2,12 @@ using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Configuration;
 
+[Collection(CircuitBreakerGlobalTelemetryCollection.Name)]
 public sealed class CircuitBreakerOptionsTests
 {
     [Fact]
@@ -75,6 +77,38 @@ public sealed class CircuitBreakerOptionsTests
         Assert.False(options.ExceptionFilter.Match(new ArgumentException("excluded")));
         Assert.Equal("value", Assert.Throws<ArgumentNullException>(() => options.SetTimeProvider(null!)).ParamName);
         Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() => options.SetExceptionFilter(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION", "retained-filter-builder-cannot-mutate-snapshot")]
+    public void RetainedExceptionConfigurator_CannotMutateThePublishedFilterSnapshot()
+    {
+        IExceptionConfigurator retained = null!;
+        var options = new CircuitBreakerOptions()
+            .SetExceptionFilter(configurator =>
+            {
+                retained = configurator;
+                configurator.Handle<ExpectedFailureException>();
+            });
+
+        retained.Ignore<ExpectedFailureException>();
+
+        Assert.True(options.ExceptionFilter.Match(new ExpectedFailureException()));
+        Assert.False(options.ExceptionFilter.Match(new ArgumentException("not configured")));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION", "caller-owned-type-array-cannot-mutate-snapshot")]
+    public void CallerOwnedExceptionTypeArray_CannotMutateThePublishedFilterSnapshot()
+    {
+        Type[] handledTypes = [typeof(ExpectedFailureException)];
+        var options = new CircuitBreakerOptions()
+            .SetExceptionFilter(configurator => configurator.Handle(handledTypes));
+
+        handledTypes[0] = typeof(ArgumentException);
+
+        Assert.True(options.ExceptionFilter.Match(new ExpectedFailureException()));
+        Assert.False(options.ExceptionFilter.Match(new ArgumentException("not configured")));
     }
 
     [Fact]

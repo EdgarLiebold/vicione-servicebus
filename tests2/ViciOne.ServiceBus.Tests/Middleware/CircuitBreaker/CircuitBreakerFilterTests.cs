@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
@@ -8,6 +9,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker;
 
+[Collection(CircuitBreakerGlobalTelemetryCollection.Name)]
 public sealed class CircuitBreakerFilterTests
 {
     private static readonly DateTimeOffset StartTime =
@@ -158,44 +160,75 @@ public sealed class CircuitBreakerFilterTests
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "exactly-one-concurrent-probe")]
     public async Task HalfOpen_AdmitsExactlyOneProbeAndRejectsEveryConcurrentCompetitor()
     {
-        const int competitors = 32;
-        var time = new ObservableTimeProvider(StartTime);
+        const int contenderCount = 33;
+        using var time = new ContendedTimeProvider(StartTime);
         var probeEntered = NewSignal();
         var releaseProbe = NewSignal();
         var protectedCallCount = 0;
+        var recoveryEntrants = 0;
+        var decisions = 0;
+        var rejections = 0;
+        var allDecided = NewSignal();
         var fail = true;
         IPipe<TestPipeContext> pipe = CreatePipe(time, async _ =>
         {
-            int call = Interlocked.Increment(ref protectedCallCount);
+            Interlocked.Increment(ref protectedCallCount);
             if (fail)
                 throw new ExpectedFailureException("initial trip");
 
-            if (call == 2)
-            {
-                probeEntered.SetResult();
-                await releaseProbe.Task;
-            }
+            Interlocked.Increment(ref recoveryEntrants);
+            probeEntered.TrySetResult();
+            if (Interlocked.Increment(ref decisions) == contenderCount)
+                allDecided.TrySetResult();
+            await releaseProbe.Task;
         });
 
         await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
         fail = false;
         time.Advance(TimeSpan.FromSeconds(1));
-        Task probe = pipe.Send(new TestPipeContext());
+        time.ArmContention(contenderCount);
+        Task<Exception?>[] attempts = Enumerable.Range(0, contenderCount)
+            .Select(_ => Task.Factory.StartNew(
+                async () =>
+                {
+                    try
+                    {
+                        await pipe.Send(new TestPipeContext());
+                        return null;
+                    }
+                    catch (Exception exception)
+                    {
+                        if (exception is CircuitBreakerOpenException)
+                            Interlocked.Increment(ref rejections);
+                        if (Interlocked.Increment(ref decisions) == contenderCount)
+                            allDecided.TrySetResult();
+                        return exception;
+                    }
+                },
+                CancellationToken.None,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default).Unwrap())
+            .ToArray();
+
+        await time.AllContendersArrived;
+        time.ReleaseContenders();
         await probeEntered.Task;
+        await allDecided.Task;
 
-        CircuitBreakerOpenException[] rejections = await Task.WhenAll(
-            Enumerable.Range(0, competitors)
-                .Select(_ => Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.Send(new TestPipeContext()))));
+        Assert.Equal(1, recoveryEntrants);
+        Assert.Equal(contenderCount - 1, rejections);
+        Assert.Equal(2, protectedCallCount);
 
-        Assert.All(rejections, rejection =>
+        releaseProbe.SetResult();
+        Exception?[] results = await Task.WhenAll(attempts);
+        CircuitBreakerOpenException[] rejectedResults = results.OfType<CircuitBreakerOpenException>().ToArray();
+        Assert.Equal(contenderCount - 1, rejectedResults.Length);
+        Assert.Single(results, result => result is null);
+        Assert.All(rejectedResults, rejection =>
         {
             Assert.True(rejection.ProbeInProgress);
             Assert.Equal(TimeSpan.Zero, rejection.RetryAfter);
         });
-        Assert.Equal(2, protectedCallCount);
-
-        releaseProbe.SetResult();
-        await probe;
         await pipe.Send(new TestPipeContext());
 
         Assert.Equal(3, protectedCallCount);
@@ -247,7 +280,7 @@ public sealed class CircuitBreakerFilterTests
                 case ProbeOutcome.Fail:
                     throw new ExpectedFailureException("initial trip");
                 case ProbeOutcome.Cancel:
-                    throw new OperationCanceledException(context.CancellationToken);
+                    throw new OperationCanceledException("caller canceled");
                 case ProbeOutcome.HoldRecovery:
                     if (Interlocked.Increment(ref recoveryCallCount) == 1)
                     {
@@ -265,7 +298,7 @@ public sealed class CircuitBreakerFilterTests
         outcome = ProbeOutcome.Cancel;
         OperationCanceledException canceled = await Assert.ThrowsAsync<OperationCanceledException>(
             () => pipe.Send(new TestPipeContext(cancellation.Token)));
-        Assert.Equal(cancellation.Token, canceled.CancellationToken);
+        Assert.Equal(CancellationToken.None, canceled.CancellationToken);
 
         outcome = ProbeOutcome.HoldRecovery;
         Task recovery = pipe.Send(new TestPipeContext());
@@ -300,6 +333,29 @@ public sealed class CircuitBreakerFilterTests
             () => pipe.Send(new TestPipeContext()));
         Assert.Same(outcome, rejection.InnerException);
         Assert.Equal(TimeSpan.FromSeconds(1), rejection.RetryAfter);
+        Assert.False(rejection.ProbeInProgress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "matching-but-not-canceled-caller-token-reopens")]
+    public async Task MatchingButNotCanceledContextToken_IsAClassifiedDependencyFailure()
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        using var callerCancellation = new CancellationTokenSource();
+        Exception outcome = new ExpectedFailureException("initial trip");
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ => Task.FromException(outcome));
+
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        time.Advance(TimeSpan.FromSeconds(1));
+        outcome = new OperationCanceledException("dependency used the context token", callerCancellation.Token);
+        OperationCanceledException observed = await Assert.ThrowsAsync<OperationCanceledException>(
+            () => pipe.Send(new TestPipeContext(callerCancellation.Token)));
+
+        Assert.False(callerCancellation.IsCancellationRequested);
+        Assert.Same(outcome, observed);
+        CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+            () => pipe.Send(new TestPipeContext()));
+        Assert.Same(outcome, rejection.InnerException);
         Assert.False(rejection.ProbeInProgress);
     }
 
@@ -353,6 +409,44 @@ public sealed class CircuitBreakerFilterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "classifier-failure-releases-probe")]
+    public async Task ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailure()
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        var classifierCalls = 0;
+        var protectedCalls = 0;
+        var succeed = false;
+        var classifierFailure = new ClassifierFailureException();
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ =>
+        {
+            Interlocked.Increment(ref protectedCalls);
+            return succeed
+                ? Task.CompletedTask
+                : Task.FromException(new ExpectedFailureException("resource unavailable"));
+        }, options => options.SetExceptionFilter(configurator =>
+            configurator.Handle<ExpectedFailureException>(_ =>
+            {
+                if (Interlocked.Increment(ref classifierCalls) == 1)
+                    return true;
+
+                throw classifierFailure;
+            })));
+
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        time.Advance(TimeSpan.FromSeconds(1));
+        ClassifierFailureException observed = await Assert.ThrowsAsync<ClassifierFailureException>(
+            () => pipe.Send(new TestPipeContext()));
+        Assert.Same(classifierFailure, observed);
+
+        succeed = true;
+        await pipe.Send(new TestPipeContext());
+        await pipe.Send(new TestPipeContext());
+
+        Assert.Equal(4, protectedCalls);
+        Assert.Equal(2, classifierCalls);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MIDDLEWARE-COMPOSITION", "retry-breaker-concurrency-and-exclusive-recovery")]
     public async Task RetryCircuitBreakerAndConcurrencyLimit_ComposeWithoutChangingTheirOwnership()
     {
@@ -388,9 +482,23 @@ public sealed class CircuitBreakerFilterTests
         filter.Throw = false;
         time.Advance(TimeSpan.FromSeconds(1));
         await pipe.Send(new TestPipeContext());
-        await pipe.Send(new TestPipeContext());
+        int attemptsAfterRecovery = filter.Attempts;
+        filter.HoldAtConcurrency(2);
+        Task[] concurrent = Enumerable.Range(0, 3)
+            .Select(_ => pipe.Send(new TestPipeContext()))
+            .ToArray();
+        await filter.ConfiguredConcurrencyReached;
 
-        Assert.Equal(6, filter.Attempts);
+        Assert.Equal(2, filter.CurrentConcurrency);
+        Assert.Equal(2, filter.MaximumConcurrency);
+        Assert.Equal(attemptsAfterRecovery + 2, filter.Attempts);
+        Assert.All(concurrent, task => Assert.False(task.IsCompleted));
+
+        filter.ReleaseHeldCalls();
+        await Task.WhenAll(concurrent);
+
+        Assert.Equal(attemptsAfterRecovery + 3, filter.Attempts);
+        Assert.Equal(2, filter.MaximumConcurrency);
         Assert.Equal(0, time.TimerCount);
     }
 
@@ -434,21 +542,61 @@ public sealed class CircuitBreakerFilterTests
         time.Advance(TimeSpan.FromSeconds(1));
         await pipe.Send(new TestPipeContext());
 
-        Assert.Contains(measurements, item => item.Name.EndsWith("state_transitions", StringComparison.Ordinal) && item.Value == 1);
-        Assert.Contains(measurements, item => item.Name.EndsWith("probes", StringComparison.Ordinal) && item.Value == 1);
-        Assert.Contains(measurements, item => item.Name.EndsWith("rejections", StringComparison.Ordinal) && item.Value == 1);
-        Assert.Contains(activities, item => item.Name.EndsWith("StateTransition", StringComparison.Ordinal));
-        Assert.Contains(activities, item => item.Name.EndsWith("Probe", StringComparison.Ordinal));
-        Assert.Contains(activities, item => item.Name.EndsWith("Rejected", StringComparison.Ordinal));
         Assert.All(measurements, item => Assert.False(string.IsNullOrWhiteSpace(item.SourceVersion)));
         Assert.All(activities, item => Assert.False(string.IsNullOrWhiteSpace(item.SourceVersion)));
-        Assert.All(measurements.SelectMany(item => item.Tags).Concat(activities.SelectMany(item => item.Tags)), tag =>
+        Assert.Equal(
+            [
+                "vicione.servicebus.circuit_breaker.probes|",
+                "vicione.servicebus.circuit_breaker.rejections|circuit_breaker.rejection.reason=open",
+                "vicione.servicebus.circuit_breaker.state_transitions|circuit_breaker.state.from=closed,circuit_breaker.state.to=open",
+                "vicione.servicebus.circuit_breaker.state_transitions|circuit_breaker.state.from=half_open,circuit_breaker.state.to=closed",
+                "vicione.servicebus.circuit_breaker.state_transitions|circuit_breaker.state.from=open,circuit_breaker.state.to=half_open",
+            ],
+            measurements.Select(item => DescribeSignal(item.Name, item.Tags)).Order(StringComparer.Ordinal));
+        Assert.Equal(
+            [
+                "ViciOne.ServiceBus.CircuitBreaker.Probe|circuit_breaker.probe.result=acquired",
+                "ViciOne.ServiceBus.CircuitBreaker.Rejected|circuit_breaker.rejection.reason=open",
+                "ViciOne.ServiceBus.CircuitBreaker.StateTransition|circuit_breaker.state.from=closed,circuit_breaker.state.to=open",
+                "ViciOne.ServiceBus.CircuitBreaker.StateTransition|circuit_breaker.state.from=half_open,circuit_breaker.state.to=closed",
+                "ViciOne.ServiceBus.CircuitBreaker.StateTransition|circuit_breaker.state.from=open,circuit_breaker.state.to=half_open",
+            ],
+            activities.Select(item => DescribeSignal(item.Name, item.Tags)).Order(StringComparer.Ordinal));
+        Assert.All(measurements, item => Assert.Equal(1, item.Value));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-OBSERVABILITY", "observer-failure-cannot-change-product-semantics")]
+    public async Task ThrowingOpenTelemetryObservers_CannotChangeCircuitStateOrFailures()
+    {
+        using (var meterListener = new MeterListener())
         {
-            Assert.StartsWith("circuit_breaker.", tag.Key, StringComparison.Ordinal);
-            string value = Assert.IsType<string>(tag.Value);
-            Assert.Contains(value,
-                new[] { "closed", "open", "half_open", "probe_in_progress", "acquired" });
-        });
+            meterListener.InstrumentPublished = (instrument, listener) =>
+            {
+                if (instrument.Meter.Name == "ViciOne.ServiceBus"
+                    && instrument.Name.StartsWith("vicione.servicebus.circuit_breaker.", StringComparison.Ordinal))
+                    listener.EnableMeasurementEvents(instrument);
+            };
+            meterListener.SetMeasurementEventCallback<long>(static (_, _, _, _) => throw new TelemetryObserverException());
+            meterListener.Start();
+
+            await AssertCircuitSemanticsSurviveTelemetryObserver();
+        }
+
+        using var activityListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus",
+            Sample = static (ref ActivityCreationOptions<ActivityContext> options) =>
+            {
+                if (options.Name.StartsWith("ViciOne.ServiceBus.CircuitBreaker.", StringComparison.Ordinal))
+                    throw new TelemetryObserverException();
+
+                return ActivitySamplingResult.None;
+            },
+        };
+        ActivitySource.AddActivityListener(activityListener);
+
+        await AssertCircuitSemanticsSurviveTelemetryObserver();
     }
 
     private static IPipe<TestPipeContext> CreatePipe(
@@ -480,6 +628,29 @@ public sealed class CircuitBreakerFilterTests
         return copy;
     }
 
+    private static string DescribeSignal(string name, IEnumerable<KeyValuePair<string, object?>> tags) =>
+        $"{name}|{string.Join(',', tags.OrderBy(tag => tag.Key, StringComparer.Ordinal).Select(tag => $"{tag.Key}={tag.Value}"))}";
+
+    private static async Task AssertCircuitSemanticsSurviveTelemetryObserver()
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        var expected = new ExpectedFailureException("resource unavailable");
+        var fail = true;
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ => fail ? Task.FromException(expected) : Task.CompletedTask);
+
+        ExpectedFailureException observed = await Assert.ThrowsAsync<ExpectedFailureException>(
+            () => pipe.Send(new TestPipeContext()));
+        Assert.Same(expected, observed);
+        CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+            () => pipe.Send(new TestPipeContext()));
+        Assert.Same(expected, rejection.InnerException);
+
+        fail = false;
+        time.Advance(TimeSpan.FromSeconds(1));
+        await pipe.Send(new TestPipeContext());
+        await pipe.Send(new TestPipeContext());
+    }
+
     private static TaskCompletionSource NewSignal() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -498,26 +669,131 @@ public sealed class CircuitBreakerFilterTests
 
     private sealed class UnclassifiedFailureException : Exception;
 
+    private sealed class ClassifierFailureException : Exception;
+
+    private sealed class TelemetryObserverException : Exception;
+
     private sealed class ThrowingFilter : IFilter<TestPipeContext>
     {
         private int _attempts;
+        private int _currentConcurrency;
+        private int _hold;
+        private int _maximumConcurrency;
+        private int _targetConcurrency;
+        private readonly TaskCompletionSource _configuredConcurrencyReached = NewSignal();
+        private readonly TaskCompletionSource _releaseHeldCalls = NewSignal();
 
         public int Attempts => Volatile.Read(ref _attempts);
 
+        public int CurrentConcurrency => Volatile.Read(ref _currentConcurrency);
+
+        public int MaximumConcurrency => Volatile.Read(ref _maximumConcurrency);
+
+        public Task ConfiguredConcurrencyReached => _configuredConcurrencyReached.Task;
+
         public bool Throw { get; set; } = true;
 
-        public Task Send(TestPipeContext context, IPipe<TestPipeContext> next)
+        public void HoldAtConcurrency(int targetConcurrency)
+        {
+            _targetConcurrency = targetConcurrency;
+            Volatile.Write(ref _hold, 1);
+        }
+
+        public void ReleaseHeldCalls() => _releaseHeldCalls.TrySetResult();
+
+        public async Task Send(TestPipeContext context, IPipe<TestPipeContext> next)
         {
             Interlocked.Increment(ref _attempts);
             if (Throw)
                 throw new ExpectedFailureException("application failed");
 
-            return next.Send(context);
+            if (Volatile.Read(ref _hold) == 1)
+            {
+                int current = Interlocked.Increment(ref _currentConcurrency);
+                SetMaximumConcurrency(current);
+                if (current == _targetConcurrency)
+                    _configuredConcurrencyReached.TrySetResult();
+
+                try
+                {
+                    await _releaseHeldCalls.Task;
+                }
+                finally
+                {
+                    Interlocked.Decrement(ref _currentConcurrency);
+                }
+            }
+
+            await next.Send(context);
         }
 
         public void Probe(ProbeContext context)
         {
         }
+
+        private void SetMaximumConcurrency(int value)
+        {
+            int observed = Volatile.Read(ref _maximumConcurrency);
+            while (value > observed)
+            {
+                int previous = Interlocked.CompareExchange(ref _maximumConcurrency, value, observed);
+                if (previous == observed)
+                    return;
+                observed = previous;
+            }
+        }
+    }
+
+    private sealed class ContendedTimeProvider(DateTimeOffset startTime) : TimeProvider, IDisposable
+    {
+        private readonly TaskCompletionSource _allContendersArrived = NewSignal();
+        private readonly FakeTimeProvider _inner = new(startTime);
+        private readonly ManualResetEventSlim _release = new(initialState: false);
+        private int _arrivals;
+        private int _armed;
+        private int _contenderCount;
+
+        public Task AllContendersArrived => _allContendersArrived.Task;
+
+        public override DateTimeOffset GetUtcNow() => _inner.GetUtcNow();
+
+        public override TimeZoneInfo LocalTimeZone => _inner.LocalTimeZone;
+
+        public override long TimestampFrequency => _inner.TimestampFrequency;
+
+        public override long GetTimestamp()
+        {
+            long timestamp = _inner.GetTimestamp();
+            if (Volatile.Read(ref _armed) == 0)
+                return timestamp;
+
+            if (Interlocked.Increment(ref _arrivals) == _contenderCount)
+                _allContendersArrived.TrySetResult();
+            _release.Wait();
+            return timestamp;
+        }
+
+        public override ITimer CreateTimer(
+            TimerCallback callback,
+            object? state,
+            TimeSpan dueTime,
+            TimeSpan period) => throw new InvalidOperationException("The circuit breaker must not allocate timers.");
+
+        public void Advance(TimeSpan elapsed) => _inner.Advance(elapsed);
+
+        public void ArmContention(int contenderCount)
+        {
+            _contenderCount = contenderCount;
+            Volatile.Write(ref _armed, 1);
+        }
+
+        public void ReleaseContenders()
+        {
+            Volatile.Write(ref _armed, 0);
+            _release.Set();
+        }
+
+        public void Dispose() => _release.Dispose();
     }
 
     private sealed class CountingRetryObserver : IRetryObserver

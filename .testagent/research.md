@@ -1132,6 +1132,16 @@ caller atomically owns the half-open probe and every competitor is rejected with
 protected pipe. Probe success closes, a classified failure reopens with bounded backoff, and caller
 cancellation or an unclassified failure releases ownership while remaining half-open.
 
+The final boundary additionally freezes exception-filter configuration at pipe construction:
+retaining the configurator or mutating a caller-owned type array cannot alter the published filter.
+Cancellation ownership depends on the caller token actually being requested rather than token
+identity alone. A throwing classifier releases an acquired probe before propagating the original
+classifier failure. Metrics and activities remain OpenTelemetry-only, carry exact low-cardinality
+tags and are a no-throw observation boundary, so a hostile in-process listener cannot change
+delivery failures or circuit state. The concurrency composition test now holds two real concurrent
+entries and proves that a third waits; the recovery race synchronizes 33 callers on the same
+Open-to-Half-open transition and admits exactly one.
+
 A complete profile exposed two independent test defects outside the inherited lower bound. Cache
 capacity is a documented soft bound of `Capacity + BucketSize`, while `NodeTracker.Cleanup` really
 could lose a concurrent cleanup request by resetting its scheduling flag outside the protecting

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1880 |
+| Added | 1881 |
 | Modified | 4322 |
 | Deleted | 1326 |
 | Renamed | 2 |
@@ -7460,6 +7460,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/CircuitBreakerGlobalTelemetryCollection.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/ConditionExpressionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs` | Added |  |

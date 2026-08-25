@@ -585,13 +585,16 @@ future cohorts as complete.
 - Exactly one caller owns the half-open probe. Success closes and resets bounded backoff; a
   classified failure reopens; caller cancellation and unclassified failures release the probe and
   remain observably half-open. Dependency cancellation remains a classified resource failure.
-- Eighteen ordinary xUnit/MTP facts cover configuration, public surface, both sides of inclusive
-  thresholds, exact sampling/open boundaries, 32-way probe competition, failure classification,
-  cancellation ownership, retry/concurrency composition and versioned low-cardinality OTel signals.
-- Seven isolated one-cause product mutations fail for their intended reasons: throughput boundary,
-  open-time boundary, exclusive probe, backoff progression, caller-cancellation classification,
-  false close after no-verdict release and missing OTel source version. Every mutated source was
-  restored to its pre-mutation SHA-256 before the final build.
-- Core passes 855/855, UnitArchitecture 1487/1487 and LocalIntegration 3/3 with no failure or skip.
+- Twenty-three ordinary xUnit/MTP facts cover configuration, public surface, both sides of inclusive
+  thresholds, exact sampling/open boundaries, immutable filter capture, a real 33-caller probe race,
+  failure and cancellation causality, retry/concurrency composition, exact low-cardinality OTel
+  signals and observer-failure isolation.
+- Fourteen isolated one-cause product mutations fail for their intended reasons: throughput
+  boundary, open-time boundary, exclusive probe, backoff progression, caller-cancellation
+  classification, false close after no-verdict release, missing OTel source version, ignored
+  Open-to-Half-open CAS, token-equality misclassification, missing classifier-failure release,
+  observer exception leakage, mutable caller-owned filter types, missing concurrency limit and a
+  missing rejection tag. Every mutated source was restored before the final build.
+- Core passes 860/860, UnitArchitecture 1492/1492 and LocalIntegration 3/3 with no failure or skip.
   The complete Engineering Release build, including benchmarks and retained transports, has zero
   warnings and zero errors. Bounded `dotnet format whitespace --verify-no-changes` passes.

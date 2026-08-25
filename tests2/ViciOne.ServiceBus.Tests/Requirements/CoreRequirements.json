@@ -691,6 +691,20 @@
    {
       "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RetainedExceptionConfigurator_CannotMutateThePublishedFilterSnapshot",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "retained-filter-builder-cannot-mutate-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CallerOwnedExceptionTypeArray_CannotMutateThePublishedFilterSnapshot",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "caller-owned-type-array-cannot-mutate-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "BuiltPipe_UsesAnImmutableConfigurationSnapshot",
       "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
       "variantKey" : "immutable-runtime-snapshot"
@@ -768,9 +782,23 @@
    {
       "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MatchingButNotCanceledContextToken_IsAClassifiedDependencyFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "matching-but-not-canceled-caller-token-reopens"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
       "variantKey" : "unclassified-failure-releases-probe"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "classifier-failure-releases-probe"
    },
    {
       "requirementId" : "REQ-VSB-MIDDLEWARE-COMPOSITION",
@@ -785,6 +813,13 @@
       "testMethod" : "StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignals",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
       "variantKey" : "otel-low-cardinality-signals"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-OBSERVABILITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingOpenTelemetryObservers_CannotChangeCircuitStateOrFailures",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "observer-failure-cannot-change-product-semantics"
    },
    {
       "requirementId" : "REQ-VSB-PARTITIONER",
