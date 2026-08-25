@@ -28,11 +28,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
             if (!string.IsNullOrWhiteSpace(address.DelayedType))
                 SetExchangeArgument("x-delayed-type", address.DelayedType);
 
-            if (address.BindExchanges != null)
-            {
-                foreach (var exchange in address.BindExchanges)
-                    BindToExchange(exchange);
-            }
+            foreach (var exchange in address.BindExchanges)
+                BindToExchange(exchange);
 
             if (!string.IsNullOrWhiteSpace(address.AlternateExchange))
                 SetExchangeArgument(Headers.AlternateExchange, address.AlternateExchange);

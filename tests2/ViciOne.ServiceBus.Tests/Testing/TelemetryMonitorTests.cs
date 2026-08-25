@@ -17,7 +17,7 @@ public sealed class TelemetryMonitorTests
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var receiveCompleted = new ReceiveCompletionObserver();
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
         using var harness = new InMemoryTestHarness($"telemetry-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -36,7 +36,7 @@ public sealed class TelemetryMonitorTests
                 timeProvider);
 
             await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
-            await receiveCompleted.Completed.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.False(wait.IsCompleted);
 
             timeProvider.Advance(idleTimeout);
@@ -87,7 +87,7 @@ public sealed class TelemetryMonitorTests
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var receiveCompleted = new ReceiveCompletionObserver();
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
         using var harness = new InMemoryTestHarness($"telemetry-send-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -106,7 +106,7 @@ public sealed class TelemetryMonitorTests
                 timeProvider);
 
             await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
-            await receiveCompleted.Completed.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.False(wait.IsCompleted);
 
             timeProvider.Advance(idleTimeout);
@@ -201,18 +201,19 @@ public sealed class TelemetryMonitorTests
         }
     }
 
-    private sealed class ReceiveCompletionObserver : IReceiveObserver
+    private sealed class ReceiveCompletionObserver(ObservableTimeProvider timeProvider) : IReceiveObserver
     {
-        private readonly TaskCompletionSource<bool> _completed =
+        private readonly TaskCompletionSource<Task> _idleTimerArmedAfterReceive =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task Completed => _completed.Task;
+        public Task IdleTimerArmedAfterReceive => _idleTimerArmedAfterReceive.Task.Unwrap();
 
         public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
 
         public Task PostReceive(ReceiveContext context)
         {
-            _completed.TrySetResult(true);
+            Task nextTimerChange = timeProvider.WaitForChangeCount(timeProvider.ChangeCount + 1);
+            _idleTimerArmedAfterReceive.TrySetResult(nextTimerChange);
             return Task.CompletedTask;
         }
 
@@ -224,7 +225,7 @@ public sealed class TelemetryMonitorTests
 
         public Task ReceiveFault(ReceiveContext context, Exception exception)
         {
-            _completed.TrySetException(exception);
+            _idleTimerArmedAfterReceive.TrySetException(exception);
             return Task.CompletedTask;
         }
     }

@@ -26,11 +26,17 @@ dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.LocalIntegration.slnx --locked-mode
 
-dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore --no-incremental
-dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore --no-incremental
-dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
-dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore --no-incremental
+dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore
 ```
+
+Use the normal MSBuild dependency graph. `--no-incremental` selects the `Rebuild` target, which is
+unsafe for this solution shape because product projects are deliberate solution members and are
+also reached through test `ProjectReference` edges. A GitHub runner starts from a clean checkout;
+locally, use `dotnet clean` as a separate explicit operation only when generated output must be
+discarded.
 
 Only an intentional package update may rewrite lock files:
 
@@ -49,7 +55,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1584 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1681 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -75,8 +81,11 @@ MessagePack serialization and transport behavior, the state-machine visualizer, 
 endpoint-name formatting, message-URN contracts, and deterministic request-rate behavior. The
 profile also proves that a public one-dimensional array can be published and consumed as one
 ordered message contract; this compatibility feature is not a batch abstraction. Future-location
-URI round trips and their malformed-input boundaries are also part of the profile. The
-message- and host-retry cohort additionally proves exact retry-layer ownership, consumer and bus
+URI round trips and their malformed-input boundaries are also part of the profile. The RabbitMQ
+address cohort proves canonical host and endpoint values, full and short URI forms, scheme-owned
+TLS, strict certificate defaults, exact option mapping, credential preservation, immutable binding
+ownership and the broker's UTF-8 entity-name limit without contacting a broker. The message- and
+host-retry cohort additionally proves exact retry-layer ownership, consumer and bus
 budgets, base/interface dispatch, bus-stop cancellation, host stopping precedence, caller-token
 identity, explicit deterministic delay and strict configuration boundaries. The
 TaskExecutor and TaskUtil cohorts add deterministic concurrency, cancellation, synchronous-wait,

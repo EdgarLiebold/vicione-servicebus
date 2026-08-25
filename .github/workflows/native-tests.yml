@@ -35,9 +35,9 @@ jobs:
       - name: Restore locked dependency graph
         run: dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
       - name: Build release test binaries
-        run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+        run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 1584 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 1681 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -53,7 +53,7 @@ jobs:
       - name: Restore locked dependency graph
         run: dotnet restore ViciOne.ServiceBus.Tests.LocalIntegration.slnx --locked-mode
       - name: Build release test binaries
-        run: dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore --no-incremental
+        run: dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore
       - name: Run the complete profile against pinned local providers
         run: >-
           python3 tools/ci/run_broker_category.py

@@ -13,17 +13,15 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
     class ConfigurationHostSettings :
         RabbitMqHostSettings
     {
-        internal const SslProtocols DefaultSslProtocols = SslProtocols.Tls12;
+        internal const SslProtocols DefaultSslProtocols = SslProtocols.None;
 
         readonly ConfigurationBatchSettings _batchSettings;
         readonly Lazy<Uri> _hostAddress;
 
         public ConfigurationHostSettings()
         {
-            var defaultOptions = new SslOption();
             SslProtocol = DefaultSslProtocols;
-
-            AcceptablePolicyErrors = defaultOptions.AcceptablePolicyErrors | SslPolicyErrors.RemoteCertificateChainErrors;
+            AcceptablePolicyErrors = SslPolicyErrors.None;
 
             PublisherConfirmation = true;
 
@@ -81,7 +79,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
 
         Uri FormatHostAddress()
         {
-            return new RabbitMqHostAddress(Host, Port, VirtualHost);
+            return new RabbitMqHostAddress(Host, Port, VirtualHost, Ssl);
         }
 
 

@@ -52,7 +52,7 @@ namespace ViciOne.ServiceBus
         bool Ssl { get; }
 
         /// <summary>
-        /// SSL protocol, Tls11 or Tls12 are recommended
+        /// TLS protocol selection. The default is <see cref="SslProtocols.None" />, allowing the operating system to negotiate enabled secure protocols.
         /// </summary>
         SslProtocols SslProtocol { get; }
 

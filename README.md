@@ -57,9 +57,9 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
-dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1584 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1681 \
   --max-parallel-test-modules 1
 ```
 

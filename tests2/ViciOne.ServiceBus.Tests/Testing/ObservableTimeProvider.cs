@@ -6,6 +6,7 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime) : TimePro
 {
     private readonly FakeTimeProvider _inner = new(startTime);
     private readonly object _lock = new();
+    private readonly Dictionary<int, TaskCompletionSource<bool>> _changeWaiters = [];
     private readonly Dictionary<int, TaskCompletionSource<bool>> _timerWaiters = [];
     private int _activeTimerCount;
     private int _changeCount;
@@ -99,15 +100,45 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime) : TimePro
         }
     }
 
+    public Task WaitForChangeCount(int count)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+
+        lock (_lock)
+        {
+            if (_changeCount >= count)
+                return Task.CompletedTask;
+
+            if (!_changeWaiters.TryGetValue(count, out TaskCompletionSource<bool>? waiter))
+            {
+                waiter = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _changeWaiters.Add(count, waiter);
+            }
+
+            return waiter.Task;
+        }
+    }
+
     private void TimerDisposed() => Interlocked.Decrement(ref _activeTimerCount);
 
     private void TimerChanged(TimeSpan dueTime)
     {
+        TaskCompletionSource<bool>[] completedWaiters;
         lock (_lock)
         {
             _changeCount++;
             _lastDueTime = dueTime;
+            completedWaiters = _changeWaiters
+                .Where(waiter => waiter.Key <= _changeCount)
+                .Select(waiter => waiter.Value)
+                .ToArray();
+
+            foreach (int completedCount in _changeWaiters.Keys.Where(count => count <= _changeCount).ToArray())
+                _changeWaiters.Remove(completedCount);
         }
+
+        foreach (TaskCompletionSource<bool> waiter in completedWaiters)
+            waiter.TrySetResult(true);
     }
 
     private sealed class ObservableTimer(ObservableTimeProvider owner, ITimer inner) : ITimer

@@ -1,32 +1,41 @@
+#nullable enable
 namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
 {
+    using System.Text;
     using System.Text.RegularExpressions;
 
 
-    public class RabbitMqEntityNameValidator :
+    public sealed partial class RabbitMqEntityNameValidator :
         IEntityNameValidator
     {
-        static readonly Regex _regex = new Regex(@"^[\w\p{L}\-_\.:]+$", RegexOptions.Compiled);
+        const int MaxEntityNameBytes = 255;
 
         public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
         public void ThrowIfInvalidEntityName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new RabbitMqAddressException("The entity name must not be null or empty");
+                throw new RabbitMqAddressException("The entity name must not be null, empty, or whitespace.");
 
-            var success = IsValidEntityName(name);
-            if (!success)
+            if (Encoding.UTF8.GetByteCount(name) > MaxEntityNameBytes)
+                throw new RabbitMqAddressException($"The UTF-8 encoded entity name must not exceed {MaxEntityNameBytes} bytes.");
+
+            if (!EntityNamePattern().IsMatch(name))
             {
                 throw new RabbitMqAddressException(
-                    "The entity name must be a sequence of these characters: letters, digits, hyphen, underscore, period, or colon.");
+                    "The entity name may contain only Unicode letters and decimal digits, hyphen, underscore, period, or colon.");
             }
         }
 
         public bool IsValidEntityName(string name)
         {
-            return _regex.Match(name).Success;
+            return !string.IsNullOrWhiteSpace(name)
+                && Encoding.UTF8.GetByteCount(name) <= MaxEntityNameBytes
+                && EntityNamePattern().IsMatch(name);
         }
+
+        [GeneratedRegex(@"^[\p{L}\p{Nd}_\-.:]+$", RegexOptions.CultureInvariant)]
+        private static partial Regex EntityNamePattern();
 
 
         static class Cached

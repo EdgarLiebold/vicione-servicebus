@@ -1664,3 +1664,41 @@ Age and count retention are evaluated and applied atomically with each append. A
 not run background cleanup. This is intentional: the capability is finite without duplicating host
 work, and the architecture forbids turning it into a queue, retry carrier, scheduler or second
 outbox.
+
+## RabbitMQ address model
+
+The complete 588-line inherited address fixture, all 46 ledger obligations and the complete current
+address implementation and its consumers were read before the first edit. The cohort is wholly
+hermetic: it constructs `Uri`, `RabbitMqHostAddress`, `RabbitMqEndpointAddress`, host settings and
+receive settings but never opens a connection or resolves a network endpoint.
+
+The old fixture usefully preserves default-port, virtual-host, queue-name, temporary-queue,
+prefetch, TTL, credential and short-address behavior, but omits invalid schemes and values, direct
+constructor parity, ownership of caller arrays, all endpoint query options and credentials that
+contain an additional colon. The current product also exposes mutable array storage from a readonly
+struct, names scheme constants as `Schema`, permits direct construction to bypass entity validation
+and splits user information at every colon, silently dropping the password suffix. Those are
+product/API defects, not behaviors for a replacement test to copy.
+
+The source owner is `src/Transports/ViciOne.ServiceBus.RabbitMqTransport`; the matching test owner is
+`tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests`. The project remains signed because
+the product already grants that exact assembly narrow internal access for an independently retained
+transport test. It joins both the UnitArchitecture and Engineering graphs together with the RabbitMQ
+product project so Release configuration applies to the complete test closure.
+
+The first complete profile build exposed a separate MSBuild defect in the inherited command line,
+not in the RabbitMQ code. `--no-incremental` selected `Rebuild`; projects that are both explicit
+solution members and transitive `ProjectReference` dependencies then waited on duplicate nested
+rebuild ownership and left reusable worker nodes behind. A server-isolated ordinary `Build` completed
+the same focused graph in 21 seconds with zero warnings and errors. The permanent commands therefore
+use normal MSBuild dependency tracking. Clean CI checkouts already have no stale output, while a
+local clean is an explicit preceding operation instead of a concurrent delete-and-build target.
+
+The first unfiltered Unit run also exposed a pre-existing test-only synchronization race in
+`TelemetryMonitorTests`: `IReceiveObserver.PostReceive` runs before `ReceivePipeDispatcher` stops the
+receive activity, and stopping that activity is what rearms the monitored idle timer. Advancing the
+fake clock directly after `PostReceive` could therefore move the clock while the original ten-minute
+timer was still armed; the subsequent one-minute idle interval then began at the advanced time and
+the test waited on time it never advanced. The observer now registers a waiter for the next timer
+change inside `PostReceive` and exposes completion only after that exact change. This is a causal
+barrier, not a retry, delay, increased timeout or accommodation of product behavior.

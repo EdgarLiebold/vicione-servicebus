@@ -6,13 +6,13 @@ namespace ViciOne.ServiceBus
 
 
     /// <summary>
-    /// Configures SSL/TLS for RabbitMQ. See http://www.rabbitmq.com/ssl.html
+    /// Configures TLS for RabbitMQ. See https://www.rabbitmq.com/docs/ssl.
     /// for details on how to set up RabbitMQ for SSL.
     /// </summary>
     public interface IRabbitMqSslConfigurator
     {
         /// <summary>
-        /// The SSL protocol version.
+        /// The TLS protocol selection. Prefer <see cref="SslProtocols.None" /> so the operating system selects enabled secure protocols.
         /// </summary>
         SslProtocols Protocol { get; set; }
 

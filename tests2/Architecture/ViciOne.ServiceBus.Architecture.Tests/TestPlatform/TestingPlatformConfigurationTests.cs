@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 1584;
+    private const int ExpectedUnitTestFloor = 1681;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -108,6 +108,29 @@ public sealed class TestingPlatformConfigurationTests
         ];
 
         Assert.All(commandOwners, path => Assert.Equal(ExpectedUnitTestFloor, ReadUnitProfileFloor(path)));
+    }
+
+    [Fact]
+    public void PublicBuildCommands_DoNotUseConcurrentRebuild()
+    {
+        string[] commandOwners =
+        [
+            Path.Combine(RepositoryLayout.Root, "README.md"),
+            Path.Combine(RepositoryLayout.Root, "docs", "build.md"),
+            Path.Combine(RepositoryLayout.Root, ".github", "workflows", "native-tests.yml"),
+        ];
+
+        Assert.All(commandOwners, path =>
+        {
+            var content = Regex.Replace(File.ReadAllText(path), @"\\\r?\n\s*", " ");
+            MatchCollection buildCommands = Regex.Matches(
+                content,
+                @"(?m)^\s*(?:run:\s*)?dotnet\s+build\b[^\r\n]*",
+                RegexOptions.CultureInvariant);
+
+            Assert.NotEmpty(buildCommands);
+            Assert.All(buildCommands.Cast<Match>(), match => Assert.DoesNotContain("--no-incremental", match.Value));
+        });
     }
 
     private static int ReadUnitProfileFloor(string path)

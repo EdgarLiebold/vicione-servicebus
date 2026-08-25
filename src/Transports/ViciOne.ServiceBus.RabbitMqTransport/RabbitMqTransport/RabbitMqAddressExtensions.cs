@@ -107,13 +107,12 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             option.Enabled = settings.Ssl;
             option.Version = settings.SslProtocol;
             option.AcceptablePolicyErrors = settings.AcceptablePolicyErrors;
-            option.ServerName = settings.SslServerName;
+            option.ServerName = string.IsNullOrWhiteSpace(settings.SslServerName)
+                ? settings.Host
+                : settings.SslServerName;
             option.Certs = settings.ClientCertificate == null ? null : new X509Certificate2Collection { settings.ClientCertificate };
             option.CertificateSelectionCallback = settings.CertificateSelectionCallback;
             option.CertificateValidationCallback = settings.CertificateValidationCallback;
-
-            if (string.IsNullOrWhiteSpace(option.ServerName))
-                option.AcceptablePolicyErrors |= SslPolicyErrors.RemoteCertificateNameMismatch;
 
             if (string.IsNullOrEmpty(settings.ClientCertificatePath))
             {
@@ -147,21 +146,24 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             var hostSettings = new ConfigurationHostSettings
             {
                 Host = hostAddress.Host,
+                Ssl = RabbitMqHostAddress.IsSecureScheme(hostAddress.Scheme),
                 VirtualHost = hostAddress.VirtualHost,
                 Username = "",
                 Password = ""
             };
 
-            if (hostAddress.Port.HasValue)
-                hostSettings.Port = hostAddress.Port.Value;
+            hostSettings.Port = hostAddress.Port;
 
             if (!string.IsNullOrEmpty(address.UserInfo))
             {
-                var parts = address.UserInfo.Split(':');
-                hostSettings.Username = UriDecode(parts[0]);
-
-                if (parts.Length >= 2)
-                    hostSettings.Password = UriDecode(parts[1]);
+                var separator = address.UserInfo.IndexOf(':');
+                if (separator < 0)
+                    hostSettings.Username = UriDecode(address.UserInfo);
+                else
+                {
+                    hostSettings.Username = UriDecode(address.UserInfo[..separator]);
+                    hostSettings.Password = UriDecode(address.UserInfo[(separator + 1)..]);
+                }
             }
 
             hostSettings.Heartbeat = TimeSpan.FromSeconds(hostAddress.Heartbeat ?? 0);

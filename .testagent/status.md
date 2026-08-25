@@ -615,3 +615,26 @@ future cohorts as complete.
   17/17 against ephemeral PostgreSQL and pinned Azurite, all with zero failure and zero skip. The
   transition-only Python inventory remains green at 206/206 after dispositioning only the replaced
   inherited audit obligations.
+
+## Lead implementation: RabbitMQ address model
+
+- The complete 588-line inherited `RabbitMqAddress_Specs.cs` fixture and all 46 frozen obligations
+  were read and mapped one-to-one before retirement. The replacement is a source-mirrored signed
+  xUnit 4/MTP 2 transport project; the old fixture remains available in Git history.
+- Host and endpoint addresses are immutable, normalize scheme-specific ports, preserve encoded
+  virtual hosts and credentials, own binding snapshots and reject unknown, duplicate, invalid or
+  semantically conflicting options. Short addresses reject host settings that cannot take effect.
+- TLS follows the scheme rather than a port number, lets the operating system negotiate enabled
+  protocols, validates chains and names by default and uses the configured host as the default
+  certificate server name. Explicit policy exceptions remain available through the SSL configurator.
+- The focused RabbitMQ executable passes 94/94, UnitArchitecture passes 1681/1681 and
+  LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all without failure or
+  skip. The complete serial Engineering Release build has zero warnings and zero errors.
+- Six isolated product mutations reject wrong default-port normalization, lost virtual-host
+  encoding, bypassed direct-name validation, truncated credential semantics, wrong TTL mapping and
+  retained caller-owned bindings. A separate projection omission proves that an attributed test
+  cannot disappear from the requirement catalog unnoticed. Every target was restored byte-for-byte.
+- The full Unit run exposed a pre-existing race in the TelemetryMonitor test barrier: `PostReceive`
+  precedes the product span stop and idle-timer restart. The test clock now observes that causal timer
+  restart before advancing; the product timeout was neither increased nor bypassed. The focused
+  telemetry cohort passes 4/4 and the complete stationary Unit profile remains 1681/1681.

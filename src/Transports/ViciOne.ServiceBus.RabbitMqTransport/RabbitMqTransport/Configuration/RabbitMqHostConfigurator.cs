@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
         {
             _settings = hostAddress.GetConfigurationHostSettings();
 
-            if (_settings.Port == 5671)
+            if (_settings.Ssl)
                 UseSsl();
 
             _settings.VirtualHost = Uri.UnescapeDataString(GetVirtualHost(hostAddress));
@@ -32,13 +32,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
                 Port = port,
                 VirtualHost = virtualHost
             };
-
-            if (_settings.Port == 5671)
-            {
-                UseSsl(s =>
-                {
-                });
-            }
 
             if (!string.IsNullOrEmpty(connectionName))
                 _settings.ClientProvidedName = connectionName;

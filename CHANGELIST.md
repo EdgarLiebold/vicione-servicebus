@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1957 |
+| Added | 1967 |
 | Modified | 4265 |
 | Deleted | 1383 |
 | Renamed | 2 |
@@ -916,6 +916,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/MESSAGE-JOURNAL/ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/R1-SCOPE-QUESTION/SCOPE_GAP_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/PRODUCT_PATH_ANALYSIS.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
 | `evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/abstractions/MUTATION_VALIDATION.md` | Added |  |
@@ -2471,6 +2473,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/MessageReturnedException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/MessageReturnedException.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/RabbitMqAddressException.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/Exceptions/RabbitMqConnectionException.cs` |
+| `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqAddressOptionNames.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqBasicConsumeContext.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqBasicConsumeContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqBusFactory.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqBusFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqConsumeContextExtensions.cs` | Modified | `src/Transports/MassTransit.RabbitMqTransport/RabbitMqConsumeContextExtensions.cs` |
@@ -6758,7 +6761,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/PublisherConfirm_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/PurgeOnStartup_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqActivityTestFixture.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqAddress_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestFixture.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTestSetUpFixture.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RawJson_Specs.cs` | Added |  |
@@ -7281,6 +7283,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RabbitMqAddressRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/AbstractionsLocalIntegrationRequirements.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |

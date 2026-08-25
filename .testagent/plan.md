@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1557 predeclared unfiltered cases;
-- `LocalIntegration`: 3 unfiltered cases.
+- `UnitArchitecture`: 1681 predeclared unfiltered cases;
+- `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1105,7 +1105,7 @@ just-below thresholds, sampling/open boundaries, a filter snapshot isolated from
 and caller-owned arrays, bounded backoff, cancellation causality, a real 33-caller CAS race,
 classifier-failure recovery, measured retry/concurrency composition, public surface, exact
 low-cardinality OpenTelemetry signals and no-throw observer isolation. The predeclared
-UnitArchitecture floor is 1557; final acceptance additionally requires focused, unfiltered Unit and
+UnitArchitecture floor is 1584; final acceptance additionally requires focused, unfiltered Unit and
 LocalIntegration profiles, the Engineering Release build and one-cause mutations.
 
 ## Accepted cohort — middleware retry
@@ -1413,3 +1413,26 @@ mutations must reject raw-payload defaults, CLR-wrapper type capture, outcome lo
 on journal failure, missing bounds, retention bypass and telemetry leakage. Final UnitArchitecture,
 LocalIntegration, applicable External and Engineering Release profiles pass without failures,
 skips, warnings or a second verdict path.
+
+## RabbitMQ address model
+
+Reconstruct the complete inherited `RabbitMqAddress_Specs.cs` cohort as one hermetic transport-owner
+slice under `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests`. The 46 R0 obligations are
+a lower bound, not the target design. Native tests cover host and endpoint parsing, canonical
+rendering, short forms, virtual-host and entity encoding, default and secure ports, credentials,
+temporary queues, receive settings and every supported query option. Negative and boundary cases
+come from the complete product path, not from the NUnit fixture.
+
+The public address values become immutable Greenfield value objects with correctly named schemes,
+defensive collection ownership and fail-fast validation. URI parsing must never truncate a password
+at a later colon. Direct endpoint construction enforces the same entity-name contract as URI
+construction. Configuration errors expose stable argument or RabbitMQ-address exceptions; tests do
+not preserve silent fallback or partial parsing as a desired contract.
+
+Acceptance is one signed xUnit 4/MTP v2 executable project in the source-mirrored transport folder,
+one passive embedded requirement projection, a terminal one-to-one disposition of all 46 R0 IDs,
+focused locked restore/build/test, the unfiltered UnitArchitecture profile and targeted one-cause
+mutations for default-port normalization, virtual-host encoding, direct-constructor validation,
+credential preservation, option mapping and defensive snapshot ownership. Only then remove the old
+fixture and any resulting empty directory. No broker, container, network or wall-clock oracle is
+allowed in this cohort.
