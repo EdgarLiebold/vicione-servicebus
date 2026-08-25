@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1992 |
+| Added | 1997 |
 | Modified | 4265 |
 | Deleted | 1383 |
 | Renamed | 2 |
@@ -917,7 +917,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/MESSAGE-JOURNAL/ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/R1-SCOPE-QUESTION/SCOPE_GAP_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/MUTATION_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/MUTATION_MANIFEST.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/MUTATION_RECIPES.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/PRODUCT_PATH_ANALYSIS.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/VALIDATION.md` | Added |  |
@@ -941,6 +943,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M13-direct-alternate-validation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M14-direct-binding-validation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M15-telemetry-half-idle-deadline.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M16-topology-name-injection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M17-short-queue-name-decoding.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M18-topology-formatted-name-injection.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
 | `evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/abstractions/MUTATION_VALIDATION.md` | Added |  |

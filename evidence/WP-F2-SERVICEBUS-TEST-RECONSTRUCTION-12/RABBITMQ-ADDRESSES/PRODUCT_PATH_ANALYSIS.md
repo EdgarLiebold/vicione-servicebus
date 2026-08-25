@@ -42,6 +42,9 @@ removed. The old Git history remains the byte-preserving archive.
   addresses.
 - Destination topology resolves the host once per operation from the final host-configuration owner;
   it never retains the constructor's temporary `localhost` default.
+- Destination topology treats both public exchange names and message-formatter output as entity-name
+  data. It never reparses either value as an address, query or fragment, and it carries temporary
+  message lifetime through typed constructor arguments.
 - Queue TTL reaches RabbitMQ as a nonnegative numeric AMQP argument, never as formatted text.
 - Delayed exchanges normalize independently of option order and generated auxiliary names pass the
   same entity-name validation as public names.

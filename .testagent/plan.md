@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1696 predeclared unfiltered cases;
+- `UnitArchitecture`: 1698 predeclared unfiltered cases;
 - `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1437,9 +1437,11 @@ credential preservation, option mapping and defensive snapshot ownership. Only t
 fixture and any resulting empty directory. No broker, container, network or wall-clock oracle is
 allowed in this cohort.
 
-The first independent review found and the correction closes five wider product-path defects: query
+The independent reviews found and the correction closes the wider product-path defects: query
 values retain every byte after the first separator, opaque short names decode symmetrically, queue
 TTL is a numeric AMQP argument, bus topology resolves against the final configured host, and every
-direct-constructor name input owns the same validation boundary. The telemetry test barrier also
-proves the exact idle deadline rather than merely observing an arbitrary timer change. The focused
-transport executable now contains 105 unfiltered cases and the UnitArchitecture floor is 1696.
+direct-constructor name input owns the same validation boundary. Public and formatter-produced
+topology names are data and can no longer be reinterpreted as URI options or fragments. The
+telemetry test barrier also proves the exact idle deadline rather than merely observing an arbitrary
+timer change. The focused transport executable now contains 107 unfiltered cases and the
+UnitArchitecture floor is 1698.
