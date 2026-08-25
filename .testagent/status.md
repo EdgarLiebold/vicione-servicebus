@@ -633,10 +633,14 @@ future cohorts as complete.
 - The first independent code and test reviews rejected the initial candidate. Their product-path
   counterexamples are fixed: raw query separators are retained, short names decode symmetrically,
   TTL is a numeric AMQP value, topology reads the final host configuration, and validation covers
-  exchange, queue, alternate-exchange and binding inputs. Fresh one-cause mutation evidence is still
-  being regenerated against this corrected candidate.
+  exchange, queue, alternate-exchange and binding inputs. Fourteen product mutants and one
+  requirement-projection sabotage are killed by their owning native tests and bound with baseline,
+  mutant, raw-result and post-restore hashes.
 - The full Unit run exposed a pre-existing race in the TelemetryMonitor test barrier: `PostReceive`
   precedes the product span stop and idle-timer restart. The test clock now observes that causal timer
   restart before advancing; the product timeout was neither increased nor bypassed. The focused
   telemetry cohort now proves the exact due time and just-before boundary, passes 4/4, and the
   complete stationary Unit profile passes 1696/1696.
+- The same unfiltered validation exposed a missing causal barrier in a pre-existing Saga test. It
+  now waits for actual consumption before reading state written during `Consume`; the focused test
+  passed 10/10 consecutive runs without timeout, retry or product-semantic changes.
