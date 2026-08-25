@@ -114,9 +114,13 @@ public sealed class TestingPlatformConfigurationTests
     {
         const string unitCommandPattern =
             @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.Unit\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
-        Match match = Regex.Match(File.ReadAllText(path), unitCommandPattern, RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        MatchCollection matches = Regex.Matches(
+            File.ReadAllText(path),
+            unitCommandPattern,
+            RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
-        Assert.True(match.Success, $"expected one documented Unit profile command in {path}");
+        Assert.True(matches.Count == 1, $"expected exactly one documented Unit profile command in {path}, found {matches.Count}");
+        Match match = matches[0];
         return int.Parse(match.Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 }
