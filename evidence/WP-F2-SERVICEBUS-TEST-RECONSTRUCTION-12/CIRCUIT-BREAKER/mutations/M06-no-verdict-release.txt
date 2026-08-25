@@ -1,0 +1,18 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery (122ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.CircuitBreakerOpenException)
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:418
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:426
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (1s 347ms)
+Exitcode: 2
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 927ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

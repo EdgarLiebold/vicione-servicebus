@@ -1,0 +1,23 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailure (62ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: ViciOne.ServiceBus.CircuitBreakerOpenException : The circuit breaker is half-open and its exclusive recovery probe is already in progress.
+  ---- ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests+ExpectedFailureException : resource unavailable
+    um ViciOne.ServiceBus.Middleware.CircuitBreaker.CircuitBreakerStateMachine.Acquire() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerStateMachine.cs:53
+    um ViciOne.ServiceBus.Middleware.CircuitBreakerFilter`1.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreakerFilter.cs:22
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailure() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:464
+    --- End of stack trace from previous location ---
+    ----- Inner Stack Trace -----
+    um ViciOne.ServiceBus.Middleware.AsyncDelegateFilter`1.<>c__DisplayClass3_0.<<Send>g__SendAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Middleware/AsyncDelegateFilter.cs:34
+    --- End of stack trace from previous location ---
+    um ViciOne.ServiceBus.Middleware.CircuitBreakerFilter`1.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreakerFilter.cs:25
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (1s 258ms)
+Exitcode: 2
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 922ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

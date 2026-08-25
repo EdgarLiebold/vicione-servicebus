@@ -1,0 +1,40 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignals (115ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Assert.All() Failure: 6 out of 6 items in the collection did not pass.
+  [0]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.state_transitions, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+  [1]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.rejections, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+  [2]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.state_transitions, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+  [3]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.probes, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+  [4]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.rejections, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+  [5]: Item:  MeasurementRecord { Name = vicione.servicebus.circuit_breaker.state_transitions, SourceVersion = , Value = 1, Tags = System.Collections.Generic.KeyValuePair`2[System.String,System.Object][] }
+       Error: Assert.Equal() Failure: Strings differ
+              Expected: "1.0.0.0"
+              Actual:   null
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignals() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:598
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (1s 244ms)
+Exitcode: 2
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 847ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

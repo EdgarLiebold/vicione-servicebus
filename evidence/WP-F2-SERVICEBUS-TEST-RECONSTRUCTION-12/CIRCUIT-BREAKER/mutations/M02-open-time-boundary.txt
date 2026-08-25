@@ -1,0 +1,28 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailure (62ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests+ExpectedFailureException)
+  Actual:   typeof(ViciOne.ServiceBus.CircuitBreakerOpenException)
+  ---- ViciOne.ServiceBus.CircuitBreakerOpenException : The circuit breaker is open. Retry after 00:00:00.
+  -------- ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests+ExpectedFailureException : resource unavailable
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailure() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:157
+    --- End of stack trace from previous location ---
+    ----- Inner Stack Trace -----
+    um ViciOne.ServiceBus.Middleware.CircuitBreaker.CircuitBreakerStateMachine.Acquire() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerStateMachine.cs:41
+    um ViciOne.ServiceBus.Middleware.CircuitBreakerFilter`1.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreakerFilter.cs:22
+    ----- Inner Stack Trace -----
+    um ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests.<>c__DisplayClass5_0.<OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailure>b__0(TestPipeContext _) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs:138
+    um ViciOne.ServiceBus.Middleware.AsyncDelegateFilter`1.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Middleware/AsyncDelegateFilter.cs:28
+    um ViciOne.ServiceBus.Configuration.PipeConfigurator`1.LastPipe.Send(TContext context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeBuilder.cs:115
+    um ViciOne.ServiceBus.Middleware.CircuitBreakerFilter`1.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/CircuitBreakerFilter.cs:25
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (1s 352ms)
+Exitcode: 2
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 940ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

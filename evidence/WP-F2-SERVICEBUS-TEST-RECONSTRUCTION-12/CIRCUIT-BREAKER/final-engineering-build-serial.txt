@@ -1,0 +1,40 @@
+  ViciOne.ServiceBus.Abstractions -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.MessagePack -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+  ViciOne.ServiceBus.Benchmarks.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmarks.Tests/release/ViciOne.ServiceBus.Benchmarks.Tests.dll
+  ViciOne.ServiceBus.Analyzers -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers/release/ViciOne.ServiceBus.Analyzers.dll
+  ViciOne.ServiceBus.Analyzers.CodeFixes -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes/release/ViciOne.ServiceBus.Analyzers.CodeFixes.dll
+  ViciOne.ServiceBus.SignalR -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR/release/ViciOne.ServiceBus.SignalR.dll
+  ViciOne.ServiceBus.StateMachineVisualizer -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer/release/ViciOne.ServiceBus.StateMachineVisualizer.dll
+  ViciOne.ServiceBus.Diagnostics -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics/release/ViciOne.ServiceBus.Diagnostics.dll
+  ViciOne.ServiceBus.Diagnostics.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll
+  ViciOne.ServiceBus.Samples.OrderWorkflow -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Samples.OrderWorkflow/release/ViciOne.ServiceBus.Samples.OrderWorkflow.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll
+  ViciOne.ServiceBus.Tests.Infrastructure.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll
+  ViciOne.ServiceBus.Abstractions.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll
+  ViciOne.ServiceBus.Analyzers.CodeFixes.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll
+  ViciOne.ServiceBus.Analyzers.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.dll
+  ViciOne.ServiceBus.MessagePack.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack.Tests/release/ViciOne.ServiceBus.MessagePack.Tests.dll
+  ViciOne.ServiceBus.SignalR.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR.Tests/release/ViciOne.ServiceBus.SignalR.Tests.dll
+  ViciOne.ServiceBus.StateMachineVisualizer.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll
+  ViciOne.ServiceBus.Tests -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:01:27.31
