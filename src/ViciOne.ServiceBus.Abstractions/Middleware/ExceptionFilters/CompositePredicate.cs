@@ -46,5 +46,10 @@ namespace ViciOne.ServiceBus.ExceptionFilters
         {
             return _list.Count == 0 || !MatchesAny(target);
         }
+
+        public Func<T, bool>[] CreateSnapshot()
+        {
+            return _list.ToArray();
+        }
     }
 }

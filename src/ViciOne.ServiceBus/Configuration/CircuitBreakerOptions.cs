@@ -36,7 +36,7 @@ public sealed class CircuitBreakerOptions : IOptions
         SamplingDuration = TimeSpan.FromMinutes(1);
         _breakDurations = Array.AsReadOnly((TimeSpan[])DefaultBreakDurations.Clone());
         TimeProvider = TimeProvider.System;
-        ExceptionFilter = new ExceptionFilterBuilder().Build();
+        ExceptionFilter = new FilterSpecification().Build();
     }
 
     /// <summary>
@@ -121,9 +121,9 @@ public sealed class CircuitBreakerOptions : IOptions
     {
         ArgumentNullException.ThrowIfNull(configure);
 
-        var builder = new ExceptionFilterBuilder();
-        configure(builder);
-        ExceptionFilter = builder.Build();
+        var specification = new FilterSpecification();
+        configure(specification);
+        ExceptionFilter = specification.Build();
         return this;
     }
 
@@ -135,127 +135,8 @@ public sealed class CircuitBreakerOptions : IOptions
         TimeProvider,
         ExceptionFilter);
 
-    private sealed class ExceptionFilterBuilder : IExceptionConfigurator
+    private sealed class FilterSpecification : ExceptionSpecification
     {
-        private readonly List<Func<Exception, bool>> _excludes = [];
-        private readonly List<Func<Exception, bool>> _includes = [];
-
-        public void Handle(params Type[] exceptionTypes)
-        {
-            Type[] snapshot = SnapshotTypes(exceptionTypes);
-            _includes.Add(exception => Matches(exception, snapshot));
-        }
-
-        public void Handle<T>()
-            where T : Exception => _includes.Add(static exception => Matches(exception, typeof(T)));
-
-        public void Handle<T>(Func<T, bool> filter)
-            where T : Exception
-        {
-            ArgumentNullException.ThrowIfNull(filter);
-            _includes.Add(exception => Matches(exception, filter));
-        }
-
-        public void Ignore(params Type[] exceptionTypes)
-        {
-            Type[] snapshot = SnapshotTypes(exceptionTypes);
-            _excludes.Add(exception => Matches(exception, snapshot));
-        }
-
-        public void Ignore<T>()
-            where T : Exception => _excludes.Add(static exception => Matches(exception, typeof(T)));
-
-        public void Ignore<T>(Func<T, bool> filter)
-            where T : Exception
-        {
-            ArgumentNullException.ThrowIfNull(filter);
-            _excludes.Add(exception => Matches(exception, filter));
-        }
-
-        public IExceptionFilter Build() => new SnapshotExceptionFilter([.. _includes], [.. _excludes]);
-
-        private static Type[] SnapshotTypes(Type[] exceptionTypes)
-        {
-            ArgumentNullException.ThrowIfNull(exceptionTypes);
-
-            var snapshot = (Type[])exceptionTypes.Clone();
-            if (snapshot.Any(type => type is null || !typeof(Exception).IsAssignableFrom(type)))
-                throw new ArgumentException("Every configured type must derive from Exception.", nameof(exceptionTypes));
-
-            return snapshot;
-        }
-
-        private static bool Matches(Exception exception, params Type[] exceptionTypes)
-        {
-            Exception baseException = exception.GetBaseException();
-            if (baseException is AggregateException aggregateException)
-            {
-                foreach (Exception innerException in aggregateException.InnerExceptions)
-                {
-                    Exception baseInnerException = innerException.GetBaseException();
-                    foreach (Type exceptionType in exceptionTypes)
-                    {
-                        if (exceptionType.IsInstanceOfType(innerException)
-                            || exceptionType.IsInstanceOfType(baseInnerException))
-                            return true;
-                    }
-                }
-            }
-
-            foreach (Type exceptionType in exceptionTypes)
-            {
-                if (exceptionType.IsInstanceOfType(exception)
-                    || exceptionType.IsInstanceOfType(baseException))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static bool Matches<T>(Exception exception, Func<T, bool> filter)
-            where T : Exception
-        {
-            if (exception is T typedException)
-                return filter(typedException);
-
-            Exception baseException = exception.GetBaseException();
-            if (baseException is AggregateException aggregateException)
-            {
-                foreach (Exception innerException in aggregateException.InnerExceptions)
-                {
-                    if (innerException.GetBaseException() is T typedInnerException && filter(typedInnerException))
-                        return true;
-                }
-            }
-
-            return baseException is T typedBaseException && filter(typedBaseException);
-        }
-    }
-
-    private sealed class SnapshotExceptionFilter(
-        Func<Exception, bool>[] includes,
-        Func<Exception, bool>[] excludes) : IExceptionFilter
-    {
-        public bool Match(Exception exception)
-        {
-            ArgumentNullException.ThrowIfNull(exception);
-
-            bool included = includes.Length == 0;
-            for (var index = 0; !included && index < includes.Length; index++)
-                included = includes[index](exception);
-
-            if (!included)
-                return false;
-
-            for (var index = 0; index < excludes.Length; index++)
-            {
-                if (excludes[index](exception))
-                    return false;
-            }
-
-            return true;
-        }
-
-        void IProbeSite.Probe(ProbeContext context) => context.Add("filter", "snapshot");
+        public IExceptionFilter Build() => CreateFilterSnapshot();
     }
 }

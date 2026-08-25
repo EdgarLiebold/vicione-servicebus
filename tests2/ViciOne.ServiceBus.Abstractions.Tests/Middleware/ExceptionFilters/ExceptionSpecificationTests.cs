@@ -41,8 +41,27 @@ public sealed class ExceptionSpecificationTests
         Assert.True(specification.Matches(new ArgumentException("invalid value", "value")));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EXCEPTION-FILTER", "immutable-snapshot")]
+    public void Snapshot_IsDetachedFromLaterConfigurationAndCallerOwnedTypeArrays()
+    {
+        Type[] handledTypes = [typeof(InvalidOperationException)];
+        var specification = new TestExceptionSpecification();
+        specification.Handle(handledTypes);
+        IExceptionFilter snapshot = specification.CreateSnapshot();
+
+        handledTypes[0] = typeof(ArgumentException);
+        specification.Ignore<InvalidOperationException>();
+
+        Assert.True(snapshot.Match(new InvalidOperationException("captured")));
+        Assert.False(snapshot.Match(new ArgumentException("not captured")));
+        Assert.False(specification.Matches(new InvalidOperationException("now ignored")));
+    }
+
     private sealed class TestExceptionSpecification : ExceptionSpecification
     {
         public bool Matches(Exception exception) => Filter.Match(exception);
+
+        public IExceptionFilter CreateSnapshot() => CreateFilterSnapshot();
     }
 }

@@ -24,7 +24,8 @@ entry below records what the current work changed for anyone reading the source.
 
 - The circuit breaker now has one validated greenfield options boundary, an immutable runtime
   snapshot and a timer-free state machine. The snapshot is isolated from retained configuration
-  builders and caller-owned arrays. Exactly one caller owns each half-open recovery probe;
+  builders and caller-owned arrays and is produced by the shared exception-filter semantics used by
+  retry, rescue, redelivery and kill-switch paths. Exactly one caller owns each half-open recovery probe;
   competitors fail immediately with `CircuitBreakerOpenException`. Inclusive throughput/ratio
   boundaries, bounded backoff, causal cancellation classification and no-throw, low-cardinality
   OpenTelemetry signals replace public runtime states, router events and timer ownership.

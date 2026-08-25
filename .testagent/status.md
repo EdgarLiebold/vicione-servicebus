@@ -589,12 +589,13 @@ future cohorts as complete.
   thresholds, exact sampling/open boundaries, immutable filter capture, a real 33-caller probe race,
   failure and cancellation causality, retry/concurrency composition, exact low-cardinality OTel
   signals and observer-failure isolation.
-- Fourteen isolated one-cause product mutations fail for their intended reasons: throughput
+- Thirteen isolated one-cause product mutations and one test-setup sabotage fail for their intended reasons: throughput
   boundary, open-time boundary, exclusive probe, backoff progression, caller-cancellation
   classification, false close after no-verdict release, missing OTel source version, ignored
   Open-to-Half-open CAS, token-equality misclassification, missing classifier-failure release,
-  observer exception leakage, mutable caller-owned filter types, missing concurrency limit and a
-  missing rejection tag. Every mutated source was restored before the final build.
-- Core passes 860/860, UnitArchitecture 1492/1492 and LocalIntegration 3/3 with no failure or skip.
+  observer exception leakage, retained-builder mutation, mutable caller-owned filter types and
+  missing rejection tags. Removing the configured concurrency limit is the separate test-setup
+  sabotage. Every mutated source and test setup was restored before the final build.
+- Core passes 860/860, UnitArchitecture 1494/1494 and LocalIntegration 3/3 with no failure or skip.
   The complete Engineering Release build, including benchmarks and retained transports, has zero
   warnings and zero errors. Bounded `dotnet format whitespace --verify-no-changes` passes.

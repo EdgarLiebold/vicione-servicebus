@@ -93,6 +93,13 @@
    {
       "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Snapshot_IsDetachedFromLaterConfigurationAndCallerOwnedTypeArrays",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters.ExceptionSpecificationTests",
+      "variantKey" : "immutable-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-EXCEPTION-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "TypeOnlyRegistration_MatchesThatExceptionType",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters.ExceptionSpecificationTests",
       "variantKey" : "type-only"

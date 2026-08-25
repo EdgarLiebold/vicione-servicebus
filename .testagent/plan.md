@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1492 predeclared unfiltered cases;
+- `UnitArchitecture`: 1494 predeclared unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1105,7 +1105,7 @@ just-below thresholds, sampling/open boundaries, a filter snapshot isolated from
 and caller-owned arrays, bounded backoff, cancellation causality, a real 33-caller CAS race,
 classifier-failure recovery, measured retry/concurrency composition, public surface, exact
 low-cardinality OpenTelemetry signals and no-throw observer isolation. The predeclared
-UnitArchitecture floor is 1492; final acceptance additionally requires focused, unfiltered Unit and
+UnitArchitecture floor is 1494; final acceptance additionally requires focused, unfiltered Unit and
 LocalIntegration profiles, the Engineering Release build and one-cause mutations.
 
 ## Accepted cohort — middleware retry

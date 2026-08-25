@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using Xunit;
 
@@ -15,6 +16,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
+    private const int ExpectedUnitTestFloor = 1494;
+
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
     {
@@ -92,5 +95,28 @@ public sealed class TestingPlatformConfigurationTests
         Assert.Equal(
             File.ReadAllBytes(Path.Combine(RepositoryLayout.Root, "tests2", "testsettings.json")),
             File.ReadAllBytes(deployed));
+    }
+
+    [Fact]
+    public void PublicUnitProfileCommands_UseThePredeclaredFloor()
+    {
+        string[] commandOwners =
+        [
+            Path.Combine(RepositoryLayout.Root, "README.md"),
+            Path.Combine(RepositoryLayout.Root, "docs", "build.md"),
+            Path.Combine(RepositoryLayout.Root, ".github", "workflows", "native-tests.yml"),
+        ];
+
+        Assert.All(commandOwners, path => Assert.Equal(ExpectedUnitTestFloor, ReadUnitProfileFloor(path)));
+    }
+
+    private static int ReadUnitProfileFloor(string path)
+    {
+        const string unitCommandPattern =
+            @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.Unit\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
+        Match match = Regex.Match(File.ReadAllText(path), unitCommandPattern, RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        Assert.True(match.Success, $"expected one documented Unit profile command in {path}");
+        return int.Parse(match.Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 }

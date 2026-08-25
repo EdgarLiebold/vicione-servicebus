@@ -21,5 +21,16 @@ namespace ViciOne.ServiceBus.ExceptionFilters
         {
             return Includes.MatchesAny(target) && Excludes.DoesNotMatchAny(target);
         }
+
+        public CompositeFilter<T> CreateSnapshot()
+        {
+            var snapshot = new CompositeFilter<T>();
+            foreach (var predicate in _includes.CreateSnapshot())
+                snapshot.Includes.Add(predicate);
+            foreach (var predicate in _excludes.CreateSnapshot())
+                snapshot.Excludes.Add(predicate);
+
+            return snapshot;
+        }
     }
 }

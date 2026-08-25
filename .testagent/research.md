@@ -1132,12 +1132,14 @@ caller atomically owns the half-open probe and every competitor is rejected with
 protected pipe. Probe success closes, a classified failure reopens with bounded backoff, and caller
 cancellation or an unclassified failure releases ownership while remaining half-open.
 
-The final boundary additionally freezes exception-filter configuration at pipe construction:
-retaining the configurator or mutating a caller-owned type array cannot alter the published filter.
+The final boundary additionally freezes exception-filter configuration at pipe construction through
+the single shared Abstractions exception-matching owner: retaining the configurator or mutating a
+caller-owned type array cannot alter the published filter, and Retry, Rescue, Redelivery, Kill
+Switch and Circuit Breaker cannot drift into separate type or aggregate-exception semantics.
 Cancellation ownership depends on the caller token actually being requested rather than token
 identity alone. A throwing classifier releases an acquired probe before propagating the original
 classifier failure. Metrics and activities remain OpenTelemetry-only, carry exact low-cardinality
-tags and are a no-throw observation boundary, so a hostile in-process listener cannot change
+tags for both open and probe-in-progress rejections and are a no-throw observation boundary, so a hostile in-process listener cannot change
 delivery failures or circuit state. The concurrency composition test now holds two real concurrent
 entries and proves that a third waits; the recovery race synchronizes 33 callers on the same
 Open-to-Half-open transition and admits exactly one.

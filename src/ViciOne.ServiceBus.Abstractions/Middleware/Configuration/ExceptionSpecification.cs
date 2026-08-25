@@ -17,9 +17,15 @@ namespace ViciOne.ServiceBus.Configuration
 
         protected IExceptionFilter Filter { get; }
 
+        protected IExceptionFilter CreateFilterSnapshot()
+        {
+            return new CompositeExceptionFilter(_exceptionFilter.CreateSnapshot());
+        }
+
         public void Handle(params Type[] exceptionTypes)
         {
-            _exceptionFilter.Includes += exception => Match(exception, exceptionTypes);
+            var snapshot = SnapshotTypes(exceptionTypes);
+            _exceptionFilter.Includes += exception => Match(exception, snapshot);
         }
 
         public void Handle<T>()
@@ -31,12 +37,14 @@ namespace ViciOne.ServiceBus.Configuration
         public void Handle<T>(Func<T, bool> filter)
             where T : Exception
         {
+            ArgumentNullException.ThrowIfNull(filter);
             _exceptionFilter.Includes += exception => Match(exception, filter);
         }
 
         public void Ignore(params Type[] exceptionTypes)
         {
-            _exceptionFilter.Excludes += exception => Match(exception, exceptionTypes);
+            var snapshot = SnapshotTypes(exceptionTypes);
+            _exceptionFilter.Excludes += exception => Match(exception, snapshot);
         }
 
         public void Ignore<T>()
@@ -48,7 +56,22 @@ namespace ViciOne.ServiceBus.Configuration
         public void Ignore<T>(Func<T, bool> filter)
             where T : Exception
         {
+            ArgumentNullException.ThrowIfNull(filter);
             _exceptionFilter.Excludes += exception => Match(exception, filter);
+        }
+
+        static Type[] SnapshotTypes(Type[] exceptionTypes)
+        {
+            ArgumentNullException.ThrowIfNull(exceptionTypes);
+
+            var snapshot = (Type[])exceptionTypes.Clone();
+            for (var index = 0; index < snapshot.Length; index++)
+            {
+                if (snapshot[index] == null || !typeof(Exception).IsAssignableFrom(snapshot[index]))
+                    throw new ArgumentException("Every configured type must derive from Exception.", nameof(exceptionTypes));
+            }
+
+            return snapshot;
         }
 
         static bool Match(Exception exception, params Type[] exceptionTypes)
