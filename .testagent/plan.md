@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1472 predeclared unfiltered cases;
+- `UnitArchitecture`: 1487 predeclared unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1060,8 +1060,9 @@ implementation states.
 
 Use virtual time for rate and circuit behavior, fresh keys and concurrent callers for arbitration,
 and exact exception/identity/order assertions. Public routing key providers reject null. Setup and
-limit adjustment recover after terminal failure or cancellation. The circuit message path remains
-lock-free while rare transitions serialize ownership of state, timers and timeout enumerators.
+limit adjustment recover after terminal failure or cancellation. The inherited circuit shape
+retained by this historical migration cohort is superseded by the greenfield circuit-breaker cohort
+below; its timer and router-event ownership are not current architecture.
 
 The cohort is terminal: all 19 identities have exact replacement dispositions, the eleven inherited
 files are removed, seven independent one-cause mutations reject the protected behavior, and the
@@ -1085,6 +1086,25 @@ The cohort is terminal: all eight identities have exact dispositions, the five i
 are removed, and the remaining inherited Core project still compiles. Abstractions passes 203/203,
 Core 649/649, UnitArchitecture 1243/1243 and LocalIntegration 3/3 without failures or skips; the
 final Engineering build completes with zero warnings and zero errors.
+
+## Current cohort — greenfield circuit breaker
+
+Replace the inherited public runtime-state API with one public validated options boundary and one
+internal timer-free state machine. Capture an immutable settings snapshot when the pipe is built.
+Closed sampling uses the configured standard `TimeProvider`; minimum throughput and failure ratio
+are inclusive. Open rejects before the protected pipe with `CircuitBreakerOpenException`. At the
+exact duration boundary, one compare-and-swap winner owns the only half-open probe; competitors fail
+immediately. Success closes and resets backoff, a classified failure reopens, while caller
+cancellation and unclassified failures release the probe without claiming either success or
+failure. Retain exception filtering and retry/concurrency composition. Remove router events, public
+states and timers. Emit only low-cardinality metrics and activities under the existing
+`ViciOne.ServiceBus` OpenTelemetry source.
+
+Eighteen ordinary xUnit/MTP facts own configuration and behavior. They cover exact and just-below
+thresholds, sampling/open boundaries, immutable capture, bounded backoff, cancellation ownership,
+32-way probe competition, composition, public surface and OpenTelemetry tags. The predeclared
+UnitArchitecture floor is 1487; final acceptance additionally requires focused, unfiltered Unit and
+LocalIntegration profiles, the Engineering Release build and one-cause mutations.
 
 ## Accepted cohort — middleware retry
 

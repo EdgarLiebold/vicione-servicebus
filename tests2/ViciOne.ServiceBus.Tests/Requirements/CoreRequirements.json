@@ -661,18 +661,130 @@
       "variantKey" : "distinct-exceptions-have-independent-budgets"
    },
    {
-      "requirementId" : "REQ-VSB-MIDDLEWARE-COMPOSITION",
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "RetryCircuitBreakerAndConcurrencyLimit_ComposeAndRecoverThroughVirtualTime",
-      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreakerFilterTests",
-      "variantKey" : "retry-breaker-concurrency-and-virtual-reset"
+      "testMethod" : "Defaults_AreBoundedExplicitAndUseStandardTime",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "safe-and-explicit-defaults"
    },
    {
-      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER",
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "CircuitBreaker_ConcurrentFailuresCreateExactlyOneOpenStateTimer",
-      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreakerFilterTests",
-      "variantKey" : "concurrent-transition-has-single-timer-owner"
+      "testMethod" : "ThresholdConfiguration_AcceptsExactBoundsAndRejectsEveryInvalidValue",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "threshold-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "TimeConfiguration_IsPositiveBoundedAndDefensivelyCopied",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "time-and-duration-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Collaborators_AreRequiredAndTheExceptionFilterIsExplicit",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "required-collaborators-and-filter"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BuiltPipe_UsesAnImmutableConfigurationSnapshot",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "immutable-runtime-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublicSurface_ExposesOptionsAndRejectionButNoRuntimeStateOrRouterEvents",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.CircuitBreakerOptionsTests",
+      "variantKey" : "greenfield-public-surface"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-TRIP",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExactMinimumThroughputAndFailureRatio_OpenTheCircuitInclusively",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "inclusive-throughput-and-ratio-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-TRIP",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MatchingFailuresBelowMinimumThroughput_KeepTheCircuitClosed",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "below-minimum-throughput-stays-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-TRIP",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MatchingFailuresBelowFailureRatio_KeepTheCircuitClosed",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "below-failure-ratio-stays-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-TRIP",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FirstAdmissionAtSamplingBoundary_StartsAFreshWindowWithoutATimer",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "lazy-sampling-window-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "distinct-rejection-and-exact-retry-delay"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HalfOpen_AdmitsExactlyOneProbeAndRejectsEveryConcurrentCompetitor",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "exactly-one-concurrent-probe"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ClassifiedProbeFailure_EscalatesTheBreakDurationAndSuccessResetsIt",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "classified-failure-escalates-and-success-resets"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CallerCancellation_ReleasesTheProbeWithoutClosingOrReopening",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "caller-cancellation-releases-probe"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DependencyCancellation_IsAClassifiedProbeFailureAndReopensTheCircuit",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "dependency-cancellation-reopens"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "unclassified-failure-releases-probe"
+   },
+   {
+      "requirementId" : "REQ-VSB-MIDDLEWARE-COMPOSITION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RetryCircuitBreakerAndConcurrencyLimit_ComposeWithoutChangingTheirOwnership",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "retry-breaker-concurrency-and-exclusive-recovery"
+   },
+   {
+      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER-OBSERVABILITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignals",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker.CircuitBreakerFilterTests",
+      "variantKey" : "otel-low-cardinality-signals"
    },
    {
       "requirementId" : "REQ-VSB-PARTITIONER",
@@ -694,13 +806,6 @@
       "testMethod" : "ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests",
       "variantKey" : "exact-configured-maximum"
-   },
-   {
-      "requirementId" : "REQ-VSB-CIRCUIT-BREAKER",
-      "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "CircuitBreaker_DefaultThresholdStopsAfterSixAttemptsAndPublishesOneExactFailure",
-      "testType" : "ViciOne.ServiceBus.Tests.Middleware.CircuitBreakerFilterTests",
-      "variantKey" : "default-threshold-and-single-open-event"
    },
    {
       "requirementId" : "REQ-VSB-DYNAMIC-ROUTING",

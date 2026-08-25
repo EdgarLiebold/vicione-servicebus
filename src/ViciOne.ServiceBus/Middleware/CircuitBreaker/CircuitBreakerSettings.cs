@@ -1,40 +1,39 @@
-namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Configuration;
+
+internal sealed record CircuitBreakerSettings(
+    int MinimumThroughput,
+    double FailureRatio,
+    TimeSpan SamplingDuration,
+    TimeSpan[] BreakDurations,
+    TimeProvider TimeProvider,
+    IExceptionFilter ExceptionFilter) : ISpecification
 {
-    using System;
-    using System.Collections.Generic;
-
-
-    public interface CircuitBreakerSettings
+    public IEnumerable<ValidationResult> Validate()
     {
-        /// <summary>
-        /// The window duration to keep track of errors before they fall off the breaker state
-        /// </summary>
-        TimeSpan TrackingPeriod { get; }
+        if (MinimumThroughput < 1)
+            yield return this.Failure(nameof(MinimumThroughput), "must be at least one");
 
-        /// <summary>
-        /// The time to wait after the breaker has opened before attempting to close it
-        /// </summary>
-        IEnumerable<TimeSpan> ResetTimeout { get; }
+        if (!double.IsFinite(FailureRatio) || FailureRatio is < 0 or > 1)
+            yield return this.Failure(nameof(FailureRatio), "must be between 0.0 and 1.0");
 
-        /// <summary>
-        /// A percentage of how many failures versus successful calls before the breaker
-        /// is opened. Should be 0-100, but seriously like 5-10.
-        /// </summary>
-        int TripThreshold { get; }
+        if (SamplingDuration <= TimeSpan.Zero)
+            yield return this.Failure(nameof(SamplingDuration), "must be greater than zero");
 
-        /// <summary>
-        /// The active count of attempts before the circuit breaker can be tripped
-        /// </summary>
-        int ActiveThreshold { get; }
+        if (BreakDurations is null || BreakDurations.Length == 0)
+            yield return this.Failure(nameof(BreakDurations), "must contain at least one duration");
+        else if (BreakDurations.Any(duration => duration <= TimeSpan.Zero))
+            yield return this.Failure(nameof(BreakDurations), "must contain only positive durations");
 
-        /// <summary>
-        /// Provides the clock and timers used by the circuit breaker.
-        /// </summary>
-        TimeProvider TimeProvider { get; }
+        if (TimeProvider is null)
+            yield return this.Failure(nameof(TimeProvider), "must not be null");
 
-        /// <summary>
-        /// The router used to publish events related to the circuit breaker behavior
-        /// </summary>
-        IPipeRouter Router { get; }
+        if (ExceptionFilter is null)
+            yield return this.Failure(nameof(ExceptionFilter), "must not be null");
     }
 }

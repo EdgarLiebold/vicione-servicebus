@@ -12,10 +12,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1350 |
-| Modified | 4507 |
-| Deleted | 1140 |
-| Renamed | 3 |
+| Added | 1880 |
+| Modified | 4322 |
+| Deleted | 1326 |
+| Renamed | 2 |
 
 | Path | Status | Baseline path |
 |---|---|---|
@@ -47,7 +47,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `NuGet.config` | Added |  |
 | `README.md` | Modified | `README.md` |
 | `SECURITY.md` | Modified | `SECURITY.md` |
+| `TODO.md` | Added |  |
 | `ViciOne.ServiceBus.Engineering.slnx` | Added |  |
+| `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | Added |  |
 | `ViciOne.ServiceBus.Tests.Unit.slnx` | Added |  |
 | `ViciOne.ServiceBus.slnx` | Added |  |
 | `ViciOne.ServiceBus.snk` | Renamed | `MassTransit.snk` |
@@ -813,18 +815,237 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/LEDGER_DRAFT.jsonl` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/READ_MANIFEST.tsv` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C10-FUTURE-LOCATION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C11-TASK-EXECUTOR/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C12-TASK-UTIL/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C13-TASK-INITIALIZER-EXTENSIONS/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C14-HEADER-INITIALIZER-CONVENTION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C15-STATE-PROPERTY-CONVERTER/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C16-MESSAGE-INITIALIZER-SCALAR-CONVERSION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C17-MESSAGE-INITIALIZER-OBJECT-GRAPH/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C18-DICTIONARY-AND-EXPANDO-INITIALIZATION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C19-MESSAGE-INITIALIZER-CAPABILITIES/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C2-ENDPOINT-NAMING/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C2-ENDPOINT-NAMING/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C20-PROPERTY-PROVIDER-FACTORY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C21-AGENT-LIFECYCLE-AND-CONTEXT-CACHE/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C22-CUSTOM-PIPE-SPECIFICATIONS/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C23-BOUND-PIPE-CONTEXT/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C24-CACHE-BUCKET-AND-CAPACITY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C24A-CACHE-EVICTION-ORDERING/REGRESSION_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C25-NODE-TRACKER-PROMOTION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C26-CONFIGURATION-COMPOSITION-AND-VALIDATION/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C26-CONFIGURATION-COMPOSITION-AND-VALIDATION/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C26-CONFIGURATION-COMPOSITION-AND-VALIDATION/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C26-CONFIGURATION-COMPOSITION-AND-VALIDATION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C27-TEST-LOCAL-MESSAGE-GROUP-SAMPLE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C27-TEST-LOCAL-MESSAGE-GROUP-SAMPLE/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C27-TEST-LOCAL-MESSAGE-GROUP-SAMPLE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C28-PIPE-CONTEXT-FAILURE-PRECEDENCE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C28-PIPE-CONTEXT-FAILURE-PRECEDENCE/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C28-PIPE-CONTEXT-FAILURE-PRECEDENCE/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C28-PIPE-CONTEXT-FAILURE-PRECEDENCE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C29-TIMEOUT-AND-CANCELLATION/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C29-TIMEOUT-AND-CANCELLATION/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C29-TIMEOUT-AND-CANCELLATION/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C29-TIMEOUT-AND-CANCELLATION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C3-MESSAGE-URN/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C3-MESSAGE-URN/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C30-INMEMORY-DELAY/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C30-INMEMORY-DELAY/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C30-INMEMORY-DELAY/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C30-INMEMORY-DELAY/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C31-BUS-HEALTH-WAIT/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C31-BUS-HEALTH-WAIT/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C31-BUS-HEALTH-WAIT/TEST_QUALITY_REVIEW.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C31-BUS-HEALTH-WAIT/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C32-KILL-SWITCH/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C32-KILL-SWITCH/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C32-KILL-SWITCH/TEST_QUALITY_REVIEW.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C32-KILL-SWITCH/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C33-FAULT-AND-HOST-METADATA/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C33-FAULT-AND-HOST-METADATA/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C33-FAULT-AND-HOST-METADATA/TEST_QUALITY_REVIEW.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C33-FAULT-AND-HOST-METADATA/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C34-INITIALIZER-DUPLICATE-CONSOLIDATION/DISPOSITION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C35-INMEMORY-ENDPOINT-CONCURRENCY/MUTATION_AND_TEST_QUALITY.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C35-INMEMORY-ENDPOINT-CONCURRENCY/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C35-INMEMORY-ENDPOINT-CONCURRENCY/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C36-STRUCTURED-BUS-PROBE/MUTATION_AND_TEST_QUALITY.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C36-STRUCTURED-BUS-PROBE/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C36-STRUCTURED-BUS-PROBE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C37-INMEMORY-OUTBOX-FAULT/MUTATION_AND_TEST_QUALITY.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C37-INMEMORY-OUTBOX-FAULT/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C37-INMEMORY-OUTBOX-FAULT/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C38-NATIVE-SOURCE-LAYOUT/FINAL_PROFILE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C38-NATIVE-SOURCE-LAYOUT/MUTATION_AND_VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C38-NATIVE-SOURCE-LAYOUT/STRUCTURE_ANALYSIS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C4-REQUEST-RATE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C4-REQUEST-RATE/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C5-REFLECTION-METADATA/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C5-REFLECTION-METADATA/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C6-ABSTRACTIONS-PROJECT-RETIREMENT/ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C7-IMPLEMENTED-MESSAGE-TOPOLOGY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C8-FAULT-POLYMORPHISM/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C9-ARRAY-MESSAGE-PUBLICATION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/R1-SCOPE-QUESTION/SCOPE_GAP_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
+| `evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/abstractions/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/agent-lifecycle-and-context-cache/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/analyzers/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/analyzers/MESSAGE_CONTRACT_MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/analyzers/MESSAGE_CONTRACT_SCENARIO_MAPPING.json` | Added |  |
+| `evidence/native-tests/analyzers/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/array-message-publication/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/bound-pipe-context/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cache-bucket-capacity/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cache-direct-add/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cache-index/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cache-multiple-index/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cache-multiple-index/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/cache-node-value-factory/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/ENVELOPE_METADATA_AND_TIME_VALIDATION.md` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/FORWARDING_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/LEGACY_DATEONLY_TIMEONLY_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/core-serializer-configuration-and-forwarding/SERIALIZATION_CONFIGURATION_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cron-expression/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/cron-expression/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/custom-pipe-specifications/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/dictionary-and-expando-initializer/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/endpoint-cache-recovery/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/endpoint-resource-cache/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/endpoint-resource-cache/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/fault-polymorphism/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/future-location/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/header-initializer-convention/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/implemented-message-type-cache/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-and-host-retry/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-and-host-retry/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-and-host-retry/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-and-host-retry/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/message-body-contract/ACCEPTANCE.md` | Added |  |
+| `evidence/native-tests/message-body-contract/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-body-contract/SOURCE_FILE_CLOSURE.json` | Added |  |
+| `evidence/native-tests/message-context-and-dynamic-contracts/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-context-and-dynamic-contracts/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-context-and-dynamic-contracts/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-context-and-dynamic-contracts/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/message-identity-and-headers/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-identity-and-headers/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-identity-and-headers/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/message-identity-and-headers/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/message-initializer-capabilities/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-initializer-object-graph/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/message-initializer-scalar-conversion/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/messagepack/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/messagepack/INHERITED_MESSAGE_BODY_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/messagepack/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-coordination-and-resilience/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-coordination-and-resilience/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/middleware-coordination-and-resilience/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-coordination-and-resilience/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/middleware-retry/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-retry/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/middleware-retry/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-retry/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/middleware-routing-limits-and-scope/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-routing-limits-and-scope/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/middleware-routing-limits-and-scope/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/middleware-routing-limits-and-scope/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/minimal-envelope-redelivery/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/minimal-envelope-redelivery/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/node-tracker-promotion/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/object-and-datetime-conversion/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/object-and-datetime-conversion/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/observer-pipelines/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/observer-pipelines/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/observer-pipelines/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/observer-pipelines/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/property-provider-factory/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/raw-system-text-json-object/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/raw-system-text-json-object/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/request-clients-response-mediator-multibus/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/request-clients-response-mediator-multibus/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/request-clients-response-mediator-multibus/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/request-clients-response-mediator-multibus/PRODUCT_PATH_ANALYSIS.md` | Added |  |
+| `evidence/native-tests/send-endpoint-cache/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/send-endpoint-cache/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/serialization-faults/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/serialization-faults/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/signalr/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/signalr/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/state-machine-visualizer/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/state-machine-visualizer/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/state-property-converter/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/system-text-json-application-formats/ACCEPTANCE.md` | Added |  |
+| `evidence/native-tests/system-text-json-application-formats/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/system-text-json-application-formats/SOURCE_FILE_CLOSURE.json` | Added |  |
+| `evidence/native-tests/system-text-json-collection-compatibility/ACCEPTANCE.md` | Added |  |
+| `evidence/native-tests/system-text-json-collection-compatibility/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/system-text-json-collection-compatibility/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/system-text-json-contract-shapes/ACCEPTANCE.md` | Added |  |
+| `evidence/native-tests/system-text-json-contract-shapes/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/system-text-json-contract-shapes/SOURCE_FILE_CLOSURE.json` | Added |  |
+| `evidence/native-tests/system-text-json-serialization/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/system-text-json-serialization/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/task-executor/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/task-initializer-extensions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/task-util/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/DI_TESTING_UTILITIES_VALIDATION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/EXECUTION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/testing-harnesses/LEGACY_CONSUME_OBSERVER_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/LEGACY_DI_SAGA_HARNESS_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/LEGACY_TELEMETRY_MONITOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/LEGACY_TESTING_HARNESS_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/MESSAGE_OBSERVATION_LIST_VALIDATION.json` | Added |  |
+| `evidence/native-tests/testing-harnesses/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/testing-harnesses/TEST_QUALITY_REVIEW.md` | Added |  |
+| `evidence/native-tests/testing-observation-primitives/ASYNC_ELEMENT_LIST_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-observation-primitives/EXECUTION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/testing-observation-primitives/INACTIVITY_OBSERVER_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/testing-observation-primitives/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/testing-observation-primitives/TEST_QUALITY_REVIEW.md` | Added |  |
+| `evidence/native-tests/type-relationships-and-properties/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
+| `evidence/native-tests/type-relationships-and-properties/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/native-tests/type-relationships-and-properties/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/type-relationships-and-properties/PRODUCT_PATH_ANALYSIS.md` | Added |  |
 | `global.json` | Added |  |
 | `mt-logo-small.png` | Deleted | `mt-logo-small.png` |
+| `samples/OrderWorkflow/Activities/ProcessOrderActivity.cs` | Added |  |
+| `samples/OrderWorkflow/Activities/ProcessOrderActivityDefinition.cs` | Added |  |
+| `samples/OrderWorkflow/Consumers/SubmitOrderConsumer.cs` | Added |  |
+| `samples/OrderWorkflow/Consumers/SubmitOrderConsumerDefinition.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/OrderEvent.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/OrderSubmissionAccepted.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/OrderSubmitted.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/ProcessOrderArguments.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/ProcessOrderLog.cs` | Added |  |
+| `samples/OrderWorkflow/Contracts/SubmitOrder.cs` | Added |  |
+| `samples/OrderWorkflow/README.md` | Added |  |
+| `samples/OrderWorkflow/Sagas/OrderDeliverySaga.cs` | Added |  |
+| `samples/OrderWorkflow/Sagas/OrderDeliverySagaDefinition.cs` | Added |  |
+| `samples/OrderWorkflow/ViciOne.ServiceBus.Samples.OrderWorkflow.csproj` | Added |  |
+| `samples/OrderWorkflow/packages.lock.json` | Added |  |
 | `signing.props` | Modified | `signing.props` |
 | `src/Directory.Build.props` | Modified | `src/Directory.Build.props` |
 | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` | Deleted | `src/MassTransit.Abstractions/Configuration/UsageTelemetryOptions.cs` |
+| `src/MassTransit.Abstractions/Internals/Extensions/InterfaceExtensions.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Extensions/InterfaceExtensions.cs` |
+| `src/MassTransit.Abstractions/Internals/Reflection/InterfaceReflectionCache.cs` | Deleted | `src/MassTransit.Abstractions/Internals/Reflection/InterfaceReflectionCache.cs` |
 | `src/MassTransit.Abstractions/Licensing/LicenseContact.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseContact.cs` |
 | `src/MassTransit.Abstractions/Licensing/LicenseCustomer.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseCustomer.cs` |
 | `src/MassTransit.Abstractions/Licensing/LicenseFeature.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseFeature.cs` |
 | `src/MassTransit.Abstractions/Licensing/LicenseInfo.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseInfo.cs` |
 | `src/MassTransit.Abstractions/Licensing/LicenseProduct.cs` | Deleted | `src/MassTransit.Abstractions/Licensing/LicenseProduct.cs` |
+| `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerClosed.cs` | Deleted | `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerClosed.cs` |
+| `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerOpened.cs` | Deleted | `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerOpened.cs` |
 | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` | Deleted | `src/MassTransit.Abstractions/SagaStateMachine/Visitable.cs` |
 | `src/MassTransit.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/BusUsageTelemetry.cs` |
 | `src/MassTransit.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` | Deleted | `src/MassTransit.Abstractions/UsageTelemetry/EndpointUsageTelemetry.cs` |
@@ -932,6 +1153,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
 | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` | Deleted | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` |
 | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` | Deleted | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` |
+| `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` | Deleted | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` |
@@ -949,9 +1171,24 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/Licensing/LicenseFile.cs` | Deleted | `src/MassTransit/Licensing/LicenseFile.cs` |
 | `src/MassTransit/Licensing/LicenseReader.cs` | Deleted | `src/MassTransit/Licensing/LicenseReader.cs` |
 | `src/MassTransit/Licensing/LicenseSettings.cs` | Deleted | `src/MassTransit/Licensing/LicenseSettings.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerState.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerState.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/ClosedBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/ClosedBehavior.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/HalfOpenBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/HalfOpenBehavior.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/ICircuitBreaker.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/ICircuitBreaker.cs` |
+| `src/MassTransit/Middleware/CircuitBreaker/OpenBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/OpenBehavior.cs` |
+| `src/MassTransit/RetryPolicies/MessageRetryPolicyExtensions.cs` | Deleted | `src/MassTransit/RetryPolicies/MessageRetryPolicyExtensions.cs` |
+| `src/MassTransit/Sagas/Configuration/ISagaMetadataCache.cs` | Deleted | `src/MassTransit/Sagas/Configuration/ISagaMetadataCache.cs` |
+| `src/MassTransit/Sagas/Configuration/SagaInterfaceType.cs` | Deleted | `src/MassTransit/Sagas/Configuration/SagaInterfaceType.cs` |
 | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` | Deleted | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` |
 | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` |
 | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/IKillSwitch.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitch.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/IKillSwitchState.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitchState.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/KillSwitchOptions.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/KillSwitchOptions.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/RestartingKillSwitchState.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/RestartingKillSwitchState.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/StartedKillSwitchState.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/StartedKillSwitchState.cs` |
+| `src/MassTransit/Transports/Components/KillSwitch/StoppedKillSwitchState.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/StoppedKillSwitchState.cs` |
 | `src/MassTransit/UsageTracking/IUsageTelemetrySource.cs` | Deleted | `src/MassTransit/UsageTracking/IUsageTelemetrySource.cs` |
 | `src/MassTransit/UsageTracking/IUsageTracker.cs` | Deleted | `src/MassTransit/UsageTracking/IUsageTracker.cs` |
 | `src/MassTransit/UsageTracking/MassTransitUsageTelemetryExtensions.cs` | Deleted | `src/MassTransit/UsageTracking/MassTransitUsageTelemetryExtensions.cs` |
@@ -2360,6 +2597,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/BusHandle.cs` | Modified | `src/MassTransit.Abstractions/BusHandle.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/BusHealthResult.cs` | Modified | `src/MassTransit.Abstractions/BusHealthResult.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/BusHealthStatus.cs` | Modified | `src/MassTransit.Abstractions/BusHealthStatus.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/BusHealthStatusTimeoutException.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/BusInstance.cs` | Modified | `src/MassTransit.Abstractions/BusInstance.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Clients/ClientFactoryContext.cs` | Modified | `src/MassTransit.Abstractions/Clients/ClientFactoryContext.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Clients/IClientFactory.cs` | Modified | `src/MassTransit.Abstractions/Clients/IClientFactory.cs` |
@@ -2519,6 +2757,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/PartitionKeySendContext.cs` | Modified | `src/MassTransit.Abstractions/Contexts/PartitionKeySendContext.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/PayloadFactory.cs` | Modified | `src/MassTransit.Abstractions/Contexts/PayloadFactory.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/PipeContext.cs` | Modified | `src/MassTransit.Abstractions/Contexts/PipeContext.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Contexts/PipeContextTimeProviderExtensions.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/PublishContext.cs` | Modified | `src/MassTransit.Abstractions/Contexts/PublishContext.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/PublishExecuteExtensions.cs` | Modified | `src/MassTransit.Abstractions/Contexts/PublishExecuteExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Contexts/ReceiveContext.cs` | Modified | `src/MassTransit.Abstractions/Contexts/ReceiveContext.cs` |
@@ -2622,6 +2861,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityCompensationException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/ActivityCompensationException.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityExecutionException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/ActivityExecutionException.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/ActivityExecutionFaultedException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/ActivityExecutionFaultedException.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Exceptions/CircuitBreakerOpenException.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/CommandException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/CommandException.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/ConcurrencyException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/ConcurrencyException.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs` | Modified | `src/MassTransit.Abstractions/Exceptions/ConfigurationException.cs` |
@@ -2711,11 +2951,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/ExceptionExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/ExceptionExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/ExpressionExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/ExpressionExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/ITypeCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/ITypeCache.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/InterfaceExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/InterfaceExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/QueryStringExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/QueryStringExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TaskExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/TaskExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TimeSpanExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/TimeSpanExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TypeExtensions.cs` | Modified | `src/MassTransit.Abstractions/Internals/Extensions/TypeExtensions.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TypeRelationshipExtensions.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/AdjacencyList.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/AdjacencyList.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/CyclicGraphException.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/CyclicGraphException.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/DependencyGraph.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/DependencyGraph.cs` |
@@ -2729,9 +2969,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/TopologicalSort.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSort.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/GraphValidation/TopologicalSortNodeProperties.cs` | Modified | `src/MassTransit.Abstractions/Internals/GraphValidation/TopologicalSortNodeProperties.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/IMessageTypeCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/IMessageTypeCache.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/GenericTypeMatchCache.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/IReadOnlyPropertyCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/IReadOnlyPropertyCache.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/IReadWritePropertyCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/IReadWritePropertyCache.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/InterfaceReflectionCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/InterfaceReflectionCache.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/ReadOnlyProperty.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/ReadOnlyProperty.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/ReadOnlyPropertyCache.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/ReadOnlyPropertyCache.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/ReadWriteProperty.cs` | Modified | `src/MassTransit.Abstractions/Internals/Reflection/ReadWriteProperty.cs` |
@@ -2844,8 +3084,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/Send/SendPipeSpecificationObservable.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Configuration/Send/SendPipeSpecificationObservable.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/SpecificationPipeBuilder.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Configuration/SpecificationPipeBuilder.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/ConnectPipeOptions.cs` | Modified | `src/MassTransit.Abstractions/Middleware/ConnectPipeOptions.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Middleware/Contracts/CircuitBreakerClosed.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerClosed.cs` |
-| `src/ViciOne.ServiceBus.Abstractions/Middleware/Contracts/CircuitBreakerOpened.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Contracts/CircuitBreakerOpened.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/Contracts/CommandContext.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Contracts/CommandContext.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/Contracts/ConcurrencyLimitUpdated.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Contracts/ConcurrencyLimitUpdated.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Middleware/Contracts/EventContext.cs` | Modified | `src/MassTransit.Abstractions/Middleware/Contracts/EventContext.cs` |
@@ -3047,6 +3285,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/ISerialization.cs` | Modified | `src/MassTransit.Abstractions/Serialization/ISerialization.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/Serialization/CamelCaseDictionaryExtensions.cs` | Modified | `src/MassTransit.Abstractions/Serialization/Serialization/CamelCaseDictionaryExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/Serialization/EmptyHeaders.cs` | Modified | `src/MassTransit.Abstractions/Serialization/Serialization/EmptyHeaders.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Serialization/Serialization/EnvelopeMetadataProjection.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/Serialization/MessageEnvelope.cs` | Modified | `src/MassTransit.Abstractions/Serialization/Serialization/MessageEnvelope.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/SerializerContextExtensions.cs` | Modified | `src/MassTransit.Abstractions/Serialization/SerializerContextExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Serialization/SerializerFactory.cs` | Modified | `src/MassTransit.Abstractions/Serialization/SerializerFactory.cs` |
@@ -3447,6 +3686,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/BindConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/BindConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs` | Modified | `src/MassTransit/Configuration/BusFactoryExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/CircuitBreakerConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/CircuitBreakerConfigurationExtensions.cs` |
+| `src/ViciOne.ServiceBus/Configuration/CircuitBreakerOptions.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Configuration/ConcurrencyLimitConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/ConcurrencyLimitConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/ConcurrentMessageLimitExtensions.cs` | Modified | `src/MassTransit/Configuration/ConcurrentMessageLimitExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/BaseHostConfiguration.cs` | Modified | `src/MassTransit/Configuration/Configuration/BaseHostConfiguration.cs` |
@@ -3464,6 +3704,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConcurrencyLimit/ConcurrencyLimitSagaConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConcurrencyLimit/ConcurrencyLimitSagaConfigurationObserver.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConcurrencyLimitPipeSpecification.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConcurrencyLimitPipeSpecification.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConfigurationObserver.cs` |
+| `src/ViciOne.ServiceBus/Configuration/Configuration/ConfigurationObserverNotification.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConfiguratorPipeConnectorSpecification.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConfiguratorPipeConnectorSpecification.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConnectReceiveEndpointObserverBusObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConnectReceiveEndpointObserverBusObserver.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/ConsumeContextRescuePipeSpecification.cs` | Modified | `src/MassTransit/Configuration/Configuration/ConsumeContextRescuePipeSpecification.cs` |
@@ -3562,6 +3803,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/Timeout/TimeoutConfigurationObserver.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutConsumerConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/Timeout/TimeoutConsumerConfigurationObserver.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutHandlerConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/Timeout/TimeoutHandlerConfigurationObserver.cs` |
+| `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutPipeSpecification.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutSagaConfigurationObserver.cs` | Modified | `src/MassTransit/Configuration/Configuration/Timeout/TimeoutSagaConfigurationObserver.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/Timeout/TimeoutSpecification.cs` | Modified | `src/MassTransit/Configuration/Configuration/Timeout/TimeoutSpecification.cs` |
 | `src/ViciOne.ServiceBus/Configuration/Configuration/TransactionPipeSpecification.cs` | Modified | `src/MassTransit/Configuration/Configuration/TransactionPipeSpecification.cs` |
@@ -3634,7 +3876,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/IBindConfigurator.cs` | Modified | `src/MassTransit/Configuration/IBindConfigurator.cs` |
 | `src/ViciOne.ServiceBus/Configuration/IBusFactory.cs` | Modified | `src/MassTransit/Configuration/IBusFactory.cs` |
 | `src/ViciOne.ServiceBus/Configuration/IBusFactorySelector.cs` | Modified | `src/MassTransit/Configuration/IBusFactorySelector.cs` |
-| `src/ViciOne.ServiceBus/Configuration/ICircuitBreakerConfigurator.cs` | Modified | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` |
 | `src/ViciOne.ServiceBus/Configuration/IDispatchConfigurator.cs` | Modified | `src/MassTransit/Configuration/IDispatchConfigurator.cs` |
 | `src/ViciOne.ServiceBus/Configuration/IJobSagaOptionsConfigurator.cs` | Modified | `src/MassTransit/Configuration/IJobSagaOptionsConfigurator.cs` |
 | `src/ViciOne.ServiceBus/Configuration/IJobServiceConfigurator.cs` | Modified | `src/MassTransit/Configuration/IJobServiceConfigurator.cs` |
@@ -3664,6 +3905,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/JsonSerializerConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/JsonSerializerConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/KebabCaseEndpointNameFormatter.cs` | Modified | `src/MassTransit/Configuration/KebabCaseEndpointNameFormatter.cs` |
 | `src/ViciOne.ServiceBus/Configuration/KillSwitchConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/KillSwitchConfigurationExtensions.cs` |
+| `src/ViciOne.ServiceBus/Configuration/KillSwitchOptions.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Configuration/LatestConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/LatestConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/LatestFilterCreated.cs` | Modified | `src/MassTransit/Configuration/LatestFilterCreated.cs` |
 | `src/ViciOne.ServiceBus/Configuration/MediatorConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/MediatorConfigurationExtensions.cs` |
@@ -4401,13 +4643,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Metadata/ITypeMetadataCache.cs` | Modified | `src/MassTransit/Metadata/ITypeMetadataCache.cs` |
 | `src/ViciOne.ServiceBus/Metadata/RegistrationMetadata.cs` | Modified | `src/MassTransit/Metadata/RegistrationMetadata.cs` |
 | `src/ViciOne.ServiceBus/Metadata/TypeMetadataCache.cs` | Modified | `src/MassTransit/Metadata/TypeMetadataCache.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` |
 | `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerSettings.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerSettings.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerState.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerState.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/ClosedBehavior.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/ClosedBehavior.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/HalfOpenBehavior.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/HalfOpenBehavior.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/ICircuitBreaker.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/ICircuitBreaker.cs` |
-| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/OpenBehavior.cs` | Modified | `src/MassTransit/Middleware/CircuitBreaker/OpenBehavior.cs` |
+| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerStateMachine.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Middleware/CircuitBreakerFilter.cs` | Modified | `src/MassTransit/Middleware/CircuitBreakerFilter.cs` |
 | `src/ViciOne.ServiceBus/Middleware/CompensateActivityFactoryFilter.cs` | Modified | `src/MassTransit/Middleware/CompensateActivityFactoryFilter.cs` |
 | `src/ViciOne.ServiceBus/Middleware/CompensateActivityFilter.cs` | Modified | `src/MassTransit/Middleware/CompensateActivityFilter.cs` |
@@ -4624,7 +4862,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/RetryPolicies/IntervalRetryContext.cs` | Modified | `src/MassTransit/RetryPolicies/IntervalRetryContext.cs` |
 | `src/ViciOne.ServiceBus/RetryPolicies/IntervalRetryPolicy.cs` | Modified | `src/MassTransit/RetryPolicies/IntervalRetryPolicy.cs` |
 | `src/ViciOne.ServiceBus/RetryPolicies/IntervalRetryPolicyContext.cs` | Modified | `src/MassTransit/RetryPolicies/IntervalRetryPolicyContext.cs` |
-| `src/ViciOne.ServiceBus/RetryPolicies/MessageRetryPolicyExtensions.cs` | Modified | `src/MassTransit/RetryPolicies/MessageRetryPolicyExtensions.cs` |
 | `src/ViciOne.ServiceBus/RetryPolicies/NoRetryContext.cs` | Modified | `src/MassTransit/RetryPolicies/NoRetryContext.cs` |
 | `src/ViciOne.ServiceBus/RetryPolicies/NoRetryPolicy.cs` | Modified | `src/MassTransit/RetryPolicies/NoRetryPolicy.cs` |
 | `src/ViciOne.ServiceBus/RetryPolicies/NoRetryPolicyContext.cs` | Modified | `src/MassTransit/RetryPolicies/NoRetryPolicyContext.cs` |
@@ -4788,7 +5025,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaConnectorFactory.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaConnectorFactory.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaMessageConnector.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaMessageConnector.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaMessageSpecification.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaMessageSpecification.cs` |
-| `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaMetadataCache.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaMetadataCache.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaQueryPropertySelector.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaQueryPropertySelector.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/ISagaSpecification.cs` | Modified | `src/MassTransit/Sagas/Configuration/ISagaSpecification.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/IStateMachineInterfaceType.cs` | Modified | `src/MassTransit/Sagas/Configuration/IStateMachineInterfaceType.cs` |
@@ -4802,8 +5038,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaConfigurator.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaConfigurator.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaConnector.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaConnector.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaConnectorCache.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaConnectorCache.cs` |
-| `src/ViciOne.ServiceBus/Sagas/Configuration/SagaInterfaceType.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaInterfaceType.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageConnector.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaMessageConnector.cs` |
+| `src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageConnectorDescriptor.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageSpecification.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaMessageSpecification.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageSplitFilterSpecification.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaMessageSplitFilterSpecification.cs` |
 | `src/ViciOne.ServiceBus/Sagas/Configuration/SagaMetadataCache.cs` | Modified | `src/MassTransit/Sagas/Configuration/SagaMetadataCache.cs` |
@@ -4880,6 +5116,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Serialization/EnvelopeMessageContext.cs` | Modified | `src/MassTransit/Serialization/EnvelopeMessageContext.cs` |
 | `src/ViciOne.ServiceBus/Serialization/EnvelopeSerializerContext.cs` | Modified | `src/MassTransit/Serialization/EnvelopeSerializerContext.cs` |
 | `src/ViciOne.ServiceBus/Serialization/ForwardMessagePipe.cs` | Modified | `src/MassTransit/Serialization/ForwardMessagePipe.cs` |
+| `src/ViciOne.ServiceBus/Serialization/ForwardingExpiration.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/ICryptoStreamProvider.cs` | Modified | `src/MassTransit/Serialization/ICryptoStreamProvider.cs` |
 | `src/ViciOne.ServiceBus/Serialization/ICryptoStreamProviderV2.cs` | Modified | `src/MassTransit/Serialization/ICryptoStreamProviderV2.cs` |
 | `src/ViciOne.ServiceBus/Serialization/ISecureKeyProvider.cs` | Modified | `src/MassTransit/Serialization/ISecureKeyProvider.cs` |
@@ -5217,13 +5454,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Transports/BusState.cs` | Modified | `src/MassTransit/Transports/BusState.cs` |
 | `src/ViciOne.ServiceBus/Transports/BusTopology.cs` | Modified | `src/MassTransit/Transports/BusTopology.cs` |
 | `src/ViciOne.ServiceBus/Transports/CachedSendEndpoint.cs` | Modified | `src/MassTransit/Transports/CachedSendEndpoint.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/IKillSwitch.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitch.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/IKillSwitchState.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitchState.cs` |
 | `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/KillSwitch.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/KillSwitch.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/KillSwitchOptions.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/KillSwitchOptions.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/RestartingKillSwitchState.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/RestartingKillSwitchState.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/StartedKillSwitchState.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/StartedKillSwitchState.cs` |
-| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/StoppedKillSwitchState.cs` | Modified | `src/MassTransit/Transports/Components/KillSwitch/StoppedKillSwitchState.cs` |
+| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/KillSwitchEndpoint.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transports/Components/KillSwitch/KillSwitchSettings.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Transports/ConsumeSendEndpoint.cs` | Modified | `src/MassTransit/Transports/ConsumeSendEndpoint.cs` |
 | `src/ViciOne.ServiceBus/Transports/ConsumeSendPipeAdapter.cs` | Modified | `src/MassTransit/Transports/ConsumeSendPipeAdapter.cs` |
 | `src/ViciOne.ServiceBus/Transports/ConsumerAgent.cs` | Modified | `src/MassTransit/Transports/ConsumerAgent.cs` |
@@ -5279,6 +5512,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Transports/IReceiveEndpointDispatcherFactory.cs` | Modified | `src/MassTransit/Transports/IReceiveEndpointDispatcherFactory.cs` |
 | `src/ViciOne.ServiceBus/Transports/IReceivePipeDispatcher.cs` | Modified | `src/MassTransit/Transports/IReceivePipeDispatcher.cs` |
 | `src/ViciOne.ServiceBus/Transports/IReceiveTransport.cs` | Modified | `src/MassTransit/Transports/IReceiveTransport.cs` |
+| `src/ViciOne.ServiceBus/Transports/IRestartableReceiveEndpoint.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Transports/IRiderCollection.cs` | Modified | `src/MassTransit/Transports/IRiderCollection.cs` |
 | `src/ViciOne.ServiceBus/Transports/IRoutingKeyFormatter.cs` | Modified | `src/MassTransit/Transports/IRoutingKeyFormatter.cs` |
 | `src/ViciOne.ServiceBus/Transports/ISendEndpointCache.cs` | Modified | `src/MassTransit/Transports/ISendEndpointCache.cs` |
@@ -5349,6 +5583,28 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/packages.lock.json` | Added |  |
 | `src/mt-logo-small.png` | Deleted | `src/mt-logo-small.png` |
 | `tests/Directory.Build.props` | Modified | `tests/Directory.Build.props` |
+| `tests/MassTransit.Abstractions.Tests/ExceptionFilter_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/ExceptionFilter_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` | Deleted | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
+| `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` | Deleted | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` |
+| `tests/MassTransit.Abstractions.Tests/NewId/Formatter_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Formatter_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/Generator_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Generator_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/GuidInterop_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/GuidInterop_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/LongTerm_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/LongTerm_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/NetworkAddress_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/NetworkAddress_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/NewId_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/NewId_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/Order_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Order_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/Usage_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Usage_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/NewId/texts.txt` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/texts.txt` |
+| `tests/MassTransit.Abstractions.Tests/TypeExtensions_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/TypeExtensions_Specs.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderEvent.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderEvent.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmissionAccepted.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmissionAccepted.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmitted.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmitted.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/Contracts/SubmitOrder.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/SubmitOrder.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/OrderDeliverySaga.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/OrderDeliverySaga.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderActivity.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderActivity.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderArguments.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderArguments.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderLog.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderLog.cs` |
+| `tests/MassTransit.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` |
 | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Deleted | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` |
 | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Deleted | `tests/MassTransit.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` |
 | `tests/MassTransit.ActiveMqTransport.Tests/Compression_Specs.cs` | Deleted | `tests/MassTransit.ActiveMqTransport.Tests/Compression_Specs.cs` |
@@ -5959,15 +6215,159 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.SqlTransport.Tests/SubscriptionType_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/SubscriptionType_Specs.cs` |
 | `tests/MassTransit.SqlTransport.Tests/TestConfigurationExtensions.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/TestConfigurationExtensions.cs` |
 | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` |
+| `tests/MassTransit.Tests/BadConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/Caching/Cache_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
+| `tests/MassTransit.Tests/Cancellation_Specs.cs` | Deleted | `tests/MassTransit.Tests/Cancellation_Specs.cs` |
+| `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/ConfigurationObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/ConfigurationObserver_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/InstanceSubscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/InstanceSubscription_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/SagaConfigurationObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/SagaConfigurationObserver_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/SagaConnector_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/SagaConnector_Specs.cs` |
+| `tests/MassTransit.Tests/Configuration/SendSpecification_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/SendSpecification_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` |
+| `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` |
+| `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` |
+| `tests/MassTransit.Tests/ContainedMessage_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
+| `tests/MassTransit.Tests/ConversationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
+| `tests/MassTransit.Tests/CorrelationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
+| `tests/MassTransit.Tests/CronExpressionTests.cs` | Deleted | `tests/MassTransit.Tests/CronExpressionTests.cs` |
+| `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
+| `tests/MassTransit.Tests/DelayProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
 | `tests/MassTransit.Tests/Encryption/TestMessage.cs` | Deleted | `tests/MassTransit.Tests/Encryption/TestMessage.cs` |
+| `tests/MassTransit.Tests/EndpointName_Specs.cs` | Deleted | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
+| `tests/MassTransit.Tests/ExceptionInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/ExceptionInfo_Specs.cs` |
+| `tests/MassTransit.Tests/FastProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/FastProperty_Specs.cs` |
+| `tests/MassTransit.Tests/FaultPoly_Specs.cs` | Deleted | `tests/MassTransit.Tests/FaultPoly_Specs.cs` |
+| `tests/MassTransit.Tests/FutureLocation_Specs.cs` | Deleted | `tests/MassTransit.Tests/FutureLocation_Specs.cs` |
+| `tests/MassTransit.Tests/Groups/Group_Specs.cs` | Deleted | `tests/MassTransit.Tests/Groups/Group_Specs.cs` |
+| `tests/MassTransit.Tests/HeaderObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/HeaderObject_Specs.cs` |
+| `tests/MassTransit.Tests/HostInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/HostInfo_Specs.cs` |
+| `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/Class_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/Initializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Initializer_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/MessageInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/MessageInitializer_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/PropertyProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/PropertyProvider_Specs.cs` |
+| `tests/MassTransit.Tests/Initializers/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/State_Specs.cs` |
+| `tests/MassTransit.Tests/InterfaceProxy_Specs.cs` | Deleted | `tests/MassTransit.Tests/InterfaceProxy_Specs.cs` |
+| `tests/MassTransit.Tests/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/Introspection_Specs.cs` |
+| `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/JsonToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
+| `tests/MassTransit.Tests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
 | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
+| `tests/MassTransit.Tests/MediatorRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
+| `tests/MassTransit.Tests/MessageContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
+| `tests/MassTransit.Tests/MessageFlow_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageFlow_Specs.cs` |
+| `tests/MassTransit.Tests/MessageType_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageType_Specs.cs` |
+| `tests/MassTransit.Tests/MessageUrnSpecs.cs` | Deleted | `tests/MassTransit.Tests/MessageUrnSpecs.cs` |
+| `tests/MassTransit.Tests/Middleware/Agents/Agent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Agents/Agent_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Authentication_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Authentication_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Bind_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Bind_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/Bucket_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/Bucket_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/Endpoint.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/Endpoint.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/Index_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/Index_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/MissingValueFactory_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/MissingValueFactory_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/NodeTracker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/NodeTracker_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/TestException.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/TestException.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/Tests.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/Tests.cs` |
+| `tests/MassTransit.Tests/Middleware/Caching/TwoIndex_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Caching/TwoIndex_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/CircuitBreaker_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Clone_a_payload_cache.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Clone_a_payload_cache.cs` |
+| `tests/MassTransit.Tests/Middleware/CommandContextRetryPolicy.cs` | Deleted | `tests/MassTransit.Tests/Middleware/CommandContextRetryPolicy.cs` |
+| `tests/MassTransit.Tests/Middleware/CommandRetryContext.cs` | Deleted | `tests/MassTransit.Tests/Middleware/CommandRetryContext.cs` |
+| `tests/MassTransit.Tests/Middleware/ConcurrencyLimit_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/ConcurrencyLimit_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/ConsumeContextRetryContext.cs` | Deleted | `tests/MassTransit.Tests/Middleware/ConsumeContextRetryContext.cs` |
+| `tests/MassTransit.Tests/Middleware/ConsumeContextRetryPolicyContext.cs` | Deleted | `tests/MassTransit.Tests/Middleware/ConsumeContextRetryPolicyContext.cs` |
+| `tests/MassTransit.Tests/Middleware/Dispatch_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Dispatch_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/DynamicRouter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/DynamicRouter_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/InterfaceExtensions.cs` | Deleted | `tests/MassTransit.Tests/Middleware/InterfaceExtensions.cs` |
+| `tests/MassTransit.Tests/Middleware/InterfaceReflectionCache.cs` | Deleted | `tests/MassTransit.Tests/Middleware/InterfaceReflectionCache.cs` |
+| `tests/MassTransit.Tests/Middleware/Internals/FastProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Internals/FastProperty_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionGeneric_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionGeneric_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionMoreGeneric_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionMoreGeneric_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Internals/TypeExtension_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Internals/TypeExtension_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Internals/TypeProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Internals/TypeProperty_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Latest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Latest_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/LayeredRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/LayeredRetry_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Observer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Observer_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/OneTime_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/OneTime_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/OrCanceled_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/OrCanceled_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Parent_Child_Pipes.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Parent_Child_Pipes.cs` |
+| `tests/MassTransit.Tests/Middleware/PartitionByKey_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/PartitionByKey_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/RateLimit_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/RateLimit_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/RescueContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/RescueContext_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Rescue_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Rescue_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/RetryCommandContext.cs` | Deleted | `tests/MassTransit.Tests/Middleware/RetryCommandContext.cs` |
+| `tests/MassTransit.Tests/Middleware/RetryDifferent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/RetryDifferent_Specs.cs` |
+| `tests/MassTransit.Tests/Middleware/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/MinimalBody_Specs.cs` | Deleted | `tests/MassTransit.Tests/MinimalBody_Specs.cs` |
+| `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` |
+| `tests/MassTransit.Tests/Observer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Observer_Specs.cs` |
+| `tests/MassTransit.Tests/Outbox_Specs.cs` | Deleted | `tests/MassTransit.Tests/Outbox_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` |
+| `tests/MassTransit.Tests/PollingAlgorithm_Specs.cs` | Deleted | `tests/MassTransit.Tests/PollingAlgorithm_Specs.cs` |
+| `tests/MassTransit.Tests/PublishHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishHeader_Specs.cs` |
+| `tests/MassTransit.Tests/PublishObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishObserver_Specs.cs` |
+| `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` |
+| `tests/MassTransit.Tests/RequestClientNew_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` |
+| `tests/MassTransit.Tests/RequestClient_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClient_Specs.cs` |
+| `tests/MassTransit.Tests/RequestFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
+| `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` | Deleted | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
+| `tests/MassTransit.Tests/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` |
+| `tests/MassTransit.Tests/SendObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendObserver_Specs.cs` |
+| `tests/MassTransit.Tests/SendProxy_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendProxy_Specs.cs` |
+| `tests/MassTransit.Tests/SentTime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SentTime_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/Array_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Array_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/Attribute_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Attribute_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/DateTimeConverter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/DateTimeConverter_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/DateTimeFormat_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/DateTimeFormat_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/DeserializerFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/DeserializerFault_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/ExtensionData_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/ExtensionData_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/MisnamedProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/MisnamedProperty_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/MoreSerialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/MoreSerialization_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/Performance_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Performance_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/PolymorphicProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/PolymorphicProperty_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/PropertyType_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/PropertyType_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/ProtoBufAsJson_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/ProtoBufAsJson_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` | Deleted | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` |
+| `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` |
+| `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto` | Deleted | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto` |
+| `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto.cs` |
+| `tests/MassTransit.Tests/Serialization/TypeHandling_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TypeHandling_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` |
+| `tests/MassTransit.Tests/SerializationFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationFault_Specs.cs` |
 | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` |
+| `tests/MassTransit.Tests/StaticProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/StaticProperty_Specs.cs` |
+| `tests/MassTransit.Tests/TaskExecutor_Specs.cs` | Deleted | `tests/MassTransit.Tests/TaskExecutor_Specs.cs` |
+| `tests/MassTransit.Tests/TaskExtension_Specs.cs` | Deleted | `tests/MassTransit.Tests/TaskExtension_Specs.cs` |
+| `tests/MassTransit.Tests/TelemetryMonitor_Specs.cs` | Deleted | `tests/MassTransit.Tests/TelemetryMonitor_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/AsyncMessageList_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/AsyncMessageList_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/BusPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/BusPublish_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/ConsumerMultiple_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/ConsumerMultiple_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/ConsumerTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/ConsumerTest_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/HandlerRespond_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/HandlerRespond_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/HandlerTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/HandlerTest_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/NewTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/NewTest_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/SagaTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/SagaTest_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/StandaloneConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/StandaloneConsumer_Specs.cs` |
+| `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` |
+| `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
+| `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
+| `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_ConsumeRecords_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_Filter_Specs .cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_PartitionKey_Specs.cs` | Added |  |
@@ -6384,29 +6784,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/docker-compose.yml` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/ExceptionFilter_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/ExceptionFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/Formatter_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/Formatter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/Generator_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/Generator_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/GuidInterop_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/GuidInterop_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/LongTerm_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/LongTerm_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NetworkAddress_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/NetworkAddress_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewId_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/NewId_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/Order_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/Order_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/Usage_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/NewId/Usage_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt` | Renamed | `tests/MassTransit.Abstractions.Tests/NewId/texts.txt` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/TypeExtensions_Specs.cs` | Modified | `tests/MassTransit.Abstractions.Tests/TypeExtensions_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/Contracts/OrderEvent.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderEvent.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/Contracts/OrderSubmissionAccepted.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmissionAccepted.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/Contracts/OrderSubmitted.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/OrderSubmitted.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/Contracts/SubmitOrder.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/Contracts/SubmitOrder.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/OrderDeliverySaga.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/OrderDeliverySaga.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/ProcessOrderActivity.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderActivity.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/ProcessOrderArguments.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderArguments.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/ProcessOrderLog.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/ProcessOrderLog.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` | Modified | `tests/MassTransit.Abstractions.Tests/Usage/SubmitOrderConsumer.cs` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj.DotSettings` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` |
-| `tests/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceState_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/Await_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` |
@@ -6449,25 +6826,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Audit/AuditFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/Audit_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
-| `tests/ViciOne.ServiceBus.Tests/AwaitSemantics_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Caching/CacheRecovery_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Caching/Cache_Specs.cs` | Modified | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Cancellation_Specs.cs` | Modified | `tests/MassTransit.Tests/Cancellation_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/CircuitBreaker_Specs.cs` | Modified | `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/ConfigurationObserver_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/InstanceSubscription_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/InstanceSubscription_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/SagaConfigurationObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/SagaConfigurationObserver_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/SagaConnector_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs` | Modified | `tests/MassTransit.Tests/Configuration/SendSpecification_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ConsumeJsonObject_Specs.cs` | Modified | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ConsumeObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs` | Modified | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Consumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainedMessage_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/AccessScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` |
@@ -6492,10 +6854,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MyId.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/MyId.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClientOutbox_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/RequestClientOutbox_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClient_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/RequestClient_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Dispatcher_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Dispatcher_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/EmptyBody_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/EmptyBody_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/EndpointConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` |
@@ -6505,8 +6863,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Handler_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/HealthCheck_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/InstrumentationRegistration_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/KillSwitchInstrumentation_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/MediatorFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/MultiBusScopeIsolation_Specs.cs` | Added |  |
@@ -6541,8 +6897,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerMessageConvention.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerMessageConvention.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/IHandler.cs` | Modified | `tests/MassTransit.Tests/Conventional/IHandler.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ConversationId_Specs.cs` | Modified | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/CorrelationId_Specs.cs` | Modified | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/ActivityRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/ArgumentOverload_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ArgumentOverload_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/Builder_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Builder_Specs.cs` |
@@ -6566,58 +6920,30 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/Subscription_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Subscription_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/TwoActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/UriArgument_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/CronExpressionTests.cs` | Modified | `tests/MassTransit.Tests/CronExpressionTests.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/DelayProviderPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/DelayProvider_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/DelayedRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Diagnostics/Trace_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/DynamicProxySerialization_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/EmittedMetrics_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/EndpointName_Specs.cs` | Modified | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ErrorQueue_Specs.cs` | Modified | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/EventPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/EventPublish_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ExceptionInfo_Specs.cs` | Modified | `tests/MassTransit.Tests/ExceptionInfo_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs` | Modified | `tests/MassTransit.Tests/ExcessiveAsyncFault_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/FastProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/FastProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/FaultPoly_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPoly_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/FaultPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPublish_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/FutureLocation_Specs.cs` | Modified | `tests/MassTransit.Tests/FutureLocation_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Groups/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/Groups/Group_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/HeaderObject_Specs.cs` | Modified | `tests/MassTransit.Tests/HeaderObject_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/HostConfigurationRetry_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/HostInfo_Specs.cs` | Modified | `tests/MassTransit.Tests/HostInfo_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ImplementedTypeCache_Specs.cs` | Modified | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryDuo_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxDirectPath_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/Class_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/Expando_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/HeaderInitializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/Initializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/Initializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/MessageInitializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProvider_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/PropertyProvider_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Initializers/State_Specs.cs` | Modified | `tests/MassTransit.Tests/Initializers/State_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InterceptingConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/InterceptingConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InterfaceProxy_Specs.cs` | Modified | `tests/MassTransit.Tests/InterfaceProxy_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InterfaceSubscription_Specs.cs` | Modified | `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Introspection_Specs.cs` | Modified | `tests/MassTransit.Tests/Introspection_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InvalidConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobAttemptGeneration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobServiceEndpointConfiguration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobServiceLifecycle_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/JsonToken_Specs.cs` | Modified | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/KillSwitch_Specs.cs` | Modified | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MediatorRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs` | Modified | `tests/MassTransit.Tests/Mediator_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageContext_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/DataBus_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/FileSystem_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/InMemory_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/InMemory_Specs.cs` |
@@ -6628,9 +6954,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/MessageData/NestedInitializer_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/NestedInitializer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/PublishMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/PublishMessageData_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/ResponseMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/ResponseMessageData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageFlow_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageFlow_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageType_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageType_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageUrnSpecs.cs` | Modified | `tests/MassTransit.Tests/MessageUrnSpecs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/ClientMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/ClientMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/DeleteMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/DeleteMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/PartialSerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/PartialSerializationTestMessage.cs` |
@@ -6639,56 +6962,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Messages/SerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/SerializationTestMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/UpdateAcceptedMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateAcceptedMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/UpdateMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Agents/Agent_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Agents/Agent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Authentication_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Authentication_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Bind_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Bind_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/Bucket_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/Bucket_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/Endpoint.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/Endpoint.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/Index_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/Index_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/MissingValueFactory_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/MissingValueFactory_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/NodeTracker_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/NodeTracker_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/TestException.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/TestException.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/Tests.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/Tests.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Caching/TwoIndex_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Caching/TwoIndex_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/CircuitBreaker_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Clone_a_payload_cache.cs` | Modified | `tests/MassTransit.Tests/Middleware/Clone_a_payload_cache.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/CommandContextRetryPolicy.cs` | Modified | `tests/MassTransit.Tests/Middleware/CommandContextRetryPolicy.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/CommandRetryContext.cs` | Modified | `tests/MassTransit.Tests/Middleware/CommandRetryContext.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/ConcurrencyLimit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextRetryContext.cs` | Modified | `tests/MassTransit.Tests/Middleware/ConsumeContextRetryContext.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextRetryPolicyContext.cs` | Modified | `tests/MassTransit.Tests/Middleware/ConsumeContextRetryPolicyContext.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Dispatch_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Dispatch_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRouter_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/DynamicRouter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/InterfaceExtensions.cs` | Modified | `tests/MassTransit.Tests/Middleware/InterfaceExtensions.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/InterfaceReflectionCache.cs` | Modified | `tests/MassTransit.Tests/Middleware/InterfaceReflectionCache.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Internals/FastProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Internals/FastProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Internals/TypeExtensionGeneric_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionGeneric_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Internals/TypeExtensionMoreGeneric_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Internals/TypeExtensionMoreGeneric_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Internals/TypeExtension_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Internals/TypeExtension_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Internals/TypeProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Internals/TypeProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Latest_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Latest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/LayeredRetry_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/LayeredRetry_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Observer_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Observer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/OneTime_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/OneTime_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/OrCanceled_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/OrCanceled_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Parent_Child_Pipes.cs` | Modified | `tests/MassTransit.Tests/Middleware/Parent_Child_Pipes.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/PartitionByKey_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/PartitionByKey_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/RateLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/RateLimit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/RescueContext_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/RescueContext_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Rescue_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Rescue_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/RetryCommandContext.cs` | Modified | `tests/MassTransit.Tests/Middleware/RetryCommandContext.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/RetryDifferent_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/RetryDifferent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Middleware/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/Middleware/Retry_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MinimalBody_Specs.cs` | Modified | `tests/MassTransit.Tests/MinimalBody_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MultiBusRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MultiTestConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs` | Modified | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NoLicensingResidue_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/NoOutboundVendorCall_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Observer_Specs.cs` | Modified | `tests/MassTransit.Tests/Observer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Outbox_Specs.cs` | Modified | `tests/MassTransit.Tests/Outbox_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/CircuitBreaker_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Concurrency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectHandler_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectHandler_Specs.cs` |
@@ -6702,13 +6979,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Retry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Transaction_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Pipeline/TwoMessageConsumer.cs` | Modified | `tests/MassTransit.Tests/Pipeline/TwoMessageConsumer.cs` |
-| `tests/ViciOne.ServiceBus.Tests/PollingAlgorithm_Specs.cs` | Modified | `tests/MassTransit.Tests/PollingAlgorithm_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PolymorphicFault_Specs.cs` | Modified | `tests/MassTransit.Tests/PolymorphicFault_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/PublishHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/PublishHeader_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/PublishObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/PublishObserver_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PublishSubscribe_Specs.cs` | Modified | `tests/MassTransit.Tests/PublishSubscribe_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReceiveEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReceiveObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/RecurringJobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/RecurringSchedule_Specs.cs` | Modified | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/RedeliveryHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` |
@@ -6723,11 +6996,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableState.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableState.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableStateMachine.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableStateMachine.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/StateVerified.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/StateVerified.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RequestClientNew_Specs.cs` | Modified | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RequestClient_Specs.cs` | Modified | `tests/MassTransit.Tests/RequestClient_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RequestFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ResponsePatternMatching_Specs.cs` | Modified | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/Retry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/InitiateSaga_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/InitiateSaga_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/InjectingSampleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/InjectingSampleSaga.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/Injecting_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/Injecting_Specs.cs` |
@@ -6863,70 +7131,25 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SendByConvention_Specs.cs` | Modified | `tests/MassTransit.Tests/SendByConvention_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SendContextMiddleware_Specs.cs` | Modified | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendEndpointCache_Specs.cs` | Modified | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/SendObserver_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendProxy_Specs.cs` | Modified | `tests/MassTransit.Tests/SendProxy_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SendReceive_Specs.cs` | Modified | `tests/MassTransit.Tests/SendReceive_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SentTime_Specs.cs` | Modified | `tests/MassTransit.Tests/SentTime_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/Array_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Array_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/Attribute_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Attribute_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/DateTimeConverter_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/DateTimeConverter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/DateTimeFormat_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/DateTimeFormat_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/DeserializerFault_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/DeserializerFault_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/ExtensionData_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/ExtensionData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/Forward_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs` | Modified | `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/IEnumerable_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/JobDeserialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/JobDeserialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/JsonSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyLength_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessageDataSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/MessageDataSerialization_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MisnamedProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/MisnamedProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MoreSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/MoreSerialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/PolymorphicProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/PolymorphicProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/PropertyType_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/PropertyType_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/ProtoBufAsJson_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/ProtoBufAsJson_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Redelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Redelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SeparateSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationValidation_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationTest.cs` | Modified | `tests/MassTransit.Tests/Serialization/SerializationTest.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto` | Modified | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TradeBookedViciOneServiceBus.proto.cs` | Modified | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.Populate.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.proto` | Modified | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TradesBookedViciOneServiceBus.proto.cs` | Modified | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/TypeHandling_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/TypeHandling_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/XmlPayload_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/SerializationFault_Specs.cs` | Modified | `tests/MassTransit.Tests/SerializationFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceInstanceEndpoints_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ServiceProviderExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/StartStop_Specs.cs` | Modified | `tests/MassTransit.Tests/StartStop_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/StaticProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/StaticProperty_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/TaskExecutor_Specs.cs` | Modified | `tests/MassTransit.Tests/TaskExecutor_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/TaskExtension_Specs.cs` | Modified | `tests/MassTransit.Tests/TaskExtension_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/TelemetryMonitor_Specs.cs` | Modified | `tests/MassTransit.Tests/TelemetryMonitor_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Telemetry_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Testing/AsyncMessageList_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/AsyncMessageList_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/BusPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/BusPublish_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/ConsumerMultiple_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/ConsumerMultiple_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/ConsumerTest_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/ConsumerTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/HandlerRespond_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/HandlerRespond_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/HandlerTest_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/HandlerTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/InactivityObserver_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Testing/NewTest_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/NewTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/SagaTest_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/SagaTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/StandaloneConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/StandaloneConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Testing/StateMachineSagaTest_Specs.cs` | Modified | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Threading_Specs.cs` | Modified | `tests/MassTransit.Tests/Threading_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Timeout_Specs.cs` | Modified | `tests/MassTransit.Tests/Timeout_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/CreateTopology_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Topology/MessageSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/MessageSerializer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` |
@@ -6937,28 +7160,335 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Transforms/TransformClass_Specs.cs` | Modified | `tests/MassTransit.Tests/Transforms/TransformClass_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transports/MessageFabric_Specs.cs` | Modified | `tests/MassTransit.Tests/Transports/MessageFabric_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs` | Modified | `tests/MassTransit.Tests/Transports/TopicExchange_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/TypeCastRetry_Specs.cs` | Modified | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/EvaluatedBuildGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/RepositoryGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/ResolvedPackageGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestConfigurationTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestTreeIsolationTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Architecture/TestingPlatformConfigurationTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/MsBuildEvaluation.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/RepositoryLayout.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ResolvedPackageGraph.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/ArchitectureFoundationRequirements.json` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
 | `tests2/Directory.Build.props` | Added |  |
 | `tests2/Directory.Build.targets` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedInitializer.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedMessageContractDiagnostic.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenario.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenarioCatalog.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractSourceFactory.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageSourceForm.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Compilation/RoslynTestHostTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RoslynInfrastructureRequirements.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/Diagnostics/DiagnosticObservation.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/References/MetadataReferenceClosure.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/RoslynTestHost.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Configuration/TestConfigurationProviderTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageAttributeTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionVerifierTests.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageVerifierRequirements.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/AbstractionsLocalIntegrationRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Attributes/MessageUrnAttributeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/BusControlHealthExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Clients/RequestTimeoutTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Clients/ResponseTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/MessageBodyContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/PipeContextTimeProviderExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TaskExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeRelationshipExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyCacheTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/MessageUrnTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/BusHostInfoTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/FaultMessageTypeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/ImplementedMessageTypeCacheTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/PipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Publish/PublishPipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Send/SendPipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ExceptionFilters/ExceptionSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/PipeExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ScopePipeContextTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/SupervisorLifecycleTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/NewIdFormatterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/ReferenceCorpus.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGeneratorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGuidInteropTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdOrderingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdTestInputs.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdValueTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/ArrayMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/Base64MessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/BytesMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/EmptyMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/StringMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/CancellationTokenOverloadMethodFixerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Fixtures/ServiceBusCodeFixFixture.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/MessageContractCodeFixProvider/MessageContractCodeFixScenarioTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/CodeFixRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceStateTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/AsyncMethodAnalyzerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/CancellationTokenOverloadMethodAnalyzerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Fixtures/ServiceBusAnalyzerFixture.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/DictionaryInitializerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioCatalogTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageDataInitializerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Requirements/AnalyzerRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerBoundaryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerReferenceScanner.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Configuration/MessagePackTransportIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Requirements/MessagePackRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InterfaceMessagePackFormatterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InternalMessagePackResolverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackDomainContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeMetadataProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageSerializerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackRoundTrip.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackTestContracts.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.MessagePack.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/RecordingLogger.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerFanOutTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerLocalTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerScaleOutTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerSerializationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.SignalR.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Abstractions/StateMachineGeneratorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/StateMachineVisualizerRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphFixtures.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphvizGeneratorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineInputTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineMermaidGeneratorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/packages.lock.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorFailureTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/BucketTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/IndexTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/NodeTrackerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/NodeValueFactoryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Caching/MultipleIndexTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientBoundaryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientLifecycleTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientMetadataTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Clients/ResponseAcceptanceTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contexts/ConversationContextTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contexts/MessageContextFlowTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerObjectGraphTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerRequestResponseTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerScalarConversionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ArrayPropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/DictionaryPropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ListPropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/StatePropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/TaskPropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/VariablePropertyConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/AsyncPropertyProviderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryArrayTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryDictionaryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryObjectGraphTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryScalarTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryVariableTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderTestContext.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/TaskPropertyProviderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/TaskInitializerExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/DateTimeTypeConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/ExceptionTypeConverterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/CacheEntry.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ManualTimeProvider.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/TimeToLiveCachePolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheCapacityTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheRecoveryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/ExponentialRetryPolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/ImmediateRetryPolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/IncrementalRetryPolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/EnvelopeMetadataProjectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/MemoryMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/NotSupportedMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConstructorBindingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateOnlyTimeOnlyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateTimeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDecimalTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionDataTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonInterfaceMetadataTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageSerializerOptionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonObjectMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPolymorphismTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRawMessageBodyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRoundTrip.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonScalarTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonTypeSafetyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/ActivityTestHarnessTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/ConditionExpressionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/DynamicReceiveEndpointConnectorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/HostedServiceLifecycleTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/InMemoryTestHarnessBehaviorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/MediatorTestHarnessBehaviorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/MessageFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/SystemTextJsonGlobalOptionsCollection.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/TelemetryMonitorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Util/TaskUtilTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tests2/testconfig.json` | Added |  |
 | `tests2/testsettings.json` | Added |  |
 | `tools/ci/api_surface.cs` | Added |  |

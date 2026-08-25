@@ -359,7 +359,8 @@ future cohorts as complete.
 - Source-derived tests cover latest-value visibility, recoverable single-flight setup, exact
   cancellation and abandoned-fault observation, fork/join and nested-pipe ordering, partition
   isolation, repeated rate/concurrency adjustment, observer order, rescue diagnostics, distinct
-  retry budgets and deterministic circuit-breaker resource ownership.
+  retry budgets and the imported circuit-breaker resource ownership that was subsequently
+  superseded by the greenfield circuit-breaker cohort.
 - Product defects were corrected at their owners, including lost cache-cleanup scheduling,
   non-recovering setup state, permit rollback, null routing keys, process-clock timers and competing
   circuit transitions. Tests were not relaxed to preserve any defect.
@@ -575,3 +576,22 @@ future cohorts as complete.
 - The complete serial Unit and Engineering Release builds have zero warnings and errors. The
   UnitArchitecture floor is raised to 1472 and passes 1472/1472; LocalIntegration passes 3/3,
   both without failure or skip.
+
+## Lead-verified: greenfield circuit breaker
+
+- PO-2026-08-25-04 is implemented as one validated `CircuitBreakerOptions` boundary, an immutable
+  runtime snapshot and an internal timer-free compare-and-swap state machine. Public runtime states,
+  router events and the inherited configurator API are removed.
+- Exactly one caller owns the half-open probe. Success closes and resets bounded backoff; a
+  classified failure reopens; caller cancellation and unclassified failures release the probe and
+  remain observably half-open. Dependency cancellation remains a classified resource failure.
+- Eighteen ordinary xUnit/MTP facts cover configuration, public surface, both sides of inclusive
+  thresholds, exact sampling/open boundaries, 32-way probe competition, failure classification,
+  cancellation ownership, retry/concurrency composition and versioned low-cardinality OTel signals.
+- Seven isolated one-cause product mutations fail for their intended reasons: throughput boundary,
+  open-time boundary, exclusive probe, backoff progression, caller-cancellation classification,
+  false close after no-verdict release and missing OTel source version. Every mutated source was
+  restored to its pre-mutation SHA-256 before the final build.
+- Core passes 855/855, UnitArchitecture 1487/1487 and LocalIntegration 3/3 with no failure or skip.
+  The complete Engineering Release build, including benchmarks and retained transports, has zero
+  warnings and zero errors. Bounded `dotnet format whitespace --verify-no-changes` passes.

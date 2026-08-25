@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1472 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1487 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -108,10 +108,12 @@ surface. The middleware coordination cohort additionally proves latest-value vis
 single-flight setup and recovery, abandoned-task observation, fork/join and nested-pipe ordering,
 partition isolation, dynamically adjustable rate/concurrency limits, exact observer and rescue
 semantics, distinct retry budgets, and deterministic circuit-breaker ownership through the standard
-`TimeProvider`. The
-scope/routing/limit cohort additionally proves parent/local payload isolation, typed fan-out,
-keyed routing, route disconnection, converter boundaries, exact input-pipeline continuation,
-configured concurrency maxima and the historical default circuit threshold. The fault-diagnostic
+`TimeProvider`. The greenfield circuit-breaker cohort additionally proves inclusive throughput and
+failure-ratio boundaries, lazy sampling-window rollover, one exclusive half-open probe, classified
+failure and cancellation ownership, bounded backoff, retry/concurrency composition and low-cardinality
+OpenTelemetry signals. The scope/routing/limit cohort additionally proves parent/local payload isolation,
+typed fan-out, keyed routing, route disconnection, converter boundaries, exact input-pipeline continuation,
+and configured concurrency maxima. The fault-diagnostic
 and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
 application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
 one unambiguous current-host capture path and all eight host fields after real envelope transport.

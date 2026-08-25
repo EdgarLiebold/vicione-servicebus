@@ -1,139 +1,65 @@
-namespace ViciOne.ServiceBus.Middleware
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware;
+
+using System;
+using System.Threading.Tasks;
+using CircuitBreaker;
+
+internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using CircuitBreaker;
+    private readonly CircuitBreakerSettings _settings;
+    private readonly CircuitBreakerStateMachine _stateMachine;
 
-
-    public class CircuitBreakerFilter<TContext> :
-        IFilter<TContext>,
-        ICircuitBreaker
-        where TContext : class, PipeContext
+    public CircuitBreakerFilter(CircuitBreakerSettings settings)
     {
-        readonly IExceptionFilter _exceptionFilter;
-        readonly CircuitBreakerSettings _settings;
-        readonly object _stateLock;
-        ICircuitBreakerBehavior _behavior;
+        _settings = settings;
+        _stateMachine = new CircuitBreakerStateMachine(settings);
+    }
 
-        public CircuitBreakerFilter(CircuitBreakerSettings settings, IExceptionFilter exceptionFilter)
+    public async Task Send(TContext context, IPipe<TContext> next)
+    {
+        CircuitBreakerLease lease = _stateMachine.Acquire();
+        try
         {
-            _settings = settings;
-            _exceptionFilter = exceptionFilter;
-            _stateLock = new object();
-
-            _behavior = new ClosedBehavior(this);
+            await next.Send(context).ConfigureAwait(false);
+            _stateMachine.RecordSuccess(lease);
         }
-
-        public TimeSpan OpenDuration => _settings.TrackingPeriod;
-
-        public TimeProvider TimeProvider => _settings.TimeProvider;
-
-        CircuitBreakerTransition ICircuitBreaker.Open(Exception exception, ICircuitBreakerBehavior behavior,
-            IEnumerator<TimeSpan> timeoutEnumerator)
+        catch (Exception exception)
         {
-            lock (_stateLock)
-            {
-                if (!ReferenceEquals(_behavior, behavior))
-                    return CircuitBreakerTransition.Unchanged;
+            if (IsCallerCancellation(context, exception) || !_settings.ExceptionFilter.Match(exception))
+                _stateMachine.ReleaseWithoutVerdict(lease);
+            else
+                _stateMachine.RecordFailure(lease, exception);
 
-                timeoutEnumerator ??= _settings.ResetTimeout.GetEnumerator();
-                Volatile.Write(ref _behavior, new OpenBehavior(this, exception, timeoutEnumerator));
-            }
-
-            return new CircuitBreakerTransition(true, PublishOpened(exception));
+            throw;
         }
+    }
 
-        CircuitBreakerTransition ICircuitBreaker.Close(ICircuitBreakerBehavior behavior)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        CircuitBreakerSnapshot snapshot = _stateMachine.GetSnapshot();
+        var scope = context.CreateFilterScope("circuitBreaker");
+        scope.Set(new
         {
-            lock (_stateLock)
-            {
-                if (!ReferenceEquals(_behavior, behavior))
-                    return CircuitBreakerTransition.Unchanged;
+            _settings.MinimumThroughput,
+            _settings.FailureRatio,
+            _settings.SamplingDuration,
+            BreakDurations = (TimeSpan[])_settings.BreakDurations.Clone(),
+            snapshot.State,
+            snapshot.AttemptCount,
+            snapshot.FailureCount,
+            snapshot.RetryAfter,
+            snapshot.ProbeInProgress,
+        });
+    }
 
-                Volatile.Write(ref _behavior, new ClosedBehavior(this));
-            }
+    private static bool IsCallerCancellation(TContext context, Exception exception)
+    {
+        if (exception is not OperationCanceledException cancellation || !context.CancellationToken.CanBeCanceled)
+            return false;
 
-            return new CircuitBreakerTransition(true, PublishClosed());
-        }
-
-        bool ICircuitBreaker.ClosePartially(Exception exception, IEnumerator<TimeSpan> timeoutEnumerator,
-            ICircuitBreakerBehavior behavior)
-        {
-            lock (_stateLock)
-            {
-                if (!ReferenceEquals(_behavior, behavior))
-                    return false;
-
-                Volatile.Write(ref _behavior, new HalfOpenBehavior(this, exception, timeoutEnumerator));
-                return true;
-            }
-        }
-
-        public int TripThreshold => _settings.TripThreshold;
-
-        public int ActiveThreshold => _settings.ActiveThreshold;
-
-        public async Task Send(TContext context, IPipe<TContext> next)
-        {
-            ICircuitBreakerBehavior behavior = Volatile.Read(ref _behavior);
-            try
-            {
-                await behavior.PreSend().ConfigureAwait(false);
-
-                await next.Send(context).ConfigureAwait(false);
-
-                await behavior.PostSend().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (!_exceptionFilter.Match(ex))
-                    throw;
-
-                await behavior.SendFault(ex).ConfigureAwait(false);
-
-                throw;
-            }
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("circuitBreaker");
-            scope.Set(new
-            {
-                ActiveCount = _settings.ActiveThreshold,
-                _settings.TripThreshold,
-                Duration = _settings.TrackingPeriod,
-                ResetTimeout = _settings.ResetTimeout.Take(10).ToArray()
-            });
-
-            Volatile.Read(ref _behavior).Probe(scope);
-        }
-
-        Task PublishOpened(Exception exception)
-        {
-            try
-            {
-                return _settings.Router?.PublishCircuitBreakerOpened(exception) ?? Task.CompletedTask;
-            }
-            catch (Exception caught)
-            {
-                return Task.FromException(caught);
-            }
-        }
-
-        Task PublishClosed()
-        {
-            try
-            {
-                return _settings.Router?.PublishCircuitBreakerClosed() ?? Task.CompletedTask;
-            }
-            catch (Exception caught)
-            {
-                return Task.FromException(caught);
-            }
-        }
+        return context.CancellationToken.IsCancellationRequested
+            || cancellation.CancellationToken == context.CancellationToken;
     }
 }

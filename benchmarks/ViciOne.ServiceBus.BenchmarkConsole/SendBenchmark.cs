@@ -74,7 +74,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
 
             tripleDispatchPipe.ConnectPipe(Pipe.Empty<CommandContext<SetConcurrencyLimit>>());
             tripleDispatchPipe.ConnectPipe(Pipe.Empty<CommandContext<SetRateLimit>>());
-            tripleDispatchPipe.ConnectPipe(Pipe.Empty<CommandContext<CircuitBreakerOpened>>());
+            tripleDispatchPipe.ConnectPipe(Pipe.Empty<CommandContext<BusReady>>());
         }
 
         [Benchmark]

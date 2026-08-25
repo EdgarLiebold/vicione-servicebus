@@ -22,6 +22,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The circuit breaker now has one validated greenfield options boundary, an immutable runtime
+  snapshot and a timer-free state machine. Exactly one caller owns each half-open recovery probe;
+  competitors fail immediately with `CircuitBreakerOpenException`. Inclusive throughput/ratio
+  boundaries, bounded backoff, cancellation ownership and low-cardinality OpenTelemetry signals
+  replace public runtime states, router events and timer ownership.
 - Two roots, and a run owns its own child of each. Compilation output under `artifacts/sdk`, packages
   under `artifacts/packages`; the raw TRX, the endpoint projection, the control files and the broker
   logs of one run under `artifacts/run-output/<run>/`; and the durable category record under the

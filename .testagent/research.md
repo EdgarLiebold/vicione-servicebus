@@ -1123,12 +1123,14 @@ permits, runtime partition keys could become an unintended empty route, and late
 had no cross-thread memory contract. Rate and circuit timers also bypassed the standard
 `TimeProvider`. Each defect is corrected at its owner and has an exact behavior test.
 
-Circuit-breaker admission and completion are causally linked: a send completes against the state
-that admitted it, while only the rare transition decision is serialized. Losing competitors must
-not allocate timers or timeout enumerators. The implementation therefore keeps lock-free state reads
-on the message path and a small transition lock for sole successor/resource ownership. The inherited
-activation-threshold boundary remains deliberate; the breaker opens after the configured attempt
-boundary is exceeded, not when it is merely reached.
+That migration cohort deliberately retained the inherited circuit API and its strict activation
+boundary. It is historical evidence, not the current product contract. PO-2026-08-25-04 supersedes
+it with a validated `CircuitBreakerOptions` API, an immutable settings snapshot and a timer-free
+compare-and-swap state machine. Closed sampling is lazy and uses the configured `TimeProvider`;
+minimum throughput and failure ratio are inclusive. After an open duration expires, exactly one
+caller atomically owns the half-open probe and every competitor is rejected without reaching the
+protected pipe. Probe success closes, a classified failure reopens with bounded backoff, and caller
+cancellation or an unclassified failure releases ownership while remaining half-open.
 
 A complete profile exposed two independent test defects outside the inherited lower bound. Cache
 capacity is a documented soft bound of `Capacity + BucketSize`, while `NodeTracker.Cleanup` really
@@ -1164,9 +1166,10 @@ unrelated output contexts would be a separate architecture change, not an accide
 
 Source review exposed missing null/result guards for parent contexts, converter factories, key
 accessors, converter instances, successful-null conversions and configured/runtime keys. All are
-fixed at their owners. The established strict circuit activation rule remains unchanged and is now
-explicitly covered: default active threshold five opens after the sixth failed attempt and publishes
-one event carrying the exact causal exception.
+fixed at their owners. The then-established strict circuit activation rule and router event were
+covered as migration evidence. Both have since been superseded by PO-2026-08-25-04: the greenfield
+breaker uses inclusive ratio/throughput boundaries, a distinct rejection exception and
+OpenTelemetry-only transitions.
 
 All eight inherited rows are terminally mapped, five fixtures are removed, and eight one-cause
 mutations fail for their intended reasons. Final results are Abstractions 203/203, Core 649/649,

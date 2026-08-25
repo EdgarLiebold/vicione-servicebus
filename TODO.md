@@ -184,26 +184,6 @@ retained adapter tests, exact observer and supervisor-state assertions, one-caus
 delay mutations, public-API/package comparison, zero-warning Release builds and every applicable
 unfiltered native profile.
 
-## Redesign the circuit breaker after the half-open policy is decided
-
-The current circuit-breaker owner is an inherited public runtime/state-machine API rather than a
-greenfield configuration boundary. Its mutable settings, timer-owned closed state, percentage
-threshold representation and attempt counting also make the intended transitions harder to reason
-about and test. Existing native tests preserve useful behavior, but they do not establish an A+
-public API or a complete state contract.
-
-Do not change this owner until the PO has selected the half-open recovery policy: one exclusive
-probe after the reset interval, or a configured successful sample before closing. That choice
-materially changes concurrency, throughput and retrip semantics. After the decision, replace the
-public runtime types with an immutable validated options snapshot and an internal synchronized
-state machine using `TimeProvider`; preserve useful filtering, exception matching and pipeline
-composition features without preserving legacy API shape.
-
-Acceptance requires deterministic boundary and concurrency tests for every transition, exact
-threshold and window behavior, one owned recovery mechanism, cancellation/lifecycle proof, real
-pipeline integration, retained-feature and public-API comparison, and one-cause mutations for
-off-by-one, timer, concurrency and half-open regressions.
-
 ## Decide the inherited message-audit feature boundary before migration
 
 The inherited `IMessageAuditStore` feature observes sent, published and consumed messages and can
