@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1956 |
+| Added | 1957 |
 | Modified | 4265 |
 | Deleted | 1383 |
 | Renamed | 2 |
@@ -987,6 +987,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/native-tests/node-tracker-promotion/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/object-and-datetime-conversion/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/object-and-datetime-conversion/MUTATION_VALIDATION.md` | Added |  |
+| `evidence/native-tests/observability/ACCEPTANCE.md` | Added |  |
 | `evidence/native-tests/observer-pipelines/EXECUTION_AND_QUALITY_VALIDATION.md` | Added |  |
 | `evidence/native-tests/observer-pipelines/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/observer-pipelines/MUTATION_VALIDATION.md` | Added |  |
