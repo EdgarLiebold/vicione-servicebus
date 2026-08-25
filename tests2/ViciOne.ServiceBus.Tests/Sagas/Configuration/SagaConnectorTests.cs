@@ -74,6 +74,7 @@ public sealed class SagaConnectorTests
         {
             await harness.InputQueueSendEndpoint.Send(new PropertySagaMessage(correlationId), cancellationToken);
 
+            Assert.True(await sagaHarness.Consumed.Any<PropertySagaMessage>(cancellationToken));
             Guid? createdId = await sagaHarness.Exists(correlationId, timeout);
             PropertySaga created = sagaHarness.Created.Contains(correlationId);
 
