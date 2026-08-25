@@ -1,5 +1,7 @@
 using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology;
@@ -38,11 +40,18 @@ public sealed class RabbitMqBusTopologyTests
     {
         var topologyConfiguration = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
         var busConfiguration = new RabbitMqBusConfiguration(topologyConfiguration);
+        var formattedTopology = new RabbitMqBusTopology(
+            busConfiguration.HostConfiguration,
+            new FixedMessageNameFormatter("orders#fragment"),
+            topologyConfiguration);
 
-        var exception = Assert.Throws<RabbitMqAddressException>(
+        var namedException = Assert.Throws<RabbitMqAddressException>(
             () => busConfiguration.HostConfiguration.Topology.GetDestinationAddress("orders?temporary=true"));
+        var typedException = Assert.Throws<RabbitMqAddressException>(
+            () => formattedTopology.GetDestinationAddress(typeof(OrderSubmitted)));
 
-        Assert.Contains("entity name", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("entity name", namedException.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("entity name", typedException.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void AssertDestinationUsesConfiguredHost(Uri destination, Uri configuredHost)
@@ -56,4 +65,9 @@ public sealed class RabbitMqBusTopologyTests
     }
 
     private sealed record OrderSubmitted;
+
+    private sealed class FixedMessageNameFormatter(string messageName) : IMessageNameFormatter
+    {
+        public string GetMessageName(Type type) => messageName;
+    }
 }
