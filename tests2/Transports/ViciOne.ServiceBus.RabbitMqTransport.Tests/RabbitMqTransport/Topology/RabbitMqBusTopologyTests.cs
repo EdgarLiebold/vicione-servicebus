@@ -29,9 +29,28 @@ public sealed class RabbitMqBusTopologyTests
         AssertDestinationUsesConfiguredHost(namedDestination, hostConfiguration.HostAddress);
         AssertDestinationUsesConfiguredHost(typedDestination, hostConfiguration.HostAddress);
         Assert.Equal("orders", new RabbitMqEndpointAddress(hostConfiguration.HostAddress, namedDestination).Name);
-        var typedEndpoint = new RabbitMqEndpointAddress(hostConfiguration.HostAddress, typedDestination);
-        Assert.False(typedEndpoint.Durable);
-        Assert.True(typedEndpoint.AutoDelete);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "topology-preserves-message-lifetime")]
+    public void TypedDestination_PreservesTemporaryAndDurableMessageLifetimes()
+    {
+        var topologyConfiguration = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topologyConfiguration);
+
+        Uri temporaryDestination = busConfiguration.HostConfiguration.Topology.GetDestinationAddress(typeof(OrderSubmitted));
+        Uri durableDestination = busConfiguration.HostConfiguration.Topology.GetDestinationAddress(typeof(PublicOrderSubmitted));
+
+        Assert.False(typeof(OrderSubmitted).IsVisible);
+        Assert.True(typeof(PublicOrderSubmitted).IsVisible);
+
+        var temporaryEndpoint = new RabbitMqEndpointAddress(busConfiguration.HostConfiguration.HostAddress, temporaryDestination);
+        Assert.False(temporaryEndpoint.Durable);
+        Assert.True(temporaryEndpoint.AutoDelete);
+
+        var durableEndpoint = new RabbitMqEndpointAddress(busConfiguration.HostConfiguration.HostAddress, durableDestination);
+        Assert.True(durableEndpoint.Durable);
+        Assert.False(durableEndpoint.AutoDelete);
     }
 
     [Fact]
@@ -71,3 +90,5 @@ public sealed class RabbitMqBusTopologyTests
         public string GetMessageName(Type type) => messageName;
     }
 }
+
+public sealed record PublicOrderSubmitted;

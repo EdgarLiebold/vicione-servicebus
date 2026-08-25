@@ -627,7 +627,7 @@ future cohorts as complete.
 - TLS follows the scheme rather than a port number, lets the operating system negotiate enabled
   protocols, validates chains and names by default and uses the configured host as the default
   certificate server name. Explicit policy exceptions remain available through the SSL configurator.
-- The focused RabbitMQ executable passes 107/107, UnitArchitecture passes 1698/1698 and
+- The focused RabbitMQ executable passes 108/108, UnitArchitecture passes 1699/1699 and
   LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all without failure or
   skip. The complete serial Engineering Release build has zero warnings and zero errors.
 - The first independent code and test reviews rejected the initial candidate. Their product-path
@@ -641,7 +641,7 @@ future cohorts as complete.
   precedes the product span stop and idle-timer restart. The test clock now observes that causal timer
   restart before advancing; the product timeout was neither increased nor bypassed. The focused
   telemetry cohort now proves the exact due time and just-before boundary, passes 4/4, and the
-  complete stationary Unit profile passes 1698/1698.
+  complete stationary Unit profile passes 1699/1699.
 - The same unfiltered validation exposed a missing causal barrier in a pre-existing Saga test. It
   now waits for actual consumption before reading state written during `Consume`; the focused test
   passed 10/10 consecutive runs without timeout, retry or product-semantic changes.
