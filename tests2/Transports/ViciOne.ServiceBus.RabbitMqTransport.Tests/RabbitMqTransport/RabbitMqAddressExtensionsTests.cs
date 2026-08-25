@@ -53,7 +53,7 @@ public sealed class RabbitMqAddressExtensionsTests
 
         Assert.Equal("orders", settings.QueueName);
         Assert.Single(settings.QueueArguments);
-        Assert.Equal("30000", settings.QueueArguments["x-message-ttl"]);
+        Assert.Equal(30000, Assert.IsType<int>(settings.QueueArguments["x-message-ttl"]));
     }
 
     [Fact]

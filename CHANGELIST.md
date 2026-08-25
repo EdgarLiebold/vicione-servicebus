@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1982 |
+| Added | 1984 |
 | Modified | 4265 |
 | Deleted | 1383 |
 | Renamed | 2 |
@@ -7302,6 +7302,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RabbitMqAddressRequirements.json` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj` | Added |  |
@@ -7317,6 +7318,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Clients/ResponseTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/MessageBodyContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/PipeContextTimeProviderExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/QueryStringExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TaskExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeRelationshipExtensionsTests.cs` | Added |  |

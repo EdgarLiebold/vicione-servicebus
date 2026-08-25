@@ -30,15 +30,20 @@ public sealed class RabbitMqEndpointAddressTests
     }
 
     [Theory]
-    [InlineData("queue:input-queue", true, "rabbitmq://localhost/test/input-queue?bind=true")]
-    [InlineData("exchange:input-queue", false, "rabbitmq://localhost/test/input-queue")]
+    [InlineData("queue:input-queue", true, "input-queue", "rabbitmq://localhost/test/input-queue?bind=true")]
+    [InlineData("exchange:input-queue", false, "input-queue", "rabbitmq://localhost/test/input-queue")]
+    [InlineData("exchange:orders.%C3%A4", false, "orders.ä", "rabbitmq://localhost/test/orders.ä")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "short-address-resolution")]
-    public void ShortAddresses_ResolveAgainstTheHost(string source, bool expectedBindToQueue, string expectedAddress)
+    public void ShortAddresses_ResolveAgainstTheHost(
+        string source,
+        bool expectedBindToQueue,
+        string expectedName,
+        string expectedAddress)
     {
         var address = new RabbitMqEndpointAddress(HostAddress, new Uri(source));
 
         Assert.Equal(expectedBindToQueue, address.BindToQueue);
-        Assert.Equal("input-queue", address.Name);
+        Assert.Equal(expectedName, address.Name);
         Assert.Equal(new Uri(expectedAddress), (Uri)address);
     }
 
@@ -90,6 +95,18 @@ public sealed class RabbitMqEndpointAddressTests
         Assert.Equal(new Uri("exchange:orders?delayedtype=topic"), address.ToShortAddress());
     }
 
+    [Theory]
+    [InlineData("exchange:orders?delayedtype=x=y")]
+    [InlineData("exchange:orders?delayedtype=x%3Dy")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "query-value-separator-roundtrip")]
+    public void QueryValues_PreserveRawAndEncodedSeparators(string source)
+    {
+        var address = new RabbitMqEndpointAddress(HostAddress, new Uri(source));
+
+        Assert.Equal("x=y", address.DelayedType);
+        Assert.Equal(new Uri("exchange:orders?delayedtype=x%3Dy"), address.ToShortAddress());
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-OPTIONS", "direct-delayed-exchange-normalization")]
     public void DirectConstruction_NormalizesADelayedExchange()
@@ -118,11 +135,41 @@ public sealed class RabbitMqEndpointAddressTests
         Assert.Throws<NotSupportedException>(() => ((IList<string>)address.BindExchanges)[0] = "mutated");
     }
 
-    [Fact]
+    [Theory]
+    [InlineData("exchange")]
+    [InlineData("queue")]
+    [InlineData("alternate")]
+    [InlineData("binding")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "direct-construction-validation")]
-    public void DirectConstruction_ValidatesEntityNames()
+    public void DirectConstruction_ValidatesEveryEntityNameInput(string target)
     {
-        Assert.Throws<RabbitMqAddressException>(() => new RabbitMqEndpointAddress(HostAddress, "invalid/name"));
+        const string invalidName = "invalid/name";
+
+        Assert.Throws<RabbitMqAddressException>(() => target switch
+        {
+            "exchange" => new RabbitMqEndpointAddress(HostAddress, invalidName),
+            "queue" => new RabbitMqEndpointAddress(HostAddress, "orders", queueName: invalidName),
+            "alternate" => new RabbitMqEndpointAddress(HostAddress, "orders", alternateExchange: invalidName),
+            "binding" => new RabbitMqEndpointAddress(HostAddress, "orders", bindExchanges: [invalidName]),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target, "Unknown entity-name input."),
+        });
+    }
+
+    [Theory]
+    [InlineData("exchange")]
+    [InlineData("queue")]
+    [InlineData("alternate")]
+    [InlineData("binding")]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "direct-construction-name-boundaries")]
+    public void DirectConstruction_AppliesTheUtf8LimitToEveryEntityNameInput(string target)
+    {
+        string acceptedName = new('a', 255);
+        string rejectedName = new('a', 256);
+
+        RabbitMqEndpointAddress accepted = CreateWithName(target, acceptedName);
+
+        Assert.Equal(acceptedName, GetName(accepted, target));
+        Assert.Throws<RabbitMqAddressException>(() => CreateWithName(target, rejectedName));
     }
 
     [Theory]
@@ -221,4 +268,22 @@ public sealed class RabbitMqEndpointAddressTests
 
         Assert.Equal(new Uri(expected), address.ToShortAddress());
     }
+
+    private static RabbitMqEndpointAddress CreateWithName(string target, string name) => target switch
+    {
+        "exchange" => new RabbitMqEndpointAddress(HostAddress, name),
+        "queue" => new RabbitMqEndpointAddress(HostAddress, "orders", queueName: name),
+        "alternate" => new RabbitMqEndpointAddress(HostAddress, "orders", alternateExchange: name),
+        "binding" => new RabbitMqEndpointAddress(HostAddress, "orders", bindExchanges: [name]),
+        _ => throw new ArgumentOutOfRangeException(nameof(target), target, "Unknown entity-name input."),
+    };
+
+    private static string GetName(RabbitMqEndpointAddress address, string target) => target switch
+    {
+        "exchange" => address.Name,
+        "queue" => address.QueueName!,
+        "alternate" => address.AlternateExchange!,
+        "binding" => Assert.Single(address.BindExchanges),
+        _ => throw new ArgumentOutOfRangeException(nameof(target), target, "Unknown entity-name input."),
+    };
 }

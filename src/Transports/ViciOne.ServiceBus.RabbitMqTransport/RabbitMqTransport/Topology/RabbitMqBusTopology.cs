@@ -10,15 +10,15 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
         IRabbitMqBusTopology
     {
         readonly IRabbitMqTopologyConfiguration _configuration;
-        readonly Uri _hostAddress;
+        readonly IRabbitMqHostConfiguration _hostConfiguration;
         readonly IMessageNameFormatter _messageNameFormatter;
 
-        public RabbitMqBusTopology(IRabbitMqHostConfiguration hostConfiguration, IMessageNameFormatter messageNameFormatter, Uri hostAddress,
+        public RabbitMqBusTopology(IRabbitMqHostConfiguration hostConfiguration, IMessageNameFormatter messageNameFormatter,
             IRabbitMqTopologyConfiguration configuration)
             : base(hostConfiguration, configuration)
         {
+            _hostConfiguration = hostConfiguration;
             _messageNameFormatter = messageNameFormatter;
-            _hostAddress = hostAddress;
             _configuration = configuration;
         }
 
@@ -37,26 +37,28 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
 
         public Uri GetDestinationAddress(string exchangeName, Action<IRabbitMqExchangeConfigurator> configure = null)
         {
-            var address = new RabbitMqEndpointAddress(_hostAddress, new Uri($"exchange:{exchangeName}"));
+            var hostAddress = _hostConfiguration.HostAddress;
+            var address = new RabbitMqEndpointAddress(hostAddress, new Uri($"exchange:{exchangeName}"));
 
             var sendSettings = new RabbitMqSendSettings(address);
 
             configure?.Invoke(sendSettings);
 
-            return sendSettings.GetSendAddress(_hostAddress);
+            return sendSettings.GetSendAddress(hostAddress);
         }
 
         public Uri GetDestinationAddress(Type messageType, Action<IRabbitMqExchangeConfigurator> configure = null)
         {
+            var hostAddress = _hostConfiguration.HostAddress;
             var exchangeName = _messageNameFormatter.GetMessageName(messageType).ToString();
             var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);
-            var address = new RabbitMqEndpointAddress(_hostAddress, new Uri($"exchange:{exchangeName}?temporary={isTemporary}"));
+            var address = new RabbitMqEndpointAddress(hostAddress, new Uri($"exchange:{exchangeName}?temporary={isTemporary}"));
 
             var settings = new RabbitMqSendSettings(address);
 
             configure?.Invoke(settings);
 
-            return settings.GetSendAddress(_hostAddress);
+            return settings.GetSendAddress(hostAddress);
         }
     }
 }

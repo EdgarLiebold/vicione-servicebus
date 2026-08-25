@@ -2,46 +2,28 @@ namespace ViciOne.ServiceBus.Internals
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
 
     public static class QueryStringExtensions
     {
         public static bool TryGetValueFromQueryString(this Uri uri, string key, out string? value)
         {
-            var queryString = uri.Query;
-            if (string.IsNullOrEmpty(queryString) || queryString.Length <= 1)
+            var found = false;
+            value = null;
+
+            foreach (var (candidateKey, candidateValue) in uri.SplitQueryString())
             {
-                value = null;
-                return false;
+                if (!string.Equals(candidateKey, key, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (found)
+                    throw new InvalidOperationException($"The query string contains the key '{key}' more than once.");
+
+                found = true;
+                value = candidateValue ?? string.Empty;
             }
 
-            value = queryString.Substring(1)
-                .Split('&')
-                .Select(x =>
-                {
-                    var values = x.Split('=');
-                    if (values.Length == 2)
-                    {
-                        return new
-                        {
-                            Key = values[0],
-                            Value = values[1]
-                        };
-                    }
-
-                    return new
-                    {
-                        Key = values[0],
-                        Value = ""
-                    };
-                })
-                .Where(x => string.Compare(x.Key, key, StringComparison.OrdinalIgnoreCase) == 0)
-                .Select(x => x.Value)
-                .DefaultIfEmpty(null)
-                .SingleOrDefault();
-
-            return value != null;
+            return found;
         }
 
         public static T GetValueFromQueryString<T>(this Uri uri, string key, T defaultValue)
@@ -122,9 +104,14 @@ namespace ViciOne.ServiceBus.Internals
             if (string.IsNullOrWhiteSpace(query))
                 yield break;
 
-            foreach (var element in query!.Split('&').Select(x => x.Split('='))
-                         .Select(x => (x.First().ToLowerInvariant(), x.Skip(1).FirstOrDefault())))
-                yield return element;
+            foreach (var element in query.Split('&'))
+            {
+                var separator = element.IndexOf('=');
+                var key = separator < 0 ? element : element[..separator];
+                var value = separator < 0 ? null : element[(separator + 1)..];
+
+                yield return (key.ToLowerInvariant(), value);
+            }
         }
     }
 }

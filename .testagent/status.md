@@ -627,14 +627,16 @@ future cohorts as complete.
 - TLS follows the scheme rather than a port number, lets the operating system negotiate enabled
   protocols, validates chains and names by default and uses the configured host as the default
   certificate server name. Explicit policy exceptions remain available through the SSL configurator.
-- The focused RabbitMQ executable passes 94/94, UnitArchitecture passes 1681/1681 and
+- The focused RabbitMQ executable passes 105/105, UnitArchitecture passes 1696/1696 and
   LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all without failure or
   skip. The complete serial Engineering Release build has zero warnings and zero errors.
-- Six isolated product mutations reject wrong default-port normalization, lost virtual-host
-  encoding, bypassed direct-name validation, truncated credential semantics, wrong TTL mapping and
-  retained caller-owned bindings. A separate projection omission proves that an attributed test
-  cannot disappear from the requirement catalog unnoticed. Every target was restored byte-for-byte.
+- The first independent code and test reviews rejected the initial candidate. Their product-path
+  counterexamples are fixed: raw query separators are retained, short names decode symmetrically,
+  TTL is a numeric AMQP value, topology reads the final host configuration, and validation covers
+  exchange, queue, alternate-exchange and binding inputs. Fresh one-cause mutation evidence is still
+  being regenerated against this corrected candidate.
 - The full Unit run exposed a pre-existing race in the TelemetryMonitor test barrier: `PostReceive`
   precedes the product span stop and idle-timer restart. The test clock now observes that causal timer
   restart before advancing; the product timeout was neither increased nor bypassed. The focused
-  telemetry cohort passes 4/4 and the complete stationary Unit profile remains 1681/1681.
+  telemetry cohort now proves the exact due time and just-before boundary, passes 4/4, and the
+  complete stationary Unit profile passes 1696/1696.

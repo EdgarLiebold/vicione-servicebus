@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1681 predeclared unfiltered cases;
+- `UnitArchitecture`: 1696 predeclared unfiltered cases;
 - `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1087,7 +1087,7 @@ are removed, and the remaining inherited Core project still compiles. Abstractio
 Core 649/649, UnitArchitecture 1243/1243 and LocalIntegration 3/3 without failures or skips; the
 final Engineering build completes with zero warnings and zero errors.
 
-## Current cohort — greenfield circuit breaker
+## Accepted cohort — greenfield circuit breaker
 
 Replace the inherited public runtime-state API with one public validated options boundary and one
 internal timer-free state machine. Capture an immutable settings snapshot when the pipe is built.
@@ -1105,8 +1105,8 @@ just-below thresholds, sampling/open boundaries, a filter snapshot isolated from
 and caller-owned arrays, bounded backoff, cancellation causality, a real 33-caller CAS race,
 classifier-failure recovery, measured retry/concurrency composition, public surface, exact
 low-cardinality OpenTelemetry signals and no-throw observer isolation. The predeclared
-UnitArchitecture floor is 1584; final acceptance additionally requires focused, unfiltered Unit and
-LocalIntegration profiles, the Engineering Release build and one-cause mutations.
+UnitArchitecture floor was 1494 at acceptance; focused unfiltered Unit and LocalIntegration
+profiles, the Engineering Release build and the one-cause mutations were also green.
 
 ## Accepted cohort — middleware retry
 
@@ -1414,7 +1414,7 @@ on journal failure, missing bounds, retention bypass and telemetry leakage. Fina
 LocalIntegration, applicable External and Engineering Release profiles pass without failures,
 skips, warnings or a second verdict path.
 
-## RabbitMQ address model
+## Current cohort — RabbitMQ address model
 
 Reconstruct the complete inherited `RabbitMqAddress_Specs.cs` cohort as one hermetic transport-owner
 slice under `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests`. The 46 R0 obligations are
@@ -1436,3 +1436,10 @@ mutations for default-port normalization, virtual-host encoding, direct-construc
 credential preservation, option mapping and defensive snapshot ownership. Only then remove the old
 fixture and any resulting empty directory. No broker, container, network or wall-clock oracle is
 allowed in this cohort.
+
+The first independent review found and the correction closes five wider product-path defects: query
+values retain every byte after the first separator, opaque short names decode symmetrically, queue
+TTL is a numeric AMQP argument, bus topology resolves against the final configured host, and every
+direct-constructor name input owns the same validation boundary. The telemetry test barrier also
+proves the exact idle deadline rather than merely observing an arbitrary timer change. The focused
+transport executable now contains 105 unfiltered cases and the UnitArchitecture floor is 1696.

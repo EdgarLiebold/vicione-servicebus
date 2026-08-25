@@ -1328,5 +1328,19 @@
       "testMethod" : "PublicConstruction_ContainsOnlyTheParameterlessWireConstructor",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.BusHostInfoTests",
       "variantKey" : "unambiguous-public-construction"
+   },
+   {
+      "requirementId" : "REQ-VSB-QUERY-STRING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SplitQueryString_PreservesTheCompleteRawValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
+      "variantKey" : "split-at-first-separator"
+   },
+   {
+      "requirementId" : "REQ-VSB-QUERY-STRING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetValueFromQueryString_PreservesTheCompleteRawValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
+      "variantKey" : "lookup-preserves-complete-value"
    }
 ]

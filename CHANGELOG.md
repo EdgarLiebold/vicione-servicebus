@@ -29,8 +29,11 @@ entry below records what the current work changed for anyone reading the source.
   scheme-owned TLS semantics, canonical port and URI rendering, defensive binding ownership and
   UTF-8 byte-accurate entity limits. Credentials retain password suffixes after the first colon;
   TLS lets the operating system negotiate enabled protocols and validates certificate chains and
-  names by default. The complete inherited address fixture is replaced by a source-mirrored native
-  xUnit/MTP cohort with a one-to-one disposition of all 46 inherited obligations.
+  names by default. Query values and encoded short names round-trip without truncation, queue TTL is
+  emitted as a numeric AMQP argument, and destination topology uses the final configured broker
+  rather than its constructor default. The complete inherited address fixture is replaced by a
+  source-mirrored native xUnit/MTP cohort with a one-to-one disposition of all 46 inherited
+  obligations.
 - `MessageJournal` is an optional, default-off diagnostic capability for terminal send, publish and
   consume outcomes. A mandatory caller policy selects and sanitizes the serialized envelope before
   an immutable entry reaches EF Core or Azure Table. Both stores enforce finite size, count and age

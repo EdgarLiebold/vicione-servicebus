@@ -34,7 +34,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
 
             var messageNameFormatter = new RabbitMqMessageNameFormatter();
 
-            _topology = new RabbitMqBusTopology(this, messageNameFormatter, _hostSettings.HostAddress, topologyConfiguration);
+            _topology = new RabbitMqBusTopology(this, messageNameFormatter, topologyConfiguration);
 
             ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
             {

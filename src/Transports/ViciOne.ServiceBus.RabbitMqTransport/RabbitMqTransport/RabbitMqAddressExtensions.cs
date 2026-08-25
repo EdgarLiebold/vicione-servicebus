@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Net.Security;
     using System.Security.Cryptography.X509Certificates;
     using Configuration;
@@ -30,7 +29,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
                 settings.PrefetchCount = hostAddress.Prefetch.Value;
 
             if (hostAddress.TimeToLive.HasValue)
-                settings.QueueArguments.Add(Headers.XMessageTTL, hostAddress.TimeToLive.Value.ToString("F0", CultureInfo.InvariantCulture));
+                settings.QueueArguments.Add(Headers.XMessageTTL, hostAddress.TimeToLive.Value);
 
             return settings;
         }

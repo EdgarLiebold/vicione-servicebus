@@ -54,7 +54,7 @@ namespace ViciOne.ServiceBus
                     Host = host;
                     Port = port;
                     VirtualHost = virtualHost;
-                    Name = address.AbsolutePath;
+                    Name = Uri.UnescapeDataString(address.AbsolutePath);
                     BindToQueue = true;
                     break;
 
@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus
                     Host = host;
                     Port = port;
                     VirtualHost = virtualHost;
-                    Name = address.AbsolutePath;
+                    Name = Uri.UnescapeDataString(address.AbsolutePath);
                     break;
 
                 default:

@@ -37,9 +37,12 @@ public sealed class TelemetryMonitorTests
 
             await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
 
-            timeProvider.Advance(idleTimeout);
+            timeProvider.Advance(idleTimeout - TimeSpan.FromTicks(1));
+            Assert.False(wait.IsCompleted);
+            timeProvider.Advance(TimeSpan.FromTicks(1));
 
             await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             IReceivedMessage<MonitoredMessage> consumed = await harness.Consumed
@@ -107,9 +110,12 @@ public sealed class TelemetryMonitorTests
 
             await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
 
-            timeProvider.Advance(idleTimeout);
+            timeProvider.Advance(idleTimeout - TimeSpan.FromTicks(1));
+            Assert.False(wait.IsCompleted);
+            timeProvider.Advance(TimeSpan.FromTicks(1));
 
             await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             IReceivedMessage<MonitoredMessage> consumed = await consumer.Consumed
@@ -131,6 +137,7 @@ public sealed class TelemetryMonitorTests
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
         var callbackCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var receiveCompleted = new ReceiveCompletionObserver(timeProvider);
         using var harness = new InMemoryTestHarness($"telemetry-request-{NewId.NextGuid():N}")
         {
             TestTimeout = operationTimeout,
@@ -139,6 +146,7 @@ public sealed class TelemetryMonitorTests
         harness.Consumer<MonitoredRequestConsumer>();
 
         await harness.Start(TestContext.Current.CancellationToken);
+        using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
             Guid correlationId = NewId.NextGuid();
@@ -158,10 +166,14 @@ public sealed class TelemetryMonitorTests
 
             await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await callbackCompleted.Task.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
             Assert.True(await harness.Published.Any<MonitoredRequestHandled>(TestContext.Current.CancellationToken));
 
-            timeProvider.Advance(idleTimeout);
+            timeProvider.Advance(idleTimeout - TimeSpan.FromTicks(1));
+            Assert.False(wait.IsCompleted);
+            timeProvider.Advance(TimeSpan.FromTicks(1));
 
             Response<MonitoredResponse> response = await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.Equal(correlationId, response.Message.CorrelationId);
