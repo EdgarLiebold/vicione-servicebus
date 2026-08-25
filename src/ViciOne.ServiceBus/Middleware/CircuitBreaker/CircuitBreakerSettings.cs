@@ -28,6 +28,11 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
         int ActiveThreshold { get; }
 
         /// <summary>
+        /// Provides the clock and timers used by the circuit breaker.
+        /// </summary>
+        TimeProvider TimeProvider { get; }
+
+        /// <summary>
         /// The router used to publish events related to the circuit breaker behavior
         /// </summary>
         IPipeRouter Router { get; }

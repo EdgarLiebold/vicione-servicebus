@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus.Metadata
         /// </summary>
         static IEnumerable<Type> GetDirectTopologyTypes(Type messageType)
         {
-            if (messageType.ClosesType(typeof(Fault<>), out Type[] arguments))
+            if (messageType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
             {
                 foreach (var implementedType in GetDirectTopologyTypes(arguments[0]))
                     yield return typeof(Fault<>).MakeGenericType(implementedType);

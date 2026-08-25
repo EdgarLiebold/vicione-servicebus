@@ -1,98 +1,73 @@
-namespace ViciOne.ServiceBus
+#nullable enable
+namespace ViciOne.ServiceBus;
+
+using System;
+using System.Collections.Generic;
+using Configuration;
+using Transports.Components;
+
+
+public static class KillSwitchConfigurationExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-    using Transports.Components;
-
-
-    public static class KillSwitchConfigurationExtensions
+    /// <summary>
+    /// Monitors every receive endpoint and temporarily pauses delivery when the configured matching-failure ratio is reached.
+    /// Configuration is captured once and shared as an immutable snapshot by the endpoint-specific runtime instances.
+    /// </summary>
+    public static void UseKillSwitch(
+        this IBusFactoryConfigurator configurator,
+        Action<KillSwitchOptions>? configure = null)
     {
-        /// <summary>
-        /// A Kill Switch monitors a receive endpoint and automatically stops and restarts the endpoint in the presence of consumer faults. The options
-        /// can be configured to adjust the trip threshold, restart timeout, and exceptions that are observed by the kill switch. When configured on the bus,
-        /// a kill switch is installed on every receive endpoint.
-        /// </summary>
-        /// <param name="configurator">The bus factory configurator</param>
-        /// <param name="configure">Configure the kill switch options</param>
-        public static void UseKillSwitch(this IBusFactoryConfigurator configurator, Action<KillSwitchOptions> configure = default)
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        var options = new KillSwitchOptions();
+        configure?.Invoke(options);
+        KillSwitchSettings settings = options.CreateSettings();
+
+        configurator.ConnectEndpointConfigurationObserver(new EndpointConfigurationObserver(settings));
+        configurator.AddPipeSpecification(new KillSwitchSettingsSpecification(settings));
+    }
+
+    /// <summary>
+    /// Monitors one receive endpoint and temporarily pauses delivery when the configured matching-failure ratio is reached.
+    /// Configuration is captured before the runtime observer is installed.
+    /// </summary>
+    public static void UseKillSwitch(
+        this IReceiveEndpointConfigurator configurator,
+        Action<KillSwitchOptions>? configure = null)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        var options = new KillSwitchOptions();
+        configure?.Invoke(options);
+        KillSwitchSettings settings = options.CreateSettings();
+
+        var killSwitch = new KillSwitch(settings);
+        configurator.ConnectReceiveEndpointObserver(killSwitch);
+        configurator.ConnectActivityObserver(killSwitch);
+        configurator.AddPipeSpecification(new KillSwitchSettingsSpecification(settings));
+    }
+
+
+    private sealed class EndpointConfigurationObserver(KillSwitchSettings settings) :
+        IEndpointConfigurationObserver
+    {
+        public void EndpointConfigured<T>(T configurator)
+            where T : IReceiveEndpointConfigurator
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var options = new KillSwitchOptions();
-
-            configure?.Invoke(options);
-
-            var observer = new EndpointConfigurationObserver(options);
-
-            configurator.ConnectEndpointConfigurationObserver(observer);
-
-            configurator.AddPipeSpecification(new KillSwitchOptionsSpecification(options));
-        }
-
-        /// <summary>
-        /// A Kill Switch monitors a receive endpoint and automatically stops and restarts the endpoint in the presence of consumer faults. The options
-        /// can be configured to adjust the trip threshold, restart timeout, and exceptions that are observed by the kill switch. When configured on a
-        /// receive endpoint, a kill switch is installed on that receive endpoint only.
-        /// </summary>
-        /// <param name="configurator">The bus factory configurator</param>
-        /// <param name="configure">Configure the kill switch options</param>
-        public static void UseKillSwitch(this IReceiveEndpointConfigurator configurator, Action<KillSwitchOptions> configure = default)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var options = new KillSwitchOptions();
-
-            configure?.Invoke(options);
-
-            var killSwitch = new KillSwitch(options);
+            var killSwitch = new KillSwitch(settings);
             configurator.ConnectReceiveEndpointObserver(killSwitch);
             configurator.ConnectActivityObserver(killSwitch);
-
-            configurator.AddPipeSpecification(new KillSwitchOptionsSpecification(options));
         }
+    }
 
 
-        class EndpointConfigurationObserver :
-            IEndpointConfigurationObserver
+    private sealed class KillSwitchSettingsSpecification(KillSwitchSettings settings) :
+        IPipeSpecification<ConsumeContext>
+    {
+        public void Apply(IPipeBuilder<ConsumeContext> builder)
         {
-            readonly KillSwitchOptions _options;
-
-            public EndpointConfigurationObserver(KillSwitchOptions options)
-            {
-                _options = options;
-            }
-
-            public void EndpointConfigured<T>(T configurator)
-                where T : IReceiveEndpointConfigurator
-            {
-                var killSwitch = new KillSwitch(_options);
-                configurator.ConnectReceiveEndpointObserver(killSwitch);
-                configurator.ConnectActivityObserver(killSwitch);
-            }
         }
 
-
-        class KillSwitchOptionsSpecification :
-            IPipeSpecification<ConsumeContext>
-        {
-            readonly KillSwitchOptions _options;
-
-            public KillSwitchOptionsSpecification(KillSwitchOptions options)
-            {
-                _options = options;
-            }
-
-            public void Apply(IPipeBuilder<ConsumeContext> builder)
-            {
-            }
-
-            public IEnumerable<ValidationResult> Validate()
-            {
-                return _options.Validate();
-            }
-        }
+        public IEnumerable<ValidationResult> Validate() => settings.Validate();
     }
 }

@@ -23,6 +23,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
         }
       },
+      "Microsoft.Extensions.TimeProvider.Testing": {
+        "type": "Direct",
+        "requested": "[10.9.0, )",
+        "resolved": "10.9.0",
+        "contentHash": "0If8xc915BgRpYmKB9tOOOprvHMt8Tue6kiD8ARgVf8Ok6PNUxkJScKT7QUp7+RllR4RN2DNACgaxioy9BJxeQ=="
+      },
       "xunit.v3.mtp-v2": {
         "type": "Direct",
         "requested": "[4.0.0, )",
@@ -238,6 +244,12 @@
           "Microsoft.Extensions.Configuration.Binder": "[10.0.11, )",
           "Microsoft.Extensions.Configuration.Json": "[10.0.11, )",
           "Microsoft.Extensions.Configuration.UserSecrets": "[10.0.11, )"
+        }
+      },
+      "vicione.servicebus.tests.internalaccess": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
       "Microsoft.Extensions.Configuration": {

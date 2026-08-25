@@ -15,7 +15,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public SagaConfigurator(ISagaRepository<TSaga> sagaRepository, ISagaConfigurationObserver observer)
         {
-            _sagaRepository = sagaRepository;
+            _sagaRepository = sagaRepository ?? throw new ArgumentNullException(nameof(sagaRepository));
+            ArgumentNullException.ThrowIfNull(observer);
 
             _specification = SagaConnectorCache<TSaga>.Connector.CreateSagaSpecification<TSaga>();
 
@@ -24,6 +25,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             SagaConnectorCache<TSaga>.Connector.ConnectSaga(builder, _sagaRepository, _specification);
         }
 

@@ -23,7 +23,13 @@ class TrackedActivity :
     readonly TraceInfo _traceInfo;
 
     public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout)
+        : this(methodName, timeout, idleTimeout, TimeProvider.System)
     {
+    }
+
+    public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _idleTimeout = idleTimeout ?? TimeSpan.FromSeconds(0.05);
         _timeout = timeout ?? TimeSpan.FromSeconds(30);
 
@@ -42,10 +48,18 @@ class TrackedActivity :
 
         ActivitySource.AddActivityListener(_listener);
 
+        _traceInfo = new TraceInfo { StartTime = timeProvider.GetUtcNow() };
         _testActivity = _source.StartActivity($"{methodName ?? "test"} process");
-        _traceInfo = new TraceInfo { StartTime = _testActivity?.StartTimeUtc ?? DateTimeOffset.UtcNow };
-        _timer = new RollingTimer(OnTimeout, _timeout, this);
+        if (_testActivity != null)
+            _traceInfo.StartTime = _testActivity.StartTimeUtc;
+
+        _timer = new RollingTimer(OnTimeout, _timeout, this, timeProvider);
         _timer.Start();
+    }
+
+    public void StopWaiting()
+    {
+        _completed.TrySetResult(true);
     }
 
     public async ValueTask DisposeAsync()

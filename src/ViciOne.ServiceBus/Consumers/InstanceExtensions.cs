@@ -21,6 +21,9 @@ namespace ViciOne.ServiceBus
         /// <returns>An instance subscription configurator.</returns>
         public static void Instance(this IReceiveEndpointConfigurator configurator, object instance)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(instance);
+
             var instanceConfigurator = new InstanceConfigurator(instance);
 
             configurator.AddEndpointSpecification(instanceConfigurator);
@@ -37,10 +40,8 @@ namespace ViciOne.ServiceBus
         /// </returns>
         public static ConnectHandle ConnectInstance(this IConsumePipeConnector connector, object instance)
         {
-            if (connector == null)
-                throw new ArgumentNullException(nameof(connector));
-            if (instance == null)
-                throw new ArgumentNullException(nameof(instance));
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(instance);
 
             return InstanceConnectorCache.GetInstanceConnector(instance.GetType()).ConnectInstance(connector, instance);
         }
@@ -59,6 +60,9 @@ namespace ViciOne.ServiceBus
         public static void Instance<T>(this IReceiveEndpointConfigurator configurator, T instance, Action<IInstanceConfigurator<T>> configure = null)
             where T : class, IConsumer
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(instance);
+
             var instanceConfigurator = new InstanceConfigurator<T>(instance, configurator);
 
             configure?.Invoke(instanceConfigurator);
@@ -79,6 +83,9 @@ namespace ViciOne.ServiceBus
         public static ConnectHandle ConnectInstance<T>(this IConsumePipeConnector connector, T instance)
             where T : class, IConsumer
         {
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(instance);
+
             return InstanceConnectorCache<T>.Connector.ConnectInstance(connector, instance);
         }
     }

@@ -35,13 +35,15 @@ namespace ViciOne.ServiceBus
         /// <param name="rateLimit">The number of messages allowed per interval</param>
         /// <param name="interval">The reset interval for each set of messages</param>
         /// <param name="router">The control pipe used to adjust the rate limit dynamically</param>
-        public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, TimeSpan interval, IPipeRouter router = null)
+        /// <param name="timeProvider">The clock and timer source used to replenish the limit</param>
+        public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, TimeSpan interval, IPipeRouter router = null,
+            TimeProvider timeProvider = null)
             where T : class, PipeContext
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var specification = new RateLimitPipeSpecification<T>(rateLimit, interval, router);
+            var specification = new RateLimitPipeSpecification<T>(rateLimit, interval, router, timeProvider);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -53,12 +55,13 @@ namespace ViciOne.ServiceBus
         /// <param name="configurator"></param>
         /// <param name="rateLimit">The number of messages allowed per interval</param>
         /// <param name="interval">The reset interval for each set of messages</param>
-        public static void UseRateLimit(this IConsumePipeConfigurator configurator, int rateLimit, TimeSpan interval)
+        /// <param name="timeProvider">The clock and timer source used to replenish the limit</param>
+        public static void UseRateLimit(this IConsumePipeConfigurator configurator, int rateLimit, TimeSpan interval, TimeProvider timeProvider = null)
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var specification = new RateLimitPipeSpecification<ConsumeContext>(rateLimit, interval);
+            var specification = new RateLimitPipeSpecification<ConsumeContext>(rateLimit, interval, timeProvider: timeProvider);
 
             configurator.AddPrePipeSpecification(specification);
         }

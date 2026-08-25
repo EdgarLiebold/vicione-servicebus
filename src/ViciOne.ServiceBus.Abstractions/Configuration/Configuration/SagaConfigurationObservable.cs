@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Util;
 
 
@@ -10,12 +11,17 @@ namespace ViciOne.ServiceBus.Configuration
         public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
             where TSaga : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.SagaConfigured(configurator));
         }
 
         public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
             where TInstance : class, ISaga, SagaStateMachineInstance
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(stateMachine);
+
             ForEach(observer => observer.StateMachineSagaConfigured(configurator, stateMachine));
         }
 
@@ -23,6 +29,8 @@ namespace ViciOne.ServiceBus.Configuration
             where TSaga : class, ISaga
             where TMessage : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.SagaMessageConfigured(configurator));
         }
     }

@@ -1,80 +1,57 @@
-namespace ViciOne.ServiceBus.Metadata
+using System;
+using System.IO;
+using System.Reflection;
+
+namespace ViciOne.ServiceBus.Metadata;
+
+[Serializable]
+public sealed class BusHostInfo : HostInfo
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reflection;
-
-
-    [Serializable]
-    public class BusHostInfo :
-        HostInfo
+    public BusHostInfo()
     {
-        public BusHostInfo()
+    }
+
+    public string? MachineName { get; set; }
+
+    public string? ProcessName { get; set; }
+
+    public int ProcessId { get; set; }
+
+    public string? Assembly { get; set; }
+
+    public string? AssemblyVersion { get; set; }
+
+    public string? FrameworkVersion { get; set; }
+
+    public string? ViciOneServiceBusVersion { get; set; }
+
+    public string? OperatingSystemVersion { get; set; }
+
+    internal static BusHostInfo CaptureCurrent()
+    {
+        System.Reflection.Assembly entryAssembly = System.Reflection.Assembly.GetEntryAssembly()
+            ?? typeof(HostMetadataCache).Assembly;
+        AssemblyName assemblyName = entryAssembly.GetName();
+
+        return new BusHostInfo
         {
-        }
+            MachineName = Environment.MachineName,
+            ProcessName = GetProcessName(entryAssembly),
+            ProcessId = Environment.ProcessId,
+            Assembly = assemblyName.Name,
+            AssemblyVersion = assemblyName.Version?.ToString() ?? "Unknown",
+            FrameworkVersion = Environment.Version.ToString(),
+            ViciOneServiceBusVersion = typeof(HostInfo).Assembly.GetName().Version?.ToString(),
+            OperatingSystemVersion = Environment.OSVersion.ToString(),
+        };
+    }
 
-        public BusHostInfo(bool initialize)
-        {
-            FrameworkVersion = Environment.Version.ToString();
-            OperatingSystemVersion = Environment.OSVersion.ToString();
-            var entryAssembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetCallingAssembly();
-            MachineName = Environment.MachineName;
-            ViciOneServiceBusVersion = typeof(HostInfo).Assembly.GetName().Version?.ToString();
+    private static string GetProcessName(System.Reflection.Assembly entryAssembly)
+    {
+        string? processName = Path.GetFileNameWithoutExtension(Environment.ProcessPath);
 
-            try
-            {
-                using var currentProcess = Process.GetCurrentProcess();
-                ProcessId = currentProcess.Id;
-                ProcessName = currentProcess.ProcessName;
-                if ("dotnet".Equals(ProcessName, StringComparison.OrdinalIgnoreCase))
-                    ProcessName = GetUsefulProcessName(ProcessName);
-            }
-            catch (NotSupportedException)
-            {
-                ProcessId = 0;
-                ProcessName = GetUsefulProcessName("UWP");
-            }
-
-            var assemblyName = entryAssembly.GetName();
-            Assembly = assemblyName.Name;
-            AssemblyVersion = assemblyName.Version?.ToString() ?? "Unknown";
-        }
-
-        public string? MachineName { get; set; }
-        public string? ProcessName { get; set; }
-        public int ProcessId { get; set; }
-        public string? Assembly { get; set; }
-        public string? AssemblyVersion { get; set; }
-        public string? FrameworkVersion { get; set; }
-        public string? ViciOneServiceBusVersion { get; set; }
-        public string? OperatingSystemVersion { get; set; }
-
-        static string GetAssemblyFileVersion(Assembly assembly)
-        {
-            var attribute = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
-            if (attribute != null)
-                return attribute.Version;
-
-            return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion ?? "Unknown";
-        }
-
-        static string GetAssemblyInformationalVersion(Assembly assembly)
-        {
-            var attribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-            if (attribute != null)
-                return attribute.InformationalVersion;
-
-            return GetAssemblyFileVersion(assembly);
-        }
-
-        static string GetUsefulProcessName(string defaultProcessName)
-        {
-            var entryAssemblyLocation = System.Reflection.Assembly.GetEntryAssembly()?.Location;
-
-            return string.IsNullOrWhiteSpace(entryAssemblyLocation)
-                ? defaultProcessName
-                : Path.GetFileNameWithoutExtension(entryAssemblyLocation);
-        }
+        return string.IsNullOrWhiteSpace(processName) || processName.Equals("dotnet", StringComparison.OrdinalIgnoreCase)
+            ? entryAssembly.GetName().Name ?? "Unknown"
+            : processName;
     }
 }

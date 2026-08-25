@@ -46,7 +46,7 @@ namespace ViciOne.ServiceBus.Initializers.TypeConverters
                 return typeConverter != null;
             }
 
-            var matched = _converters.FirstOrDefault(x => x.GetType().HasInterface(neededType));
+            var matched = _converters.FirstOrDefault(x => x.GetType().ImplementsInterface(neededType));
             if (matched != default)
             {
                 _typeConverters.GetOrAdd(neededType, matched);
@@ -59,7 +59,7 @@ namespace ViciOne.ServiceBus.Initializers.TypeConverters
             if (propertyType.IsEnum)
             {
                 var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
-                if (enumConverterType.HasInterface(neededType))
+                if (enumConverterType.ImplementsInterface(neededType))
                     AddSupportedTypes(enumConverterType);
             }
             else if (propertyType.IsNullable(out var underlyingType))

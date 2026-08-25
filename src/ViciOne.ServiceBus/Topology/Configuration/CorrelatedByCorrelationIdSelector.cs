@@ -11,8 +11,7 @@ namespace ViciOne.ServiceBus.Configuration
     {
         public bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId)
         {
-            var correlatedByInterface = typeof(T).GetInterface<CorrelatedBy<Guid>>();
-            if (correlatedByInterface != null)
+            if (typeof(T).ImplementsInterface<CorrelatedBy<Guid>>())
             {
                 var objectType = typeof(CorrelatedByMessageCorrelationId<>).MakeGenericType(typeof(T));
                 messageCorrelationId = (IMessageCorrelationId<T>)Activator.CreateInstance(objectType);

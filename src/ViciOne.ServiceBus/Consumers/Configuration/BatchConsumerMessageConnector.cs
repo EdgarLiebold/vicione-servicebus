@@ -42,7 +42,7 @@ namespace ViciOne.ServiceBus.Configuration
                 collector = new BatchCollector<TMessage>(options, batchMessagePipe);
             else
             {
-                if (options.GroupKeyProvider.GetType().ClosesType(typeof(IGroupKeyProvider<,>), out Type[] types))
+                if (options.GroupKeyProvider.GetType().TryGetSingleClosedGenericArguments(typeof(IGroupKeyProvider<,>), out Type[] types))
                 {
                     var collectorType = typeof(BatchCollector<,>).MakeGenericType(typeof(TMessage), types[1]);
                     collector = (IBatchCollector<TMessage>)Activator.CreateInstance(collectorType,

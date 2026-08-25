@@ -114,11 +114,11 @@ namespace ViciOne.ServiceBus.Transports
                 return dispatcherFactory.Create(factory, formatter);
             }
 
-            if (typeof(T).HasInterface<ISaga>())
+            if (typeof(T).ImplementsInterface<ISaga>())
                 _dispatcher = CreateDispatcher(typeof(SagaReceiveEndpointDispatcher<>).MakeGenericType(typeof(T)));
-            else if (typeof(T).HasInterface<IConsumer>())
+            else if (typeof(T).ImplementsInterface<IConsumer>())
                 _dispatcher = CreateDispatcher(typeof(ConsumerReceiveEndpointDispatcher<>).MakeGenericType(typeof(T)));
-            else if (typeof(T).ClosesType(typeof(IExecuteActivity<>), out Type[] arguments))
+            else if (typeof(T).TryGetSingleClosedGenericArguments(typeof(IExecuteActivity<>), out Type[] arguments))
                 _dispatcher = CreateDispatcher(typeof(ExecuteActivityReceiveEndpointDispatcher<,>).MakeGenericType(typeof(T), arguments[0]));
             else
                 _dispatcher = factory.CreateReceiver(formatter.Message<T>());

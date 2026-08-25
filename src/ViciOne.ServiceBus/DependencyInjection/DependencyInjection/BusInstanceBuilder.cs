@@ -56,7 +56,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
             if (interfaceType.IsGenericType)
                 throw new ArgumentException("Bus instance types can not be generic: " + interfaceType.Name, nameof(interfaceType));
 
-            if (!interfaceType.HasInterface<IBus>())
+            if (!interfaceType.ImplementsInterface<IBus>())
                 throw new ArgumentException("Bus instance types must include the IBus interface: " + interfaceType.Name, nameof(interfaceType));
 
             return GetModuleBuilderForType(interfaceType, moduleBuilder => CreateTypeFromInterface(moduleBuilder, interfaceType));
@@ -98,7 +98,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
 
                 Type[] extraInterfaces = interfaceType.GetAllInterfaces().Except(typeof(IBus).GetAllInterfaces()).ToArray();
 
-                IEnumerable<PropertyInfo> properties = interfaceType.GetAllProperties();
+                IEnumerable<PropertyInfo> properties = interfaceType.GetReadableInstanceProperties();
                 foreach (var property in properties)
                 {
                     if (extraInterfaces.Contains(property.DeclaringType))

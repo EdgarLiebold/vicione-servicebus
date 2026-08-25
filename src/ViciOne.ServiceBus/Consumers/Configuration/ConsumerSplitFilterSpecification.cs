@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (!typeof(TConsumer).HasInterface<IConsumer<TMessage>>())
+            if (!typeof(TConsumer).ImplementsInterface<IConsumer<TMessage>>())
                 yield return this.Failure("MessageType", $"is not consumed by {TypeCache<TConsumer>.ShortName}");
 
             foreach (var validationResult in _specification.Validate())

@@ -6,15 +6,15 @@ namespace ViciOne.ServiceBus.Middleware.Timeout
     using Context;
 
 
-    public class TimeoutCompensateContext<TLog> :
+    internal sealed class TimeoutCompensateContext<TLog> :
         TimeoutCourierContextProxy,
         CompensateContext<TLog>
         where TLog : class
     {
         readonly CompensateContext<TLog> _context;
 
-        public TimeoutCompensateContext(CompensateContext<TLog> context, CancellationToken cancellationToken)
-            : base(context, cancellationToken)
+        public TimeoutCompensateContext(CompensateContext<TLog> context, CancellationToken cancellationToken, TimeSpan timeout)
+            : base(context, cancellationToken, timeout)
         {
             _context = context;
         }

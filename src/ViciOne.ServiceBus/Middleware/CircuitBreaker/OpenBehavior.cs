@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -11,14 +10,14 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
     /// Represents a circuit that is unavailable, with a timer waiting to partially close
     /// the circuit.
     /// </summary>
-    public class OpenBehavior :
+    internal sealed class OpenBehavior :
         ICircuitBreakerBehavior
     {
         readonly ICircuitBreaker _breaker;
-        readonly Stopwatch _elapsed;
         readonly Exception _exception;
+        readonly long _openedTimestamp;
         readonly IEnumerator<TimeSpan> _timeoutEnumerator;
-        readonly Timer _timer;
+        readonly ITimer _timer;
 
         public OpenBehavior(ICircuitBreaker breaker, Exception exception, IEnumerator<TimeSpan> timeoutEnumerator)
         {
@@ -27,7 +26,7 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
             _timeoutEnumerator = timeoutEnumerator;
 
             _timer = GetTimer(timeoutEnumerator);
-            _elapsed = Stopwatch.StartNew();
+            _openedTimestamp = breaker.TimeProvider.GetTimestamp();
         }
 
         Task ICircuitBreakerBehavior.PreSend()
@@ -53,15 +52,15 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
                 State = "open",
                 Exception = _exception,
                 Timeout = timeout,
-                Remaining = timeout - _elapsed.Elapsed
+                Remaining = timeout - _breaker.TimeProvider.GetElapsedTime(_openedTimestamp)
             });
         }
 
-        Timer GetTimer(IEnumerator<TimeSpan> timeoutEnumerator)
+        ITimer GetTimer(IEnumerator<TimeSpan> timeoutEnumerator)
         {
             timeoutEnumerator.MoveNext();
 
-            return new Timer(PartiallyCloseCircuit, this, timeoutEnumerator.Current, TimeSpan.FromMilliseconds(-1));
+            return _breaker.TimeProvider.CreateTimer(PartiallyCloseCircuit, this, timeoutEnumerator.Current, Timeout.InfiniteTimeSpan);
         }
 
         void PartiallyCloseCircuit(object state)

@@ -245,7 +245,7 @@ namespace ViciOne.ServiceBus.Configuration
             public List<IExecuteActivityDefinition> ExecuteActivities { get; }
             public List<IFutureDefinition> Futures { get; }
 
-            public bool HasJobConsumers => Consumers.Any(c => c.ConsumerType.ClosesType(typeof(IJobConsumer<>)));
+            public bool HasJobConsumers => Consumers.Any(c => c.ConsumerType.ClosesGenericType(typeof(IJobConsumer<>)));
         }
     }
 }

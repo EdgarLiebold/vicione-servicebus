@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
     /// <summary>
     /// Provides access to a circuit breaker from a state object
     /// </summary>
-    public interface ICircuitBreaker
+    internal interface ICircuitBreaker
     {
         /// <summary>
         /// The number of failures before opening the circuit breaker
@@ -26,13 +26,19 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
         TimeSpan OpenDuration { get; }
 
         /// <summary>
+        /// Provides the clock and timers used by the current behavior.
+        /// </summary>
+        TimeProvider TimeProvider { get; }
+
+        /// <summary>
         /// Open the circuit breaker, preventing any further access to the resource until
         /// the timer expires
         /// </summary>
         /// <param name="exception">The exception to return when the circuit breaker is accessed</param>
         /// <param name="behavior"></param>
         /// <param name="timeoutEnumerator">A previously created enumerator for a timeout period</param>
-        Task Open(Exception exception, ICircuitBreakerBehavior behavior, IEnumerator<TimeSpan> timeoutEnumerator = null);
+        CircuitBreakerTransition Open(Exception exception, ICircuitBreakerBehavior behavior,
+            IEnumerator<TimeSpan> timeoutEnumerator = null);
 
         /// <summary>
         /// Partially open the circuit breaker, allowing the eventual return to a closed
@@ -41,12 +47,12 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
         /// <param name="exception"></param>
         /// <param name="timeoutEnumerator"></param>
         /// <param name="behavior"></param>
-        Task ClosePartially(Exception exception, IEnumerator<TimeSpan> timeoutEnumerator, ICircuitBreakerBehavior behavior);
+        bool ClosePartially(Exception exception, IEnumerator<TimeSpan> timeoutEnumerator, ICircuitBreakerBehavior behavior);
 
         /// <summary>
         /// Close the circuit breaker, allowing normal execution
         /// </summary>
         /// <param name="behavior"></param>
-        Task Close(ICircuitBreakerBehavior behavior);
+        CircuitBreakerTransition Close(ICircuitBreakerBehavior behavior);
     }
 }

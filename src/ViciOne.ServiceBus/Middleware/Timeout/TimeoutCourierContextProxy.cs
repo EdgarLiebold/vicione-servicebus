@@ -5,14 +5,14 @@ namespace ViciOne.ServiceBus.Middleware.Timeout
     using Courier.Contracts;
 
 
-    public abstract class TimeoutCourierContextProxy :
+    internal abstract class TimeoutCourierContextProxy :
         TimeoutConsumeContext<RoutingSlip>,
         CourierContext
     {
         readonly CourierContext _courierContext;
 
-        protected TimeoutCourierContextProxy(CourierContext courierContext, CancellationToken cancellationToken)
-            : base(courierContext, cancellationToken)
+        protected TimeoutCourierContextProxy(CourierContext courierContext, CancellationToken cancellationToken, TimeSpan timeout)
+            : base(courierContext, cancellationToken, timeout)
         {
             _courierContext = courierContext;
         }

@@ -3,224 +3,320 @@ namespace ViciOne.ServiceBus.InMemoryTransport;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
-using Util;
 
 
-public class InMemoryDelayProvider :
+public sealed class InMemoryDelayProvider :
     IAsyncDisposable,
     IInMemoryDelayProvider
 {
-    readonly SortedList<DateTime, FutureDelay> _delays;
-    readonly Channel<IOperation> _operations;
-    readonly Task _readerTask;
-    TimeSpan _nowOffset;
+    static readonly TimeSpan MaximumTimerInterval = TimeSpan.FromMilliseconds(uint.MaxValue - 1L);
+
+    readonly SortedSet<ScheduledDelay> _delays = new(ScheduledDelayComparer.Instance);
+    readonly object _lock = new();
+    readonly CancellationTokenSource _stopping = new();
+    readonly TimeProvider _timeProvider;
+    readonly ITimer _timer;
+    bool _disposed;
+    TimeSpan _offset;
+    long _sequence;
 
     public InMemoryDelayProvider()
+        : this(TimeProvider.System)
     {
-        _operations = Channel.CreateUnbounded<IOperation>(new UnboundedChannelOptions
+    }
+
+    public InMemoryDelayProvider(TimeProvider timeProvider)
+    {
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        _timer = timeProvider.CreateTimer(
+            static state => ((InMemoryDelayProvider)state!).TimerElapsed(),
+            this,
+            Timeout.InfiniteTimeSpan,
+            Timeout.InfiniteTimeSpan);
+    }
+
+    public DateTimeOffset UtcNow
+    {
+        get
         {
-            AllowSynchronousContinuations = false,
-            SingleReader = true,
-            SingleWriter = false
-        });
-
-        _delays = new SortedList<DateTime, FutureDelay>(new DuplicateKeyComparer<DateTime>());
-        _nowOffset = TimeSpan.Zero;
-
-        _readerTask = Task.Run(() => DelayChannelReader());
-    }
-
-    public DateTime UtcNow => DateTime.UtcNow + _nowOffset;
-
-    public async ValueTask DisposeAsync()
-    {
-        _operations.Writer.TryComplete();
-
-        await _readerTask.ConfigureAwait(false);
-
-        CancelPendingDelays();
-    }
-
-    public Task Delay(int milliseconds, CancellationToken cancellationToken = default)
-    {
-        return Delay(TimeSpan.FromMilliseconds(milliseconds), cancellationToken);
+            lock (_lock)
+            {
+                ThrowIfDisposed();
+                return GetUtcNow();
+            }
+        }
     }
 
     public Task Delay(TimeSpan delay, CancellationToken cancellationToken = default)
     {
-        return Delay(UtcNow + delay, cancellationToken);
+        if (delay < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(delay), delay, "The delay cannot be negative.");
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        lock (_lock)
+        {
+            ThrowIfDisposed();
+
+            if (delay == TimeSpan.Zero)
+                return Task.CompletedTask;
+
+            DateTimeOffset deadline;
+            try
+            {
+                deadline = GetUtcNow().Add(delay);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException(nameof(delay), delay, "The delay exceeds the supported time range.");
+            }
+
+            return Schedule(deadline, cancellationToken);
+        }
     }
 
-    public async Task Delay(DateTime delayUntil, CancellationToken cancellationToken = default)
+    public Task Delay(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
     {
-        using var future = new FutureDelay(cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        var operation = new DelayOperation(delayUntil, future);
+        lock (_lock)
+        {
+            ThrowIfDisposed();
 
-        await _operations.Writer.WriteAsync(operation, cancellationToken).ConfigureAwait(false);
+            if (delayUntil <= GetUtcNow())
+                return Task.CompletedTask;
 
-        await future.DelayTask.ConfigureAwait(false);
+            return Schedule(delayUntil, cancellationToken);
+        }
     }
 
-    public ValueTask Advance(TimeSpan duration)
+    public void Advance(TimeSpan duration)
     {
         if (duration <= TimeSpan.Zero)
-            throw new ArgumentOutOfRangeException(nameof(duration), "Must be greater than zero");
+            throw new ArgumentOutOfRangeException(nameof(duration), duration, "The duration must be greater than zero.");
 
-        return _operations.Writer.WriteAsync(new AdvanceTimeOperation(duration));
-    }
-
-    async Task DelayChannelReader()
-    {
-        while (_operations.Reader.Completion.IsCompleted == false)
+        List<ScheduledDelay> due;
+        lock (_lock)
         {
-            var timeoutToken = CancellationToken.None;
-            CancellationTokenSource timeoutSource = null;
-
-            TimeSpan? timeout = GetDelayTimeout();
-            if (timeout.HasValue)
-            {
-                timeoutSource = new CancellationTokenSource(timeout.Value);
-                timeoutToken = timeoutSource.Token;
-            }
+            ThrowIfDisposed();
 
             try
             {
-                var operation = await _operations.Reader.ReadAsync(timeoutToken).ConfigureAwait(false);
+                _ = GetUtcNow().Add(duration);
+                _offset += duration;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException(nameof(duration), duration, "The duration exceeds the supported time range.");
+            }
+            catch (OverflowException)
+            {
+                throw new ArgumentOutOfRangeException(nameof(duration), duration, "The duration exceeds the supported time range.");
+            }
 
-                switch (operation)
+            due = RemoveDueDelays();
+            RearmTimer();
+        }
+
+        Complete(due);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        ScheduledDelay[] pending;
+        lock (_lock)
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            pending = [.. _delays];
+            _delays.Clear();
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+
+        _stopping.Cancel();
+        await _timer.DisposeAsync().ConfigureAwait(false);
+
+        foreach (ScheduledDelay delay in pending)
+            delay.Cancel(_stopping.Token);
+
+        _stopping.Dispose();
+    }
+
+    Task Schedule(DateTimeOffset deadline, CancellationToken cancellationToken)
+    {
+        var delay = new ScheduledDelay(this, deadline, ++_sequence, cancellationToken);
+        _delays.Add(delay);
+        RearmTimer();
+        delay.RegisterCancellation();
+        return delay.Task;
+    }
+
+    void Cancel(ScheduledDelay delay, CancellationToken cancellationToken)
+    {
+        lock (_lock)
+        {
+            if (!_delays.Remove(delay))
+                return;
+
+            RearmTimer();
+        }
+
+        delay.Cancel(cancellationToken);
+    }
+
+    void TimerElapsed()
+    {
+        List<ScheduledDelay> due;
+        lock (_lock)
+        {
+            if (_disposed)
+                return;
+
+            due = RemoveDueDelays();
+            RearmTimer();
+        }
+
+        Complete(due);
+    }
+
+    List<ScheduledDelay> RemoveDueDelays()
+    {
+        var due = new List<ScheduledDelay>();
+        DateTimeOffset now = GetUtcNow();
+        while (_delays.Min is { } next && next.Deadline <= now)
+        {
+            _delays.Remove(next);
+            due.Add(next);
+        }
+
+        return due;
+    }
+
+    void RearmTimer()
+    {
+        if (_delays.Min is not { } next)
+        {
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+            return;
+        }
+
+        TimeSpan dueTime = next.Deadline - GetUtcNow();
+        if (dueTime < TimeSpan.Zero)
+            dueTime = TimeSpan.Zero;
+        else if (dueTime > MaximumTimerInterval)
+            dueTime = MaximumTimerInterval;
+
+        _timer.Change(dueTime, Timeout.InfiniteTimeSpan);
+    }
+
+    DateTimeOffset GetUtcNow() => _timeProvider.GetUtcNow().Add(_offset);
+
+    void ThrowIfDisposed()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+    }
+
+    static void Complete(IEnumerable<ScheduledDelay> delays)
+    {
+        foreach (ScheduledDelay delay in delays)
+            delay.Complete();
+    }
+
+    sealed class ScheduledDelay(
+        InMemoryDelayProvider owner,
+        DateTimeOffset deadline,
+        long sequence,
+        CancellationToken cancellationToken)
+    {
+        readonly CancellationToken _cancellationToken = cancellationToken;
+        readonly InMemoryDelayProvider _owner = owner;
+        readonly object _registrationLock = new();
+        readonly TaskCompletionSource _source = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationTokenRegistration _registration;
+        bool _completed;
+        bool _registrationAssigned;
+
+        public DateTimeOffset Deadline { get; } = deadline;
+        public long Sequence { get; } = sequence;
+        public Task Task => _source.Task;
+
+        public void RegisterCancellation()
+        {
+            if (!_cancellationToken.CanBeCanceled)
+                return;
+
+            CancellationTokenRegistration registration = _cancellationToken.UnsafeRegister(
+                static state => ((ScheduledDelay)state!).CancelFromToken(),
+                this);
+
+            var unregister = false;
+            lock (_registrationLock)
+            {
+                if (_completed)
+                    unregister = true;
+                else
                 {
-                    case AdvanceTimeOperation advance:
-                        _nowOffset += advance.Duration;
-                        break;
-                    case DelayOperation delayOperation:
-                        _delays.Add(delayOperation.Delay, delayOperation.Future);
-                        break;
+                    _registration = registration;
+                    _registrationAssigned = true;
                 }
             }
-            catch (ChannelClosedException)
-            {
-                // nothing to see here
-            }
-            catch (OperationCanceledException)
-            {
-                //
-            }
-            catch (Exception exception)
-            {
-                LogContext.Warning?.Log(exception, "DelayChannelReader faulted");
-            }
-            finally
-            {
-                timeoutSource?.Dispose();
-            }
-        }
-    }
 
-    TimeSpan? GetDelayTimeout()
-    {
-        while (_delays.Count > 0)
-        {
-            var nextDelayTime = _delays.Keys[0];
-
-            var delay = nextDelayTime - UtcNow;
-            if (delay > TimeSpan.Zero)
-                return delay;
-
-            var nextDelay = _delays.Values[0];
-
-            nextDelay.Complete();
-
-            _delays.RemoveAt(0);
-        }
-
-        return null;
-    }
-
-    void CancelPendingDelays()
-    {
-        foreach (var delay in _delays.Values)
-            delay.Cancel();
-
-        _delays.Clear();
-    }
-
-
-    class DuplicateKeyComparer<TKey>
-        : IComparer<TKey>
-        where TKey : IComparable
-    {
-        public int Compare(TKey x, TKey y)
-        {
-            var result = x.CompareTo(y);
-
-            return result == 0
-                ? 1
-                : result;
-        }
-    }
-
-
-    class FutureDelay :
-        IDisposable
-    {
-        readonly CancellationTokenRegistration _registration;
-        readonly TaskCompletionSource<bool> _source;
-
-        public FutureDelay(CancellationToken cancellationToken)
-        {
-            _source = TaskUtil.GetTask();
-
-            if (cancellationToken.CanBeCanceled)
-                _registration = cancellationToken.Register(() => _source.TrySetCanceled(cancellationToken));
-        }
-
-        public Task DelayTask => _source.Task;
-
-        public void Dispose()
-        {
-            _registration.Dispose();
+            if (unregister)
+                registration.Unregister();
         }
 
         public void Complete()
         {
-            _source.TrySetResult(true);
+            _source.TrySetResult();
+            UnregisterCancellation();
         }
 
-        public void Cancel()
+        public void Cancel(CancellationToken cancellationToken)
         {
-            _source.TrySetCanceled();
+            _source.TrySetCanceled(cancellationToken);
+            UnregisterCancellation();
+        }
+
+        void CancelFromToken()
+        {
+            _owner.Cancel(this, _cancellationToken);
+        }
+
+        void UnregisterCancellation()
+        {
+            CancellationTokenRegistration registration = default;
+            lock (_registrationLock)
+            {
+                _completed = true;
+                if (_registrationAssigned)
+                {
+                    registration = _registration;
+                    _registrationAssigned = false;
+                }
+            }
+
+            registration.Unregister();
         }
     }
 
-
-    class AdvanceTimeOperation :
-        IOperation
+    sealed class ScheduledDelayComparer : IComparer<ScheduledDelay>
     {
-        public AdvanceTimeOperation(TimeSpan duration)
+        public static ScheduledDelayComparer Instance { get; } = new();
+
+        public int Compare(ScheduledDelay x, ScheduledDelay y)
         {
-            Duration = duration;
+            if (ReferenceEquals(x, y))
+                return 0;
+            if (x is null)
+                return -1;
+            if (y is null)
+                return 1;
+
+            int deadline = x.Deadline.CompareTo(y.Deadline);
+            return deadline != 0 ? deadline : x.Sequence.CompareTo(y.Sequence);
         }
-
-        public TimeSpan Duration { get; }
     }
-
-
-    class DelayOperation :
-        IOperation
-    {
-        public DelayOperation(DateTime delay, FutureDelay future)
-        {
-            Delay = delay;
-            Future = future;
-        }
-
-        public DateTime Delay { get; }
-        public FutureDelay Future { get; }
-    }
-
-
-    interface IOperation;
 }

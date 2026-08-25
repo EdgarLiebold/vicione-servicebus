@@ -43,31 +43,31 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
             if (type == propertyType)
                 return new Matching<T>();
 
-            if (type.IsTask(out var taskType))
+            if (type.TryGetTaskResultType(out var taskType))
                 return (IProviderFactory)Activator.CreateInstance(typeof(TaskResult<>).MakeGenericType(typeof(TInput), taskType), this);
 
-            if (propertyType.IsTask(out taskType))
+            if (propertyType.TryGetTaskResultType(out taskType))
                 return (IProviderFactory)Activator.CreateInstance(typeof(TaskProperty<>).MakeGenericType(typeof(TInput), taskType), this);
 
             if (type.IsNullable(out var underlyingType))
                 return (IProviderFactory)Activator.CreateInstance(typeof(NullableResult<>).MakeGenericType(typeof(TInput), underlyingType), this);
 
-            if (type.ClosesType(typeof(MessageData<>), out Type[] types))
+            if (type.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
                 return (IProviderFactory)Activator.CreateInstance(typeof(MessageDataResult<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
 
             if (propertyType.IsNullable(out underlyingType))
                 return (IProviderFactory)Activator.CreateInstance(typeof(NullableProperty<>).MakeGenericType(typeof(TInput), underlyingType), this);
 
-            if (propertyType.ClosesType(typeof(IInitializerVariable<>), out types))
+            if (propertyType.TryGetSingleClosedGenericArguments(typeof(IInitializerVariable<>), out types))
                 return (IProviderFactory)Activator.CreateInstance(typeof(VariableProperty<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
 
-            if (propertyType.ClosesType(typeof(State<>), out types))
+            if (propertyType.TryGetSingleClosedGenericArguments(typeof(State<>), out types))
                 return (IProviderFactory)Activator.CreateInstance(typeof(StateProperty<>).MakeGenericType(typeof(TInput), types[0]), this);
 
             if (propertyType.IsValueTypeOrObject())
                 return (IProviderFactory)Activator.CreateInstance(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
 
-            if (propertyType.ClosesType(typeof(IDictionary<,>), out types) || propertyType.ClosesType(typeof(IReadOnlyDictionary<,>), out types))
+            if (propertyType.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out types) || propertyType.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types))
             {
                 return (IProviderFactory)Activator.CreateInstance(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0],
                     types[1]), this);
@@ -79,9 +79,9 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
                     propertyType.GetElementType()), this);
             }
 
-            if (propertyType.ClosesType(typeof(IEnumerable<>), out Type[] enumerableTypes))
+            if (propertyType.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] enumerableTypes))
             {
-                if (enumerableTypes[0].ClosesType(typeof(KeyValuePair<,>), out types))
+                if (enumerableTypes[0].TryGetSingleClosedGenericArguments(typeof(KeyValuePair<,>), out types))
                 {
                     return (IProviderFactory)Activator.CreateInstance(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0],
                         types[1]), this);
@@ -248,7 +248,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
 
             bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
             {
-                if (typeof(T).IsTask(out var taskType) && taskType == typeof(TTask))
+                if (typeof(T).TryGetTaskResultType(out var taskType) && taskType == typeof(TTask))
                 {
                     if (_factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TTask> providerFactory))
                     {
@@ -362,7 +362,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
 
             public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
             {
-                if (typeof(T).ClosesType(typeof(MessageData<>), out Type[] types))
+                if (typeof(T).TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
                 {
                     converter = MessageDataPropertyConverter.Instance as IPropertyConverter<T, TProperty>;
                     if (converter != null)
@@ -579,7 +579,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
                     return true;
                 }
 
-                if (type.ClosesType(typeof(IEnumerable<>), out Type[] types))
+                if (type.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] types))
                 {
                     var factoryType = typeof(ListResult<>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputElement), types[0]);
 
@@ -711,10 +711,10 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
 
             bool IsSupportedType(Type type, out IProviderFactory providerFactory)
             {
-                if (type.ClosesType(typeof(IDictionary<,>), out Type[] types)
-                    || type.ClosesType(typeof(IReadOnlyDictionary<,>), out types)
-                    || (type.ClosesType(typeof(IEnumerable<>), out Type[] enumerableTypes)
-                        && enumerableTypes[0].ClosesType(typeof(KeyValuePair<,>), out types)))
+                if (type.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] types)
+                    || type.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types)
+                    || (type.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] enumerableTypes)
+                        && enumerableTypes[0].TryGetSingleClosedGenericArguments(typeof(KeyValuePair<,>), out types)))
                 {
                     var factoryType = typeof(DictionaryResult<,>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputKey),
                         typeof(TInputValue), types[0], types[1]);

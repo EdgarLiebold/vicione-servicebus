@@ -5,17 +5,9 @@ namespace ViciOne.ServiceBus.Testing
         readonly PublishedMessageFilterSet _excludes = new PublishedMessageFilterSet();
         readonly PublishedMessageFilterSet _includes = new PublishedMessageFilterSet();
 
-        public PublishedMessageFilterSet Includes
-        {
-            get => _includes;
-            set { }
-        }
+        public PublishedMessageFilterSet Includes => _includes;
 
-        public PublishedMessageFilterSet Excludes
-        {
-            get => _excludes;
-            set { }
-        }
+        public PublishedMessageFilterSet Excludes => _excludes;
 
         public bool Any(IPublishedMessage element)
         {

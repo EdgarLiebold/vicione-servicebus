@@ -17,6 +17,8 @@ namespace ViciOne.ServiceBus
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
+            if (pipe == null)
+                throw new ArgumentNullException(nameof(pipe));
 
             var specification = new ForkPipeSpecification<T>(pipe);
 

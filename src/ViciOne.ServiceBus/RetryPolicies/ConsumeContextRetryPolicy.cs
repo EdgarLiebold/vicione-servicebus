@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken)
         {
-            _retryPolicy = retryPolicy;
+            _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
             _cancellationToken = cancellationToken;
         }
 
@@ -27,7 +27,8 @@ namespace ViciOne.ServiceBus.RetryPolicies
         {
             if (context is ConsumeContext consumeContext)
             {
-                RetryPolicyContext<ConsumeContext> retryPolicyContext = _retryPolicy.CreatePolicyContext(consumeContext);
+                RetryPolicyContext<ConsumeContext> retryPolicyContext = _retryPolicy.CreatePolicyContext(consumeContext)
+                    ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
 
                 var retryConsumeContext = new RetryConsumeContext(consumeContext, _retryPolicy, null);
 
@@ -56,9 +57,9 @@ namespace ViciOne.ServiceBus.RetryPolicies
         public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken,
             Func<TFilter, IRetryPolicy, RetryContext, TContext> contextFactory)
         {
-            _retryPolicy = retryPolicy;
+            _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
             _cancellationToken = cancellationToken;
-            _contextFactory = contextFactory;
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
         }
 
         public void Probe(ProbeContext context)
@@ -74,9 +75,11 @@ namespace ViciOne.ServiceBus.RetryPolicies
             if (filterContext == null)
                 throw new ArgumentException($"The argument must be a {typeof(TFilter).Name}", nameof(context));
 
-            RetryPolicyContext<TFilter> retryPolicyContext = _retryPolicy.CreatePolicyContext(filterContext);
+            RetryPolicyContext<TFilter> retryPolicyContext = _retryPolicy.CreatePolicyContext(filterContext)
+                ?? throw new InvalidOperationException("The retry policy returned a null consume policy context.");
 
-            var retryConsumeContext = _contextFactory(filterContext, _retryPolicy, null);
+            var retryConsumeContext = _contextFactory(filterContext, _retryPolicy, null)
+                ?? throw new InvalidOperationException("The consume retry context factory returned null.");
 
             return new ConsumeContextRetryPolicyContext<TFilter, TContext>(retryPolicyContext, retryConsumeContext,
                 _cancellationToken) as RetryPolicyContext<T>;

@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IConsumerConfigurationObserver.ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
         {
-            if (typeof(TMessage).ClosesType(typeof(Batch<>), out Type[] types))
+            if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
             {
                 typeof(ConfigurationObserver)
                     .GetMethod(nameof(BatchConsumerConfigured))

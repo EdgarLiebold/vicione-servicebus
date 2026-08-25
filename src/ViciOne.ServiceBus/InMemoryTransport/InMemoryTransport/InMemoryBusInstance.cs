@@ -20,23 +20,20 @@ public class InMemoryBusInstance :
         _host = host as IInMemoryHost ?? throw new ArgumentException("Host was not an IInMemoryHost", nameof(host));
     }
 
-    public Task Delay(int milliseconds, CancellationToken cancellationToken = default)
-    {
-        return _host.DelayProvider.Delay(milliseconds, cancellationToken);
-    }
-
     public Task Delay(TimeSpan delay, CancellationToken cancellationToken = default)
     {
         return _host.DelayProvider.Delay(delay, cancellationToken);
     }
 
-    public Task Delay(DateTime delayUntil, CancellationToken cancellationToken = default)
+    public Task Delay(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
     {
         return _host.DelayProvider.Delay(delayUntil, cancellationToken);
     }
 
-    public ValueTask Advance(TimeSpan duration)
+    public void Advance(TimeSpan duration)
     {
-        return _host.DelayProvider.Advance(duration);
+        _host.DelayProvider.Advance(duration);
     }
+
+    public DateTimeOffset UtcNow => _host.DelayProvider.UtcNow;
 }

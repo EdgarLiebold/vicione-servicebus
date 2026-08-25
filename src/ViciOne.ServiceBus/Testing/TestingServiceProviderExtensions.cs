@@ -29,6 +29,9 @@ namespace ViciOne.ServiceBus.Testing
         public static async Task<Task<ConsumeContext<T>>> ConnectPublishHandler<T>(this ITestHarness harness, Func<ConsumeContext<T>, bool> filter)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(harness);
+            ArgumentNullException.ThrowIfNull(filter);
+
             TaskCompletionSource<ConsumeContext<T>> source = harness.GetTask<ConsumeContext<T>>();
 
             var handle = harness.Bus.ConnectReceiveEndpoint(configurator =>
@@ -40,7 +43,9 @@ namespace ViciOne.ServiceBus.Testing
                 });
             });
 
-            await handle.Ready;
+            await handle.Ready
+                .WaitAsync(harness.TestTimeout, harness.TimeProvider, harness.CancellationToken)
+                .ConfigureAwait(false);
 
             return source.Task;
         }

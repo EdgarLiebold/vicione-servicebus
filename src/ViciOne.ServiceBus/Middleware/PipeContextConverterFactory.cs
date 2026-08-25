@@ -12,16 +12,16 @@ namespace ViciOne.ServiceBus.Middleware
         public IPipeContextConverter<PipeContext, TOutput> GetConverter<TOutput>()
             where TOutput : class, PipeContext
         {
-            if (typeof(TOutput).HasInterface<CommandContext>())
+            if (typeof(TOutput).ImplementsInterface<CommandContext>())
             {
-                var innerType = typeof(TOutput).GetClosingArguments(typeof(CommandContext<>)).Single();
+                var innerType = typeof(TOutput).GetSingleClosedGenericArguments(typeof(CommandContext<>)).Single();
 
                 return (IPipeContextConverter<PipeContext, TOutput>)Activator.CreateInstance(typeof(CommandContextConverter<>).MakeGenericType(innerType));
             }
 
-            if (typeof(TOutput).HasInterface<EventContext>())
+            if (typeof(TOutput).ImplementsInterface<EventContext>())
             {
-                var innerType = typeof(TOutput).GetClosingArguments(typeof(EventContext<>)).Single();
+                var innerType = typeof(TOutput).GetSingleClosedGenericArguments(typeof(EventContext<>)).Single();
 
                 return (IPipeContextConverter<PipeContext, TOutput>)Activator.CreateInstance(typeof(EventContextConverter<>).MakeGenericType(innerType));
             }

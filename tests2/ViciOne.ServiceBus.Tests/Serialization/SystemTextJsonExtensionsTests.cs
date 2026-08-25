@@ -38,10 +38,34 @@ public sealed class SystemTextJsonExtensionsTests
         Assert.Equal(3, result.Count);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-OBJECT-CONVERSION", "interface-with-caller-options")]
+    public void JsonElement_GetObjectMaterializesAPublicInterfaceWithCallerOwnedOptions()
+    {
+        using JsonDocument document = JsonDocument.Parse("{\"name\":\"bob\",\"count\":3}");
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+
+        InterfaceValue? result = document.RootElement.GetObject<InterfaceValue>(options);
+
+        Assert.NotNull(result);
+        Assert.Equal("bob", result.Name);
+        Assert.Equal(3, result.Count);
+    }
+
     public sealed class CountedMessage
     {
         public string? Name { get; init; }
 
         public int Count { get; init; }
+    }
+
+    public interface InterfaceValue
+    {
+        string? Name { get; }
+
+        int Count { get; }
     }
 }

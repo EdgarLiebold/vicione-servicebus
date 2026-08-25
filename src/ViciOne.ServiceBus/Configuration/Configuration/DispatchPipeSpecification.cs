@@ -16,7 +16,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public DispatchPipeSpecification(IPipeContextConverterFactory<TInput> pipeContextConverterFactory)
         {
-            _pipeContextConverterFactory = pipeContextConverterFactory;
+            _pipeContextConverterFactory = pipeContextConverterFactory
+                ?? throw new ArgumentNullException(nameof(pipeContextConverterFactory));
 
             _specifications = new List<IPipeConnectorSpecification>();
         }
@@ -44,9 +45,6 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (_pipeContextConverterFactory == null)
-                yield return this.Failure("PipeContextProviderFactory", "must not be null");
-
             foreach (var result in _specifications.SelectMany(x => x.Validate()))
                 yield return result.WithParentKey("Dispatch");
         }

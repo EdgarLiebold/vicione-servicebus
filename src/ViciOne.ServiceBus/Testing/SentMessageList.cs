@@ -17,6 +17,11 @@ namespace ViciOne.ServiceBus.Testing
         {
         }
 
+        public SentMessageList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeout, testCompleted, timeProvider)
+        {
+        }
+
         public IEnumerable<ISentMessage<T>> Select<T>(CancellationToken cancellationToken = default)
             where T : class
         {
@@ -87,13 +92,13 @@ namespace ViciOne.ServiceBus.Testing
         public void Add<T>(SendContext<T> context)
             where T : class
         {
-            Add(new SentMessage<T>(context));
+            Add(new SentMessage<T>(context, null, TimeProvider));
         }
 
         public void Add<T>(SendContext<T> context, Exception exception)
             where T : class
         {
-            Add(new SentMessage<T>(context, exception));
+            Add(new SentMessage<T>(context, exception, TimeProvider));
         }
     }
 }

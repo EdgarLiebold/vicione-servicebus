@@ -10,8 +10,11 @@ namespace ViciOne.ServiceBus.Clients
     {
         readonly HostReceiveEndpointHandle _handle;
 
-        public HostReceiveEndpointClientFactoryContext(HostReceiveEndpointHandle handle, RequestTimeout defaultTimeout = default)
-            : base(handle, defaultTimeout)
+        public HostReceiveEndpointClientFactoryContext(
+            HostReceiveEndpointHandle handle,
+            RequestTimeout defaultTimeout = default,
+            TimeProvider timeProvider = null)
+            : base(handle, defaultTimeout, timeProvider)
         {
             _handle = handle;
         }

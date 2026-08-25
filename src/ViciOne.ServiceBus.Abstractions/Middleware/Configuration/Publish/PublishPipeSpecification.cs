@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Internals;
@@ -13,24 +12,26 @@ namespace ViciOne.ServiceBus.Configuration
         IPublishPipeSpecification
     {
         readonly object _lock = new object();
-        readonly ConcurrentDictionary<Type, IMessagePublishPipeSpecification> _messageSpecifications;
+        readonly Dictionary<Type, IMessagePublishPipeSpecification> _messageSpecifications;
         readonly PublishPipeSpecificationObservable _observers;
         readonly List<IPipeSpecification<PublishContext>> _specifications;
 
         public PublishPipeSpecification()
         {
             _specifications = new List<IPipeSpecification<PublishContext>>();
-            _messageSpecifications = new ConcurrentDictionary<Type, IMessagePublishPipeSpecification>();
+            _messageSpecifications = new Dictionary<Type, IMessagePublishPipeSpecification>();
             _observers = new PublishPipeSpecificationObservable();
         }
 
         public void AddPipeSpecification(IPipeSpecification<PublishContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             lock (_lock)
             {
                 _specifications.Add(specification);
 
-                foreach (var messageSpecification in _messageSpecifications.Values)
+                foreach (IMessagePublishPipeSpecification messageSpecification in _messageSpecifications.Values)
                     messageSpecification.AddPipeSpecification(specification);
             }
         }
@@ -38,6 +39,8 @@ namespace ViciOne.ServiceBus.Configuration
         public void AddPipeSpecification<T>(IPipeSpecification<PublishContext<T>> specification)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             IMessagePublishPipeSpecification<T> messageSpecification = GetMessageSpecification<T>();
 
             messageSpecification.AddPipeSpecification(specification);
@@ -45,6 +48,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IPublishPipeConfigurator.AddPipeSpecification(IPipeSpecification<SendContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             var splitSpecification = new PipeConfigurator<PublishContext>.SplitFilterPipeSpecification<SendContext>(specification, MergeContext, FilterContext);
 
             AddPipeSpecification(splitSpecification);
@@ -52,6 +57,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IPublishPipeConfigurator.AddPipeSpecification<T>(IPipeSpecification<SendContext<T>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             var splitSpecification =
                 new PipeConfigurator<PublishContext<T>>.SplitFilterPipeSpecification<SendContext<T>>(specification, MergeContext, FilterContext);
 
@@ -68,16 +75,35 @@ namespace ViciOne.ServiceBus.Configuration
             lock (_lock)
             {
                 return _specifications.SelectMany(x => x.Validate())
-                    .Concat(_messageSpecifications.Values.SelectMany(x => x.Validate()));
+                    .Concat(_messageSpecifications.Values.SelectMany(x => x.Validate()))
+                    .ToArray();
             }
         }
 
         public IMessagePublishPipeSpecification<T> GetMessageSpecification<T>()
             where T : class
         {
-            var specification = _messageSpecifications.GetOrAdd(typeof(T), CreateMessageSpecification<T>);
+            lock (_lock)
+            {
+                if (!_messageSpecifications.TryGetValue(typeof(T), out IMessagePublishPipeSpecification? specification))
+                {
+                    var created = new MessagePublishPipeSpecification<T>();
+                    specification = created;
+                    _messageSpecifications.Add(typeof(T), specification);
 
-            return specification.GetMessageSpecification<T>();
+                    try
+                    {
+                        InitializeMessageSpecification(created);
+                    }
+                    catch
+                    {
+                        _messageSpecifications.Remove(typeof(T));
+                        throw;
+                    }
+                }
+
+                return specification.GetMessageSpecification<T>();
+            }
         }
 
         static SendContext<T> FilterContext<T>(PublishContext<T> context)
@@ -102,24 +128,17 @@ namespace ViciOne.ServiceBus.Configuration
             return context.GetPayload<PublishContext>();
         }
 
-        IMessagePublishPipeSpecification CreateMessageSpecification<T>(Type type)
+        void InitializeMessageSpecification<T>(MessagePublishPipeSpecification<T> specification)
             where T : class
         {
-            var specification = new MessagePublishPipeSpecification<T>();
-
-            lock (_lock)
-            {
-                foreach (IPipeSpecification<PublishContext> pipeSpecification in _specifications)
-                    specification.AddPipeSpecification(pipeSpecification);
-            }
+            foreach (IPipeSpecification<PublishContext> pipeSpecification in _specifications)
+                specification.AddPipeSpecification(pipeSpecification);
 
             _observers.MessageSpecificationCreated(specification);
 
             var connector = new ImplementedMessageTypeConnector<T>(this, specification);
 
             ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
-
-            return specification;
         }
 
 

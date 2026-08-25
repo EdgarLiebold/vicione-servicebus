@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Util;
 
 
@@ -10,6 +11,8 @@ namespace ViciOne.ServiceBus.Configuration
         public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
             where TConsumer : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.ConsumerConfigured(configurator));
         }
 
@@ -17,6 +20,8 @@ namespace ViciOne.ServiceBus.Configuration
             where TConsumer : class
             where TMessage : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.ConsumerMessageConfigured(configurator));
         }
     }

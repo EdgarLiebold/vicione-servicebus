@@ -195,7 +195,7 @@ namespace ViciOne.ServiceBus
                 throw new ArgumentNullException(nameof(consumerType));
             if (objectFactory == null)
                 throw new ArgumentNullException(nameof(objectFactory));
-            if (!consumerType.HasInterface<IConsumer>())
+            if (!consumerType.ImplementsInterface<IConsumer>())
                 throw new ArgumentException("The consumer type must implement an IConsumer interface");
 
             LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (by type, using object consumer factory)", TypeCache.GetShortName(consumerType));

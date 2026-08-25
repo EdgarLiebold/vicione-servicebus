@@ -769,3 +769,829 @@ constructor-bound type with a private setter and a control character, and the co
 preserves an ordered key/value list even when keys repeat. Their methods are reused by the terminal
 disposition; duplicating either test would add maintenance without adding a distinguishable product
 verdict.
+
+## Core serializer configuration and forwarding
+
+Baseline `cc6f2e11` is clean and byte-identical to its private remote branch. The complete inherited
+`Serialization/SerializationConfigurationValidation_Specs.cs` and
+`Serialization/Forward_Specs.cs`, all 16 ledger obligations, the Core
+`SerializationConfiguration`, both JSON-options extension methods, `ForwardMessagePipe<T>`, the
+public forwarding extensions, the current native requirement projection, and the in-memory test
+harness usage were read before the first edit.
+
+The configuration fixture owns fourteen independent boundaries. Six validate registered,
+unregistered, case-insensitive, and inherited media types. Three prove that per-message options use
+the callback result for both mutate-and-return and replace-instance forms and reject a null result.
+Five prove that process-global options receive a defensive copy, retain either returned form,
+reject null without losing the previous instance, and remain untouched when no callback exists.
+The global-options cases must run in the existing non-parallel collection and restore the original
+instance unconditionally.
+
+The forwarding fixture contains the same System.Text.Json behavior twice. One stronger native fact
+is therefore the single execution owner for both obligations: a concrete message is consumed via an
+interface, forwarded through the real in-memory pipeline, and observed again as the concrete type.
+It must preserve fixed message values and identifiers, an explicit custom header, the additional
+concrete-only property, the original JSON content type, and exactly one downstream delivery. No
+clock, sleep, polling, inherited TestFramework type, or duplicate test is retained.
+
+The complete forwarding path shows two legitimate preservation layers rather than one redundant
+mechanism. `ForwardMessagePipe<T>` first populates the outgoing send context for transports,
+observers, middleware and the optional caller pipe. The selected serializer then clones the original
+envelope so interface consumption does not lose concrete payload members or supported type identity,
+and applies final send-context overrides when the body is materialized. The replacement observes
+both layers independently. The same path review exposed a null child-pipe probe and an inverted
+`PipeExtensions.IsEmpty` branch; both are unambiguous product defects and are corrected with native
+regression coverage. Serializer-specific envelope-update duplication and deterministic expiration
+remain an independent product-normalization slice in the root `TODO.md`, not a hidden test workaround.
+
+The subsequent full-path review resolved the previously open forwarding-expiration policy. An
+expired generic forward runs its caller pipe first and proceeds only when that pipe leaves a positive
+TTL. Otherwise one internal forwarding marker is consumed before normal transport dispatch, before
+persistent-outbox storage, or before mediator dispatch, and emits one structured
+`FORWARD-EXPIRED` event without retry or fault. Responses and faults retain their separate one-second
+minimum. System.Text.Json, MessagePack, replacement-message, outbox, mediator, positive/null override
+and structured-log tests cover the decision; five targeted mutants each fail at their intended
+boundary.
+
+## Envelope metadata and contextual time
+
+The complete constructors and update paths of `JsonMessageEnvelope` and `MessagePackEnvelope` were
+compared field by field. They duplicated the same transport metadata and both read
+`DateTime.UtcNow`; their update paths also converted every nonpositive TTL into one second. The
+MassTransit 8.5.10 upstream contains the same implementation but no source-level rationale for
+making that a serializer rule. It conflicts with the separately reconstructed forwarding policy:
+only response/fault creation owns the one-second exception.
+
+The Greenfield boundary is therefore one internal value projection in Abstractions, consumed by
+both retained serializer assemblies through signed internal visibility. No public metadata model or
+product package was added. The existing public `PipeContext` payload mechanism carries the standard
+.NET `TimeProvider`, exposed through a small extension API; tests use the official
+`Microsoft.Extensions.TimeProvider.Testing` package only. The projector copies or merges headers
+case-insensitively, preserves existing optional overlay fields, intentionally replaces the final
+destination as before, and captures one UTC snapshot whenever sent time or relative expiration
+needs it. Message payload encoding and MessagePack's defensive byte-copy behavior remain untouched.
+
+Before implementation, the target tests failed for ignored contextual time, divergent format
+expiration and the hidden one-second clamp. After implementation all three complete project suites
+pass. Four real mutations independently proved that the tests reject a system-clock substitution,
+reintroduced clamp, second clock read and one-field MessagePack drift.
+
+## Testing observation primitives
+
+The complete inherited `Testing/AsyncMessageList_Specs.cs` and
+`Testing/InactivityObserver_Specs.cs`, their thirteen ledger rows, the public asynchronous-list
+surface, every concrete list constructor, both observer implementations, the two harness
+composition paths, and the adjacent saga-polling paths were read before the first edit. The original
+MassTransit 8.5.10 source has the same process-clock and timer implementation; its repository history
+contains no rationale that makes those mechanisms part of the behavioral contract.
+
+The immediate owner is smaller than the complete harness timing surface. `AsyncElementList<T>` owns
+all nine list obligations, while `AsyncInactivityObserver` owns four interval obligations. The
+remaining harness-budget, rolling-timer, saga polling, and recorded-message timestamp paths are
+distinct source owners and remain explicitly deferred; they are not silently claimed by this
+cohort.
+
+## Test-local message-group sample
+
+The complete inherited `Groups/Group_Specs.cs` and all three ledger rows were read. Its extension,
+collection, marker interface and correlated message types are declared locally; retained source,
+tests, samples and benchmarks contain no reference to them. Product `GroupKeyProvider` types belong
+to batch grouping and share only the ordinary word “group.” Recreating these cases would introduce
+new test-only production logic into the test suite, so the correct disposition is terminal
+non-product removal.
+
+Both immediate primitives currently hide the process clock. The asynchronous list creates a real
+timer, the synchronous list combines `DateTime.Now` with timed `Monitor.Wait` and holds its monitor
+across yielded values, and the inactivity observer uses real `Task.Delay`. A Greenfield replacement
+uses the standard .NET `TimeProvider`, defaults existing public construction to
+`TimeProvider.System`, and provides explicit provider-aware overloads. One provider owns each
+observation. The synchronous iterator uses the same provider-backed cancellation deadline and
+copies pending elements outside its monitor, so it neither blocks producers across consumer code nor
+contains a second wall-clock algorithm.
+
+The native tests use `Microsoft.Extensions.TimeProvider.Testing.FakeTimeProvider`, never sleep and
+never use elapsed wall time as an oracle. They preserve existing/immediate selection, include,
+exclude, pattern, later arrival, cancellation and timeout behavior; the observer cases preserve both
+force orderings, active-to-inactive transition and exactly one query per virtual interval. Additional
+hardening covers the synchronous deadline and makes observation-source failures visible instead of
+turning them into a permanently pending false-green state.
+
+## Testing harnesses, consumers, handlers and sagas
+
+The nine remaining inherited Testing fixtures contain 42 R0 obligations. They are preservation
+evidence only. A static Roslyn source-to-test pairing scan was run once before implementation and
+reported 3,912 product sources, 1,164 test sources, 657 heuristic pairs and 3,255 unpaired sources.
+Those figures are a navigation aid, not coverage or completeness evidence. The complete nine
+fixtures and their consumer, handler, saga, state-machine, in-memory bus, dependency-injection,
+observer, message-list and timeout implementation paths were read before the first edit.
+
+The product has two legitimate public test entry points. `InMemoryTestHarness` is a lightweight
+direct composition surface; `AddViciOneServiceBusTestHarness` is the dependency-injection surface
+with hosted-service lifecycle and registered consumer/saga harnesses. They are not interchangeable,
+but must share one timeout, inactivity, observation, message-timestamp and saga-polling model. Each
+test owns and disposes exactly one harness; the old NUnit fixture-reset method is compatibility debt
+until the separate TestFramework retirement and is not used by native tests.
+
+The path review found hidden process time in harness cancellation, rolling timers, message-record
+timestamps and saga polling. It also found that `HandlerTestHarness` records a handler exception but
+does not rethrow it, incorrectly allowing the consume pipeline to report success. The A+ boundary is
+one standard .NET `TimeProvider` per harness, propagated to all lists, observers, timers and polling
+helpers; existing public construction remains source-compatible and defaults to
+`TimeProvider.System`. Handler faults are recorded and rethrown. Tests use deterministic fake time,
+coordination primitives and real in-memory dispatch, never sleeps, stopwatch thresholds or polling.
+
+Coverage is derived from product behavior rather than the old test count. In addition to terminally
+mapping all 42 R0 obligations, the native set must cover invalid construction, timeout and
+cancellation boundaries, start/stop/dispose lifecycle, DI override propagation, destination and
+response addressing, multiple contracts, exact observations, consumer and handler faults,
+unsupported saga repositories, saga existence/nonexistence/matching, state-machine state and fault
+transitions, recorded timestamps and independent harness isolation.
+
+### Observation-list and observer gap review
+
+The complete public `SentMessageList`, `PublishedMessageList`, `ReceivedMessageList` and typed
+`ReceivedMessageList<T>` surfaces were compared with their common `AsyncElementList<T>` owner and
+with the send, publish, receive and receive-endpoint observers that populate them. The static
+source-to-test pairing report is only navigation evidence: indirect harness use makes several files
+look unpaired even when a behavior test reaches them. The source review therefore enumerates the
+observable contract directly instead of treating filename pairing as coverage.
+
+The inherited tests cover isolated list and observer success paths but do not prove all public query
+shapes, consistent include/exclude behavior across all three message kinds, exact fault recording,
+duplicate and missing identifier handling, filter-failure propagation, empty-sequence extension
+semantics or the typed received-list facade. The native replacement must cover those boundaries with
+real message contexts and the real in-memory harness where integration matters. No wall clock,
+sleep, polling or shared running harness is permitted.
+
+`TestReceiveEndpointObserver` also accepted a null publish observer and deferred failure until an
+endpoint became ready. This is an unambiguous public construction defect. The A+ behavior rejects
+the missing mandatory dependency immediately with `ArgumentNullException` naming
+`publishObserver`; tests do not preserve the delayed null-reference failure.
+
+The observer's `Ready` connection is not redundant with the bus-level publish observer. Its source
+and local history show that it is the unchanged upstream mechanism for endpoints added after bus
+startup. A real dynamic in-memory endpoint was therefore connected after the harness started and
+published from its consume context into a separately owned observer connected only through
+`TestReceiveEndpointObserver`. Removing the `Ready` connection made exactly that test fail with an
+empty observation after the publication itself had completed. The path is retained as a justified
+endpoint-lifecycle boundary, not as unexplained compatibility code.
+
+### DI testing utilities and dynamic endpoints
+
+The complete `TestingServiceProviderExtensions`, `ServiceProviderTestExtensions`,
+`InMemoryTestHarnessBusInstance`, its registration factory, both receive-endpoint connector
+interfaces, consumer decorator/registration chain, container harness and all current native DI
+tests were read together with the two deleted inherited DI fixtures. The inherited tests prove only
+basic harness, consumer, saga and state-machine success. They do not prove filtered dynamic publish
+handlers, registered task identity/order, either registration-aware endpoint-connector overload or
+their failure boundaries.
+
+The in-memory bus-instance implementation is composition behind `IReceiveEndpointConnector`; its
+implementation type should not become a test-owned public contract. Both overloads are therefore
+tested through the resolved interface and real endpoints. `ConnectPublishHandler<T>` currently
+accepts missing required arguments and awaits endpoint readiness without the harness time budget.
+The Greenfield boundary is an immediate argument failure plus the existing standard harness
+`TimeProvider`, timeout and cancellation token; no new timer abstraction or wall-clock wait is
+introduced.
+
+The dynamic-endpoint execution uncovered an upstream inconsistency that the inherited suite never
+exercised. `AddConfigureEndpointsCallback` promises invocation for each receive endpoint, and the
+default registration bus, dedicated in-memory harness bus and transport-typed connector already
+honored that contract. The general connector overloads on `TransportBusInstance` alone skipped it.
+The normal transport path now applies the same collected callbacks before the caller-specific
+configuration. Both callback overloads are observed exactly once for queue-name and endpoint-
+definition creation, including the real registration context.
+
+The first parallel namespace run also exposed a test race rather than a product fault. A terminal
+fault publication can precede `BusTestConsumeObserver.ConsumeFault`; snapshotting the consume list
+immediately after only the publication is therefore invalid. The corrected test subscribes to both
+independent terminal observations before publishing and snapshots only after both complete. Two
+subsequent complete 105-case Testing-namespace runs pass without failure or skip.
+
+## Observer pipelines and message-flow diagnostics
+
+The complete inherited `MessageFlow_Specs.cs`, `Observer_Specs.cs`, `PublishObserver_Specs.cs`,
+`ReceiveObserver_Specs.cs`, and `SendObserver_Specs.cs` plus all connected observer, observable,
+transport, mediator, consume-filter, connection-set and timeline sources were read before closure.
+The old set contains 27 useful historical intents, but many cases only await one callback. It does
+not specify order, identity, mutually exclusive terminal stages, disconnection, fan-out failure,
+observer-branch isolation or the full rendered topology.
+
+The source establishes three distinct receive levels: transport delivery, individual consumer, and
+endpoint error handling. A middleware failure after successful consumption therefore raises
+`ReceiveFault`; when the endpoint error pipe handles it, the delivery subsequently completes with
+`PostReceive`. A complete parallel run exposed that distinction after an isolated run had made an
+incorrect three-stage assertion appear plausible. Delivery assertions now correlate the exact
+`ReceiveContext` and bind the four-stage handled-fault sequence.
+
+`IObserver<ConsumeContext<T>>` is one consume branch, not a filter over sibling handlers. Its
+failure is reported unchanged to `OnError` and as that branch's consume fault while another handler
+continues. Publish notifications are adapted through transport sends but remain publish-only to
+public observers. Mediator request/response notifications are nested around the response. The
+timeline topology is a deterministic 1/3/3/3/9 graph and is rendered immediately with fake time.
+
+The only product defect in the bounded path was the mutable array returned by `Connectable<T>` and
+its incomplete handling of synchronous/null-task asynchronous fan-out failures. The fix preserves
+the internal cached snapshot for constrained-device performance and copies only at the public array
+boundary. Every other product path is preserved and now has stronger executable contracts.
+
+## Message identity, conversation, time, and headers
+
+The complete five inherited fixtures and their connected topology, send-endpoint, consume-transfer,
+message-context, header-container, JSON-object, and dynamic-interface paths were read together. The
+old cases are a lower bound: they cover positive convention choices and basic metadata presence but
+not precedence, overrides, empty identifiers, exact causation, exact time, storage ownership, or
+complete object-header values.
+
+Correlation is a stable message-type topology decision. Its order is explicit selector,
+`CorrelatedBy<Guid>`, `CorrelationId`, `EventId`, and `CommandId`; the caller's send pipe may override
+that result afterward. Conversation identity is generated at the final endpoint boundary, inherited
+from a consume context when present, and deliberately replaced with an initiating-conversation
+header when requested. Source address has two compatible safeguards: exact consume-endpoint transfer
+and a null-only contextual endpoint fallback.
+
+The review found a real inherited defect in `DictionarySendHeaders`: the independent-copy branch
+constructed a populated dictionary and then added the same entries again. The corrected branch is
+one case-insensitive snapshot; the explicitly requested shared dictionary remains shared. A separate
+JSON test uses caller-owned options without the global converter because the real transport path has
+two valid interface-materialization routes and would otherwise mask loss of the direct fallback.
+
+Seventeen native facts, exact 15/15 ledger disposition, eleven killing product mutations, the
+550-case Core run, the unfiltered 1080-case UnitArchitecture profile, and the unchanged 3-case
+LocalIntegration profile close the cohort without skips or wall-clock assertions.
+
+## Message contexts and dynamic contracts
+
+The four inherited context/proxy fixtures, all 30 ledger obligations, and the complete connected
+request client, response handlers, send endpoint, initializer, reflection emitter, System.Text.Json,
+raw JSON and MessagePack paths were read as one behavior boundary. The inherited assertions were a
+lower bound: they omitted most identities and addresses, accepted response types, independent
+subscriber delivery, timeout identity, caller-token preservation, nested anonymous values,
+unsupported contract shapes, concurrency, collectibility and attribute fidelity.
+
+The emitted message type is a property-only data contract. Closed interfaces and all inherited
+properties are accepted; behavior members, static/default/indexed/write-only shapes and ambiguous
+case-insensitive wire names fail before emission. Compatible inherited duplicates are merged
+deterministically. Constructor and named attribute arrays must be converted to their declared CLR
+array type. The latter exposed an existing `InvalidCastException` and is fixed at the shared custom-
+attribute conversion boundary. Request cancellation exposed a second product defect: the response
+task used an anonymous cancellation token rather than the caller's exact token. Invalid proxy shapes
+previously leaked late `TypeLoadException`/`InvalidOperationException`; they now fail as precise
+argument errors.
+
+The request deadline still used `System.Threading.Timer` directly. That made its correctness test
+depend on real elapsed time even though the platform already standardizes testable time sources.
+`ClientFactoryContext` now owns a `TimeProvider` with a source-compatible system default; all built-in
+contexts accept or forward it, and the request handle creates its deadline `ITimer` there. The native
+test waits for deterministic timer registration, advances virtual time, and asserts the exact timeout
+without sleeping.
+
+The resulting 24 new Core cases plus the existing MessagePack interface case terminally cover all
+30 inherited rows and add the missing source-derived contracts. Eight one-cause mutations prove the
+new boundaries. Core passes 574/574 and the unfiltered UnitArchitecture profile passes 1104/1104,
+with no failure or skip.
+
+## Request clients, response matching, mediator, and multibus
+
+The six inherited request fixtures and all 40 connected ledger identities were read as migration
+evidence, not as an API specification. The complete client-factory, request-handle, response,
+mediator, outbox, filter, TTL, dependency-injection, and multi-bus paths establish the retained
+capabilities. MassTransit source/binary compatibility is not required: useful behavior remains,
+while signatures and ownership may change to produce a coherent greenfield ViciOne.ServiceBus API.
+
+Source analysis exposed five owner-level corrections: deadline and transport TTL were coupled;
+deadline and response/fault expiration bypassed the context clock; several public construction
+paths leaked late null failures; response wrappers did not enforce complete deterministic context
+behavior; and outbox bypass was repeated in four concrete request endpoints instead of being an
+invariant of the shared base. Each correction is implemented at its product owner and protected by
+direct behavior plus a one-cause mutation. The inherited nested-outbox scenario alone did not detect
+loss of bypass, so a transport-backed direct test now proves the invariant independently.
+
+All 40 inherited identities are mapped exactly once to 24 permanent test methods. The six inherited
+files are removed, no empty test directory remains, and the additional source-derived cases cover
+the omitted three-response, race, null-boundary, accepted-type, TTL, outbox, filter, mediator-time,
+and secondary-bus boundaries. Core passes 614/614, Abstractions 150/150, UnitArchitecture 1155/1155,
+and LocalIntegration 3/3 with no failure or skip. Release builds have zero warnings and errors.
+
+## Accepted cohort — type relationships and readable-property reflection
+
+The four inherited type-extension/property fixtures contribute 37 obligations, but they are only a
+lower bound. Several assertions are duplicates or counts, and their `GetClosingArguments` calls bind
+to a test-local copy of the old helper rather than reliably exercising the product implementation.
+The complete product helpers, cache, consumers and existing native property tests were therefore
+read before the first edit.
+
+The current API mixes three different questions: whether any closed generic match exists, which
+single match a caller requires, and which arguments that match carries. It silently selects the
+first interface when a type closes the same generic interface more than once. Its cache also exposes
+an implementation type publicly and attempts to store negative reference values. The A+ contract
+separates any-match, complete deterministic match enumeration and exactly-one selection; ambiguous
+single-match requests fail explicitly. Historical method names and overloads are not retained merely
+for MassTransit compatibility.
+
+Readable instance and static property discovery is also named explicitly. Each property is selected
+by its own accessor instead of by the shared `get_` method name, inherited interfaces are traversed
+deterministically before the derived interface, and diamond inheritance is de-duplicated. This keeps
+the existing derived-property-wins consumers correct and prevents one readable indexer from making a
+different write-only indexer appear readable.
+
+The connected caller review exposed an independent registration defect: runtime future registration
+indexes an empty generic-argument array when the supplied type is not a state machine and accepts a
+state machine over the wrong state type until reflection fails later. The product boundary must
+reject both shapes directly with the stable `futureType` argument contract.
+
+The completed review also found that strong type-keyed dictionaries in the generic relationship,
+short-name and formatter caches would prevent unload of collectible assemblies. All three use weak
+type-key ownership and one collectible-assembly fact kills each strong-cache regression. A reversed
+ambiguous-interface declaration proves that deterministic result order comes from the product sort,
+not incidental reflection order. The four inherited fixtures are terminally replaced; their
+test-local helper remains temporarily because unrelated inherited fixtures still compile against
+it. A broader non-public read/write-property policy question is explicitly deferred in `TODO.md`
+instead of being hidden in a test workaround.
+
+## Middleware coordination and resilience
+
+The eleven inherited middleware fixtures and the complete connected product implementations were
+read as one composition boundary. The old tests establish 19 useful identities but omit repeated
+configuration changes, rollback after cancellation, null runtime keys, concurrent state ownership,
+resource disposal and deterministic time. Those boundaries are derived from the product rather than
+copied from fixture structure.
+
+The product review found that one-time setup retained a failed terminal state, dynamic rate and
+concurrency changes used the initial rather than current limit, cancelled decreases leaked acquired
+permits, runtime partition keys could become an unintended empty route, and latest-value visibility
+had no cross-thread memory contract. Rate and circuit timers also bypassed the standard
+`TimeProvider`. Each defect is corrected at its owner and has an exact behavior test.
+
+Circuit-breaker admission and completion are causally linked: a send completes against the state
+that admitted it, while only the rare transition decision is serialized. Losing competitors must
+not allocate timers or timeout enumerators. The implementation therefore keeps lock-free state reads
+on the message path and a small transition lock for sole successor/resource ownership. The inherited
+activation-threshold boundary remains deliberate; the breaker opens after the configured attempt
+boundary is exceeded, not when it is merely reached.
+
+A complete profile exposed two independent test defects outside the inherited lower bound. Cache
+capacity is a documented soft bound of `Capacity + BucketSize`, while `NodeTracker.Cleanup` really
+could lose a concurrent cleanup request by resetting its scheduling flag outside the protecting
+lock. The oracle was corrected to the documented bound and the product race was fixed under the
+same lock. The abandoned-fault test no longer assumes a `WeakReference` dies after five collections;
+it proves the runtime observation boundary with a marked unobserved control failure and rejects an
+exact mutation that removes the product observer.
+
+All 19 identities are terminally mapped, the eleven inherited files are removed, and seven
+effective mutations fail for their intended reason. Final post-deletion results are Abstractions
+201/201, Core 643/643, UnitArchitecture 1235/1235 and LocalIntegration 3/3 with no failure or skip;
+all affected Release builds have zero warnings and errors.
+
+## Middleware routing, limits and scope
+
+The five inherited fixtures carry eight useful identities but leave the actual product boundaries
+largely untested. The complete scope/payload, dispatch/output/tee, dynamic/key routing, limiter and
+circuit paths establish the stronger contract. The old wall-clock concurrency loops are replaced by
+explicit entry/release gates; the circuit uses virtual time and exact event/exception identity.
+
+`ScopePipeContext` intentionally overlays its own payload cache on a readable parent. An inherited
+payload returned by `GetOrAddPayload` is not copied, while `AddOrUpdatePayload` creates a local
+replacement and leaves the parent unchanged. Both protected constructors now reject a null parent
+immediately, and nested scopes preserve nearest-readable/local-write isolation.
+
+Dynamic dispatch is compatible-type fan-out. Every compatible output pipe completes before the
+original input continuation runs exactly once; nonmatching outputs do not suppress it. Keyed routing
+adds an independent exact-key condition. A connected output type must implement the input context
+because the existing continuation contract is typed that way; this real boundary now fails with a
+stable product diagnostic instead of a reflective generic-constraint error. Generalizing the API to
+unrelated output contexts would be a separate architecture change, not an accidental test demand.
+
+Source review exposed missing null/result guards for parent contexts, converter factories, key
+accessors, converter instances, successful-null conversions and configured/runtime keys. All are
+fixed at their owners. The established strict circuit activation rule remains unchanged and is now
+explicitly covered: default active threshold five opens after the sixth failed attempt and publishes
+one event carrying the exact causal exception.
+
+All eight inherited rows are terminally mapped, five fixtures are removed, and eight one-cause
+mutations fail for their intended reasons. Final results are Abstractions 203/203, Core 649/649,
+UnitArchitecture 1243/1243 and LocalIntegration 3/3 without failure or skip; the final Engineering
+build and the post-deletion inherited Core build have zero warnings and errors.
+
+## Middleware retry
+
+The inherited retry fixture defines 17 useful behavior identities but relies on command-specific
+replacement-context helpers and omits cancellation identity, deterministic time, invalid policy
+results, immutable schedules and the general task retry executor. The complete product path shows
+that retry ownership is a non-generic payload concern: typed dispatch may change the concrete pipe
+context while the retry context retains the observer type. A downstream retry therefore owns the
+failure and budget; outer layers may report the terminal nested context but must not retry it.
+
+Source review found recursive retry loops, wall-clock delays, source cancellation rewritten as a
+linked token, policy cancellation capable of returning success, cancellation ineffective before
+the first failure, mutable caller-owned interval schedules, uncaught schedule overflow, repeated
+jitter selection and duplicated task/result loops that could rethrow the wrong failure. These are
+product defects, not compatibility behavior, and are corrected at the owning sources.
+
+`MessageRetryPolicyExtensions` has no product or retained legacy-suite caller. It is an incomplete
+third execution path beside the configured message-retry middleware and the general task executor;
+removing it eliminates duplication without removing a capability. All 17 inherited identities are
+terminally mapped, 54 native cases execute, the eight exclusive inherited files are removed and
+nine independent mutations reject regression. Final results are Abstractions 203/203, Core 703/703,
+UnitArchitecture 1297/1297 and LocalIntegration 3/3 without failure or skip; Release and bounded
+format gates are clean.
+
+## Message and host retry integration
+
+The remaining host-retry fixture is not another retry-engine implementation. It is the boundary
+that combines a transport host policy with caller cancellation and transport shutdown. Upstream
+history shows the fixed one-second pause entered together with the first host send retry loop and
+survived later cancellation and transport changes. All retained host configurations already own an
+explicit exponential minimum delay, so the additional pause duplicates policy ownership and makes
+the actual delay neither configurable nor deterministic.
+
+The remaining message-retry fixtures exercise configuration placement rather than policy
+arithmetic: endpoint versus bus ownership, consumer scope, disjoint policies, no/default policy,
+bus shutdown and a concrete message whose topology includes base and interface contracts. The old
+TypeCast test never raised a failure and therefore never exercised retry. The replacement retains
+its abstract-ancestor topology regression while also dispatching through a concrete base and a
+public interface, failing once in each pipeline and proving exact recovery.
+
+The separate receive-transport agent contains another inherited reconnect loop and fixed breather.
+It is causally different from host send retry and has a larger supervisor/ready/fault lifecycle;
+changing it in this bounded cohort would be guesswork. It is recorded as its own path-complete
+product slice in `TODO.md`.
+
+## Configuration composition and validation
+
+The eight inherited fixtures contribute 29 useful behavior identities but mix configuration
+observation, send ownership, saga reflection, runtime instances and invalid-startup behavior. The
+complete connected product paths were read before replacement. The source-derived review added six
+missing boundaries: late root send/publish configuration must reach already-created message
+specifications; failed send/publish observer initialization must not poison the cache; invalid saga
+message contracts must be ignored; and an unsupported saga construction shape must fail with one
+actionable configuration error.
+
+Observer callbacks may mutate configurators before failing, so automatic retry cannot be made
+transactional. The A+ lifecycle is exactly-once notification with re-entry rejection and a sticky,
+identity-preserving first failure. Send and publish roots publish a provisional message entry before
+recursive discovery for safe same-message re-entry, but remove that entry if initialization fails.
+Validation results are materialized snapshots rather than live enumeration over mutable owners.
+
+Saga reflection order is not a contract. Discovery uses semantic role precedence and ordinal
+message identity, filters invalid message types, keeps the first role for duplicates, and compiles
+one synchronous construction delegate for either a public `Guid` constructor or a public
+parameterless constructor with writable `CorrelationId`. The former public interface and role DTO
+were implementation remnants rather than useful capabilities and are removed.
+
+All 29 inherited identities close against ordinary source-owner tests. Ten one-cause mutations cover
+snapshot materialization, parent composition, deterministic saga discovery, role precedence,
+observer failure ownership, observer-injected validation, late root propagation and failed-cache
+recovery. Static assertion, gap and anti-pattern review found no remaining defect in the bounded
+cohort.
+
+## Pipe-context failure precedence
+
+The complete supervisor, context factory/handle, active-context agent and base lifecycle path shows
+one authoritative operation result. A cleanup exception after a successful send is not evidence
+that the send failed and must not invite a duplicate. After an operation failure, fault
+notification, stop and disposal remain cleanup; none may replace the exact causal exception, and all
+stages must still be attempted.
+
+The inherited fixture covered five useful outcomes but not exact exception identity, complete event
+order, caller cancellation-token propagation or a failure while awaiting the context itself. The
+replacement adds those boundaries with deterministic in-memory fakes and no timing or transport
+dependency. Existing cache tests independently retain invalidation and recreation behavior.
+
+Eight isolated mutations remove or corrupt operation execution, fault notification, stop,
+disposal, exception precedence and token propagation. Every mutation is rejected by its owning
+test. The product behavior was already correct; the only product edit removes incident-specific
+commentary and uses transport-neutral diagnostics.
+
+## Timeout and cancellation
+
+The inherited timeout implementation was still the upstream v8.5.10 shape: a linked cancellation
+source, `CancelAfter` on system time and a final timeout exception without the original cause. The
+old tests used wall-clock waits and covered only timeout short-circuit, one shutdown case and one
+independent cancellation case. They did not distinguish caller, deadline and transport ownership or
+exercise the configuration graph.
+
+The complete path shows that fault generation occurs inside the timeout consume context before the
+outer filter can classify the cancellation. Timeout classification therefore belongs at both
+boundaries: the context projects it into `Fault<T>`, while the outer filter reports it to the caller.
+Transport cancellation is owned by the original context and suppresses application faults.
+
+The standard `TimeProvider` boundary removes wall-clock dependence. A context provider is the normal
+single time source; an explicit provider is a supported override and must be captured with the
+timeout duration when the pipeline is built. Retaining and later mutating an internal configurator
+must not change an already compiled pipe. Timer disposal needs an observable provider that tracks
+the actual `ITimer`, not merely the linked token; the common `ObservableTimeProvider` now owns that
+capability and replaces a duplicate Circuit-Breaker-only helper.
+
+Mutation work found two initially false-positive assurances. A disposed linked source hid a leaked
+deadline timer, and a shutdown test without installed timeout middleware could not protect timeout
+fault suppression. Both tests were strengthened against the real product boundary before the
+cohort was accepted. The final twelve effective mutations each fail for their intended cause.
+
+## In-memory delay and scheduled publish
+
+The imported v8.5.10 provider combined process UTC, a mutable offset, an unbounded operation channel,
+a permanent reader task and an invalid duplicate-key comparer. Its four tests measured one-second
+wall-clock windows and did not establish the ordering promised by their names. A canceled far-future
+entry also remained retained until its deadline, while `Advance` acknowledged queue admission rather
+than application of the time change.
+
+The complete host/fabric/queue/DI path needs one domain behavior surface for in-memory delayed
+delivery, but not a custom clock abstraction. The final provider therefore accepts standard .NET
+`TimeProvider`, owns one timer, orders `DateTimeOffset` deadlines by a stable sequence and applies
+manual advancement synchronously. The normal production constructor uses `TimeProvider.System`.
+
+The scheduled-publish behavior test initially did not always reject a reintroduced `Task.Run`,
+because the thread pool sometimes won the race. A second ordinary assurance now reads the compiled
+async state machine, proves the direct `DeliverWithDelay` call and rejects `Task.Run`. A real mutant
+proves the IL reader is not vacuous. The final 18-case cohort contains no sleep or wall-clock oracle.
+
+## Bus health waiting
+
+`BusControlHealthExtensions` is the single public owner for waiting until one or more bus controls
+reach an expected health state. The imported API polls `DateTime.UtcNow`, sleeps for a fixed 100 ms,
+returns only the final enum and silently returns an unexpected status when its timeout expires. Its
+async methods also lack the `Async` suffix, do not validate their public arguments and cannot be
+driven deterministically. The cancellation overload is used by the EF Core outbox delivery service;
+the timeout overloads are also used by inherited broker and kill-switch fixtures.
+
+The A+ boundary keeps polling as an implementation detail but injects the standard .NET
+`TimeProvider`, defaults production calls to `TimeProvider.System`, preserves a final observation at
+the exact deadline and throws a typed timeout containing the expected status and complete last
+`BusHealthResult`. Cancellation wins before the first observation and preserves the exact caller
+token. Collection waiting materializes and validates its input once, starts all waits together and
+returns results in input order. No custom clock, real sleep, elapsed-time oracle or test-framework
+helper is part of this owner.
+
+The final source-derived review added two boundaries not present in the inherited tests: a state
+reached only after the deadline cannot revive the wait, and a deferred collection is enumerated
+exactly once. Both were proven with isolated product mutations. The complete native profiles and
+all direct callers are green; the retained kill-switch fixtures are only API-adjusted because their
+state-machine behavior has not yet been migrated.
+
+## Kill-switch lifecycle and recovery
+
+The imported state classes describe a useful protection mechanism but not a coherent modern
+lifecycle. `Ready` bypasses the nominal recovery population, transition work is detached, failed
+restart strands the switch, and counter reset races concurrent observations. Raw timers, stopwatch
+and process UTC form three time sources. The current upstream source remains materially identical,
+so it supplies no correction that should be copied.
+
+The coherent feature is smaller than the imported API: observe failures, trip one endpoint after an
+exact population/ratio decision, expose degraded health while it is paused, then restart reliably.
+One internal state machine can own this with an immutable configuration snapshot, `TimeProvider`, a
+stored recovery task and bounded retry. The former runtime interfaces and state classes are not
+extension points and have no product consumer; their only outside consumer is the inherited
+instrumentation fixture, which must be replaced by behavior against the real recovery boundary.
+
+The old `RestartingKillSwitchState` nevertheless records useful experienced-author intent: a
+matching failure after restart should stop the endpoint immediately, while enough successful
+deliveries should stabilize it. `KillSwitch.Ready` replaced that state with `Started` before any
+delivery could exercise it, and the nominal success boundary was one attempt late. The final design
+recovers the intent as an explicit internal `VerifyingRecovery` state with an exact inclusive
+activation boundary. It does not preserve the dead public state graph or compatibility API.
+
+The final matrix has 26 one-to-one projected facts and 85 assertions. Fifteen isolated mutations,
+including both recovery-verification exits, fail for their intended cause. Core is 828/828,
+UnitArchitecture is 1455/1455 and LocalIntegration is 3/3, all with no failures or skips; the full
+serial Engineering Release build is clean.
+
+## Fault diagnostics and host metadata
+
+The inherited exception tests preserve two useful transport facts but do not detect that
+`FaultExceptionInfo` aliases a generic `Exception.Data` dictionary while copying a non-generic one.
+That makes an already-created fault change when application code later mutates the exception and
+also makes key comparison depend on the source dictionary. The corrected owner always takes one
+ordinal-ignore-case snapshot. Application-wrapper values win over wrapped exception values, while
+the wrapped exception remains the reported identity.
+
+The transport test also exposed a separate owner defect in
+`CaseInsensitiveDictionaryStringObjectJsonConverter`: the public `Write` override selected itself
+again instead of the intended enumerable overload. Naming the implementation `WriteEntries`
+removes the ambiguous overload and exercises the real System.Text.Json receive boundary rather than
+merely observing a pre-serialization publish context.
+
+`BusHostInfo(bool)` did not represent two modes; its argument was ignored. The serializer still
+needs the public parameterless DTO constructor, while production capture now has one internal
+factory using `Environment.ProcessId` and `Environment.ProcessPath`. The cache remains the lifetime
+owner. The new transport test waits for a dynamically connected endpoint to become ready before
+publishing, so all eight fields are proven after real envelope serialization.
+
+Seven isolated mutations reject aliasing, comparer drift, omitted JSON entries, wrapper identity,
+placeholder process identity, a revived boolean constructor and requirement-projection drift. The
+complete final profile is 1466/1466, LocalIntegration is 3/3, and all Release builds are clean.
+
+## Initializer duplicate-path consolidation
+
+`SendProxy_Specs.cs` is named as though it tested a send proxy, but it only invokes
+`MessageInitializerCache<T>.Initialize` and compares Guid, string and `DateTime` properties. The
+accepted exact-scalar test covers string and `DateTime` plus the complete scalar set; the accepted
+dynamic-contract test covers Guid/string anonymous materialization and the real interface transport
+boundary. Their union strictly contains the old assertion set, so another test would add a second
+truth rather than coverage.
+
+## InMemory receive-endpoint concurrency
+
+The inherited `Threading_Specs.cs` title describes thread-pool scaling, but its actual contract is
+transport-level concurrency: `InMemoryReceiveTransport` creates a `TaskExecutor` from
+`ConcurrentMessageLimit ?? PrefetchCount`, and the single fabric dispatcher can continue because
+`TaskExecutor.Push` completes after admission rather than after handler completion. The relevant
+owner path is endpoint configuration -> receive context -> InMemory receive transport -> executor;
+the existing executor and middleware tests do not prove that the endpoint configuration reaches
+that path.
+
+The native replacement therefore sends real messages to the harness input endpoint. It first
+saturates one hundred configured slots while holding every handler, preserving the inherited high
+concurrency boundary. A separate cap case configures prefetch four and concurrency three, proving
+that the fourth handler cannot enter until a slot is released. This also gives a precise mutation:
+using prefetch unconditionally produces an observed maximum of four and fails the cap assertion.
+
+## Structured bus-probe endpoint inventory
+
+`Introspection_Specs.cs` only asserts endpoint addresses, despite configuring unrelated handler,
+rate-limit and consumer behavior. Its `GetReceiveEndpointAddresses` call is not a core API: the old
+TestFramework helper serializes `ProbeResult` with System.Text.Json and reparses a fixed JSON path.
+The product already exposes the richer structured `ProbeResult`, whose relevant path is bus -> host
+-> receiveEndpoint -> receiveTransport -> address.
+
+The harness owns an input endpoint and an internal bus endpoint; a connected dynamic endpoint is a
+third. The native replacement asserts all three unique addresses directly in the structured graph.
+After stopping the dynamic handle, its collection entry is removed synchronously and the next probe
+contains exactly the two persistent endpoints. Renaming the transport's `address` field makes both
+tests fail at that exact missing key, proving that neither test merely counts unrelated nodes.
+
+## InMemory outbox fault isolation
+
+The inherited `Outbox_Specs.cs` proves one useful contract but uses a 300-ms negative timeout and
+does not await the response that is supposed to be deferred. The actual owner path is
+`InMemoryOutboxSpecification` -> `InMemoryOutboxFilter` -> `InMemoryOutboxConsumeContext` -> the
+deferred outbox send endpoint. The filter executes queued actions only after the handler succeeds;
+on a handler exception it must discard them before the consume pipeline publishes `Fault<T>`.
+
+The native replacement awaits `RespondAsync`, then throws. The observed request fault is a causal
+barrier: by then the outbox catch path has completed and the fault has been published. A canceled
+snapshot token inspects already observed sent messages without introducing another wait. This
+proves both the exact fault envelope and that no deferred response escaped.
+
+The isolated catch-path mutation from discard to execute made the response assertion fail. A first
+attempt to reverse that mutation matched the identical call in the success branch and left the
+branches inverted; the still-red focused test correctly rejected it. The complete branch was then
+restored explicitly, the product file was proven byte-identical to its baseline, and a forced
+non-incremental build preceded the final green run. This is now the required restoration procedure
+for mutations with repeated or structurally similar call sites.
+
+## Preliminary next-owner triage: dynamic consume-pipe connections
+
+Do not migrate `ConnectHandler_Specs.cs` as an isolated one-test cohort. Its apparent happy path is
+one member of a shared dynamic connection boundary containing `ConnectHandler`, `ConnectConsumer`,
+`ConnectInstance`, consume-message observers and their `ConnectHandle` lifetimes. The adjacent R0
+set is `OBL-R0-CORE-B-0430` through `OBL-R0-CORE-B-0437`; treating only 0433 would preserve the old
+suite's missing disconnect, lifecycle and error-order coverage.
+
+A preliminary read shows that the eventual source-owner cohort must disposition handler, factory,
+object-instance and multi-message consumer attachment together; prove observer pre/post/fault order
+and exact fault identity; and derive connection/disconnection plus concurrent update boundaries from
+the complete connector, pipe and handle implementation before writing tests. This is a triage note,
+not an implementation plan: the full source graph has not yet been read and no fixture is replaced.
+
+The direct connector and dispatch path has now been read far enough to sharpen the next analysis:
+
+- one consumer implementing two message interfaces creates two message connectors and returns one
+  `MultipleConnectHandle`; disconnect must remove both routes, and partial connection failure must
+  roll back every already-created route;
+- `Connectable<T>` already has strong native lifecycle, snapshot, null-task and failure-aggregation
+  coverage, so the next cohort should reuse that truth rather than duplicate its unit tests;
+- existing native `ConsumeObserverTests` are stronger than most inherited observer assertions at a
+  real bus/mediator boundary, but they do not by themselves prove the consumer-specific dynamic
+  connection or the exact direct-pipe callback ordering;
+- existing `InstanceExtensionsTests` prove configured endpoint registration, not dynamic
+  `ConnectInstance`, while the mediator forwarding test exercises `ConnectHandler` through a
+  different connector boundary;
+- public handler connection currently lacks the explicit boundary validation already present on
+  consumer and instance connection extensions, and several connector/cache implementation types are
+  public. Their A+ API disposition must follow the complete call-site and package-surface review,
+  not be preserved merely for compatibility.
+
+The tee/request routing and handle composition have now also been read. Dynamic message routes end
+in a `RequestIdTeeFilter<T>` whose ordinary route is a `Connectable<IPipe<T>>`; request-key routes
+add one lazy key filter and return the keyed connection handle. Dispatch observes one stable
+connection snapshot, awaits all started branches, and only then invokes the continuation. Consumer
+and instance connectors dispose already-created handles if a later message-interface connection
+throws. The preliminary ordinary matrix can therefore be bounded to:
+
+1. handler delivery, validation and disconnect;
+2. factory and exact-instance delivery plus disconnect;
+3. one consumer implementing two message interfaces, one composite handle and removal of both
+   routes;
+4. injected second-route failure with rollback of the first route;
+5. typed observer order `pre -> handler/consumer -> post`, exact fault rethrow, no post on fault and
+   observer disconnect;
+6. a source/API disposition that keeps useful public extension points while internalizing accidental
+   connector/cache implementation surface where package and call-site evidence permits it.
+
+The consumer metadata and repository-wide call-site read corrects a tempting over-cleanup. Cache
+types, handler-connector types and their cache interfaces are referenced only inside the product and
+are candidates for internalization. The message-connector contracts are different:
+`IMessageInterfaceType` is returned by the public custom consumer-convention mechanism and creates
+consumer and instance message connectors. Removing that surface wholesale would remove a useful
+extension feature, not merely a legacy API.
+
+The eventual A+ surface review must therefore separate accidental cache/factory exposure from the
+custom-convention extension boundary. It may simplify or replace the latter with a cleaner public
+contract because backward API compatibility is not required, but it must retain the capability and
+prove a custom convention end to end. The repository contains no `PublicAPI.Shipped.txt` or
+`PublicAPI.Unshipped.txt`; package/API comparison must therefore use compiled public metadata. Then
+reuse strict containment from existing native observer and `Connectable<T>` cases rather than
+cloning already-proven behavior.
+
+The complete custom-convention call-site read adds an important lifecycle constraint. The useful
+feature is real: the inherited fixture registers an `IHandler<T>` convention, supplies its own
+message-interface descriptor, connector factory and consumer filter, and dispatches two unrelated
+message contracts through one handler type. No retained product, native test, tool, benchmark or
+sample registers another custom convention, so this fixture is the only executable evidence for the
+extension point.
+
+The present API is nevertheless not an A+ lifetime owner. `ConsumerConventionCache` stores a
+process-global mutable `List<IConsumerConvention>` without synchronization, while
+`ConsumerMetadataCache<T>` snapshots that list once in a per-type static `Lazy`. Registering or
+removing a convention after a consumer type has first been inspected therefore cannot update that
+type's metadata, and concurrent registration/enumeration has no defined safety boundary. The old
+fixture avoids the problem only by registering before the first use of its unique handler type and
+removing afterward; it does not prove a sound runtime lifecycle. Git history available in this fork
+contains only the upstream import and mechanical ViciOne rename for these files, so it supplies no
+experienced-author rationale for preserving the global cache shape.
+
+The next design must preserve custom message-discovery and connector creation while replacing the
+global mutable registration/cache coupling with one explicit, immutable convention set whose
+lifetime is owned by bus configuration. Built-in async, batch and job conventions belong in that
+default set. The exact public contract still requires the full compiled-surface and construction
+path review; no API change is authorized by this preliminary note.
+
+The public dynamic-connection facade also has inconsistent guard ownership. `ConnectConsumer` and
+`ConnectInstance` validate their connector and subject inputs before touching caches, whereas
+`Handler`, `ConnectHandler` and `ConnectRequestHandler` forward unchecked inputs. The ordinary
+handler connector creates a default pipe configurator when none is supplied, but the request
+variant dereferences its required configurator immediately. These are source-observed boundaries,
+not yet accepted defects: the next cohort must read every request-handler caller and specification
+owner before deciding whether to normalize the public API or retain a deliberate distinction.
+
+Do not accidentally merge the separate `IObserver<ConsumeContext<T>>` endpoint/bus connector API
+into this cohort. R0 obligations 0434--0437 exercise `IConsumeMessageObserver<T>` on
+`ConsumeContextOutputMessageTypeFilter<T>`: pre callbacks precede dynamic dispatch, post callbacks
+follow it, fault callbacks observe its exact exception, and the exception is rethrown. The generic
+observer facade builds a different pipe through `ObserverConnectorCache<T>` and has its own public
+guard and lifecycle questions. It is adjacent implementation, not evidence for this obligation
+set, and requires a separate source-owner disposition if selected later.
+
+The configuration path confirms another custom-convention mismatch. `UntypedConsumerConfigurator`
+correctly obtains message specifications through the registered conventions, so the inherited
+`IHandler<T>` convention executes. Its validator nevertheless warns solely because the type does
+not implement the built-in `IConsumer` marker, even when the convention has discovered valid
+message connectors. A greenfield convention contract must make discovery and validation consume
+the same immutable result; a valid custom consumer must not produce a false built-in-marker
+warning. This is a candidate product defect to reproduce before fixing, not permission to weaken
+consumer validation globally.
+
+Convention order is behavior, not incidental list order. The current defaults are async, batch and
+job; metadata groups descriptors by message type and keeps the last descriptor, and subsequently
+registered custom conventions are appended. This lets a specialized or custom connector override a
+generic descriptor for the same message type. Any immutable replacement must make this precedence
+explicit and deterministic, including duplicate registration and conflicting custom conventions,
+rather than sorting or deduplicating the set accidentally.
+
+`Connectable<T>` itself already has strong native snapshot, idempotence, concurrent-disconnect and
+multi-failure tests. Its composite owner does not: `MultipleConnectHandle` retains a caller-supplied
+array by reference, validates neither the collection nor its elements, and stops disconnecting as
+soon as one child throws. The consumer/instance rollback loops have the same stop-at-first-failure
+shape. The next cohort must determine the intended cleanup contract from all handle owners and
+history, then prove that one faulty child cannot leave unrelated dynamic routes connected. Do not
+rewrite `Connectable<T>` or duplicate its already accepted tests to hide this separate composite
+lifetime question.
+
+The Microsoft Roslyn static-pairing analyzer reports `ConsumerConnectorCache.cs` as unpaired, which
+supports selecting this cluster for deeper analysis. Its wider count (3911 source files, 3140
+statically unpaired) is only a parse heuristic: extension-method calls, DI and reflection cause
+false negatives. Its suggested paths into the inherited `ViciOne.ServiceBus.TestFramework` are
+invalid for the accepted architecture because the analyzer derives them from still-existing project
+references. Use the report for triage only; source-derived behavior, R0 obligations and executable
+native tests remain the acceptance truth.
+
+## Native test source-layout enforcement
+
+The compiled architecture rules protected assembly and dependency direction but did not bind C#
+source namespaces to physical folders. With 280 native source files, that left the structure rule as
+prose and allowed silent navigation drift.
+
+The new rule consumes evaluated MSBuild `Compile` items and `RootNamespace` values, then uses Roslyn
+syntax rather than text matching. It exposed nine real discrepancies in two support projects. Their
+files already shared the intended public architecture roots
+`ViciOne.ServiceBus.Tests.Infrastructure.Analyzers` and `.Roslyn`; only MSBuild was deriving a
+different implicit root from the assembly name. Explicit project-level roots make both truths clear:
+the assembly name identifies the specialized artifact, and the namespace identifies its common
+test-infrastructure owner. No namespace or public surface was renamed.
+
+An isolated file under `Serialization` with namespace `ViciOne.ServiceBus.Tests.WrongFolder` made
+exactly the new rule fail while the other 84 architecture facts remained green. After removing the
+probe, the complete architecture project returned to 85/85. A second isolated file declared the
+correct namespace first and a hidden second namespace afterward; it also made exactly the new rule
+fail, this time with the exact two-declaration diagnostic. Its removal again restored 85/85.

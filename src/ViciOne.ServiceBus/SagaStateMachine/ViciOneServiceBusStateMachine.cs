@@ -1875,10 +1875,10 @@ namespace ViciOne.ServiceBus
 
         static EventRegistration GetEventRegistration(Event @event, Type messageType)
         {
-            var isFault = messageType.ClosesType(typeof(Fault<>), out Type[] faultMessageType);
+            var isFault = messageType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] faultMessageType);
 
             Type registrationType;
-            if (messageType.HasInterface<CorrelatedBy<Guid>>())
+            if (messageType.ImplementsInterface<CorrelatedBy<Guid>>())
             {
                 registrationType = isFault
                     ? typeof(CorrelatedFaultEventRegistration<>).MakeGenericType(typeof(TInstance), faultMessageType[0])

@@ -21,9 +21,9 @@ namespace ViciOne.ServiceBus.Configuration
         public MessageRetrySagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, CancellationToken cancellationToken,
             Action<IRetryConfigurator> configure)
         {
-            _configurator = configurator;
+            _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
             _cancellationToken = cancellationToken;
-            _configure = configure;
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
         }
 
         void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<TMessage>, RetryConsumeContext<TMessage>>(Factory, _cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
         }

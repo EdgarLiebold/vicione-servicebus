@@ -17,6 +17,11 @@ namespace ViciOne.ServiceBus.Testing
         {
         }
 
+        public ReceivedMessageList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeout, testCompleted, timeProvider)
+        {
+        }
+
         public IEnumerable<IReceivedMessage<T>> Select<T>(CancellationToken cancellationToken = default)
             where T : class
         {
@@ -87,13 +92,13 @@ namespace ViciOne.ServiceBus.Testing
         public void Add<T>(ConsumeContext<T> context)
             where T : class
         {
-            Add(new ReceivedMessage<T>(context));
+            Add(new ReceivedMessage<T>(context, null, TimeProvider));
         }
 
         public void Add<T>(ConsumeContext<T> context, Exception exception)
             where T : class
         {
-            Add(new ReceivedMessage<T>(context, exception));
+            Add(new ReceivedMessage<T>(context, exception, TimeProvider));
         }
     }
 
@@ -105,6 +110,11 @@ namespace ViciOne.ServiceBus.Testing
     {
         public ReceivedMessageList(TimeSpan timeout, CancellationToken testCompleted = default)
             : base(timeout, testCompleted)
+        {
+        }
+
+        public ReceivedMessageList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeout, testCompleted, timeProvider)
         {
         }
 
@@ -125,12 +135,12 @@ namespace ViciOne.ServiceBus.Testing
 
         public void Add(ConsumeContext<T> context)
         {
-            Add(new ReceivedMessage<T>(context));
+            Add(new ReceivedMessage<T>(context, null, TimeProvider));
         }
 
         public void Add(ConsumeContext<T> context, Exception exception)
         {
-            Add(new ReceivedMessage<T>(context, exception));
+            Add(new ReceivedMessage<T>(context, exception, TimeProvider));
         }
     }
 }

@@ -103,10 +103,10 @@ namespace ViciOne.ServiceBus
             filter ??= t => true;
 
             IEnumerable<Type> consumerTypes = types.Where(RegistrationMetadata.IsConsumer);
-            IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.HasInterface(typeof(IConsumerDefinition<>)));
+            IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IConsumerDefinition<>)));
 
             var consumers = from c in consumerTypes
-                join d in consumerDefinitionTypes on c equals d.GetClosingArgument(typeof(IConsumerDefinition<>)) into dc
+                join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IConsumerDefinition<>)) into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c)
                 select new
@@ -215,11 +215,11 @@ namespace ViciOne.ServiceBus
         {
             filter ??= t => true;
 
-            IEnumerable<Type> sagaTypes = types.Where(x => x.HasInterface<ISaga>() && !x.HasInterface<SagaStateMachineInstance>());
-            IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.HasInterface(typeof(ISagaDefinition<>)));
+            IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface<ISaga>() && !x.ImplementsInterface<SagaStateMachineInstance>());
+            IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
             var sagas = from c in sagaTypes
-                join d in sagaDefinitionTypes on c equals d.GetClosingArgument(typeof(ISagaDefinition<>)) into dc
+                join d in sagaDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c)
                 select new
@@ -320,12 +320,12 @@ namespace ViciOne.ServiceBus
         {
             filter ??= t => true;
 
-            IEnumerable<Type> sagaTypes = types.Where(x => x.HasInterface(typeof(SagaStateMachine<>)));
-            IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.HasInterface(typeof(ISagaDefinition<>)));
+            IEnumerable<Type> sagaTypes = types.Where(x => x.ImplementsInterface(typeof(SagaStateMachine<>)));
+            IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
             var sagas = from c in sagaTypes
-                let it = c.GetClosingArgument(typeof(SagaStateMachine<>))
-                join d in sagaDefinitionTypes on it equals d.GetClosingArgument(typeof(ISagaDefinition<>)) into dc
+                let it = c.GetSingleClosedGenericArgument(typeof(SagaStateMachine<>))
+                join d in sagaDefinitionTypes on it equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c) || filter(it)
                 select new
@@ -437,11 +437,11 @@ namespace ViciOne.ServiceBus
         {
             filter ??= _ => true;
 
-            IEnumerable<Type> activityTypes = types.Where(x => x.HasInterface(typeof(IActivity<,>))).ToList();
-            IEnumerable<Type> activityDefinitionTypes = types.Where(x => x.HasInterface(typeof(IActivityDefinition<,,>))).ToList();
+            IEnumerable<Type> activityTypes = types.Where(x => x.ImplementsInterface(typeof(IActivity<,>))).ToList();
+            IEnumerable<Type> activityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IActivityDefinition<,,>))).ToList();
 
             var activities = from c in activityTypes
-                join d in activityDefinitionTypes on c equals d.GetClosingArguments(typeof(IActivityDefinition<,,>)).First() into dc
+                join d in activityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>)).First() into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c)
                 select new
@@ -453,11 +453,11 @@ namespace ViciOne.ServiceBus
             foreach (var activity in activities)
                 configurator.AddActivity(activity.ActivityType, activity.DefinitionType);
 
-            IEnumerable<Type> executeActivityTypes = types.Where(x => x.HasInterface(typeof(IExecuteActivity<>))).Except(activityTypes).ToList();
-            IEnumerable<Type> executeActivityDefinitionTypes = types.Where(x => x.HasInterface(typeof(IExecuteActivityDefinition<,>))).ToList();
+            IEnumerable<Type> executeActivityTypes = types.Where(x => x.ImplementsInterface(typeof(IExecuteActivity<>))).Except(activityTypes).ToList();
+            IEnumerable<Type> executeActivityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IExecuteActivityDefinition<,>))).ToList();
 
             var executeActivities = from c in executeActivityTypes
-                join d in executeActivityDefinitionTypes on c equals d.GetClosingArguments(typeof(IExecuteActivityDefinition<,>)).First() into dc
+                join d in executeActivityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First() into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c)
                 select new
@@ -603,11 +603,11 @@ namespace ViciOne.ServiceBus
         {
             filter ??= t => true;
 
-            IEnumerable<Type> consumerTypes = types.Where(x => x.HasInterface(typeof(SagaStateMachine<FutureState>)));
-            IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.HasInterface(typeof(IFutureDefinition<>)));
+            IEnumerable<Type> consumerTypes = types.Where(x => x.ImplementsInterface(typeof(SagaStateMachine<FutureState>)));
+            IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IFutureDefinition<>)));
 
             var futures = from c in consumerTypes
-                join d in consumerDefinitionTypes on c equals d.GetClosingArgument(typeof(IFutureDefinition<>)) into dc
+                join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IFutureDefinition<>)) into dc
                 from d in dc.DefaultIfEmpty()
                 where filter(c)
                 select new

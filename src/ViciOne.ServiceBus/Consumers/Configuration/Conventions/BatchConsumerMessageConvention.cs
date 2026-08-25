@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (consumerType.IsGenericType && consumerType.GetGenericTypeDefinition() == typeof(IConsumer<>))
             {
                 var messageType = consumerType.GetGenericArguments()[0];
-                if (messageType.ClosesType(typeof(Batch<>), out Type[] batchTypes))
+                if (messageType.TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] batchTypes))
                 {
                     var interfaceType = new BatchConsumerInterfaceType(messageType, batchTypes[0], consumerType);
                     if (MessageTypeCache.IsValidMessageType(interfaceType.MessageType))
@@ -36,12 +36,12 @@ namespace ViciOne.ServiceBus.Configuration
                     Type = x,
                     MessageType = x.GetGenericArguments()[0]
                 })
-                .Where(x => x.MessageType.ClosesType(typeof(Batch<>)))
+                .Where(x => x.MessageType.ClosesGenericType(typeof(Batch<>)))
                 .Select(x => new
                 {
                     x.Type,
                     BatchMessageType = x.MessageType,
-                    MessageType = x.MessageType.GetClosingArgument(typeof(Batch<>))
+                    MessageType = x.MessageType.GetSingleClosedGenericArgument(typeof(Batch<>))
                 })
                 .Select(x => new BatchConsumerInterfaceType(x.BatchMessageType, x.MessageType, consumerType))
                 .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));

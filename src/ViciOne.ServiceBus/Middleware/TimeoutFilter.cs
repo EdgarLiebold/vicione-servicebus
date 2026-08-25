@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Middleware
 {
     using System;
@@ -5,40 +6,66 @@ namespace ViciOne.ServiceBus.Middleware
     using System.Threading.Tasks;
 
 
-    public class TimeoutFilter<TContext, TResult> :
+    public sealed class TimeoutFilter<TContext, TResult> :
         IFilter<TContext>
         where TContext : class, ConsumeContext
         where TResult : TContext
     {
         readonly Func<TContext, CancellationToken, TResult> _contextFactory;
+        readonly TimeProvider? _timeProvider;
         readonly TimeSpan _timeout;
 
         public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout)
+            : this(contextFactory, timeout, null, useContextTimeProvider: true)
         {
+        }
+
+        public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout, TimeProvider timeProvider)
+            : this(contextFactory, timeout, timeProvider, useContextTimeProvider: false)
+        {
+        }
+
+        TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout, TimeProvider? timeProvider,
+            bool useContextTimeProvider)
+        {
+            ArgumentNullException.ThrowIfNull(contextFactory);
+            if (timeout <= TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "The timeout must be greater than zero.");
+            if (!useContextTimeProvider)
+                ArgumentNullException.ThrowIfNull(timeProvider);
+
             _contextFactory = contextFactory;
+            _timeProvider = timeProvider;
             _timeout = timeout;
         }
 
         public async Task Send(TContext context, IPipe<TContext> next)
         {
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken);
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(next);
+
+            CancellationToken callerToken = context.CancellationToken;
+            using var timeoutSource = new CancellationTokenSource(_timeout, _timeProvider ?? context.GetTimeProvider());
+            using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(callerToken, timeoutSource.Token);
+
             try
             {
-                cts.CancelAfter(_timeout);
-
-                var timeoutContext = _contextFactory(context, cts.Token);
+                TResult timeoutContext = _contextFactory(context, linkedSource.Token)
+                    ?? throw new InvalidOperationException("The timeout context factory returned null.");
 
                 await next.Send(timeoutContext).ConfigureAwait(false);
 
                 await timeoutContext.ConsumeCompleted.ConfigureAwait(false);
             }
-            catch (OperationCanceledException ex) when (ex.CancellationToken == cts.Token && !context.CancellationToken.IsCancellationRequested)
+            catch (OperationCanceledException exception) when (callerToken.IsCancellationRequested)
             {
-                throw new ConsumerCanceledException("The operation was canceled by the timeout filter");
+                throw new OperationCanceledException("The operation was canceled by the caller.", exception, callerToken);
             }
-            finally
+            catch (OperationCanceledException exception) when (!callerToken.IsCancellationRequested
+                && timeoutSource.IsCancellationRequested
+                && (exception.CancellationToken == linkedSource.Token || exception.CancellationToken == timeoutSource.Token))
             {
-                cts.Dispose();
+                throw new ConsumerCanceledException($"The operation exceeded the configured timeout of {_timeout}.", exception);
             }
         }
 

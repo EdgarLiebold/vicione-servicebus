@@ -44,11 +44,11 @@ public class Using_the_kill_switch_with_rabbitmq
 
                     cfg.UseKillSwitch(options => options
                         .SetActivationThreshold(9)
-                        .SetTripThreshold(10)
+                        .SetTripThresholdRatio(0.10)
 // Same reasoning as the core spec: the scenario needs one restart cycle per trip and it
                         // trips more than once, so five seconds per cycle sits on the edge of the fifteen second
                         // health wait. The ActiveMQ spec already uses one second.
-                        .SetRestartTimeout(s: 1));
+                        .SetRestartDelay(TimeSpan.FromSeconds(1)));
 
                     cfg.ConfigureEndpoints(context);
                 });
@@ -59,17 +59,20 @@ public class Using_the_kill_switch_with_rabbitmq
 
         var busControl = provider.GetRequiredService<IBusControl>();
 
-        Assert.That(await busControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(5)), Is.EqualTo(BusHealthStatus.Healthy));
+        Assert.That((await busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, TimeSpan.FromSeconds(5))).Status,
+            Is.EqualTo(BusHealthStatus.Healthy));
 
         await harness.Bus.PublishBatch(Enumerable.Range(0, 20).Select(_ => new MessageA()));
 
         await Assert.MultipleAsync(async () =>
         {
-            Assert.That(await busControl.WaitForHealthStatus(BusHealthStatus.Degraded, TimeSpan.FromSeconds(10)), Is.EqualTo(BusHealthStatus.Degraded));
+            Assert.That((await busControl.WaitForHealthStatusAsync(BusHealthStatus.Degraded, TimeSpan.FromSeconds(10))).Status,
+                Is.EqualTo(BusHealthStatus.Degraded));
 
             Assert.That(await harness.Consumed.SelectAsync<MessageA>().Take(10).Count(), Is.EqualTo(10));
 
-            Assert.That(await busControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10)), Is.EqualTo(BusHealthStatus.Healthy));
+            Assert.That((await busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10))).Status,
+                Is.EqualTo(BusHealthStatus.Healthy));
         });
 
         Assert.That(await harness.Consumed.SelectAsync<MessageA>().Take(20).Count(), Is.EqualTo(20));

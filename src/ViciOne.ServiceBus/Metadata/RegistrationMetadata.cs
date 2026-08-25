@@ -16,9 +16,9 @@ namespace ViciOne.ServiceBus.Metadata
         {
             Type[] interfaces = type.GetInterfaces();
 
-            return !IsSaga(type) && interfaces.Any(t => t.HasInterface(typeof(IConsumer<>))
-                || t.HasInterface(typeof(IJobConsumer<>))
-                || t.HasInterface(typeof(IConsumerDefinition<>)));
+            return !IsSaga(type) && interfaces.Any(t => t.ImplementsInterface(typeof(IConsumer<>))
+                || t.ImplementsInterface(typeof(IJobConsumer<>))
+                || t.ImplementsInterface(typeof(IConsumerDefinition<>)));
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace ViciOne.ServiceBus.Metadata
         {
             Type[] interfaces = type.GetInterfaces();
 
-            return interfaces.Any(t => t.HasInterface(typeof(IConsumer<>))
-                || t.HasInterface(typeof(IJobConsumer<>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(IConsumer<>))
+                || t.ImplementsInterface(typeof(IJobConsumer<>)));
         }
 
         /// <summary>
@@ -46,11 +46,11 @@ namespace ViciOne.ServiceBus.Metadata
             if (interfaces.Contains(typeof(ISaga)))
                 return true;
 
-            return interfaces.Any(t => t.HasInterface(typeof(InitiatedBy<>))
-                || t.HasInterface(typeof(Orchestrates<>))
-                || t.HasInterface(typeof(InitiatedByOrOrchestrates<>))
-                || t.HasInterface(typeof(Observes<,>))
-                || t.HasInterface(typeof(ISagaDefinition<>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(InitiatedBy<>))
+                || t.ImplementsInterface(typeof(Orchestrates<>))
+                || t.ImplementsInterface(typeof(InitiatedByOrOrchestrates<>))
+                || t.ImplementsInterface(typeof(Observes<,>))
+                || t.ImplementsInterface(typeof(ISagaDefinition<>)));
         }
 
         /// <summary>
@@ -65,10 +65,10 @@ namespace ViciOne.ServiceBus.Metadata
             if (interfaces.Contains(typeof(ISaga)))
                 return true;
 
-            return interfaces.Any(t => t.HasInterface(typeof(InitiatedBy<>))
-                || t.HasInterface(typeof(Orchestrates<>))
-                || t.HasInterface(typeof(InitiatedByOrOrchestrates<>))
-                || t.HasInterface(typeof(Observes<,>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(InitiatedBy<>))
+                || t.ImplementsInterface(typeof(Orchestrates<>))
+                || t.ImplementsInterface(typeof(InitiatedByOrOrchestrates<>))
+                || t.ImplementsInterface(typeof(Observes<,>)));
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace ViciOne.ServiceBus.Metadata
         {
             Type[] interfaces = type.GetInterfaces();
 
-            return interfaces.Any(t => t.HasInterface(typeof(SagaStateMachine<>))
-                || t.HasInterface(typeof(ISagaDefinition<>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(SagaStateMachine<>))
+                || t.ImplementsInterface(typeof(ISagaDefinition<>)));
         }
 
         /// <summary>
@@ -93,10 +93,10 @@ namespace ViciOne.ServiceBus.Metadata
         {
             Type[] interfaces = type.GetInterfaces();
 
-            return interfaces.Any(t => t.HasInterface(typeof(IExecuteActivity<>))
-                || t.HasInterface(typeof(ICompensateActivity<>))
-                || t.HasInterface(typeof(IActivityDefinition<,,>))
-                || t.HasInterface(typeof(IExecuteActivityDefinition<,>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(IExecuteActivity<>))
+                || t.ImplementsInterface(typeof(ICompensateActivity<>))
+                || t.ImplementsInterface(typeof(IActivityDefinition<,,>))
+                || t.ImplementsInterface(typeof(IExecuteActivityDefinition<,>)));
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace ViciOne.ServiceBus.Metadata
         {
             Type[] interfaces = type.GetInterfaces();
 
-            return interfaces.Any(t => t.HasInterface(typeof(SagaStateMachine<FutureState>))
-                || t.HasInterface(typeof(IFutureDefinition<>)));
+            return interfaces.Any(t => t.ImplementsInterface(typeof(SagaStateMachine<FutureState>))
+                || t.ImplementsInterface(typeof(IFutureDefinition<>)));
         }
     }
 }

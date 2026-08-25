@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Middleware
 {
+    using System;
     using System.Threading.Tasks;
 
 
@@ -15,7 +16,7 @@ namespace ViciOne.ServiceBus.Middleware
 
         public ForkFilter(IPipe<TContext> pipe)
         {
-            _pipe = pipe;
+            _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
         }
 
         Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)

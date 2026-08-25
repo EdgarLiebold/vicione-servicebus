@@ -27,14 +27,32 @@ namespace ViciOne.ServiceBus.Mediator
 
         public ViciOneServiceBusMediator(ILogContext logContext, IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher,
             IReceiveEndpointConfiguration responseConfiguration, IReceivePipeDispatcher responseDispatcher)
+            : this(logContext, configuration, dispatcher, responseConfiguration, responseDispatcher, TimeProvider.System)
         {
+        }
+
+        public ViciOneServiceBusMediator(
+            ILogContext logContext,
+            IReceiveEndpointConfiguration configuration,
+            IReceivePipeDispatcher dispatcher,
+            IReceiveEndpointConfiguration responseConfiguration,
+            IReceivePipeDispatcher responseDispatcher,
+            TimeProvider timeProvider)
+        {
+            if (timeProvider == null)
+                throw new ArgumentNullException(nameof(timeProvider));
+
             _responseDispatcher = responseDispatcher;
             _dispatcher = dispatcher;
             var sendObservable = new SendObservable();
 
             _endpoint = new MediatorSendEndpoint(configuration, dispatcher, logContext, sendObservable, responseConfiguration, responseDispatcher);
 
-            var clientFactoryContext = new MediatorClientFactoryContext(_endpoint, responseConfiguration.ConsumePipe, responseConfiguration.InputAddress);
+            var clientFactoryContext = new MediatorClientFactoryContext(
+                _endpoint,
+                responseConfiguration.ConsumePipe,
+                responseConfiguration.InputAddress,
+                timeProvider: timeProvider);
             _clientFactory = new ClientFactory(clientFactoryContext);
         }
 

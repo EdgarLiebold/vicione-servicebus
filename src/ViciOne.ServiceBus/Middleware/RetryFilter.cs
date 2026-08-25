@@ -19,8 +19,8 @@ namespace ViciOne.ServiceBus.Middleware
 
         public RetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
         {
-            _retryPolicy = retryPolicy;
-            _observers = observers;
+            _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
+            _observers = observers ?? throw new ArgumentNullException(nameof(observers));
         }
 
         void IProbeSite.Probe(ProbeContext context)
@@ -34,7 +34,17 @@ namespace ViciOne.ServiceBus.Middleware
         [DebuggerStepThrough]
         async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
         {
-            RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context);
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(next);
+
+            RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context)
+                ?? throw new InvalidOperationException("The retry policy returned a null policy context.");
+            if (policyContext.Context == null)
+            {
+                policyContext.Dispose();
+                throw new InvalidOperationException("The retry policy returned a policy context without a pipe context.");
+            }
+
             try
             {
                 if (_observers.Count > 0)
@@ -46,8 +56,13 @@ namespace ViciOne.ServiceBus.Middleware
 
                 await next.Send(policyContext.Context).ConfigureAwait(false);
             }
+            catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                throw;
+            }
             catch (OperationCanceledException exception)
-                when (exception.CancellationToken == policyContext.Context.CancellationToken || exception.CancellationToken == context.CancellationToken)
+                when (exception.CancellationToken == policyContext.Context.CancellationToken)
             {
                 throw;
             }
@@ -55,50 +70,14 @@ namespace ViciOne.ServiceBus.Middleware
             {
                 policyContext.Context.CancellationToken.ThrowIfCancellationRequested();
 
-                if (policyContext.Context.TryGetPayload(out RetryContext<TContext> payloadRetryContext))
-                {
-                    if (_retryPolicy.IsHandled(exception))
-                    {
-                        context.GetOrAddPayload(() => payloadRetryContext);
-
-                        var retryFaultedTask = policyContext.RetryFaulted(exception);
-                        if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
-                            await retryFaultedTask.ConfigureAwait(false);
-
-                        if (_observers.Count > 0)
-                        {
-                            var retryFaultTask = _observers.RetryFault(payloadRetryContext);
-                            if (retryFaultTask.Status != TaskStatus.RanToCompletion)
-                                await retryFaultTask.ConfigureAwait(false);
-                        }
-                    }
-
+                if (await PropagateNestedRetryFailure(context, policyContext.Context, exception,
+                        () => policyContext.RetryFaulted(exception)).ConfigureAwait(false))
                     throw;
-                }
-
-                if (policyContext.Context.TryGetPayload(out RetryContext genericRetryContext))
-                {
-                    if (_retryPolicy.IsHandled(exception))
-                    {
-                        context.GetOrAddPayload(() => genericRetryContext);
-
-                        var retryFaultedTask = policyContext.RetryFaulted(exception);
-                        if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
-                            await retryFaultedTask.ConfigureAwait(false);
-
-                        if (_observers.Count > 0)
-                        {
-                            var retryFaultTask = _observers.RetryFault(genericRetryContext);
-                            if (retryFaultTask.Status != TaskStatus.RanToCompletion)
-                                await retryFaultTask.ConfigureAwait(false);
-                        }
-                    }
-
-                    throw;
-                }
 
                 if (!policyContext.CanRetry(exception, out RetryContext<TContext> retryContext))
                 {
+                    EnsureRetryContext(retryContext);
+
                     if (_retryPolicy.IsHandled(exception))
                     {
                         context.GetOrAddPayload(() => retryContext);
@@ -117,6 +96,8 @@ namespace ViciOne.ServiceBus.Middleware
 
                     throw;
                 }
+
+                EnsureRetryContext(retryContext);
 
                 if (_observers.Count > 0)
                 {
@@ -137,10 +118,26 @@ namespace ViciOne.ServiceBus.Middleware
         [DebuggerStepThrough]
         async Task Attempt(TContext context, RetryContext<TContext> retryContext, IPipe<TContext> next)
         {
-            while (!retryContext.CancellationToken.IsCancellationRequested)
+            while (true)
             {
+                if (context.CancellationToken.IsCancellationRequested)
+                    context.CancellationToken.ThrowIfCancellationRequested();
+
+                retryContext.CancellationToken.ThrowIfCancellationRequested();
+
                 if (retryContext.Delay.HasValue)
-                    await Task.Delay(retryContext.Delay.Value, retryContext.CancellationToken).ConfigureAwait(false);
+                {
+                    try
+                    {
+                        await Task.Delay(retryContext.Delay.Value, context.GetTimeProvider(), retryContext.CancellationToken)
+                            .ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+                    {
+                        context.CancellationToken.ThrowIfCancellationRequested();
+                        throw;
+                    }
+                }
 
                 var preRetryContextTask = retryContext.PreRetry();
                 if (preRetryContextTask.Status != TaskStatus.RanToCompletion)
@@ -166,8 +163,13 @@ namespace ViciOne.ServiceBus.Middleware
 
                     return;
                 }
+                catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    throw;
+                }
                 catch (OperationCanceledException exception)
-                    when (exception.CancellationToken == retryContext.CancellationToken || exception.CancellationToken == context.CancellationToken)
+                    when (exception.CancellationToken == retryContext.CancellationToken)
                 {
                     throw;
                 }
@@ -175,50 +177,14 @@ namespace ViciOne.ServiceBus.Middleware
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
 
-                    if (retryContext.Context.TryGetPayload(out RetryContext<TContext> payloadRetryContext))
-                    {
-                        if (_retryPolicy.IsHandled(exception))
-                        {
-                            context.GetOrAddPayload(() => payloadRetryContext);
-
-                            var retryFaultedTask = retryContext.RetryFaulted(exception);
-                            if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
-                                await retryFaultedTask.ConfigureAwait(false);
-
-                            if (_observers.Count > 0)
-                            {
-                                var retryFaultTask = _observers.RetryFault(payloadRetryContext);
-                                if (retryFaultTask.Status != TaskStatus.RanToCompletion)
-                                    await retryFaultTask.ConfigureAwait(false);
-                            }
-                        }
-
+                    if (await PropagateNestedRetryFailure(context, retryContext.Context, exception,
+                            () => retryContext.RetryFaulted(exception)).ConfigureAwait(false))
                         throw;
-                    }
-
-                    if (retryContext.Context.TryGetPayload(out RetryContext genericRetryContext))
-                    {
-                        if (_retryPolicy.IsHandled(exception))
-                        {
-                            context.GetOrAddPayload(() => genericRetryContext);
-
-                            var retryFaultedTask = retryContext.RetryFaulted(exception);
-                            if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
-                                await retryFaultedTask.ConfigureAwait(false);
-
-                            if (_observers.Count > 0)
-                            {
-                                var retryFaultTask = _observers.RetryFault(genericRetryContext);
-                                if (retryFaultTask.Status != TaskStatus.RanToCompletion)
-                                    await retryFaultTask.ConfigureAwait(false);
-                            }
-                        }
-
-                        throw;
-                    }
 
                     if (!retryContext.CanRetry(exception, out RetryContext<TContext> nextRetryContext))
                     {
+                        EnsureRetryContext(nextRetryContext);
+
                         if (_retryPolicy.IsHandled(exception))
                         {
                             context.GetOrAddPayload(() => nextRetryContext);
@@ -238,6 +204,8 @@ namespace ViciOne.ServiceBus.Middleware
                         throw;
                     }
 
+                    EnsureRetryContext(nextRetryContext);
+
                     if (_observers.Count > 0)
                     {
                         var postFaultTask = _observers.PostFault(nextRetryContext);
@@ -248,8 +216,42 @@ namespace ViciOne.ServiceBus.Middleware
                     retryContext = nextRetryContext;
                 }
             }
+        }
 
-            context.CancellationToken.ThrowIfCancellationRequested();
+        async Task<bool> PropagateNestedRetryFailure(TContext rootContext, PipeContext currentContext,
+            Exception exception, Func<Task> notifyPolicyFault)
+        {
+            // A downstream retry owns the exception once its context is present. The outer retry
+            // reports the terminal fault but must not start a second retry budget. The non-generic
+            // payload is deliberate: dispatch may change the concrete PipeContext type, while
+            // RetryContext.ContextType retains the exact type required by observer callbacks.
+            if (!currentContext.TryGetPayload(out RetryContext nestedRetryContext))
+                return false;
+
+            if (!_retryPolicy.IsHandled(exception))
+                return true;
+
+            rootContext.GetOrAddPayload(() => nestedRetryContext);
+
+            Task policyFaultTask = notifyPolicyFault()
+                ?? throw new InvalidOperationException("The retry policy returned a null fault task.");
+            if (policyFaultTask.Status != TaskStatus.RanToCompletion)
+                await policyFaultTask.ConfigureAwait(false);
+
+            if (_observers.Count > 0)
+            {
+                Task observerTask = _observers.RetryFault(nestedRetryContext);
+                if (observerTask.Status != TaskStatus.RanToCompletion)
+                    await observerTask.ConfigureAwait(false);
+            }
+
+            return true;
+        }
+
+        static void EnsureRetryContext(RetryContext<TContext> retryContext)
+        {
+            if (retryContext == null)
+                throw new InvalidOperationException("The retry policy returned a null retry context.");
         }
     }
 }

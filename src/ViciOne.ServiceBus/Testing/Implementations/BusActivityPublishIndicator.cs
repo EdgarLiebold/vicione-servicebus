@@ -10,16 +10,23 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     /// An activity indicator for publish endpoints. Utilizes a timer that restarts on publish activity.
     /// </summary>
     public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
-        ISignalResource
+        IDisposable,
+        ISignalResource,
+        IPublishObserver
     {
         readonly RollingTimer _receiveIdleTimer;
         readonly ISignalResource _signalResource;
         int _activityStarted;
 
         public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+            : this(signalResource, receiveIdleTimeout, TimeProvider.System)
+        {
+        }
+
+        public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
         {
             _signalResource = signalResource;
-            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout);
+            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
         }
 
         public BusActivityPublishIndicator(ISignalResource signalResource)
@@ -47,6 +54,11 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         public void Signal()
         {
             SignalInactivity(null);
+        }
+
+        public void Dispose()
+        {
+            _receiveIdleTimer.Dispose();
         }
 
         public Task PrePublish<T>(PublishContext<T> context)

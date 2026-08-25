@@ -31,10 +31,10 @@ namespace ViciOne.ServiceBus.Serialization.JsonConverters
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            Write(writer, value, options);
+            WriteEntries(writer, value, options);
         }
 
-        static void Write(Utf8JsonWriter writer, IEnumerable<KeyValuePair<string, object>> values, JsonSerializerOptions options)
+        static void WriteEntries(Utf8JsonWriter writer, IEnumerable<KeyValuePair<string, object>> values, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 

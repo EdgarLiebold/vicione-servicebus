@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/ContainerTestHarness_Specs.cs",
+      "sha256BeforeDeletion": "901a92180f346aeeca825c003c5af834a482bd92a8ca49e05b03d8fbc4f52b99"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs",
+      "sha256BeforeDeletion": "dce2b0b6023b5d8155e677f0322eb9cf06df3881b2be6ff185660ffe71a1aa0d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs",
+      "sha256BeforeDeletion": "7c0741fc4b4c9ac30aabc70d6530630b1532fcbad1070e896d79e41351f770cd"
+    }
+  ],
+  "disposition": "REPLACED_BY_STRONGER_NATIVE_TESTS",
+  "replacements": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0134",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "scoped-consumer-dependency-publishes-follow-up",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ScopedConsumerDependency_PublishesTheExactCausallyLinkedFollowUpMessage"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0135",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "retry-produces-one-terminal-fault",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.RetryPolicy_ExecutesTheConfiguredAttemptsButRecordsOneTerminalFault"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0136",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "scoped-request-client-response",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ScopedRequestClient_RecordsTheExactRequestAndResponse"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0137",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "state-machine-endpoint-causation-and-state",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ContainerStateMachineHarness_PreservesCausationAndRecordsTheResultingState"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0139",
+      "requirementId": "REQ-VSB-TEST-HARNESS-STATE-MACHINE",
+      "variantKey": "direct-request-response-and-state",
+      "test": "ViciOne.ServiceBus.Tests.Testing.SagaTestHarnessBehaviorTests.DirectStateMachineHarness_RespondsAndRecordsTheExactResultingState"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0140",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "state-machine-request-response-and-state",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ContainerStateMachineRequestClient_RespondsAndRecordsTheExactState"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0141",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "scoped-request-client-response",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ScopedRequestClient_RecordsTheExactRequestAndResponse"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0142",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "consumer-and-bus-observation-boundaries",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ConsumerHarness_RecordsTheSameRequestAtItsConsumerAndBusBoundaries"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0143",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "classic-saga-registration-and-observations",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ContainerSagaHarness_RecordsCreationStateConsumptionAndPublication"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0144",
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "state-machine-endpoint-causation-and-state",
+      "test": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ContainerStateMachineHarness_PreservesCausationAndRecordsTheResultingState"
+    }
+  ],
+  "additionalHardening": [
+    "REQ-VSB-TEST-HARNESS-DI/custom-time-provider-propagation",
+    "REQ-VSB-TEST-HARNESS-DI/default-system-time-provider",
+    "REQ-VSB-TEST-HARNESS-DI/in-memory-saga-repository-management",
+    "REQ-VSB-TEST-HARNESS-DI/missing-hosted-service-rejected",
+    "REQ-VSB-TEST-HARNESS-LIFECYCLE/container-constructor-validates-dependencies",
+    "REQ-VSB-TEST-HARNESS-LIFECYCLE/dispose-stops-services-reverse-once",
+    "REQ-VSB-TEST-HARNESS-LIFECYCLE/restart-stops-reverse-starts-forward",
+    "REQ-VSB-TEST-HARNESS-STATE-MACHINE/query-correlation-existing-and-missing"
+  ],
+  "validation": {
+    "profile": "UnitArchitecture",
+    "configuration": "Release",
+    "total": 1046,
+    "passed": 1046,
+    "failed": 0,
+    "skipped": 0
+  },
+  "adjacentFollowUpDisposition": {
+    "obligationId": "OBL-R0-CORE-B-0138",
+    "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs",
+    "state": "REPLACED_BY_STRONGER_NATIVE_TESTS",
+    "evidence": "evidence/native-tests/core-serializer-configuration-and-forwarding/LEGACY_DATEONLY_TIMEONLY_DISPOSITION.json"
+  },
+  "explanation": "The inherited files are a semantic lower bound, not the design template. Their ten executable cases are preserved by ordinary xUnit tests over real in-memory and dependency-injection harnesses. The replacements assert exact payloads, correlation and conversation metadata, saga state, failure cardinality, and lifecycle behavior; they do not reproduce the inherited NUnit fixture structure."
+}

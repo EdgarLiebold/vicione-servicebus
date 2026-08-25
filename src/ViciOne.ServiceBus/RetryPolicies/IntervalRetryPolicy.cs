@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.RetryPolicies
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
 
@@ -11,35 +12,38 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public IntervalRetryPolicy(IExceptionFilter filter, params TimeSpan[] intervals)
         {
-            if (intervals == null)
-                throw new ArgumentNullException(nameof(intervals));
+            ArgumentNullException.ThrowIfNull(filter);
+            ArgumentNullException.ThrowIfNull(intervals);
             if (intervals.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(intervals), "At least one interval must be specified");
+            if (intervals.Any(interval => interval < TimeSpan.Zero))
+                throw new ArgumentOutOfRangeException(nameof(intervals), "Retry intervals must be non-negative.");
 
             _filter = filter;
-
-            Intervals = intervals;
+            Intervals = Array.AsReadOnly([.. intervals]);
         }
 
         public IntervalRetryPolicy(IExceptionFilter filter, params int[] intervals)
         {
-            if (intervals == null)
-                throw new ArgumentNullException(nameof(intervals));
+            ArgumentNullException.ThrowIfNull(filter);
+            ArgumentNullException.ThrowIfNull(intervals);
             if (intervals.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(intervals), "At least one interval must be specified");
+            if (intervals.Any(interval => interval < 0))
+                throw new ArgumentOutOfRangeException(nameof(intervals), "Retry intervals must be non-negative.");
 
             _filter = filter;
-            Intervals = intervals.Select(x => TimeSpan.FromMilliseconds(x)).ToArray();
+            Intervals = Array.AsReadOnly(intervals.Select(x => TimeSpan.FromMilliseconds(x)).ToArray());
         }
 
-        public TimeSpan[] Intervals { get; }
+        public IReadOnlyList<TimeSpan> Intervals { get; }
 
         void IProbeSite.Probe(ProbeContext context)
         {
             context.Set(new
             {
                 Policy = "Interval",
-                Limit = Intervals.Length,
+                Limit = Intervals.Count,
                 Intervals
             });
 
@@ -58,7 +62,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public override string ToString()
         {
-            return $"Interval (limit {Intervals.Length}, intervals {string.Join(";", Intervals.Take(5).Select(x => x.ToString()))})";
+            return $"Interval (limit {Intervals.Count}, intervals {string.Join(";", Intervals.Take(5).Select(x => x.ToString()))})";
         }
     }
 }

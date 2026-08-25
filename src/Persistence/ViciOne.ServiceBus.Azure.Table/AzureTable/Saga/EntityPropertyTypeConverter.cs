@@ -518,7 +518,7 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
             var fromType = typeof(ITypeConverter<,>).MakeGenericType(typeof(object), propertyType);
             var toType = typeof(ITypeConverter<,>).MakeGenericType(propertyType, typeof(object));
 
-            return typeof(EntityPropertyTypeConverter).HasInterface(fromType) && typeof(EntityPropertyTypeConverter).HasInterface(toType);
+            return typeof(EntityPropertyTypeConverter).ImplementsInterface(fromType) && typeof(EntityPropertyTypeConverter).ImplementsInterface(toType);
         }
     }
 }

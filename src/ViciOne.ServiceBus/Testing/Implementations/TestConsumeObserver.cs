@@ -11,8 +11,13 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         readonly ReceivedMessageList _messages;
 
         public TestConsumeObserver(TimeSpan timeout, CancellationToken inactivityToken)
+            : this(timeout, inactivityToken, TimeProvider.System)
         {
-            _messages = new ReceivedMessageList(timeout, inactivityToken);
+        }
+
+        public TestConsumeObserver(TimeSpan timeout, CancellationToken inactivityToken, TimeProvider timeProvider)
+        {
+            _messages = new ReceivedMessageList(timeout, inactivityToken, timeProvider);
         }
 
         public IReceivedMessageList Messages => _messages;

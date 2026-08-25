@@ -16,12 +16,12 @@ namespace ViciOne.ServiceBus.Serialization.JsonConverters
     {
         public override bool CanConvert(Type typeToConvert)
         {
-            return typeToConvert.ClosesType(typeof(MessageData<>));
+            return typeToConvert.ClosesGenericType(typeof(MessageData<>));
         }
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            if (!typeToConvert.ClosesType(typeof(MessageData<>), out Type[] types))
+            if (!typeToConvert.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
                 return null;
 
             var elementType = types[0];

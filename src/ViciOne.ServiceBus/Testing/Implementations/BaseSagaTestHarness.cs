@@ -11,15 +11,18 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     public abstract class BaseSagaTestHarness<TSaga>
         where TSaga : class, ISaga
     {
-        protected BaseSagaTestHarness(IQuerySagaRepository<TSaga> querySagaRepository, ILoadSagaRepository<TSaga> loadSagaRepository, TimeSpan testTimeout)
+        protected BaseSagaTestHarness(IQuerySagaRepository<TSaga> querySagaRepository, ILoadSagaRepository<TSaga> loadSagaRepository, TimeSpan testTimeout,
+            TimeProvider timeProvider)
         {
             QuerySagaRepository = querySagaRepository;
             LoadSagaRepository = loadSagaRepository;
 
             TestTimeout = testTimeout;
+            TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         protected TimeSpan TestTimeout { get; }
+        protected TimeProvider TimeProvider { get; }
 
         protected IQuerySagaRepository<TSaga> QuerySagaRepository { get; }
         protected ILoadSagaRepository<TSaga> LoadSagaRepository { get; }
@@ -35,18 +38,11 @@ namespace ViciOne.ServiceBus.Testing.Implementations
             if (LoadSagaRepository == null)
                 throw new InvalidOperationException("The repository does not support Load operations");
 
-            var giveUpAt = DateTime.Now + (timeout ?? TestTimeout);
-
-            while (DateTime.Now < giveUpAt)
-            {
-                var saga = await LoadSagaRepository.Load(correlationId).ConfigureAwait(false);
-                if (saga != null)
-                    return saga.CorrelationId;
-
-                await Task.Delay(10).ConfigureAwait(false);
-            }
-
-            return default;
+            return await PollAsync(
+                async () => (await LoadSagaRepository.Load(correlationId).ConfigureAwait(false))?.CorrelationId,
+                sagaId => sagaId.HasValue,
+                default(Guid?),
+                timeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -60,20 +56,13 @@ namespace ViciOne.ServiceBus.Testing.Implementations
             if (QuerySagaRepository == null)
                 throw new InvalidOperationException("The repository does not support Query operations");
 
-            var giveUpAt = DateTime.Now + (timeout ?? TestTimeout);
-
             var query = new SagaQuery<TSaga>(filter);
 
-            while (DateTime.Now < giveUpAt)
-            {
-                List<Guid> sagas = (await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList();
-                if (sagas.Count > 0)
-                    return sagas;
-
-                await Task.Delay(10).ConfigureAwait(false);
-            }
-
-            return new List<Guid>();
+            return await PollAsync(
+                async () => (IList<Guid>)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList(),
+                sagas => sagas.Count > 0,
+                new List<Guid>(),
+                timeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -87,19 +76,33 @@ namespace ViciOne.ServiceBus.Testing.Implementations
             if (LoadSagaRepository == null)
                 throw new InvalidOperationException("The repository does not support Load operations");
 
-            var giveUpAt = DateTime.Now + (timeout ?? TestTimeout);
+            TSaga saga = await PollAsync(
+                () => LoadSagaRepository.Load(correlationId),
+                instance => instance == null,
+                default(TSaga),
+                timeout).ConfigureAwait(false);
 
-            TSaga saga = default;
-            while (DateTime.Now < giveUpAt)
+            return saga?.CorrelationId;
+        }
+
+        protected async Task<TResult> PollAsync<TResult>(Func<Task<TResult>> probe, Func<TResult, bool> completed, TResult timeoutResult,
+            TimeSpan? timeout = default)
+        {
+            var effectiveTimeout = timeout ?? TestTimeout;
+            if (effectiveTimeout <= TimeSpan.Zero)
+                return timeoutResult;
+
+            var startedAt = TimeProvider.GetTimestamp();
+            while (TimeProvider.GetElapsedTime(startedAt) < effectiveTimeout)
             {
-                saga = await LoadSagaRepository.Load(correlationId).ConfigureAwait(false);
-                if (saga == null)
-                    return default;
+                TResult result = await probe().ConfigureAwait(false);
+                if (completed(result))
+                    return result;
 
-                await Task.Delay(10).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromMilliseconds(10), TimeProvider).ConfigureAwait(false);
             }
 
-            return saga.CorrelationId;
+            return timeoutResult;
         }
     }
 }

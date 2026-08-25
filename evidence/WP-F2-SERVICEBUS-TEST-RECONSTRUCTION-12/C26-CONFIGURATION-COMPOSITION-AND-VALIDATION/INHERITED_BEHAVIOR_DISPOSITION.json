@@ -1,0 +1,234 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-B-0001",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_the_observers_for_each_consumer_and_message_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.ConsumerRegistrationShapes_ReportTheExactConsumerAndMessageContracts",
+    "rationale": "The configured generic shape exercises Message, ConsumerMessage, and consumer-wide middleware while exact assertions prove one consumer callback and every message callback."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0002",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_the_observers_for_object_consumer_and_message_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.ConsumerRegistrationShapes_ReportTheExactConsumerAndMessageContracts",
+    "rationale": "The runtime-Type factory row asserts the requested type and the complete exact callback sets."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0003",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_for_the_handler",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.HandlerAndSagaRegistration_ReportEveryConfiguredContractExactlyOnce",
+    "rationale": "The replacement asserts the exact handler message-type set rather than membership only."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0004",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_the_observers_for_regular_consumer_and_message_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.ConsumerRegistrationShapes_ReportTheExactConsumerAndMessageContracts",
+    "rationale": "The default registration row proves the exact consumer and message callbacks without inherited fixture state."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0005",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_the_observers_for_execute_activity_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.ActivityRegistration_ReportsExactTypesAndCompensationAddress",
+    "rationale": "The replacement asserts the complete execute-only callback tuple."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0006",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/ConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.ConfigurationObserver_Specs.Should_invoke_the_observers_for_activity_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.ActivityRegistration_ReportsExactTypesAndCompensationAddress",
+    "rationale": "The replacement asserts execute, compensate, and the exact paired compensation address."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0007",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_consumers_are_generic_classes.Should_all_be_unique",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.GenericConsumerName_UsesItsMessageType",
+    "rationale": "Two closed generic consumers over different message types produce exact distinct names."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0008",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_consumers_are_generic_classes.Should_be_named_after_first_generic_parameter",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.EndpointNameFormatterTests.GenericConsumerName_UsesItsMessageType",
+    "rationale": "A two-argument generic consumer proves that the final message argument, not metadata or the consumer type, owns the endpoint name."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0009",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/InstanceSubscription_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_subscribing_an_object_instance_to_the_bus.Should_have_received_the_message",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Consumers.InstanceExtensionsTests.EndpointRegistration_UsesTheExactConfiguredInstanceForEveryFactoryShape",
+    "rationale": "The runtime object path proves delivery, reference identity, and exactly one consumption."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0010",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/InstanceSubscription_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_subscribing_a_consumer_to_the_bus_by_factory_method.Should_have_received_the_message",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Consumers.InstanceExtensionsTests.EndpointRegistration_UsesTheExactConfiguredInstanceForEveryFactoryShape",
+    "rationale": "The delegate row proves delivery through the exact returned instance and exactly one consumption."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0011",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/InstanceSubscription_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_subscribing_a_consumer_to_the_bus_by_object_factory_method.Should_have_received_the_message",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Consumers.InstanceExtensionsTests.EndpointRegistration_UsesTheExactConfiguredInstanceForEveryFactoryShape",
+    "rationale": "The runtime-Type row proves the requested type, returned reference, delivery, and exactly one consumption."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0012",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConfigurationObserver_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SagaConfigurationObserver_Specs.Should_invoke_the_observers_for_each_consumer_and_message_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationObserverTests.HandlerAndSagaRegistration_ReportEveryConfiguredContractExactlyOnce",
+    "rationale": "The replacement exercises Message, SagaMessage, and saga-wide middleware and asserts the exact saga and message callback sets."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0013",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_a_saga_is_inspected.Should_create_the_builder",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Sagas.Configuration.SagaConnectorTests.MessageContracts_AreDiscoveredInSemanticRoleAndStableMessageOrder",
+    "rationale": "Successful construction is a prerequisite of the exact six-connector assertion."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0014",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_a_saga_is_inspected.Should_have_three_subscription_types",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Sagas.Configuration.SagaConnectorTests.MessageContracts_AreDiscoveredInSemanticRoleAndStableMessageOrder",
+    "rationale": "The exact complete sequence proves count and identity while extending coverage to all four supported roles."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0015",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_a_saga_is_inspected.Should_have_an_a",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Sagas.Configuration.SagaConnectorTests.MessageContracts_AreDiscoveredInSemanticRoleAndStableMessageOrder",
+    "rationale": "The exact semantic sequence contains the initiating message first."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0016",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_a_saga_is_inspected.Should_have_a_b",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Sagas.Configuration.SagaConnectorTests.MessageContracts_AreDiscoveredInSemanticRoleAndStableMessageOrder",
+    "rationale": "The exact semantic sequence retains orchestration after initiation without depending on reflection enumeration order."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0017",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnector_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.When_a_saga_is_inspected.Should_have_a_c",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Sagas.Configuration.SagaConnectorTests.MessageContracts_AreDiscoveredInSemanticRoleAndStableMessageOrder",
+    "rationale": "The exact semantic sequence retains observation and additionally proves combined-role discovery."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0018",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_get_interfaces_in_proper_order",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests.ConcreteMessage_ComposesEveryOwnedLayerOnceInStableOrder",
+    "rationale": "The inherited test only printed interfaces. The replacement asserts the complete stable composition sequence."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0019",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_properly_delegate_the_specifications",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests.ConcreteMessage_ComposesEveryOwnedLayerOnceInStableOrder",
+    "rationale": "The replacement proves both implemented interface specifications reach the concrete message exactly once."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0020",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_properly_use_the_original_specification",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.SendPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "rationale": "The replacement asserts the exact parent-bus contribution for interface and concrete message layers."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0021",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_properly_use_the_original_specification_plus_more",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests.ConcreteMessage_ComposesEveryOwnedLayerOnceInStableOrder",
+    "rationale": "The interface-to-concrete composition is asserted directly; actual partition and concurrency behavior is independently proven by PartitionerTests.Partitioner_StringKeysDeliverEveryContextAndRejectANullRuntimeKey and RateAndConcurrencyLimitTests.ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0022",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_properly_use_the_original_specification_plus_topology",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.SendPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "rationale": "The exact trace proves topology, bus, and endpoint contributions for the concrete type."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0023",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Configuration/SendSpecification_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Configuration.SendSpecification_Specs.Should_properly_use_the_original_specification_plus_topology_on_type",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.SendPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "rationale": "The exact trace proves interface topology reaches the implementing concrete message before its direct layers."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0009",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.An_improperly_configured_endpoint.Should_throw_for_consumer_invalid_message",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.ConsumerMessageConfiguration_RejectsAContractTheConsumerDoesNotImplement",
+    "rationale": "The replacement asserts the direct exception and both involved contract identities."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0010",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.An_improperly_configured_endpoint.Should_throw_for_consumer_message_retry",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.EmptyRetryPolicy_IsRejectedAtEverySupportedConfigurationScope",
+    "rationale": "The ConsumerMessage theory row asserts a direct configuration failure with no inner exception."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0011",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.An_improperly_configured_endpoint.Should_throw_for_consumer_retry",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.EmptyRetryPolicy_IsRejectedAtEverySupportedConfigurationScope",
+    "rationale": "The Consumer theory row asserts a direct configuration failure with no inner exception."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0012",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.An_improperly_configured_endpoint.Should_throw_for_message_retry",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.EmptyRetryPolicy_IsRejectedAtEverySupportedConfigurationScope",
+    "rationale": "The Endpoint theory row asserts a direct configuration failure with no inner exception."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0013",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/BadConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.An_improperly_configured_endpoint.Should_throw_for_retry",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.EmptyRetryPolicy_IsRejectedAtEverySupportedConfigurationScope",
+    "rationale": "The full eight-row theory is stronger than the duplicate endpoint retry fixture and retains its direct failure."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0200",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/InvalidConfiguration_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.When_the_transport_is_not_configured.Should_throw_a_configuration_exception",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests.HostedServiceStart_RejectsARegistrationWithoutATransport",
+    "rationale": "The replacement starts the actual registered hosted service and asserts the direct transport configuration failure."
+  }
+]

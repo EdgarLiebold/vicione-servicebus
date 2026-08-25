@@ -15,8 +15,9 @@ namespace ViciOne.ServiceBus
             where TSaga : class, ISaga;
 
         /// <summary>
-        /// Called immediately after the state machine saga configuration is completed, but before the saga pipeline is built. Note that
-        /// <see cref="SagaConfigured{TInstance}" /> method will also be called, for backwards compatibility
+        /// Called immediately after the state machine saga configuration is completed, but before the saga pipeline is built.
+        /// <see cref="SagaConfigured{TInstance}" /> is also called so that policies applying to every saga are composed with
+        /// state-machine-specific policies.
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="stateMachine"></param>

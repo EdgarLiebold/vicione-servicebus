@@ -40,5 +40,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Dependencies.ResolvedPackageGraphTests",
     "testMethod": "EveryNativeTestProject_ResolvesNoForbiddenPackage"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "native-source-folders-and-namespaces-mirror",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.NativeTestSourceLayoutTests",
+    "testMethod": "EveryNativeTestSourceNamespace_MirrorsItsProjectFolder"
   }
 ]

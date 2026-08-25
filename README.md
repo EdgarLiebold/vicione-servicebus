@@ -22,6 +22,20 @@ This includes paths, projects, assemblies, package IDs, namespaces and types, co
 wire headers, MIME types, topology names, telemetry, logs, generators, analyzers, tests, fixtures
 and build automation. The rename changes neither the origin nor any Apache-2.0 obligation.
 
+## Migration and API policy
+
+ViciOne.ServiceBus preserves useful messaging capabilities, not the historical MassTransit API.
+Source, binary, overload, naming, namespace, and call-shape compatibility with MassTransit are not
+product requirements. Public APIs may change whenever a clearer, safer, more coherent greenfield
+design provides the retained capability better. Compatibility shims are not introduced merely to
+keep an inherited call site compiling.
+
+Inherited source, tests, documentation, and history remain valuable evidence for capabilities,
+failure modes, and design intent. They are inputs to analysis, never an API specification. Each
+migration cohort derives its behavior contract from the complete connected product path, preserves
+all useful features unless an explicit product decision removes one, corrects product defects at
+their source, and protects the resulting A+ API with native behavior tests.
+
 ## Build
 
 - .NET SDK 10.0.302 exactly, pinned by `global.json` with `rollForward: disable`
@@ -45,7 +59,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 882 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1472 \
   --max-parallel-test-modules 1
 ```
 

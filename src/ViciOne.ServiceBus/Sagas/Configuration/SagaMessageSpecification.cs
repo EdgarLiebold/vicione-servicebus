@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.Configuration
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
 
     public partial class SagaConnector<TSaga, TMessage>
@@ -19,6 +20,7 @@ namespace ViciOne.ServiceBus.Configuration
             readonly IBuildPipeConfigurator<SagaConsumeContext<TSaga, TMessage>> _configurator;
             readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _messagePipeConfigurator;
             readonly SagaConfigurationObservable _observers;
+            readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
             public SagaMessageSpecification()
             {
@@ -29,7 +31,12 @@ namespace ViciOne.ServiceBus.Configuration
 
             public IEnumerable<ValidationResult> Validate()
             {
-                return _configurator.Validate();
+                _configurationNotification.EnsureNotified(() =>
+                    _observers.ForEach(observer => observer.SagaMessageConfigured(this)));
+
+                return _configurator.Validate()
+                    .Concat(_messagePipeConfigurator.Validate())
+                    .ToArray();
             }
 
             public Type MessageType => typeof(TMessage);
@@ -54,10 +61,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             public IPipe<SagaConsumeContext<TSaga, TMessage>> BuildConsumerPipe(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter)
             {
-                _observers.ForEach(observer => observer.SagaMessageConfigured(this));
-
-                if (_configurator == null)
-                    throw new ArgumentNullException(nameof(_configurator));
+                ArgumentNullException.ThrowIfNull(consumeFilter);
 
                 _configurator.AddPipeSpecification(new FilterPipeSpecification<SagaConsumeContext<TSaga, TMessage>>(consumeFilter));
 

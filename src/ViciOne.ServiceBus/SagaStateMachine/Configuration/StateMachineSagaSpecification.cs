@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Configuration;
 
 
@@ -11,6 +12,7 @@ namespace ViciOne.ServiceBus
             SagaSpecification<TInstance>
         {
             readonly SagaStateMachine<TInstance> _stateMachine;
+            readonly ConfigurationObserverNotification _stateMachineConfigurationNotification = new ConfigurationObserverNotification();
 
             public StateMachineSagaSpecification(SagaStateMachine<TInstance> stateMachine,
                 IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
@@ -21,9 +23,10 @@ namespace ViciOne.ServiceBus
 
             public override IEnumerable<ValidationResult> Validate()
             {
-                Observers.ForEach(observer => observer.StateMachineSagaConfigured(this, _stateMachine));
+                _stateMachineConfigurationNotification.EnsureNotified(() =>
+                    Observers.ForEach(observer => observer.StateMachineSagaConfigured(this, _stateMachine)));
 
-                return base.Validate();
+                return base.Validate().ToArray();
             }
         }
     }

@@ -16,7 +16,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public ConsumerConfigurator(IConsumerFactory<TConsumer> consumerFactory, IConsumerConfigurationObserver observer)
         {
-            _consumerFactory = consumerFactory;
+            _consumerFactory = consumerFactory ?? throw new ArgumentNullException(nameof(consumerFactory));
+            ArgumentNullException.ThrowIfNull(observer);
 
             _specification = ConsumerConnectorCache<TConsumer>.Connector.CreateConsumerSpecification<TConsumer>();
 
@@ -25,6 +26,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _specification.AddPipeSpecification(specification);
         }
 
@@ -81,6 +84,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             ConsumerConnectorCache<TConsumer>.Connector.ConnectConsumer(builder, _consumerFactory, _specification);
         }
     }

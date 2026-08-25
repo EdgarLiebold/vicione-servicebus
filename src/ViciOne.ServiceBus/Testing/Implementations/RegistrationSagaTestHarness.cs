@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     {
         public RegistrationSagaTestHarness(ISagaRepositoryDecoratorRegistration<TSaga> registration, ISagaRepository<TSaga> repository,
             ILoadSagaRepository<TSaga> loadRepository, IQuerySagaRepository<TSaga> queryRepository)
-            : base(queryRepository, loadRepository, registration.TestTimeout)
+            : base(queryRepository, loadRepository, registration.TestTimeout, registration.TimeProvider)
         {
             Consumed = registration.Consumed;
             Created = registration.Created;

@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
         {
             retryContext = new IntervalRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
 
-            return RetryAttempt < _policy.Intervals.Length && _policy.IsHandled(exception);
+            return RetryAttempt < _policy.Intervals.Count && _policy.IsHandled(exception);
         }
     }
 }

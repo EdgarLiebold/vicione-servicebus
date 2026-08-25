@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Testing
 {
+    using System;
+
+
     public class PublishedMessageFilterSet :
         FilterSet<IPublishedMessage>
     {
@@ -19,6 +22,8 @@ namespace ViciOne.ServiceBus.Testing
         public PublishedMessageFilterSet Add<T>(FilterDelegate<IPublishedMessage<T>> filter)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             bool Filter(IPublishedMessage element)
             {
                 return element is IPublishedMessage<T> result && filter(result);

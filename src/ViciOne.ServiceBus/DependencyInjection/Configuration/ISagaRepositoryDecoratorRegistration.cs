@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Configuration
         where TSaga : class, ISaga
     {
         TimeSpan TestTimeout { get; }
+        TimeProvider TimeProvider { get; }
         ReceivedMessageList Consumed { get; }
         SagaList<TSaga> Created { get; }
         SagaList<TSaga> Sagas { get; }

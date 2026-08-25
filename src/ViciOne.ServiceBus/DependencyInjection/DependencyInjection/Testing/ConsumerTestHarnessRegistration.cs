@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
     {
         public ConsumerTestHarnessRegistration(BusTestHarness testHarness)
         {
-            Consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken);
+            Consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
         }
 
         public ReceivedMessageList Consumed { get; }

@@ -20,8 +20,8 @@ namespace ViciOne.ServiceBus.Configuration
             _filterType = filterType;
             _provider = provider;
             _messageTypeFilter = messageTypeFilter;
-            _messageTypeFilter.Excludes += type => type.HasInterface<Fault>();
-            _messageTypeFilter.Excludes += type => type.HasInterface<ReceiveFault>();
+            _messageTypeFilter.Excludes += type => type.ImplementsInterface<Fault>();
+            _messageTypeFilter.Excludes += type => type.ImplementsInterface<ReceiveFault>();
             // do not create filters for scheduled/outbox messages
             _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
         }
@@ -45,11 +45,11 @@ namespace ViciOne.ServiceBus.Configuration
             if (!_messageTypeFilter.Matches(typeof(T)))
                 return;
 
-            var filterType = _filterType.HasInterface<IFilter<TContext>>()
+            var filterType = _filterType.ImplementsInterface<IFilter<TContext>>()
                 ? _filterType
                 : _filterType.MakeGenericType(typeof(T));
 
-            if (!filterType.HasInterface(typeof(IFilter<TContext>)))
+            if (!filterType.ImplementsInterface(typeof(IFilter<TContext>)))
                 throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<TContext>>.ShortName} ");
 
             var scopeProviderType = typeof(FilterScopeProvider<,>).MakeGenericType(filterType, typeof(TContext));

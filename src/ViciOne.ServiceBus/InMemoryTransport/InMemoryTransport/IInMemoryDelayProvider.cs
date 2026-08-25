@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 public interface IInMemoryDelayProvider
 {
-    Task Delay(int milliseconds, CancellationToken cancellationToken = default);
-    Task Delay(TimeSpan delay, CancellationToken cancellationToken = default);
-    Task Delay(DateTime delayUntil, CancellationToken cancellationToken = default);
+    DateTimeOffset UtcNow { get; }
 
-    ValueTask Advance(TimeSpan duration);
+    Task Delay(TimeSpan delay, CancellationToken cancellationToken = default);
+    Task Delay(DateTimeOffset delayUntil, CancellationToken cancellationToken = default);
+
+    void Advance(TimeSpan duration);
 }

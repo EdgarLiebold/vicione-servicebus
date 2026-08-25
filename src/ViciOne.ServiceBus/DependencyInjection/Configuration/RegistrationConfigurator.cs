@@ -59,7 +59,7 @@ namespace ViciOne.ServiceBus.Configuration
         public ISagaRegistrationConfigurator<T> AddSaga<T>(Type sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
             where T : class, ISaga
         {
-            if (typeof(T).HasInterface<SagaStateMachineInstance>())
+            if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache<T>.ShortName}");
 
             var registration = _collection.RegisterSaga<T>(Registrar, sagaDefinitionType);

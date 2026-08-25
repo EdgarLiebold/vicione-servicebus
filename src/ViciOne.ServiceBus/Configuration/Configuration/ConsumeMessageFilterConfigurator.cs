@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Include(Func<Type, bool> filter)
         {
-            Filter.Includes += context => context.GetType().ClosesType(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
+            Filter.Includes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
         }
 
         public void Include<T>()
@@ -44,7 +44,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Exclude(Func<Type, bool> filter)
         {
-            Filter.Excludes += context => context.GetType().ClosesType(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
+            Filter.Excludes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
         }
 
         public void Exclude<T>()

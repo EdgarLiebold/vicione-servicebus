@@ -32,8 +32,27 @@ namespace ViciOne.ServiceBus
         /// <exception cref="ArgumentNullException"></exception>
         public static IMediator CreateMediator(this IBusFactorySelector selector, Uri baseAddress, Action<IMediatorConfigurator> configure)
         {
+            return CreateMediator(selector, baseAddress, configure, TimeProvider.System);
+        }
+
+        /// <summary>
+        /// Create a mediator using an explicit standard .NET time source for request deadlines.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <param name="baseAddress"></param>
+        /// <param name="configure"></param>
+        /// <param name="timeProvider"></param>
+        /// <returns></returns>
+        public static IMediator CreateMediator(
+            this IBusFactorySelector selector,
+            Uri baseAddress,
+            Action<IMediatorConfigurator> configure,
+            TimeProvider timeProvider)
+        {
             if (configure == null)
                 throw new ArgumentNullException(nameof(configure));
+            if (timeProvider == null)
+                throw new ArgumentNullException(nameof(timeProvider));
 
             baseAddress ??= new Uri("loopback://localhost/");
             var topologyConfiguration = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
@@ -59,7 +78,13 @@ namespace ViciOne.ServiceBus
 
             var responseDispatcher = responseConfigurator.Build();
 
-            return new ViciOneServiceBusMediator(LogContext.Current, endpointConfiguration, mediatorDispatcher, responseEndpointConfiguration, responseDispatcher);
+            return new ViciOneServiceBusMediator(
+                LogContext.Current,
+                endpointConfiguration,
+                mediatorDispatcher,
+                responseEndpointConfiguration,
+                responseDispatcher,
+                timeProvider);
         }
     }
 }

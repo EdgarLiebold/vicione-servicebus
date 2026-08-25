@@ -1,5 +1,7 @@
 namespace ViciOne.ServiceBus.Middleware
 {
+    using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
 
@@ -21,7 +23,9 @@ namespace ViciOne.ServiceBus.Middleware
 
         Task IFilter<T>.Send(T context, IPipe<T> next)
         {
-            _latest = context;
+            ArgumentNullException.ThrowIfNull(context);
+
+            Volatile.Write(ref _latest, context);
             _hasValue.TrySetResult(true);
 
             return next.Send(context);
@@ -38,7 +42,8 @@ namespace ViciOne.ServiceBus.Middleware
         {
             await _hasValue.Task.ConfigureAwait(false);
 
-            return _latest;
+            return Volatile.Read(ref _latest)
+                ?? throw new InvalidOperationException("The latest filter was signaled without a context.");
         }
     }
 }

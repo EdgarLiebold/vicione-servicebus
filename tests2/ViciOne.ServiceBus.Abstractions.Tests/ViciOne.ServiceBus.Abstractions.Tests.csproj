@@ -19,6 +19,7 @@
     <!-- The single test entry package. It brings discovery, assertions and the Microsoft Testing
          Platform v2 entry point; nothing else here may bring a runner, an adapter or a logger.
          This cohort needs no architecture library: it observes product behaviour, not structure. -->
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 

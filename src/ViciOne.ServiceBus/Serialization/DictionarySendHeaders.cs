@@ -39,12 +39,7 @@ namespace ViciOne.ServiceBus.Serialization
             if (useExistingDictionary)
                 _headers = headers;
             else
-            {
                 _headers = new Dictionary<string, object>(headers, StringComparer.OrdinalIgnoreCase);
-
-                foreach (KeyValuePair<string, object> header in headers)
-                    _headers.Add(header.Key, header.Value);
-            }
         }
 
         public void Set(string key, string? value)

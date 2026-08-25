@@ -24,10 +24,10 @@ public sealed class GreenCacheCapacityTests
 
         for (var indexValue = 0; indexValue < Capacity; indexValue++)
         {
-            await index.Get($"key-{indexValue}", CreateValue);
-
             if (advanceClock)
                 settings.CurrentTime += TimeSpan.FromSeconds(1);
+
+            await index.Get($"key-{indexValue}", CreateValue);
         }
 
         await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
@@ -50,8 +50,8 @@ public sealed class GreenCacheCapacityTests
 
         for (var indexValue = 0; indexValue < Capacity; indexValue++)
         {
-            await index.Get($"key-{indexValue}", CreateValue);
             settings.CurrentTime += TimeSpan.FromSeconds(1);
+            await index.Get($"key-{indexValue}", CreateValue);
         }
 
         await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
@@ -74,18 +74,33 @@ public sealed class GreenCacheCapacityTests
         TestCacheSettings settings = CreateSettings(maximumAgeSeconds);
         var cache = new GreenCache<CacheValue>(settings);
         IIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
-        var observer = new CacheEventObserver<CacheValue>(expectedAdded: 200);
+        const int targetCount = Capacity * 2;
+        int maximumBoundedCount = Capacity + cache.Statistics.BucketSize;
+        var observer = new CacheEventObserver<CacheValue>(
+            expectedAdded: targetCount,
+            expectedRemoved: targetCount - maximumBoundedCount);
         using ConnectHandle connection = cache.Connect(observer);
 
-        int added = await FillUntilBounded(
+        int added = await FillToCount(
             index,
             CreateValue,
-            observer,
             settings,
             indexValue => advanceEveryAddition || indexValue % 2 == 0,
-            startingIndex: 0);
+            startingIndex: 0,
+            targetCount: targetCount);
 
         await observer.WaitForAddedCount(added, OperationTimeout, TestCancellationToken);
+        try
+        {
+            await observer.Removed.WaitAsync(OperationTimeout, TestCancellationToken);
+        }
+        catch (TimeoutException exception)
+        {
+            throw new InvalidOperationException(
+                $"Cache did not converge: added={observer.AddedCount}, removed={observer.RemovedCount}, "
+                + $"count={cache.Statistics.Count}, oldestBucket={cache.Statistics.OldestBucketIndex}, "
+                + $"currentBucket={cache.Statistics.CurrentBucketIndex}.", exception);
+        }
 
         AssertBoundedAndNonEmpty(cache, observer, added);
     }
@@ -97,7 +112,10 @@ public sealed class GreenCacheCapacityTests
         TestCacheSettings settings = CreateSettings(maximumAgeSeconds: 300);
         var cache = new GreenCache<UsageAwareCacheValue>(settings);
         IIndex<string, UsageAwareCacheValue> index = cache.AddIndex("id", value => value.Id);
-        var observer = new CacheEventObserver<UsageAwareCacheValue>(expectedAdded: Capacity);
+        int maximumBoundedCount = Capacity + cache.Statistics.BucketSize;
+        var observer = new CacheEventObserver<UsageAwareCacheValue>(
+            expectedAdded: 200,
+            expectedRemoved: 200 - maximumBoundedCount);
         using ConnectHandle connection = cache.Connect(observer);
 
         UsageAwareCacheValue first = await index.Get("key-0", CreateUsageAwareValue);
@@ -105,25 +123,26 @@ public sealed class GreenCacheCapacityTests
 
         for (var indexValue = 1; indexValue < Capacity; indexValue++)
         {
-            await index.Get($"key-{indexValue}", CreateUsageAwareValue);
             settings.CurrentTime += TimeSpan.FromSeconds(1);
+            await index.Get($"key-{indexValue}", CreateUsageAwareValue);
         }
 
-        await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
+        await observer.WaitForAddedCount(Capacity, OperationTimeout, TestCancellationToken);
 
-        int added = await FillUntilBounded(
+        int added = await FillToCount(
             index,
             CreateUsageAwareValue,
-            observer,
             settings,
             ignoredIndex =>
             {
                 _ = first.Value;
                 return true;
             },
-            startingIndex: Capacity);
+            startingIndex: Capacity,
+            targetCount: 200);
 
         await observer.WaitForAddedCount(added, OperationTimeout, TestCancellationToken);
+        await observer.Removed.WaitAsync(OperationTimeout, TestCancellationToken);
 
         AssertBoundedAndNonEmpty(cache, observer, added);
         Assert.Same(first, await index.Get(first.Id));
@@ -148,26 +167,22 @@ public sealed class GreenCacheCapacityTests
     private static Task<UsageAwareCacheValue> CreateUsageAwareValue(string key) =>
         Task.FromResult(new UsageAwareCacheValue(key, $"The key is {key}"));
 
-    private static async Task<int> FillUntilBounded<TValue>(
+    private static async Task<int> FillToCount<TValue>(
         IIndex<string, TValue> index,
         MissingValueFactory<string, TValue> factory,
-        CacheEventObserver<TValue> observer,
         TestCacheSettings settings,
         Func<int, bool> advanceClock,
-        int startingIndex)
+        int startingIndex,
+        int targetCount)
         where TValue : class
     {
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(TestCancellationToken);
-        timeout.CancelAfter(OperationTimeout);
-
         var added = startingIndex;
-        while (added < 200 || observer.RemovedCount < added - settings.Capacity)
+        while (added < targetCount)
         {
-            timeout.Token.ThrowIfCancellationRequested();
-            await index.Get($"key-{added}", factory);
-
             if (advanceClock(added))
                 settings.CurrentTime += TimeSpan.FromSeconds(1);
+
+            await index.Get($"key-{added}", factory);
 
             added++;
         }
@@ -183,13 +198,13 @@ public sealed class GreenCacheCapacityTests
     {
         int count = cache.Statistics.Count;
         int visibleCount = cache.GetAll().Count();
+        int maximumBoundedCount = Capacity + cache.Statistics.BucketSize;
 
         Assert.True(observer.AddedCount >= added);
-        Assert.True(observer.RemovedCount >= added - Capacity);
-        Assert.True(observer.RemovedCount >= 100);
+        Assert.True(observer.RemovedCount >= added - maximumBoundedCount);
         Assert.Equal(0, observer.RemovedWhileValidCount);
-        Assert.InRange(count, 1, Capacity);
-        Assert.InRange(visibleCount, 1, Capacity);
+        Assert.InRange(count, 1, maximumBoundedCount);
+        Assert.InRange(visibleCount, 1, maximumBoundedCount);
     }
 
     private static TimeSpan OperationTimeout => TestConfigurationProvider.ForCurrentTestRun()

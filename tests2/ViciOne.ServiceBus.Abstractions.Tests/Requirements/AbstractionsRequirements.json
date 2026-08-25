@@ -429,7 +429,7 @@
    {
       "requirementId" : "REQ-VSB-TYPE-EXTENSIONS",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetAllProperties_EnumeratesTypesWithDifferentIndexerSignatures",
+      "testMethod" : "GetReadableInstanceProperties_EnumeratesTypesWithDifferentIndexerSignatures",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "multiple-indexers"
    },
@@ -604,35 +604,35 @@
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetAllStaticProperties_IncludesPrivateGetterAndInheritedProperty",
+      "testMethod" : "GetReadableStaticProperties_IncludesPrivateGetterAndInheritedProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "private-getter-plus-inherited"
    },
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetAllStaticProperties_IncludesPrivateAndInheritedProperties",
+      "testMethod" : "GetReadableStaticProperties_IncludesPrivateAndInheritedProperties",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "private-property-plus-inherited"
    },
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetAllStaticProperties_StandaloneTypeReturnsItsStaticProperty",
+      "testMethod" : "GetReadableStaticProperties_StandaloneTypeReturnsItsStaticProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "standalone-static-property"
    },
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetAllStaticProperties_DerivedTypeReturnsInheritedStaticProperty",
+      "testMethod" : "GetReadableStaticProperties_DerivedTypeReturnsInheritedStaticProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "inherited-static-property"
    },
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "GetStaticProperties_ExcludesInheritedStaticProperty",
+      "testMethod" : "GetDeclaredReadableStaticProperties_ExcludesInheritedStaticProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
       "variantKey" : "declared-only-static-property"
    },
@@ -677,5 +677,649 @@
       "testMethod" : "MissingRoles_AreRejectedBeforeThePipeIsBuilt",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.PipeSpecificationTests",
       "variantKey" : "missing-configuration-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-PIPE-EMPTY-CLASSIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyClassification_DistinguishesMissingEmptyAndExecutablePipes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "null-empty-executable"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-TIME-PROVIDER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ContextWithoutAnExplicitProvider_UsesTheSystemProvider",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.PipeContextTimeProviderExtensionsTests",
+      "variantKey" : "system-default"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-TIME-PROVIDER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExplicitProvider_CanBeSetAndReplacedAtOneContextBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.PipeContextTimeProviderExtensionsTests",
+      "variantKey" : "set-and-replace"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-TIME-PROVIDER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullContextAndProvider_AreRejectedAtThePublicBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.PipeContextTimeProviderExtensionsTests",
+      "variantKey" : "null-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONNECTABLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Connections_HaveIndependentIdempotentHandlesAndDefensiveSnapshots",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.ConnectableTests",
+      "variantKey" : "lifecycle-and-defensive-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONNECTABLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ForEachAsync_UsesOneStableSnapshotAndAwaitsEveryStartedCallback",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.ConnectableTests",
+      "variantKey" : "stable-async-dispatch-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONNECTABLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ForEachAsync_InvokesEveryConnectionAndReportsEveryFailureShape",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.ConnectableTests",
+      "variantKey" : "complete-async-failure-observation"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONNECTABLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "All_UsesVacuousTruthAndStopsAtTheFirstRejectedConnection",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.ConnectableTests",
+      "variantKey" : "all-short-circuit-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONNECTABLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicOperations_RejectEveryMissingRequiredInputBeforeInspectingConnections",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.ConnectableTests",
+      "variantKey" : "required-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-TIMEOUT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "DefaultNoneAndOr_HaveExactValueSemantics",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests",
+      "variantKey" : "default-none-and-or"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-TIMEOUT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplicitConversions_PreserveTheExactRequestedDuration",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests",
+      "variantKey" : "time-span-and-millisecond-conversions"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-TIMEOUT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "After_ComposesEveryDurationComponentExactly",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests",
+      "variantKey" : "component-composition"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-TIMEOUT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NonPositiveImplicitDurations_AreRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests",
+      "variantKey" : "non-positive-conversion-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-TIMEOUT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyAfterComposition_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests",
+      "variantKey" : "empty-composition-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-RESPONSE-WRAPPER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TwoResponseWrapper_DelegatesContextAndPreservesBothBranchTasks",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.ResponseTests",
+      "variantKey" : "two-response-second-branch"
+   },
+   {
+      "requirementId" : "REQ-VSB-RESPONSE-WRAPPER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ThreeResponseWrapper_SelectsOnlyTheCompletedMiddleBranch",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.ResponseTests",
+      "variantKey" : "three-response-middle-branch"
+   },
+   {
+      "requirementId" : "REQ-VSB-RESPONSE-WRAPPER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ResponseWrapperWithoutACompletedBranch_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.ResponseTests",
+      "variantKey" : "no-completed-branch-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-RESPONSE-WRAPPER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "MultipleCompletedBranches_UseTheFirstDeclaredBranchAsTheContextOwner",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.ResponseTests",
+      "variantKey" : "multiple-completed-branches-have-deterministic-priority"
+   },
+   {
+      "requirementId" : "REQ-VSB-RESPONSE-WRAPPER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "MissingResponseTasks_AreRejectedAtThePublicConstructorBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Clients.ResponseTests",
+      "variantKey" : "required-response-tasks"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterface_MatchesClosedOpenAndInheritedInterfaces",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "implemented-interface"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterfaceGenericOverload_MatchesDirectAndInheritedInterfaces",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "implemented-interface-generic-overload"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterface_ReturnsFalseForAnUnimplementedInterface",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "missing-interface"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterface_RejectsTypesThatAreNotInterfaces",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "invalid-interface-shape"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterface_RejectsAPartiallyOpenInterface",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "partially-open-interface"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ImplementsInterface_RejectsMissingInputs",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "null-interface-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ClosesGenericType_RequiresAFullyClosedMatch",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "closed-generic-match"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetSingleClosedGenericArguments_ResolvesDirectNestedAndInheritedInterfaces",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "interface-closing-arguments"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetSingleClosedGenericArguments_ResolvesDirectAndInheritedClasses",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "class-closing-arguments"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetClosedGenericTypes_ReturnsEveryMatchInStableOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "multiple-generic-matches"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetSingleClosedGenericType_RejectsAmbiguousMatches",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "ambiguous-single-match"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SingleClosedGenericAccessors_DistinguishAMissingMatch",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "missing-single-match"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GenericRelationshipOperations_RequireAGenericTypeDefinition",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "generic-definition-required"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GenericRelationshipOperations_RejectMissingInputs",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "null-generic-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TryGetTaskResultType_ReturnsOnlyAClosedTaskResult",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "task-result-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-RELATIONSHIPS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetSingleClosedGenericArgument_RejectsAMultiArgumentDefinition",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "single-generic-argument-required"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-CACHE-LIFETIME",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RelationshipAndNameCaches_DoNotRootCollectibleTypes",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeRelationshipExtensionsTests",
+      "variantKey" : "collectible-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetReadableInstanceProperties_ReturnsExactBaseAndDerivedProperties",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "class-hierarchy"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetReadableInstanceProperties_TraversesInterfaceDiamondsOnceInStableOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "interface-diamond"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetReadableInstanceProperties_ReturnsExactConcreteInterfaceImplementationProperties",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "interface-implementation"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetReadableInstanceProperties_PlacesAHidingDerivedInterfacePropertyLast",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "derived-interface-hides-base"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetReadableInstanceProperties_DoesNotBorrowAGetterFromAnotherIndexer",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "write-only-indexer"
+   },
+   {
+      "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReadableStaticPropertyOperations_ExcludeWriteOnlyProperties",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "write-only-static-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-READABLE-PROPERTY-REFLECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReadablePropertyOperations_RejectAMissingType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TypeExtensionsTests",
+      "variantKey" : "null-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-TYPE-NAME",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GetShortName_FormatsOpenGenericDefinitionsWithoutActivation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.TypeCacheTests",
+      "variantKey" : "open-generic-definition"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_ExecutesOnceForEveryConcurrentCaller",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "concurrent-single-flight"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_AfterAnIsolatedFailureAllowsAHealthyRetry",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "failure-is-retryable"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_AQueuedHealthyCallerCompletesAfterTheLeaderFails",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "queued-fallback"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_EvictionRerunsSetupAndRejectsEvictionWhileRunning",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "eviction-lifecycle"
+   },
+   {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_PreservesCancellationAndRejectsANullCallbackTaskWithoutPoisoningTheContext",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "cancellation-and-invalid-callback"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OrCanceled_ReturnsTheOriginalTaskWhenCancellationCannotWin",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "completed-and-noncancelable"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OrCanceled_CompletesAsCanceledWithTheExactTokenWhenCancellationWins",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "cancellation-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OrCanceled_PreservesTheSourceResultAndExactFailureWhenTheSourceWins",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "source-outcome-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OrCanceled_ObservesAFaultThatArrivesAfterCancellation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "abandoned-fault-is-observed"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OrCanceled_RejectsNullTasks",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "null-task-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCOPED-PAYLOADS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Scope_ReadsParentPayloadsButKeepsAddsAndUpdatesLocal",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ScopePipeContextTests",
+      "variantKey" : "parent-readable-local-write-isolated"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCOPED-PAYLOADS",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NestedScope_InheritsNearestPayloadWithoutWritingBackAndRejectsANullParent",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.ScopePipeContextTests",
+      "variantKey" : "nested-isolation-and-null-parent"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-PIPE-COMPOSITION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConcreteMessage_ComposesEveryOwnedLayerOnceInStableOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests",
+      "variantKey" : "implemented-parent-direct-and-base-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-PIPE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Validate_ReturnsAStableSnapshotAndReportsEachOwnedSpecificationOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests",
+      "variantKey" : "owned-results-and-point-in-time-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-PIPE-CREATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ObserverReentryForTheSameMessage_ReturnsTheSinglePublishedSpecification",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests",
+      "variantKey" : "same-message-observer-reentry"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-COMPOSITION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConcreteMessage_ComposesEveryOwnedLayerOnceInStableOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Publish.PublishPipeSpecificationTests",
+      "variantKey" : "implemented-parent-direct-and-base-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Validate_ReturnsAStableSnapshotAndReportsEachOwnedSpecificationOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Publish.PublishPipeSpecificationTests",
+      "variantKey" : "owned-results-and-point-in-time-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-CREATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ObserverReentryForTheSameMessage_ReturnsTheSinglePublishedSpecification",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Publish.PublishPipeSpecificationTests",
+      "variantKey" : "same-message-observer-reentry"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-PIPE-COMPOSITION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RootSpecificationAddedAfterMessageCreation_ReachesTheExistingMessageExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests",
+      "variantKey" : "late-root-specification-reaches-existing-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-PIPE-CREATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FailedObserverInitialization_IsDiscardedBeforeTheMessageCanBeRequestedAgain",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Send.SendPipeSpecificationTests",
+      "variantKey" : "failed-initialization-is-not-cached"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-COMPOSITION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RootSpecificationAddedAfterMessageCreation_ReachesTheExistingMessageExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Publish.PublishPipeSpecificationTests",
+      "variantKey" : "late-root-specification-reaches-existing-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-CREATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FailedObserverInitialization_IsDiscardedBeforeTheMessageCanBeRequestedAgain",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.Configuration.Publish.PublishPipeSpecificationTests",
+      "variantKey" : "failed-initialization-is-not-cached"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExpectedStatusOnFirstObservation_ReturnsTheCompleteExactResultWithoutWaiting",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "immediate-complete-result"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "StatusChange_IsObservedOnlyAtTheExactVirtualPollBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "virtual-poll-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExpectedStatusReachedAtTheExactDeadline_WinsOverTimeout",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "final-deadline-observation"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExpectedStatusReachedOnlyAfterTheDeadline_DoesNotTurnTheExpiredWaitIntoSuccess",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "post-deadline-state-is-too-late"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Timeout_ThrowsTypedFailureWithTheCompleteLastObservation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "typed-timeout-diagnostics"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ZeroTimeout_ObservesOnceAndThenReportsTheUnexpectedResult",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "zero-timeout-final-result"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PendingWait_CancelsWithTheExactCallerToken",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "exact-cancellation-token"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AlreadyCanceledWait_DoesNotObserveMutableBusState",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "pre-cancellation-no-observation"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CollectionWait_StartsEveryBusAndReturnsCompleteResultsInInputOrder",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-concurrency-and-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CollectionWait_EnumeratesTheInputExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-single-enumeration"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyCollection_CompletesWithAnEmptyResult",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "empty-collection"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AlreadyCanceledCollectionWait_DoesNotObserveAnyBus",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-pre-cancellation-no-observation"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullBus_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "single-null-bus"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullTimeProvider_IsRejectedBeforePolling",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "single-null-time-provider"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UndefinedExpectedStatus_IsRejectedBeforePolling",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "single-invalid-status"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InvalidTimeout_IsRejectedBeforePolling",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "single-invalid-timeout"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullCollection_IsRejected",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-null"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullCollectionTimeProvider_IsRejectedBeforeStartingAnyWait",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-null-time-provider"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UndefinedCollectionExpectedStatus_IsRejectedBeforeStartingAnyWait",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-invalid-status"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "InvalidCollectionTimeout_IsRejectedBeforeStartingAnyWait",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-invalid-timeout"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "NullCollectionElement_IsRejectedBeforeStartingAnyWait",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "collection-null-element"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-WAIT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SystemTimeConvenienceOverloads_ReturnCompleteImmediateResults",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.BusControlHealthExtensionsTests",
+      "variantKey" : "system-time-convenience"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CachedHost_DescribesTheCurrentProcessAndRuntime",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.BusHostInfoTests",
+      "variantKey" : "current-process-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "HostAndEmptySnapshots_AreStableAndDistinct",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.BusHostInfoTests",
+      "variantKey" : "stable-cache"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EmptyHost_HasOnlyWireDefaults",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.BusHostInfoTests",
+      "variantKey" : "empty-wire-defaults"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-METADATA",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicConstruction_ContainsOnlyTheParameterlessWireConstructor",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.BusHostInfoTests",
+      "variantKey" : "unambiguous-public-construction"
    }
 ]

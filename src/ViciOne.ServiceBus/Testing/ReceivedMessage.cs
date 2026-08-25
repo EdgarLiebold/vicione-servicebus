@@ -11,14 +11,22 @@ namespace ViciOne.ServiceBus.Testing
         readonly Exception _exception;
 
         public ReceivedMessage(ConsumeContext<T> context, Exception exception = null)
+            : this(context, exception, TimeProvider.System)
         {
+        }
+
+        public ReceivedMessage(ConsumeContext<T> context, Exception exception, TimeProvider timeProvider)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
             _context = context;
             _exception = exception;
 
             ElementId = _context.MessageId;
 
             ElapsedTime = context.ReceiveContext.ElapsedTime;
-            StartTime = DateTime.UtcNow - ElapsedTime;
+            StartTime = timeProvider.GetUtcNow().UtcDateTime - ElapsedTime;
             if (StartTime < context.SentTime)
                 StartTime = context.SentTime.Value;
         }

@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Middleware;
     using Transports;
 
@@ -11,12 +12,16 @@ namespace ViciOne.ServiceBus.Configuration
 
         public PublishPipeConfiguration(IPublishTopology publishTopology)
         {
+            ArgumentNullException.ThrowIfNull(publishTopology);
+
             _specification = new PublishPipeSpecification();
             _specification.ConnectPublishPipeSpecificationObserver(new TopologyPublishPipeSpecificationObserver(publishTopology));
         }
 
         public PublishPipeConfiguration(IPublishPipeSpecification parentSpecification)
         {
+            ArgumentNullException.ThrowIfNull(parentSpecification);
+
             _specification = new PublishPipeSpecification();
             _specification.ConnectPublishPipeSpecificationObserver(new ParentPublishPipeSpecificationObserver(parentSpecification));
         }

@@ -10,6 +10,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     /// An activity indicator for receive endpoint queues. Utilizes a timer that restarts on receive activity.
     /// </summary>
     public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
+        IDisposable,
         ISignalResource,
         IReceiveObserver
     {
@@ -18,9 +19,14 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         int _activityStarted;
 
         public BusActivityReceiveIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+            : this(signalResource, receiveIdleTimeout, TimeProvider.System)
+        {
+        }
+
+        public BusActivityReceiveIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
         {
             _signalResource = signalResource;
-            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout);
+            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
         }
 
         public BusActivityReceiveIndicator(ISignalResource signalResource)
@@ -77,6 +83,11 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         public void Signal()
         {
             SignalInactivity(null);
+        }
+
+        public void Dispose()
+        {
+            _receiveIdleTimer.Dispose();
         }
 
         void SignalInactivity(object state)

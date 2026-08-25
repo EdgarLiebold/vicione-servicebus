@@ -15,6 +15,7 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IReadOnlyDictionary<Type, ISagaMessageSpecification<TSaga>> _messageTypes;
         protected readonly SagaConfigurationObservable Observers;
         IConcurrencyLimiter _concurrencyLimiter;
+        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
         public SagaSpecification(IEnumerable<ISagaMessageSpecification<TSaga>> messageSpecifications)
         {
@@ -70,13 +71,17 @@ namespace ViciOne.ServiceBus.Configuration
 
         public virtual IEnumerable<ValidationResult> Validate()
         {
-            Observers.ForEach(observer => observer.SagaConfigured(this));
+            NotifyConfigurationObservers();
 
-            foreach (var result in _messageTypes.Values.SelectMany(x => x.Validate()))
-                yield return result;
+            return _messageTypes.Values.SelectMany(x => x.Validate())
+                .Concat(ValidateOptions())
+                .ToArray();
+        }
 
-            foreach (var result in ValidateOptions())
-                yield return result;
+        protected void NotifyConfigurationObservers()
+        {
+            _configurationNotification.EnsureNotified(() =>
+                Observers.ForEach(observer => observer.SagaConfigured(this)));
         }
 
         public void AddPipeSpecification(IPipeSpecification<SagaConsumeContext<TSaga>> specification)

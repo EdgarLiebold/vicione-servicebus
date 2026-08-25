@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.Clients;
 
 using System;
 using System.Threading.Tasks;
-using Middleware;
 
 
 public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
@@ -23,8 +22,6 @@ public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
     {
         var ready = await _handle.Ready.ConfigureAwait(false);
 
-        var endpoint = await ready.ReceiveEndpoint.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
-
-        return endpoint.SkipOutbox();
+        return await ready.ReceiveEndpoint.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
     }
 }

@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Testing
     {
         TimeSpan TestTimeout { get; set; }
         TimeSpan TestInactivityTimeout { get; set; }
+        TimeProvider TimeProvider { get; }
 
         /// <summary>
         /// CancellationToken that is canceled when the test is being aborted

@@ -15,8 +15,9 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 /// the project file itself.
 /// <para>
 /// Only <c>-getProperty</c> and <c>-getItem</c> are used, so evaluation runs but no target executes
-/// and nothing is written into the checkout. Results are cached per project because the evaluation
-/// costs seconds and every test asks about the same two projects.
+/// and nothing is written into the checkout. Results are cached per project because evaluation
+/// costs seconds, several rules revisit the same projects, and source-layout validation traverses
+/// the complete native test-project set.
 /// </para>
 /// </remarks>
 internal static class MsBuildEvaluation
@@ -26,10 +27,10 @@ internal static class MsBuildEvaluation
     private static readonly TimeSpan Budget = TimeSpan.FromMinutes(3);
 
     private const string Properties =
-        "TargetFramework;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;LangVersion;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;UserSecretsId";
+        "TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;LangVersion;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;UserSecretsId";
 
     private const string Items =
-        "PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
+        "Compile;PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
 
     /// <summary>Evaluates a project once and returns the parsed MSBuild output.</summary>
     internal static JsonElement Evaluate(string projectPath)

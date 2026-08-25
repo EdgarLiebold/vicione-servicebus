@@ -1,7 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Internals;
@@ -13,30 +12,34 @@ namespace ViciOne.ServiceBus.Configuration
         ISendPipeSpecification
     {
         readonly object _lock = new object();
-        readonly ConcurrentDictionary<Type, IMessageSendPipeSpecification> _messageSpecifications;
+        readonly Dictionary<Type, IMessageSendPipeSpecification> _messageSpecifications;
         readonly SendPipeSpecificationObservable _observers;
         readonly List<IPipeSpecification<SendContext>> _specifications;
 
         public SendPipeSpecification()
         {
             _specifications = new List<IPipeSpecification<SendContext>>();
-            _messageSpecifications = new ConcurrentDictionary<Type, IMessageSendPipeSpecification>();
+            _messageSpecifications = new Dictionary<Type, IMessageSendPipeSpecification>();
             _observers = new SendPipeSpecificationObservable();
         }
 
         public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             lock (_lock)
             {
                 _specifications.Add(specification);
 
-                foreach (var messageSpecification in _messageSpecifications.Values)
+                foreach (IMessageSendPipeSpecification messageSpecification in _messageSpecifications.Values)
                     messageSpecification.AddPipeSpecification(specification);
             }
         }
 
         void ISendPipeConfigurator.AddPipeSpecification<T>(IPipeSpecification<SendContext<T>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             IMessageSendPipeSpecification<T> messageSpecification = GetMessageSpecification<T>();
 
             messageSpecification.AddPipeSpecification(specification);
@@ -52,36 +55,48 @@ namespace ViciOne.ServiceBus.Configuration
             lock (_lock)
             {
                 return _specifications.SelectMany(x => x.Validate())
-                    .Concat(_messageSpecifications.Values.SelectMany(x => x.Validate()));
+                    .Concat(_messageSpecifications.Values.SelectMany(x => x.Validate()))
+                    .ToArray();
             }
         }
 
         public IMessageSendPipeSpecification<T> GetMessageSpecification<T>()
             where T : class
         {
-            var specification = _messageSpecifications.GetOrAdd(typeof(T), CreateMessageSpecification<T>);
-
-            return specification.GetMessageSpecification<T>();
-        }
-
-        IMessageSendPipeSpecification CreateMessageSpecification<T>(Type type)
-            where T : class
-        {
-            var specification = new MessageSendPipeSpecification<T>();
-
             lock (_lock)
             {
-                foreach (IPipeSpecification<SendContext> pipeSpecification in _specifications)
-                    specification.AddPipeSpecification(pipeSpecification);
+                if (!_messageSpecifications.TryGetValue(typeof(T), out IMessageSendPipeSpecification? specification))
+                {
+                    var created = new MessageSendPipeSpecification<T>();
+                    specification = created;
+                    _messageSpecifications.Add(typeof(T), specification);
+
+                    try
+                    {
+                        InitializeMessageSpecification(created);
+                    }
+                    catch
+                    {
+                        _messageSpecifications.Remove(typeof(T));
+                        throw;
+                    }
+                }
+
+                return specification.GetMessageSpecification<T>();
             }
+        }
+
+        void InitializeMessageSpecification<T>(MessageSendPipeSpecification<T> specification)
+            where T : class
+        {
+            foreach (IPipeSpecification<SendContext> pipeSpecification in _specifications)
+                specification.AddPipeSpecification(pipeSpecification);
 
             _observers.MessageSpecificationCreated(specification);
 
             var connector = new ImplementedMessageTypeConnector<T>(this, specification);
 
             ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
-
-            return specification;
         }
 
 

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "legacySource": {
+    "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs",
+    "sha256BeforeDeletion": "ce5af4a56faae171a3833b83aae1da68b6120a6fc47a3bc0441cf8967c868b66"
+  },
+  "disposition": "REPLACED_BY_STRONGER_NATIVE_TESTS",
+  "replacement": {
+    "obligationId": "OBL-R0-CORE-B-0138",
+    "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY",
+    "variantKey": "in-memory-transport-roundtrip",
+    "test": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonDateOnlyTimeOnlyTests.InMemoryTransport_ConsumesExactTemporalValuesWithoutCustomConverters"
+  },
+  "additionalHardening": [
+    "REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY/envelope-boundaries-and-null-values",
+    "REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY/malformed-date-receive-fault",
+    "REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY/malformed-time-receive-fault"
+  ],
+  "focusedValidation": {
+    "profile": "UnitArchitecture",
+    "configuration": "Release",
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unfilteredValidation": {
+    "profile": "UnitArchitecture",
+    "configuration": "Release",
+    "total": 1022,
+    "passed": 1022,
+    "failed": 0,
+    "skipped": 0
+  },
+  "designDecision": "The .NET 10 System.Text.Json implementation natively supports DateOnly and TimeOnly with invariant ISO wire formats. The inherited custom converters duplicated platform behavior and parsed using ambient culture. The replacement verifies the built-in product path and deliberately introduces no custom converter."
+}

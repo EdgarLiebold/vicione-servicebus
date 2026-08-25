@@ -22,12 +22,14 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             InstanceConnectorCache.GetInstanceConnector(_instance.GetType()).ConnectInstance(builder, _instance);
         }
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (!_instance.GetType().HasInterface<IConsumer>())
+            if (!_instance.GetType().ImplementsInterface<IConsumer>())
                 yield return this.Warning($"The instance of {TypeCache.GetShortName(_instance.GetType())} does not implement any consumer interfaces");
         }
     }
@@ -43,7 +45,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public InstanceConfigurator(TInstance instance, IConsumerConfigurationObserver observer)
         {
-            _instance = instance;
+            _instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            ArgumentNullException.ThrowIfNull(observer);
 
             _specification = ConsumerConnectorCache<TInstance>.Connector.CreateConsumerSpecification<TInstance>();
 
@@ -92,6 +95,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TInstance>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _specification.AddPipeSpecification(specification);
         }
 
@@ -112,6 +117,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             InstanceConnectorCache<TInstance>.Connector.ConnectInstance(builder, _instance, _specification);
         }
     }

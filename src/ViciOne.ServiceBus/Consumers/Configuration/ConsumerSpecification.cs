@@ -15,6 +15,7 @@ namespace ViciOne.ServiceBus.Configuration
         readonly ConnectHandle[] _handles;
         readonly IReadOnlyDictionary<Type, IConsumerMessageSpecification<TConsumer>> _messageTypes;
         readonly ConsumerConfigurationObservable _observers;
+        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
         IConcurrencyLimiter? _concurrencyLimiter;
 
         public ConsumerSpecification(IEnumerable<IConsumerMessageSpecification<TConsumer>> messageSpecifications)
@@ -68,13 +69,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            _observers.ForEach(observer => observer.ConsumerConfigured(this));
+            _configurationNotification.EnsureNotified(() =>
+                _observers.ForEach(observer => observer.ConsumerConfigured(this)));
 
-            foreach (var result in _messageTypes.Values.SelectMany(x => x.Validate()))
-                yield return result;
-
-            foreach (var result in ValidateOptions())
-                yield return result;
+            return _messageTypes.Values.SelectMany(x => x.Validate())
+                .Concat(ValidateOptions())
+                .ToArray();
         }
 
         public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)

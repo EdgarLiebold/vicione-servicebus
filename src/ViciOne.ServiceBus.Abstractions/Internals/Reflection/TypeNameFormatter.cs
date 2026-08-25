@@ -1,13 +1,13 @@
 namespace ViciOne.ServiceBus.Internals
 {
     using System;
-    using System.Collections.Concurrent;
+    using System.Runtime.CompilerServices;
     using System.Text;
 
 
     public class TypeNameFormatter
     {
-        readonly ConcurrentDictionary<Type, string> _cache;
+        readonly ConditionalWeakTable<Type, CachedName> _cache;
         readonly string _genericArgumentSeparator;
         readonly string _genericClose;
         readonly string _genericOpen;
@@ -28,19 +28,18 @@ namespace ViciOne.ServiceBus.Internals
             _namespaceSeparator = namespaceSeparator;
             _nestedTypeSeparator = nestedTypeSeparator;
 
-            _cache = new ConcurrentDictionary<Type, string>();
+            _cache = new ConditionalWeakTable<Type, CachedName>();
         }
 
         public string GetTypeName(Type type)
         {
-            return _cache.GetOrAdd(type, FormatTypeName);
+            ArgumentNullException.ThrowIfNull(type);
+
+            return _cache.GetValue(type, value => new CachedName(FormatTypeName(value))).Value;
         }
 
         string FormatTypeName(Type type)
         {
-            if (type.IsGenericTypeDefinition)
-                throw new ArgumentException("An open generic type cannot be used as a message name");
-
             var sb = new StringBuilder("");
 
             return FormatTypeName(sb, type, null);
@@ -78,7 +77,7 @@ namespace ViciOne.ServiceBus.Internals
 
                 sb.Append(name);
                 sb.Append(_genericOpen);
-                Type[] arguments = type.GenericTypeArguments;
+                Type[] arguments = type.GetGenericArguments();
                 for (var i = 0; i < arguments.Length; i++)
                 {
                     if (i > 0)
@@ -94,5 +93,8 @@ namespace ViciOne.ServiceBus.Internals
 
             return sb.ToString();
         }
+
+
+        sealed record CachedName(string Value);
     }
 }

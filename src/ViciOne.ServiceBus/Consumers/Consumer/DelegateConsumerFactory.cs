@@ -13,7 +13,7 @@ namespace ViciOne.ServiceBus.Consumer
 
         public DelegateConsumerFactory(Func<TConsumer> factoryMethod)
         {
-            _factoryMethod = factoryMethod;
+            _factoryMethod = factoryMethod ?? throw new ArgumentNullException(nameof(factoryMethod));
         }
 
         public async Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)

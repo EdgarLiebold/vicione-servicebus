@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Middleware
         /// <param name="context"></param>
         protected ScopePipeContext(PipeContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.Middleware
         /// <param name="payloads">Loads the payload cache with the specified objects</param>
         protected ScopePipeContext(PipeContext context, params object[]? payloads)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
 
             if (payloads != null && payloads.Length > 0)
                 _payloadCache = new ListPayloadCache(payloads);

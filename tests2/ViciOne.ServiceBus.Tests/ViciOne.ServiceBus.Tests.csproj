@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
@@ -10,6 +9,7 @@
     <PackageReference Include="Google.Protobuf" />
     <PackageReference Include="Grpc.Tools" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <ProjectReference Include="../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <ProjectReference Include="../Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>

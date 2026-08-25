@@ -67,7 +67,7 @@ namespace ViciOne.ServiceBus.Middleware
 
         public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
         {
-            _keyAccessor = keyAccessor;
+            _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
 
             _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
         }

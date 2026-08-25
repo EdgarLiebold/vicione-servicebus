@@ -40,6 +40,11 @@ namespace ViciOne.ServiceBus.Configuration
             set => _settings.ResetTimeout = IntervalTimeout(value);
         }
 
+        public TimeProvider TimeProvider
+        {
+            set => _settings.TimeProvider = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
         public IPipeRouter Router
         {
             set => _settings.Router = value;
@@ -78,6 +83,7 @@ namespace ViciOne.ServiceBus.Configuration
                 TripThreshold = 5;
                 TrackingPeriod = TimeSpan.FromMinutes(1);
                 ResetTimeout = DefaultTimeout;
+                TimeProvider = global::System.TimeProvider.System;
             }
 
             static IEnumerable<TimeSpan> DefaultTimeout
@@ -102,6 +108,7 @@ namespace ViciOne.ServiceBus.Configuration
             public IEnumerable<TimeSpan> ResetTimeout { get; set; }
             public int TripThreshold { get; set; }
             public int ActiveThreshold { get; set; }
+            public TimeProvider TimeProvider { get; set; }
             public IPipeRouter Router { get; set; }
         }
     }

@@ -11,13 +11,19 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
         readonly IConsumePipe _connector;
         readonly ISendEndpoint _endpoint;
 
-        public MediatorClientFactoryContext(ISendEndpoint endpoint, IConsumePipe connector, Uri responseAddress, RequestTimeout defaultTimeout = default)
+        public MediatorClientFactoryContext(
+            ISendEndpoint endpoint,
+            IConsumePipe connector,
+            Uri responseAddress,
+            RequestTimeout defaultTimeout = default,
+            TimeProvider? timeProvider = null)
         {
             _endpoint = endpoint;
             _connector = connector;
 
             ResponseAddress = responseAddress;
             DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -53,5 +59,7 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
         }
 
         public RequestTimeout DefaultTimeout { get; }
+
+        public TimeProvider TimeProvider { get; }
     }
 }

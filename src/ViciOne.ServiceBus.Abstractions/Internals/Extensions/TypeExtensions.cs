@@ -21,42 +21,52 @@ namespace ViciOne.ServiceBus.Internals
             return _typeNameFormatter.GetTypeName(type);
         }
 
-        public static IEnumerable<PropertyInfo> GetAllProperties(this Type type)
+        public static IReadOnlyList<PropertyInfo> GetReadableInstanceProperties(this Type type)
         {
-            return GetAllProperties(type.GetTypeInfo());
+            ArgumentNullException.ThrowIfNull(type);
+
+            var properties = new List<PropertyInfo>();
+            var propertySet = new HashSet<PropertyInfo>();
+
+            if (type.IsInterface)
+                AddInterfaceProperties(type, isStatic: false, properties, propertySet, new HashSet<Type>());
+            else
+                AddClassProperties(type, isStatic: false, properties, propertySet);
+
+            return properties.AsReadOnly();
         }
 
-        public static IEnumerable<PropertyInfo> GetAllProperties(this TypeInfo typeInfo)
+        public static IReadOnlyList<PropertyInfo> GetReadableStaticProperties(this Type type)
         {
-            if (typeInfo.BaseType != null)
-            {
-                foreach (var prop in GetAllProperties(typeInfo.BaseType))
-                    yield return prop;
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
-            IEnumerable<string>? specialGetPropertyNames = typeInfo.DeclaredMethods
-                .Where(x => x.IsSpecialName && x.Name.StartsWith("get_") && !x.IsStatic)
-                .Select(x => x.Name.Substring("get_".Length)).Distinct();
+            var properties = new List<PropertyInfo>();
+            var propertySet = new HashSet<PropertyInfo>();
 
-            List<PropertyInfo> properties = typeInfo.DeclaredProperties
-                .Where(x => specialGetPropertyNames.Contains(x.Name))
-                .ToList();
+            if (type.IsInterface)
+                AddInterfaceProperties(type, isStatic: true, properties, propertySet, new HashSet<Type>());
+            else
+                AddClassProperties(type, isStatic: true, properties, propertySet);
 
-            if (typeInfo.IsInterface)
-            {
-                IEnumerable<PropertyInfo> sourceProperties = properties
-                    .Concat(typeInfo.ImplementedInterfaces.SelectMany(x => x.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance |
-                        BindingFlags.Static | BindingFlags.Public |
-                        BindingFlags.NonPublic)));
+            return properties.AsReadOnly();
+        }
 
-                foreach (var prop in sourceProperties)
-                    yield return prop;
+        public static IReadOnlyList<PropertyInfo> GetDeclaredReadableStaticProperties(this Type type)
+        {
+            ArgumentNullException.ThrowIfNull(type);
 
-                yield break;
-            }
+            return type.GetTypeInfo().DeclaredProperties
+                .Where(static property => property.GetGetMethod(nonPublic: true) is { IsStatic: true })
+                .ToList()
+                .AsReadOnly();
+        }
 
-            foreach (var info in properties)
-                yield return info;
+        static void AddClassProperties(Type type, bool isStatic, ICollection<PropertyInfo> properties, ISet<PropertyInfo> propertySet)
+        {
+            if (type.BaseType != null)
+                AddClassProperties(type.BaseType, isStatic, properties, propertySet);
+
+            AddDeclaredProperties(type, isStatic, properties, propertySet);
         }
 
         public static IEnumerable<Type> GetAllInterfaces(this Type type)
@@ -68,32 +78,45 @@ namespace ViciOne.ServiceBus.Internals
                 yield return interfaceType;
         }
 
-        public static IEnumerable<PropertyInfo> GetAllStaticProperties(this Type type)
+        static void AddInterfaceProperties(Type type, bool isStatic, ICollection<PropertyInfo> properties, ISet<PropertyInfo> propertySet,
+            ISet<Type> visitedInterfaces)
         {
-            var info = type.GetTypeInfo();
+            if (!visitedInterfaces.Add(type))
+                return;
 
-            if (type.BaseType != null)
-            {
-                foreach (var prop in GetAllStaticProperties(type.BaseType))
-                    yield return prop;
-            }
+            foreach (var interfaceType in GetDirectInterfaces(type))
+                AddInterfaceProperties(interfaceType, isStatic, properties, propertySet, visitedInterfaces);
 
-            IEnumerable<PropertyInfo?> props = info.DeclaredMethods
-                .Where(x => x.IsSpecialName && x.Name.StartsWith("get_") && x.IsStatic)
-                .Select(x => info.GetDeclaredProperty(x.Name.Substring("get_".Length)));
-
-            foreach (var propertyInfo in props)
-                if (propertyInfo != null)
-                    yield return propertyInfo;
+            AddDeclaredProperties(type, isStatic, properties, propertySet);
         }
 
-        public static IEnumerable<PropertyInfo?> GetStaticProperties(this Type type)
+        static IEnumerable<Type> GetDirectInterfaces(Type type)
         {
-            var info = type.GetTypeInfo();
+            Type[] interfaces = type.GetInterfaces();
+            var inheritedInterfaces = interfaces
+                .SelectMany(static interfaceType => interfaceType.GetInterfaces())
+                .ToHashSet();
 
-            return info.DeclaredMethods
-                .Where(x => x.IsSpecialName && x.Name.StartsWith("get_") && x.IsStatic)
-                .Select(x => info.GetDeclaredProperty(x.Name.Substring("get_".Length)));
+            return interfaces
+                .Where(interfaceType => !inheritedInterfaces.Contains(interfaceType))
+                .OrderBy(GetStableTypeIdentity, StringComparer.Ordinal);
+        }
+
+        static void AddDeclaredProperties(Type type, bool isStatic, ICollection<PropertyInfo> properties, ISet<PropertyInfo> propertySet)
+        {
+            foreach (PropertyInfo property in type.GetTypeInfo().DeclaredProperties)
+            {
+                MethodInfo? getter = property.GetGetMethod(nonPublic: true);
+                if (getter == null || getter.IsStatic != isStatic || !propertySet.Add(property))
+                    continue;
+
+                properties.Add(property);
+            }
+        }
+
+        static string GetStableTypeIdentity(Type type)
+        {
+            return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
         }
 
         /// <summary>

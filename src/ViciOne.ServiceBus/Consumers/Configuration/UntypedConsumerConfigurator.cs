@@ -16,6 +16,9 @@ namespace ViciOne.ServiceBus.Configuration
 
         public UntypedConsumerConfigurator(Func<Type, object> consumerFactory, IConsumerConfigurationObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(consumerFactory);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _consumerFactory = new DelegateConsumerFactory<TConsumer>(() => (TConsumer)consumerFactory(typeof(TConsumer)));
 
             _specification = ConsumerConnectorCache<TConsumer>.Connector.CreateConsumerSpecification<TConsumer>();
@@ -35,10 +38,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (_consumerFactory == null)
-                yield return this.Failure("The consumer factory cannot be null.");
-
-            if (!typeof(TConsumer).HasInterface<IConsumer>())
+            if (!typeof(TConsumer).ImplementsInterface<IConsumer>())
                 yield return this.Warning($"The consumer class {TypeCache<TConsumer>.ShortName} does not implement any IMessageConsumer interfaces");
 
             foreach (var result in _specification.Validate())
@@ -47,6 +47,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             ConsumerConnectorCache<TConsumer>.Connector.ConnectConsumer(builder, _consumerFactory, _specification);
         }
     }

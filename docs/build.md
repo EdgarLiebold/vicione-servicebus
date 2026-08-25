@@ -49,7 +49,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 886 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1472 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -74,6 +74,9 @@ endpoint-name formatting, message-URN contracts, and deterministic request-rate 
 profile also proves that a public one-dimensional array can be published and consumed as one
 ordered message contract; this compatibility feature is not a batch abstraction. Future-location
 URI round trips and their malformed-input boundaries are also part of the profile. The
+message- and host-retry cohort additionally proves exact retry-layer ownership, consumer and bus
+budgets, base/interface dispatch, bus-stop cancellation, host stopping precedence, caller-token
+identity, explicit deterministic delay and strict configuration boundaries. The
 TaskExecutor and TaskUtil cohorts add deterministic concurrency, cancellation, synchronous-wait,
 completion-source, and validation contracts without timing-based behavior assertions. The task
 initializer cohort adds type-safe reference and nullable-value projections, constant and lazy
@@ -92,7 +95,27 @@ usage-aware retention, exact hit accounting, tracker churn, and TTL behavior thr
 remaining same-named NUnit project cannot overwrite its resolved package graph. The
 serialization-fault cohort proves request-fault propagation, unsupported-body receive faults, and
 deep contract-type mismatch without dispatch through three real in-memory pipelines. The
-LocalIntegration floor is independent and includes only host-resource tests in that profile.
+message-metadata cohort additionally proves correlation priority and overrides, conversation
+causation, exact source and UTC sent-time metadata, header storage ownership, and complete interface
+header materialization. Message-context and dynamic-contract tests additionally prove complete
+send/request/response causation, independent response subscribers, timeout versus cancellation,
+accepted response types, emitted property-only contract validation, inherited and nested interface
+materialization, complete custom-attribute values, and all retained interface serializers. The
+request-client cohort adds deterministic deadline/TTL separation, multi-response arbitration,
+outbox bypass, scoped filter faults, mediator time ownership, complete response context, and
+secondary-bus isolation behind the A+ ViciOne.ServiceBus API rather than a MassTransit compatibility
+surface. The middleware coordination cohort additionally proves latest-value visibility,
+single-flight setup and recovery, abandoned-task observation, fork/join and nested-pipe ordering,
+partition isolation, dynamically adjustable rate/concurrency limits, exact observer and rescue
+semantics, distinct retry budgets, and deterministic circuit-breaker ownership through the standard
+`TimeProvider`. The
+scope/routing/limit cohort additionally proves parent/local payload isolation, typed fan-out,
+keyed routing, route disconnection, converter boundaries, exact input-pipeline continuation,
+configured concurrency maxima and the historical default circuit threshold. The fault-diagnostic
+and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
+application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
+one unambiguous current-host capture path and all eight host fields after real envelope transport.
+The LocalIntegration floor is independent and includes only host-resource tests in that profile.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in

@@ -31,7 +31,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public static IEndpointRegistration RegisterEndpoint(this IServiceCollection collection, IContainerRegistrar registrar, Type endpointDefinitionType)
         {
-            if (!endpointDefinitionType.ClosesType(typeof(IEndpointDefinition<>), out Type[] types))
+            if (!endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))
                 throw new ArgumentException($"{TypeCache.GetShortName(endpointDefinitionType)} is not an endpoint definition", nameof(endpointDefinitionType));
 
             var register = (IEndpointRegistrar)Activator.CreateInstance(typeof(EndpointRegistrar<,>).MakeGenericType(endpointDefinitionType, types[0]));

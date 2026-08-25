@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.Testing
         {
             _handler = handler;
 
-            _consumed = new ReceivedMessageList<TMessage>(testHarness.TestTimeout, testHarness.InactivityToken);
+            _consumed = new ReceivedMessageList<TMessage>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
 
             testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
         }
@@ -37,6 +37,7 @@ namespace ViciOne.ServiceBus.Testing
             catch (Exception ex)
             {
                 _consumed.Add(context, ex);
+                throw;
             }
         }
     }

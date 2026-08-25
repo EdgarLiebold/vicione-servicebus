@@ -14,8 +14,10 @@ namespace ViciOne.ServiceBus.Configuration
 
         public MessageRetryConfigurationObserver(IConsumePipeConfigurator receiveEndpointConfigurator, CancellationToken cancellationToken,
             Action<IRetryConfigurator> configure)
-            : base(receiveEndpointConfigurator)
+            : base(receiveEndpointConfigurator ?? throw new ArgumentNullException(nameof(receiveEndpointConfigurator)))
         {
+            ArgumentNullException.ThrowIfNull(configure);
+
             _cancellationToken = cancellationToken;
             _configure = configure;
 
@@ -27,7 +29,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<TMessage>, RetryConsumeContext<TMessage>>(Factory, _cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -41,7 +43,7 @@ namespace ViciOne.ServiceBus.Configuration
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<Batch<TMessage>>, RetryConsumeContext<Batch<TMessage>>>(Factory,
                 _cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             consumerSpecification.AddPipeSpecification(specification);
         }
@@ -50,7 +52,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ExecuteContextRetryPipeSpecification<TArguments>(_cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Arguments(x => x.AddPipeSpecification(specification));
         }
@@ -59,7 +61,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ExecuteContextRetryPipeSpecification<TArguments>(_cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Arguments(x => x.AddPipeSpecification(specification));
         }
@@ -68,7 +70,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new CompensateContextRetryPipeSpecification<TLog>(_cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Log(x => x.AddPipeSpecification(specification));
         }

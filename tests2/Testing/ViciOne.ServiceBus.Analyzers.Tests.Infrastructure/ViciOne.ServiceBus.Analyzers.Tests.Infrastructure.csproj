@@ -2,6 +2,12 @@
 
   <!-- Product-specific, framework-neutral Roslyn fixtures shared by analyzer and code-fix tests. -->
 
+  <PropertyGroup>
+    <!-- The assembly name identifies its consumer; the namespace identifies its architectural
+         owner inside the common framework-neutral test infrastructure. -->
+    <RootNamespace>ViciOne.ServiceBus.Tests.Infrastructure.Analyzers</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <ProjectReference Include="../ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj" />

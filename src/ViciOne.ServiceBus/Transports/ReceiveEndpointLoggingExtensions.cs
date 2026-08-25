@@ -32,6 +32,10 @@ namespace ViciOne.ServiceBus.Transports
         static readonly LogMessage<Uri, Guid?, string> _logSendFault = LogContext.Define<Uri, Guid?, string>(LogLevel.Error,
             "S-FAULT {DestinationAddress} {MessageId} {MessageType}");
 
+        static readonly LogMessage<Uri, Guid?, string, DateTime?, TimeSpan?> _logExpiredForward =
+            LogContext.DefineMessage<Uri, Guid?, string, DateTime?, TimeSpan?>(LogLevel.Information,
+                "FORWARD-EXPIRED {DestinationAddress} {MessageId} {MessageType} {ExpirationTime} {TimeToLive}");
+
         static readonly LogMessage<Uri, string> _logSkipped = LogContext.DefineMessage<Uri, string>(LogLevel.Debug,
             "SKIP {InputAddress} {MessageId}");
 
@@ -146,6 +150,13 @@ namespace ViciOne.ServiceBus.Transports
             where T : class
         {
             _logSent(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void LogExpiredForward<T>(this SendContext<T> context, DateTime? expirationTime, TimeSpan? timeToLive)
+            where T : class
+        {
+            _logExpiredForward(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName, expirationTime, timeToLive);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

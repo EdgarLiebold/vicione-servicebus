@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Middleware
 {
+    using System;
     using System.Threading.Tasks;
 
 
@@ -17,6 +18,8 @@ namespace ViciOne.ServiceBus.Middleware
 
         public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory)
         {
+            ArgumentNullException.ThrowIfNull(converterFactory);
+
             _filter = new DynamicFilter<TContext>(converterFactory);
             _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
         }
@@ -60,6 +63,9 @@ namespace ViciOne.ServiceBus.Middleware
 
         public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory, KeyAccessor<TContext, TKey> keyAccessor)
         {
+            ArgumentNullException.ThrowIfNull(converterFactory);
+            ArgumentNullException.ThrowIfNull(keyAccessor);
+
             _filter = new DynamicFilter<TContext, TKey>(converterFactory, keyAccessor);
             _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
         }

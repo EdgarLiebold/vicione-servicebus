@@ -16,6 +16,11 @@ namespace ViciOne.ServiceBus
         RequestTimeout DefaultTimeout { get; }
 
         /// <summary>
+        /// Time source used for request deadlines.
+        /// </summary>
+        TimeProvider TimeProvider { get; }
+
+        /// <summary>
         /// The address used for responses to messages sent by this client
         /// </summary>
         Uri ResponseAddress { get; }

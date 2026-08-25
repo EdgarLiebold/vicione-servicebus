@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "cohort": "middleware-coordination-and-resilience",
+  "compatibilityPolicy": "FEATURE_PRESERVATION_WITH_A_PLUS_API",
+  "entries": [
+    {
+      "obligationId": "OBL-R0-CORE-B-0389",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.LatestFilterTests.Latest_TransitionsFromPendingToTheMostRecentlyObservedContext"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0390",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.CircuitBreakerFilterTests.RetryCircuitBreakerAndConcurrencyLimit_ComposeAndRecoverThroughVirtualTime"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0391",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests.Observers_ReceiveTheSameContextInExactSuccessOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0392",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests.Observers_ReceiveTheSameContextInExactSuccessOrder"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0393",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests.Observers_ReceiveTheExactFailureAndNeverReportPostSend"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0394",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests.OneTimeSetup_ExecutesOnceForEveryConcurrentCaller"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0395",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests.OrCanceled_ObservesAFaultThatArrivesAfterCancellation"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0396",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.ForkFilterTests.Fork_StartsBothBranchesAndCompletesOnlyAfterBothFinish"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0397",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.PipeCompositionTests.NestedPipe_CompletesBeforeTheParentContinues"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0398",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.PartitionerTests.Partitioner_StringKeysDeliverEveryContextAndRejectANullRuntimeKey"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0399",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_AppliesRepeatedDynamicChangesInBothDirections"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0400",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_AppliesRepeatedDynamicChangesInBothDirections"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0401",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_CountsFaultedAndSuccessfulAttemptsEqually"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0402",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_ReplenishesExactlyWhenTheConfiguredTimeProviderAdvances"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0403",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests.Rescue_PassesTheExactHandledFailureToTheCustomRescueContext"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0404",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests.Rescue_PassesTheExactHandledFailureToTheCustomRescueContext"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0405",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests.Rescue_RethrowsTheExactExceptionExcludedByTheFilter"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0406",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests.Rescue_MatchesAnAggregateByItsBaseFailureButPreservesTheFullAggregateForDiagnostics"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-B-0407",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests.DistinctNestedPolicies_KeepIndependentBudgetsWithoutRecursiveMultiplication"
+    }
+  ]
+}

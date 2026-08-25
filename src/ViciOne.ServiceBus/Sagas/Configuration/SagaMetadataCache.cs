@@ -3,150 +3,69 @@ namespace ViciOne.ServiceBus.Configuration
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Saga;
 
 
-    public class SagaMetadataCache<TSaga> :
-        ISagaMetadataCache<TSaga>
+    internal sealed class SagaMetadataCache<TSaga>
         where TSaga : class, ISaga
     {
-        SagaInstanceFactoryMethod<TSaga> _factoryMethod;
+        readonly SagaInstanceFactoryMethod<TSaga> _factoryMethod;
+        readonly SagaMessageConnectorDescriptor[] _initiatedByOrOrchestratesTypes;
+        readonly SagaMessageConnectorDescriptor[] _initiatedByTypes;
+        readonly SagaMessageConnectorDescriptor[] _observesTypes;
+        readonly SagaMessageConnectorDescriptor[] _orchestratesTypes;
 
         SagaMetadataCache()
         {
-            GetActivatorSagaInstanceFactoryMethod();
+            _initiatedByTypes = GetMessageContracts(typeof(InitiatedBy<>));
+            _orchestratesTypes = GetMessageContracts(typeof(Orchestrates<>));
+            _initiatedByOrOrchestratesTypes = GetMessageContracts(typeof(InitiatedByOrOrchestrates<>));
+            _observesTypes = GetMessageContracts(typeof(Observes<,>));
+
+            _factoryMethod = CreateSagaInstanceFactory();
         }
 
-        public static SagaInterfaceType[] InitiatedByTypes => Cached.Instance.Value.InitiatedByTypes;
-        public static SagaInterfaceType[] OrchestratesTypes => Cached.Instance.Value.OrchestratesTypes;
-        public static SagaInterfaceType[] ObservesTypes => Cached.Instance.Value.ObservesTypes;
-        public static SagaInterfaceType[] InitiatedByOrOrchestratesTypes => Cached.Instance.Value.InitiatedByOrOrchestratesTypes;
-        public static SagaInstanceFactoryMethod<TSaga> FactoryMethod => Cached.Instance.Value.FactoryMethod;
+        public static IReadOnlyList<SagaMessageConnectorDescriptor> InitiatedByTypes => Cached.Instance.Value._initiatedByTypes;
+        public static IReadOnlyList<SagaMessageConnectorDescriptor> OrchestratesTypes => Cached.Instance.Value._orchestratesTypes;
+        public static IReadOnlyList<SagaMessageConnectorDescriptor> ObservesTypes => Cached.Instance.Value._observesTypes;
+        public static IReadOnlyList<SagaMessageConnectorDescriptor> InitiatedByOrOrchestratesTypes =>
+            Cached.Instance.Value._initiatedByOrOrchestratesTypes;
+        public static SagaInstanceFactoryMethod<TSaga> FactoryMethod => Cached.Instance.Value._factoryMethod;
 
-        SagaInstanceFactoryMethod<TSaga> ISagaMetadataCache<TSaga>.FactoryMethod => _factoryMethod;
-        SagaInterfaceType[] ISagaMetadataCache<TSaga>.InitiatedByTypes => GetInitiatingTypes().ToArray();
-        SagaInterfaceType[] ISagaMetadataCache<TSaga>.OrchestratesTypes => GetOrchestratingTypes().ToArray();
-        SagaInterfaceType[] ISagaMetadataCache<TSaga>.ObservesTypes => GetObservingTypes().ToArray();
-        SagaInterfaceType[] ISagaMetadataCache<TSaga>.InitiatedByOrOrchestratesTypes => GetInitiatingOrOrchestratingTypes().ToArray();
-
-        void GetActivatorSagaInstanceFactoryMethod()
+        static SagaInstanceFactoryMethod<TSaga> CreateSagaInstanceFactory()
         {
-            var constructorInfo = typeof(TSaga).GetConstructor(new[] { typeof(Guid) });
-            if (constructorInfo != null)
+            if (typeof(TSaga).GetConstructor([typeof(Guid)]) is not null)
+                return new ConstructorSagaInstanceFactory<TSaga>().FactoryMethod;
+
+            if (typeof(TSaga).GetConstructor(Type.EmptyTypes) is not null
+                && typeof(TSaga).GetProperty(nameof(ISaga.CorrelationId), typeof(Guid))?.SetMethod is not null)
             {
-                // this takes zero compilation time and speeds up application startup time
-                // while the optimized method is generated asynchronously
-                _factoryMethod = correlationId => (TSaga)Activator.CreateInstance(typeof(TSaga), correlationId);
-
-                Task.Run(GenerateFactoryMethodAsynchronously);
+                return new PropertySagaInstanceFactory<TSaga>().FactoryMethod;
             }
-            else
-            {
-                constructorInfo = typeof(TSaga).GetConstructor(Type.EmptyTypes);
-                var propertyInfo = typeof(TSaga).GetProperty("CorrelationId", typeof(Guid));
-                if (constructorInfo != null && propertyInfo != null)
-                {
-                    // this takes zero compilation time and speeds up application startup time
-                    // while the optimized method is generated asynchronously
-                    _factoryMethod = correlationId =>
-                    {
-                        var saga = (TSaga)Activator.CreateInstance(typeof(TSaga));
 
-                        propertyInfo.SetValue(saga, correlationId);
-
-                        return saga;
-                    };
-
-                    Task.Run(GeneratePropertyFactoryMethodAsynchronously);
-                }
-                else
-                {
-                    throw new ConfigurationException(
-                        $"The saga {TypeCache<TSaga>.ShortName} must have either a default constructor and a writable CorrelationId property or a constructor with a single Guid argument to assign the CorrelationId");
-                }
-            }
+            throw new ConfigurationException(
+                $"The saga {TypeCache<TSaga>.ShortName} must have either a public constructor with one Guid parameter, "
+                + "or a public parameterless constructor and a writable CorrelationId property.");
         }
 
-        /// <summary>
-        /// Creates a task to generate a compiled saga factory method that is faster than the
-        /// regular Activator, but doing this asynchronously ensures we don't slow down startup
-        /// </summary>
-        /// <returns></returns>
-        async Task GenerateFactoryMethodAsynchronously()
-        {
-            try
-            {
-                var factory = new ConstructorSagaInstanceFactory<TSaga>();
-
-                Interlocked.Exchange(ref _factoryMethod, factory.FactoryMethod);
-            }
-            catch (Exception ex)
-            {
-                LogContext.Error?.Log(ex, "Generate constructor instance factory faulted: {SagaType}", TypeCache<TSaga>.ShortName);
-            }
-        }
-
-        /// <summary>
-        /// Creates a task to generate a compiled saga factory method that is faster than the
-        /// regular Activator, but doing this asynchronously ensures we don't slow down startup
-        /// </summary>
-        /// <returns></returns>
-        async Task GeneratePropertyFactoryMethodAsynchronously()
-        {
-            try
-            {
-                var factory = new PropertySagaInstanceFactory<TSaga>();
-
-                Interlocked.Exchange(ref _factoryMethod, factory.FactoryMethod);
-            }
-            catch (Exception ex)
-            {
-                LogContext.Error?.Log(ex, "Generate property instance factory faulted: {SagaType}", TypeCache<TSaga>.ShortName);
-            }
-        }
-
-        static IEnumerable<SagaInterfaceType> GetInitiatingTypes()
+        static SagaMessageConnectorDescriptor[] GetMessageContracts(Type contractTypeDefinition)
         {
             return typeof(TSaga).GetInterfaces()
                 .Where(x => x.IsGenericType)
-                .Where(x => x.GetGenericTypeDefinition() == typeof(InitiatedBy<>))
-                .Select(x => new SagaInterfaceType(x, x.GetGenericArguments()[0], typeof(TSaga)))
-                .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));
+                .Where(x => x.GetGenericTypeDefinition() == contractTypeDefinition)
+                .Select(x => x.GetGenericArguments()[0])
+                .Where(MessageTypeCache.IsValidMessageType)
+                .Select(x => new SagaMessageConnectorDescriptor(x, typeof(TSaga)))
+                .OrderBy(x => GetStableTypeName(x.MessageType), StringComparer.Ordinal)
+                .ToArray();
         }
 
-        static IEnumerable<SagaInterfaceType> GetOrchestratingTypes()
-        {
-            return typeof(TSaga).GetInterfaces()
-                .Where(x => x.IsGenericType)
-                .Where(x => x.GetGenericTypeDefinition() == typeof(Orchestrates<>))
-                .Select(x => new SagaInterfaceType(x, x.GetGenericArguments()[0], typeof(TSaga)))
-                .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));
-        }
-
-        static IEnumerable<SagaInterfaceType> GetObservingTypes()
-        {
-            return typeof(TSaga).GetInterfaces()
-                .Where(x => x.IsGenericType)
-                .Where(x => x.GetGenericTypeDefinition() == typeof(Observes<,>))
-                .Select(x => new SagaInterfaceType(x, x.GetGenericArguments()[0], typeof(TSaga)))
-                .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));
-        }
-
-        static IEnumerable<SagaInterfaceType> GetInitiatingOrOrchestratingTypes()
-        {
-            return typeof(TSaga).GetInterfaces()
-                .Where(x => x.IsGenericType)
-                .Where(x => x.GetGenericTypeDefinition() == typeof(InitiatedByOrOrchestrates<>))
-                .Select(x => new SagaInterfaceType(x, x.GetGenericArguments()[0], typeof(TSaga)))
-                .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType));
-        }
+        static string GetStableTypeName(Type type) => type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
 
 
         static class Cached
         {
-            internal static readonly Lazy<ISagaMetadataCache<TSaga>> Instance = new Lazy<ISagaMetadataCache<TSaga>>(() => new SagaMetadataCache<TSaga>());
+            internal static readonly Lazy<SagaMetadataCache<TSaga>> Instance = new Lazy<SagaMetadataCache<TSaga>>(() => new SagaMetadataCache<TSaga>());
         }
     }
 }

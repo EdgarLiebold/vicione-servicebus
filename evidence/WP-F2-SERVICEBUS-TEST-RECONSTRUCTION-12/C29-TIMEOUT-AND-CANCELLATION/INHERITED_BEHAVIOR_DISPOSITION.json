@@ -1,0 +1,34 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-D-0021",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Cancellation_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.When_the_transport_cancels.Should_not_produce_a_fault_on_shutdown",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Middleware.Timeout.TimeoutCancellationIntegrationTests.TransportStop_CancelsTheHandlerWithoutPublishingAFault",
+    "rationale": "The replacement proves real transport-stop cancellation through an installed timeout filter and the absence of a published Fault message."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0022",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Cancellation_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.When_the_transport_cancels.Should_produce_fault_on_internal_cancellation",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Middleware.Timeout.TimeoutCancellationIntegrationTests.IndependentHandlerCancellation_PublishesTheExactFault",
+    "rationale": "The replacement proves that an independently canceled handler publishes exactly one fault with the exact cancellation classification."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0023",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Cancellation_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.When_the_transport_cancels.Should_produce_fault_on_timeout",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Middleware.Timeout.TimeoutCancellationIntegrationTests.PipelineTimeout_PublishesOneFaultAndDoesNotContinueTheHandler",
+    "rationale": "The replacement advances virtual time, proves timeout fault classification and causal exception nesting, and proves the handler does not continue."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0466",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Timeout_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Timeout_Specs.Should_throw_on_timeout",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Middleware.Timeout.TimeoutCancellationIntegrationTests.PipelineTimeout_PublishesOneFaultAndDoesNotContinueTheHandler",
+    "rationale": "The replacement retains the original short-circuit behavior without wall-clock delay and strengthens it with exact fault and cause assertions."
+  }
+]

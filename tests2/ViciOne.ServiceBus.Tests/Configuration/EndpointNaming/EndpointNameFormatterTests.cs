@@ -60,11 +60,16 @@ public sealed class EndpointNameFormatterTests
     {
         var formatter = new KebabCaseEndpointNameFormatter("Dev", includeNamespace: true);
 
-        var actual = formatter.Consumer<GenericConsumer<EndpointMessage>>();
+        string first = formatter.Consumer<GenericConsumer<MarkerType, EndpointMessage>>();
+        string second = formatter.Consumer<GenericConsumer<MarkerType, AlternateEndpointMessage>>();
 
         Assert.Equal(
             "dev-vici-one-service-bus-tests-configuration-endpoint-naming-endpoint-name-formatter-tests-endpoint-message",
-            actual);
+            first);
+        Assert.Equal(
+            "dev-vici-one-service-bus-tests-configuration-endpoint-naming-endpoint-name-formatter-tests-alternate-endpoint-message",
+            second);
+        Assert.NotEqual(first, second);
     }
 
     [Fact]
@@ -178,6 +183,12 @@ public sealed class EndpointNameFormatterTests
 
     private sealed record EndpointMessage;
 
+    private sealed record AlternateEndpointMessage;
+
+    private sealed class MarkerType
+    {
+    }
+
     private sealed class SomeReallyCoolConsumer : IConsumer<EndpointMessage>
     {
         public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
@@ -193,10 +204,11 @@ public sealed class EndpointNameFormatterTests
         public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
-    private sealed class GenericConsumer<T> : IConsumer<T>
-        where T : class
+    private sealed class GenericConsumer<TMetadata, TMessage> : IConsumer<TMessage>
+        where TMetadata : class
+        where TMessage : class
     {
-        public Task Consume(ConsumeContext<T> context) => Task.CompletedTask;
+        public Task Consume(ConsumeContext<TMessage> context) => Task.CompletedTask;
     }
 
     private sealed class Consumer : IConsumer<EndpointMessage>

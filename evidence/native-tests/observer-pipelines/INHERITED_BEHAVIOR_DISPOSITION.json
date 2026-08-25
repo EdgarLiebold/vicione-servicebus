@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "cohort": "observer-pipelines",
+  "profile": "UnitArchitecture",
+  "ledger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "inheritedSources": [
+    { "path": "tests/ViciOne.ServiceBus.Tests/MessageFlow_Specs.cs", "sha256": "efd81bafc578dc2997708028dc2683f5a2bed75460a782805d107d8c852a810b" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Observer_Specs.cs", "sha256": "621b2bbacb100da42247e4ba8ec47272d65d3a1b61addbdf3565355b0bdb4261" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/PublishObserver_Specs.cs", "sha256": "a5b871529d4c18be0c30f71171a8e6e5e1be6722a25f3cf10302968d9f7045cf" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/ReceiveObserver_Specs.cs", "sha256": "ca66d85aefcf258947ba2ed5042edbe8b51ca181d106de4d37bb8a4c26dbbd10" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/SendObserver_Specs.cs", "sha256": "052cc8f05bbc39f37714808bb2091ed1a7099e9677e496f0477e68c060032b2c" }
+  ],
+  "dispositions": [
+    { "obligationId": "OBL-R0-CORE-D-0259", "replacement": "ViciOne.ServiceBus.Tests.Testing.DiagnosticOutputTests.Timeline_RendersTheProducedAndConsumedMessageFlowWithItsAddress" },
+    { "obligationId": "OBL-R0-CORE-D-0293", "replacement": "ViciOne.ServiceBus.Tests.Observers.MessageObserverTests.ConfiguredObserver_ReceivesTheFilteredContextAndCompletesTheRequestResponse" },
+    { "obligationId": "OBL-R0-CORE-D-0312", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesTheExactPublishFailureWithoutPostPublishOrSendObservation" },
+    { "obligationId": "OBL-R0-CORE-D-0313", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesPublishedEventsAndRequestsButNeverReportsThemAsSends" },
+    { "obligationId": "OBL-R0-CORE-D-0314", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesPublishedEventsAndRequestsButNeverReportsThemAsSends" },
+    { "obligationId": "OBL-R0-CORE-D-0315", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesPublishedEventsAndRequestsButNeverReportsThemAsSends" },
+    { "obligationId": "OBL-R0-CORE-D-0316", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesTheExactPublishFailureWithoutPostPublishOrSendObservation" },
+    { "obligationId": "OBL-R0-CORE-D-0317", "replacement": "ViciOne.ServiceBus.Tests.Observers.PublishObserverTests.PublishObserver_SeesPublishedEventsAndRequestsButNeverReportsThemAsSends" },
+    { "obligationId": "OBL-R0-CORE-D-0327", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundaries" },
+    { "obligationId": "OBL-R0-CORE-D-0328", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundaries" },
+    { "obligationId": "OBL-R0-CORE-D-0329", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundaries" },
+    { "obligationId": "OBL-R0-CORE-D-0330", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.ConsumerFailure_ReportsConsumeFaultThenCompletesTheHandledReceive" },
+    { "obligationId": "OBL-R0-CORE-D-0331", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.ConsumerFailure_ReportsConsumeFaultThenCompletesTheHandledReceive" },
+    { "obligationId": "OBL-R0-CORE-D-0332", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundaries" },
+    { "obligationId": "OBL-R0-CORE-D-0333", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.FailureAfterSuccessfulConsumption_ReportsReceiveFaultThenCompletesTheHandledDelivery" },
+    { "obligationId": "OBL-R0-CORE-D-0334", "replacement": "ViciOne.ServiceBus.Tests.Observers.ReceiveObserverTests.FailureAfterSuccessfulConsumption_ReportsReceiveFaultThenCompletesTheHandledDelivery" },
+    { "obligationId": "OBL-R0-CORE-D-0404", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusObserver_DistinguishesTheOriginalSendFromAFaultedResponseSend" },
+    { "obligationId": "OBL-R0-CORE-D-0405", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSend" },
+    { "obligationId": "OBL-R0-CORE-D-0406", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependently" },
+    { "obligationId": "OBL-R0-CORE-D-0407", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependently" },
+    { "obligationId": "OBL-R0-CORE-D-0408", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSend" },
+    { "obligationId": "OBL-R0-CORE-D-0409", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSend" },
+    { "obligationId": "OBL-R0-CORE-D-0410", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependently" },
+    { "obligationId": "OBL-R0-CORE-D-0411", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependently" },
+    { "obligationId": "OBL-R0-CORE-D-0412", "replacement": "ViciOne.ServiceBus.Tests.Observers.SendObserverTests.BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSend" },
+    { "obligationId": "OBL-R0-CORE-D-0413", "replacement": "ViciOne.ServiceBus.Tests.Mediator.Contexts.MediatorSendObserverTests.Observer_ReportsOneSendForOneWayAndBothSendsForRequestResponse" },
+    { "obligationId": "OBL-R0-CORE-D-0414", "replacement": "ViciOne.ServiceBus.Tests.Mediator.Contexts.MediatorSendObserverTests.Observer_ReportsOneSendForOneWayAndBothSendsForRequestResponse" }
+  ],
+  "closure": {
+    "inheritedObligations": 27,
+    "terminalReplacements": 27,
+    "unresolved": 0
+  }
+}

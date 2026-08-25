@@ -1,21 +1,25 @@
 namespace ViciOne.ServiceBus
 {
     using System;
-    using System.Collections.Concurrent;
+    using System.Runtime.CompilerServices;
     using Internals;
-    using Metadata;
 
 
     public static class TypeCache
     {
         static CachedType GetOrAdd(Type type)
         {
-            return Cached.Instance.GetOrAdd(type, _ => Activation.Activate(type, new Factory()));
+            ArgumentNullException.ThrowIfNull(type);
+
+            return Cached.Instance.GetValue(type, static value => new CachedType(value.GetTypeName()));
         }
 
         internal static void GetOrAdd<T>(Type type, ITypeCache<T> typeCache)
         {
-            Cached.Instance.GetOrAdd(type, _ => new CachedType<T>(typeCache));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(typeCache);
+
+            Cached.Instance.GetValue(type, _ => new CachedType(typeCache.ShortName));
         }
 
         public static string GetShortName(Type type)
@@ -23,46 +27,20 @@ namespace ViciOne.ServiceBus
             return GetOrAdd(type).ShortName;
         }
 
-
-        readonly struct Factory :
-            IActivationType<CachedType>
-        {
-            public CachedType ActivateType<T>()
-                where T : class
-            {
-                return new CachedType<T>();
-            }
-        }
-
-
         static class Cached
         {
-            internal static readonly ConcurrentDictionary<Type, CachedType> Instance = new ConcurrentDictionary<Type, CachedType>();
+            internal static readonly ConditionalWeakTable<Type, CachedType> Instance = new();
         }
 
 
-        interface CachedType
+        sealed class CachedType
         {
-            string ShortName { get; }
-        }
-
-
-        class CachedType<T> :
-            CachedType
-        {
-            string? _shortName;
-
-            // ReSharper disable once UnusedMember.Local
-            public CachedType()
+            public CachedType(string shortName)
             {
+                ShortName = shortName;
             }
 
-            public CachedType(ITypeCache<T> typeCache)
-            {
-                _shortName = typeCache.ShortName;
-            }
-
-            public string ShortName => _shortName ??= TypeCache<T>.ShortName;
+            public string ShortName { get; }
         }
     }
 

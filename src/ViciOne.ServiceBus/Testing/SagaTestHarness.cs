@@ -14,11 +14,11 @@ namespace ViciOne.ServiceBus.Testing
 
         public SagaTestHarness(BusTestHarness testHarness, ISagaRepository<TSaga> repository, IQuerySagaRepository<TSaga> querySagaRepository,
             ILoadSagaRepository<TSaga> loadSagaRepository, string queueName)
-            : base(querySagaRepository, loadSagaRepository, testHarness.TestTimeout)
+            : base(querySagaRepository, loadSagaRepository, testHarness.TestTimeout, testHarness.TimeProvider)
         {
-            _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken);
-            _created = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken);
-            _sagas = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken);
+            _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
+            _created = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
+            _sagas = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
 
             TestRepository = new TestSagaRepositoryDecorator<TSaga>(repository, _consumed, _created, _sagas);
 

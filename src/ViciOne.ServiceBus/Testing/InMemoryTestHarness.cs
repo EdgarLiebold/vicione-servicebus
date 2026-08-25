@@ -20,7 +20,18 @@ namespace ViciOne.ServiceBus.Testing
         {
         }
 
+        public InMemoryTestHarness(TimeProvider timeProvider, string virtualHost = null)
+            : this(virtualHost, Enumerable.Empty<IBusInstanceSpecification>(), timeProvider)
+        {
+        }
+
         public InMemoryTestHarness(string virtualHost, IEnumerable<IBusInstanceSpecification> specifications)
+            : this(virtualHost, specifications, TimeProvider.System)
+        {
+        }
+
+        public InMemoryTestHarness(string virtualHost, IEnumerable<IBusInstanceSpecification> specifications, TimeProvider timeProvider)
+            : base(timeProvider)
         {
             BaseAddress = new Uri("loopback://localhost/");
             if (!string.IsNullOrWhiteSpace(virtualHost))

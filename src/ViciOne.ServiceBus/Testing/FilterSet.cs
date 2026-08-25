@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Testing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -19,6 +20,8 @@ namespace ViciOne.ServiceBus.Testing
 
         protected FilterSet<T> Add(FilterDelegate<T> filter)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             _all = x => _list.All(predicate => predicate(x));
             _any = x => _list.Any(predicate => predicate(x));
             _notAny = x => !_any(x);

@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     {
         public RegistrationSagaStateMachineTestHarness(ISagaRepositoryDecoratorRegistration<TInstance> registration,
             IQuerySagaRepository<TInstance> querySagaRepository, ILoadSagaRepository<TInstance> loadSagaRepository, TStateMachine stateMachine)
-            : base(querySagaRepository, loadSagaRepository, registration.TestTimeout)
+            : base(querySagaRepository, loadSagaRepository, registration.TestTimeout, registration.TimeProvider)
         {
             StateMachine = stateMachine;
             Consumed = registration.Consumed;
@@ -58,20 +58,13 @@ namespace ViciOne.ServiceBus.Testing.Implementations
             if (QuerySagaRepository == null)
                 throw new InvalidOperationException("The repository does not support Query operations");
 
-            var giveUpAt = DateTime.Now + (timeout ?? TestTimeout);
-
             ISagaQuery<TInstance> query = StateMachine.CreateSagaQuery(x => x.CorrelationId == correlationId, state);
 
-            while (DateTime.Now < giveUpAt)
-            {
-                var saga = (await QuerySagaRepository.Find(query).ConfigureAwait(false)).FirstOrDefault();
-                if (saga != Guid.Empty)
-                    return saga;
-
-                await Task.Delay(10).ConfigureAwait(false);
-            }
-
-            return default;
+            return await PollAsync(
+                async () => (Guid?)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).FirstOrDefault(),
+                sagaId => sagaId.HasValue && sagaId.Value != Guid.Empty,
+                default(Guid?),
+                timeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -100,20 +93,13 @@ namespace ViciOne.ServiceBus.Testing.Implementations
             if (QuerySagaRepository == null)
                 throw new InvalidOperationException("The repository does not support Query operations");
 
-            var giveUpAt = DateTime.Now + (timeout ?? TestTimeout);
-
             ISagaQuery<TInstance> query = StateMachine.CreateSagaQuery(expression, state);
 
-            while (DateTime.Now < giveUpAt)
-            {
-                List<Guid> sagas = (await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList();
-                if (sagas.Count > 0)
-                    return sagas;
-
-                await Task.Delay(10).ConfigureAwait(false);
-            }
-
-            return default;
+            return await PollAsync(
+                async () => (IList<Guid>)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList(),
+                sagas => sagas.Count > 0,
+                default(IList<Guid>),
+                timeout).ConfigureAwait(false);
         }
     }
 }

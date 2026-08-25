@@ -209,7 +209,7 @@ namespace ViciOne.ServiceBus
         /// <param name="sagaDefinitionType">The saga definition type</param>
         public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type sagaDefinitionType = null)
         {
-            if (sagaType.HasInterface<SagaStateMachineInstance>())
+            if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
 
             var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType));
@@ -226,7 +226,7 @@ namespace ViciOne.ServiceBus
         public static ISagaRegistrationConfigurator AddSagaStateMachine(this IRegistrationConfigurator configurator, Type sagaType,
             Type sagaDefinitionType = null)
         {
-            if (!sagaType.ClosesType(typeof(SagaStateMachine<>), out Type[] types))
+            if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types))
                 throw new ArgumentException($"The type is not a saga state machine: {TypeCache.GetShortName(sagaType)}", nameof(sagaType));
 
             var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, types[0]));
@@ -243,7 +243,7 @@ namespace ViciOne.ServiceBus
         public static IActivityRegistrationConfigurator AddActivity(this IRegistrationConfigurator configurator, Type activityType,
             Type activityDefinitionType = null)
         {
-            if (!activityType.ClosesType(typeof(IActivity<,>), out Type[] types))
+            if (!activityType.TryGetSingleClosedGenericArguments(typeof(IActivity<,>), out Type[] types))
                 throw new ArgumentException($"The type is not a Courier activity: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
             var register = (IRegisterActivity)Activator.CreateInstance(typeof(RegisterActivity<,,>).MakeGenericType(activityType, types[0], types[1]));
@@ -260,7 +260,7 @@ namespace ViciOne.ServiceBus
         public static IExecuteActivityRegistrationConfigurator AddExecuteActivity(this IRegistrationConfigurator configurator, Type activityType,
             Type activityDefinitionType = null)
         {
-            if (!activityType.ClosesType(typeof(IExecuteActivity<>), out Type[] types))
+            if (!activityType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivity<>), out Type[] types))
                 throw new ArgumentException($"The type is not a Courier execute activity: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
             var register = (IRegisterExecuteActivity)Activator.CreateInstance(typeof(RegisterExecuteActivity<,>).MakeGenericType(activityType, types[0]));
@@ -277,7 +277,12 @@ namespace ViciOne.ServiceBus
         public static IFutureRegistrationConfigurator AddFuture(this IRegistrationConfigurator configurator, Type futureType,
             Type futureDefinitionType = null)
         {
-            if (!futureType.ClosesType(typeof(SagaStateMachine<>), out Type[] types) && types[0] == typeof(FutureState))
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(futureType);
+
+            if (!futureType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types)
+                || types.Length != 1
+                || types[0] != typeof(FutureState))
                 throw new ArgumentException($"The type is not a future: {TypeCache.GetShortName(futureType)}", nameof(futureType));
 
             var register = (IRegisterFuture)Activator.CreateInstance(typeof(RegisterFuture<>).MakeGenericType(futureType));

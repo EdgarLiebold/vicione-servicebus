@@ -51,6 +51,9 @@ namespace ViciOne.ServiceBus
 
         public Response(Task<Response<T1>> response1, Task<Response<T2>> response2)
         {
+            ArgumentNullException.ThrowIfNull(response1);
+            ArgumentNullException.ThrowIfNull(response2);
+
             _response1Task = response1;
             _response2Task = response2;
 
@@ -157,6 +160,10 @@ namespace ViciOne.ServiceBus
 
         public Response(Task<Response<T1>> response1, Task<Response<T2>> response2, Task<Response<T3>> response3)
         {
+            ArgumentNullException.ThrowIfNull(response1);
+            ArgumentNullException.ThrowIfNull(response2);
+            ArgumentNullException.ThrowIfNull(response3);
+
             _response1Task = response1;
             _response2Task = response2;
             _response3Task = response3;

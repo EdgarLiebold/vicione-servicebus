@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
+
+  <PropertyGroup>
+    <Description>Signed, xUnit-free access bridge for testing internal ViciOne.ServiceBus runtime state machines.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+</Project>

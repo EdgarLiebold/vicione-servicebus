@@ -1,9 +1,10 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
 
 
-    public class TimeoutConfigurationObserver :
+    internal sealed class TimeoutConfigurationObserver :
         ConfigurationObserver,
         IMessageConfigurationObserver
     {
@@ -22,7 +23,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new TimeoutSpecification<TMessage>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -31,7 +32,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new TimeoutSpecification<Batch<TMessage>>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Message(m => m.AddPipeSpecification(specification));
         }
@@ -40,7 +41,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Arguments(x => x.AddPipeSpecification(specification));
         }
@@ -49,7 +50,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Arguments(x => x.AddPipeSpecification(specification));
         }
@@ -58,7 +59,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new CompensateContextTimeoutSpecification<TLog>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.Log(x => x.AddPipeSpecification(specification));
         }

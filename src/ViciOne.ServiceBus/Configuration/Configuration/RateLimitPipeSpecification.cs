@@ -12,17 +12,19 @@ namespace ViciOne.ServiceBus.Configuration
         readonly TimeSpan _interval;
         readonly int _rateLimit;
         readonly IPipeRouter _router;
+        readonly TimeProvider _timeProvider;
 
-        public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter router = null)
+        public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter router = null, TimeProvider timeProvider = null)
         {
             _rateLimit = rateLimit;
             _interval = interval;
             _router = router;
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public void Apply(IPipeBuilder<T> builder)
         {
-            var filter = new RateLimitFilter<T>(_rateLimit, _interval);
+            var filter = new RateLimitFilter<T>(_rateLimit, _interval, _timeProvider);
 
             builder.AddFilter(filter);
 

@@ -30,7 +30,7 @@ namespace ViciOne.ServiceBus.Configuration
         public void ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
             where T : class
         {
-            if (typeof(T).HasInterface(typeof(IJobConsumer<>)))
+            if (typeof(T).ImplementsInterface(typeof(IJobConsumer<>)))
             {
                 _consumerConfigurators.Add(typeof(T), configurator);
 
@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.Configuration
             where T : class
             where TMessage : class
         {
-            if (typeof(T).HasInterface<IJobConsumer<TMessage>>()
+            if (typeof(T).ImplementsInterface<IJobConsumer<TMessage>>()
                 && _consumerConfigurators.TryGetValue(typeof(T), out var value)
                 && value is IConsumerConfigurator<T> consumerConfigurator)
             {

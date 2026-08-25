@@ -44,7 +44,7 @@ namespace ViciOne.ServiceBus.Initializers.Conventions
                 // can only copy to object, no idea what the destination type would/could be
                 if (propertyType == typeof(object))
                 {
-                    if (inputPropertyType.IsTask(out var taskType))
+                    if (inputPropertyType.TryGetTaskResultType(out var taskType))
                     {
                         var type = typeof(CopyAsyncObjectPropertyInitializer<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), taskType);
                         initializer = (IPropertyInitializer<TMessage, TInput>)Activator.CreateInstance(type, propertyInfo, inputPropertyInfo);

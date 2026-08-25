@@ -21,6 +21,8 @@ namespace ViciOne.ServiceBus
         {
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
+            if (pipeContextProviderFactory == null)
+                throw new ArgumentNullException(nameof(pipeContextProviderFactory));
 
             var specification = new DispatchPipeSpecification<T>(pipeContextProviderFactory);
 

@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.Middleware
 
         public DynamicFilter(IPipeContextConverterFactory<TInput> converterFactory)
         {
-            ConverterFactory = converterFactory;
+            ConverterFactory = converterFactory ?? throw new ArgumentNullException(nameof(converterFactory));
 
             _outputPipes = new Dictionary<Type, IOutputFilter>();
             _outputPipeArray = [];
@@ -121,9 +121,24 @@ namespace ViciOne.ServiceBus.Middleware
         protected virtual IOutputFilter CreateOutputPipe<T>()
             where T : class, PipeContext
         {
-            IPipeContextConverter<TInput, T> converter = ConverterFactory.GetConverter<T>();
+            EnsureCompatibleOutputType<T>();
 
-            return (IOutputFilter)Activator.CreateInstance(typeof(OutputFilter<>).MakeGenericType(typeof(TInput), typeof(T)), Observers, converter);
+            IPipeContextConverter<TInput, T> converter = ConverterFactory.GetConverter<T>()
+                ?? throw new InvalidOperationException($"The converter factory returned null for output context type {TypeCache<T>.ShortName}.");
+
+            return (IOutputFilter)(Activator.CreateInstance(typeof(OutputFilter<>).MakeGenericType(typeof(TInput), typeof(T)), Observers, converter)
+                ?? throw new InvalidOperationException($"The output filter could not be created for context type {TypeCache<T>.ShortName}."));
+        }
+
+        protected static void EnsureCompatibleOutputType<T>()
+            where T : class, PipeContext
+        {
+            if (!typeof(TInput).IsAssignableFrom(typeof(T)))
+            {
+                throw new ArgumentException(
+                    $"The output context type {TypeCache<T>.ShortName} must implement {TypeCache<TInput>.ShortName}.",
+                    nameof(T));
+            }
         }
 
 
@@ -194,7 +209,7 @@ namespace ViciOne.ServiceBus.Middleware
         public DynamicFilter(IPipeContextConverterFactory<TInput> converterFactory, KeyAccessor<TInput, TKey> keyAccessor)
             : base(converterFactory)
         {
-            _keyAccessor = keyAccessor;
+            _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
         }
 
         public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
@@ -210,9 +225,15 @@ namespace ViciOne.ServiceBus.Middleware
 
         protected override IOutputFilter CreateOutputPipe<T>()
         {
+            EnsureCompatibleOutputType<T>();
+
             var dynamicType = typeof(KeyOutputFilter<>).MakeGenericType(typeof(TInput), typeof(TKey), typeof(T));
 
-            return (IOutputFilter)Activator.CreateInstance(dynamicType, Observers, ConverterFactory.GetConverter<T>(), _keyAccessor);
+            IPipeContextConverter<TInput, T> converter = ConverterFactory.GetConverter<T>()
+                ?? throw new InvalidOperationException($"The converter factory returned null for output context type {TypeCache<T>.ShortName}.");
+
+            return (IOutputFilter)(Activator.CreateInstance(dynamicType, Observers, converter, _keyAccessor)
+                ?? throw new InvalidOperationException($"The keyed output filter could not be created for context type {TypeCache<T>.ShortName}."));
         }
 
 

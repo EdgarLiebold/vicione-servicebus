@@ -13,13 +13,15 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
         public SagaContainerTestHarnessRegistration(ITestHarness testHarness)
         {
             TestTimeout = testHarness.TestTimeout;
+            TimeProvider = testHarness.TimeProvider;
 
-            Consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken);
-            Created = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken);
-            Sagas = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken);
+            Consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, TimeProvider);
+            Created = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, TimeProvider);
+            Sagas = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, TimeProvider);
         }
 
         public TimeSpan TestTimeout { get; }
+        public TimeProvider TimeProvider { get; }
 
         public ReceivedMessageList Consumed { get; }
         public SagaList<TSaga> Created { get; }

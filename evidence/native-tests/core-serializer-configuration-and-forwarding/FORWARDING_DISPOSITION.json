@@ -1,0 +1,28 @@
+{
+  "sourceProject": "tests/ViciOne.ServiceBus.Tests",
+  "sourceFile": "tests/ViciOne.ServiceBus.Tests/Serialization/Forward_Specs.cs",
+  "sourceFileSha256": "f866240de5a35965419b20845cee3ef972a04a8c658a3c5c31e9db5859df484a",
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-CORE-C-0151",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-MESSAGE-FORWARDING",
+      "variantKey": "interface-to-concrete-json-envelope",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Serialization.ForwardMessageTests.ConsumedInterfaceMessage_ForwardsItsCompleteBodyAndMetadataExactlyOnce"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-C-0152",
+      "state": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-MESSAGE-FORWARDING",
+      "variantKey": "interface-to-concrete-json-envelope",
+      "targetProject": "tests2/ViciOne.ServiceBus.Tests",
+      "targetTest": "ViciOne.ServiceBus.Tests.Serialization.ForwardMessageTests.ConsumedInterfaceMessage_ForwardsItsCompleteBodyAndMetadataExactlyOnce"
+    }
+  ],
+  "explanation": "The inherited fixture duplicated the same System.Text.Json scenario. One stronger real in-memory execution now owns both rows and independently observes the pre-serialization send context and the materialized envelope. It asserts interface consumption, concrete body preservation, fixed identifiers and addresses, ordinary and ViciOne-internal headers, a safe no-child probe, exact JSON media type, and exactly one downstream delivery."
+}

@@ -13,13 +13,15 @@ namespace ViciOne.ServiceBus.Internals
 
         public static Task OrCanceled(this Task task, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(task);
+
             if (!cancellationToken.CanBeCanceled || task.IsCompleted)
                 return task;
 
             if (cancellationToken.IsCancellationRequested)
             {
                 task.IgnoreUnobservedExceptions();
-                throw new OperationCanceledException(cancellationToken);
+                return Task.FromCanceled(cancellationToken);
             }
 
             async Task WaitAsync()
@@ -41,13 +43,15 @@ namespace ViciOne.ServiceBus.Internals
 
         public static Task<T> OrCanceled<T>(this Task<T> task, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(task);
+
             if (!cancellationToken.CanBeCanceled || task.IsCompleted)
                 return task;
 
             if (cancellationToken.IsCancellationRequested)
             {
                 task.IgnoreUnobservedExceptions();
-                throw new OperationCanceledException(cancellationToken);
+                return Task.FromCanceled<T>(cancellationToken);
             }
 
             async Task<T> WaitAsync()

@@ -15,6 +15,9 @@ namespace ViciOne.ServiceBus.Middleware
 
         public Partitioner(int partitionCount, IHashGenerator hashGenerator)
         {
+            ArgumentOutOfRangeException.ThrowIfLessThan(partitionCount, 1);
+            ArgumentNullException.ThrowIfNull(hashGenerator);
+
             _id = Guid.NewGuid().ToString("N");
 
             _partitionCount = partitionCount;
@@ -66,15 +69,15 @@ namespace ViciOne.ServiceBus.Middleware
 
             public ContextPartitioner(Partitioner partitioner, PartitionKeyProvider<TContext> keyProvider)
             {
-                _partitioner = partitioner;
-                _keyProvider = keyProvider;
+                _partitioner = partitioner ?? throw new ArgumentNullException(nameof(partitioner));
+                _keyProvider = keyProvider ?? throw new ArgumentNullException(nameof(keyProvider));
             }
 
             public Task Send(TContext context, IPipe<TContext> next)
             {
                 var key = _keyProvider(context);
                 if (key == null)
-                    throw new InvalidOperationException("The key cannot be null");
+                    throw new InvalidOperationException("The partition key provider returned null.");
 
                 return _partitioner.Send(key, context, next);
             }

@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (futureDefinitionType == null)
                 return RegisterFuture<T, DefaultFutureDefinition<T>>(collection, registrar);
 
-            if (!futureDefinitionType.ClosesType(typeof(IFutureDefinition<>), out Type[] types) || types[0] != typeof(T))
+            if (!futureDefinitionType.TryGetSingleClosedGenericArguments(typeof(IFutureDefinition<>), out Type[] types) || types[0] != typeof(T))
             {
                 throw new ArgumentException($"{TypeCache.GetShortName(futureDefinitionType)} is not a future definition of {TypeCache<T>.ShortName}",
                     nameof(futureDefinitionType));
@@ -61,12 +61,12 @@ namespace ViciOne.ServiceBus.Configuration
         public static IFutureRegistration RegisterFuture(this IServiceCollection collection, IContainerRegistrar registrar, Type futureType,
             Type futureDefinitionType = null)
         {
-            if (!futureType.HasInterface<SagaStateMachine<FutureState>>())
+            if (!futureType.ImplementsInterface<SagaStateMachine<FutureState>>())
                 throw new ArgumentException($"The registered type must be a future: {TypeCache.GetShortName(futureType)}");
 
             futureDefinitionType ??= typeof(DefaultFutureDefinition<>).MakeGenericType(futureType);
 
-            if (!futureDefinitionType.ClosesType(typeof(ISagaDefinition<>), out Type[] types) || types[0] != futureType)
+            if (!futureDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != futureType)
             {
                 throw new ArgumentException(
                     $"{TypeCache.GetShortName(futureDefinitionType)} is not a future definition of {TypeCache.GetShortName(futureType)}",

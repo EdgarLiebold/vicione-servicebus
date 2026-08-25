@@ -10,16 +10,23 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     /// An activity indicator for send endpoints. Utilizes a timer that restarts on send activity.
     /// </summary>
     public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
-        ISignalResource
+        IDisposable,
+        ISignalResource,
+        ISendObserver
     {
         readonly RollingTimer _receiveIdleTimer;
         readonly ISignalResource _signalResource;
         int _activityStarted;
 
         public BusActivitySendIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+            : this(signalResource, receiveIdleTimeout, TimeProvider.System)
+        {
+        }
+
+        public BusActivitySendIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
         {
             _signalResource = signalResource;
-            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout);
+            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
         }
 
         public BusActivitySendIndicator(ISignalResource signalResource)
@@ -47,6 +54,11 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         public void Signal()
         {
             SignalInactivity(null);
+        }
+
+        public void Dispose()
+        {
+            _receiveIdleTimer.Dispose();
         }
 
         public Task PreSend<T>(SendContext<T> context)

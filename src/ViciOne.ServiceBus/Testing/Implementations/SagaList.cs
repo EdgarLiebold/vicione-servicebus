@@ -17,6 +17,11 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         {
         }
 
+        public SagaList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeout, testCompleted, timeProvider)
+        {
+        }
+
         public IEnumerable<ISagaInstance<T>> Select(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
         {
             return Select(x => filter(x.Saga), cancellationToken);

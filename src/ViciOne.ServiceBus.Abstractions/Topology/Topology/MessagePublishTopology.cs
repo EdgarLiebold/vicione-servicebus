@@ -111,7 +111,7 @@ namespace ViciOne.ServiceBus.Topology
             if (typeof(TMessage).GetCustomAttributes(typeof(ExcludeFromTopologyAttribute), false).Length > 0)
                 return true;
 
-            if (typeof(TMessage).ClosesType(typeof(Fault<>), out Type[] types) && _publishTopology.GetMessageTopology(types[0]).Exclude)
+            if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] types) && _publishTopology.GetMessageTopology(types[0]).Exclude)
                 return true;
 
             return false;

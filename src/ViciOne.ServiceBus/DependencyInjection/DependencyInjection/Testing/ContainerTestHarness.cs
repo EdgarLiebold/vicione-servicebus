@@ -27,25 +27,32 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
         CancellationToken _cancellationToken;
         CancellationTokenSource _cancellationTokenSource;
         Task<bool> _cancelledTask;
-        bool _disposing;
+        int _disposed;
         IEnumerable<IHostedService> _hostedServices;
         CancellationTokenRegistration _registration;
 
-        public ContainerTestHarness(IServiceProvider provider, IOptions<TestHarnessOptions> options)
+        public ContainerTestHarness(IServiceProvider provider, IOptions<TestHarnessOptions> options, TimeProvider timeProvider)
         {
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(options);
+
             _provider = provider;
+            TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
             _handles = new List<ConnectHandle>(5);
 
             TestTimeout = options.Value.TestTimeout;
             TestInactivityTimeout = options.Value.TestInactivityTimeout;
 
-            _inactivityObserver = new Lazy<AsyncInactivityObserver>(() => new AsyncInactivityObserver(TestInactivityTimeout, CancellationToken));
+            _inactivityObserver = new Lazy<AsyncInactivityObserver>(
+                () => new AsyncInactivityObserver(TestInactivityTimeout, CancellationToken, TimeProvider));
 
-            _consumed = new Lazy<BusTestConsumeObserver>(() => new BusTestConsumeObserver(TestTimeout, InactivityToken));
-            _published = new Lazy<BusTestPublishObserver>(() => new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken));
-            _received = new Lazy<BusTestReceiveObserver>(() => new BusTestReceiveObserver(TestInactivityTimeout));
-            _sent = new Lazy<BusTestSendObserver>(() => new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken));
+            _consumed = new Lazy<BusTestConsumeObserver>(() => new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider));
+            _published = new Lazy<BusTestPublishObserver>(
+                () => new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider));
+            _received = new Lazy<BusTestReceiveObserver>(() => new BusTestReceiveObserver(TestInactivityTimeout, TimeProvider));
+            _sent = new Lazy<BusTestSendObserver>(
+                () => new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider));
 
             _scope = new Lazy<IServiceScope>(() => _provider.CreateScope());
 
@@ -54,13 +61,14 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
 
         public async ValueTask DisposeAsync()
         {
-            if (_disposing)
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
                 return;
 
-            _disposing = true;
-
             if (_hostedServices != null)
-                await Task.WhenAll(_hostedServices.Select(x => x.StopAsync(CancellationToken)));
+            {
+                foreach (var service in _hostedServices.Reverse())
+                    await service.StopAsync(CancellationToken).ConfigureAwait(false);
+            }
 
             if (_scope.IsValueCreated)
             {
@@ -76,6 +84,8 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
             }
 
             _registration.Dispose();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
 
             _handles.ForEach(handle => handle.Disconnect());
             _handles.Clear();
@@ -88,6 +98,8 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
                 _received.Value.Dispose();
             if (_sent.IsValueCreated)
                 _sent.Value.Dispose();
+            if (_inactivityObserver.IsValueCreated)
+                _inactivityObserver.Value.Dispose();
         }
 
         public Task InactivityTask => _inactivityObserver.Value.InactivityTask;
@@ -197,7 +209,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
         public async Task Start()
         {
             _hostedServices = _provider.GetServices<IHostedService>().ToArray();
-            if (_hostedServices == null)
+            if (!_hostedServices.Any())
                 throw new ConfigurationException("The ViciOne.ServiceBus hosted service was not found.");
 
             foreach (var service in _hostedServices)
@@ -206,6 +218,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
 
         public TimeSpan TestTimeout { get; set; }
         public TimeSpan TestInactivityTimeout { get; set; }
+        public TimeProvider TimeProvider { get; }
 
         /// <summary>
         /// CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity
@@ -221,7 +234,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Testing
             {
                 if (_cancellationToken == CancellationToken.None)
                 {
-                    _cancellationTokenSource = new CancellationTokenSource((int)TestTimeout.TotalMilliseconds);
+                    _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
                     _cancellationToken = _cancellationTokenSource.Token;
 
                     var source = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);

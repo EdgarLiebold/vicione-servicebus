@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Util;
 
 
@@ -10,6 +11,8 @@ namespace ViciOne.ServiceBus.Configuration
         public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
             where TMessage : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.HandlerConfigured(configurator));
         }
     }

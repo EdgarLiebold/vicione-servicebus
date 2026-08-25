@@ -14,12 +14,21 @@ namespace ViciOne.ServiceBus.Util
         readonly TimerCallback _callback;
         readonly object _lock = new object();
         readonly object _state;
+        readonly TimeProvider _timeProvider;
         TimeSpan _timeout;
-        Timer _timer;
+        ITimer _timer;
         int _triggered;
 
         public RollingTimer(TimerCallback callback, TimeSpan timeout, object state = default)
+            : this(callback, timeout, state, TimeProvider.System)
         {
+        }
+
+        public RollingTimer(TimerCallback callback, TimeSpan timeout, object state, TimeProvider timeProvider)
+        {
+            ArgumentNullException.ThrowIfNull(callback);
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+
             void Callback(object obj)
             {
                 Set();
@@ -77,7 +86,7 @@ namespace ViciOne.ServiceBus.Util
                 else
                 {
                     Reset();
-                    _timer.Change(_timeout, TimeSpan.FromMilliseconds(-1));
+                    _timer.Change(_timeout, Timeout.InfiniteTimeSpan);
                 }
             }
         }
@@ -85,7 +94,7 @@ namespace ViciOne.ServiceBus.Util
         void StartInternal()
         {
             Reset();
-            _timer = new Timer(_callback, _state, _timeout, TimeSpan.FromMilliseconds(-1));
+            _timer = _timeProvider.CreateTimer(_callback, _state, _timeout, Timeout.InfiniteTimeSpan);
         }
 
         /// <summary>

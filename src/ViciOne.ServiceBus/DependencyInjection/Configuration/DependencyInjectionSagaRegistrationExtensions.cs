@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Configuration
         public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar)
             where T : class, ISaga
         {
-            if (typeof(T).HasInterface<SagaStateMachineInstance>())
+            if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
             return new SagaRegistrar<T>().Register(collection, registrar);
@@ -34,7 +34,7 @@ namespace ViciOne.ServiceBus.Configuration
             where T : class, ISaga
             where TDefinition : class, ISagaDefinition<T>
         {
-            if (typeof(T).HasInterface<SagaStateMachineInstance>())
+            if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
             return new SagaDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
@@ -52,10 +52,10 @@ namespace ViciOne.ServiceBus.Configuration
             if (sagaDefinitionType == null)
                 return RegisterSaga<T>(collection, registrar);
 
-            if (typeof(T).HasInterface<SagaStateMachineInstance>())
+            if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache<T>.ShortName}");
 
-            if (!sagaDefinitionType.ClosesType(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(T))
+            if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(T))
             {
                 throw new ArgumentException($"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache<T>.ShortName}",
                     nameof(sagaDefinitionType));
@@ -69,12 +69,12 @@ namespace ViciOne.ServiceBus.Configuration
         public static ISagaRegistration RegisterSaga(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
             Type sagaDefinitionType = null)
         {
-            if (sagaType.HasInterface<SagaStateMachineInstance>())
+            if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"State machine sagas must be registered using RegisterSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
 
             if (sagaDefinitionType != null)
             {
-                if (!sagaDefinitionType.ClosesType(typeof(ISagaDefinition<>), out Type[] types) || types[0] != sagaType)
+                if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != sagaType)
                 {
                     throw new ArgumentException($"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache.GetShortName(sagaType)}",
                         nameof(sagaDefinitionType));

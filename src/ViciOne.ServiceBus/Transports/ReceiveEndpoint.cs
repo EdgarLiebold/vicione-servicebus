@@ -14,7 +14,8 @@ namespace ViciOne.ServiceBus.Transports
     /// filters on the receive context.
     /// </summary>
     public class ReceiveEndpoint :
-        IReceiveEndpoint
+        IReceiveEndpoint,
+        IRestartableReceiveEndpoint
     {
         public enum State
         {
@@ -28,15 +29,18 @@ namespace ViciOne.ServiceBus.Transports
 
 
         readonly ReceiveEndpointContext _context;
+        readonly SemaphoreSlim _lifecycleGate;
         readonly TaskCompletionSource<ReceiveEndpointReady> _started;
         readonly StartObserver _startObserver;
         readonly IReceiveTransport _transport;
         EndpointHandle _handle;
+        bool _paused;
 
         public ReceiveEndpoint(IReceiveTransport transport, ReceiveEndpointContext context)
         {
             _context = context;
             _transport = transport;
+            _lifecycleGate = new SemaphoreSlim(1, 1);
 
             _started = new TaskCompletionSource<ReceiveEndpointReady>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -61,8 +65,22 @@ namespace ViciOne.ServiceBus.Transports
 
         public Task<ReceiveEndpointReady> Started => _started.Task;
         public ConnectHandle ObserverHandle { get; set; }
+        Logging.ILogContext IRestartableReceiveEndpoint.LogContext => _context.LogContext;
 
         public ReceiveEndpointHandle Start(CancellationToken cancellationToken)
+        {
+            _lifecycleGate.Wait(cancellationToken);
+            try
+            {
+                return StartTransport(cancellationToken);
+            }
+            finally
+            {
+                _lifecycleGate.Release();
+            }
+        }
+
+        ReceiveEndpointHandle StartTransport(CancellationToken cancellationToken)
         {
             LogContext.SetCurrentIfNull(_context.LogContext);
 
@@ -70,6 +88,7 @@ namespace ViciOne.ServiceBus.Transports
                 throw new InvalidOperationException($"The receive endpoint was already started: {InputAddress}");
 
             _handle = new EndpointHandle(this, _transport, _startObserver, cancellationToken);
+            _paused = false;
 
             _handle.Start();
 
@@ -90,6 +109,8 @@ namespace ViciOne.ServiceBus.Transports
         {
             return Stop(false, cancellationToken);
         }
+
+        internal bool IsPaused => Volatile.Read(ref _paused);
 
         public void Probe(ProbeContext context)
         {
@@ -165,20 +186,72 @@ namespace ViciOne.ServiceBus.Transports
 
         public async Task Stop(bool removed, CancellationToken cancellationToken)
         {
-            LogContext.SetCurrentIfNull(_context.LogContext);
-
-            if (_handle != null)
+            await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
             {
-                await _context.DependentsCompleted.OrCanceled(cancellationToken).ConfigureAwait(false);
+                LogContext.SetCurrentIfNull(_context.LogContext);
 
-                await _context.EndpointObservers.Stopping(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+                if (_handle != null)
+                    await StopTransport(removed, cancellationToken).ConfigureAwait(false);
+                else if (_paused)
+                {
+                    // A policy pause has no active transport handle, but a later external stop is still a
+                    // terminal lifecycle event. Publishing it lets the policy cancel a pending restart.
+                    await _context.EndpointObservers.Stopping(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+                }
 
-                await _handle.TransportHandle.Stop(cancellationToken).ConfigureAwait(false);
-
-                _handle = null;
+                _paused = false;
+                _context.Reset();
             }
+            finally
+            {
+                _lifecycleGate.Release();
+            }
+        }
 
-            _context.Reset();
+        async Task IRestartableReceiveEndpoint.Pause(CancellationToken cancellationToken)
+        {
+            await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                LogContext.SetCurrentIfNull(_context.LogContext);
+
+                if (_handle == null)
+                    return;
+
+                // Mark the endpoint before stopping the transport so a concurrent host stop cannot omit it.
+                _paused = true;
+                await StopTransport(false, cancellationToken).ConfigureAwait(false);
+                _context.Reset();
+            }
+            finally
+            {
+                _lifecycleGate.Release();
+            }
+        }
+
+        async Task<ReceiveEndpointHandle> IRestartableReceiveEndpoint.Restart(CancellationToken cancellationToken)
+        {
+            await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return StartTransport(cancellationToken);
+            }
+            finally
+            {
+                _lifecycleGate.Release();
+            }
+        }
+
+        async Task StopTransport(bool removed, CancellationToken cancellationToken)
+        {
+            await _context.DependentsCompleted.OrCanceled(cancellationToken).ConfigureAwait(false);
+
+            await _context.EndpointObservers.Stopping(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+
+            await _handle.TransportHandle.Stop(cancellationToken).ConfigureAwait(false);
+
+            _handle = null;
         }
 
 

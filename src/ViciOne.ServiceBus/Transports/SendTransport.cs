@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Transports
     using System.Threading.Tasks;
     using Logging;
     using Middleware;
+    using Serialization;
 
 
     public class SendTransport<TContext> :
@@ -82,6 +83,9 @@ namespace ViciOne.ServiceBus.Transports
             public async Task Send(TContext context)
             {
                 SendContext<T> sendContext = await _sendTransportContext.CreateSendContext(context, _message, _pipe, _cancellationToken).ConfigureAwait(false);
+
+                if (ForwardingExpiration.TryDiscard(sendContext))
+                    return;
 
                 StartedActivity? activity = LogContext.Current?.StartSendActivity(_sendTransportContext, sendContext);
                 StartedInstrument? instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);

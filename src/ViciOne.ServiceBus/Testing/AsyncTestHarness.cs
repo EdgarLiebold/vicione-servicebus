@@ -20,7 +20,13 @@ namespace ViciOne.ServiceBus.Testing
         bool _disposed;
 
         protected AsyncTestHarness()
+            : this(TimeProvider.System)
         {
+        }
+
+        protected AsyncTestHarness(TimeProvider timeProvider)
+        {
+            TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             TestTimeout = Debugger.IsAttached ? TimeSpan.FromMinutes(50) : TimeSpan.FromSeconds(30);
             TestInactivityTimeout = Debugger.IsAttached ? TimeSpan.FromMinutes(30) : TimeSpan.FromSeconds(6);
 
@@ -33,7 +39,7 @@ namespace ViciOne.ServiceBus.Testing
             // detection would be dead for every later test in the same fixture. It is therefore bound to
             // the lifetime of the harness instead, which ends in Dispose.
             _inactivityObserver = new Lazy<AsyncInactivityObserver>(
-                () => new AsyncInactivityObserver(TestInactivityTimeout, _harnessLifetime.Token));
+                () => new AsyncInactivityObserver(TestInactivityTimeout, _harnessLifetime.Token, TimeProvider));
         }
 
         /// <summary>
@@ -95,7 +101,7 @@ namespace ViciOne.ServiceBus.Testing
                 {
                     if (_cancellationToken == CancellationToken.None)
                     {
-                        _cancellationTokenSource = new CancellationTokenSource((int)TestTimeout.TotalMilliseconds);
+                        _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
                         _cancellationToken = _cancellationTokenSource.Token;
 
                         TaskCompletionSource<bool> source = TaskUtil.GetTask<bool>();
@@ -131,6 +137,8 @@ namespace ViciOne.ServiceBus.Testing
         /// </summary>
         public TimeSpan TestInactivityTimeout { get; set; }
 
+        public TimeProvider TimeProvider { get; }
+
         public virtual void Dispose()
         {
             // Disposing twice has to stay harmless: a container fixture disposes the harness itself and
@@ -141,11 +149,14 @@ namespace ViciOne.ServiceBus.Testing
                     return;
 
                 _disposed = true;
+                _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource?.Dispose();
             }
 
             // Ends the inactivity timeout loop, which runs for the lifetime of the harness.
             _harnessLifetime.Cancel();
+            if (_inactivityObserver.IsValueCreated)
+                _inactivityObserver.Value.Dispose();
             _harnessLifetime.Dispose();
         }
 
@@ -190,7 +201,7 @@ namespace ViciOne.ServiceBus.Testing
 
         public TestConsumeObserver GetConsumeObserver()
         {
-            return new TestConsumeObserver(TestTimeout, InactivityToken);
+            return new TestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
         }
     }
 }

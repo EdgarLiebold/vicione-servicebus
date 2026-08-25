@@ -11,7 +11,8 @@ namespace ViciOne.ServiceBus.Middleware
         where T : class, PipeContext
     {
         /// <summary>
-        /// The most recently completed context to pass through the filter
+        /// The most recently observed context to pass through the filter. The task remains pending
+        /// until the first context arrives and subsequently returns the current snapshot.
         /// </summary>
         Task<T> Latest { get; }
     }

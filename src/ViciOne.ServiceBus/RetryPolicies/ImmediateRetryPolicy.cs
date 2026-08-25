@@ -10,7 +10,9 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public ImmediateRetryPolicy(IExceptionFilter filter, int retryLimit)
         {
-            _filter = filter;
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
+
+            _filter = filter ?? throw new ArgumentNullException(nameof(filter));
             RetryLimit = retryLimit;
         }
 

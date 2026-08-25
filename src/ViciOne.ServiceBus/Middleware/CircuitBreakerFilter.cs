@@ -15,47 +15,61 @@ namespace ViciOne.ServiceBus.Middleware
     {
         readonly IExceptionFilter _exceptionFilter;
         readonly CircuitBreakerSettings _settings;
+        readonly object _stateLock;
         ICircuitBreakerBehavior _behavior;
 
         public CircuitBreakerFilter(CircuitBreakerSettings settings, IExceptionFilter exceptionFilter)
         {
             _settings = settings;
             _exceptionFilter = exceptionFilter;
+            _stateLock = new object();
 
             _behavior = new ClosedBehavior(this);
         }
 
         public TimeSpan OpenDuration => _settings.TrackingPeriod;
 
-        Task ICircuitBreaker.Open(Exception exception, ICircuitBreakerBehavior behavior, IEnumerator<TimeSpan> timeoutEnumerator)
+        public TimeProvider TimeProvider => _settings.TimeProvider;
+
+        CircuitBreakerTransition ICircuitBreaker.Open(Exception exception, ICircuitBreakerBehavior behavior,
+            IEnumerator<TimeSpan> timeoutEnumerator)
         {
-            if (timeoutEnumerator == null)
-                timeoutEnumerator = _settings.ResetTimeout.GetEnumerator();
+            lock (_stateLock)
+            {
+                if (!ReferenceEquals(_behavior, behavior))
+                    return CircuitBreakerTransition.Unchanged;
 
-            var openBehavior = new OpenBehavior(this, exception, timeoutEnumerator);
+                timeoutEnumerator ??= _settings.ResetTimeout.GetEnumerator();
+                Volatile.Write(ref _behavior, new OpenBehavior(this, exception, timeoutEnumerator));
+            }
 
-            Interlocked.CompareExchange(ref _behavior, openBehavior, behavior);
-            if (_behavior == openBehavior)
-                return _settings.Router?.PublishCircuitBreakerOpened(exception) ?? Task.CompletedTask;
-
-            return Task.CompletedTask;
+            return new CircuitBreakerTransition(true, PublishOpened(exception));
         }
 
-        Task ICircuitBreaker.Close(ICircuitBreakerBehavior behavior)
+        CircuitBreakerTransition ICircuitBreaker.Close(ICircuitBreakerBehavior behavior)
         {
-            var closedBehavior = new ClosedBehavior(this);
-            Interlocked.CompareExchange(ref _behavior, closedBehavior, behavior);
-            if (_behavior == closedBehavior)
-                return _settings.Router?.PublishCircuitBreakerClosed() ?? Task.CompletedTask;
+            lock (_stateLock)
+            {
+                if (!ReferenceEquals(_behavior, behavior))
+                    return CircuitBreakerTransition.Unchanged;
 
-            return Task.CompletedTask;
+                Volatile.Write(ref _behavior, new ClosedBehavior(this));
+            }
+
+            return new CircuitBreakerTransition(true, PublishClosed());
         }
 
-        Task ICircuitBreaker.ClosePartially(Exception exception, IEnumerator<TimeSpan> timeoutEnumerator, ICircuitBreakerBehavior behavior)
+        bool ICircuitBreaker.ClosePartially(Exception exception, IEnumerator<TimeSpan> timeoutEnumerator,
+            ICircuitBreakerBehavior behavior)
         {
-            Interlocked.CompareExchange(ref _behavior, new HalfOpenBehavior(this, exception, timeoutEnumerator), behavior);
+            lock (_stateLock)
+            {
+                if (!ReferenceEquals(_behavior, behavior))
+                    return false;
 
-            return Task.CompletedTask;
+                Volatile.Write(ref _behavior, new HalfOpenBehavior(this, exception, timeoutEnumerator));
+                return true;
+            }
         }
 
         public int TripThreshold => _settings.TripThreshold;
@@ -64,20 +78,21 @@ namespace ViciOne.ServiceBus.Middleware
 
         public async Task Send(TContext context, IPipe<TContext> next)
         {
+            ICircuitBreakerBehavior behavior = Volatile.Read(ref _behavior);
             try
             {
-                await _behavior.PreSend().ConfigureAwait(false);
+                await behavior.PreSend().ConfigureAwait(false);
 
                 await next.Send(context).ConfigureAwait(false);
 
-                await _behavior.PostSend().ConfigureAwait(false);
+                await behavior.PostSend().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 if (!_exceptionFilter.Match(ex))
                     throw;
 
-                await _behavior.SendFault(ex).ConfigureAwait(false);
+                await behavior.SendFault(ex).ConfigureAwait(false);
 
                 throw;
             }
@@ -94,7 +109,31 @@ namespace ViciOne.ServiceBus.Middleware
                 ResetTimeout = _settings.ResetTimeout.Take(10).ToArray()
             });
 
-            _behavior.Probe(scope);
+            Volatile.Read(ref _behavior).Probe(scope);
+        }
+
+        Task PublishOpened(Exception exception)
+        {
+            try
+            {
+                return _settings.Router?.PublishCircuitBreakerOpened(exception) ?? Task.CompletedTask;
+            }
+            catch (Exception caught)
+            {
+                return Task.FromException(caught);
+            }
+        }
+
+        Task PublishClosed()
+        {
+            try
+            {
+                return _settings.Router?.PublishCircuitBreakerClosed() ?? Task.CompletedTask;
+            }
+            catch (Exception caught)
+            {
+                return Task.FromException(caught);
+            }
         }
     }
 }

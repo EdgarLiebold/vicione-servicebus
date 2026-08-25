@@ -34,7 +34,7 @@ namespace ViciOne.ServiceBus.Visualizer
 
                 if (args.Vertex.TargetType != typeof(Event) && args.Vertex.TargetType != typeof(Exception))
                 {
-                    if (args.Vertex.TargetType.ClosesType(typeof(Fault<>), out Type[] arguments))
+                    if (args.Vertex.TargetType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
                         args.VertexFormat.Label += "<" + arguments[0].Name + ">";
                     else
                         args.VertexFormat.Label += "<" + args.Vertex.TargetType.Name + ">";

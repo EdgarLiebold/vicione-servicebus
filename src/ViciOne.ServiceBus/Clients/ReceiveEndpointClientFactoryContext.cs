@@ -10,7 +10,10 @@ namespace ViciOne.ServiceBus.Clients
         readonly HostReceiveEndpointHandle _handle;
         readonly IReceiveEndpoint _receiveEndpoint;
 
-        public ReceiveEndpointClientFactoryContext(HostReceiveEndpointHandle handle, RequestTimeout defaultTimeout = default)
+        public ReceiveEndpointClientFactoryContext(
+            HostReceiveEndpointHandle handle,
+            RequestTimeout defaultTimeout = default,
+            TimeProvider? timeProvider = null)
         {
             _handle = handle;
             _receiveEndpoint = handle.ReceiveEndpoint;
@@ -18,6 +21,7 @@ namespace ViciOne.ServiceBus.Clients
             ResponseAddress = _receiveEndpoint.InputAddress;
 
             DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -53,5 +57,7 @@ namespace ViciOne.ServiceBus.Clients
         }
 
         public RequestTimeout DefaultTimeout { get; }
+
+        public TimeProvider TimeProvider { get; }
     }
 }

@@ -1,9 +1,10 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
 
 
-    public class TimeoutConsumerConfigurationObserver<TConsumer> :
+    internal sealed class TimeoutConsumerConfigurationObserver<TConsumer> :
         IConsumerConfigurationObserver
         where TConsumer : class
     {
@@ -24,7 +25,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new TimeoutSpecification<TMessage>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
         }

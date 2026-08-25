@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Middleware
         public IPipeContextConverter<ConsumeContext, TOutput> GetConverter<TOutput>()
             where TOutput : class, PipeContext
         {
-            var innerType = typeof(TOutput).GetClosingArguments(typeof(ConsumeContext<>)).Single();
+            var innerType = typeof(TOutput).GetSingleClosedGenericArguments(typeof(ConsumeContext<>)).Single();
 
             return (IPipeContextConverter<ConsumeContext, TOutput>)Activator.CreateInstance(typeof(Converter<>).MakeGenericType(innerType));
         }

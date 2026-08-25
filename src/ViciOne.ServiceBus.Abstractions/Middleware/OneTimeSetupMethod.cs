@@ -22,7 +22,8 @@ class OneTimeSetupMethod
     {
         try
         {
-            var task = _callback();
+            Task task = _callback()
+                ?? throw new InvalidOperationException("The one-time setup callback returned null.");
             if (task.Status == TaskStatus.RanToCompletion)
             {
                 _value.TrySetResult(true);
@@ -40,7 +41,7 @@ class OneTimeSetupMethod
                 }
                 catch (Exception exception)
                 {
-                    _value.TrySetException(exception);
+                    SetFailure(exception);
 
                     throw;
                 }
@@ -50,7 +51,7 @@ class OneTimeSetupMethod
         }
         catch (Exception exception)
         {
-            _value.TrySetException(exception);
+            SetFailure(exception);
 
             throw;
         }
@@ -59,6 +60,14 @@ class OneTimeSetupMethod
     public void SetPayload(Task<bool> value)
     {
         _value.TrySetFromTask(value);
+    }
+
+    void SetFailure(Exception exception)
+    {
+        if (exception is OperationCanceledException canceled)
+            _value.TrySetCanceled(canceled.CancellationToken);
+        else
+            _value.TrySetException(exception);
     }
 }
 

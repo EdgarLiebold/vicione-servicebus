@@ -12,8 +12,14 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         readonly PublishedMessageList _messages;
 
         public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
+            : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
         {
-            _messages = new PublishedMessageList(timeout, testCompleted);
+        }
+
+        public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeProvider)
+        {
+            _messages = new PublishedMessageList(timeout, testCompleted, timeProvider);
 
             StartTimer(inactivityTimout);
         }

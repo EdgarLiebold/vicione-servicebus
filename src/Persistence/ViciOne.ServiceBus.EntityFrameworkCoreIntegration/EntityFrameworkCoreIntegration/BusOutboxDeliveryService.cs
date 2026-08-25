@@ -78,7 +78,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 try
                 {
-                    await _busControl.WaitForHealthStatus(BusHealthStatus.Healthy, stoppingToken).ConfigureAwait(false);
+                    await _busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, stoppingToken).ConfigureAwait(false);
 
                     // ReSharper disable once AccessToDisposedClosure
                     var count = await _retryPolicy.Retry(() => algorithm.Run(DeliverOutbox, stoppingToken), stoppingToken).ConfigureAwait(false);

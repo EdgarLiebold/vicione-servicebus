@@ -1,0 +1,104 @@
+{
+  "sourceLedger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "sourceFiles": [
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/BusPublish_Specs.cs", "sha256": "d831a6349567e4c57a0503e373ca3255f6b31fbfec9320290df1b16ddb47224a" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/ConsumerMultiple_Specs.cs", "sha256": "3caa5d4d6babaabd4863c6c6dddb47573d53c1959ddf04b4893ec511c06d35f6" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/ConsumerTest_Specs.cs", "sha256": "62293d5e9dcaecaf66980be517a4c870eb14f8b9aa9c2964cbd62add7443cf3c" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/HandlerRespond_Specs.cs", "sha256": "46e3e3bea708990eef84ff470adfc2cc97add3181e0cdd00951defe2e9a70dd6" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/HandlerTest_Specs.cs", "sha256": "5edaab2625c417f06cd1aa31a2cbd65eb2adcd791d4adb0c48d485b557b919eb" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/NewTest_Specs.cs", "sha256": "fff71eea427bc3a5dd48c46d8f2f0454af83ccefb3049ace58bef897c19fb70a" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/SagaTest_Specs.cs", "sha256": "2fc9645035b172a2c5e0cb9c2f93dded0aecbafb4a12eb548278b8ccfdf7722e" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/StandaloneConsumer_Specs.cs", "sha256": "c23beaebe638c779bfef5242257750dbe2fc8797cf907e705d73092550cea467" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/Testing/StateMachineSagaTest_Specs.cs", "sha256": "6878aa83801bfe267780b3ec65d3f8a08ae3ab2dfd23010be66a1e44cc754cff" }
+  ],
+  "state": "REPLACED_EXECUTING",
+  "mappings": [
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0382"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-DI",
+      "variantKey": "scoped-service-publishes-through-started-bus",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.DependencyInjectionTestHarnessTests.ScopedApplicationService_PublishesThroughTheStartedHarnessBus"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0383", "OBL-R0-CORE-C-0384", "OBL-R0-CORE-C-0385", "OBL-R0-CORE-C-0386"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "multiple-message-contracts-and-addressed-responses",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.MultiContractConsumer_RecordsBothContractsAndTheirAddressedResponses"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0387", "OBL-R0-CORE-C-0388", "OBL-R0-CORE-C-0389", "OBL-R0-CORE-C-0390"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "send-consume-respond-observations",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.ConsumerHarness_ObservesTheCompleteSendConsumeAndPublishPath"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0391", "OBL-R0-CORE-C-0392", "OBL-R0-CORE-C-0393", "OBL-R0-CORE-C-0394"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "in-flight-completion-without-wall-clock-delay",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.ConsumerHarness_DoesNotReportCompletionBeforeTheConsumerCompletes"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0395", "OBL-R0-CORE-C-0396", "OBL-R0-CORE-C-0397", "OBL-R0-CORE-C-0398"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "interface-contract-projection",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.InterfaceConsumer_PreservesConcreteAndInterfaceObservations"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0399", "OBL-R0-CORE-C-0400", "OBL-R0-CORE-C-0401", "OBL-R0-CORE-C-0402"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "multiple-message-contracts-and-addressed-responses",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.MultiContractConsumer_RecordsBothContractsAndTheirAddressedResponses"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0403", "OBL-R0-CORE-C-0404", "OBL-R0-CORE-C-0405"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-HANDLER",
+      "variantKey": "response-destination-and-observation",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.HandlerHarness_RecordsTheHandledMessageAndExactResponseDestination"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0406", "OBL-R0-CORE-C-0407", "OBL-R0-CORE-C-0408", "OBL-R0-CORE-C-0409"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-HANDLER",
+      "variantKey": "default-handler-send-observation",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.DefaultHandlerHarness_ObservesASentMessageWithoutApplicationBehavior"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0410", "OBL-R0-CORE-C-0411", "OBL-R0-CORE-C-0412", "OBL-R0-CORE-C-0413", "OBL-R0-CORE-C-0414"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-HANDLER",
+      "variantKey": "default-handler-publish-interface-projection",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.DefaultHandlerHarness_ObservesPublishedConcreteAndInterfaceContracts"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0419", "OBL-R0-CORE-C-0426"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-CONSUMER",
+      "variantKey": "send-consume-respond-observations",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.InMemoryTestHarnessBehaviorTests.ConsumerHarness_ObservesTheCompleteSendConsumeAndPublishPath"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0420", "OBL-R0-CORE-C-0421", "OBL-R0-CORE-C-0422", "OBL-R0-CORE-C-0423", "OBL-R0-CORE-C-0424", "OBL-R0-CORE-C-0425"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-SAGA",
+      "variantKey": "creation-consumption-state-and-publication",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.SagaTestHarnessBehaviorTests.ClassicSagaHarness_ObservesCreationStateConsumptionAndPublication"
+    },
+    {
+      "obligationIds": ["OBL-R0-CORE-C-0427"],
+      "requirementId": "REQ-VSB-TEST-HARNESS-STATE-MACHINE",
+      "variantKey": "request-fault-correlation-and-transition",
+      "targetTest": "ViciOne.ServiceBus.Tests.Testing.SagaTestHarnessBehaviorTests.StateMachineHarness_CorrelatesTheRequestFaultAndObservesTheResultingState"
+    }
+  ],
+  "hardeningRequirements": [
+    "REQ-VSB-TEST-HARNESS-ACTIVITY",
+    "REQ-VSB-TEST-HARNESS-CONSUMER/failure-recorded-and-propagated",
+    "REQ-VSB-TEST-HARNESS-CONSUMER/named-endpoint-configuration",
+    "REQ-VSB-TEST-HARNESS-DI/custom-time-provider-propagation",
+    "REQ-VSB-TEST-HARNESS-LIFECYCLE",
+    "REQ-VSB-TEST-HARNESS-MEDIATOR",
+    "REQ-VSB-TEST-HARNESS-MULTI-CONSUMER",
+    "REQ-VSB-TEST-HARNESS-SAGA-POLLING",
+    "REQ-VSB-TEST-HARNESS-TIME"
+  ],
+  "explanation": "The 42 inherited NUnit obligations are preserved as a lower bound. The native suite consolidates repeated assertions into complete scenarios and adds deterministic failure, lifecycle, time, capability, named-endpoint, mediator, multi-consumer, and activity-indicator coverage that the inherited fixtures did not provide."
+}

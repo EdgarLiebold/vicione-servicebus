@@ -20,6 +20,15 @@ namespace ViciOne.ServiceBus.Testing
         BusTestReceiveObserver _received;
         BusTestSendObserver _sent;
 
+        protected BusTestHarness()
+        {
+        }
+
+        protected BusTestHarness(TimeProvider timeProvider)
+            : base(timeProvider)
+        {
+        }
+
         public IBusControl BusControl { get; private set; }
 
         /// <summary>
@@ -101,16 +110,16 @@ namespace ViciOne.ServiceBus.Testing
             if (!cancellationToken.CanBeCanceled)
                 cancellationToken = TestCancellationToken;
 
-            _received = new BusTestReceiveObserver(TestInactivityTimeout);
+            _received = new BusTestReceiveObserver(TestInactivityTimeout, TimeProvider);
             _received.ConnectInactivityObserver(InactivityObserver);
 
-            _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken);
+            _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
             _consumed.ConnectInactivityObserver(InactivityObserver);
 
-            _published = new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken);
+            _published = new BusTestPublishObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
             _published.ConnectInactivityObserver(InactivityObserver);
 
-            _sent = new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken);
+            _sent = new BusTestSendObserver(TestTimeout, TestInactivityTimeout, InactivityToken, TimeProvider);
             _sent.ConnectInactivityObserver(InactivityObserver);
 
             PreCreateBus?.Invoke(this);
@@ -143,7 +152,7 @@ namespace ViciOne.ServiceBus.Testing
             {
                 if (_busHandle != null)
                 {
-                    using var tokenSource = new CancellationTokenSource(TestTimeout);
+                    using var tokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
 
                     await _busHandle.StopAsync(tokenSource.Token).ConfigureAwait(false);
                 }
@@ -162,6 +171,16 @@ namespace ViciOne.ServiceBus.Testing
 
         public virtual async Task Clean()
         {
+        }
+
+        public override void Dispose()
+        {
+            _consumed?.Dispose();
+            _published?.Dispose();
+            _received?.Dispose();
+            _sent?.Dispose();
+
+            base.Dispose();
         }
 
         public async Task<ISendEndpoint> GetSendEndpoint(Uri address)

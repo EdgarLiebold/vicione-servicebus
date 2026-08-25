@@ -128,7 +128,7 @@ namespace ViciOne.ServiceBus
 
         static List<PropertyInfo> PropertyListFactory()
         {
-            return typeof(T).GetAllProperties()
+            return typeof(T).GetReadableInstanceProperties()
                 .GroupBy(x => x.Name)
                 .Select(x => x.Last())
                 .ToList();
@@ -151,7 +151,7 @@ namespace ViciOne.ServiceBus
             if (IsValidMessageType)
                 yield return typeof(T);
 
-            if (typeof(T).ClosesType(typeof(Fault<>), out Type[] arguments))
+            if (typeof(T).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
             {
                 foreach (var faultMessageType in MessageTypeCache.GetMessageTypes(arguments[0]))
                 {
@@ -215,9 +215,9 @@ namespace ViciOne.ServiceBus
                 return false;
             }
 
-            if (type.HasInterface<SendContext>()
-                || type.HasInterface<ConsumeContext>()
-                || type.HasInterface<ReceiveContext>())
+            if (type.ImplementsInterface<SendContext>()
+                || type.ImplementsInterface<ConsumeContext>()
+                || type.ImplementsInterface<ReceiveContext>())
             {
                 _invalidMessageTypeReason = $"ConsumeContext, ReceiveContext, and SendContext are not valid message types: {TypeCache<T>.ShortName}";
                 return false;
@@ -229,7 +229,7 @@ namespace ViciOne.ServiceBus
                 if (typeDefinition == typeof(CorrelatedBy<>))
                 {
                     _invalidMessageTypeReason =
-                        $"CorrelatedBy<{type.GetClosingArgument(typeof(CorrelatedBy<>)).Name}> is not a valid message type";
+                        $"CorrelatedBy<{type.GetSingleClosedGenericArgument(typeof(CorrelatedBy<>)).Name}> is not a valid message type";
 
                     return false;
                 }
@@ -237,7 +237,7 @@ namespace ViciOne.ServiceBus
                 if (typeDefinition == typeof(Orchestrates<>))
                 {
                     _invalidMessageTypeReason =
-                        $"Orchestrates<{type.GetClosingArgument(typeof(Orchestrates<>)).Name}> is not a valid message type";
+                        $"Orchestrates<{type.GetSingleClosedGenericArgument(typeof(Orchestrates<>)).Name}> is not a valid message type";
 
                     return false;
                 }
@@ -245,7 +245,7 @@ namespace ViciOne.ServiceBus
                 if (typeDefinition == typeof(InitiatedBy<>))
                 {
                     _invalidMessageTypeReason =
-                        $"InitiatedBy<{type.GetClosingArgument(typeof(InitiatedBy<>)).Name}> is not a valid message type";
+                        $"InitiatedBy<{type.GetSingleClosedGenericArgument(typeof(InitiatedBy<>)).Name}> is not a valid message type";
 
                     return false;
                 }
@@ -253,14 +253,14 @@ namespace ViciOne.ServiceBus
                 if (typeDefinition == typeof(InitiatedByOrOrchestrates<>))
                 {
                     _invalidMessageTypeReason =
-                        $"InitiatedByOrOrchestrates<{type.GetClosingArgument(typeof(InitiatedByOrOrchestrates<>)).Name}> is not a valid message type";
+                        $"InitiatedByOrOrchestrates<{type.GetSingleClosedGenericArgument(typeof(InitiatedByOrOrchestrates<>)).Name}> is not a valid message type";
 
                     return false;
                 }
 
                 if (typeDefinition == typeof(Observes<,>))
                 {
-                    Type[]? closingArguments = type.GetClosingArguments(typeof(Observes<,>)).ToArray();
+                    Type[]? closingArguments = type.GetSingleClosedGenericArguments(typeof(Observes<,>)).ToArray();
                     _invalidMessageTypeReason = $"Observes<{closingArguments[0].Name},{closingArguments[1].Name}> is not a valid message type";
                     return false;
                 }
@@ -284,7 +284,7 @@ namespace ViciOne.ServiceBus
         {
             const string activity = "Activity";
 
-            if (typeof(T).HasInterface<IExecuteActivity>())
+            if (typeof(T).ImplementsInterface<IExecuteActivity>())
             {
                 var activityName = typeof(T).Name;
                 if (activityName.EndsWith(activity, StringComparison.InvariantCultureIgnoreCase))

@@ -56,21 +56,15 @@ namespace ViciOne.ServiceBus.Agents
             }
             catch (Exception exception)
             {
-
-                // Reporting the fault is cleanup, and cleanup may fail. When it did, this throw was
-                // never reached and the caller received the failure of the clean up instead of the one
-                // that caused it — a broker refusing a queue arrived as "channel already closed", with
-                // the real answer nowhere in it. The primary exception is the answer; whatever happens
-                // while tidying up after it stays diagnostic.
+                // Fault notification is cleanup. Its failure must never replace the operation failure
+                // that determines whether the caller may safely retry.
                 try
                 {
                     await activeContext.Faulted(exception).ConfigureAwait(false);
-
                 }
                 catch (Exception faultException)
                 {
-
-                    LogContext.Error?.Log(faultException, "Reporting the fault of the context faulted, the primary failure is unaffected: {ContextType}",
+                    LogContext.Error?.Log(faultException, "Context fault notification failed; the primary operation failure is preserved: {ContextType}",
                         TypeCache<TContext>.ShortName);
                 }
 
@@ -78,16 +72,15 @@ namespace ViciOne.ServiceBus.Agents
             }
             finally
             {
-                // Same rule on the way out. A finally that throws replaces whatever was propagating,
-                // including a rethrow that just took care to preserve it.
+                // Cleanup failures remain diagnostic. Reporting them as operation failures after a
+                // successful send could trigger a duplicate; replacing a real failure would hide its cause.
                 try
                 {
                     await activeContext.Stop(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
                 {
-
-                    LogContext.Error?.Log(stopException, "Stopping the context faulted, the primary failure is unaffected: {ContextType}", TypeCache<TContext>.ShortName);
+                    LogContext.Error?.Log(stopException, "Context stop failed; the operation result is preserved: {ContextType}", TypeCache<TContext>.ShortName);
                 }
 
                 try
@@ -96,8 +89,8 @@ namespace ViciOne.ServiceBus.Agents
                 }
                 catch (Exception disposeException)
                 {
-
-                    LogContext.Error?.Log(disposeException, "Disposing the context faulted, the primary failure is unaffected: {ContextType}", TypeCache<TContext>.ShortName);
+                    LogContext.Error?.Log(disposeException, "Context disposal failed; the operation result is preserved: {ContextType}",
+                        TypeCache<TContext>.ShortName);
                 }
             }
         }

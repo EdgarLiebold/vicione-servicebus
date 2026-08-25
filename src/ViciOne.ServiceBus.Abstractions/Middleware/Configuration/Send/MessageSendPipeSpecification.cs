@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System.Linq;
 
 
-    public class MessageSendPipeSpecification<TMessage> :
+    internal sealed class MessageSendPipeSpecification<TMessage> :
         IMessageSendPipeSpecification<TMessage>,
         IMessageSendPipeSpecification
         where TMessage : class
@@ -25,6 +25,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _baseSpecifications.Add(specification);
         }
 
@@ -38,6 +40,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<SendContext<TMessage>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _specifications.Add(specification);
         }
 
@@ -48,6 +52,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             if (!builder.IsDelegated && _implementedMessageTypeSpecifications.Count > 0)
             {
                 ISpecificationPipeBuilder<SendContext<TMessage>> implementedBuilder = builder.CreateImplementedBuilder();
@@ -91,12 +97,16 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddParentMessageSpecification(ISpecificationPipeSpecification<SendContext<TMessage>> parentSpecification)
         {
+            ArgumentNullException.ThrowIfNull(parentSpecification);
+
             _parentMessageSpecifications.Add(parentSpecification);
         }
 
         public void AddImplementedMessageSpecification<T>(ISpecificationPipeSpecification<SendContext<T>> implementedSpecification)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(implementedSpecification);
+
             var adapter = new ImplementedTypeAdapter<T>(implementedSpecification);
 
             _implementedMessageTypeSpecifications.Add(adapter);

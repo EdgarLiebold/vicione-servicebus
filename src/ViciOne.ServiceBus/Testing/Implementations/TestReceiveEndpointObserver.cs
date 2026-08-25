@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Testing.Implementations
 {
+    using System;
     using System.Threading.Tasks;
 
 
@@ -10,7 +11,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
 
         public TestReceiveEndpointObserver(IPublishObserver publishObserver)
         {
-            _publishObserver = publishObserver;
+            _publishObserver = publishObserver ?? throw new ArgumentNullException(nameof(publishObserver));
         }
 
         public Task Ready(ReceiveEndpointReady ready)

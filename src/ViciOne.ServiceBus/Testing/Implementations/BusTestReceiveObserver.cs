@@ -9,6 +9,12 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         IReceiveObserver
     {
         public BusTestReceiveObserver(TimeSpan inactivityTimout)
+            : this(inactivityTimout, TimeProvider.System)
+        {
+        }
+
+        public BusTestReceiveObserver(TimeSpan inactivityTimout, TimeProvider timeProvider)
+            : base(timeProvider)
         {
             StartTimer(inactivityTimout);
         }

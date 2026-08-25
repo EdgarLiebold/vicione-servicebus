@@ -10,14 +10,23 @@ namespace ViciOne.ServiceBus.Testing
         readonly PublishContext<T> _context;
 
         public PublishedMessage(PublishContext<T> context, Exception exception = null)
+            : this(context, exception, TimeProvider.System)
         {
+        }
+
+        public PublishedMessage(PublishContext<T> context, Exception exception, TimeProvider timeProvider)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
             _context = context;
             Exception = exception;
 
             ElementId = _context.MessageId;
 
-            StartTime = context.SentTime ?? DateTime.UtcNow;
-            ElapsedTime = DateTime.UtcNow - StartTime;
+            var now = timeProvider.GetUtcNow().UtcDateTime;
+            StartTime = context.SentTime ?? now;
+            ElapsedTime = now - StartTime;
         }
 
         public Guid? ElementId { get; }

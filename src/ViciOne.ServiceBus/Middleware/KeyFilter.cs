@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Middleware
 
         public KeyFilter(KeyAccessor<TContext, TKey> keyAccessor)
         {
-            _keyAccessor = keyAccessor;
+            _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
             _pipes = new ConcurrentDictionary<TKey, IPipe<TContext>>();
         }
 
@@ -41,6 +41,8 @@ namespace ViciOne.ServiceBus.Middleware
         public async Task Send(TContext context, IPipe<TContext> next)
         {
             var key = _keyAccessor(context);
+            if (key == null)
+                throw new InvalidOperationException("The key accessor returned null.");
 
             if (_pipes.TryGetValue(key, out IPipe<TContext> pipe))
                 await pipe.Send(context).ConfigureAwait(false);
@@ -51,6 +53,8 @@ namespace ViciOne.ServiceBus.Middleware
         public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
             where T : class, PipeContext
         {
+            ArgumentNullException.ThrowIfNull(key);
+
             if (pipe == null)
                 throw new ArgumentNullException(nameof(pipe));
 

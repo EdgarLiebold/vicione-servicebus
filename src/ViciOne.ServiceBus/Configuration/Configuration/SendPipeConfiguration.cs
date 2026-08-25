@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Middleware;
     using Transports;
 
@@ -11,12 +12,16 @@ namespace ViciOne.ServiceBus.Configuration
 
         public SendPipeConfiguration(ISendTopology sendTopology)
         {
+            ArgumentNullException.ThrowIfNull(sendTopology);
+
             _specification = new SendPipeSpecification();
             _specification.ConnectSendPipeSpecificationObserver(new TopologySendPipeSpecificationObserver(sendTopology));
         }
 
         public SendPipeConfiguration(ISendPipeSpecification parentSpecification)
         {
+            ArgumentNullException.ThrowIfNull(parentSpecification);
+
             _specification = new SendPipeSpecification();
             _specification.ConnectSendPipeSpecificationObserver(new ParentSendPipeSpecificationObserver(parentSpecification));
         }

@@ -209,6 +209,9 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
 
             await pipe.Send(context).ConfigureAwait(false);
 
+            if (ForwardingExpiration.TryDiscard(context))
+                return;
+
             var receiveContext = new MediatorReceiveContext<T>(context, this, this, _publishTopology, _receiveObservers, _objectDeserializer)
             {
                 IsDelivered = context.IsPublish && !context.Mandatory

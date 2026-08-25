@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus
             var entityNameAttribute = typeof(TMessage).GetCustomAttribute<EntityNameAttribute>();
             if (entityNameAttribute != null)
                 _entityName = entityNameAttribute.EntityName;
-            else if (typeof(TMessage).ClosesType(typeof(Fault<>), out Type[] messageTypes))
+            else if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] messageTypes))
             {
                 var faultEntityNameAttribute = messageTypes[0].GetCustomAttribute<FaultEntityNameAttribute>();
                 if (faultEntityNameAttribute != null)

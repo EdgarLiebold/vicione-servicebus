@@ -98,13 +98,13 @@ namespace ViciOne.ServiceBus.Serialization.JsonConverters
         {
             if (typeToConvert.IsGenericType)
             {
-                if (typeToConvert.ClosesType(typeof(IDictionary<,>), out Type[] elementTypes)
-                    || typeToConvert.ClosesType(typeof(IReadOnlyDictionary<,>), out elementTypes)
-                    || typeToConvert.ClosesType(typeof(Dictionary<,>), out elementTypes)
-                    || (typeToConvert.ClosesType(typeof(IEnumerable<>), out Type[] enumerableType)
-                        && enumerableType[0].ClosesType(typeof(KeyValuePair<,>), out elementTypes)
+                if (typeToConvert.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] elementTypes)
+                    || typeToConvert.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out elementTypes)
+                    || typeToConvert.TryGetSingleClosedGenericArguments(typeof(Dictionary<,>), out elementTypes)
+                    || (typeToConvert.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] enumerableType)
+                        && enumerableType[0].TryGetSingleClosedGenericArguments(typeof(KeyValuePair<,>), out elementTypes)
                         && elementTypes[1] == typeof(object)
-                        && !typeToConvert.ClosesType(typeof(IReadOnlyList<>))))
+                        && !typeToConvert.ClosesGenericType(typeof(IReadOnlyList<>))))
                 {
                     var keyType = elementTypes[0];
 
@@ -151,11 +151,11 @@ namespace ViciOne.ServiceBus.Serialization.JsonConverters
                     if (typeToConvert == typeof(IEnumerable<KeyValuePair<string, object>>))
                         return new CaseInsensitiveDictionaryStringObjectJsonConverter<IEnumerable<KeyValuePair<string, object>>>();
 
-                    if (typeToConvert.ClosesType(typeof(IDictionary<,>), out Type[] elementTypes)
-                        || typeToConvert.ClosesType(typeof(IReadOnlyDictionary<,>), out elementTypes)
-                        || typeToConvert.ClosesType(typeof(Dictionary<,>), out elementTypes)
-                        || (typeToConvert.ClosesType(typeof(IEnumerable<>), out Type[] enumerableTypes)
-                            && enumerableTypes[0].ClosesType(typeof(KeyValuePair<,>), out elementTypes)
+                    if (typeToConvert.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] elementTypes)
+                        || typeToConvert.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out elementTypes)
+                        || typeToConvert.TryGetSingleClosedGenericArguments(typeof(Dictionary<,>), out elementTypes)
+                        || (typeToConvert.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] enumerableTypes)
+                            && enumerableTypes[0].TryGetSingleClosedGenericArguments(typeof(KeyValuePair<,>), out elementTypes)
                             && elementTypes[1] == typeof(object)))
                     {
                         if (elementTypes[0] == typeof(string))

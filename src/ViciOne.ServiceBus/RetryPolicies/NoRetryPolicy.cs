@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public NoRetryPolicy(IExceptionFilter filter)
         {
-            _filter = filter;
+            _filter = filter ?? throw new ArgumentNullException(nameof(filter));
         }
 
         void IProbeSite.Probe(ProbeContext context)

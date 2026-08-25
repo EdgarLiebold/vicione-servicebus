@@ -49,6 +49,9 @@ namespace ViciOne.ServiceBus.Transports
         {
             return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
             {
+                RegistrationContext.GetConfigureReceiveEndpoints()
+                    .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
+
                 configure?.Invoke(RegistrationContext, configurator);
             });
         }
@@ -58,6 +61,8 @@ namespace ViciOne.ServiceBus.Transports
         {
             return _host.ConnectReceiveEndpoint(queueName, configurator =>
             {
+                RegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
+
                 configure?.Invoke(RegistrationContext, configurator);
             });
         }

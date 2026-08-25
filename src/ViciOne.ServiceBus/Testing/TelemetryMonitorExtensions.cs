@@ -20,12 +20,28 @@ public static class TelemetryMonitorExtensions
     public static async Task Wait(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout = null,
         TimeSpan? idleTimeout = null)
     {
+        await Wait(publishEndpoint, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+    }
+
+    public static async Task Wait(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout,
+        TimeSpan? idleTimeout, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(publishEndpoint);
+        ArgumentNullException.ThrowIfNull(timeProvider);
         var methodName = GetTestMethodInfo();
 
-        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout);
+        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout, timeProvider);
 
-        if (callback != null)
-            await callback(publishEndpoint).ConfigureAwait(false);
+        try
+        {
+            if (callback != null)
+                await callback(publishEndpoint).ConfigureAwait(false);
+        }
+        catch
+        {
+            trackedActivity.StopWaiting();
+            throw;
+        }
     }
 
     /// <summary>
@@ -39,12 +55,28 @@ public static class TelemetryMonitorExtensions
     public static async Task Wait(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout = null,
         TimeSpan? idleTimeout = null)
     {
+        await Wait(sendEndpoint, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+    }
+
+    public static async Task Wait(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout,
+        TimeSpan? idleTimeout, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(sendEndpoint);
+        ArgumentNullException.ThrowIfNull(timeProvider);
         var methodName = GetTestMethodInfo();
 
-        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout);
+        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout, timeProvider);
 
-        if (callback != null)
-            await callback(sendEndpoint).ConfigureAwait(false);
+        try
+        {
+            if (callback != null)
+                await callback(sendEndpoint).ConfigureAwait(false);
+        }
+        catch
+        {
+            trackedActivity.StopWaiting();
+            throw;
+        }
     }
 
     /// <summary>
@@ -60,16 +92,32 @@ public static class TelemetryMonitorExtensions
         where T : class
         where T1 : class
     {
+        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+    }
+
+    public static async Task<Response<T1>> Wait<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
+        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+        where T : class
+        where T1 : class
+    {
+        ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         var methodName = GetTestMethodInfo();
 
-        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout);
+        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout, timeProvider);
 
-        Response<T1> result = await callback(client).ConfigureAwait(false);
-
-        return result;
+        try
+        {
+            return await callback(client).ConfigureAwait(false);
+        }
+        catch
+        {
+            trackedActivity.StopWaiting();
+            throw;
+        }
     }
 
     /// <summary>
@@ -86,16 +134,33 @@ public static class TelemetryMonitorExtensions
         where T1 : class
         where T2 : class
     {
+        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+    }
+
+    public static async Task<Response<T1, T2>> Wait<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
+        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+        where T : class
+        where T1 : class
+        where T2 : class
+    {
+        ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         var methodName = GetTestMethodInfo();
 
-        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout);
+        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout, timeProvider);
 
-        Response<T1, T2> result = await callback(client).ConfigureAwait(false);
-
-        return result;
+        try
+        {
+            return await callback(client).ConfigureAwait(false);
+        }
+        catch
+        {
+            trackedActivity.StopWaiting();
+            throw;
+        }
     }
 
     /// <summary>
@@ -113,16 +178,34 @@ public static class TelemetryMonitorExtensions
         where T2 : class
         where T3 : class
     {
+        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+    }
+
+    public static async Task<Response<T1, T2, T3>> Wait<T, T1, T2, T3>(this IRequestClient<T> client,
+        Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+        where T : class
+        where T1 : class
+        where T2 : class
+        where T3 : class
+    {
+        ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         var methodName = GetTestMethodInfo();
 
-        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout);
+        await using var trackedActivity = new TrackedActivity(methodName, timeout, idleTimeout, timeProvider);
 
-        Response<T1, T2, T3> result = await callback(client).ConfigureAwait(false);
-
-        return result;
+        try
+        {
+            return await callback(client).ConfigureAwait(false);
+        }
+        catch
+        {
+            trackedActivity.StopWaiting();
+            throw;
+        }
     }
 
     static string? GetTestMethodInfo()

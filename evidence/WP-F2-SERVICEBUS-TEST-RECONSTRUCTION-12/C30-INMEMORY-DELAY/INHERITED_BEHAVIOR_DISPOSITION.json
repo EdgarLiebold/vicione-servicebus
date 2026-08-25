@@ -1,0 +1,42 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-D-0106",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/DelayProviderPublish_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.DelayProviderPublish_Specs.Should_advance_the_delay_provider",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryScheduledPublishTests.ScheduledPublish_IsDeliveredAtTheExactAdvancedDeadline",
+    "rationale": "The replacement drives the real scheduler and bus at the exact boundary without an elapsed-time tolerance and asserts exact single delivery."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0107",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/DelayProvider_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.DelayProvider_Specs.Should_delay_subsequent_delay",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryDelayProviderTests.DelayScheduledAfterAdvance_UsesTheAdvancedLogicalTime",
+    "rationale": "The replacement proves a subsequent deadline is relative to the already advanced logical time without waiting one real second."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0108",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/DelayProvider_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.DelayProvider_Specs.Should_manage_delays_in_order",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryDelayProviderTests.RelativeDelay_CompletesOnlyWhenItsTimeProviderReachesTheDeadline",
+    "rationale": "The replacement proves exact standard-TimeProvider progression at the tick boundary instead of measuring wall time."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0109",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/DelayProvider_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.DelayProvider_Specs.Should_manage_delays_in_order_without_waiting",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryDelayProviderTests.Advance_ReleasesOnlyDeadlinesAtOrBeforeTheNewLogicalTime",
+    "rationale": "The replacement proves two ordered deadlines before, at and after the exact logical boundary and distinguishes base time from the manual offset."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0110",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/DelayProvider_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.DelayProvider_Specs.Should_support_simultaneous_delays",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryDelayProviderTests.OneAdvance_ReleasesEveryDelayAtTheSameDeadline",
+    "rationale": "The replacement proves 32 equal absolute deadlines are all retained and completed by one exact advance, exercising the comparer boundary directly."
+  }
+]

@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
     /// Executes until the success count is met. If a fault occurs before the success
     /// count is reached, the circuit reopens.
     /// </summary>
-    public class HalfOpenBehavior :
+    internal sealed class HalfOpenBehavior :
         ICircuitBreakerBehavior
     {
         readonly ICircuitBreaker _breaker;
@@ -38,14 +38,17 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
         {
             if (IsActive)
             {
-                await _breaker.Close(this).ConfigureAwait(false);
-                _timeoutEnumerator.Dispose();
+                CircuitBreakerTransition transition = _breaker.Close(this);
+                if (transition.Changed)
+                    _timeoutEnumerator.Dispose();
+
+                await transition.Notification.ConfigureAwait(false);
             }
         }
 
         Task ICircuitBreakerBehavior.SendFault(Exception exception)
         {
-            return _breaker.Open(_exception, this, _timeoutEnumerator);
+            return _breaker.Open(_exception, this, _timeoutEnumerator).Notification;
         }
 
         void IProbeSite.Probe(ProbeContext context)

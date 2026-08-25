@@ -11,16 +11,26 @@ namespace ViciOne.ServiceBus.RetryPolicies
         public IncrementalRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan initialInterval,
             TimeSpan intervalIncrement)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
+
             if (initialInterval < TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(nameof(initialInterval),
-                    "The initialInterval must be non-negative or -1, and it must be less than or equal to TimeSpan.MaxValue.");
+                    "The initial interval must be non-negative.");
             }
 
             if (intervalIncrement < TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
-                    "The intervalIncrement must be non-negative or -1, and it must be less than or equal to TimeSpan.MaxValue.");
+                    "The interval increment must be non-negative.");
+            }
+
+            if (retryLimit > 1
+                && intervalIncrement.Ticks > (TimeSpan.MaxValue.Ticks - initialInterval.Ticks) / (retryLimit - 1L))
+            {
+                throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
+                    "The retry interval would exceed TimeSpan.MaxValue before the configured retry limit.");
             }
 
             _filter = filter;

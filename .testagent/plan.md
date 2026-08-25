@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 886 unfiltered cases;
+- `UnitArchitecture`: 1472 predeclared unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -731,3 +731,625 @@ Outcome: the exact 34-row source closure is terminal; 13 new cases and two stron
 carriers cover all 17 open Core identities. The inherited fixture is removed, all resulting empty
 `tests/` directories are removed, five independent mutations fail for their intended reasons, and
 the accepted floors are UnitArchitecture 899/899 and LocalIntegration 3/3 with no skipped tests.
+
+## Accepted cohort — Core serializer configuration and forwarding
+
+Replace all 14 obligations `OBL-R0-CORE-C-0352` through `-0365` with fourteen ordinary xUnit facts
+under `Serialization`. Preserve each validation and callback boundary one-to-one. Put the five
+process-global option cases in `SystemTextJsonGlobalOptionsCollection`, save the original options
+before each case, and restore the exact instance in `Dispose` even after an assertion or
+configuration failure. Use exact validation members and exception types instead of matching broad
+exception text.
+
+Replace duplicate forwarding obligations `OBL-R0-CORE-C-0151` and `-0152` with one ordinary fact
+using the real in-memory bus. It must consume the concrete input through its interface contract,
+forward the same consumed context to a second endpoint, and assert exact fixed identifiers, values,
+the concrete-only property, custom header, envelope JSON media type, and one downstream delivery.
+The terminal disposition maps both old rows explicitly to this stronger single carrier.
+
+Add fifteen passive replacement-requirement rows, one source-parallel hardening row for the
+`PipeExtensions.IsEmpty` defect, and two source-file dispositions. Delete both inherited files
+only after the focused tests, native Core project, remaining inherited project build,
+UnitArchitecture floor 915, unchanged LocalIntegration 3, bounded formatting, static quality, and
+at least five effective one-cause mutations pass. The mutations must independently reject unknown
+serializer acceptance, unknown default acceptance, ignored callback replacement, unsafe shared
+instance mutation or nulling, lost forwarding metadata/body, unsafe empty-pipe probing, incorrect
+empty-pipe classification, and requirement projection drift.
+Delete every directory that becomes empty after the source files are removed.
+
+The PO-approved forwarding-expiration correction is part of this cohort's product-defect rule, not
+a test workaround. Preserve the source expiration through the caller pipe, accept only a final
+positive TTL as an explicit revival, and otherwise discard centrally before transport, persistent
+outbox, or mediator dispatch while emitting `FORWARD-EXPIRED`. Keep the response/fault one-second
+minimum separate. The forwarding, MessagePack, Outbox, Mediator and request-outcome tests plus the
+targeted boundary mutations are mandatory closure evidence.
+
+Outcome: both inherited fixtures are terminally mapped and removed. The native replacements close
+all 16 inherited identities, add the source-parallel empty-pipe guard, and retain forwarding over
+the real in-memory path. Expiration is enforced consistently at transport, persistent-outbox, and
+mediator boundaries. The bounded source-owner projects, complete UnitArchitecture profile at
+937/937, and LocalIntegration profile at 3/3 pass with zero skipped tests; all independent one-cause
+mutations fail for their intended reasons.
+
+## Accepted product normalization — envelope metadata and time source
+
+The PO selected Option C after the forwarding review. One internal projection in
+`ViciOne.ServiceBus.Abstractions` now owns identifiers, addresses, message types, expiration,
+sent time, headers and host metadata for every retained wire envelope. System.Text.Json and
+MessagePack retain only their payload encoding and mechanical assignment into their wire models.
+
+A pipeline context can carry the standard .NET `TimeProvider`; absence means
+`TimeProvider.System`. Envelope materialization captures no more than one UTC instant and adds a
+relative TTL exactly, including zero and negative values. The response/fault one-second exception
+remains upstream and is not a serializer fallback. The two legitimate forwarding stages remain
+separate.
+
+The bounded execution set is the Abstractions, Core and MessagePack test projects. Required closure
+is a zero-warning Release build and unfiltered run for each, the complete UnitArchitecture profile,
+cross-format metadata comparison, deterministic `FakeTimeProvider` boundaries and four one-cause
+mutations covering process-clock substitution, TTL clamping, multiple clock reads and serializer
+field drift.
+
+Outcome: the common projector supplies one captured UTC instant and identical envelope metadata to
+System.Text.Json and MessagePack. All bounded Release builds and tests pass without warnings or
+skips, UnitArchitecture remains 937/937 and LocalIntegration remains 3/3, and all four targeted
+mutations are rejected for the intended reason.
+
+## Accepted cohort — Testing observation primitives
+
+Replace `OBL-R0-CORE-C-0373` through `-0381` and `OBL-R0-CORE-C-0415` through `-0418` under the
+source-mirrored `Testing` owner. Use ordinary xUnit facts and theories with the public
+`SentMessageList` and `AsyncInactivityObserver`; do not recreate the inherited fixture hierarchy.
+
+Normalize both source primitives before writing their final tests. `AsyncElementList<T>` and
+`AsyncInactivityObserver` must accept one standard .NET `TimeProvider`, while existing constructors
+remain source-compatible and default to `TimeProvider.System`. Both asynchronous and synchronous
+list deadlines and every observer interval use that provider. The synchronous iterator must never
+hold its message-list monitor across caller-controlled enumeration. The observer may absorb its
+own lifetime cancellation but must not hide failures raised while querying a connected source.
+
+The exact behavioral set is immediate Any/SelectAsync, both include variants, exclude, pattern
+matching, arrival after observation begins, observation cancellation, virtual timeout, force before
+and after task materialization, active-to-inactive transition, and one query per virtual interval.
+Add separate hardening for the synchronous virtual deadline and visible source-query failure.
+Neither product nor tests may use `Thread.Sleep`, real `Task.Delay`, stopwatch thresholds, polling,
+or a custom clock abstraction.
+
+Create one terminal disposition per inherited source file and one passive requirement row per native
+method. Delete both inherited files only after focused Release build/test, the unfiltered Core
+project, complete UnitArchitecture and unchanged LocalIntegration profiles pass with zero skips.
+At least six one-cause mutations must reject process-time substitution in each primitive, broken
+later delivery, ignored cancellation, monitor-held enumeration, lost repeated interval queries, and
+swallowed source failures. The remaining harness, rolling-timer, saga-polling and recorded-message
+time paths stay in the root TODO as a separate path-complete normalization slice.
+
+Outcome: all 13 inherited obligations have terminal source-file dispositions and are carried by 17
+ordinary source-owner facts. Both primitives now use one injected standard `TimeProvider`; existing
+constructors default to `TimeProvider.System`, synchronous filters execute outside the list monitor,
+and connected-source failures remain visible. Eleven independent one-cause mutations reject both
+process-time fallbacks, broken delivery and cancellation, monitor-held caller code, lost repeated
+queries, swallowed failures, and projection drift. Both inherited fixtures are removed. The native
+Core project passes 429/429, the complete UnitArchitecture profile passes 954/954, and
+LocalIntegration remains 3/3, all with zero failures or skipped tests.
+
+## Accepted cohort — Testing harnesses, consumers, handlers and sagas
+
+1. Freeze the exact 42-obligation R0 set from the nine remaining Testing fixtures and map every row
+   to one stronger native carrier. Treat this only as the inherited lower bound.
+2. Normalize the complete affected harness path around one standard `TimeProvider`: direct and DI
+   harness budgets, inactivity and rolling timers, observer/list construction, message timestamps,
+   saga polling and registration propagation. Preserve source-compatible defaults.
+3. Correct the handler failure boundary so observation records the exact exception and the consume
+   pipeline still faults. Do not change a test expectation to accommodate the current defect.
+4. Build source-mirrored native xUnit/MTP tests under `Testing`, grouped by actual product owner:
+   harness lifecycle/DI, consumer harness, handler harness, saga harness/state machine, and shared
+   time behavior. Every test owns one harness and uses deterministic coordination or fake time.
+5. Add native requirements for every distinguishable positive, negative, fault, lifecycle, time and
+   integration behavior absent from the inherited fixtures. Do not overload R0 IDs with new meaning.
+6. Run focused Release build and tests, the unfiltered Core project, UnitArchitecture and
+   LocalIntegration profiles, then exact source-to-test closure, assertion-quality, anti-pattern,
+   gap and smell reviews. Run the final build non-incrementally.
+7. Execute one-cause mutations for time-source fallback, handler exception swallowing, missing
+   timeout/cancellation enforcement, lost destination/response metadata, lost saga state/fault
+   observation, requirement projection and shared-harness leakage.
+8. Delete each inherited fixture only after its complete stronger replacement passes. Remove every
+   resulting empty directory and record exact terminal dispositions, commands, exit codes and raw
+   evidence hashes.
+
+### Accepted subcohort — message observation lists and observers
+
+1. Exercise every public query form of `SentMessageList`, `PublishedMessageList` and
+   `ReceivedMessageList` against exact real records: synchronous typed selection, typed predicate,
+   configured asynchronous selection, typed asynchronous selection, typed asynchronous predicate,
+   configured `Any`, typed `Any`, and typed-predicate `Any`.
+2. Exercise `ReceivedMessageList<T>` independently so its covariant typed facade is not inferred
+   from the untyped list.
+3. Prove that send and publish observers record exact success and exact fault records on the
+   configured `TimeProvider`, including identity, context and exception.
+4. Prove the shared list owner rejects missing identifiers, keeps the first duplicate identifier,
+   propagates filter failures, disconnects failed observations and remains usable afterward.
+5. Prove exact empty-sequence behavior of `First`, `FirstOrDefault`, `Count` and `Any`, and exact
+   typed and untyped sent-message deconstruction.
+6. Reject null provider construction for every concrete list and reject a null required publish
+   observer at `TestReceiveEndpointObserver` construction.
+7. Prove with a real dynamically connected receive endpoint that its endpoint-local publications
+   reach an observer connected only through `TestReceiveEndpointObserver`; synchronize on the
+   completed publication and inspect a snapshot so loss fails immediately without a timer.
+8. Add one passive native requirement row per test. Run focused tests, complete Core,
+   UnitArchitecture and LocalIntegration profiles without skip, then assertion-quality,
+   anti-pattern and pseudo-mutation review. Execute independent one-cause mutations for at least
+   duplicate suppression, fault recording, configured time, filter failure, the constructor guard
+   and the endpoint-local observer connection.
+
+### Accepted subcohort — DI testing utilities and dynamic endpoints
+
+1. Exercise `ConnectPublishHandler<T>` with one rejected and one matching real publication. Preserve
+   the exact matching consume context and reject missing harness/filter dependencies before any
+   endpoint is connected.
+2. Bound dynamic endpoint readiness with the harness `TestTimeout`, `TimeProvider` and cancellation
+   token. Do not add a second timer or process-clock dependency.
+3. Exercise `AddTaskCompletionSource<T>`, `GetTask<T>` and `GetTasks<T>` with two registrations and
+   prove exact task identity, registration order, last-registration resolution and independent
+   completion.
+4. Exercise both `IReceiveEndpointConnector` overloads supplied by the in-memory DI harness. Prove
+   that each callback receives the real registration context, each endpoint consumes only its own
+   message, and endpoint-local publications retain exact correlation.
+5. Keep implementation classes behind their public interfaces; do not freeze internal composition
+   types as new public contracts merely to unit-test them. Add one passive requirement row per
+   ordinary test and reject targeted filter/timeout/context/registration regressions.
+
+Outcome: five additional source-owner facts close the filtered publish-handler, bounded readiness,
+task-registration and dynamic-connector gaps that the inherited suite never covered. Dynamic
+endpoints now apply both global endpoint-callback forms exactly once through either public connector
+overload. The test run also exposed and removed a race in the retry assertion by synchronizing on
+both terminal fault publication and terminal consume observation. Four independent one-cause
+mutations reject filter loss, dependency-guard loss, unbounded readiness and registration-order
+drift; the pre-fix dynamic-endpoint run rejects missing global endpoint configuration. The complete
+UnitArchitecture profile passes 1046/1046 and LocalIntegration passes 3/3 without skips.
+
+## Accepted cohort — observer pipelines and message-flow diagnostics
+
+The five inherited observer/message-flow fixtures contribute 27 migration obligations. They are a
+lower bound only: most merely awaited one callback and several contained no assertion. The native
+replacement therefore derives the complete contract from the product path and adds 17 ordinary
+xUnit facts: five Abstractions-owned connection/fan-out cases, ten transport/publish/receive/message
+observer cases, and two mediator cases. The existing timeline fact is strengthened in place.
+
+The replacement proves exact pre/post/fault exclusivity, message/context/exception identity,
+bus-versus-endpoint propagation, independent disconnect, publish-versus-send isolation, handler and
+consumer names, receive-versus-consume fault boundaries, independent observer branches, nested
+mediator request/response order, and every operation in a deterministic five-message flow. No test
+uses a sleep, wall-clock oracle, random input, inherited fixture, or global endpoint convention.
+
+`Connectable<T>` now returns a defensive public snapshot without allocating on internal dispatch,
+rejects every missing callback consistently, and turns synchronous or null-task observer failures
+into awaited faults while still starting every callback in the stable snapshot. Eight independent
+one-cause mutations reject snapshot exposure, incomplete fan-out, lost send/publish/receive/message
+or mediator semantics, and omitted timeline records. Release builds have zero warnings and errors;
+Core passes 533/533, Abstractions passes 139/139, UnitArchitecture passes 1063/1063, and
+LocalIntegration passes 3/3, all without skips. Only then are the five inherited files removed.
+
+## Accepted cohort — message identity, conversation, time and headers
+
+The 15 inherited obligations are terminally mapped to 17 source-derived native facts. The expanded
+contract binds complete correlation priority, empty identities, explicit topology and caller
+overrides, root and inherited conversations, initiator/source metadata, exact conversation restart
+headers, exact `MessageId`-derived UTC time, independent versus shared header storage, header mutation
+boundaries, complete interface-object round trips, and converter-independent interface materialization.
+
+The source review exposed an inherited product defect in the independent `DictionarySendHeaders`
+constructor: it copied the input and then inserted the same keys again. The correction removes only
+the impossible second insertion; the explicit shared-storage mode remains intact. Eleven one-cause
+product mutations fail for their intended reasons. Release builds have zero warnings and errors;
+Core passes 550/550, UnitArchitecture passes 1080/1080, and LocalIntegration passes 3/3 without skips.
+Only then are all five inherited fixtures removed. The exact disposition and product-path analysis
+are under `evidence/native-tests/message-identity-and-headers`.
+
+## Accepted cohort — message contexts and dynamic contracts
+
+Treat the 30 obligations in `MessageContext_Specs.cs`, `ContainedMessage_Specs.cs`,
+`InterfaceProxy_Specs.cs`, and `DynamicProxySerialization_Specs.cs` only as the inherited lower
+bound. Read the complete request/response, send/publish, initializer, dynamic-implementation,
+System.Text.Json, MessagePack, and metadata paths before the first test edit. Consolidate duplicate
+assertions, replace assertion-free delivery checks with exact observable outcomes, and add missing
+validation, failure, type-shape, cache, inheritance, and serializer boundaries derived from the
+product.
+
+Place context and request/response behavior under `Contexts`; place emitted-contract construction
+under `Internals/Reflection`; keep serializer-specific round trips under `Serialization` in their
+own source-owner projects. Use real in-memory dispatch where transport context is the contract and
+direct deterministic tests where the implementation builder is the owner. Do not use the inherited
+fixture hierarchy, blocking waits, wall-clock timing, random oracles, or metadata-only delivery
+claims. A reproduced product defect is corrected in product code and protected by a focused
+regression plus a one-cause mutation; tests are never weakened to preserve the defect.
+
+The 30 inherited obligations are terminally mapped to 24 new source-derived Core cases plus the
+existing MessagePack interface round trip. The permanent tests prove complete send/request/response
+causation, an independent response subscriber, exact timeout and caller-cancellation semantics,
+accepted response types, dynamic nested/generic interface transport, every retained serializer,
+collectible proxy caching, complete custom attributes, and fail-fast validation of unsupported or
+ambiguous contracts.
+
+Source-derived testing exposed four product defects: invalid interface shapes leaked late emission
+exceptions, named custom-attribute arrays were passed with the wrong CLR value type, and an already
+canceled request lost the caller's cancellation token; request deadlines also bypassed the standard
+`TimeProvider` testability boundary. The product paths are corrected and eight
+one-cause mutations reject regression. Core passes 574/574 and UnitArchitecture passes 1104/1104,
+both without failures or skips. The exact disposition and analysis are under
+`evidence/native-tests/message-context-and-dynamic-contracts`; only after final static and profile
+verification are the four inherited fixtures removed.
+
+## Accepted cohort — request clients, response matching, mediator, and multibus
+
+Treat the 40 obligations in `RequestClient_Specs.cs`, `RequestClientNew_Specs.cs`,
+`RequestFilter_Specs.cs`, `ResponsePatternMatching_Specs.cs`, `MultiBusRequest_Specs.cs`, and
+`MediatorRequest_Specs.cs` only as migration evidence. Read every file and the complete connected
+client-factory, request-handle, response-handler, response-pattern, mediator, multibus, outbox,
+fault, cancellation, filter, and expiration path before designing replacements.
+
+Consolidate duplicate syntax demonstrations into behavioral contracts. Derive the full positive,
+fault, timeout, cancellation-race, accepted-type, pattern-matching, TTL/expiration, outbox, scoped
+filter, mediator, and bus-isolation matrix from product source. Use virtual time for every deadline,
+real hermetic in-memory dispatch for transport causation, and direct unit tests only where a pure
+response wrapper or matcher is the actual owner. Preserve no inherited fixture, blocking wait,
+wall-clock timer, assertion-free delivery claim, or implementation accident. Fix reproduced product
+defects at their source before accepting the corresponding test.
+
+Delete the six inherited files only after exact 40/40 terminal disposition, stronger source-derived
+coverage, focused and unfiltered Release profiles without skips, bounded formatting/static review,
+and one-cause mutations of the protected request-client boundaries.
+
+The cohort is terminal. All 40 inherited identities have exact dispositions against 24 permanent
+source-owner methods; the six inherited fixtures are removed. The retained capability set is
+offered through the A+ ViciOne.ServiceBus API, without a MassTransit backward-compatibility
+requirement. Source-derived tests additionally cover three-response arbitration, deterministic
+deadline/cancellation races, deadline/TTL independence, dependency-injection time ownership,
+duplicate response rejection, public null boundaries, accepted-type matching, complete response
+context delegation, exact remaining response/fault TTL, shared outbox bypass, scoped filter faults,
+and secondary-bus isolation.
+
+Five product boundaries were corrected at their owner: client deadline and transport TTL are
+independent; all deadline/TTL calculations use the context-owned `TimeProvider`; public request and
+response construction fails early for missing dependencies; multi-response wrappers delegate the
+complete context and select deterministically; and the request outbox bypass is centralized in the
+shared request-send endpoint. Eleven one-cause mutations reject regression. Core passes 614/614,
+Abstractions passes 150/150, UnitArchitecture passes 1155/1155, and LocalIntegration passes 3/3,
+with zero failures or skips; Release builds have zero warnings and errors.
+
+## Accepted cohort — type relationships and readable-property reflection
+
+1. Replace the inherited generic-type API with intent-revealing operations for interface matching,
+   any closed-generic match, deterministic complete match enumeration, exactly-one match and exact
+   generic arguments. Do not retain aliases or forwarding overloads for MassTransit compatibility.
+2. Make the generic-match cache an internal implementation detail, store a non-null result object,
+   and sort multiple interface matches by stable type identity. Exactly-one callers must fail on
+   ambiguity instead of consuming reflection order.
+3. Rename property helpers to state that they return readable instance/static properties. Traverse
+   base types and inherited interfaces before derived declarations, de-duplicate diamond paths and
+   select each property by its own getter. Update all product consumers atomically.
+4. Fix runtime future registration at its source so non-state-machine and wrong-state-machine types
+   fail directly as `futureType` argument errors. Add a positive valid-registration case as well as
+   both negative cases.
+5. Build source-mirrored native tests under Abstractions `Internals/Extensions` and Core
+   `Configuration/DependencyInjection`. Derive null, invalid-definition, open-source, nested-base,
+   multiple-interface, ambiguity, task-result, hiding, indexer, write-only, static and diamond
+   boundaries from product source; treat the 37 inherited rows only as minimum evidence.
+6. Create exact terminal disposition for all 37 identities. Delete the four inherited fixtures only
+   after their complete replacements pass; keep the separate legacy helper files until their other
+   consumers are migrated.
+7. Reject one-cause mutations for ambiguity handling, deterministic matching, invalid generic
+   definitions, write-only filtering, derived-interface precedence, future-type validation and
+   requirement projection. Then run focused tests, zero-warning Release builds, UnitArchitecture,
+   LocalIntegration and the full retained product-source solution without skips.
+
+The cohort preserves every useful generic-type, interface and readable-property feature behind an
+intent-revealing ViciOne API; MassTransit compatibility aliases are absent. All 37 inherited rows
+have exact terminal dispositions. The new cache design does not root collectible metadata. The four
+inherited fixtures are removed only after the final Abstractions 191/191, Core 618/618,
+UnitArchitecture 1200/1200 and LocalIntegration 3/3 gates, all without skips. Every retained product
+project builds in Release with zero warnings and errors. Thirteen independent one-cause mutations
+reject the protected behavior, resource-lifetime and requirement-projection regressions.
+
+## Accepted cohort — middleware coordination and resilience
+
+Treat the 19 inherited identities in the eleven middleware fixtures as a lower bound. The complete
+latest-value, one-time setup, cancellation, fork/join, nested-pipe, partition, rate/concurrency,
+observer, rescue, retry and circuit-breaker product paths define the retained behavior. Preserve
+features behind an intent-revealing ViciOne API; do not preserve fixture shapes or accidental public
+implementation states.
+
+Use virtual time for rate and circuit behavior, fresh keys and concurrent callers for arbitration,
+and exact exception/identity/order assertions. Public routing key providers reject null. Setup and
+limit adjustment recover after terminal failure or cancellation. The circuit message path remains
+lock-free while rare transitions serialize ownership of state, timers and timeout enumerators.
+
+The cohort is terminal: all 19 identities have exact replacement dispositions, the eleven inherited
+files are removed, seven independent one-cause mutations reject the protected behavior, and the
+post-deletion inherited project still compiles. Abstractions passes 201/201, Core 643/643,
+UnitArchitecture 1235/1235 and LocalIntegration 3/3 without failures or skips; all affected Release
+builds complete with zero warnings and zero errors.
+
+## Accepted cohort — middleware routing, limits and scope
+
+Treat the eight inherited identities in the circuit, payload-scope, concurrency, dispatch and
+dynamic-router fixtures as migration evidence. Read the complete parent/local payload, converter,
+output/tee, type/key routing, limiter and circuit-state paths before replacement. Preserve useful
+capabilities behind fail-fast ViciOne boundaries, not the old fixture or reflection failure shapes.
+
+Source-owner tests prove parent-readable/local-write payload isolation, nested scopes, typed fan-out,
+exact route disconnection, matched and unmatched dispatch continuation, keyed selection, invalid
+collaborators/converter results, the exact configured concurrency maximum and the default circuit
+activation threshold. Eight one-cause mutations cover those boundaries.
+
+The cohort is terminal: all eight identities have exact dispositions, the five inherited fixtures
+are removed, and the remaining inherited Core project still compiles. Abstractions passes 203/203,
+Core 649/649, UnitArchitecture 1243/1243 and LocalIntegration 3/3 without failures or skips; the
+final Engineering build completes with zero warnings and zero errors.
+
+## Accepted cohort — middleware retry
+
+Treat the 17 inherited retry identities as a behavior lower bound. Read the complete retry filter,
+policy/context, configuration, cancellation, observer, nested-payload, typed-dispatch and general
+task-executor paths before replacement. Preserve capabilities, not the former API or its private
+command-specific fixture hierarchy.
+
+Use iterative retry loops, exact terminal failures and tokens, context-owned or explicitly supplied
+`TimeProvider` instances, immutable validated schedules, and one downstream retry owner across
+typed dispatch. Cover nested observer ownership at both the owning and outer layers. Remove the
+unused message-specific direct retry extension because its capabilities are already owned by the
+general task executor and the configured message-retry middleware.
+
+The 54 source-mirrored xUnit/MTP cases raise the predeclared UnitArchitecture floor from 1243 to
+1297. Delete the inherited retry fixture and its seven exclusive support files only after the
+17-row disposition is complete, focused tests and one-cause mutations pass, and the remaining
+inherited Core project still compiles. Finish with unfiltered Core, UnitArchitecture and
+LocalIntegration gates plus the complete Engineering Release build.
+
+The cohort is terminal. All 17 inherited identities have exact executing dispositions; the eight
+exclusive inherited files and the unused direct message-retry duplicate are removed. Nine
+one-cause product mutations fail for their intended reasons. Abstractions passes 203/203, Core
+703/703, UnitArchitecture 1297/1297 and LocalIntegration 3/3 without failures or skips. All bounded
+and complete Release builds finish with zero warnings and errors, and the bounded .NET whitespace
+format check passes.
+
+## Accepted cohort — message and host retry integration
+
+Replace the 17 remaining obligations from `HostConfigurationRetry_Specs.cs`, `Retry_Specs.cs` and
+`TypeCastRetry_Specs.cs` as one cohesive integration slice. The previously accepted retry engine is
+the implementation foundation; this cohort proves its public configuration, bus lifecycle,
+transport-host and polymorphic dispatch boundaries rather than rebuilding policy mechanics.
+
+Use one retry executor and one configured delay. Host send retry accepts an explicit
+`TimeProvider`, preserves the exact caller cancellation token, reports transport stopping as a
+`ConnectionException`, gives stopping precedence when both sources cancel and rethrows the exact
+terminal transport failure. Message retry preserves inner-policy ownership, exact consumer and bus
+budgets, disjoint exception-policy ownership, concrete-base and interface dispatch for a concrete
+message with an abstract ancestor, explicit/default no-retry behavior, and real cancellation of a
+pending retry during bus stop. Invalid public collaborators and policy results fail at their owning
+boundary.
+
+Nineteen source-mirrored xUnit/MTP cases raise the predeclared UnitArchitecture floor from 1297 to
+1316 and the Core project from 703 to 722. Delete the three inherited fixtures only after their
+17-row terminal disposition, focused tests, one-cause mutations, zero-warning Release build,
+unfiltered Core and UnitArchitecture runs, unchanged LocalIntegration run, inherited Core compile
+check, projection validation, bounded formatting and static test-quality review all pass.
+
+The cohort is terminal. All 17 inherited identities have exact executing dispositions, the three
+fully replaced fixtures are removed, and four independent one-cause production mutations fail for
+their intended reasons. Core passes 722/722, UnitArchitecture passes 1316/1316 and LocalIntegration
+passes 3/3 without failure or skip. The native UnitArchitecture build, remaining inherited Core
+project and complete Engineering solution build in Release with zero warnings and errors.
+
+## Accepted cohort — configuration composition and validation
+
+Treat the 29 obligations in the eight inherited configuration fixtures as a lower bound. Read the
+complete observer, send/publish composition, saga discovery/creation, runtime-instance and invalid-
+configuration paths before replacement. Preserve capabilities behind coherent ViciOne APIs; do not
+preserve delayed observer callbacks, reflection order, assertion-free smoke tests or obsolete public
+implementation types.
+
+The cohort is terminal. Twenty-eight new inherited-replacement cases plus six source-derived
+hardening cases cover stable composition order, validation snapshots, observer re-entry/failure,
+late root configuration, failed-initialization recovery, saga role precedence and construction,
+runtime instance identity and exact invalid boundaries. All 29 inherited identities have terminal
+executing dispositions; the eight fixtures and their empty directory are removed. Ten independent
+one-cause product mutations fail for their intended reasons. Abstractions passes 213/213, Core
+746/746, UnitArchitecture 1350/1350 and LocalIntegration 3/3 without failure or skip; the remaining
+inherited Core project and complete Engineering solution build in Release with zero warnings and
+errors.
+
+## Accepted cleanup — test-local message-group sample
+
+The three cases in `Groups/Group_Specs.cs` test only types and extension methods declared in that
+same inherited file. They exercise no ViciOne.ServiceBus product code and are not the similarly
+named batch-grouping feature. All three identities are terminally classified as non-product and the
+file is removed without creating a test of copied test code. The UnitArchitecture floor remains
+1350.
+
+## Accepted cohort — pipe-context failure precedence
+
+Replace the five inherited cleanup-precedence cases at their `Agents/PipeContextSupervisor` source
+owner. The operation result is authoritative: cleanup after successful delivery cannot create a
+retry signal, and cleanup after failure cannot replace the exact primary exception. Fault
+notification, stop and disposal remain ordered and independently attempted.
+
+Eight native cases close the five inherited identities and add source-derived coverage for exact
+exception identity, lifecycle order, caller-token propagation and failed asynchronous context
+acquisition. Eight one-cause product mutations reject regression. The inherited fixture is removed;
+Core passes 754/754, UnitArchitecture 1358/1358 and LocalIntegration 3/3 without failure or skip.
+All final Release builds have zero warnings and errors.
+
+## Accepted cohort — timeout and cancellation
+
+Replace the four inherited timeout and cancellation obligations at their middleware and
+configuration owners. The inherited tests are a lower bound: cover virtual deadline ownership,
+nested caller-token normalization, independent cancellation, the complete consume lifecycle,
+timer disposal, timeout fault projection, transport-stop suppression and all timeout configuration
+projections.
+
+Use the context `TimeProvider` by default and permit an explicit configured provider. Applied pipe
+specifications are immutable snapshots. Preserve exact causal exceptions and deterministic caller,
+deadline and transport-stop precedence. Keep `TimeoutFilter`, `UseTimeout` and
+`ITimeoutConfigurator` public while hiding specification, observer and proxy implementation types.
+Reject nonpositive durations in every projected scope and require the configuration callback.
+
+The cohort is terminal. Thirty native cases close all four inherited identities and add the full
+source-derived boundary set. The two inherited fixtures are removed. Twelve one-cause product
+mutations fail for their intended reasons. Core passes 784/784, UnitArchitecture 1388/1388 and
+LocalIntegration 3/3 without failure or skip. All final Release builds and bounded formatting and
+static closure checks pass with zero warnings or errors. The complete gate also exposed and fixed a
+pre-existing saga-test observation race without changing product behavior.
+
+## Accepted cohort — in-memory delay and scheduled publish
+
+Replace the five inherited delay-provider identities at the `InMemoryTransport` owner and keep the
+real scheduled-publish integration boundary. Replace the channel/reader-task/wall-clock-offset
+implementation with an injected standard `TimeProvider`, one timer and a comparer-correct ordered
+deadline set. `Advance` must be applied when it returns; cancellation removes its entry and preserves
+the exact caller token; disposal cancels pending work and releases all resources.
+
+Use `TimeSpan` and `DateTimeOffset` as the public time shapes and do not retain redundant integer or
+ambiguous `DateTime` overloads for compatibility. Preserve direct delayed-delivery registration in
+`MessageQueue`: no `Task.Run` may allow logical time to advance before registration. Tests must be
+source-mirrored, contain no elapsed-time verdict, and cover boundaries, equal and subsequent
+deadlines, cancellation, disposal, timer count, maximum supported timer interval, API shape and the
+real DI scheduler path.
+
+The cohort is terminal. Eighteen native cases close all five inherited identities and add the full
+source-derived set. Fourteen one-cause product/projection attacks fail for their intended reasons.
+Core passes 802/802, UnitArchitecture 1406/1406 and LocalIntegration 3/3 without failure or skip. The
+two inherited fixtures are removed and all final Release builds and bounded formatting checks pass.
+
+## Bus health waiting
+
+Normalize the complete `BusControlHealthExtensions` owner before migrating the larger health and
+kill-switch scenarios. Rename the asynchronous public surface with the `Async` suffix and return the
+complete `BusHealthResult`. Add one standard-`TimeProvider` execution path plus system-time
+convenience overloads; keep the polling interval private. A finite timeout must either return the
+exact expected result after a final boundary observation or throw `BusHealthStatusTimeoutException`
+with the last result. Infinite waiting remains available through caller cancellation.
+
+Test the owner under `tests2/ViciOne.ServiceBus.Abstractions.Tests` with ordinary xUnit/MTP cases for
+immediate and delayed success, exact-deadline success, zero/finite/infinite timeout, exact
+cancellation, validation, empty and invalid collections, concurrency and stable input ordering.
+Update every still-compiling product and inherited-test caller mechanically to the renamed API; do
+not change their asserted behavior. Add passive requirement rows and prove at least the process-time,
+silent-timeout, cancellation-order, final-boundary and collection-order defects with one-cause
+mutations. Run focused Abstractions, unfiltered Abstractions, complete UnitArchitecture,
+LocalIntegration, remaining inherited Core and Engineering Release gates before accepting C31.
+
+Outcome: the 22-case source-owner cohort passes in full and each case has an exact passive
+requirement carrier. Twelve isolated one-cause mutations reject process-time polling, silent
+timeouts, cancellation-order loss, missed deadline semantics, invalid collection handling,
+reordering, repeated enumeration and projection drift. Abstractions passes 235/235,
+UnitArchitecture 1428/1428 and LocalIntegration 3/3 without failure or skip. Every affected caller
+and the complete Engineering solution build in Release with zero warnings and errors. The larger
+kill-switch state machine remains a separate cohort; no inherited fixture is falsely declared
+replaced here.
+
+## Kill-switch lifecycle and recovery
+
+Replace the imported public runtime-state graph with one internal, lifecycle-owned state machine.
+Preserve bus-wide and endpoint-local configuration, activation population, failure-ratio threshold,
+tracking window, exception filtering, endpoint pause/restart, routing-slip observation and health
+transitions. Do not preserve public coordination interfaces, public state classes, the bypassed
+restart state, raw timers, process time, mutable shared options or detached transition tasks.
+
+The public configuration uses an explicit ratio in the inclusive range zero through one, an explicit
+`TimeSpan` restart delay and one standard .NET `TimeProvider`. Configuration is snapshotted before it
+is shared. The runtime performs counter reset and threshold evaluation under one synchronization
+boundary, trips at the exact activation population, owns one observable recovery task, retries
+failed stop/start operations with bounded delay and cancels recovery when the endpoint is stopped by
+its host. Recovery establishes its own log/instrumentation context.
+
+Build the source-derived deterministic Core matrix before deleting the three Core inherited
+fixtures. It must cover all public validation, concurrent fault collapse, exact virtual-time
+transitions, failure retries, external-stop cancellation, health and instrumentation. Retain the
+ActiveMQ and RabbitMQ fixtures for separate real-broker LocalIntegration cohorts.
+
+Outcome: the cohort is terminal. The product now owns one internal synchronized state machine, an
+immutable configuration snapshot, standard `TimeProvider`, one observable recovery task, bounded
+pause/start retry, terminal cancellation and an explicit `VerifyingRecovery` phase. Twenty-six
+ordinary native facts and fifteen one-cause mutations cover the complete source-derived boundary.
+The three Core fixtures are removed; ActiveMQ and RabbitMQ remain. Core passes 828/828,
+UnitArchitecture 1455/1455 and LocalIntegration 3/3 without failure or skip. The complete serial
+Engineering Release build has zero warnings and zero errors.
+
+## Fault diagnostics and host metadata
+
+Replace the two inherited exception-data cases and the inherited host-metadata round trip at their
+actual source owners. Fault construction must always detach serializable string-keyed non-null
+diagnostic data from the mutable source exception, use ordinal case-insensitive lookup and give
+explicit application-wrapper values precedence without replacing the reported inner exception
+identity. Remote exception identities and nested chains remain intact.
+
+`BusHostInfo` remains the wire DTO but has one parameterless serializer constructor and one internal
+current-process factory; no boolean pseudo-mode or unused version discovery remains. The process
+snapshot uses modern runtime APIs and the host cache owns exactly one current and one empty object.
+Tests cover direct snapshot boundaries, public shape, real fault publication and real host metadata
+serialization. Do not accept publish-observer values as transport-roundtrip evidence.
+
+Outcome: six fault-diagnostic cases, four host-capture cases and one real host transport case pass.
+Core is 835/835, Abstractions is 239/239, UnitArchitecture is 1466/1466 and LocalIntegration is 3/3.
+Seven isolated one-cause mutations are rejected. The two inherited fixtures are removed only after
+all three R0 obligations are replaced. Every final Release build, including Engineering, completes
+with zero warnings and errors.
+
+## Initializer duplicate-path consolidation
+
+Do not create redundant native tests when an inherited obligation is already strictly contained by
+accepted source-owner tests. `OBL-R0-CORE-D-0415` is jointly covered by the exact scalar-copy test and
+the real anonymous-values interface transport test. Record the two-carrier mapping and remove only
+the inherited `SendProxy_Specs.cs`; product code, native tests and the 1466 profile floor do not
+change.
+
+## InMemory receive-endpoint concurrency
+
+Replace `OBL-R0-CORE-D-0465` at the real endpoint boundary, not with an isolated executor test. One
+case proves that a configured limit of one hundred admits all one hundred deliveries before any is
+released. A second source-derived hardening case separates prefetch from concurrency and proves that
+delivery beyond the configured limit waits for a slot. Both cases use observable barriers rather
+than elapsed-time or thread-count assertions.
+
+The one-cause mutation makes the transport ignore `ConcurrentMessageLimit` and use `PrefetchCount`;
+the cap case must fail with an observed maximum of four instead of three. Remove the inherited
+fixture only after both ordinary cases and the restored product path pass. The UnitArchitecture
+floor becomes 1468.
+
+## Structured bus-probe endpoint inventory
+
+Replace `OBL-R0-CORE-D-0199` against the structured `ProbeResult` produced by the real bus. Do not
+recreate the old `ViciOne.ServiceBus.TestFramework.GetReceiveEndpointAddresses` helper, which
+serializes the probe to JSON and reparses path strings. Prove that the harness input endpoint, the
+internal bus endpoint and a dynamic endpoint each appear exactly once, then prove that stopping the
+dynamic endpoint removes only that address.
+
+The one-cause mutation renames the InMemory receive-transport `address` probe field and both tests
+must fail at the missing structured key. Remove the inherited fixture only after restoration and a
+green focused run. The UnitArchitecture floor becomes 1470.
+
+## InMemory outbox fault isolation
+
+Replace `OBL-R0-CORE-D-0294` at the actual in-memory outbox boundary. A handler must await a deferred
+response and then fault; the request fault is the causal completion barrier. The test must prove the
+exact sent `Fault<T>` and the absence of the deferred response from the harness snapshot, without an
+elapsed-time absence window.
+
+Mutate only the filter catch path from `DiscardPendingActions` to `ExecutePendingActions`; the
+response-presence assertion must fail. Mutation restoration is accepted only after restoring the
+complete try/catch branch, proving the product file byte-identical to its baseline and forcing a
+non-incremental rebuild. Remove the inherited fixture only after the restored focused test passes.
+The UnitArchitecture floor becomes 1471.
+
+## Native test source-layout enforcement
+
+Turn the agreed source-mirrored test structure into a fail-closed architecture rule. Evaluate every
+native project's real `Compile` items and `RootNamespace` through MSBuild, parse each source with
+Roslyn and require exactly one top-level namespace matching the project root plus its physical
+folder. Keep specialized analyzer and Roslyn support assemblies in the common test-infrastructure
+API space by declaring their intentional `RootNamespace` explicitly.
+
+Attack the rule with one otherwise valid source under `Serialization` whose namespace names a
+different folder. Only the new architecture fact must fail with the exact path and expected/actual
+namespaces. Remove the probe, rerun the complete architecture project, then enforce a 1472
+UnitArchitecture floor.

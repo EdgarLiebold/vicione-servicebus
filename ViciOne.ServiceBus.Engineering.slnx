@@ -30,6 +30,7 @@
     <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj" />

@@ -43,7 +43,7 @@ namespace ViciOne.ServiceBus.Visualizer
         {
             if (includeOptionalType && vertex.TargetType != typeof(Event) && vertex.TargetType != typeof(Exception))
             {
-                if (vertex.TargetType.ClosesType(typeof(Fault<>), out Type[] arguments))
+                if (vertex.TargetType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
                     return $"{vertex.Title}{OpenBracket}{arguments[0].Name}{CloseBracket}";
 
                 return $"{vertex.Title}{OpenBracket}{vertex.TargetType.Name}{CloseBracket}";

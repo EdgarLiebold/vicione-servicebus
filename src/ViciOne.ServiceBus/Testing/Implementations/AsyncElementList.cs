@@ -17,17 +17,26 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         readonly IDictionary<Guid, TElement> _messageLookup;
         readonly List<TElement> _messages;
         readonly CancellationToken _testCompleted;
+        readonly TimeProvider _timeProvider;
         readonly TimeSpan _timeout;
 
         protected AsyncElementList(TimeSpan timeout, CancellationToken testCompleted = default)
+            : this(timeout, testCompleted, TimeProvider.System)
+        {
+        }
+
+        protected AsyncElementList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
         {
             _timeout = timeout;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             _testCompleted = testCompleted;
 
             _messages = new List<TElement>();
             _messageLookup = new Dictionary<Guid, TElement>();
             _channels = new Connectable<Channel<TElement>>();
         }
+
+        protected TimeProvider TimeProvider => _timeProvider;
 
         public async IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -66,7 +75,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
                 if (cancellationToken.IsCancellationRequested || _testCompleted.IsCancellationRequested)
                     yield break;
 
-                using var timeout = new CancellationTokenSource(_timeout);
+                using var timeout = new CancellationTokenSource(_timeout, _timeProvider);
 
                 using var linked = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, _testCompleted, cancellationToken);
 
@@ -123,61 +132,52 @@ namespace ViciOne.ServiceBus.Testing.Implementations
 
         public IEnumerable<TElement> Select(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default)
         {
+            var index = 0;
+
+            TElement[] messages;
             lock (_messages)
+                messages = _messages.ToArray();
+
+            for (; index < messages.Length; index++)
             {
-                var index = 0;
-                for (; index < _messages.Count; index++)
+                var entry = messages[index];
+                if (filter(entry))
+                    yield return entry;
+            }
+
+            if (cancellationToken.IsCancellationRequested || _testCompleted.IsCancellationRequested)
+                yield break;
+
+            using var timeout = new CancellationTokenSource(_timeout, _timeProvider);
+            using var linked = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, _testCompleted, cancellationToken);
+
+            using var cancellationRegistration = linked.Token.Register(static state =>
+            {
+                var messageList = (List<TElement>)state;
+                lock (messageList)
                 {
-                    var entry = _messages[index];
-                    if (filter(entry))
-                        yield return entry;
+                    Monitor.PulseAll(messageList);
+                }
+            }, _messages);
+
+            while (true)
+            {
+                lock (_messages)
+                {
+                    while (index == _messages.Count && !linked.IsCancellationRequested)
+                        Monitor.Wait(_messages);
+
+                    if (index == _messages.Count)
+                        yield break;
+
+                    messages = _messages.GetRange(index, _messages.Count - index).ToArray();
+                    index += messages.Length;
                 }
 
-                if (cancellationToken.IsCancellationRequested || _testCompleted.IsCancellationRequested)
-                    yield break;
-
-                var monitorTimeout = _timeout;
-                var endTime = DateTime.Now + monitorTimeout;
-
-                void Cancel()
+                foreach (var element in messages)
                 {
-                    endTime = DateTime.Now;
-
-                    lock (_messages)
-                        Monitor.PulseAll(_messages);
-                }
-
-                CancellationTokenRegistration cancellationTokenRegistration = default;
-                if (cancellationToken.CanBeCanceled)
-                    cancellationTokenRegistration = cancellationToken.Register(() => Cancel());
-
-                CancellationTokenRegistration timeoutTokenRegistration = default;
-                if (_testCompleted.CanBeCanceled)
-                    timeoutTokenRegistration = _testCompleted.Register(() => Cancel());
-
-                try
-                {
-                    while (Monitor.Wait(_messages, monitorTimeout))
-                    {
-                        for (; index < _messages.Count; index++)
-                        {
-                            var element = _messages[index];
-                            if (filter(element))
-                                yield return element;
-                        }
-
-                        monitorTimeout = endTime - DateTime.Now;
-                        if (monitorTimeout <= TimeSpan.Zero)
-                            break;
-
-                        if (cancellationToken.IsCancellationRequested || _testCompleted.IsCancellationRequested)
-                            yield break;
-                    }
-                }
-                finally
-                {
-                    cancellationTokenRegistration.Dispose();
-                    timeoutTokenRegistration.Dispose();
+                    if (filter(element))
+                        yield return element;
                 }
             }
         }

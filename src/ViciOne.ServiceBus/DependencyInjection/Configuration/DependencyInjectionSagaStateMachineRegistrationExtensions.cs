@@ -53,7 +53,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (sagaDefinitionType == null)
                 return RegisterSagaStateMachine<T, TSaga>(collection, registrar);
 
-            if (!sagaDefinitionType.ClosesType(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(TSaga))
+            if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != typeof(TSaga))
             {
                 throw new ArgumentException($"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache<TSaga>.ShortName}",
                     nameof(sagaDefinitionType));
@@ -68,15 +68,15 @@ namespace ViciOne.ServiceBus.Configuration
         public static ISagaRegistration RegisterSagaStateMachine(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
             Type sagaDefinitionType = null)
         {
-            if (!sagaType.ClosesType(typeof(SagaStateMachine<>), out Type[] instanceTypes))
+            if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] instanceTypes))
                 throw new ArgumentException($"The saga type must be a saga state machine: {TypeCache.GetShortName(sagaType)}");
 
-            if (!instanceTypes[0].HasInterface<SagaStateMachineInstance>())
+            if (!instanceTypes[0].ImplementsInterface<SagaStateMachineInstance>())
                 throw new ArgumentException($"The instance type must be a saga state machine instance: {TypeCache.GetShortName(instanceTypes[0])}");
 
             if (sagaDefinitionType != null)
             {
-                if (!sagaDefinitionType.ClosesType(typeof(ISagaDefinition<>), out Type[] types) || types[0] != instanceTypes[0])
+                if (!sagaDefinitionType.TryGetSingleClosedGenericArguments(typeof(ISagaDefinition<>), out Type[] types) || types[0] != instanceTypes[0])
                 {
                     throw new ArgumentException(
                         $"{TypeCache.GetShortName(sagaDefinitionType)} is not a saga definition of {TypeCache.GetShortName(instanceTypes[0])}",

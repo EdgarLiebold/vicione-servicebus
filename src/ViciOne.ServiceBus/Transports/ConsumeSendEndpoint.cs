@@ -12,13 +12,21 @@ namespace ViciOne.ServiceBus.Transports
         SendEndpointProxy
     {
         readonly ConsumeContext _context;
+        readonly bool _inheritRequestTimeToLive;
         readonly Guid? _requestId;
 
         public ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId = default)
+            : this(endpoint, context, requestId, false)
+        {
+        }
+
+        internal ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId,
+            bool inheritRequestTimeToLive)
             : base(endpoint)
         {
             _context = context;
             _requestId = requestId;
+            _inheritRequestTimeToLive = inheritRequestTimeToLive;
         }
 
         public override Task Send<T>(T message, CancellationToken cancellationToken)
@@ -41,7 +49,7 @@ namespace ViciOne.ServiceBus.Transports
 
         protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
         {
-            return new ConsumeSendPipeAdapter<T>(_context, pipe, _requestId);
+            return new ConsumeSendPipeAdapter<T>(_context, pipe, _requestId, _inheritRequestTimeToLive);
         }
 
         Task ConsumeTask(Task task)

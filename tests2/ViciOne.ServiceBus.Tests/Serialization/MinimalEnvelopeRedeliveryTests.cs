@@ -93,7 +93,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
 
             IInMemoryDelayProvider delayProvider =
                 provider.GetRequiredService<IInMemoryDelayProvider>();
-            await delayProvider.Advance(RedeliveryInterval);
+            delayProvider.Advance(RedeliveryInterval);
 
             ConsumeContext<MinimalEnvelopeMessage> second = await secondDelivery.Task.WaitAsync(
                 operationTimeout,

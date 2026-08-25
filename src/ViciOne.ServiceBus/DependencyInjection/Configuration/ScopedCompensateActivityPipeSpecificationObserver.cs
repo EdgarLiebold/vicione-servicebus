@@ -42,7 +42,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             var filterType = _filterType.MakeGenericType(typeof(TLog));
 
-            if (!filterType.HasInterface(typeof(IFilter<CompensateContext<TLog>>)))
+            if (!filterType.ImplementsInterface(typeof(IFilter<CompensateContext<TLog>>)))
                 throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<CompensateContext<TLog>>>.ShortName} ");
 
             var scopeProvider = new CompensateActivityScopeProvider<TActivity, TLog>(_context);

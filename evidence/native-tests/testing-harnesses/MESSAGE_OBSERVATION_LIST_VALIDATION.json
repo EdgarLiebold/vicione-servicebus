@@ -1,0 +1,52 @@
+{
+  "scope": "message-observation-lists-and-observers",
+  "date": "2026-08-24",
+  "ordinaryTests": 10,
+  "requirements": [
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/sent-query-surface",
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/published-query-surface",
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/received-query-surface-and-typed-facade",
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/observer-success-fault-and-clock",
+    "REQ-VSB-ASYNC-ELEMENT-LIST/missing-and-duplicate-identifiers",
+    "REQ-VSB-ASYNC-ELEMENT-LIST/filter-failure-propagation-and-recovery",
+    "REQ-VSB-ASYNC-ELEMENT-LIST/empty-async-extension-contract",
+    "REQ-VSB-ASYNC-ELEMENT-LIST/sent-message-deconstruction",
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/required-constructor-dependencies",
+    "REQ-VSB-MESSAGE-OBSERVATION-LIST/dynamic-endpoint-publish-observation"
+  ],
+  "productCorrection": {
+    "path": "src/ViciOne.ServiceBus/Testing/Implementations/TestReceiveEndpointObserver.cs",
+    "behavior": "A missing mandatory publish observer is rejected at construction with ArgumentNullException naming publishObserver."
+  },
+  "retainedEndpointBoundary": {
+    "path": "src/ViciOne.ServiceBus/Testing/Implementations/TestReceiveEndpointObserver.cs",
+    "behavior": "Ready connects the supplied publish observer to each dynamically added receive endpoint so publications from its consume context are visible without relying on a bus-level observer."
+  },
+  "focusedResult": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unitArchitectureResult": {
+    "total": 1046,
+    "passed": 1046,
+    "failed": 0,
+    "skipped": 0
+  },
+  "localIntegrationResult": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "mutations": [
+    "duplicate-id-suppression-removed",
+    "send-fault-exception-dropped",
+    "configured-clock-replaced-by-process-clock",
+    "existing-entry-filter-ignored",
+    "receive-endpoint-observer-null-guard-removed",
+    "receive-endpoint-observer-ready-connection-removed"
+  ],
+  "verdict": "PASS"
+}

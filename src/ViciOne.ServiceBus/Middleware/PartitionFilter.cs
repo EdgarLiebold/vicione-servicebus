@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Middleware
 {
+    using System;
     using System.Threading.Tasks;
 
 
@@ -11,6 +12,9 @@ namespace ViciOne.ServiceBus.Middleware
 
         public PartitionFilter(PartitionKeyProvider<TContext> keyProvider, IPartitioner partitioner)
         {
+            ArgumentNullException.ThrowIfNull(keyProvider);
+            ArgumentNullException.ThrowIfNull(partitioner);
+
             _partitioner = partitioner.GetPartitioner(keyProvider);
         }
 

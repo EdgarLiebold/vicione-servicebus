@@ -22,15 +22,18 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         [Test]
         public async Task Should_be_degraded_after_too_many_exceptions()
         {
-            Assert.That(await BusControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10)), Is.EqualTo(BusHealthStatus.Healthy));
+            Assert.That((await BusControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10))).Status,
+                Is.EqualTo(BusHealthStatus.Healthy));
 
             await Task.WhenAll(Enumerable.Range(0, 11).Select(x => Bus.Publish(new BadMessage())));
 
             await Assert.MultipleAsync(async () =>
             {
-                Assert.That(await BusControl.WaitForHealthStatus(BusHealthStatus.Degraded, TimeSpan.FromSeconds(15)), Is.EqualTo(BusHealthStatus.Degraded));
+                Assert.That((await BusControl.WaitForHealthStatusAsync(BusHealthStatus.Degraded, TimeSpan.FromSeconds(15))).Status,
+                    Is.EqualTo(BusHealthStatus.Degraded));
 
-                Assert.That(await BusControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10)), Is.EqualTo(BusHealthStatus.Healthy));
+                Assert.That((await BusControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, TimeSpan.FromSeconds(10))).Status,
+                    Is.EqualTo(BusHealthStatus.Healthy));
 
                 Assert.That(await ActiveMqTestHarness.Consumed.SelectAsync<BadMessage>().Take(11).Count(), Is.EqualTo(11));
             });
@@ -46,8 +49,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests
         {
             configurator.UseKillSwitch(options => options
                 .SetActivationThreshold(10)
-                .SetTripThreshold(0.1)
-                .SetRestartTimeout(s: 1));
+                .SetTripThresholdRatio(0.10)
+                .SetRestartDelay(TimeSpan.FromSeconds(1)));
         }
 
         protected override void ConfigureActiveMqReceiveEndpoint(IActiveMqReceiveEndpointConfigurator configurator)

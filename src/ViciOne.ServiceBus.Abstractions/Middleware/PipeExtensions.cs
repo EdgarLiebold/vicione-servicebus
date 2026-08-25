@@ -36,7 +36,7 @@ namespace ViciOne.ServiceBus
             return pipe switch
             {
                 null => true,
-                PipeConfigurator<T>.EmptyPipe _ => false,
+                PipeConfigurator<T>.EmptyPipe _ => true,
                 _ => false
             };
         }

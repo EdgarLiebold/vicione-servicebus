@@ -10,16 +10,17 @@ namespace ViciOne.ServiceBus.RetryPolicies
         where TContext : class, PipeContext
     {
         readonly IRetryPolicy _policy;
-        CancellationTokenSource _cancellationTokenSource;
-        CancellationTokenRegistration _registration;
+        readonly Lazy<CancellationTokenSource> _cancellationTokenSource;
 
         protected BaseRetryPolicyContext(IRetryPolicy policy, TContext context)
         {
-            _policy = policy;
-            Context = context;
+            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            _cancellationTokenSource = new Lazy<CancellationTokenSource>(CreateCancellationTokenSource,
+                LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
-        protected CancellationToken CancellationToken => _cancellationTokenSource?.Token ?? CreateCancellationToken();
+        protected CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
 
         public TContext Context { get; }
 
@@ -27,7 +28,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
         {
             retryContext = CreateRetryContext(exception, CancellationToken);
 
-            return _policy.IsHandled(exception) && !_cancellationTokenSource.IsCancellationRequested;
+            return _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
         }
 
         Task RetryPolicyContext<TContext>.RetryFaulted(Exception exception)
@@ -37,23 +38,22 @@ namespace ViciOne.ServiceBus.RetryPolicies
 
         public void Cancel()
         {
-            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource.Value.Cancel();
         }
 
         void IDisposable.Dispose()
         {
-            _registration.Dispose();
+            if (_cancellationTokenSource.IsValueCreated)
+                _cancellationTokenSource.Value.Dispose();
         }
 
         protected abstract RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken);
 
-        CancellationToken CreateCancellationToken()
+        CancellationTokenSource CreateCancellationTokenSource()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            if (Context.CancellationToken.CanBeCanceled)
-                _registration = Context.CancellationToken.Register(_cancellationTokenSource.Cancel);
-
-            return _cancellationTokenSource.Token;
+            return Context.CancellationToken.CanBeCanceled
+                ? CancellationTokenSource.CreateLinkedTokenSource(Context.CancellationToken)
+                : new CancellationTokenSource();
         }
     }
 }

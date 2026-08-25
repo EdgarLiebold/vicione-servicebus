@@ -229,7 +229,7 @@ public sealed class TaskUtilTests
         cancellation.Cancel();
         var pending = NewCompletionSource();
 
-        OperationCanceledException exception = Assert.Throws<OperationCanceledException>(() =>
+        OperationCanceledException exception = Assert.ThrowsAny<OperationCanceledException>(() =>
             TaskUtil.Await(pending.Task, cancellation.Token));
 
         Assert.Equal(cancellation.Token, exception.CancellationToken);

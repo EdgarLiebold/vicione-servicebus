@@ -23,9 +23,9 @@ namespace ViciOne.ServiceBus.Middleware
         public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
             RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
         {
-            _rescuePipe = rescuePipe;
-            _exceptionFilter = exceptionFilter;
-            _rescueContextFactory = rescueContextFactory;
+            _rescuePipe = rescuePipe ?? throw new ArgumentNullException(nameof(rescuePipe));
+            _exceptionFilter = exceptionFilter ?? throw new ArgumentNullException(nameof(exceptionFilter));
+            _rescueContextFactory = rescueContextFactory ?? throw new ArgumentNullException(nameof(rescueContextFactory));
         }
 
         void IProbeSite.Probe(ProbeContext context)
@@ -47,7 +47,8 @@ namespace ViciOne.ServiceBus.Middleware
                 if (!_exceptionFilter.Match(ex.GetBaseException()))
                     throw;
 
-                var rescueContext = _rescueContextFactory(context, ex);
+                var rescueContext = _rescueContextFactory(context, ex)
+                    ?? throw new InvalidOperationException("The rescue context factory returned null.");
 
                 await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
             }
@@ -56,7 +57,8 @@ namespace ViciOne.ServiceBus.Middleware
                 if (!_exceptionFilter.Match(ex))
                     throw;
 
-                var rescueContext = _rescueContextFactory(context, ex);
+                var rescueContext = _rescueContextFactory(context, ex)
+                    ?? throw new InvalidOperationException("The rescue context factory returned null.");
 
                 await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
             }

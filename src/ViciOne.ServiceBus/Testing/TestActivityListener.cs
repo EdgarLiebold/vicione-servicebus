@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.Testing
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Logging;
     using Util;
@@ -24,10 +25,11 @@ namespace ViciOne.ServiceBus.Testing
         readonly Activity? _testActivity;
         readonly ConcurrentDictionary<string, TraceInfo> _traces;
         readonly TextWriter _writer;
+        int _disposed;
 
         public TestActivityListener(TextWriter writer, string? methodName, string? className, bool includeDetails)
         {
-            _writer = writer;
+            _writer = writer ?? throw new ArgumentNullException(nameof(writer));
             _className = className;
             _includeDetails = includeDetails;
 
@@ -52,6 +54,9 @@ namespace ViciOne.ServiceBus.Testing
 
         public async ValueTask DisposeAsync()
         {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
+                return;
+
             _testActivity?.Stop();
             _testActivity?.Dispose();
 

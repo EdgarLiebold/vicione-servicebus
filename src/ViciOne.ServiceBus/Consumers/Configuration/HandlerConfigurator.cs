@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -16,9 +17,13 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IPipeSpecification<ConsumeContext<TMessage>> _handlerConfigurator;
         readonly HandlerConfigurationObservable _observers;
         readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _pipeConfigurator;
+        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
         public HandlerConfigurator(MessageHandler<TMessage> handler, IHandlerConfigurationObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(handler);
+            ArgumentNullException.ThrowIfNull(observer);
+
             _pipeConfigurator = new PipeConfigurator<ConsumeContext<TMessage>>();
             _handlerConfigurator = new HandlerPipeSpecification<TMessage>(handler);
             _observers = new HandlerConfigurationObservable();
@@ -38,12 +43,17 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            return _handlerConfigurator.Validate().Concat(_pipeConfigurator.Validate());
+            _configurationNotification.EnsureNotified(() =>
+                _observers.ForEach(observer => observer.HandlerConfigured(this)));
+
+            return _handlerConfigurator.Validate()
+                .Concat(_pipeConfigurator.Validate())
+                .ToArray();
         }
 
         public void Configure(IReceiveEndpointBuilder builder)
         {
-            _observers.ForEach(observer => observer.HandlerConfigured(this));
+            ArgumentNullException.ThrowIfNull(builder);
 
             _pipeConfigurator.AddPipeSpecification(_handlerConfigurator);
 

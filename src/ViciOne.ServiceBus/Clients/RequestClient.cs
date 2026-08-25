@@ -15,6 +15,9 @@ namespace ViciOne.ServiceBus.Clients
 
         public RequestClient(ClientFactoryContext context, IRequestSendEndpoint<TRequest> requestSendEndpoint, RequestTimeout timeout)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(requestSendEndpoint);
+
             _context = context;
             _requestSendEndpoint = requestSendEndpoint;
             _timeout = timeout;
@@ -22,6 +25,8 @@ namespace ViciOne.ServiceBus.Clients
 
         public RequestHandle<TRequest> Create(TRequest message, CancellationToken cancellationToken, RequestTimeout timeout)
         {
+            ArgumentNullException.ThrowIfNull(message);
+
             async Task<TRequest> Request(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
             {
                 await _requestSendEndpoint.Send(requestId, message, pipe, token).ConfigureAwait(false);
@@ -55,6 +60,8 @@ namespace ViciOne.ServiceBus.Clients
             CancellationToken cancellationToken = default, RequestTimeout timeout = default)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(message);
+
             async Task<TRequest> Request(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
             {
                 await _requestSendEndpoint.Send(requestId, message, pipe, token).ConfigureAwait(false);
@@ -99,6 +106,8 @@ namespace ViciOne.ServiceBus.Clients
             where T1 : class
             where T2 : class
         {
+            ArgumentNullException.ThrowIfNull(message);
+
             async Task<TRequest> Request(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
             {
                 await _requestSendEndpoint.Send(requestId, message, pipe, token).ConfigureAwait(false);
@@ -148,6 +157,8 @@ namespace ViciOne.ServiceBus.Clients
             where T2 : class
             where T3 : class
         {
+            ArgumentNullException.ThrowIfNull(message);
+
             async Task<TRequest> Request(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
             {
                 await _requestSendEndpoint.Send(requestId, message, pipe, token).ConfigureAwait(false);

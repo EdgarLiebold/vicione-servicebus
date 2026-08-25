@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Configuration
                 .Where(x => x.GetGenericTypeDefinition() == typeof(IJobConsumer<>))
                 .Select(x => new JobInterfaceType(x.GetGenericArguments()[0], consumerType))
                 .Where(x => MessageTypeCache.IsValidMessageType(x.MessageType))
-                .Where(x => !x.MessageType.ClosesType(typeof(Batch<>)));
+                .Where(x => !x.MessageType.ClosesGenericType(typeof(Batch<>)));
 
             foreach (var type in types)
                 yield return type;

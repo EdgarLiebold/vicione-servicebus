@@ -37,7 +37,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             var filterType = _filterType.MakeGenericType(typeof(TArguments));
 
-            if (!filterType.HasInterface(typeof(IFilter<ExecuteContext<TArguments>>)))
+            if (!filterType.ImplementsInterface(typeof(IFilter<ExecuteContext<TArguments>>)))
                 throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<ExecuteContext<TArguments>>>.ShortName} ");
 
             var scopeProvider = new ExecuteActivityScopeProvider<TActivity, TArguments>(_context);

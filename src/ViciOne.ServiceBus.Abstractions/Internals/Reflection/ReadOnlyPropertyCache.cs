@@ -42,7 +42,7 @@ namespace ViciOne.ServiceBus.Internals
 
         static IDictionary<string, ReadOnlyProperty<T>> CreatePropertyCache()
         {
-            return new Dictionary<string, ReadOnlyProperty<T>>(typeof(T).GetAllProperties()
+            return new Dictionary<string, ReadOnlyProperty<T>>(typeof(T).GetReadableInstanceProperties()
                 .Where(x => x.CanRead)
                 .GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
                 .Select(x => x.Last())

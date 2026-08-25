@@ -36,6 +36,8 @@ namespace ViciOne.ServiceBus.DependencyInjection
 
         public RequestTimeout DefaultTimeout => _clientFactory.Context.DefaultTimeout;
 
+        public TimeProvider TimeProvider => _clientFactory.Context.TimeProvider;
+
         public Uri ResponseAddress => _clientFactory.Context.ResponseAddress;
 
         public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)

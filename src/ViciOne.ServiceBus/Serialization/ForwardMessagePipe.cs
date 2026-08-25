@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Serialization
 
         void IProbeSite.Probe(ProbeContext context)
         {
-            _pipe.Probe(context);
+            _pipe?.Probe(context);
         }
 
         public async Task Send(SendContext<TMessage> context)
@@ -44,6 +44,9 @@ namespace ViciOne.ServiceBus.Serialization
 
             if (_pipe.IsNotEmpty())
                 await _pipe.Send(context).ConfigureAwait(false);
+
+            if (ForwardingExpiration.MarkIfExpired(context, _context.ExpirationTime))
+                return;
 
             var forwarderAddress = _context.ReceiveContext.InputAddress ?? _context.DestinationAddress;
             if (forwarderAddress != null && forwarderAddress != context.DestinationAddress)

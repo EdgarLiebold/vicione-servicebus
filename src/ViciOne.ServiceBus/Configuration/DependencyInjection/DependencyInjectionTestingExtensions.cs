@@ -50,6 +50,7 @@ namespace ViciOne.ServiceBus
             AddViciOneServiceBusTextWriterLogger(services, textWriter);
 
             services.AddOptions<TestHarnessOptions>();
+            services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
             services.AddBusObserver<ContainerTestHarnessBusObserver>();
             services.TryAddSingleton<ITestHarness>(provider => provider.GetRequiredService<ContainerTestHarness>());
             services.TryAddSingleton<ContainerTestHarness>();
@@ -171,7 +172,7 @@ namespace ViciOne.ServiceBus
             foreach (var registration in consumerRegistrations)
             {
                 if (registration.ImplementationInstance == null
-                    || !registration.ImplementationInstance.GetType().ClosesType(typeof(ConsumerRegistration<>), out Type[] types))
+                    || !registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumerRegistration<>), out Type[] types))
                     continue;
 
                 var type = typeof(RegistrationForConsumer<>).MakeGenericType(types[0]);
@@ -192,14 +193,14 @@ namespace ViciOne.ServiceBus
                 if (registration.ImplementationInstance == null)
                     continue;
 
-                if (registration.ImplementationInstance.GetType().ClosesType(typeof(SagaStateMachineRegistration<,>), out Type[] types))
+                if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaStateMachineRegistration<,>), out Type[] types))
                 {
                     var type = typeof(RegistrationForSagaStateMachine<,>).MakeGenericType(types);
                     var register = Activator.CreateInstance(type) as IRegisterTestHarness
                         ?? throw new InvalidOperationException("Could not create consumer registration");
                     register.RegisterTestHarness(services);
                 }
-                else if (registration.ImplementationInstance.GetType().ClosesType(typeof(SagaRegistration<>), out types))
+                else if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaRegistration<>), out types))
                 {
                     var type = typeof(RegistrationForSaga<>).MakeGenericType(types);
                     var register = Activator.CreateInstance(type) as IRegisterTestHarness
@@ -215,6 +216,7 @@ namespace ViciOne.ServiceBus
         public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,
             Action<IBusRegistrationConfigurator>? configure = null)
         {
+            services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
             services.AddViciOneServiceBus(cfg =>
             {
                 configure?.Invoke(cfg);

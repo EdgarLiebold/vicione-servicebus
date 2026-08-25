@@ -57,7 +57,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (RegistrationMetadata.IsSaga(typeof(T)))
                 throw new ArgumentException($"{TypeCache<T>.ShortName} is a saga, and cannot be registered as a consumer", nameof(T));
 
-            if (!consumerDefinitionType.ClosesType(typeof(IConsumerDefinition<>), out Type[] types) || types[0] != typeof(T))
+            if (!consumerDefinitionType.TryGetSingleClosedGenericArguments(typeof(IConsumerDefinition<>), out Type[] types) || types[0] != typeof(T))
             {
                 throw new ArgumentException($"{TypeCache.GetShortName(consumerDefinitionType)} is not a consumer definition of {TypeCache<T>.ShortName}",
                     nameof(consumerDefinitionType));
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             if (consumerDefinitionType != null)
             {
-                if (!consumerDefinitionType.ClosesType(typeof(IConsumerDefinition<>), out Type[] types) || types[0] != consumerType)
+                if (!consumerDefinitionType.TryGetSingleClosedGenericArguments(typeof(IConsumerDefinition<>), out Type[] types) || types[0] != consumerType)
                 {
                     throw new ArgumentException(
                         $"{TypeCache.GetShortName(consumerDefinitionType)} is not a consumer definition of {TypeCache.GetShortName(consumerType)}",

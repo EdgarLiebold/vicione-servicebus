@@ -5,17 +5,9 @@ namespace ViciOne.ServiceBus.Testing
         readonly ReceivedMessageFilterSet _excludes = new ReceivedMessageFilterSet();
         readonly ReceivedMessageFilterSet _includes = new ReceivedMessageFilterSet();
 
-        public ReceivedMessageFilterSet Includes
-        {
-            get => _includes;
-            set { }
-        }
+        public ReceivedMessageFilterSet Includes => _includes;
 
-        public ReceivedMessageFilterSet Excludes
-        {
-            get => _excludes;
-            set { }
-        }
+        public ReceivedMessageFilterSet Excludes => _excludes;
 
         public bool Any(IReceivedMessage element)
         {

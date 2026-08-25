@@ -1,81 +1,80 @@
-namespace ViciOne.ServiceBus.Events
+#nullable enable
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Events;
+
+[Serializable]
+public sealed class FaultExceptionInfo : ExceptionInfo
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using Util;
-
-
-    [Serializable]
-    public class FaultExceptionInfo :
-        ExceptionInfo
+    public FaultExceptionInfo()
     {
-        public FaultExceptionInfo()
+    }
+
+    public FaultExceptionInfo(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+
+        IDictionary primaryData = exception.Data;
+        Exception reportedException = exception;
+        IDictionary? fallbackData = null;
+
+        // The application wrapper adds diagnostic data without replacing the exception identity
+        // reported to consumers. Wrapper values win when the wrapped exception contains the same
+        // key, which lets an application deliberately refine the diagnostic context.
+        if (exception is ViciOneServiceBusApplicationException { InnerException: { } innerException })
         {
+            reportedException = innerException;
+            fallbackData = innerException.Data;
         }
 
-        public FaultExceptionInfo(Exception exception)
+        Data = SnapshotData(primaryData, fallbackData);
+        ExceptionType = reportedException is ExceptionInfoException infoException
+            ? infoException.ExceptionInfo.ExceptionType
+            : TypeCache.GetShortName(reportedException.GetType());
+        InnerException = reportedException.InnerException is { } nestedException
+            ? new FaultExceptionInfo(nestedException)
+            : null;
+        StackTrace = ExceptionUtil.GetStackTrace(reportedException);
+        Message = ExceptionUtil.GetMessage(reportedException);
+        Source = reportedException.Source ?? string.Empty;
+    }
+
+    public string ExceptionType { get; set; } = null!;
+
+    public ExceptionInfo? InnerException { get; set; }
+
+    public string StackTrace { get; set; } = null!;
+
+    public string Message { get; set; } = null!;
+
+    public string Source { get; set; } = null!;
+
+    public IDictionary<string, object>? Data { get; set; }
+
+    private static IDictionary<string, object>? SnapshotData(IDictionary primary, IDictionary? fallback)
+    {
+        Dictionary<string, object>? snapshot = null;
+
+        AddEntries(primary, ref snapshot);
+        if (fallback is not null && !ReferenceEquals(primary, fallback))
+            AddEntries(fallback, ref snapshot);
+
+        return snapshot;
+    }
+
+    private static void AddEntries(IDictionary source, ref Dictionary<string, object>? destination)
+    {
+        foreach (DictionaryEntry entry in source)
         {
-            if (exception == null)
-                throw new ArgumentNullException(nameof(exception));
+            if (entry.Key is not string key || entry.Value is null)
+                continue;
 
-            if (exception.Data is IDictionary<string, object> dictionary)
-                Data = dictionary;
-            else if (exception.Data != null)
-                UpdateData(exception.Data);
-
-            if (exception is ViciOneServiceBusApplicationException { InnerException: { } })
-            {
-                exception = exception.InnerException;
-
-                if (exception.Data != null)
-                    UpdateData(exception.Data);
-            }
-
-            if (exception is ExceptionInfoException infoException)
-                ExceptionType = infoException.ExceptionInfo.ExceptionType;
-            else
-                ExceptionType = TypeCache.GetShortName(exception.GetType());
-
-            InnerException = exception.InnerException != null
-                ? new FaultExceptionInfo(exception.InnerException)
-                : null;
-
-            StackTrace = ExceptionUtil.GetStackTrace(exception);
-            Message = ExceptionUtil.GetMessage(exception);
-            Source = exception.Source;
-        }
-
-        public string ExceptionType { get; set; }
-
-        public ExceptionInfo InnerException { get; set; }
-
-        public string StackTrace { get; set; }
-
-        public string Message { get; set; }
-        public string Source { get; set; }
-
-        public IDictionary<string, object> Data { get; set; }
-
-        void UpdateData(IDictionary dictionary)
-        {
-            var keys = dictionary.Keys;
-            if (keys.Count == 0)
-                return;
-
-            foreach (var key in keys)
-            {
-                if (key is string stringKey && (Data == null || !Data.ContainsKey(stringKey)))
-                {
-                    var value = dictionary[key];
-                    if (value != null)
-                    {
-                        Data ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-                        Data.Add(stringKey, value);
-                    }
-                }
-            }
+            destination ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            destination.TryAdd(key, entry.Value);
         }
     }
 }

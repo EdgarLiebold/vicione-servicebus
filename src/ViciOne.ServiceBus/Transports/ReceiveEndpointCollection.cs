@@ -100,11 +100,11 @@ namespace ViciOne.ServiceBus.Transports
 
         public async Task StopEndpoints(CancellationToken cancellationToken)
         {
-            ReceiveEndpoint[] endpoints = _endpoints.Values.Where(x => x.IsStarted() && !x.IsBusEndpoint).ToArray();
+            ReceiveEndpoint[] endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && !x.IsBusEndpoint).ToArray();
 
             await Task.WhenAll(endpoints.Select(x => x.Stop(cancellationToken))).ConfigureAwait(false);
 
-            endpoints = _endpoints.Values.Where(x => x.IsStarted() && x.IsBusEndpoint).ToArray();
+            endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && x.IsBusEndpoint).ToArray();
 
             await Task.WhenAll(endpoints.Select(x => x.Stop(cancellationToken))).ConfigureAwait(false);
 

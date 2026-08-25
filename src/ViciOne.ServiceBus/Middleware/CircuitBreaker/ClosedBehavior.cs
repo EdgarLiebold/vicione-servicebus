@@ -8,11 +8,11 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
     /// <summary>
     /// Represents a closed, normally operating circuit breaker state
     /// </summary>
-    public class ClosedBehavior :
+    internal sealed class ClosedBehavior :
         ICircuitBreakerBehavior
     {
         readonly ICircuitBreaker _breaker;
-        readonly Timer _timer;
+        readonly ITimer _timer;
         int _attemptCount;
         int _failureCount;
         int _successCount;
@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
         public ClosedBehavior(ICircuitBreaker breaker)
         {
             _breaker = breaker;
-            _timer = new Timer(Reset, null, breaker.OpenDuration, breaker.OpenDuration);
+            _timer = breaker.TimeProvider.CreateTimer(Reset, null, breaker.OpenDuration, breaker.OpenDuration);
         }
 
         bool IsActive => _attemptCount > _breaker.ActiveThreshold;
@@ -45,8 +45,9 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker
 
             if (IsActive && TripThresholdExceeded(failureCount))
             {
-                await _breaker.Open(exception, this).ConfigureAwait(false);
+                CircuitBreakerTransition transition = _breaker.Open(exception, this);
                 _timer.Dispose();
+                await transition.Notification.ConfigureAwait(false);
             }
         }
 

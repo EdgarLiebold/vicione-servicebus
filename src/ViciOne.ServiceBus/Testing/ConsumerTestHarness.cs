@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.Testing
         {
             _consumerFactory = consumerFactory;
 
-            _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken);
+            _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
         }
 
         public IReceivedMessageList Consumed => _consumed;

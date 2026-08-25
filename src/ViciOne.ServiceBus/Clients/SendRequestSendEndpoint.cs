@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.Clients
 {
     using System;
     using System.Threading.Tasks;
-    using Middleware;
 
 
     public class SendRequestSendEndpoint<TRequest> :
@@ -21,9 +20,7 @@ namespace ViciOne.ServiceBus.Clients
 
         protected override async Task<ISendEndpoint> GetSendEndpoint()
         {
-            var endpoint = await _provider.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
-
-            return endpoint.SkipOutbox();
+            return await _provider.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
         }
     }
 }

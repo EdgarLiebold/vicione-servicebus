@@ -22,9 +22,9 @@ namespace ViciOne.ServiceBus.Configuration
         public MessageRetryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, CancellationToken cancellationToken,
             Action<IRetryConfigurator> configure)
         {
-            _configurator = configurator;
+            _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
             _cancellationToken = cancellationToken;
-            _configure = configure;
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
         }
 
         void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IConsumerConfigurationObserver.ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
         {
-            if (typeof(TMessage).ClosesType(typeof(Batch<>), out Type[] types))
+            if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
             {
                 typeof(MessageRetryConsumerConfigurationObserver<TConsumer>)
                     .GetMethod(nameof(BatchConsumerConfigured))
@@ -45,7 +45,7 @@ namespace ViciOne.ServiceBus.Configuration
                 var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<TMessage>, RetryConsumeContext<TMessage>>(Factory,
                     _cancellationToken);
 
-                _configure?.Invoke(specification);
+                _configure(specification);
 
                 _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
             }
@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Configuration
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<Batch<TMessage>>, RetryConsumeContext<Batch<TMessage>>>(Factory,
                 _cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             consumerSpecification.AddPipeSpecification(specification);
         }

@@ -1,9 +1,10 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
 
 
-    public class TimeoutHandlerConfigurationObserver :
+    internal sealed class TimeoutHandlerConfigurationObserver :
         IHandlerConfigurationObserver
     {
         readonly Action<ITimeoutConfigurator> _configure;
@@ -17,7 +18,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             var specification = new TimeoutSpecification<T>();
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }

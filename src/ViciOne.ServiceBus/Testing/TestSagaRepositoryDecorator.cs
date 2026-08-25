@@ -30,8 +30,9 @@ namespace ViciOne.ServiceBus.Testing
 
         Task ISagaRepository<TSaga>.Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
         {
-            var interceptPipe = new InterceptPipe<T>(_sagas, _received, next);
-            var interceptPolicy = new InterceptPolicy<T>(_created, policy);
+            var preInserted = new PreInsertedSagaTracker();
+            var interceptPipe = new InterceptPipe<T>(_sagas, _received, _created, preInserted, next);
+            var interceptPolicy = new InterceptPolicy<T>(_created, preInserted, policy);
 
             return _sagaRepository.Send(context, interceptPolicy, interceptPipe);
         }
@@ -39,8 +40,9 @@ namespace ViciOne.ServiceBus.Testing
         Task ISagaRepository<TSaga>.SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
             IPipe<SagaConsumeContext<TSaga, T>> next)
         {
-            var interceptPipe = new InterceptPipe<T>(_sagas, _received, next);
-            var interceptPolicy = new InterceptPolicy<T>(_created, policy);
+            var preInserted = new PreInsertedSagaTracker();
+            var interceptPipe = new InterceptPipe<T>(_sagas, _received, _created, preInserted, next);
+            var interceptPolicy = new InterceptPolicy<T>(_created, preInserted, policy);
 
             return _sagaRepository.SendQuery(context, query, interceptPolicy, interceptPipe);
         }
@@ -51,13 +53,18 @@ namespace ViciOne.ServiceBus.Testing
             where TMessage : class
         {
             readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _pipe;
+            readonly PreInsertedSagaTracker _preInserted;
             readonly ReceivedMessageList _received;
+            readonly SagaList<TSaga> _created;
             readonly SagaList<TSaga> _sagas;
 
-            public InterceptPipe(SagaList<TSaga> sagas, ReceivedMessageList received, IPipe<SagaConsumeContext<TSaga, TMessage>> pipe)
+            public InterceptPipe(SagaList<TSaga> sagas, ReceivedMessageList received, SagaList<TSaga> created,
+                PreInsertedSagaTracker preInserted, IPipe<SagaConsumeContext<TSaga, TMessage>> pipe)
             {
                 _sagas = sagas;
                 _received = received;
+                _created = created;
+                _preInserted = preInserted;
                 _pipe = pipe;
             }
 
@@ -68,6 +75,13 @@ namespace ViciOne.ServiceBus.Testing
 
             public async Task Send(SagaConsumeContext<TSaga, TMessage> context)
             {
+                // InsertOnInitial creates and inserts the saga before the policy's Existing branch
+                // invokes this pipe. The older Missing branch is therefore never reached. Record the
+                // instance here, after insertion produced a real consume context, so Created remains
+                // truthful for both creation paths and never reports a failed pre-insert attempt.
+                if (_preInserted.Value)
+                    _created.Add(context);
+
                 _sagas.Add(context);
 
                 try
@@ -91,10 +105,12 @@ namespace ViciOne.ServiceBus.Testing
         {
             readonly SagaList<TSaga> _created;
             readonly ISagaPolicy<TSaga, TMessage> _policy;
+            readonly PreInsertedSagaTracker _preInserted;
 
-            public InterceptPolicy(SagaList<TSaga> created, ISagaPolicy<TSaga, TMessage> policy)
+            public InterceptPolicy(SagaList<TSaga> created, PreInsertedSagaTracker preInserted, ISagaPolicy<TSaga, TMessage> policy)
             {
                 _created = created;
+                _preInserted = preInserted;
                 _policy = policy;
             }
 
@@ -102,7 +118,9 @@ namespace ViciOne.ServiceBus.Testing
 
             public bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance)
             {
-                return _policy.PreInsertInstance(context, out instance);
+                _preInserted.Value = _policy.PreInsertInstance(context, out instance);
+
+                return _preInserted.Value;
             }
 
             public Task Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
@@ -142,6 +160,12 @@ namespace ViciOne.ServiceBus.Testing
                     return _pipe.Send(context);
                 }
             }
+        }
+
+
+        sealed class PreInsertedSagaTracker
+        {
+            public bool Value { get; set; }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Configuration
         void ISagaRepositoryRegistrationProvider.Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
             where TSaga : class
         {
-            if (typeof(TSaga).HasInterface<ISagaVersion>())
+            if (typeof(TSaga).ImplementsInterface<ISagaVersion>())
             {
                 var proxy = (IProxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(typeof(TSaga)), configurator);
 

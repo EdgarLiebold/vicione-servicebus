@@ -26,7 +26,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Apply(IPipeBuilder<ConsumeContext> builder)
         {
-            var retryPolicy = _policyFactory(Filter);
+            ArgumentNullException.ThrowIfNull(builder);
+
+            RetryPolicyFactory factory = _policyFactory
+                ?? throw new InvalidOperationException("A retry policy must be configured before the specification is applied.");
+            IRetryPolicy retryPolicy = factory(Filter)
+                ?? throw new InvalidOperationException("The retry policy factory returned null.");
 
             var contextRetryPolicy = new ConsumeContextRetryPolicy(retryPolicy, _cancellationToken);
 
@@ -41,11 +46,13 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void SetRetryPolicy(RetryPolicyFactory factory)
         {
-            _policyFactory = factory;
+            _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(observer);
+
             return _observers.Connect(observer);
         }
     }
@@ -66,7 +73,7 @@ namespace ViciOne.ServiceBus.Configuration
         public ConsumeContextRetryPipeSpecification(Func<TFilter, IRetryPolicy, RetryContext, TContext> contextFactory,
             CancellationToken cancellationToken = default)
         {
-            _contextFactory = contextFactory;
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
 
             _observers = new RetryObservable();
             _cancellationToken = cancellationToken;
@@ -74,10 +81,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Apply(IPipeBuilder<TFilter> builder)
         {
-            if (_policyFactory == null)
-                throw new ConfigurationException("The retry policy was not configured");
+            ArgumentNullException.ThrowIfNull(builder);
 
-            var retryPolicy = _policyFactory(Filter);
+            RetryPolicyFactory factory = _policyFactory
+                ?? throw new InvalidOperationException("A retry policy must be configured before the specification is applied.");
+            IRetryPolicy retryPolicy = factory(Filter)
+                ?? throw new InvalidOperationException("The retry policy factory returned null.");
 
             var contextRetryPolicy = new ConsumeContextRetryPolicy<TFilter, TContext>(retryPolicy, _cancellationToken, _contextFactory);
 
@@ -92,11 +101,13 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void SetRetryPolicy(RetryPolicyFactory factory)
         {
-            _policyFactory = factory;
+            _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(observer);
+
             return _observers.Connect(observer);
         }
     }

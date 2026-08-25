@@ -13,8 +13,14 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         int _activeCount;
 
         public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted)
+            : this(timeout, testCompleted, TimeProvider.System)
         {
-            _messages = new ReceivedMessageList(timeout, testCompleted);
+        }
+
+        public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+            : base(timeProvider)
+        {
+            _messages = new ReceivedMessageList(timeout, testCompleted, timeProvider);
         }
 
         public IReceivedMessageList Messages => _messages;

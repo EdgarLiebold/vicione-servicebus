@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using Context;
@@ -26,7 +27,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Apply(IPipeBuilder<ExecuteContext<TArguments>> builder)
         {
-            var retryPolicy = _policyFactory(Filter);
+            ArgumentNullException.ThrowIfNull(builder);
+
+            RetryPolicyFactory factory = _policyFactory
+                ?? throw new InvalidOperationException("A retry policy must be configured before the specification is applied.");
+            IRetryPolicy retryPolicy = factory(Filter)
+                ?? throw new InvalidOperationException("The retry policy factory returned null.");
 
             var policy = new ConsumeContextRetryPolicy<ExecuteContext<TArguments>, RetryExecuteContext<TArguments>>(retryPolicy, _cancellationToken, Factory);
 
@@ -41,11 +47,13 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void SetRetryPolicy(RetryPolicyFactory factory)
         {
-            _policyFactory = factory;
+            _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
         {
+            ArgumentNullException.ThrowIfNull(observer);
+
             return _observers.Connect(observer);
         }
 

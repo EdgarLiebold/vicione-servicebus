@@ -11,15 +11,14 @@ namespace ViciOne.ServiceBus.RetryPolicies
     {
         readonly RetryConsumeContext _context;
         readonly RetryPolicyContext<ConsumeContext> _policyContext;
-        CancellationToken _cancellationToken;
-        CancellationTokenRegistration _registration;
+        readonly CancellationTokenRegistration _registration;
 
         public ConsumeContextRetryPolicyContext(RetryPolicyContext<ConsumeContext> policyContext, RetryConsumeContext context,
             CancellationToken cancellationToken)
         {
-            _policyContext = policyContext;
-            _context = context;
-            _cancellationToken = cancellationToken;
+            _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext)state).Cancel(), this);
         }
 
         public void Cancel()
@@ -32,11 +31,11 @@ namespace ViciOne.ServiceBus.RetryPolicies
         public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
         {
             var canRetry = _policyContext.CanRetry(exception, out RetryContext<ConsumeContext> policyRetryContext);
+            if (policyRetryContext == null)
+                throw new InvalidOperationException("The retry policy returned a null retry context.");
+
             if (canRetry)
-            {
                 _context.LogRetry(exception);
-                _registration = _cancellationToken.Register(Cancel);
-            }
 
             retryContext = new ConsumeContextRetryContext(policyRetryContext, canRetry ? _context.CreateNext(policyRetryContext) : _context);
 
@@ -63,14 +62,13 @@ namespace ViciOne.ServiceBus.RetryPolicies
     {
         readonly TContext _context;
         readonly RetryPolicyContext<TFilter> _policyContext;
-        CancellationToken _cancellationToken;
-        CancellationTokenRegistration _registration;
+        readonly CancellationTokenRegistration _registration;
 
         public ConsumeContextRetryPolicyContext(RetryPolicyContext<TFilter> policyContext, TContext context, CancellationToken cancellationToken)
         {
-            _policyContext = policyContext;
-            _context = context;
-            _cancellationToken = cancellationToken;
+            _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext<TFilter, TContext>)state).Cancel(), this);
         }
 
         public void Cancel()
@@ -83,11 +81,11 @@ namespace ViciOne.ServiceBus.RetryPolicies
         public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
         {
             var canRetry = _policyContext.CanRetry(exception, out RetryContext<TFilter> policyRetryContext);
+            if (policyRetryContext == null)
+                throw new InvalidOperationException("The retry policy returned a null retry context.");
+
             if (canRetry)
-            {
                 _context.LogRetry(exception);
-                _registration = _cancellationToken.Register(Cancel);
-            }
 
             retryContext = new ConsumeContextRetryContext<TFilter, TContext>(policyRetryContext,
                 canRetry ? _context.CreateNext<TContext>(policyRetryContext) : _context);

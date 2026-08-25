@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Testing
 {
+    using System;
+
+
     public class ReceivedMessageFilterSet :
         FilterSet<IReceivedMessage>
     {
@@ -19,6 +22,8 @@ namespace ViciOne.ServiceBus.Testing
         public ReceivedMessageFilterSet Add<T>(FilterDelegate<IReceivedMessage<T>> filter)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             bool Filter(IReceivedMessage element)
             {
                 return element is IReceivedMessage<T> result && filter(result);

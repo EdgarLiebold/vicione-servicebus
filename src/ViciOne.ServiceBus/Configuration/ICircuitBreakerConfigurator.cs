@@ -37,6 +37,11 @@ namespace ViciOne.ServiceBus
         TimeSpan ResetInterval { set; }
 
         /// <summary>
+        /// Provides the clock and timers used for tracking and reset intervals.
+        /// </summary>
+        TimeProvider TimeProvider { set; }
+
+        /// <summary>
         /// Configure a router for sending events from the circuit breaker
         /// </summary>
         IPipeRouter Router { set; }

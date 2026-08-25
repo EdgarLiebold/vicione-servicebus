@@ -12,6 +12,9 @@ namespace ViciOne.ServiceBus.Configuration
             where TActivity : class, IExecuteActivity<TArguments>
             where TArguments : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(compensateAddress);
+
             ForEach(observer => observer.ActivityConfigured(configurator, compensateAddress));
         }
 
@@ -19,6 +22,8 @@ namespace ViciOne.ServiceBus.Configuration
             where TActivity : class, IExecuteActivity<TArguments>
             where TArguments : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.ExecuteActivityConfigured(configurator));
         }
 
@@ -26,6 +31,8 @@ namespace ViciOne.ServiceBus.Configuration
             where TActivity : class, ICompensateActivity<TLog>
             where TLog : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             ForEach(observer => observer.CompensateActivityConfigured(configurator));
         }
     }

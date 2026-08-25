@@ -152,10 +152,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(ConsumerConsumeContext<TConsumer> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             UseConsumerPartitioner(configurator, partitionCount, PartitionKeyProvider);
@@ -217,10 +214,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(SagaConsumeContext<TSaga> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             UseSagaPartitioner(configurator, partitionCount, PartitionKeyProvider);
@@ -318,10 +312,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(ExecuteActivityContext<TActivity, TArguments> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<ExecuteActivityContext<TActivity, TArguments>>(PartitionKeyProvider, partitionCount);
@@ -354,10 +345,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(ExecuteActivityContext<TActivity, TArguments> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<ExecuteActivityContext<TActivity, TArguments>>(PartitionKeyProvider, partitioner);
@@ -446,10 +434,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(CompensateActivityContext<TActivity, TLog> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<CompensateActivityContext<TActivity, TLog>>(PartitionKeyProvider, partitionCount);
@@ -482,10 +467,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(CompensateActivityContext<TActivity, TLog> context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<CompensateActivityContext<TActivity, TLog>>(PartitionKeyProvider, partitioner);
@@ -578,10 +560,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(T context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<T>(PartitionKeyProvider, partitionCount);
@@ -612,10 +591,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(T context)
             {
-                var key = keyProvider(context);
-                return key == null
-                    ? []
-                    : textEncoding.GetBytes(key);
+                return GetRequiredBytes(keyProvider(context), textEncoding);
             }
 
             var specification = new PartitionerPipeSpecification<T>(PartitionKeyProvider, partitioner);
@@ -694,7 +670,7 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(T context)
             {
-                return keyProvider(context) ?? [];
+                return GetRequiredBytes(keyProvider(context));
             }
 
             var specification = new PartitionerPipeSpecification<T>(PartitionKeyProvider, partitionCount);
@@ -721,12 +697,25 @@ namespace ViciOne.ServiceBus
 
             byte[] PartitionKeyProvider(T context)
             {
-                return keyProvider(context) ?? [];
+                return GetRequiredBytes(keyProvider(context));
             }
 
             var specification = new PartitionerPipeSpecification<T>(PartitionKeyProvider, partitioner);
 
             configurator.AddPipeSpecification(specification);
+        }
+
+        static byte[] GetRequiredBytes(string key, Encoding encoding)
+        {
+            if (key == null)
+                throw new InvalidOperationException("The partition key provider returned null.");
+
+            return encoding.GetBytes(key);
+        }
+
+        static byte[] GetRequiredBytes(byte[] key)
+        {
+            return key ?? throw new InvalidOperationException("The partition key provider returned null.");
         }
     }
 }

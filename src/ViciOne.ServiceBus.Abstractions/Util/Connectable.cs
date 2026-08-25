@@ -23,34 +23,16 @@ namespace ViciOne.ServiceBus.Util
             _connected = null;
         }
 
-        public T[] Connected
-        {
-            get
-            {
-                T[]? read = Volatile.Read(ref _connected);
-                if (read != null)
-                    return read;
-
-                lock (_connections)
-                {
-                    read = Volatile.Read(ref _connected);
-                    if (read != null)
-                        return read;
-
-                    var connected = new T[_connections.Count];
-                    _connections.Values.CopyTo(connected, 0);
-
-                    Volatile.Write(ref _connected, connected);
-
-                    return connected;
-                }
-            }
-        }
+        /// <summary>
+        /// Returns a point-in-time snapshot of the connected instances. Modifying the returned
+        /// array does not change this connection set.
+        /// </summary>
+        public T[] Connected => [.. GetConnected()];
 
         /// <summary>
         /// The number of connections
         /// </summary>
-        public int Count => Connected.Length;
+        public int Count => GetConnected().Length;
 
         /// <summary>
         /// Connect a connectable type
@@ -59,8 +41,7 @@ namespace ViciOne.ServiceBus.Util
         /// <returns>The connection handle</returns>
         public ConnectHandle Connect(T connection)
         {
-            if (connection == null)
-                throw new ArgumentNullException(nameof(connection));
+            ArgumentNullException.ThrowIfNull(connection);
 
             var id = Interlocked.Increment(ref _nextId);
 
@@ -80,21 +61,20 @@ namespace ViciOne.ServiceBus.Util
         /// <returns>An awaitable Task for the operation</returns>
         public Task ForEachAsync(Func<T, Task> callback)
         {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
+            ArgumentNullException.ThrowIfNull(callback);
 
-            T[] connected = Connected;
+            T[] connected = GetConnected();
 
             if (connected.Length == 0)
                 return Task.CompletedTask;
 
             if (connected.Length == 1)
-                return callback(connected[0]);
+                return InvokeCallback(connected[0], callback);
 
             var outputTasks = new Task[connected.Length];
             int i;
             for (i = 0; i < connected.Length; i++)
-                outputTasks[i] = callback(connected[i]);
+                outputTasks[i] = InvokeCallback(connected[i], callback);
 
             for (i = 0; i < outputTasks.Length; i++)
             {
@@ -108,9 +88,14 @@ namespace ViciOne.ServiceBus.Util
             return Task.WhenAll(outputTasks);
         }
 
+        /// <summary>
+        /// Invokes <paramref name="callback" /> for every instance in a stable point-in-time snapshot.
+        /// </summary>
         public void ForEach(Action<T> callback)
         {
-            T[] connected = Connected;
+            ArgumentNullException.ThrowIfNull(callback);
+
+            T[] connected = GetConnected();
 
             switch (connected.Length)
             {
@@ -120,17 +105,23 @@ namespace ViciOne.ServiceBus.Util
                     callback(connected[0]);
                     break;
                 default:
-                {
-                    for (var i = 0; i < connected.Length; i++)
-                        callback(connected[i]);
-                    break;
-                }
+                    {
+                        for (var i = 0; i < connected.Length; i++)
+                            callback(connected[i]);
+                        break;
+                    }
             }
         }
 
+        /// <summary>
+        /// Returns whether <paramref name="callback" /> accepts every instance in a stable
+        /// point-in-time snapshot, stopping at the first rejection.
+        /// </summary>
         public bool All(Func<T, bool> callback)
         {
-            T[] connected = Connected;
+            ArgumentNullException.ThrowIfNull(callback);
+
+            T[] connected = GetConnected();
 
             if (connected.Length == 0)
                 return true;
@@ -145,6 +136,40 @@ namespace ViciOne.ServiceBus.Util
             }
 
             return true;
+        }
+
+        T[] GetConnected()
+        {
+            T[]? read = Volatile.Read(ref _connected);
+            if (read != null)
+                return read;
+
+            lock (_connections)
+            {
+                read = Volatile.Read(ref _connected);
+                if (read != null)
+                    return read;
+
+                var connected = new T[_connections.Count];
+                _connections.Values.CopyTo(connected, 0);
+
+                Volatile.Write(ref _connected, connected);
+
+                return connected;
+            }
+        }
+
+        static Task InvokeCallback(T connection, Func<T, Task> callback)
+        {
+            try
+            {
+                return callback(connection)
+                    ?? Task.FromException(new InvalidOperationException("The connection callback returned a null task."));
+            }
+            catch (Exception exception)
+            {
+                return Task.FromException(exception);
+            }
         }
 
         void Disconnect(long id)

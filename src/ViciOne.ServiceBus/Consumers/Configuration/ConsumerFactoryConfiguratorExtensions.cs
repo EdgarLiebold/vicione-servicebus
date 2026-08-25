@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.Configuration
         public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification configurator)
             where TConsumer : class
         {
-            if (!typeof(TConsumer).HasInterface<IConsumer>())
+            if (!typeof(TConsumer).ImplementsInterface<IConsumer>())
             {
                 yield return configurator.Warning("Consumer",
                     $"The consumer class {TypeCache<TConsumer>.ShortName} does not implement any IConsumer interfaces");

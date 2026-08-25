@@ -82,6 +82,8 @@ namespace ViciOne.ServiceBus
                 var forwarderAddress = consumeContext.ReceiveContext.InputAddress ?? consumeContext.DestinationAddress;
                 if (forwarderAddress != null && forwarderAddress != context.DestinationAddress)
                     sendContext.Headers.Set(MessageHeaders.ForwarderAddress, forwarderAddress.ToString());
+
+                ForwardingExpiration.MarkIfExpired(sendContext, consumeContext.ExpirationTime);
             }
 
             return endpoint.Send(message, new CopyContextPipe(context, AddForwarderAddress), context.CancellationToken);

@@ -8,26 +8,24 @@ namespace ViciOne.ServiceBus
 
 
     /// <summary>
-    /// The pipe level retry, which puts a ConsumeContextRetryPipeSpecification on the pipe it is given.
+    /// Adds retry middleware directly to a pipe.
     /// <para>
-    /// There is deliberately no overload here for IBusFactoryConfigurator. A bus factory configurator is
-    /// also an IConsumePipeConfigurator, and that receiver already has UseMessageRetry in
-    /// MessageRetryConfigurationExtensions, which drives a MessageRetryConfigurationObserver per message
-    /// type. An overload on the more specific IBusFactoryConfigurator would win overload resolution and
-    /// silently move every existing bus level call to the other mechanism. It did: the courier fixtures
-    /// When_using_retry_middleware_for_courier and the Quartz Courier_Specs went red on exactly that.
+    /// There is deliberately no <see cref="IBusFactoryConfigurator"/> receiver overload. A bus factory
+    /// configurator is also an <see cref="IConsumePipeConfigurator"/>; a more specific overload would win
+    /// overload resolution and bypass the per-message configuration observer that owns bus-level message
+    /// retry.
     /// </para>
     /// </summary>
     public static class RetryConfigurationExtensions
     {
-                public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
+        public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new ConsumeContextRetryPipeSpecification();
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -35,25 +33,25 @@ namespace ViciOne.ServiceBus
         public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRetryConfigurator> configure)
             where T : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
 
-                public static void UseMessageRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
+        public static void UseMessageRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
             where T : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -64,16 +62,16 @@ namespace ViciOne.ServiceBus
             return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
         }
 
-                public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
+        public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
             where TConsumer : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification =
                 new ConsumeContextRetryPipeSpecification<ConsumerConsumeContext<TConsumer>, RetryConsumerConsumeContext<TConsumer>>(Factory);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -85,15 +83,15 @@ namespace ViciOne.ServiceBus
             return new RetryConsumerConsumeContext<TConsumer>(context, retryPolicy, retryContext);
         }
 
-                public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
+        public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
             where TSaga : class, ISaga
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new ConsumeContextRetryPipeSpecification<SagaConsumeContext<TSaga>, RetrySagaConsumeContext<TSaga>>(Factory);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -107,55 +105,58 @@ namespace ViciOne.ServiceBus
         public static void UseRetry<T>(this IPipeConfigurator<T> configurator, Action<IRetryConfigurator> configure)
             where T : class, PipeContext
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new RetryPipeSpecification<T>();
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
 
-                public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
+        public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new RetryBusObserver();
             connector.ConnectBusObserver(observer);
 
             var specification = new ConsumeContextRetryPipeSpecification(observer.Stopping);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
 
-                public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
+        public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where T : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new RetryBusObserver();
             connector.ConnectBusObserver(observer);
 
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory, observer.Stopping);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
 
-                public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
+        public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where TConsumer : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new RetryBusObserver();
             connector.ConnectBusObserver(observer);
@@ -163,24 +164,25 @@ namespace ViciOne.ServiceBus
             var specification =
                 new ConsumeContextRetryPipeSpecification<ConsumerConsumeContext<TConsumer>, RetryConsumerConsumeContext<TConsumer>>(Factory, observer.Stopping);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
 
-                public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
+        public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
             Action<IRetryConfigurator> configure)
             where TSaga : class, ISaga
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new RetryBusObserver();
             connector.ConnectBusObserver(observer);
 
             var specification = new ConsumeContextRetryPipeSpecification<SagaConsumeContext<TSaga>, RetrySagaConsumeContext<TSaga>>(Factory, observer.Stopping);
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }

@@ -67,13 +67,16 @@ namespace ViciOne.ServiceBus.Configuration
 
             var context = provider.GetRequiredService<IMediatorRegistrationContext>();
 
-            return Bus.Factory.CreateMediator(baseAddress, cfg =>
-            {
-                _configure?.Invoke(context, cfg);
+            return Bus.Factory.CreateMediator(
+                baseAddress,
+                cfg =>
+                {
+                    _configure?.Invoke(context, cfg);
 
-                cfg.ConfigureConsumers(context);
-                cfg.ConfigureSagas(context);
-            });
+                    cfg.ConfigureConsumers(context);
+                    cfg.ConfigureSagas(context);
+                },
+                provider.GetService<TimeProvider>() ?? TimeProvider.System);
         }
     }
 }

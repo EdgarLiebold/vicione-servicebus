@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (activityDefinitionType == null)
                 return RegisterActivity<TActivity, TArguments, TLog>(collection, registrar);
 
-            if (!activityDefinitionType.ClosesType(typeof(IActivityDefinition<,,>), out Type[] types) || types[0] != typeof(TActivity))
+            if (!activityDefinitionType.TryGetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>), out Type[] types) || types[0] != typeof(TActivity))
             {
                 throw new ArgumentException(
                     $"{TypeCache.GetShortName(activityDefinitionType)} is not an activity definition of {TypeCache<TActivity>.ShortName}",
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus.Configuration
         public static IActivityRegistration RegisterActivity(this IServiceCollection collection, IContainerRegistrar registrar, Type activityType,
             Type activityDefinitionType = null)
         {
-            if (!activityType.ClosesType(typeof(IActivity<,>), out Type[] argumentTypes))
+            if (!activityType.TryGetSingleClosedGenericArguments(typeof(IActivity<,>), out Type[] argumentTypes))
             {
                 throw new ArgumentException($" activities must implement IActivity<TArguments, TLog>: {TypeCache.GetShortName(activityType)}",
                     nameof(activityType));
@@ -85,7 +85,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             if (activityDefinitionType != null)
             {
-                if (!activityDefinitionType.ClosesType(typeof(IActivityDefinition<,,>), out Type[] types) || types[0] != activityType)
+                if (!activityDefinitionType.TryGetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>), out Type[] types) || types[0] != activityType)
                 {
                     throw new ArgumentException(
                         $"{TypeCache.GetShortName(activityDefinitionType)} is not an activity definition of {TypeCache.GetShortName(activityType)}",

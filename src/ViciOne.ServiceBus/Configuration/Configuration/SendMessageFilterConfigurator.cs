@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IMessageTypeFilterConfigurator.Include(Func<Type, bool> filter)
         {
-            Filter.Includes += context => context.GetType().ClosesType(typeof(SendContext<>), out Type[] types) && filter(types[0]);
+            Filter.Includes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]);
         }
 
         void IMessageTypeFilterConfigurator.Include<T>()
@@ -42,7 +42,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         void IMessageTypeFilterConfigurator.Exclude(Func<Type, bool> filter)
         {
-            Filter.Excludes += context => context.GetType().ClosesType(typeof(SendContext<>), out Type[] types) && filter(types[0]);
+            Filter.Excludes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]);
         }
 
         void IMessageTypeFilterConfigurator.Exclude<T>()

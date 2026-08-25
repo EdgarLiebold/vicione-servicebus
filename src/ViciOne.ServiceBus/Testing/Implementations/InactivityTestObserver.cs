@@ -13,6 +13,16 @@ namespace ViciOne.ServiceBus.Testing.Implementations
     {
         int _activityDetected;
         RollingTimer _inactivityTimer;
+        TimeProvider _timeProvider = TimeProvider.System;
+
+        protected InactivityTestObserver()
+        {
+        }
+
+        protected InactivityTestObserver(TimeProvider timeProvider)
+        {
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        }
 
         public void Dispose()
         {
@@ -32,7 +42,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
 
         protected void StartTimer(TimeSpan inactivityTimout)
         {
-            _inactivityTimer = new RollingTimer(OnActivityTimeout, inactivityTimout);
+            _inactivityTimer = new RollingTimer(OnActivityTimeout, inactivityTimout, null, _timeProvider);
             _inactivityTimer.Start();
         }
 

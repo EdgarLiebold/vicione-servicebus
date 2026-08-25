@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System.Linq;
 
 
-    public class MessagePublishPipeSpecification<TMessage> :
+    internal sealed class MessagePublishPipeSpecification<TMessage> :
         IMessagePublishPipeSpecification<TMessage>,
         IMessagePublishPipeSpecification
         where TMessage : class
@@ -25,6 +25,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<PublishContext> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _baseSpecifications.Add(specification);
         }
 
@@ -38,16 +40,20 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddPipeSpecification(IPipeSpecification<PublishContext<TMessage>> specification)
         {
+            ArgumentNullException.ThrowIfNull(specification);
+
             _specifications.Add(specification);
         }
 
         public IEnumerable<ValidationResult> Validate()
         {
-            return _specifications.SelectMany(x => x.Validate()).Concat(_baseSpecifications.SelectMany(x => x.Validate()));
+            return _specifications.SelectMany(x => x.Validate());
         }
 
         public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
+
             if (!builder.IsDelegated && _implementedMessageTypeSpecifications.Count > 0)
             {
                 ISpecificationPipeBuilder<PublishContext<TMessage>> implementedBuilder = builder.CreateImplementedBuilder();
@@ -91,12 +97,16 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void AddParentMessageSpecification(ISpecificationPipeSpecification<PublishContext<TMessage>> implementedMessageTypeSpecification)
         {
+            ArgumentNullException.ThrowIfNull(implementedMessageTypeSpecification);
+
             _parentMessageSpecifications.Add(implementedMessageTypeSpecification);
         }
 
         public void AddImplementedMessageSpecification<T>(ISpecificationPipeSpecification<PublishContext<T>> implementedMessageTypeSpecification)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(implementedMessageTypeSpecification);
+
             var adapter = new ImplementedTypeAdapter<T>(implementedMessageTypeSpecification);
 
             _implementedMessageTypeSpecifications.Add(adapter);

@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Internals
             if (MessageTypeCache<T>.IsValidMessageType && typeof(T).IsInterface)
             {
                 _implementationType = TypeMetadataCache<T>.ImplementationType;
-                _propertyIndex = _implementationType.GetAllProperties()
+                _propertyIndex = _implementationType.GetReadableInstanceProperties()
                     .GroupBy(x => x.Name)
                     .Select(x => x.Last())
                     .ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);

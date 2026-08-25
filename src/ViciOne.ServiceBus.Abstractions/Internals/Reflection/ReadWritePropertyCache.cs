@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus.Internals
 
         static IDictionary<string, ReadWriteProperty<T>> CreatePropertyCache(bool includeNonPublic)
         {
-            return new Dictionary<string, ReadWriteProperty<T>>(typeof(T).GetAllProperties()
+            return new Dictionary<string, ReadWriteProperty<T>>(typeof(T).GetReadableInstanceProperties()
                 .Where(x => x.CanRead && (includeNonPublic || x.CanWrite))
                 .Where(x => x.SetMethod != null)
                 .GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase)

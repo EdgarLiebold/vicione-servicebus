@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 
@@ -11,8 +10,8 @@ class OneTimeContextPayload<TPayload> :
     OneTimeContext<TPayload>
     where TPayload : class
 {
-    Task<bool>? _createValue;
     Queue<OneTimeSetupMethod>? _pending;
+    bool _running;
     TaskCompletionSource<bool> _value;
 
     public OneTimeContextPayload()
@@ -30,8 +29,11 @@ class OneTimeContextPayload<TPayload> :
     {
         lock (this)
         {
+            if (_running)
+                throw new InvalidOperationException("A one-time setup cannot be evicted while it is running.");
+
             _value = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _createValue = null;
+            _pending = null;
         }
     }
 
@@ -42,10 +44,17 @@ class OneTimeContextPayload<TPayload> :
             if (HasValue)
                 return _value.Task;
 
-            var pendingValue = oneTimeSetupMethodFactory();
+            if (IsFaultedOrCanceled && !_running)
+                _value = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            if (_createValue == null)
-                _createValue = RunOnce(pendingValue);
+            OneTimeSetupMethod pendingValue = oneTimeSetupMethodFactory()
+                ?? throw new InvalidOperationException("The one-time setup method factory returned null.");
+
+            if (!_running)
+            {
+                _running = true;
+                _ = RunSetupSequence(pendingValue);
+            }
             else
                 (_pending ??= new Queue<OneTimeSetupMethod>(1)).Enqueue(pendingValue);
 
@@ -53,36 +62,28 @@ class OneTimeContextPayload<TPayload> :
         }
     }
 
-    async Task<bool> RunOnce(OneTimeSetupMethod oneTimeSetupMethod)
+    async Task RunSetupSequence(OneTimeSetupMethod oneTimeSetupMethod)
     {
-        ExceptionDispatchInfo dispatchInfo;
-
-        var setupPayload = oneTimeSetupMethod;
-        do
+        while (true)
         {
             try
             {
-                await setupPayload.SetupPayload().ConfigureAwait(false);
+                await oneTimeSetupMethod.SetupPayload().ConfigureAwait(false);
 
                 SetResult(true);
-
-                return true;
+                return;
             }
             catch (Exception ex)
             {
-                dispatchInfo = ExceptionDispatchInfo.Capture(ex.GetBaseException());
+                if (!TryTakeOrCompleteFailure(ex, out OneTimeSetupMethod? pendingValue))
+                    return;
+
+                oneTimeSetupMethod = pendingValue;
             }
         }
-        while (TryTake(out setupPayload));
-
-        SetException(dispatchInfo);
-
-        dispatchInfo.Throw();
-
-        throw dispatchInfo.SourceException;
     }
 
-    bool TryTake([NotNullWhen(true)] out OneTimeSetupMethod? pendingValue)
+    bool TryTakeOrCompleteFailure(Exception exception, [NotNullWhen(true)] out OneTimeSetupMethod? pendingValue)
     {
         lock (this)
         {
@@ -91,6 +92,13 @@ class OneTimeContextPayload<TPayload> :
                 pendingValue = _pending.Dequeue();
                 return true;
             }
+
+            if (exception is OperationCanceledException canceled)
+                _value.TrySetCanceled(canceled.CancellationToken);
+            else
+                _value.TrySetException(exception);
+            _running = false;
+            _pending = null;
         }
 
         pendingValue = default;
@@ -106,19 +114,7 @@ class OneTimeContextPayload<TPayload> :
             while (_pending is { Count: > 0 })
                 _pending.Dequeue().SetPayload(_value.Task);
 
-            _pending = null;
-        }
-    }
-
-    void SetException(ExceptionDispatchInfo dispatchInfo)
-    {
-        lock (this)
-        {
-            _value.TrySetException(dispatchInfo.SourceException);
-
-            while (_pending is { Count: > 0 })
-                _pending.Dequeue().SetPayload(_value.Task);
-
+            _running = false;
             _pending = null;
         }
     }

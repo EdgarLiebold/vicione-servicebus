@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration
     using Util;
 
 
-    public class SagaConnector<TSaga> :
+    public sealed class SagaConnector<TSaga> :
         ISagaConnector
         where TSaga : class, ISaga
     {
@@ -17,19 +17,29 @@ namespace ViciOne.ServiceBus.Configuration
         {
             try
             {
-                if (!RegistrationMetadata.IsSaga(typeof(TSaga)))
-                    throw new ConfigurationException("The specified type is does not support any saga methods: " + TypeCache<TSaga>.ShortName);
-
                 _connectors = Initiates()
                     .Concat(Orchestrates())
                     .Concat(InitiatesOrOrchestrates())
                     .Concat(Observes())
-                    .Distinct((x, y) => x.MessageType == y.MessageType)
+                    // Category order is semantic: initiation owns a duplicated message contract
+                    // before orchestration, combined initiation/orchestration, and observation.
+                    // Ordering inside a category is stable and independent of reflection order.
+                    .DistinctBy(x => x.MessageType)
                     .ToList();
+
+                if (_connectors.Count == 0)
+                {
+                    throw new ConfigurationException(
+                        $"The saga {TypeCache<TSaga>.ShortName} does not declare a supported saga message contract.");
+                }
+            }
+            catch (ConfigurationException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException("Failed to create the saga connector for " + TypeCache<TSaga>.ShortName, ex);
+                throw new ConfigurationException($"Failed to create the saga connector for {TypeCache<TSaga>.ShortName}.", ex);
             }
         }
 
@@ -66,22 +76,22 @@ namespace ViciOne.ServiceBus.Configuration
 
         static IEnumerable<ISagaMessageConnector<TSaga>> Initiates()
         {
-            return SagaMetadataCache<TSaga>.InitiatedByTypes.Select(x => x.GetInitiatedByConnector<TSaga>());
+            return SagaMetadataCache<TSaga>.InitiatedByTypes.Select(x => x.CreateInitiatedByConnector<TSaga>());
         }
 
         static IEnumerable<ISagaMessageConnector<TSaga>> Orchestrates()
         {
-            return SagaMetadataCache<TSaga>.OrchestratesTypes.Select(x => x.GetOrchestratesConnector<TSaga>());
+            return SagaMetadataCache<TSaga>.OrchestratesTypes.Select(x => x.CreateOrchestratesConnector<TSaga>());
         }
 
         static IEnumerable<ISagaMessageConnector<TSaga>> Observes()
         {
-            return SagaMetadataCache<TSaga>.ObservesTypes.Select(x => x.GetObservesConnector<TSaga>());
+            return SagaMetadataCache<TSaga>.ObservesTypes.Select(x => x.CreateObservesConnector<TSaga>());
         }
 
         static IEnumerable<ISagaMessageConnector<TSaga>> InitiatesOrOrchestrates()
         {
-            return SagaMetadataCache<TSaga>.InitiatedByOrOrchestratesTypes.Select(x => x.GetInitiatedByOrOrchestratesConnector<TSaga>());
+            return SagaMetadataCache<TSaga>.InitiatedByOrOrchestratesTypes.Select(x => x.CreateInitiatedByOrOrchestratesConnector<TSaga>());
         }
     }
 }

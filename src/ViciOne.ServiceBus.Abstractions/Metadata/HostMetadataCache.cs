@@ -43,7 +43,7 @@ namespace ViciOne.ServiceBus.Metadata
 
     static class Cached
     {
-        internal static readonly HostInfo HostInfo = new BusHostInfo(true);
+        internal static readonly HostInfo HostInfo = BusHostInfo.CaptureCurrent();
         internal static readonly HostInfo EmptyHostInfo = new BusHostInfo();
     }
 }

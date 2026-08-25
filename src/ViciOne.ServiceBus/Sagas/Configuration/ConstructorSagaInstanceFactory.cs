@@ -7,16 +7,15 @@ namespace ViciOne.ServiceBus.Configuration
 
 
     /// <summary>
-    /// Creates a saga instance using the constructor, via a compiled expression. This class
-    /// is built asynchronously and hot-wrapped to replace the basic Activator style.
+    /// Creates a saga instance through one cached compiled constructor delegate.
     /// </summary>
     /// <typeparam name="TSaga"></typeparam>
-    public class ConstructorSagaInstanceFactory<TSaga>
+    internal sealed class ConstructorSagaInstanceFactory<TSaga>
         where TSaga : class, ISaga
     {
         public ConstructorSagaInstanceFactory()
         {
-            var constructorInfo = typeof(TSaga).GetConstructor(new[] { typeof(Guid) });
+            var constructorInfo = typeof(TSaga).GetConstructor([typeof(Guid)]);
             if (constructorInfo == null)
             {
                 throw new ArgumentException("The saga does not have a public constructor with a single Guid correlationId parameter: "

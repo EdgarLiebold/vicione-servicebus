@@ -22,6 +22,7 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IBuildPipeConfigurator<ConsumeContext<Batch<TMessage>>> _batchMessagePipeConfigurator;
         readonly ConsumerMessageSpecification<TConsumer, TMessage> _consumerSpecification;
         readonly ConsumerConfigurationObservable _observers;
+        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
         public BatchConsumerMessageSpecification()
         {
@@ -44,12 +45,16 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            var batchSpecification = this as IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>;
-            _observers.ForEach(observer => observer.ConsumerMessageConfigured(batchSpecification));
+            _configurationNotification.EnsureNotified(() =>
+            {
+                var batchSpecification = (IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>)this;
+                _observers.ForEach(observer => observer.ConsumerMessageConfigured(batchSpecification));
+            });
 
             return _batchConfigurator.Validate()
                 .Concat(_batchMessagePipeConfigurator.Validate())
-                .Concat(_consumerSpecification.Validate());
+                .Concat(_consumerSpecification.Validate())
+                .ToArray();
         }
 
         public Type MessageType => typeof(TMessage);

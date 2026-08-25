@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
     using Context;
     using Initializers;
     using Logging;
+    using Serialization;
     using Transports;
     using Util;
 
@@ -176,6 +177,9 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
         async Task AddSend<T>(SendContext<T> context)
             where T : class
         {
+            if (ForwardingExpiration.TryDiscard(context))
+                return;
+
             StartedActivity? activity = LogContext.Current?.StartOutboxSendActivity(context);
             StartedInstrument? instrument = LogContext.Current?.StartOutboxSendInstrument(context);
             try

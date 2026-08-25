@@ -318,9 +318,15 @@ namespace ViciOne.ServiceBus.Caching.Internals
             finally
             {
                 if (lockTaken)
+                {
+                    // Publish the completed cleanup before another addition can inspect the state.
+                    // Resetting this flag after releasing the lock loses the only follow-up signal
+                    // when additions arrived while the cleanup task was waiting for the lock.
+                    _cleanupScheduled = false;
                     Monitor.Exit(_lock);
-
-                _cleanupScheduled = false;
+                }
+                else
+                    Volatile.Write(ref _cleanupScheduled, false);
             }
         }
 

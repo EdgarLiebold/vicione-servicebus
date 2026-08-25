@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus
 {
     using System;
@@ -11,15 +12,15 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="configure">Configure timeout</param>
-        public static void UseTimeout<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<ITimeoutConfigurator> configure = default)
+        public static void UseTimeout<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<ITimeoutConfigurator> configure)
             where T : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var specification = new TimeoutSpecification<T>();
 
-            configure?.Invoke(specification);
+            configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }
@@ -29,12 +30,12 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="configure">Configure timeout</param>
-        public static void UseTimeout(this IConsumePipeConfigurator configurator, Action<ITimeoutConfigurator> configure = default)
+        public static void UseTimeout(this IConsumePipeConfigurator configurator, Action<ITimeoutConfigurator> configure)
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
-            var observer = new TimeoutConfigurationObserver(configurator, configure);
+            _ = new TimeoutConfigurationObserver(configurator, configure);
         }
 
         /// <summary>
@@ -42,11 +43,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="configure">Configure timeout</param>
-        public static void UseTimeout<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<ITimeoutConfigurator> configure = default)
+        public static void UseTimeout<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<ITimeoutConfigurator> configure)
             where TConsumer : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new TimeoutConsumerConfigurationObserver<TConsumer>(configurator, configure);
             configurator.ConnectConsumerConfigurationObserver(observer);
@@ -57,11 +58,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="configure">Configure timeout</param>
-        public static void UseTimeout<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure = default)
+        public static void UseTimeout<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
             where TSaga : class, ISaga
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new TimeoutSagaConfigurationObserver<TSaga>(configurator, configure);
             configurator.ConnectSagaConfigurationObserver(observer);
@@ -72,11 +73,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="configure">Configure timeout</param>
-        public static void UseTimeout<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<ITimeoutConfigurator> configure = default)
+        public static void UseTimeout<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<ITimeoutConfigurator> configure)
             where TMessage : class
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
 
             var observer = new TimeoutHandlerConfigurationObserver(configure);
             configurator.ConnectHandlerConfigurationObserver(observer);

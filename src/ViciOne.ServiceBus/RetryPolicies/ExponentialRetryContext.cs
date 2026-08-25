@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.RetryPolicies
         RetryContext<TContext>
         where TContext : class, PipeContext
     {
+        readonly TimeSpan _delay;
         readonly ExponentialRetryPolicy _policy;
 
         public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount,
@@ -16,9 +17,10 @@ namespace ViciOne.ServiceBus.RetryPolicies
             : base(context, exception, retryCount, cancellationToken)
         {
             _policy = policy;
+            _delay = policy.GetRetryInterval(retryCount);
         }
 
-        public override TimeSpan? Delay => _policy.GetRetryInterval(RetryCount);
+        public override TimeSpan? Delay => _delay;
 
         bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
         {

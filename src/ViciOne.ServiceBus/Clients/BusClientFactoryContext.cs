@@ -9,11 +9,12 @@ namespace ViciOne.ServiceBus.Clients
     {
         readonly IBus _bus;
 
-        public BusClientFactoryContext(IBus bus, RequestTimeout defaultTimeout = default)
+        public BusClientFactoryContext(IBus bus, RequestTimeout defaultTimeout = default, TimeProvider? timeProvider = null)
         {
             _bus = bus;
 
             DefaultTimeout = defaultTimeout.HasValue ? defaultTimeout : RequestTimeout.Default;
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -49,5 +50,7 @@ namespace ViciOne.ServiceBus.Clients
         }
 
         public RequestTimeout DefaultTimeout { get; }
+
+        public TimeProvider TimeProvider { get; }
     }
 }

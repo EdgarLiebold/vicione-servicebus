@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using Testing;
     using Testing.Implementations;
@@ -18,7 +19,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
         {
-            var inMemoryTestHarness = new InMemoryTestHarness(_virtualHost, specifications);
+            var timeProvider = context.GetService(typeof(TimeProvider)) as TimeProvider ?? TimeProvider.System;
+            var inMemoryTestHarness = new InMemoryTestHarness(_virtualHost, specifications, timeProvider);
 
             inMemoryTestHarness.OnConfigureInMemoryBus += configurator =>
             {

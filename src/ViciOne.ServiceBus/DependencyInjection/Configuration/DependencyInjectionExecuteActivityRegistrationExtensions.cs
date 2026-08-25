@@ -57,7 +57,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (activityDefinitionType == null)
                 return RegisterExecuteActivity<TActivity, TArguments>(collection, registrar);
 
-            if (!activityDefinitionType.ClosesType(typeof(IExecuteActivityDefinition<,>), out Type[] types) || types[0] != typeof(TActivity))
+            if (!activityDefinitionType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>), out Type[] types) || types[0] != typeof(TActivity))
             {
                 throw new ArgumentException(
                     $"{TypeCache.GetShortName(activityDefinitionType)} is not an activity definition of {TypeCache<TActivity>.ShortName}",
@@ -73,13 +73,13 @@ namespace ViciOne.ServiceBus.Configuration
         public static IExecuteActivityRegistration RegisterExecuteActivity(this IServiceCollection collection, IContainerRegistrar registrar, Type activityType,
             Type activityDefinitionType = null)
         {
-            if (activityType.ClosesType(typeof(IActivity<,>), out Type[] _))
+            if (activityType.TryGetSingleClosedGenericArguments(typeof(IActivity<,>), out Type[] _))
             {
                 throw new ArgumentException($"Activities must be registered using RegisterActivity: {TypeCache.GetShortName(activityType)}",
                     nameof(activityType));
             }
 
-            if (!activityType.ClosesType(typeof(IExecuteActivity<>), out Type[] argumentTypes))
+            if (!activityType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivity<>), out Type[] argumentTypes))
             {
                 throw new ArgumentException($"Execute activities must implement IExecuteActivity<TArguments>: {TypeCache.GetShortName(activityType)}",
                     nameof(activityType));
@@ -87,7 +87,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             if (activityDefinitionType != null)
             {
-                if (!activityDefinitionType.ClosesType(typeof(IExecuteActivityDefinition<,>), out Type[] types) || types[0] != activityType)
+                if (!activityDefinitionType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>), out Type[] types) || types[0] != activityType)
                 {
                     throw new ArgumentException(
                         $"{TypeCache.GetShortName(activityDefinitionType)} is not an activity definition of {TypeCache.GetShortName(activityType)}",

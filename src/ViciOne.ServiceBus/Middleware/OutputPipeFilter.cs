@@ -22,10 +22,10 @@ namespace ViciOne.ServiceBus.Middleware
 
         public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput> outputFilter)
         {
-            _outerObservers = observers;
-            _contextConverter = contextConverter;
+            _outerObservers = observers ?? throw new ArgumentNullException(nameof(observers));
+            _contextConverter = contextConverter ?? throw new ArgumentNullException(nameof(contextConverter));
 
-            _output = outputFilter;
+            _output = outputFilter ?? throw new ArgumentNullException(nameof(outputFilter));
 
             _observers = new FilterObservable<TOutput>();
         }
@@ -40,9 +40,13 @@ namespace ViciOne.ServiceBus.Middleware
 
         Task IFilter<TInput>.Send(TInput context, IPipe<TInput> next)
         {
-            return _contextConverter.TryConvert(context, out var pipeContext)
-                ? SendToOutput(next, pipeContext)
-                : next.Send(context);
+            if (!_contextConverter.TryConvert(context, out var pipeContext))
+                return next.Send(context);
+
+            if (pipeContext == null)
+                throw new InvalidOperationException($"The context converter returned success with a null {TypeCache<TOutput>.ShortName} context.");
+
+            return SendToOutput(next, pipeContext);
         }
 
         ConnectHandle IFilterObserverConnector<TOutput>.ConnectObserver(IFilterObserver<TOutput> observer)

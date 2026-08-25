@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "cohort": "request-clients-response-mediator-multibus",
+  "compatibilityPolicy": "FEATURE_PRESERVATION_WITH_A_PLUS_API",
+  "entries": [
+    {
+      "obligationId": "OBL-R0-CORE-D-0231",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Mediator.MediatorRequestTests.SendRequest_ServesTwoTypedRequestContractsWithExactResponses"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0232",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Mediator.MediatorRequestTests.SendRequest_UnwrapsTheOriginalConsumerExceptionExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0276",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ConsumerDefinitions_BuildAndStartTwoDistinctValidatedBusInstances"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0277",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ScopedConsumer_PreservesCausationWhileRoutingThroughTheSecondaryBus"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0346",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0347",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTests": [
+        "ViciOne.ServiceBus.Tests.Middleware.Outbox.RequestClientOutboxTests.RequestSendEndpoint_BypassesADeferredEndpointBeforeSending",
+        "ViciOne.ServiceBus.Tests.Middleware.Outbox.RequestClientOutboxTests.NestedRequest_BypassesTheOutboxWhileIndependentSideEffectsRemainDeferred"
+      ],
+      "note": "The direct transport-backed test proves the shared bypass invariant; the integration test proves nested request completion and deferred side-effect ordering. The inherited fixture alone did not reach the explicit outbox wrapper."
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0348",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWork"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0349",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWork"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0350",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWork"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0351",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportSingleResponse_ReturnsTheExactAcceptedMessage"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0352",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.RequestPipeHeader_IsPresentOnTheRequestAndReturnedResponse"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0353",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.DisabledTransportTimeToLive_DoesNotDisableTheClientDeadline"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0354",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTests": [
+        "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.DisabledTransportTimeToLive_DoesNotDisableTheClientDeadline",
+        "ViciOne.ServiceBus.Abstractions.Tests.Clients.RequestTimeoutTests.ImplicitConversions_PreserveTheExactRequestedDuration"
+      ]
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0355",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Contexts.MessageContextFlowTests.CanceledRequest_ReportsCancellationInsteadOfTimeout"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0356",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.CancellationAndDeadline_FirstTerminalOutcomeWinsExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0357",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0358",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0359",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.CancellationAndDeadline_FirstTerminalOutcomeWinsExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0360",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.CancellationAndDeadline_FirstTerminalOutcomeWinsExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0361",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0362",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0363",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportMultipleResponses_CanSelectTheFirstDeclaredBranch"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0364",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportMultipleResponses_ExposeOnlyTheProducedBranchToEveryPatternForm"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0365",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientLifecycleTests.CancellationAndDeadline_FirstTerminalOutcomeWinsExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0366",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWork"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0367",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.RequestClientMetadataTests.ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0368",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Contexts.MessageContextFlowTests.UnansweredRequest_ThrowsTheExactTimeoutForItsRequestIdentifier"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0369",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Contexts.MessageContextFlowTests.UnansweredRequest_ThrowsTheExactTimeoutForItsRequestIdentifier",
+      "note": "The replacement observes every returned task directly; it deliberately rejects GC and process-global unobserved-exception events as a test mechanism."
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0370",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Mediator.MediatorRequestTests.MissingMediatorHandler_FaultsEveryPublicRequestTaskWithItsOwnedFailure"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0371",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Mediator.MediatorRequestTests.MissingMediatorResponse_ExpiresOnlyWhenTheInjectedTimeProviderAdvances",
+      "note": "The replacement observes the response and message tasks directly and uses virtual time instead of GC or process-global exception events."
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0372",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportSingleResponse_ReturnsTheExactAcceptedMessage"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0373",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RequestFilterFaultTests.ScopedConsumeFilter_ProducesAnExactRequestFaultWithoutInvokingTheConsumer"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0374",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.MediatorUnsupportedResponse_ReportsTheOriginalDispatchFailureExactly"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0375",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.MediatorSingleResponse_ReturnsTheExactAcceptedMessage"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0376",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.MediatorMultipleResponses_ExposeOnlyTheProducedBranchToEveryPatternForm"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0377",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.MediatorMultipleResponses_ExposeOnlyTheProducedBranchToEveryPatternForm"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0378",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportUnsupportedResponse_ProducesAnExactRequestFault"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0379",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportSingleResponse_ReturnsTheExactAcceptedMessage"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0380",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportMultipleResponses_ExposeOnlyTheProducedBranchToEveryPatternForm"
+    },
+    {
+      "obligationId": "OBL-R0-CORE-D-0381",
+      "disposition": "REPLACED_EXECUTING",
+      "targetTest": "ViciOne.ServiceBus.Tests.Clients.ResponseMatchingTests.TransportMultipleResponses_ExposeOnlyTheProducedBranchToEveryPatternForm"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "cohort": "message-identity-and-headers",
+  "profile": "UnitArchitecture",
+  "ledger": {
+    "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl",
+    "sha256": "5b7134255db42f7fdb4276598b4790660059d006e13bd184db8fe5cf6bf51a66"
+  },
+  "inheritedSources": [
+    { "path": "tests/ViciOne.ServiceBus.Tests/ConversationId_Specs.cs", "sha256": "3becdb46d03c600187796c6cd39d3a9bcc2945ceeea9d2f0f96d3f5e6b8308fa" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/CorrelationId_Specs.cs", "sha256": "04ae1344c8f79c60c9095e4fe2bc8a33ac43cc59234e5099a747207e9adf3b5e" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/HeaderObject_Specs.cs", "sha256": "3665b050e5f9bca25dfb1b1eed5b080dadebb4bcb27f4ef8838fd9c6280a8bec" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/PublishHeader_Specs.cs", "sha256": "d65fdb1bb93a46b18c948d80028811f1d3173d535a639d83e877f85de1e92a2a" },
+    { "path": "tests/ViciOne.ServiceBus.Tests/SentTime_Specs.cs", "sha256": "271d8bf0948366e01f0c2166963c2af3e95b0cfd05606aa0a66d469f54a10a99" }
+  ],
+  "dispositions": [
+    { "obligationId": "OBL-R0-CORE-D-0036", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.RootSendAndPublish_CreateIndependentNonEmptyConversationIds" },
+    { "obligationId": "OBL-R0-CORE-D-0037", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.MessageProducedInsideAConsumer_InheritsConversationAndEndpointSource" },
+    { "obligationId": "OBL-R0-CORE-D-0038", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.RootSendAndPublish_CreateIndependentNonEmptyConversationIds" },
+    { "obligationId": "OBL-R0-CORE-D-0039", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.StartNewConversationInsideAConsumer_RecordsThePreviousConversation" },
+    { "obligationId": "OBL-R0-CORE-D-0040", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.ExplicitRootConversation_UsesTheExactIdWithoutAnInitiatingHeader" },
+    { "obligationId": "OBL-R0-CORE-D-0041", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.CorrelatedByGuid_DrivesBothSendAndPublish" },
+    { "obligationId": "OBL-R0-CORE-D-0042", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.NamedGuidProperties_FollowCorrelationThenEventThenCommandPrecedence" },
+    { "obligationId": "OBL-R0-CORE-D-0043", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.CorrelatedByGuid_DrivesBothSendAndPublish" },
+    { "obligationId": "OBL-R0-CORE-D-0044", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.NamedGuidProperties_FollowCorrelationThenEventThenCommandPrecedence" },
+    { "obligationId": "OBL-R0-CORE-D-0045", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.NullableCorrelationProperty_IsReadFromAClassAndAnImplementedInterface" },
+    { "obligationId": "OBL-R0-CORE-D-0046", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.NullableCorrelationProperty_IsReadFromAClassAndAnImplementedInterface" },
+    { "obligationId": "OBL-R0-CORE-D-0047", "replacement": "ViciOne.ServiceBus.Tests.Topology.Configuration.CorrelationIdConventionTests.NamedGuidProperties_FollowCorrelationThenEventThenCommandPrecedence" },
+    { "obligationId": "OBL-R0-CORE-D-0169", "replacement": "ViciOne.ServiceBus.Tests.Serialization.HeaderRoundTripTests.ObjectHeader_RoundTripsEveryInterfaceMemberWithoutAliasingTheSenderObject" },
+    { "obligationId": "OBL-R0-CORE-D-0311", "replacement": "ViciOne.ServiceBus.Tests.Contexts.ConversationContextTests.MessageProducedInsideAConsumer_InheritsConversationAndEndpointSource" },
+    { "obligationId": "OBL-R0-CORE-D-0423", "replacement": "ViciOne.ServiceBus.Tests.Contexts.SentMessageMetadataTests.ConsumedSentTime_IsTheExactUtcTimestampOfItsMessageId" }
+  ],
+  "closure": {
+    "inheritedObligations": 15,
+    "terminalReplacements": 15,
+    "unresolved": 0
+  }
+}

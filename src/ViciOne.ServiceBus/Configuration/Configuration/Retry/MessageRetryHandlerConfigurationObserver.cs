@@ -19,14 +19,14 @@ namespace ViciOne.ServiceBus.Configuration
             Action<IRetryConfigurator> configure)
         {
             _cancellationToken = cancellationToken;
-            _configure = configure;
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
         }
 
         void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
         {
             var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory, _cancellationToken);
 
-            _configure?.Invoke(specification);
+            _configure(specification);
 
             configurator.AddPipeSpecification(specification);
         }

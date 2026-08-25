@@ -1,0 +1,42 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-D-0295",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Failing_while_cleaning_up_after_a_failure.Should_not_turn_a_delivered_operation_into_a_failed_one",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests.SuccessfulOperation_WhenEveryCleanupStepFails_RemainsSuccessfulAndRunsOnce",
+    "rationale": "The replacement proves a single operation execution, successful completion, absence of fault notification and continued stop/disposal attempts when both cleanup stages fail."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0296",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Failing_while_cleaning_up_after_a_failure.Should_report_the_operation_failure_and_not_a_failing_dispose",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests.OperationFailure_WhenDisposeFails_PreservesTheExactOperationFailure",
+    "rationale": "The replacement asserts the exact originating exception instance and the complete cleanup order."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0297",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Failing_while_cleaning_up_after_a_failure.Should_report_the_operation_failure_and_not_a_failing_stop",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests.OperationFailure_WhenStopFails_PreservesTheExactOperationFailure",
+    "rationale": "The replacement preserves exact failure identity and proves disposal is still attempted after stop fails."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0298",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Failing_while_cleaning_up_after_a_failure.Should_report_the_operation_failure_and_not_the_reporting_failure",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests.OperationFailure_WhenFaultNotificationFails_PreservesTheExactOperationFailure",
+    "rationale": "The replacement proves that fault-notification failure cannot replace the exact operation failure and cannot prevent later cleanup."
+  },
+  {
+    "obligationId": "OBL-R0-CORE-D-0299",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/PipeContextFailure_Specs.cs",
+    "sourceSymbol": "ViciOne.ServiceBus.Tests.Failing_while_cleaning_up_after_a_failure.Should_report_the_operation_failure_when_everything_else_fails_too",
+    "disposition": "REPLACED_BY_NATIVE_XUNIT_MTP",
+    "replacementTest": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests.OperationFailure_WhenEveryCleanupStepFails_PreservesTheExactOperationFailure",
+    "rationale": "The replacement asserts exact primary-failure identity and proves that all three cleanup stages are attempted in stable order."
+  }
+]

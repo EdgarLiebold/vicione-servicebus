@@ -20,6 +20,7 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IBuildPipeConfigurator<ConsumerConsumeContext<TConsumer, TMessage>> _configurator;
         readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _messagePipeConfigurator;
         readonly ConsumerConfigurationObservable _observers;
+        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
         public ConsumerMessageSpecification()
         {
@@ -30,10 +31,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            _observers.ForEach(observer => observer.ConsumerMessageConfigured(this));
+            _configurationNotification.EnsureNotified(() =>
+                _observers.ForEach(observer => observer.ConsumerMessageConfigured(this)));
 
             return _configurator.Validate()
-                .Concat(_messagePipeConfigurator.Validate());
+                .Concat(_messagePipeConfigurator.Validate())
+                .ToArray();
         }
 
         public Type MessageType => typeof(TMessage);

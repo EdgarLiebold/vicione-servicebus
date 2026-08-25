@@ -115,7 +115,7 @@ namespace ViciOne.ServiceBus.Initializers.Conventions
             IMessageInputInitializerConvention<TMessage> IConventionTypeCacheFactory<IMessageInputInitializerConvention<TMessage>>.Create<T>(
                 IInitializerConvention convention)
             {
-                if (typeof(T).ClosesType(typeof(IDictionary<,>), out Type[] argumentTypes) && argumentTypes[0] == typeof(string))
+                if (typeof(T).TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] argumentTypes) && argumentTypes[0] == typeof(string))
                 {
                     var conventionType = typeof(DictionaryInitializerConvention<,,>).MakeGenericType(typeof(TMessage), typeof(T), argumentTypes[1]);
 

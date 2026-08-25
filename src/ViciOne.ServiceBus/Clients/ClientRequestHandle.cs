@@ -31,19 +31,23 @@ public class ClientRequestHandle<TRequest> :
     readonly TaskCompletionSource<SendContext<TRequest>> _sendContext;
     readonly SendRequestCallback _sendRequestCallback;
     readonly TaskScheduler _taskScheduler;
+    readonly RequestTimeout _timeout;
     int _faultedOrCanceled;
-    Timer? _timeoutTimer;
+    ITimer? _timeoutTimer;
     RequestTimeout _timeToLive;
 
     public ClientRequestHandle(ClientFactoryContext context, SendRequestCallback sendRequestCallback, CancellationToken cancellationToken = default,
         RequestTimeout timeout = default, Guid? requestId = null, TaskScheduler? taskScheduler = null)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(sendRequestCallback);
+
         _context = context;
         _sendRequestCallback = sendRequestCallback;
         _cancellationToken = cancellationToken;
 
-        var requestTimeout = timeout.HasValue ? timeout : _context.DefaultTimeout.HasValue ? _context.DefaultTimeout.Value : RequestTimeout.Default;
-        _timeToLive = requestTimeout;
+        _timeout = timeout.HasValue ? timeout : _context.DefaultTimeout.HasValue ? _context.DefaultTimeout.Value : RequestTimeout.Default;
+        _timeToLive = _timeout;
 
         RequestId = requestId ?? NewId.NextGuid();
 
@@ -85,7 +89,11 @@ public class ClientRequestHandle<TRequest> :
         if (pipe.IsNotEmpty())
             await pipe.Send(context).ConfigureAwait(false);
 
-        _timeoutTimer = new Timer(TimeoutExpired, this, (long)_timeToLive.Value.TotalMilliseconds, Timeout.Infinite);
+        _timeoutTimer = _context.TimeProvider.CreateTimer(
+            TimeoutExpired,
+            this,
+            _timeout.Value,
+            Timeout.InfiniteTimeSpan);
 
         _sendContext.TrySetResult(context);
     }
@@ -185,7 +193,7 @@ public class ClientRequestHandle<TRequest> :
         configure?.Invoke(configurator);
 
         if (_cancellationToken.IsCancellationRequested)
-            return TaskUtil.Canceled<Response<T>>();
+            return Task.FromCanceled<Response<T>>(_cancellationToken);
 
         HandlerConnectHandle<T> handle = configurator.Connect(_context, RequestId);
 

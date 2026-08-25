@@ -93,21 +93,28 @@ namespace ViciOne.ServiceBus
         static Task<ISendEndpoint> GetEndpoint<T>(ReceiveContext receiveContext, ConsumeContext consumeContext, Uri destinationAddress, Guid? requestId)
             where T : class
         {
+            // This resolver is used only for responses and faults. Mark that semantic role explicitly:
+            // destination-address matching cannot identify custom fault addresses or publish fallbacks,
+            // and request deadlines must not leak into ordinary consume-context sends.
             if (destinationAddress != null && consumeContext != null)
-                return GetSendEndpoint(receiveContext.SendEndpointProvider, consumeContext, destinationAddress, requestId);
+                return GetSendEndpoint(receiveContext.SendEndpointProvider, consumeContext, destinationAddress, requestId, true);
 
-            return GetPublishEndpoint<T>(receiveContext.PublishEndpointProvider, consumeContext, requestId);
+            return GetPublishEndpoint<T>(receiveContext.PublishEndpointProvider, consumeContext, requestId, true);
         }
 
         internal static Task<ISendEndpoint> GetPublishEndpoint<T>(this IPublishEndpointProvider publishEndpointProvider, ConsumeContext consumeContext,
-            Guid? requestId)
+            Guid? requestId, bool inheritRequestTimeToLive = false)
             where T : class
         {
             Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpoint<T>();
             if (publishSendEndpointTask.Status == TaskStatus.RanToCompletion)
             {
                 return consumeContext != null
-                    ? Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(publishSendEndpointTask.Result, consumeContext, requestId))
+                    ? Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(
+                        publishSendEndpointTask.Result,
+                        consumeContext,
+                        requestId,
+                        inheritRequestTimeToLive))
                     : publishSendEndpointTask;
             }
 
@@ -116,7 +123,7 @@ namespace ViciOne.ServiceBus
                 var publishSendEndpoint = await publishSendEndpointTask.ConfigureAwait(false);
 
                 return consumeContext != null
-                    ? new ConsumeSendEndpoint(publishSendEndpoint, consumeContext, requestId)
+                    ? new ConsumeSendEndpoint(publishSendEndpoint, consumeContext, requestId, inheritRequestTimeToLive)
                     : publishSendEndpoint;
             }
 
@@ -124,17 +131,23 @@ namespace ViciOne.ServiceBus
         }
 
         internal static Task<ISendEndpoint> GetSendEndpoint(this ISendEndpointProvider sendEndpointProvider, ConsumeContext consumeContext,
-            Uri destinationAddress, Guid? requestId)
+            Uri destinationAddress, Guid? requestId, bool inheritRequestTimeToLive = false)
         {
             Task<ISendEndpoint> sendEndpointTask = sendEndpointProvider.GetSendEndpoint(destinationAddress);
             if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
-                return Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(sendEndpointTask.Result, consumeContext, requestId));
+            {
+                return Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(
+                    sendEndpointTask.Result,
+                    consumeContext,
+                    requestId,
+                    inheritRequestTimeToLive));
+            }
 
             async Task<ISendEndpoint> GetResponseEndpointAsync()
             {
                 var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
-                return new ConsumeSendEndpoint(sendEndpoint, consumeContext, requestId);
+                return new ConsumeSendEndpoint(sendEndpoint, consumeContext, requestId, inheritRequestTimeToLive);
             }
 
             return GetResponseEndpointAsync();

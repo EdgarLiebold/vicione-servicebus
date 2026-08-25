@@ -1,9 +1,11 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Clients
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Initializers;
+    using Middleware;
     using Transports;
 
 
@@ -11,16 +13,16 @@ namespace ViciOne.ServiceBus.Clients
         IRequestSendEndpoint<TRequest>
         where TRequest : class
     {
-        readonly ConsumeContext _consumeContext;
+        readonly ConsumeContext? _consumeContext;
 
-        protected RequestSendEndpoint(ConsumeContext consumeContext)
+        protected RequestSendEndpoint(ConsumeContext? consumeContext)
         {
             _consumeContext = consumeContext;
         }
 
         public async Task<TRequest> Send(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
         {
-            var endpoint = await GetSendEndpoint().ConfigureAwait(false);
+            ISendEndpoint endpoint = (await GetSendEndpoint().ConfigureAwait(false)).SkipOutbox();
 
             (var message, IPipe<SendContext<TRequest>> sendPipe) = _consumeContext != null
                 ? await MessageInitializerCache<TRequest>.InitializeMessage(_consumeContext, values,
@@ -34,7 +36,7 @@ namespace ViciOne.ServiceBus.Clients
 
         public async Task Send(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
         {
-            var endpoint = await GetSendEndpoint().ConfigureAwait(false);
+            ISendEndpoint endpoint = (await GetSendEndpoint().ConfigureAwait(false)).SkipOutbox();
 
             IPipe<SendContext<TRequest>> consumePipe = _consumeContext != null
                 ? new ConsumeSendPipeAdapter<TRequest>(_consumeContext, pipe, requestId)

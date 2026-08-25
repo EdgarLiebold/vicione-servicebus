@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Transports
     using System.Threading;
     using System.Threading.Tasks;
     using Configuration;
-    using Middleware;
+    using RetryPolicies;
 
 
     public static class HostConfigurationRetryExtensions
@@ -12,102 +12,64 @@ namespace ViciOne.ServiceBus.Transports
         public static async Task Retry(this IHostConfiguration hostConfiguration, Func<Task> factory, CancellationToken cancellationToken,
             CancellationToken stoppingToken)
         {
+            await Retry(hostConfiguration, factory, TimeProvider.System, cancellationToken, stoppingToken).ConfigureAwait(false);
+        }
+
+        public static async Task Retry(this IHostConfiguration hostConfiguration, Func<Task> factory, TimeProvider timeProvider,
+            CancellationToken cancellationToken, CancellationToken stoppingToken)
+        {
+            ArgumentNullException.ThrowIfNull(hostConfiguration);
+            ArgumentNullException.ThrowIfNull(factory);
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
             var description = hostConfiguration.HostAddress;
+            IRetryPolicy retryPolicy = hostConfiguration.SendTransportRetryPolicy
+                ?? throw new InvalidOperationException("The host configuration returned a null send transport retry policy.");
+            Exception lastFailure = null;
 
-            using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, stoppingToken);
-
-            var stoppingContext = new SupervisorStoppingContext(tokenSource.Token);
-
-            RetryPolicyContext<SupervisorStoppingContext> policyContext = hostConfiguration.SendTransportRetryPolicy.CreatePolicyContext(stoppingContext);
+            using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, stoppingToken);
 
             try
             {
-                RetryContext<SupervisorStoppingContext> retryContext = null;
+                if (stoppingToken.IsCancellationRequested)
+                    throw CreateStoppingException(description, lastFailure);
 
-                while (!tokenSource.Token.IsCancellationRequested)
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await retryPolicy.Retry(async () =>
                 {
+                    if (stoppingToken.IsCancellationRequested)
+                        throw CreateStoppingException(description, lastFailure);
+
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     try
                     {
-                        if (retryContext?.Delay != null)
-                            await Task.Delay(retryContext.Delay.Value, tokenSource.Token).ConfigureAwait(false);
-
-                        if (stoppingToken.IsCancellationRequested)
-                            throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
-                        if (cancellationToken.IsCancellationRequested)
-                            cancellationToken.ThrowIfCancellationRequested();
-
                         await factory().ConfigureAwait(false);
-                        return;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // The backoff above waits on tokenSource.Token, which is linked from both
-                        // sources, so a cancellation raised there carries the linked token and equals
-                        // neither of them. Deciding from the exception's token therefore never reached
-                        // the stopping branch, and a caller that cancelled its own publish received a
-                        // TaskCanceledException bound to a token it had never seen. The sources are
-                        // asked directly instead, in the same order and with the same outcome the two
-                        // explicit checks in this method already use.
-                        if (stoppingToken.IsCancellationRequested)
-                            throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
-
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        throw;
                     }
                     catch (Exception exception)
                     {
-                        if (retryContext != null)
-                        {
-                            retryContext = retryContext.CanRetry(exception, out RetryContext<SupervisorStoppingContext> nextRetryContext)
-                                ? nextRetryContext
-                                : null;
-                        }
-
-                        if (retryContext == null && !policyContext.CanRetry(exception, out retryContext))
-                            throw;
+                        lastFailure = exception;
+                        throw;
                     }
-
-                    if (tokenSource.Token.IsCancellationRequested)
-                        break;
-
-                    try
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(1), tokenSource.Token).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-                        // just a little breather before reconnecting the receive transport
-                    }
-                }
-
-                // Same precedence as the pre-flight check inside the loop and as the catch handler:
-                // stopping first, then the caller. This block had it the other way round, so the answer
-                // to "both tokens are cancelled" depended on which path left the loop — a caller
-                // cancellation surfaced here and a ConnectionException surfaced there, for the same
-                // input. The transport being gone is the stronger statement either way.
-                if (stoppingToken.IsCancellationRequested)
-                    throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
-
-                if (cancellationToken.IsCancellationRequested)
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                throw new ConnectionException($"The transport is stopping and cannot be used: {description}", retryContext?.Exception);
+                }, timeProvider, linkedSource.Token).ConfigureAwait(false);
             }
-            finally
+            catch (OperationCanceledException)
             {
-                policyContext.Dispose();
+                // A delay observes the linked token, not either source token. Source state is the
+                // authoritative discriminator. A stopping transport is the stronger result when both
+                // sources are cancelled; caller-only cancellation retains the exact caller token.
+                if (stoppingToken.IsCancellationRequested)
+                    throw CreateStoppingException(description, lastFailure);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                throw;
             }
         }
 
-
-        class SupervisorStoppingContext :
-            BasePipeContext
+        static ConnectionException CreateStoppingException(Uri description, Exception lastFailure)
         {
-            public SupervisorStoppingContext(CancellationToken cancellationToken)
-                : base(cancellationToken)
-            {
-            }
+            return new ConnectionException($"The transport is stopping and cannot be used: {description}", lastFailure);
         }
     }
 }

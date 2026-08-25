@@ -12,14 +12,21 @@ namespace ViciOne.ServiceBus.Testing
         readonly List<IConsumerConfigurator> _configures;
         readonly ReceivedMessageList _received;
         readonly CancellationToken _testCompleted;
+        readonly TimeProvider _timeProvider;
 
         public MultiTestConsumer(TimeSpan timeout, CancellationToken testCompleted = default)
+            : this(timeout, TimeProvider.System, testCompleted)
         {
+        }
+
+        public MultiTestConsumer(TimeSpan timeout, TimeProvider timeProvider, CancellationToken testCompleted = default)
+        {
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             _testCompleted = testCompleted;
             Timeout = timeout;
             _configures = new List<IConsumerConfigurator>();
 
-            _received = new ReceivedMessageList(timeout, testCompleted);
+            _received = new ReceivedMessageList(timeout, testCompleted, timeProvider);
         }
 
         public IReceivedMessageList Received => _received;
@@ -113,7 +120,7 @@ namespace ViciOne.ServiceBus.Testing
             public Of(MultiTestConsumer multiConsumer)
             {
                 _multiConsumer = multiConsumer;
-                Received = new ReceivedMessageList<T>(multiConsumer.Timeout, multiConsumer._testCompleted);
+                Received = new ReceivedMessageList<T>(multiConsumer.Timeout, multiConsumer._testCompleted, multiConsumer._timeProvider);
             }
 
             public ReceivedMessageList<T> Received { get; }
@@ -137,7 +144,7 @@ namespace ViciOne.ServiceBus.Testing
             public FaultOf(MultiTestConsumer multiConsumer)
             {
                 _multiConsumer = multiConsumer;
-                Received = new ReceivedMessageList<T>(multiConsumer.Timeout, multiConsumer._testCompleted);
+                Received = new ReceivedMessageList<T>(multiConsumer.Timeout, multiConsumer._testCompleted, multiConsumer._timeProvider);
             }
 
             public ReceivedMessageList<T> Received { get; }
