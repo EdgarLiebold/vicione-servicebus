@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Middleware.CircuitBreaker;
 
-[Collection(CircuitBreakerGlobalTelemetryCollection.Name)]
+[Collection(OpenTelemetryGlobalCollection.Name)]
 public sealed class CircuitBreakerFilterTests
 {
     private static readonly DateTimeOffset StartTime =

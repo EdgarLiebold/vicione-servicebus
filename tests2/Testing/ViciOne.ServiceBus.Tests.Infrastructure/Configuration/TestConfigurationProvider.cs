@@ -58,12 +58,14 @@ public sealed class TestConfigurationProvider
         ArgumentNullException.ThrowIfNull(environment);
         ArgumentNullException.ThrowIfNull(addUserSecretsLayer);
 
+        KeyValuePair<string, string?>[] environmentValues = environment.ToArray();
         var builder = new ConfigurationBuilder()
             .SetBasePath(basePath)
             .AddJsonFile(SettingsFileName, optional: false, reloadOnChange: false);
 
         addUserSecretsLayer(builder);
-        builder.AddInMemoryCollection(Normalize(environment));
+        builder.AddInMemoryCollection(NormalizeFixtureEnvironment(environmentValues));
+        builder.AddInMemoryCollection(NormalizePrefixedEnvironment(environmentValues));
         _configuration = builder.Build();
     }
 
@@ -105,7 +107,24 @@ public sealed class TestConfigurationProvider
         return options;
     }
 
-    private static IEnumerable<KeyValuePair<string, string?>> Normalize(
+    public ViciOneTestOptions GetValidatedLocalOptions(params LocalTestResource[] requiredResources)
+    {
+        var options = GetOptions();
+        var errors = options.ValidateForLocal(requiredResources);
+
+        if (errors.Count > 0)
+        {
+            throw new InvalidOperationException(
+                $"Profile '{options.Profile}' has invalid local test configuration: " +
+                string.Join(", ", errors) +
+                $". Put endpoint settings and credentials in the shared User Secrets store or let " +
+                $"the canonical fixture runner supply them. Never commit credentials to {SettingsFileName}.");
+        }
+
+        return options;
+    }
+
+    private static IEnumerable<KeyValuePair<string, string?>> NormalizePrefixedEnvironment(
         IEnumerable<KeyValuePair<string, string?>> environment) =>
         environment
             .Where(entry => entry.Key.StartsWith(EnvironmentPrefix, StringComparison.OrdinalIgnoreCase))
@@ -115,6 +134,33 @@ public sealed class TestConfigurationProvider
                     ConfigurationPath.KeyDelimiter,
                     StringComparison.Ordinal),
                 entry.Value));
+
+    private static IEnumerable<KeyValuePair<string, string?>> NormalizeFixtureEnvironment(
+        IEnumerable<KeyValuePair<string, string?>> environment)
+    {
+        var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["VICIONE_SERVICEBUS_RMQ_HOST"] = "LocalInfrastructure:RabbitMq:Host",
+            ["VICIONE_SERVICEBUS_RMQ_PORT"] = "LocalInfrastructure:RabbitMq:Port",
+            ["VICIONE_SERVICEBUS_RMQ_USER"] = "LocalInfrastructure:RabbitMq:UserName",
+            ["VICIONE_SERVICEBUS_RMQ_PASS"] = "LocalInfrastructure:RabbitMq:Password",
+            ["VICIONE_SERVICEBUS_PG_HOST"] = "LocalInfrastructure:PostgreSql:Host",
+            ["VICIONE_SERVICEBUS_PG_PORT"] = "LocalInfrastructure:PostgreSql:Port",
+            ["VICIONE_SERVICEBUS_PG_DATABASE"] = "LocalInfrastructure:PostgreSql:Database",
+            ["VICIONE_SERVICEBUS_PG_USER"] = "LocalInfrastructure:PostgreSql:UserName",
+            ["VICIONE_SERVICEBUS_PG_PASS"] = "LocalInfrastructure:PostgreSql:Password",
+            ["VICIONE_SERVICEBUS_AZURITE_HOST"] = "LocalInfrastructure:AzureTable:Host",
+            ["VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"] = "LocalInfrastructure:AzureTable:Port",
+            ["VICIONE_SERVICEBUS_AZURITE_ACCOUNT"] = "LocalInfrastructure:AzureTable:AccountName",
+            ["VICIONE_SERVICEBUS_AZURITE_KEY"] = "LocalInfrastructure:AzureTable:AccountKey",
+        };
+
+        foreach (KeyValuePair<string, string?> entry in environment)
+        {
+            if (mappings.TryGetValue(entry.Key, out string? configurationKey))
+                yield return new KeyValuePair<string, string?>(configurationKey, entry.Value);
+        }
+    }
 
     private static IEnumerable<KeyValuePair<string, string?>> ReadProcessEnvironment()
     {

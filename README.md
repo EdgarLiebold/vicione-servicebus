@@ -59,7 +59,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1494 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1557 \
   --max-parallel-test-modules 1
 ```
 
@@ -82,6 +82,11 @@ The fork keeps in-memory messaging, the RabbitMQ, ActiveMQ, Azure Service Bus, A
 transports, the Azure Event Hubs rider, saga persistence on EF Core, Azure Table and DynamoDB,
 message body storage on Amazon S3 and Azure Blob Storage, Quartz scheduling, the job service,
 SignalR, MessagePack serialization, the state machine visualizer, the analyzer and the benchmarks.
+
+It also provides an optional, default-off `MessageJournal` for policy-selected and sanitized
+diagnostic snapshots of terminal send, publish and consume outcomes. EF Core and Azure Table stores
+apply finite size, count and age limits on every append. This capability is not a queue, retry path,
+queryable audit history, or owner of ViciOne Suite operational and security audit data.
 
 The inherited TestFramework source remains only as migration input until every behavior obligation
 has moved into the native test estate. It is not part of the future public package surface.

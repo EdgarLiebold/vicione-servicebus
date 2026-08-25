@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1881 |
-| Modified | 4322 |
-| Deleted | 1326 |
+| Added | 1948 |
+| Modified | 4299 |
+| Deleted | 1349 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -888,6 +888,26 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C7-IMPLEMENTED-MESSAGE-TOPOLOGY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C8-FAULT-POLYMORPHISM/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C9-ARRAY-MESSAGE-PUBLICATION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/CIRCUIT_BREAKER_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/MUTATION_MANIFEST.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/final-engineering-build-serial.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/final-local-integration-test.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/final-unit-test.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M01-throughput-boundary.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M02-open-time-boundary.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M03-half-open-cas-ownership.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M04-backoff-progression.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M05-cancellation-causality.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M06-no-verdict-release.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M07-otel-source-version.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M08-classifier-failure-release.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M09-observer-isolation.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M10-retained-builder-snapshot.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M11-caller-owned-type-array.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M12-open-rejection-reason.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M13-probe-in-progress-rejection-reason.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M14-concurrency-test-setup.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
@@ -1151,6 +1171,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
+| `src/MassTransit/Audit/IConsumeMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/IConsumeMetadataFactory.cs` |
+| `src/MassTransit/Audit/IMessageAuditStore.cs` | Deleted | `src/MassTransit/Audit/IMessageAuditStore.cs` |
+| `src/MassTransit/Audit/ISendMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/ISendMetadataFactory.cs` |
+| `src/MassTransit/Audit/MessageAuditMetadata.cs` | Deleted | `src/MassTransit/Audit/MessageAuditMetadata.cs` |
+| `src/MassTransit/Audit/MetadataFactories/DefaultConsumeMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/MetadataFactories/DefaultConsumeMetadataFactory.cs` |
+| `src/MassTransit/Audit/MetadataFactories/DefaultSendMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/MetadataFactories/DefaultSendMetadataFactory.cs` |
+| `src/MassTransit/Audit/Observers/AuditConsumeObserver.cs` | Deleted | `src/MassTransit/Audit/Observers/AuditConsumeObserver.cs` |
+| `src/MassTransit/Audit/Observers/AuditPublishObserver.cs` | Deleted | `src/MassTransit/Audit/Observers/AuditPublishObserver.cs` |
+| `src/MassTransit/Audit/Observers/AuditSendObserver.cs` | Deleted | `src/MassTransit/Audit/Observers/AuditSendObserver.cs` |
+| `src/MassTransit/Configuration/AuditConfigurationExtensions.cs` | Deleted | `src/MassTransit/Configuration/AuditConfigurationExtensions.cs` |
 | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` | Deleted | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` |
 | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` | Deleted | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` |
 | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` | Deleted | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` |
@@ -1226,6 +1256,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/MassTransit.Azure.Cosmos/ICosmosCollectionIdFormatter.cs` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/ICosmosCollectionIdFormatter.cs` |
 | `src/Persistence/MassTransit.Azure.Cosmos/MassTransit.Azure.Cosmos.csproj` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/MassTransit.Azure.Cosmos.csproj` |
 | `src/Persistence/MassTransit.Azure.Cosmos/MassTransit.Azure.Cosmos.csproj.DotSettings` | Deleted | `src/Persistence/MassTransit.Azure.Cosmos/MassTransit.Azure.Cosmos.csproj.DotSettings` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` |
+| `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/Configuration/Configuration/DapperSagaRepositoryRegistrationProvider.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/Configuration/Configuration/DapperSagaRepositoryRegistrationProvider.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/Configuration/DapperSagaRepositoryRegistrationExtensions.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/Configuration/DapperSagaRepositoryRegistrationExtensions.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/Configuration/DatabaseContextFactory.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/Configuration/DatabaseContextFactory.cs` |
@@ -1241,6 +1276,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/MassTransit.DapperIntegration/DapperSagaRepository.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/DapperSagaRepository.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/MassTransit.DapperIntegration.csproj` | Deleted | `src/Persistence/MassTransit.DapperIntegration/MassTransit.DapperIntegration.csproj` |
 | `src/Persistence/MassTransit.DapperIntegration/MassTransit.DapperIntegration.csproj.DotSettings` | Deleted | `src/Persistence/MassTransit.DapperIntegration/MassTransit.DapperIntegration.csproj.DotSettings` |
+| `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkAuditStoreConfiguratorExtensions.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkAuditStoreConfiguratorExtensions.cs` |
+| `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditDbContext.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditDbContext.cs` |
+| `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditMapping.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditMapping.cs` |
+| `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditRecord.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditRecord.cs` |
+| `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/EntityFrameworkAuditStore.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/EntityFrameworkAuditStore.cs` |
 | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` |
 | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs` |
 | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/EntityFrameworkSagaRepositoryRegistrationExtensions.cs` | Deleted | `src/Persistence/MassTransit.EntityFrameworkIntegration/Configuration/EntityFrameworkSagaRepositoryRegistrationExtensions.cs` |
@@ -1412,14 +1452,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj.DotSettings` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/packages.lock.json` | Added |  |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AuditRecord.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableAuditStore.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/DatabaseContext.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ICloudTableProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/ICloudTableProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/IEntityConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/IEntityConverter.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ISagaKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/ISagaKeyFormatter.cs` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStore.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStoreOptions.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/MessageJournalCapacityLease.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/MessageJournalRecord.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepository.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableSagaRepository.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs` |
@@ -1436,8 +1476,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ObjectEntityPropertyConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ObjectEntityPropertyConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/SagaETag.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/SagaETag.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ValueTypeEntityPropertyConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ValueTypeEntityPropertyConverter.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/AzureTableJobServiceConfigurationExtensions.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableJobServiceConfigurationExtensions.cs` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/AzureTableMessageJournalConfigurationExtensions.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/AzureTableRepositoryRegistrationExtensions.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableRepositoryRegistrationExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryRegistrationProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryRegistrationProvider.cs` |
@@ -1464,18 +1504,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkOutboxConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkOutboxConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs` |
-| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkAuditStoreConfiguratorExtensions.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkAuditStoreConfiguratorExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkCoreJobServiceConfigurationExtensions.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkCoreJobServiceConfigurationExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkCoreSagaRepositoryRegistrationExtensions.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkCoreSagaRepositoryRegistrationExtensions.cs` |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkMessageJournalConfigurationExtensions.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkBusOutboxConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkBusOutboxConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkOutboxConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkOutboxConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkSagaRepository.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkSagaRepository.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs` |
-| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditDbContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditDbContext.cs` |
-| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditMapping.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditMapping.cs` |
-| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditRecord.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/AuditRecord.cs` |
-| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/EntityFrameworkAuditStore.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Audit/EntityFrameworkAuditStore.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/BusOutboxDeliveryService.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/BusOutboxDeliveryService.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Configuration/EntityFrameworkSagaRepository.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/Configuration/EntityFrameworkSagaRepository.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbContextOutboxConsumeContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbContextOutboxConsumeContext.cs` |
@@ -1502,6 +1538,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JobTypeSagaMap.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JobTypeSagaMap.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JsonValueComparer.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JsonValueComparer.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JsonValueConverter.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/JsonValueConverter.cs` |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MessageJournal/EntityFrameworkMessageJournalStore.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MessageJournal/MessageJournalDbContext.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MessageJournal/MessageJournalMapping.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MessageJournal/MessageJournalModelCacheKeyFactory.cs` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MessageJournal/MessageJournalRecord.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MySqlLockStatementFormatter.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MySqlLockStatementFormatter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MySqlLockStatementProvider.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/MySqlLockStatementProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/OptimisticFutureSagaDbContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/OptimisticFutureSagaDbContext.cs` |
@@ -3624,15 +3665,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Agents/PipeContextAgent.cs` | Modified | `src/MassTransit/Agents/PipeContextAgent.cs` |
 | `src/ViciOne.ServiceBus/Agents/PipeContextSupervisor.cs` | Modified | `src/MassTransit/Agents/PipeContextSupervisor.cs` |
 | `src/ViciOne.ServiceBus/AsyncBusHandle.cs` | Modified | `src/MassTransit/AsyncBusHandle.cs` |
-| `src/ViciOne.ServiceBus/Audit/IConsumeMetadataFactory.cs` | Modified | `src/MassTransit/Audit/IConsumeMetadataFactory.cs` |
-| `src/ViciOne.ServiceBus/Audit/IMessageAuditStore.cs` | Modified | `src/MassTransit/Audit/IMessageAuditStore.cs` |
-| `src/ViciOne.ServiceBus/Audit/ISendMetadataFactory.cs` | Modified | `src/MassTransit/Audit/ISendMetadataFactory.cs` |
-| `src/ViciOne.ServiceBus/Audit/MessageAuditMetadata.cs` | Modified | `src/MassTransit/Audit/MessageAuditMetadata.cs` |
-| `src/ViciOne.ServiceBus/Audit/MetadataFactories/DefaultConsumeMetadataFactory.cs` | Modified | `src/MassTransit/Audit/MetadataFactories/DefaultConsumeMetadataFactory.cs` |
-| `src/ViciOne.ServiceBus/Audit/MetadataFactories/DefaultSendMetadataFactory.cs` | Modified | `src/MassTransit/Audit/MetadataFactories/DefaultSendMetadataFactory.cs` |
-| `src/ViciOne.ServiceBus/Audit/Observers/AuditConsumeObserver.cs` | Modified | `src/MassTransit/Audit/Observers/AuditConsumeObserver.cs` |
-| `src/ViciOne.ServiceBus/Audit/Observers/AuditPublishObserver.cs` | Modified | `src/MassTransit/Audit/Observers/AuditPublishObserver.cs` |
-| `src/ViciOne.ServiceBus/Audit/Observers/AuditSendObserver.cs` | Modified | `src/MassTransit/Audit/Observers/AuditSendObserver.cs` |
 | `src/ViciOne.ServiceBus/Bus.cs` | Modified | `src/MassTransit/Bus.cs` |
 | `src/ViciOne.ServiceBus/BusControlExtensions.cs` | Modified | `src/MassTransit/BusControlExtensions.cs` |
 | `src/ViciOne.ServiceBus/BusHandleExtensions.cs` | Modified | `src/MassTransit/BusHandleExtensions.cs` |
@@ -3682,7 +3714,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Clients/ScopedClientFactory.cs` | Modified | `src/MassTransit/Clients/ScopedClientFactory.cs` |
 | `src/ViciOne.ServiceBus/Clients/SendRequestSendEndpoint.cs` | Modified | `src/MassTransit/Clients/SendRequestSendEndpoint.cs` |
 | `src/ViciOne.ServiceBus/Configuration/ActivityObserverConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/ActivityObserverConfigurationExtensions.cs` |
-| `src/ViciOne.ServiceBus/Configuration/AuditConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/AuditConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/BindConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/BindConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs` | Modified | `src/MassTransit/Configuration/BusFactoryExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/CircuitBreakerConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/CircuitBreakerConfigurationExtensions.cs` |
@@ -3910,6 +3941,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/LatestFilterCreated.cs` | Modified | `src/MassTransit/Configuration/LatestFilterCreated.cs` |
 | `src/ViciOne.ServiceBus/Configuration/MediatorConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/MediatorConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/MessageDataConfiguratorExtensions.cs` | Modified | `src/MassTransit/Configuration/MessageDataConfiguratorExtensions.cs` |
+| `src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Configuration/MessageRetryConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/MessageRetryConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/MessageSchedulerBusExtensions.cs` | Modified | `src/MassTransit/Configuration/MessageSchedulerBusExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/MessageSchedulerExtensions.cs` | Modified | `src/MassTransit/Configuration/MessageSchedulerExtensions.cs` |
@@ -4639,6 +4671,23 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/MessageData/Values/StoredMessageData.cs` | Modified | `src/MassTransit/MessageData/Values/StoredMessageData.cs` |
 | `src/ViciOne.ServiceBus/MessageData/Values/StringInlineMessageData.cs` | Modified | `src/MassTransit/MessageData/Values/StringInlineMessageData.cs` |
 | `src/ViciOne.ServiceBus/MessageDataExtensions.cs` | Modified | `src/MassTransit/MessageDataExtensions.cs` |
+| `src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalCaptureFactory.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalMetadataKeys.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs` | Added |  |
+| `src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalSendObserver.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Metadata/IMessageDataConverter.cs` | Modified | `src/MassTransit/Metadata/IMessageDataConverter.cs` |
 | `src/ViciOne.ServiceBus/Metadata/ITypeMetadataCache.cs` | Modified | `src/MassTransit/Metadata/ITypeMetadataCache.cs` |
 | `src/ViciOne.ServiceBus/Metadata/RegistrationMetadata.cs` | Modified | `src/MassTransit/Metadata/RegistrationMetadata.cs` |
@@ -6215,6 +6264,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.SqlTransport.Tests/SubscriptionType_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/SubscriptionType_Specs.cs` |
 | `tests/MassTransit.SqlTransport.Tests/TestConfigurationExtensions.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/TestConfigurationExtensions.cs` |
 | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.SqlTransport.Tests/docker-compose.yml` |
+| `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
+| `tests/MassTransit.Tests/Audit/Audit_Specs.cs` | Deleted | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
+| `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` | Deleted | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
 | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
@@ -6368,13 +6420,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
 | `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_ConsumeRecords_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_Filter_Specs .cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_PartitionKey_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_SendRecords_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/AuditStore_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/Configure_audit_store_supply_storage_account.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Audit/Configure_audit_store_supply_table.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTableInMemoryTestFixture.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Configuration.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/FixtureSetUp.cs` | Added |  |
@@ -6400,8 +6445,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SimpleSaga.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/AuditStore/AuditStore_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/AuditStore/DataAccess/AuditContextFactory.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/BusOutboxDeliveryContext_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Container_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/FutureSagaDbContextFactory.cs` | Added |  |
@@ -6823,9 +6866,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Audit/AuditFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/AuditFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Audit/Audit_Specs.cs` | Modified | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Audit/InMemoryAuditStore.cs` | Modified | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs` | Modified | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
@@ -7179,6 +7219,26 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
 | `tests2/Directory.Build.props` | Added |  |
 | `tests2/Directory.Build.targets` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableMessageJournalLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableMessageJournalRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalStoreTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/EntityFrameworkMessageJournalLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkMessageJournalRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedInitializer.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedMessageContractDiagnostic.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenario.cs` | Added |  |
@@ -7211,6 +7271,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
@@ -7338,6 +7400,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
@@ -7390,6 +7453,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
@@ -7460,7 +7527,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/CircuitBreakerGlobalTelemetryCollection.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/ConditionExpressionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs` | Added |  |
@@ -7473,6 +7539,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs` | Added |  |

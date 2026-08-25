@@ -18,6 +18,7 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
+import base64
 import fnmatch
 import hashlib
 import json
@@ -59,9 +60,17 @@ def build_environment() -> dict[str, str]:
     """
     environment: dict[str, str] = {}
     for user_variable, pass_variable in broker_logs.BROKER_CREDENTIAL_VARIABLES.values():
-        environment[user_variable] = broker_logs.ACCOUNT_NAME
-        # 32 hex characters from the OS CSPRNG, new on every run and never written to disk.
-        environment[pass_variable] = secrets.token_hex(16)
+        environment[user_variable] = (
+            broker_logs.AZURITE_ACCOUNT_NAME
+            if user_variable == broker_logs.AZURITE_ACCOUNT_VARIABLE
+            else broker_logs.ACCOUNT_NAME
+        )
+        environment[pass_variable] = (
+            base64.b64encode(secrets.token_bytes(32)).decode("ascii")
+            if pass_variable == broker_logs.AZURITE_KEY_VARIABLE
+            else secrets.token_hex(16)
+        )
+    environment["VICIONE_SERVICEBUS_PG_DATABASE"] = "postgres"
     environment[broker_logs.MSSQL_USER_VARIABLE] = broker_logs.MSSQL_ACCOUNT_NAME
     environment[broker_logs.MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
     return environment

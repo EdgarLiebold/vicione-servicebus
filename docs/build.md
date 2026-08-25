@@ -49,14 +49,16 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1494 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1557 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
-dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
-  -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/local-integration --minimum-expected-tests 3 \
-  --max-parallel-test-modules 1
+python3 tools/ci/run_broker_category.py \
+  --broker postgres --broker azurite --command -- \
+  dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
+    -c Release --no-build --no-restore \
+    --results-directory artifacts/test-results/local-integration \
+    --minimum-expected-tests 17 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -118,6 +120,9 @@ and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
 application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
 one unambiguous current-host capture path and all eight host fields after real envelope transport.
 The LocalIntegration floor is independent and includes only host-resource tests in that profile.
+It currently contains seventeen tests: three pre-existing host-resource cases plus the complete
+PostgreSQL and Azurite-backed `MessageJournal` provider cohort. Store age and count retention are
+applied transactionally on every append; there is deliberately no background maintenance queue.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Configuration;
 
-[Collection(CircuitBreakerGlobalTelemetryCollection.Name)]
+[Collection(OpenTelemetryGlobalCollection.Name)]
 public sealed class CircuitBreakerOptionsTests
 {
     [Fact]

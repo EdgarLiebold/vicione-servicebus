@@ -25,6 +25,13 @@
       "reference": "quay.io/artemiscloud/activemq-artemis-broker@sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a",
       "rationale": "Artemis is a second, separate broker used by the parameterized 'artemis' flavor of a subset of the ActiveMQ specs. It is not the ViciOne fixture and is not a required gate. It is pinned here so the branch has a reproducible endpoint instead of the hardcoded port 61618 with admin/admin it carried from the imported baseline."
     },
+    "azurite": {
+      "repository": "mcr.microsoft.com/azure-storage/azurite",
+      "tag": "3.36.0",
+      "digest": "sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98",
+      "reference": "mcr.microsoft.com/azure-storage/azurite:3.36.0@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98",
+      "rationale": "Microsoft's current stable Azurite release provides the real Azure Table wire contract for local integration tests. The multi-architecture OCI index digest fixes the exact image bytes while retaining native amd64 and arm64 execution. A run-scoped custom account replaces the public development account, and the in-memory data directory prevents state or credentials from surviving a run."
+    },
     "mssql": {
       "repository": "mcr.microsoft.com/mssql/server",
       "tag": "2025-CU8-ubuntu-24.04",

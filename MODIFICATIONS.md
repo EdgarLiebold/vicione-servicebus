@@ -34,3 +34,24 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
 
 Which file each of these touched is not repeated here. The generated
 [CHANGELIST.md](CHANGELIST.md) is the section 4(b) record and holds the complete path inventory.
+
+## ViciOne modification: greenfield circuit breaker and message journal, 2026-08-25
+
+The inherited circuit-breaker configurator, router-event and timer model was replaced by one
+validated options boundary, an immutable runtime snapshot and a timer-free state machine with an
+exclusive half-open probe. Its health surface is OpenTelemetry only.
+
+The inherited message-audit API and its EF Core and Azure Table implementations were removed. The
+useful capture capability now has an intentionally incompatible greenfield `MessageJournal` API:
+
+- it is inactive until a caller explicitly connects a store, a selection/redaction policy, finite
+  storage limits and a finite write deadline;
+- providers receive only immutable, policy-sanitized entries derived from the serialized envelope;
+- journal failures never change the outcome of send, publish or consume operations;
+- finite count and age retention are enforced transactionally on every append, without a background
+  queue, retry carrier or second outbox; and
+- it is a diagnostic message journal, never the ViciOne Suite operational or security audit owner.
+
+The retained provider capability is implemented for EF Core and Azure Table under source-mirrored
+namespaces. The generated [CHANGELIST.md](CHANGELIST.md) records every added, modified and removed
+path, including removed inherited files that can no longer carry an inline modification notice.

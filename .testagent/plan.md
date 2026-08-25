@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1494 predeclared unfiltered cases;
+- `UnitArchitecture`: 1557 predeclared unfiltered cases;
 - `LocalIntegration`: 3 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1105,7 +1105,7 @@ just-below thresholds, sampling/open boundaries, a filter snapshot isolated from
 and caller-owned arrays, bounded backoff, cancellation causality, a real 33-caller CAS race,
 classifier-failure recovery, measured retry/concurrency composition, public surface, exact
 low-cardinality OpenTelemetry signals and no-throw observer isolation. The predeclared
-UnitArchitecture floor is 1494; final acceptance additionally requires focused, unfiltered Unit and
+UnitArchitecture floor is 1557; final acceptance additionally requires focused, unfiltered Unit and
 LocalIntegration profiles, the Engineering Release build and one-cause mutations.
 
 ## Accepted cohort — middleware retry
@@ -1375,3 +1375,41 @@ Attack the rule with one otherwise valid source under `Serialization` whose name
 different folder. Only the new architecture fact must fail with the exact path and expected/actual
 namespaces. Remove the probe, rerun the complete architecture project, then enforce a 1472
 UnitArchitecture floor.
+
+## Message journal
+
+Replace the inherited `Audit` feature as one product slice with four internal phases. First build
+the Core contract and observers, then migrate EF Core, then Azure Table, and only after the combined
+closure remove every old `Audit` file and fully replaced inherited fixture. There is no public API
+compatibility requirement, but no useful capability may disappear.
+
+The Core API is `MessageJournal` throughout. It observes the actually serialized envelope so
+transactional outbox and scheduler paths cannot expose internal wrapper types as the journal
+message. A caller must explicitly connect a store, an entry-selection/redaction policy, finite
+limits and a finite write timeout. No implicit policy captures a payload. Terminal observer
+callbacks produce explicit operation and outcome values. A timeout or any policy, provider or OTel
+observer failure must leave the original send, publish or consume result unchanged.
+
+The immutable entry owns a version-7 identifier, UTC observation time, operation, outcome, declared
+data classification, selected metadata and optional sanitized content. The policy is the sole
+owner of inclusion and redaction; providers receive no raw transport context or CLR message.
+OpenTelemetry uses one existing ViciOne meter/source identity and low-cardinality operation,
+outcome and failure-reason tags only. No log, event, queue, retry, audit query or A09 record is added.
+
+EF Core keeps configurable table/schema persistence and supported PostgreSQL, Azure SQL and SQL
+Server behavior. Azure Table keeps service-client and table-client composition and a bounded,
+explicit partition strategy. Both enforce finite entry size, count and age, use cancellation, and
+persist the same canonical entry semantics. Count and age maintenance runs transactionally with
+every append; it has no independent scheduler, background queue or retry path and therefore never
+runs for an unconfigured or idle journal.
+
+Acceptance requires normal xUnit 4/MTP v2 tests for default-off composition, exact serialized
+envelope capture including outbox, filtering/redaction, metadata and payload fidelity, success and
+fault outcomes, timeout/cancellation, provider/OTel failure isolation, immutable snapshots, all
+validation boundaries and exact low-cardinality telemetry. Provider suites must prove retention,
+capacity, collision-free keys, supported relational variants and both Azure client composition
+paths. Every one of the seventeen R0 purposes receives one terminal disposition. Targeted one-cause
+mutations must reject raw-payload defaults, CLR-wrapper type capture, outcome loss, operation-impact
+on journal failure, missing bounds, retention bypass and telemetry leakage. Final UnitArchitecture,
+LocalIntegration, applicable External and Engineering Release profiles pass without failures,
+skips, warnings or a second verdict path.

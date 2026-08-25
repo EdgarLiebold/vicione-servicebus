@@ -41,6 +41,7 @@ BROKER_HOST_VARIABLE = {
     "artemis": "VICIONE_SERVICEBUS_ARTEMIS_HOST",
     "mssql": "VICIONE_SERVICEBUS_MSSQL_HOST",
     "postgres": "VICIONE_SERVICEBUS_PG_HOST",
+    "azurite": "VICIONE_SERVICEBUS_AZURITE_HOST",
 }
 
 BROKER_CREDENTIAL_VARIABLES = {
@@ -48,7 +49,12 @@ BROKER_CREDENTIAL_VARIABLES = {
     "activemq": ("VICIONE_SERVICEBUS_AMQ_USER", "VICIONE_SERVICEBUS_AMQ_PASS"),
     "artemis": ("VICIONE_SERVICEBUS_ARTEMIS_USER", "VICIONE_SERVICEBUS_ARTEMIS_PASS"),
     "postgres": ("VICIONE_SERVICEBUS_PG_USER", "VICIONE_SERVICEBUS_PG_PASS"),
+    "azurite": ("VICIONE_SERVICEBUS_AZURITE_ACCOUNT", "VICIONE_SERVICEBUS_AZURITE_KEY"),
 }
+
+AZURITE_KEY_VARIABLE = "VICIONE_SERVICEBUS_AZURITE_KEY"
+AZURITE_ACCOUNT_VARIABLE = "VICIONE_SERVICEBUS_AZURITE_ACCOUNT"
+AZURITE_ACCOUNT_NAME = "vicioneci"
 
 # SQL Server cannot rename 'sa', so only the secret is run-scoped. It must also satisfy the engine's
 # complexity rules, which a plain hex secret does not. The account name is published all the same: the

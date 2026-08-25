@@ -1,11 +1,20 @@
 {
-  "$comment": "Secret-free defaults. User Secrets and VICIONE_TESTS__ hold non-secret resource coordinates only. Azure.Identity and the AWS SDK provider chains remain the exclusive credential owners.",
+  "$comment": "Secret-free defaults. Shared User Secrets, VICIONE_TESTS__, or the canonical fixture runner supply credentials; credentials are never checked in.",
   "Profile": "UnitArchitecture",
   "OperationTimeout": "00:00:30",
   "LocalInfrastructure": {
-    "RabbitMqHost": "localhost",
-    "RabbitMqPort": 5672,
-    "PostgreSqlHost": "localhost",
-    "PostgreSqlPort": 5432
+    "RabbitMq": {
+      "Host": "localhost",
+      "Port": 5672
+    },
+    "PostgreSql": {
+      "Host": "localhost",
+      "Port": 5432,
+      "Database": "postgres"
+    },
+    "AzureTable": {
+      "Host": "localhost",
+      "Port": 10002
+    }
   }
 }

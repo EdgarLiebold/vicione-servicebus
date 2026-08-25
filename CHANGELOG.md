@@ -11,6 +11,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Removed
 
+- The inherited message-audit contracts, observers, configuration and provider implementations.
+  Their useful diagnostic capture capability is superseded by the intentionally incompatible,
+  policy-controlled `MessageJournal`; no audit compatibility alias remains.
 - The Python policy validator, its policy modules, and its validator self-test suite. They were a
   discarded Team 1 detour rather than imported behavior. Independently valid safeguards move to their
   effective MSBuild or native xUnit/MTP boundary; the validator must not be rebuilt.
@@ -22,6 +25,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- `MessageJournal` is an optional, default-off diagnostic capability for terminal send, publish and
+  consume outcomes. A mandatory caller policy selects and sanitizes the serialized envelope before
+  an immutable entry reaches EF Core or Azure Table. Both stores enforce finite size, count and age
+  on each append; failures are deadline-bounded and isolated from message flow. The feature has no
+  query API, background queue, retry carrier, second outbox, log ownership or Suite-audit role.
 - The circuit breaker now has one validated greenfield options boundary, an immutable runtime
   snapshot and a timer-free state machine. The snapshot is isolated from retained configuration
   builders and caller-owned arrays and is produced by the shared exception-filter semantics used by

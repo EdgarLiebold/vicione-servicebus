@@ -1610,3 +1610,57 @@ exactly the new rule fail while the other 84 architecture facts remained green. 
 probe, the complete architecture project returned to 85/85. A second isolated file declared the
 correct namespace first and a hidden second namespace afterward; it also made exactly the new rule
 fail, this time with the exact two-declaration diagnostic. Its removal again restored 85/85.
+
+## Message journal boundary
+
+The inherited `Audit` graph has been read end to end: the core store contract, three observers,
+metadata factories and filters, the Entity Framework Core and Azure Table providers, all eleven
+inherited fixture/support files, the observer execution path, the transactional-outbox forwarding
+path and every current product call site. The old feature is opt-in but not an audit system in the
+Suite sense. It persists complete payloads and transport metadata without mandatory redaction,
+capacity or retention, and a provider exception can currently turn an already completed send into
+an apparent send failure. The consume observer writes before consumer completion and therefore does
+not say whether processing succeeded.
+
+The complete inherited lower bound contains seventeen relevant R0 obligations: four core observer
+and filter results, one obsolete test-cache support shape, three Entity Framework Core persistence
+purposes and nine Azure Table purposes. Most prove row counts only. They do not prove payload or
+metadata fidelity, fault outcomes, outbox/scheduler envelopes, secret redaction, maximum size,
+retention, timeout, cancellation, observer-failure isolation or exact provider concurrency.
+
+The current upstream source is materially unchanged. In MassTransit discussion 3790 the original
+maintainer describes this audit feature as outdated and explains the concrete transactional-outbox
+and scheduler defect: the generic observer type can be an internal wrapper rather than the message
+represented by the serialized transport envelope. A greenfield replacement must therefore derive
+body, content type and supported message identities from the actual serialized send/receive
+boundary, never from `typeof(T)` or `context.Message` alone.
+
+`PO-2026-08-25-02` already settles the product decision. The replacement is named `MessageJournal`,
+has no compatibility aliases, is inactive until explicitly connected, cannot own Suite audit or
+logging, and uses only the existing OpenTelemetry surface for health. Activation must provide a
+policy which both selects and sanitizes an entry, a finite store capacity/retention contract and a
+finite write deadline. The core never supplies an implicit raw-payload policy.
+
+The A+ execution boundary is:
+
+1. `IMessageJournalPolicy` receives an immutable capture of the real serialized envelope and returns
+   either one sanitized immutable entry or no entry. Returning no entry is the explicit filter path.
+2. `IMessageJournalStore` receives only the sanitized entry and exposes finite maximum-entry-size,
+   maximum-entry-count and retention values. Raw messages and transport contexts never reach a
+   persistence provider.
+3. Send, publish and consume are recorded at terminal observer callbacks with explicit `Succeeded`
+   or `Faulted` outcome. Journal failure is bounded and never changes, replaces or duplicates the
+   message operation. There is no background queue, retry carrier or second outbox.
+4. Failure and duration signals are low-cardinality `System.Diagnostics.Metrics`/`ActivitySource`
+   observations. Payload, message identifiers, addresses, exception messages and message type names
+   are forbidden as metric or span dimensions.
+5. EF Core and Azure Table remain optional provider capabilities. Their records use the new names,
+   System.Text.Json-compatible sanitized bytes and collision-free identifiers; bounded maintenance
+   replaces the inherited unlimited tables and Azure's culture-sensitive/collision-prone row key.
+6. Tests mirror source ownership under Core and Persistence, replace every useful R0 purpose with a
+   stronger xUnit 4/MTP v2 carrier and add source-derived security, failure and lifecycle cases.
+
+Age and count retention are evaluated and applied atomically with each append. An idle journal does
+not run background cleanup. This is intentional: the capability is finite without duplicating host
+work, and the architecture forbids turning it into a queue, retry carrier, scheduler or second
+outbox.

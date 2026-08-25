@@ -600,3 +600,18 @@ future cohorts as complete.
 - UnitArchitecture passes 1494/1494 and LocalIntegration passes 3/3 with no failure or skip.
   The complete Engineering Release build, including benchmarks and retained transports, has zero
   warnings and zero errors. Bounded `dotnet format whitespace --verify-no-changes` passes.
+
+## Lead implementation: optional message journal
+
+- The inherited `Audit` surface and its replaced fixtures are removed. `MessageJournal` is one
+  greenfield, default-off capability with no compatibility alias and no Suite-audit ownership.
+- The mandatory policy receives an immutable serialized-envelope capture and is the sole selection
+  and redaction owner. EF Core and Azure Table receive only immutable sanitized entries and enforce
+  finite entry size, count and age transactionally on each append.
+- Journal timeout, policy, clock, provider and OpenTelemetry failures cannot alter the original send,
+  publish or consume result. No queue, retry carrier, background cleanup, query API or second outbox
+  was introduced.
+- The source-mirrored native suite currently passes UnitArchitecture 1557/1557 and LocalIntegration
+  17/17 against ephemeral PostgreSQL and pinned Azurite, all with zero failure and zero skip. The
+  transition-only Python inventory remains green at 206/206 after dispositioning only the replaced
+  inherited audit obligations.

@@ -103,6 +103,22 @@ services:
       retries: 24
       start_period: 5s
 
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.36.0@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98
+    environment:
+      AZURITE_ACCOUNTS: ${VICIONE_SERVICEBUS_AZURITE_ACCOUNT:?run credentials are missing}:${VICIONE_SERVICEBUS_AZURITE_KEY:?run credentials are missing}
+    command: azurite --silent --location /data --tableHost 0.0.0.0 --tablePort 10002
+    ports:
+      - "127.0.0.1::10002"
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"const socket=require('net').connect(10002,'127.0.0.1'); socket.on('connect',()=>{socket.end();process.exit(0)}); socket.on('error',()=>process.exit(1))\""]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 3s
+
   # A plain TCP relay in front of ActiveMQ, started only by a run that needs to take the broker away
   # and bring it back. The proxy is never restarted, so the three addresses handed to the test process
   # survive a broker restart that would otherwise rebind every ephemeral port.

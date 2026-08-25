@@ -12,7 +12,10 @@ public sealed class TestConfigurationProviderTests
     private static TestConfigurationProvider ProviderWith(params (string Key, string Value)[] environment) =>
         new(
             AppContext.BaseDirectory,
-            environment.Select(entry => new KeyValuePair<string, string?>(entry.Key, entry.Value)));
+            environment
+                .GroupBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.Last())
+                .Select(entry => new KeyValuePair<string, string?>(entry.Key, entry.Value)));
 
     [Fact]
     public void CheckedInDefaults_AreBoundOntoTypedOptions()
@@ -22,8 +25,16 @@ public sealed class TestConfigurationProviderTests
 
         Assert.Equal(TestProfile.UnitArchitecture, options.Profile);
         Assert.Equal(TimeSpan.FromSeconds(30), options.OperationTimeout);
-        Assert.Equal("localhost", localInfrastructure.RabbitMqHost);
-        Assert.Equal(5672, localInfrastructure.RabbitMqPort);
+        RabbitMqLocalOptions rabbitMq = Assert.IsType<RabbitMqLocalOptions>(localInfrastructure.RabbitMq);
+        PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
+        AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
+        Assert.Equal("localhost", rabbitMq.Host);
+        Assert.Equal(5672, rabbitMq.Port);
+        Assert.Equal("localhost", postgreSql.Host);
+        Assert.Equal(5432, postgreSql.Port);
+        Assert.Equal("postgres", postgreSql.Database);
+        Assert.Equal("localhost", azureTable.Host);
+        Assert.Equal(10002, azureTable.Port);
     }
 
     [Theory]
@@ -59,13 +70,15 @@ public sealed class TestConfigurationProviderTests
     public void DoubleUnderscore_BindsNestedValuesWithoutResettingNeighbours()
     {
         var options = ProviderWith(
-            ("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "broker.internal"),
-            ("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "5673")).GetOptions();
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__Host", "broker.internal"),
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__Port", "5673")).GetOptions();
         var localInfrastructure = Assert.IsType<LocalInfrastructureOptions>(options.LocalInfrastructure);
+        RabbitMqLocalOptions rabbitMq = Assert.IsType<RabbitMqLocalOptions>(localInfrastructure.RabbitMq);
+        PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
 
-        Assert.Equal("broker.internal", localInfrastructure.RabbitMqHost);
-        Assert.Equal(5673, localInfrastructure.RabbitMqPort);
-        Assert.Equal("localhost", localInfrastructure.PostgreSqlHost);
+        Assert.Equal("broker.internal", rabbitMq.Host);
+        Assert.Equal(5673, rabbitMq.Port);
+        Assert.Equal("localhost", postgreSql.Host);
     }
 
     [Fact]
@@ -124,39 +137,87 @@ public sealed class TestConfigurationProviderTests
     }
 
     [Theory]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqHost", "", "LocalInfrastructure:RabbitMqHost")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "0", "LocalInfrastructure:RabbitMqPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65536", "LocalInfrastructure:RabbitMqPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlHost", "", "LocalInfrastructure:PostgreSqlHost")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "0", "LocalInfrastructure:PostgreSqlPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65536", "LocalInfrastructure:PostgreSqlPort")]
-    public void LocalIntegrationProfile_RejectsAnInvalidEndpoint(
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Host", "", "LocalInfrastructure:PostgreSql:Host")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Port", "0", "LocalInfrastructure:PostgreSql:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Port", "65536", "LocalInfrastructure:PostgreSql:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Database", "", "LocalInfrastructure:PostgreSql:Database")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", "", "LocalInfrastructure:PostgreSql:UserName")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", "", "LocalInfrastructure:PostgreSql:Password")]
+    public void LocalPostgreSqlSelection_RejectsAnInvalidSetting(
         string key,
         string value,
         string expectedError)
     {
         var options = ProviderWith(
             ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", "run-user"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", "run-secret"),
             (key, value)).GetOptions();
 
-        Assert.Contains(expectedError, options.ValidateFor());
+        Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.PostgreSql));
     }
 
     [Theory]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "1", "LocalInfrastructure:RabbitMqPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__RabbitMqPort", "65535", "LocalInfrastructure:RabbitMqPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "1", "LocalInfrastructure:PostgreSqlPort")]
-    [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSqlPort", "65535", "LocalInfrastructure:PostgreSqlPort")]
-    public void LocalIntegrationProfile_AcceptsPortBoundaries(
-        string key,
-        string value,
-        string errorKey)
+    [InlineData("1")]
+    [InlineData("65535")]
+    public void LocalPostgreSqlSelection_AcceptsPortBoundaries(string port)
     {
         var options = ProviderWith(
             ("VICIONE_TESTS__Profile", "LocalIntegration"),
-            (key, value)).GetOptions();
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Port", port),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", "run-user"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", "run-secret")).GetOptions();
 
-        Assert.DoesNotContain(errorKey, options.ValidateFor());
+        Assert.DoesNotContain(
+            "LocalInfrastructure:PostgreSql:Port",
+            options.ValidateForLocal(LocalTestResource.PostgreSql));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_PG_HOST", "db.internal", "db.internal")]
+    [InlineData("VICIONE_SERVICEBUS_PG_PORT", "55432", "55432")]
+    [InlineData("VICIONE_SERVICEBUS_PG_DATABASE", "journal", "journal")]
+    [InlineData("VICIONE_SERVICEBUS_PG_USER", "run-user", "run-user")]
+    [InlineData("VICIONE_SERVICEBUS_PG_PASS", "run-secret", "run-secret")]
+    public void CanonicalFixtureVariables_MapIntoTheSingleTypedConfiguration(
+        string key,
+        string value,
+        string expected)
+    {
+        PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.PostgreSql);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_PG_HOST" => postgreSql.Host!,
+            "VICIONE_SERVICEBUS_PG_PORT" => postgreSql.Port!.Value.ToString(),
+            "VICIONE_SERVICEBUS_PG_DATABASE" => postgreSql.Database!,
+            "VICIONE_SERVICEBUS_PG_USER" => postgreSql.UserName!,
+            "VICIONE_SERVICEBUS_PG_PASS" => postgreSql.Password!,
+            _ => throw new InvalidOperationException(key),
+        };
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void ExplicitPrefixedSetting_OverridesTheCanonicalFixtureProjection()
+    {
+        PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(ProviderWith(
+            ("VICIONE_SERVICEBUS_PG_HOST", "fixture.internal"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Host", "explicit.internal"))
+            .GetOptions().LocalInfrastructure?.PostgreSql);
+
+        Assert.Equal("explicit.internal", postgreSql.Host);
+    }
+
+    [Fact]
+    public void LocalSelection_RequiresTheMatchingProfileAndAResource()
+    {
+        ViciOneTestOptions unit = ProviderWith().GetOptions();
+        ViciOneTestOptions local = ProviderWith(("VICIONE_TESTS__Profile", "LocalIntegration")).GetOptions();
+
+        Assert.Contains(nameof(ViciOneTestOptions.Profile), unit.ValidateForLocal(LocalTestResource.PostgreSql));
+        Assert.Contains("LocalInfrastructure:Selection", local.ValidateForLocal());
     }
 
     [Fact]
@@ -271,8 +332,17 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["PostgreSqlHost", "PostgreSqlPort", "RabbitMqHost", "RabbitMqPort"],
+            ["AzureTable", "PostgreSql", "RabbitMq"],
             PublicPropertyNames<LocalInfrastructureOptions>());
+        Assert.Equal(
+            ["Host", "Password", "Port", "UserName"],
+            PublicPropertyNames<RabbitMqLocalOptions>());
+        Assert.Equal(
+            ["Database", "Host", "Password", "Port", "UserName"],
+            PublicPropertyNames<PostgreSqlLocalOptions>());
+        Assert.Equal(
+            ["AccountKey", "AccountName", "Host", "Port"],
+            PublicPropertyNames<AzureTableLocalOptions>());
         Assert.Equal(
             ["Aws", "Azure"],
             PublicPropertyNames<ExternalProviderOptions>());
@@ -284,9 +354,25 @@ public sealed class TestConfigurationProviderTests
             PublicPropertyNames<AwsProviderOptions>());
         Assert.Empty(PublicFields<ViciOneTestOptions>());
         Assert.Empty(PublicFields<LocalInfrastructureOptions>());
+        Assert.Empty(PublicFields<RabbitMqLocalOptions>());
+        Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
+        Assert.Empty(PublicFields<AzureTableLocalOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
         Assert.Empty(PublicFields<AwsProviderOptions>());
         Assert.Empty(PublicFields<ExternalProviderOptions>());
+    }
+
+    [Fact]
+    public void GetValidatedLocalOptions_FailsBeforeExecutionWithoutCredentials()
+    {
+        var provider = ProviderWith(("VICIONE_TESTS__Profile", "LocalIntegration"));
+
+        var failure = Assert.Throws<InvalidOperationException>(
+            () => provider.GetValidatedLocalOptions(LocalTestResource.PostgreSql));
+
+        Assert.Contains("LocalInfrastructure:PostgreSql:UserName", failure.Message);
+        Assert.Contains("LocalInfrastructure:PostgreSql:Password", failure.Message);
+        Assert.Contains("Never commit credentials", failure.Message);
     }
 
     [Fact]

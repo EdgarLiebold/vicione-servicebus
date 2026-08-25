@@ -184,30 +184,24 @@ retained adapter tests, exact observer and supervisor-state assertions, one-caus
 delay mutations, public-API/package comparison, zero-warning Release builds and every applicable
 unfiltered native profile.
 
-## Decide the inherited message-audit feature boundary before migration
-
-The inherited `IMessageAuditStore` feature observes sent, published and consumed messages and can
-persist message payloads and transport metadata through EF Core or Azure Table. That is a useful
-message-journal/capture capability, but its current `Audit` name collides with the Suite architecture:
-Suite operational and security audit has one authoritative structured journald/syslog path and must
-not acquire a second database-backed audit history.
-
-Do not remove the useful ServiceBus capability and do not migrate its inherited tests under the
-ambiguous name. The PO and Lead Architect must first decide its product role, naming, default-off
-behavior, payload/security boundary and relationship to the Suite's journald audit. A likely A+
-direction is an explicitly optional message-journal feature that is never the Suite audit owner,
-but this remains a material product decision.
-
-After that decision, read the complete observer, filtering, metadata, EF Core and Azure Table owner
-graphs; retain provider capabilities selected for the ServiceBus; use clear greenfield API and
-namespace names; and prove payload/metadata fidelity, filtering, observer failure semantics,
-security/redaction, provider persistence and lifecycle without claiming a second Suite audit log.
-
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in
 [`benchmarks/ToDo.md`](benchmarks/ToDo.md). Complete them only with their real infrastructure and do
 not replace them with inventory-only or skipped green results.
+
+## Complete MessageJournal external provider validation
+
+The current provider contract is covered hermetically and against ephemeral PostgreSQL and Azurite
+instances. Before release, run the same bounded append, retention, concurrency, failure-isolation
+and public-composition contract against short-lived real SQL Server, Azure SQL and Azure Table
+resources in the `External` profile. Do not represent an emulator result as proof of a cloud
+service's transaction, concurrency or storage-limit behavior, and do not weaken the provider set to
+avoid external infrastructure.
+
+Acceptance requires unfiltered native xUnit/MTP execution, zero skips, isolated per-run resources,
+secret-free durable evidence, exact resource cleanup and a documented disposition of every semantic
+difference from the local PostgreSQL/Azurite results.
 
 ## Finalize solution composition after native-test promotion
 

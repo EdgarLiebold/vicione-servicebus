@@ -1996,5 +1996,187 @@
       "testMethod" : "HandlerFault_DiscardsItsDeferredResponseBeforePublishingTheRequestFault",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.InMemoryOutboxFaultTests",
       "variantKey" : "discard-response-before-fault"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-BOUNDS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StoreLimits_RejectEveryNonPositiveBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "non-positive-store-limits-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-BOUNDS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StoreLimits_RejectInfiniteRetention",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "infinite-retention-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Options_RejectNonPositiveWriteTimeout",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "non-positive-write-timeout-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Options_PreserveTheExplicitFiniteTimeoutAndClock",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "finite-timeout-and-clock-preserved"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-SNAPSHOT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Projection_DetachesEveryCallerOwnedInput",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "projection-detaches-caller-owned-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-CLASSIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Projection_RejectsAnUndefinedDataClassification",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "undefined-classification-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-SANITIZATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Policy_IsTheOnlyBoundaryBetweenRawCaptureAndStoredEntry",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "raw-data-never-reaches-store"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NullProjection_FiltersTheObservationWithoutCallingTheStore",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "null-projection-excludes-observation"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-BOUNDS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "OversizedSanitizedEntry_IsRejectedBeforePersistence",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "oversized-entry-fails-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CapturePolicyAndStoreFailures_NeverEscapeTheJournalBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "capture-policy-and-store-failures-are-contained"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CallerCancellation_IsObservedWithoutEscapingOrPersisting",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "caller-cancellation-is-contained"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ProviderTimeout_UsesTheConfiguredClockAndDoesNotWaitOnWallTime",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "provider-timeout-uses-configured-clock"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-SNAPSHOT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StoredEntry_HasStableVersionSevenIdentityTimeAndDetachedContent",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "entry-identity-time-and-content-are-stable"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-ACTIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "WithoutExplicitConnection_TheJournalPerformsNoWork",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "default-off-has-no-observer-or-store-work"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-ACTIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExplicitOutgoingConnection_RecordsSendAndPublishTerminalEnvelopesExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "explicit-outgoing-connection"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OUTCOME",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumeJournal_RecordsTheExactTerminalSuccessAndFaultOutcomes",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "consume-success-and-fault-are-terminal"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StoreFailure_DoesNotChangeASuccessfulMessageDelivery",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "store-failure-does-not-change-delivery"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OUTBOX",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InMemoryOutbox_RecordsTheDeferredMessageEnvelopeInsteadOfAnInternalWrapper",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "deferred-message-uses-real-envelope-identity"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-ACTIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConnectionHandle_DisconnectsEverySelectedJournalObserver",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalIntegrationTests",
+      "variantKey" : "disconnect-removes-all-journal-observers"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-ACTIVATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConnectionFailure_RollsBackEveryEarlierObserverAndPreservesTheOriginalFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.MessageJournalConfigurationTests",
+      "variantKey" : "connection-failure-rolls-back-prior-observers"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StoredFilteredAndFailedWrites_EmitOnlyTheExactLowCardinalitySchema",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests",
+      "variantKey" : "exact-low-cardinality-otel-schema"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingOpenTelemetryListeners_CannotChangeStorageOrEscapeTheWriter",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalTelemetryTests",
+      "variantKey" : "throwing-listener-cannot-change-journal-semantics"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-CONTRACT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Options_RejectAWriteTimeoutTheRuntimeTimerCannotRepresent",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalContractTests",
+      "variantKey" : "unsupported-timer-delay-rejected-at-composition"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-SNAPSHOT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CaptureProjectionAndEntry_DoNotExposeMutableBodyBackingStorage",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "no-body-stage-exposes-mutable-backing-storage"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-BOUNDS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EscapedJsonContent_IsCountedBeforeTheStoreLimitIsApplied",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "escaped-json-content-counted-before-persistence"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingTimeProvider_CannotEscapeTheJournalBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
+      "variantKey" : "clock-failure-is-contained"
    }
 ]
