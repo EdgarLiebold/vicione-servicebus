@@ -27,6 +27,22 @@ public sealed class RabbitMqBusTopologyTests
         AssertDestinationUsesConfiguredHost(namedDestination, hostConfiguration.HostAddress);
         AssertDestinationUsesConfiguredHost(typedDestination, hostConfiguration.HostAddress);
         Assert.Equal("orders", new RabbitMqEndpointAddress(hostConfiguration.HostAddress, namedDestination).Name);
+        var typedEndpoint = new RabbitMqEndpointAddress(hostConfiguration.HostAddress, typedDestination);
+        Assert.False(typedEndpoint.Durable);
+        Assert.True(typedEndpoint.AutoDelete);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "topology-treats-exchange-name-as-data")]
+    public void NamedDestination_RejectsUriSyntaxInsteadOfInterpretingItAsConfiguration()
+    {
+        var topologyConfiguration = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topologyConfiguration);
+
+        var exception = Assert.Throws<RabbitMqAddressException>(
+            () => busConfiguration.HostConfiguration.Topology.GetDestinationAddress("orders?temporary=true"));
+
+        Assert.Contains("entity name", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void AssertDestinationUsesConfiguredHost(Uri destination, Uri configuredHost)

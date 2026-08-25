@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
         public Uri GetDestinationAddress(string exchangeName, Action<IRabbitMqExchangeConfigurator> configure = null)
         {
             var hostAddress = _hostConfiguration.HostAddress;
-            var address = new RabbitMqEndpointAddress(hostAddress, new Uri($"exchange:{exchangeName}"));
+            var address = new RabbitMqEndpointAddress(hostAddress, exchangeName);
 
             var sendSettings = new RabbitMqSendSettings(address);
 
@@ -52,7 +52,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
             var hostAddress = _hostConfiguration.HostAddress;
             var exchangeName = _messageNameFormatter.GetMessageName(messageType).ToString();
             var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);
-            var address = new RabbitMqEndpointAddress(hostAddress, new Uri($"exchange:{exchangeName}?temporary={isTemporary}"));
+            var address = new RabbitMqEndpointAddress(
+                hostAddress,
+                exchangeName,
+                durable: !isTemporary,
+                autoDelete: isTemporary);
 
             var settings = new RabbitMqSendSettings(address);
 

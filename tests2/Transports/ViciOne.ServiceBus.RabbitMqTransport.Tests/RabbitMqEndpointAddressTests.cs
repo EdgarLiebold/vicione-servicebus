@@ -31,6 +31,7 @@ public sealed class RabbitMqEndpointAddressTests
 
     [Theory]
     [InlineData("queue:input-queue", true, "input-queue", "rabbitmq://localhost/test/input-queue?bind=true")]
+    [InlineData("queue:orders.%C3%A4", true, "orders.ä", "rabbitmq://localhost/test/orders.ä?bind=true")]
     [InlineData("exchange:input-queue", false, "input-queue", "rabbitmq://localhost/test/input-queue")]
     [InlineData("exchange:orders.%C3%A4", false, "orders.ä", "rabbitmq://localhost/test/orders.ä")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-ENDPOINT-ADDRESS", "short-address-resolution")]
