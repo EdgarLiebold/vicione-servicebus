@@ -2178,5 +2178,187 @@
       "testMethod" : "ThrowingTimeProvider_CannotEscapeTheJournalBoundary",
       "testType" : "ViciOne.ServiceBus.Tests.MessageJournal.MessageJournalWriterTests",
       "variantKey" : "clock-failure-is-contained"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-SCHEMA",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublicTelemetryIdentity_IsOneStableDotnetSource",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.ServiceBusTelemetryTests",
+      "variantKey" : "one-stable-dotnet-telemetry-identity"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-API",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublicApi_ExposesFixedOtelActivationAndNoParallelTelemetrySystem",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.ServiceBusTelemetryTests",
+      "variantKey" : "fixed-schema-without-parallel-telemetry-api"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-SCHEMA",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MetricNames_UseTheApprovedOtelAndViciOneNamespaces",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.ServiceBusTelemetryTests",
+      "variantKey" : "otel-messaging-instrument-identities"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-INSTRUMENTS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BareContainer_PublishesTheExactInstrumentContractThroughItsOwnFactory",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "exact-types-units-descriptions-and-version"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-SCHEMA",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MessagingSystemNormalizer_MapsEverySupportedTransportIdentityToTheFixedSchema",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.ServiceBusTelemetryTests",
+      "variantKey" : "all-supported-transport-identities-normalize-to-bounded-values"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SuccessfulMessage_EmitsSendReceiveAndProcessMetricsWithOnlyBoundedTags",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "successful-send-receive-process-exact-tags"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerClassification_UsesTheExplicitAdapterContractInsteadOfTypeNames",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "processor-kind-uses-explicit-semantic-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FaultedHandler_RecordsTheFullyQualifiedErrorTypeOnItsDuration",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "fault-uses-fully-qualified-error-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FaultedSend_RecordsTheAttemptAndItsFullyQualifiedErrorType",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "failed-send-remains-an-attempt-with-exact-error-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RetriedHandler_EmitsOneRetryMeasurementAndTwoProcessingDurations",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "retry-counted-on-the-retried-attempt"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-TIME",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ProcessingDuration_UsesTheContextTimeProviderInsteadOfWallClockTime",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "duration-uses-context-time-provider"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-METRICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ActiveOperations_BracketTheActualProcessingLifetime",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "active-processing-brackets-the-real-operation-lifetime"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingMeterListener_CannotChangeSuccessfulMessageDelivery",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "throwing-listener-cannot-change-message-flow"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ApplicationMeterFactory_IsPreservedAndItsFailureCannotPreventDelivery",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "application-meter-factory-preserved-and-failure-contained"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedMeterFactory_CannotLeakMeasurementsIntoAnEarlierProvider",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "failed-factory-cannot-reuse-prior-provider-scope"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "IndependentServiceProviders_EmitOnlyThroughTheirOwnMeterFactories",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "independent-providers-have-independent-meter-scopes"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DisposingOneProvider_DoesNotDisableAnotherProvidersMetrics",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "disposing-one-provider-does-not-disable-another"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MultipleBusesInOneProvider_EmitThroughTheSameMeterFactory",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "multiple-buses-share-provider-meter-factory"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MultipleBusRegistrations_AddExactlyOneMeterFactory",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "registration-is-idempotent-across-bus-entry-points"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-NON-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExplicitNonDiActivation_EmitsThroughItsOwnProcessMeter",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "explicit-activation-emits-through-process-meter"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DependencyInjectionAndExplicitActivation_UseIndependentMeterScopes",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "di-and-explicit-non-di-meter-scopes-remain-independent"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-NON-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "UnboundLogContext_CannotReachTheExplicitNonDiMeter",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "unbound-log-context-cannot-reach-fallback-meter"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ApplicationOwnedLogContext_IsNeverBoundToAProviderMeterScope",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "application-log-context-remains-unbound-to-provider-scopes"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-OUTBOX",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InMemoryOutbox_EmitsDistinctEnqueueAndDeliveryOutcomes",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "enqueue-and-deliver-have-distinct-bounded-outcomes"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-OUTBOX",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MetricOperation_CompletesOnceAndPreservesTheFirstObservedException",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "metric-operation-is-idempotent-and-first-failure-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-OBSERVABILITY-OUTBOX",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InMemoryOutbox_DeliveryFailurePreservesTheSuccessfulEnqueueOutcome",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "variantKey" : "delivery-failure-does-not-rewrite-successful-enqueue"
    }
 ]

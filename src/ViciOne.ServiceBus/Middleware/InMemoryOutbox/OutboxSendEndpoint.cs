@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Logging;
     using Transports;
 
 
@@ -41,52 +42,87 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
 
         Task ISendEndpoint.Send<T>(T message, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, cancellationToken));
+            return Defer(() => _endpoint.Send(message, cancellationToken));
         }
 
         Task ISendEndpoint.Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
         }
 
         Task ISendEndpoint.Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
         }
 
         Task ISendEndpoint.Send(object message, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, cancellationToken));
+            return Defer(() => _endpoint.Send(message, cancellationToken));
         }
 
         Task ISendEndpoint.Send(object message, Type messageType, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, messageType, cancellationToken));
+            return Defer(() => _endpoint.Send(message, messageType, cancellationToken));
         }
 
         Task ISendEndpoint.Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
         }
 
         Task ISendEndpoint.Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(message, messageType, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send(message, messageType, pipe, cancellationToken));
         }
 
         Task ISendEndpoint.Send<T>(object values, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send<T>(values, cancellationToken));
+            return Defer(() => _endpoint.Send<T>(values, cancellationToken));
         }
 
         Task ISendEndpoint.Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send(values, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send(values, pipe, cancellationToken));
         }
 
         Task ISendEndpoint.Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
-            return _outboxContext.Add(() => _endpoint.Send<T>(values, pipe, cancellationToken));
+            return Defer(() => _endpoint.Send<T>(values, pipe, cancellationToken));
+        }
+
+        Task Defer(Func<Task> send)
+        {
+            var enqueue = LogContext.Current?.StartOutboxEnqueueInstrument();
+            try
+            {
+                Task pendingDelivery = _outboxContext.Add(() => Deliver(send));
+                enqueue?.Complete();
+                return pendingDelivery;
+            }
+            catch (Exception exception)
+            {
+                enqueue?.RecordException(exception);
+                enqueue?.Complete();
+                throw;
+            }
+        }
+
+        static async Task Deliver(Func<Task> send)
+        {
+            var delivery = LogContext.Current?.StartOutboxDeliveryInstrument();
+            try
+            {
+                await send().ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                delivery?.RecordException(exception);
+                throw;
+            }
+            finally
+            {
+                delivery?.Complete();
+            }
         }
     }
 }

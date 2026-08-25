@@ -265,7 +265,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                         var endpoint = await _busControl.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
 
                         StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                        StartedInstrument? instrument = LogContext.Current?.StartOutboxDeliveryInstrument(message);
+                        var instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
 
                         try
                         {
@@ -274,13 +274,13 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                         catch (Exception ex)
                         {
                             activity?.AddExceptionEvent(ex);
-                            instrument?.AddException(ex);
+                            instrument?.RecordException(ex);
                             throw;
                         }
                         finally
                         {
                             activity?.Stop();
-                            instrument?.Stop();
+                            instrument?.Complete();
                         }
 
                         sentSequenceNumber = message.SequenceNumber;

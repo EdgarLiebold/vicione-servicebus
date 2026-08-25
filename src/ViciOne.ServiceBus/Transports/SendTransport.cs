@@ -88,7 +88,7 @@ namespace ViciOne.ServiceBus.Transports
                     return;
 
                 StartedActivity? activity = LogContext.Current?.StartSendActivity(_sendTransportContext, sendContext);
-                StartedInstrument? instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);
+                var instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);
                 try
                 {
                     if (_sendTransportContext.SendObservers.Count > 0)
@@ -110,14 +110,14 @@ namespace ViciOne.ServiceBus.Transports
                         await _sendTransportContext.SendObservers.SendFault(sendContext, ex).ConfigureAwait(false);
 
                     activity?.AddExceptionEvent(ex);
-                    instrument?.AddException(ex);
+                    instrument?.RecordException(ex);
 
                     throw;
                 }
                 finally
                 {
                     activity?.Stop();
-                    instrument?.Stop();
+                    instrument?.Complete();
                 }
             }
 

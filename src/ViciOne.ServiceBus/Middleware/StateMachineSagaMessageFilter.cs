@@ -52,7 +52,7 @@ namespace ViciOne.ServiceBus.Middleware
                 new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage>(_machine, context, context, _event);
 
             StartedActivity? activity = LogContext.Current?.StartSagaStateMachineActivity(behaviorContext);
-            StartedInstrument? instrument = LogContext.Current?.StartSagaStateMachineInstrument(behaviorContext);
+            var instrument = LogContext.Current?.StartSagaStateMachineInstrument(behaviorContext);
 
             try
             {
@@ -76,14 +76,14 @@ namespace ViciOne.ServiceBus.Middleware
                     context.CorrelationId ?? Guid.Empty, currentState.Name, ex);
 
                 activity?.AddExceptionEvent(stateMachineException);
-                instrument?.AddException(ex);
+                instrument?.RecordException(ex);
 
                 throw stateMachineException;
             }
             catch (Exception exception)
             {
                 activity?.AddExceptionEvent(exception);
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw;
             }
@@ -101,7 +101,7 @@ namespace ViciOne.ServiceBus.Middleware
                     activity.Value.Stop();
                 }
 
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
     }

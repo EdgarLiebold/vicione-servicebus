@@ -123,7 +123,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                 sendContext.CancellationToken.ThrowIfCancellationRequested();
 
                 StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
-                StartedInstrument? instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
+                var instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
 
                 try
                 {
@@ -146,14 +146,14 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                         await _context.SendObservers.SendFault(sendContext, exception).ConfigureAwait(false);
 
                     activity?.AddExceptionEvent(exception);
-                    instrument?.AddException(exception);
+                    instrument?.RecordException(exception);
 
                     throw;
                 }
                 finally
                 {
                     activity?.Stop();
-                    instrument?.Stop();
+                    instrument?.Complete();
                 }
             }
 

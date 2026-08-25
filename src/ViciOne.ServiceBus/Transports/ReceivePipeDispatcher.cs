@@ -51,7 +51,7 @@ namespace ViciOne.ServiceBus.Transports
             var active = StartDispatch();
 
             StartedActivity? activity = LogContext.Current?.StartReceiveActivity(_activityName, _inputAddress, _endpointName, context);
-            StartedInstrument? instrument = LogContext.Current?.StartReceiveInstrument(context);
+            var instrument = LogContext.Current?.StartReceiveInstrument(context);
 
             try
             {
@@ -87,14 +87,14 @@ namespace ViciOne.ServiceBus.Transports
                             await receiveLockFaultedTask.ConfigureAwait(false);
 
                         activity?.AddExceptionEvent(ex);
-                        instrument?.AddException(ex);
+                        instrument?.RecordException(ex);
                     }
                     catch (Exception releaseLockException)
                     {
                         var aggregateException = new AggregateException("ReceiveLock.Faulted threw an exception", releaseLockException, ex);
 
                         activity?.AddExceptionEvent(aggregateException);
-                        instrument?.AddException(aggregateException);
+                        instrument?.RecordException(aggregateException);
 
                         throw aggregateException;
                     }
@@ -102,7 +102,7 @@ namespace ViciOne.ServiceBus.Transports
                 else
                 {
                     activity?.AddExceptionEvent(ex);
-                    instrument?.AddException(ex);
+                    instrument?.RecordException(ex);
                 }
 
                 throw;
@@ -110,7 +110,7 @@ namespace ViciOne.ServiceBus.Transports
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
 
                 await active.Complete().ConfigureAwait(false);
             }

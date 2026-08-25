@@ -176,9 +176,6 @@ namespace ViciOne.ServiceBus
             // standard metric core here is idempotent and does not replace a factory an application registered
             // itself, so the core does not silently expect the application bootstrap to do it.
             collection.AddMetrics();
-
-            collection.AddOptions<InstrumentationOptions>();
-            collection.AddSingleton<IConfigureOptions<InstrumentationOptions>, ConfigureDefaultInstrumentationOptions>();
         }
 
         static void AddHostedService(IServiceCollection collection)

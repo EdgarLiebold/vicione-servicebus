@@ -181,7 +181,7 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
                 return;
 
             StartedActivity? activity = LogContext.Current?.StartOutboxSendActivity(context);
-            StartedInstrument? instrument = LogContext.Current?.StartOutboxSendInstrument(context);
+            var instrument = LogContext.Current?.StartOutboxEnqueueInstrument();
             try
             {
                 await _context.AddSend(context).ConfigureAwait(false);
@@ -190,13 +190,13 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
             catch (Exception ex)
             {
                 activity?.AddExceptionEvent(ex);
-                instrument?.AddException(ex);
+                instrument?.RecordException(ex);
                 throw;
             }
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
 

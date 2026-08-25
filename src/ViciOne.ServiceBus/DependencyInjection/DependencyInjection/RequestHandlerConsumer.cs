@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     using System.Threading.Tasks;
 
 
+    [HandlerConsumerAdapter]
     public class RequestHandlerConsumer<TMessage, TResponse> :
         IConsumer<TMessage>
         where TMessage : class
@@ -26,6 +27,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     }
 
 
+    [HandlerConsumerAdapter]
     public class RequestHandlerConsumer<TMessage, T1, TResponse> :
         IConsumer<TMessage>
         where TMessage : class
@@ -51,6 +53,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     }
 
 
+    [HandlerConsumerAdapter]
     public class RequestHandlerConsumer<TMessage, T1, T2, TResponse> :
         IConsumer<TMessage>
         where TMessage : class
@@ -79,6 +82,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     }
 
 
+    [HandlerConsumerAdapter]
     public class RequestHandlerConsumer<TMessage, T1, T2, T3, TResponse> :
         IConsumer<TMessage>
         where TMessage : class

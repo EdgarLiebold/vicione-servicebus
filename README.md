@@ -59,7 +59,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1557 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 1584 \
   --max-parallel-test-modules 1
 ```
 
@@ -75,6 +75,17 @@ assembly-specific configuration name.
 [docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
 and migration contract. Bounded work deliberately deferred from the active slice is visible in
 [TODO.md](TODO.md); it is not a second architecture or feature catalog.
+
+## Observability
+
+ViciOne.ServiceBus emits one bounded OpenTelemetry schema through the built-in .NET `Meter` and
+`ActivitySource` APIs. Dependency-injection registrations activate metrics automatically without
+replacing an application-owned `IMeterFactory`; non-DI configurations opt in with
+`UseInstrumentation()`. The application remains the sole owner of exporters and sampling.
+
+[docs/observability.md](docs/observability.md) defines the stable source names, instruments,
+attributes, activation paths and isolation guarantees. StatsD, Windows performance counters and
+freely extensible metric-tag dictionaries are deliberately not parallel telemetry surfaces.
 
 ## Scope
 

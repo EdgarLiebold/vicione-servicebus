@@ -7,10 +7,10 @@ using Xunit;
 public sealed class RequirementCoverageProjectionTests
 {
     private const string ProjectionResourceName =
-        "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Requirements.EntityFrameworkMessageJournalRequirements.json";
+        "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Requirements.EntityFrameworkRequirements.json";
 
     [Fact]
-    public void EntityFrameworkMessageJournalRequirements_MatchCompiledRequirementMetadata()
+    public void EntityFrameworkRequirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;
         using Stream projection = assembly.GetManifestResourceStream(ProjectionResourceName)

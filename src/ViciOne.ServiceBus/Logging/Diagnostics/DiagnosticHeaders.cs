@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Logging
 {
     public static class DiagnosticHeaders
     {
-        public const string DefaultListenerName = "ViciOne.ServiceBus";
+        public const string DefaultListenerName = Monitoring.ServiceBusTelemetry.ActivitySourceName;
 
         public const string DiagnosticId = "Diagnostic-Id";
         public const string ActivityId = MessageHeaders.Prefix + "Activity-Id";

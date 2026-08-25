@@ -47,7 +47,7 @@ namespace ViciOneServiceBusBenchmark
                 if (optionSet.EnableMetrics)
                 {
                     disposables.Add(Sdk.CreateMeterProviderBuilder()
-                        .AddMeter(InstrumentationOptions.MeterName)
+                        .AddMeter(ServiceBusTelemetry.MeterName)
                         .ConfigureResource(r => r.AddService("ViciOne.ServiceBus.Benchmark"))
                         .AddOtlpExporter()
                         .Build());

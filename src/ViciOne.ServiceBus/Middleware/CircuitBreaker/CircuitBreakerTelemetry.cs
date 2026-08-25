@@ -78,8 +78,8 @@ internal static class CircuitBreakerTelemetry
         public Instrumentation()
         {
             string? version = HostMetadataCache.Host.ViciOneServiceBusVersion;
-            _meter = new Meter(InstrumentationOptions.MeterName, version);
-            ActivitySource = new ActivitySource(InstrumentationOptions.MeterName, version);
+            _meter = new Meter(ServiceBusTelemetry.MeterName, version);
+            ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
             StateTransitions = _meter.CreateCounter<long>("vicione.servicebus.circuit_breaker.state_transitions");
             Probes = _meter.CreateCounter<long>("vicione.servicebus.circuit_breaker.probes");
             Rejections = _meter.CreateCounter<long>("vicione.servicebus.circuit_breaker.rejections");

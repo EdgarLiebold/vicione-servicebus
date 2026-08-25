@@ -36,7 +36,7 @@ internal static class MessageJournalTelemetry
             TagList tags = CreateTags(operation, outcome, "failed");
             tags.Add("message_journal.failure.reason", reason);
             Instruments.Value.Operations.Add(1, tags);
-            Instruments.Value.Duration.Record(duration.TotalMilliseconds, tags);
+            Instruments.Value.Duration.Record(duration.TotalSeconds, tags);
 
             using Activity? activity = Instruments.Value.ActivitySource.StartActivity(
                 "ViciOne.ServiceBus.MessageJournal.Write",
@@ -59,7 +59,7 @@ internal static class MessageJournalTelemetry
         {
             TagList tags = CreateTags(operation, outcome, result);
             Instruments.Value.Operations.Add(1, tags);
-            Instruments.Value.Duration.Record(duration.TotalMilliseconds, tags);
+            Instruments.Value.Duration.Record(duration.TotalSeconds, tags);
 
             using Activity? activity = Instruments.Value.ActivitySource.StartActivity(
                 "ViciOne.ServiceBus.MessageJournal.Write",
@@ -100,12 +100,12 @@ internal static class MessageJournalTelemetry
         public Instrumentation()
         {
             string? version = HostMetadataCache.Host.ViciOneServiceBusVersion;
-            _meter = new Meter(InstrumentationOptions.MeterName, version);
-            ActivitySource = new ActivitySource(InstrumentationOptions.MeterName, version);
+            _meter = new Meter(ServiceBusTelemetry.MeterName, version);
+            ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
             Operations = _meter.CreateCounter<long>("vicione.servicebus.message_journal.operations");
             Duration = _meter.CreateHistogram<double>(
                 "vicione.servicebus.message_journal.duration",
-                "ms",
+                "s",
                 "Time spent projecting and storing a message-journal observation");
         }
 

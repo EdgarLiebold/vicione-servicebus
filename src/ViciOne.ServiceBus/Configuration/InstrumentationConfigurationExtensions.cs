@@ -1,34 +1,19 @@
-namespace ViciOne.ServiceBus
+#nullable enable
+namespace ViciOne.ServiceBus;
+
+using System;
+using Logging;
+
+public static class InstrumentationConfigurationExtensions
 {
-    using System;
-    using Logging;
-    using Monitoring;
-
-
-    public static class InstrumentationConfigurationExtensions
+    /// <summary>
+    /// Enables the built-in <see cref="System.Diagnostics.Metrics.Meter" /> instrumentation for
+    /// configurations that do not use dependency injection. Applications choose their exporter
+    /// through OpenTelemetry; the service bus exposes one stable, bounded telemetry schema.
+    /// </summary>
+    public static void UseInstrumentation(this IBusFactoryConfigurator configurator)
     {
-        /// <summary>
-        /// Enables instrumentation using the built-in .NET Meter class, which can be collected by OpenTelemetry.
-        /// See https://docs.microsoft.com/en-us/dotnet/core/diagnostics/metrics for details.
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="configureOptions"></param>
-        /// <param name="serviceName">
-        /// The service name for metrics reporting, defaults to the current process main module filename
-        /// </param>
-        public static void UseInstrumentation(this IBusFactoryConfigurator configurator, Action<InstrumentationOptions> configureOptions = null,
-            string serviceName = default)
-        {
-            var options = new InstrumentationOptions();
-            var configureDefault = new ConfigureDefaultInstrumentationOptions();
-
-            configureDefault.Configure(options);
-            configureOptions?.Invoke(options);
-
-            if (!string.IsNullOrWhiteSpace(serviceName))
-                options.ServiceName = serviceName;
-
-            LogContextInstrumentationExtensions.TryConfigure(options);
-        }
+        ArgumentNullException.ThrowIfNull(configurator);
+        LogContextInstrumentationExtensions.TryConfigure();
     }
 }

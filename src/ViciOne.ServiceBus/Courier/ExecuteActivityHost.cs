@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.Courier
             var timer = Stopwatch.StartNew();
 
             StartedActivity? activity = LogContext.Current?.StartExecuteActivity<TActivity, TArguments>(context);
-            StartedInstrument? instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context, timer);
+            var instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context);
 
             try
             {
@@ -52,7 +52,7 @@ namespace ViciOne.ServiceBus.Courier
                     await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
                     activity?.AddExceptionEvent(exception);
-                    instrument?.AddException(exception);
+                    instrument?.RecordException(exception);
 
                     await executeContext.Result.Evaluate().ConfigureAwait(false);
                 }
@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.Courier
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw new ConsumerCanceledException($"The operation was canceled by the activity: {TypeCache<TActivity>.ShortName}");
             }
@@ -78,14 +78,14 @@ namespace ViciOne.ServiceBus.Courier
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw;
             }
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
 

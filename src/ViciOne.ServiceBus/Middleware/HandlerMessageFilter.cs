@@ -37,7 +37,7 @@ namespace ViciOne.ServiceBus.Middleware
         {
             var timer = Stopwatch.StartNew();
             StartedActivity? activity = LogContext.Current?.StartHandlerActivity(context);
-            StartedInstrument? instrument = LogContext.Current?.StartHandlerInstrument(context, timer);
+            var instrument = LogContext.Current?.StartHandlerInstrument(context);
 
             try
             {
@@ -56,7 +56,7 @@ namespace ViciOne.ServiceBus.Middleware
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<MessageHandler<TMessage>>.ShortName}");
             }
@@ -65,7 +65,7 @@ namespace ViciOne.ServiceBus.Middleware
                 await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
 
                 activity?.AddExceptionEvent(ex);
-                instrument?.AddException(ex);
+                instrument?.RecordException(ex);
 
                 Interlocked.Increment(ref _faulted);
                 throw;
@@ -73,7 +73,7 @@ namespace ViciOne.ServiceBus.Middleware
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
     }

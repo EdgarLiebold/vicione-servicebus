@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1949 |
-| Modified | 4299 |
-| Deleted | 1349 |
+| Added | 1956 |
+| Modified | 4265 |
+| Deleted | 1383 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -167,6 +167,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/expected/signalr.txt` | Added |  |
 | `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
+| `docs/observability.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
 | `evidence/RAW_RUN_ARTIFACT_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/environment/ENVIRONMENT.json` | Added |  |
@@ -1185,6 +1186,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` | Deleted | `src/MassTransit/Configuration/DependencyInjection/UsageTelemetryOptionsExtensions.cs` |
 | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` | Deleted | `src/MassTransit/Configuration/HostedServiceConfigurationExtensions.cs` |
 | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` | Deleted | `src/MassTransit/Configuration/ICircuitBreakerConfigurator.cs` |
+| `src/MassTransit/Configuration/PerformanceCounterExtensions.cs` | Deleted | `src/MassTransit/Configuration/PerformanceCounterExtensions.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/LegacySetScopedConsumeContext.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistration.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ActivityRegistrationConfigurator.cs` |
@@ -1202,12 +1204,42 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/Licensing/LicenseFile.cs` | Deleted | `src/MassTransit/Licensing/LicenseFile.cs` |
 | `src/MassTransit/Licensing/LicenseReader.cs` | Deleted | `src/MassTransit/Licensing/LicenseReader.cs` |
 | `src/MassTransit/Licensing/LicenseSettings.cs` | Deleted | `src/MassTransit/Licensing/LicenseSettings.cs` |
+| `src/MassTransit/Logging/MetricsContext.cs` | Deleted | `src/MassTransit/Logging/MetricsContext.cs` |
+| `src/MassTransit/Logging/MetricsContextExtensions.cs` | Deleted | `src/MassTransit/Logging/MetricsContextExtensions.cs` |
+| `src/MassTransit/Logging/Monitoring/StartedInstrument.cs` | Deleted | `src/MassTransit/Logging/Monitoring/StartedInstrument.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerEventExtensions.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerState.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/CircuitBreakerState.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/ClosedBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/ClosedBehavior.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/HalfOpenBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/HalfOpenBehavior.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/ICircuitBreaker.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/ICircuitBreaker.cs` |
 | `src/MassTransit/Middleware/CircuitBreaker/OpenBehavior.cs` | Deleted | `src/MassTransit/Middleware/CircuitBreaker/OpenBehavior.cs` |
+| `src/MassTransit/Monitoring/ConfigureDefaultInstrumentationOptions.cs` | Deleted | `src/MassTransit/Monitoring/ConfigureDefaultInstrumentationOptions.cs` |
+| `src/MassTransit/Monitoring/InstrumentationOptions.cs` | Deleted | `src/MassTransit/Monitoring/InstrumentationOptions.cs` |
+| `src/MassTransit/Monitoring/Performance/BasePerformanceCounters.cs` | Deleted | `src/MassTransit/Monitoring/Performance/BasePerformanceCounters.cs` |
+| `src/MassTransit/Monitoring/Performance/BuiltInCounters.cs` | Deleted | `src/MassTransit/Monitoring/Performance/BuiltInCounters.cs` |
+| `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounterCache.cs` | Deleted | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounterCache.cs` |
+| `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounters.cs` | Deleted | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounters.cs` |
+| `src/MassTransit/Monitoring/Performance/CounterData.cs` | Deleted | `src/MassTransit/Monitoring/Performance/CounterData.cs` |
+| `src/MassTransit/Monitoring/Performance/CreateCounterDelegate.cs` | Deleted | `src/MassTransit/Monitoring/Performance/CreateCounterDelegate.cs` |
+| `src/MassTransit/Monitoring/Performance/IConsumerPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/IConsumerPerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/ICounterFactory.cs` | Deleted | `src/MassTransit/Monitoring/Performance/ICounterFactory.cs` |
+| `src/MassTransit/Monitoring/Performance/IMessagePerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/IMessagePerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/IPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/IPerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/IPerformanceCounterInstaller.cs` | Deleted | `src/MassTransit/Monitoring/Performance/IPerformanceCounterInstaller.cs` |
+| `src/MassTransit/Monitoring/Performance/ISendPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/ISendPerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/MessagePerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/MessagePerformanceCounterCache.cs` | Deleted | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounterCache.cs` |
+| `src/MassTransit/Monitoring/Performance/MessagePerformanceCounters.cs` | Deleted | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounters.cs` |
+| `src/MassTransit/Monitoring/Performance/Null/NullCounterFactory.cs` | Deleted | `src/MassTransit/Monitoring/Performance/Null/NullCounterFactory.cs` |
+| `src/MassTransit/Monitoring/Performance/Null/NullPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/Null/NullPerformanceCounter.cs` |
+| `src/MassTransit/Monitoring/Performance/PerformanceCounterBusObserver.cs` | Deleted | `src/MassTransit/Monitoring/Performance/PerformanceCounterBusObserver.cs` |
+| `src/MassTransit/Monitoring/Performance/PerformanceCounterPublishObserver.cs` | Deleted | `src/MassTransit/Monitoring/Performance/PerformanceCounterPublishObserver.cs` |
+| `src/MassTransit/Monitoring/Performance/PerformanceCounterReceiveObserver.cs` | Deleted | `src/MassTransit/Monitoring/Performance/PerformanceCounterReceiveObserver.cs` |
+| `src/MassTransit/Monitoring/Performance/PerformanceCounterSendObserver.cs` | Deleted | `src/MassTransit/Monitoring/Performance/PerformanceCounterSendObserver.cs` |
+| `src/MassTransit/Monitoring/Performance/StatsD/StatsDConfiguration.cs` | Deleted | `src/MassTransit/Monitoring/Performance/StatsD/StatsDConfiguration.cs` |
+| `src/MassTransit/Monitoring/Performance/StatsD/StatsDCounterFactory.cs` | Deleted | `src/MassTransit/Monitoring/Performance/StatsD/StatsDCounterFactory.cs` |
+| `src/MassTransit/Monitoring/Performance/StatsD/StatsDPerformanceCounter.cs` | Deleted | `src/MassTransit/Monitoring/Performance/StatsD/StatsDPerformanceCounter.cs` |
 | `src/MassTransit/RetryPolicies/MessageRetryPolicyExtensions.cs` | Deleted | `src/MassTransit/RetryPolicies/MessageRetryPolicyExtensions.cs` |
 | `src/MassTransit/Sagas/Configuration/ISagaMetadataCache.cs` | Deleted | `src/MassTransit/Sagas/Configuration/ISagaMetadataCache.cs` |
 | `src/MassTransit/Sagas/Configuration/SagaInterfaceType.cs` | Deleted | `src/MassTransit/Sagas/Configuration/SagaInterfaceType.cs` |
@@ -3951,7 +3983,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Configuration/ObserverRegistrationExtensions.cs` | Modified | `src/MassTransit/Configuration/ObserverRegistrationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/PartitionKeyConventionExtensions.cs` | Modified | `src/MassTransit/Configuration/PartitionKeyConventionExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/PartitionerConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/PartitionerConfigurationExtensions.cs` |
-| `src/ViciOne.ServiceBus/Configuration/PerformanceCounterExtensions.cs` | Modified | `src/MassTransit/Configuration/PerformanceCounterExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/ProgressBufferSettings.cs` | Modified | `src/MassTransit/Configuration/ProgressBufferSettings.cs` |
 | `src/ViciOne.ServiceBus/Configuration/RateLimitConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/RateLimitConfigurationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Configuration/RawJsonSerializerConfigurationExtensions.cs` | Modified | `src/MassTransit/Configuration/RawJsonSerializerConfigurationExtensions.cs` |
@@ -4200,6 +4231,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ExistingExecuteScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/ExistingExecuteScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/FilterScopeProvider.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/FilterScopeProvider.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/GenericRequestClient.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/GenericRequestClient.cs` |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/HandlerConsumerAdapterAttribute.cs` | Added |  |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/IBusInstanceBuilder.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/IBusInstanceBuilder.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/IBusInstanceBuilderCallback.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/IBusInstanceBuilderCallback.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ICompensateActivityScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/ICompensateActivityScopeContext.cs` |
@@ -4604,11 +4636,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Logging/ILogContext.cs` | Modified | `src/MassTransit/Logging/ILogContext.cs` |
 | `src/ViciOne.ServiceBus/Logging/LogCategoryName.cs` | Modified | `src/MassTransit/Logging/LogCategoryName.cs` |
 | `src/ViciOne.ServiceBus/Logging/LogMessage.cs` | Modified | `src/MassTransit/Logging/LogMessage.cs` |
-| `src/ViciOne.ServiceBus/Logging/MetricsContext.cs` | Modified | `src/MassTransit/Logging/MetricsContext.cs` |
-| `src/ViciOne.ServiceBus/Logging/MetricsContextExtensions.cs` | Modified | `src/MassTransit/Logging/MetricsContextExtensions.cs` |
 | `src/ViciOne.ServiceBus/Logging/Monitoring/LogContextInstrumentationExtensions.cs` | Modified | `src/MassTransit/Logging/Monitoring/LogContextInstrumentationExtensions.cs` |
 | `src/ViciOne.ServiceBus/Logging/Monitoring/LogContextInstrumentationState.cs` | Added |  |
-| `src/ViciOne.ServiceBus/Logging/Monitoring/StartedInstrument.cs` | Modified | `src/MassTransit/Logging/Monitoring/StartedInstrument.cs` |
+| `src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Logging/OperationName.cs` | Modified | `src/MassTransit/Logging/OperationName.cs` |
 | `src/ViciOne.ServiceBus/Logging/SagaLogExtensions.cs` | Modified | `src/MassTransit/Logging/SagaLogExtensions.cs` |
 | `src/ViciOne.ServiceBus/Logging/SingleLoggerFactory.cs` | Modified | `src/MassTransit/Logging/SingleLoggerFactory.cs` |
@@ -4856,33 +4886,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Middleware/TransportReadyFilter.cs` | Modified | `src/MassTransit/Middleware/TransportReadyFilter.cs` |
 | `src/ViciOne.ServiceBus/Monitoring/BusHealthCheck.cs` | Modified | `src/MassTransit/Monitoring/BusHealthCheck.cs` |
 | `src/ViciOne.ServiceBus/Monitoring/ConfigureBusHealthCheckServiceOptions.cs` | Modified | `src/MassTransit/Monitoring/ConfigureBusHealthCheckServiceOptions.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/ConfigureDefaultInstrumentationOptions.cs` | Modified | `src/MassTransit/Monitoring/ConfigureDefaultInstrumentationOptions.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/InstrumentationOptions.cs` | Modified | `src/MassTransit/Monitoring/InstrumentationOptions.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/BasePerformanceCounters.cs` | Modified | `src/MassTransit/Monitoring/Performance/BasePerformanceCounters.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/BuiltInCounters.cs` | Modified | `src/MassTransit/Monitoring/Performance/BuiltInCounters.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/ConsumerPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/ConsumerPerformanceCounterCache.cs` | Modified | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounterCache.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/ConsumerPerformanceCounters.cs` | Modified | `src/MassTransit/Monitoring/Performance/ConsumerPerformanceCounters.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/CounterData.cs` | Modified | `src/MassTransit/Monitoring/Performance/CounterData.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/CreateCounterDelegate.cs` | Modified | `src/MassTransit/Monitoring/Performance/CreateCounterDelegate.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/IConsumerPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/IConsumerPerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/ICounterFactory.cs` | Modified | `src/MassTransit/Monitoring/Performance/ICounterFactory.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/IMessagePerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/IMessagePerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/IPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/IPerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/IPerformanceCounterInstaller.cs` | Modified | `src/MassTransit/Monitoring/Performance/IPerformanceCounterInstaller.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/ISendPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/ISendPerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/MessagePerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/MessagePerformanceCounterCache.cs` | Modified | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounterCache.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/MessagePerformanceCounters.cs` | Modified | `src/MassTransit/Monitoring/Performance/MessagePerformanceCounters.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/Null/NullCounterFactory.cs` | Modified | `src/MassTransit/Monitoring/Performance/Null/NullCounterFactory.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/Null/NullPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/Null/NullPerformanceCounter.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/PerformanceCounterBusObserver.cs` | Modified | `src/MassTransit/Monitoring/Performance/PerformanceCounterBusObserver.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/PerformanceCounterPublishObserver.cs` | Modified | `src/MassTransit/Monitoring/Performance/PerformanceCounterPublishObserver.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/PerformanceCounterReceiveObserver.cs` | Modified | `src/MassTransit/Monitoring/Performance/PerformanceCounterReceiveObserver.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/PerformanceCounterSendObserver.cs` | Modified | `src/MassTransit/Monitoring/Performance/PerformanceCounterSendObserver.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDConfiguration.cs` | Modified | `src/MassTransit/Monitoring/Performance/StatsD/StatsDConfiguration.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDCounterFactory.cs` | Modified | `src/MassTransit/Monitoring/Performance/StatsD/StatsDCounterFactory.cs` |
-| `src/ViciOne.ServiceBus/Monitoring/Performance/StatsD/StatsDPerformanceCounter.cs` | Modified | `src/MassTransit/Monitoring/Performance/StatsD/StatsDPerformanceCounter.cs` |
+| `src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs` | Added |  |
 | `src/ViciOne.ServiceBus/NullableAttributes.cs` | Modified | `src/MassTransit/NullableAttributes.cs` |
 | `src/ViciOne.ServiceBus/PartitionKeyProvider.cs` | Modified | `src/MassTransit/PartitionKeyProvider.cs` |
 | `src/ViciOne.ServiceBus/PipeContextHandle.cs` | Modified | `src/MassTransit/PipeContextHandle.cs` |
@@ -6288,11 +6292,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
 | `tests/MassTransit.Tests/ConversationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
 | `tests/MassTransit.Tests/CorrelationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
 | `tests/MassTransit.Tests/CronExpressionTests.cs` | Deleted | `tests/MassTransit.Tests/CronExpressionTests.cs` |
 | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
 | `tests/MassTransit.Tests/DelayProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
+| `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` | Deleted | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
+| `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` | Deleted | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
 | `tests/MassTransit.Tests/Encryption/TestMessage.cs` | Deleted | `tests/MassTransit.Tests/Encryption/TestMessage.cs` |
 | `tests/MassTransit.Tests/EndpointName_Specs.cs` | Deleted | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
@@ -6446,7 +6453,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SimpleSaga.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/BusOutboxDeliveryContext_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Container_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/FutureSagaDbContextFactory.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Future_Specs.cs` | Added |  |
@@ -6903,9 +6909,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Future_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Future_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Handler_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/HealthCheck_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/InstrumentationRegistration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/MediatorFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Metrics_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/MultiBusScopeIsolation_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/RedeliveryHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/RedeliveryHeader_Specs.cs` |
@@ -6963,9 +6967,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/UriArgument_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/DelayedRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Diagnostics/StatsD_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Diagnostics/Trace_Specs.cs` | Modified | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/EmittedMetrics_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ErrorQueue_Specs.cs` | Modified | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/EventPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/EventPublish_Specs.cs` |
@@ -7236,7 +7237,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkMessageJournalRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkRequirements.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
@@ -7274,6 +7276,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
@@ -7476,6 +7480,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs` | Added |  |

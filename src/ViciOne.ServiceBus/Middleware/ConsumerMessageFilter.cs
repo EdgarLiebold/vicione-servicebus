@@ -41,7 +41,7 @@ namespace ViciOne.ServiceBus.Middleware
             var timer = Stopwatch.StartNew();
 
             StartedActivity? activity = LogContext.Current?.StartConsumerActivity<TConsumer, TMessage>(context);
-            StartedInstrument? instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context, timer);
+            var instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context);
 
             try
             {
@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus.Middleware
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<TConsumer>.ShortName}");
             }
@@ -68,14 +68,14 @@ namespace ViciOne.ServiceBus.Middleware
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw;
             }
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
     }

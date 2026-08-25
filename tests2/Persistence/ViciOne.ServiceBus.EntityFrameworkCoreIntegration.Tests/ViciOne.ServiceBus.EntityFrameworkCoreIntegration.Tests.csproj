@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Requirements/EntityFrameworkMessageJournalRequirements.json" />
+    <None Remove="Requirements/EntityFrameworkRequirements.json" />
     <EmbeddedResource
-      Include="Requirements/EntityFrameworkMessageJournalRequirements.json"
-      LogicalName="ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Requirements.EntityFrameworkMessageJournalRequirements.json" />
+      Include="Requirements/EntityFrameworkRequirements.json"
+      LogicalName="ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Requirements.EntityFrameworkRequirements.json" />
   </ItemGroup>
 
 </Project>

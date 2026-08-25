@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Courier
             var timer = Stopwatch.StartNew();
 
             StartedActivity? activity = LogContext.Current?.StartCompensateActivity<TActivity, TLog>(context);
-            StartedInstrument? instrument = LogContext.Current?.StartActivityCompensateInstrument<TActivity, TLog>(context, timer);
+            var instrument = LogContext.Current?.StartActivityCompensateInstrument<TActivity, TLog>(context);
 
             try
             {
@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus.Courier
 
                     activity?.AddExceptionEvent(exception);
 
-                    instrument?.AddException(exception);
+                    instrument?.RecordException(exception);
 
                     await compensateContext.Failed(exception).Evaluate().ConfigureAwait(false);
                 }
@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus.Courier
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw new ConsumerCanceledException($"The operation was canceled by the activity: {TypeCache<TActivity>.ShortName}");
             }
@@ -74,14 +74,14 @@ namespace ViciOne.ServiceBus.Courier
 
                 activity?.AddExceptionEvent(exception);
 
-                instrument?.AddException(exception);
+                instrument?.RecordException(exception);
 
                 throw;
             }
             finally
             {
                 activity?.Stop();
-                instrument?.Stop();
+                instrument?.Complete();
             }
         }
 

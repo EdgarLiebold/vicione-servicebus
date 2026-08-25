@@ -112,7 +112,7 @@ namespace ViciOne.ServiceBus.Middleware
                         throw new ApplicationException("Simulated Delivery Failure Requested");
 
                     StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                    StartedInstrument? instrument = LogContext.Current?.StartOutboxDeliveryInstrument(context, message);
+                    MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
                     try
                     {
                         await endpoint.Send(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
@@ -120,14 +120,14 @@ namespace ViciOne.ServiceBus.Middleware
                     catch (Exception exception)
                     {
                         activity?.AddExceptionEvent(exception);
-                        instrument?.AddException(exception);
+                        instrument?.RecordException(exception);
 
                         throw;
                     }
                     finally
                     {
                         activity?.Stop();
-                        instrument?.Stop();
+                        instrument?.Complete();
                     }
 
                     LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
