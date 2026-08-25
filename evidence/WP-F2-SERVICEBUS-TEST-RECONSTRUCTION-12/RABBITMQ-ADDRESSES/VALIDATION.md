@@ -2,8 +2,8 @@
 
 ## Frozen subject
 
-- Final technical commit: `5fd962f927c7f0fe8de0d3240f2a3129449ef41b`
-- Final technical tree: `d8f50b9995b8a457067396d49c7c4969acf0e9aa`
+- Final technical commit: `fd0d1d1d111ba2f834cf228cf804d43e17c95063`
+- Final technical tree: `0cb7bbd170328eb0d565513e6755e554c441c4bb`
 - Branch: `test/servicebus-xunit4-mtp2-a-plus-v2`
 
 The final technical commit contains every transport, test, build and documentation correction.
@@ -29,12 +29,12 @@ native xUnit 4 / MTP 2 command form.
 |---|---:|---|
 | Unit solution locked restore | exit 0; all locked graphs current | `final-locked-restore.txt` |
 | Engineering Release build | exit 0; 0 warnings; 0 errors | `final-engineering-build.txt` |
-| RabbitMQ executable, unfiltered | 107/107 passed; 0 failed; 0 skipped | `final-rabbitmq-test.json` |
-| UnitArchitecture solution, unfiltered and serial by module | 1698/1698 passed; 0 failed; 0 skipped | `final-unit-test.txt` |
+| RabbitMQ executable, unfiltered | 108/108 passed; 0 failed; 0 skipped | `final-rabbitmq-test.json` |
+| UnitArchitecture solution, unfiltered and serial by module | 1699/1699 passed; 0 failed; 0 skipped | `final-unit-test.txt` |
 | LocalIntegration with run-scoped PostgreSQL and Azurite | 17/17 passed; 0 failed; 0 skipped | `final-local-integration-test.txt` |
 | Focused Saga causal barrier | 10/10 consecutive invocations passed | command verdict |
 | Changed-file formatting and `git diff --check` | exit 0 | command verdict |
-| Generated Apache 2.0 section 4(b) change list | 7647/7647 entries matched | command verdict |
+| Generated Apache 2.0 section 4(b) change list | 7648/7648 entries matched | command verdict |
 
 The RabbitMQ cohort itself is hermetic and opens no broker, socket or container. LocalIntegration is
 the separate repository-wide required profile and uses the canonical fixture runner; it does not
@@ -48,14 +48,15 @@ stand in for address behavior.
 - TTL reaches RabbitMQ as a numeric AMQP queue argument.
 - Topology destination addresses use the final configured host for both public overloads and retain
   no temporary `localhost` snapshot. Public and formatter-produced exchange names remain data:
-  address syntax cannot silently become topology configuration.
+  address syntax cannot silently become topology configuration. Typed destinations preserve the
+  public/durable and private/temporary message-lifetime distinction.
 - Every direct-constructor entity-name input has the same character and UTF-8 byte-limit contract.
 - Telemetry waits for the exact provider-backed idle deadline and proves the just-before boundary.
 - Saga observation waits on actual consumption before reading state written during `Consume`.
 
 ## Negative proof
 
-`MUTATION_MANIFEST.md` binds 17 product mutants and one requirement-projection sabotage.
+`MUTATION_MANIFEST.md` binds 18 product mutants and one requirement-projection sabotage.
 `MUTATION_RECIPES.json` makes every edit byte-reproducible from the final technical tree: exact
 target, baseline hash, unique old/new bytes, occurrence and mutant hash. Every recipe resolves to
 its declared mutant hash. `MUTATION_EXECUTION.json` binds the exact build and native MTP argument

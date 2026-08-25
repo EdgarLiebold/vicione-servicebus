@@ -634,7 +634,7 @@ future cohorts as complete.
   counterexamples are fixed: raw query separators are retained, short names decode symmetrically,
   TTL is a numeric AMQP value, topology reads the final host configuration, and validation covers
   exchange, queue, alternate-exchange and binding inputs. Topology now treats direct and
-  formatter-produced exchange names as data rather than URI control text. Seventeen product mutants
+  formatter-produced exchange names as data rather than URI control text. Eighteen product mutants
   and one requirement-projection sabotage are killed by their owning native tests and bound with
   exact machine-readable recipes, baseline, mutant, raw-result and post-restore hashes.
 - The full Unit run exposed a pre-existing race in the TelemetryMonitor test barrier: `PostReceive`

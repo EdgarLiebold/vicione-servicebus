@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "technicalCommit": "5fd962f927c7f0fe8de0d3240f2a3129449ef41b",
-  "technicalTree": "d8f50b9995b8a457067396d49c7c4969acf0e9aa",
-  "executedAtUtc": "2026-08-25T23:20:25Z",
+  "technicalCommit": "fd0d1d1d111ba2f834cf228cf804d43e17c95063",
+  "technicalTree": "0cb7bbd170328eb0d565513e6755e554c441c4bb",
+  "executedAtUtc": "2026-08-25T23:38:37Z",
   "environment": {
     "DOTNET_ROOT": "/usr/local/share/dotnet",
     "DOTNET_MULTILEVEL_LOOKUP": "0",
@@ -13,7 +13,7 @@
   "runs": [
     {
       "id": "M01",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -30,7 +30,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqHostAddressTests.SupportedSchemes_UseTheirDefaultPortAndRoundTrip",
         "--minimum-expected-tests",
@@ -43,7 +43,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M01-default-port.json",
-      "rawResultSha256": "e63f176d75fe470b35aa29bc30c4a6712adfb8fea0a60b8214d27e9ef7b222c0",
+      "rawResultSha256": "53d2114b1a0b0e7bdb4f31c3e61367e01d0414ce9e2f226f1c52585783665e88",
       "tests": 4,
       "passed": 2,
       "failed": 2,
@@ -51,7 +51,7 @@
     },
     {
       "id": "M02",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -68,7 +68,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqHostAddressTests.EncodedVirtualHost_IsDecodedInMemoryAndEncodedInTheUri",
         "--minimum-expected-tests",
@@ -81,7 +81,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M02-virtual-host-encoding.json",
-      "rawResultSha256": "9d74d3f8e3b987b7ca7cf3b854dcd851dd9bc5a4ede0f1e15786e92383550a2c",
+      "rawResultSha256": "1c5999bc78fbc6bff2c208dc18d371e119910dc45afd4aeaf1e4a24d35397e1f",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -89,7 +89,7 @@
     },
     {
       "id": "M03",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -106,7 +106,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.RabbitMqAddressExtensionsTests.Credentials_AreDecodedWithoutTruncatingThePassword",
         "--minimum-expected-tests",
@@ -119,7 +119,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M03-credential-suffix.json",
-      "rawResultSha256": "c315b5d96c3dcc375fab1244a1363ecdb8f86ed6c85d40123f8593d3034b599b",
+      "rawResultSha256": "7108d384745fba248aa2f0e2a9c6e6526ab0981cede6d20246a59a669d3a7ab5",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -127,7 +127,7 @@
     },
     {
       "id": "M04",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -144,7 +144,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.DirectConstruction_OwnsItsBindingSnapshot",
         "--minimum-expected-tests",
@@ -157,7 +157,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M04-binding-snapshot.json",
-      "rawResultSha256": "bd5242fed6cc54530782fcb6830ebfd5af60d16050a2539f7cfa77dae2e98633",
+      "rawResultSha256": "3c54981f657ce712ca32af67e1bf207fbdd5ce1caf11a7ac26feb247195e7bf5",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -165,7 +165,7 @@
     },
     {
       "id": "M05",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -182,7 +182,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.Requirements.RequirementCoverageProjectionTests.RabbitMqAddressRequirements_MatchCompiledRequirementMetadata",
         "--minimum-expected-tests",
@@ -195,7 +195,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M05-requirement-projection-omission.json",
-      "rawResultSha256": "12250236c57392f954cf0327e3a378af0ed080c49da7ad800bd64b85a78aef31",
+      "rawResultSha256": "62278526940449b250cfd1e922c9b819828044df54bd8ac993500d39e4505303",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -203,7 +203,7 @@
     },
     {
       "id": "M06",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -220,7 +220,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.QueryValues_PreserveRawAndEncodedSeparators",
         "--minimum-expected-tests",
@@ -233,7 +233,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M06-query-truncation.json",
-      "rawResultSha256": "2ab943c737250da0f7eda70a7fd43e1a2c3cddc10619fcdb9370a2ab9b1d5245",
+      "rawResultSha256": "37e963f234c6b89321fbf998e24e7f786afa057f5f601bbd2187de6f9342e753",
       "tests": 2,
       "passed": 1,
       "failed": 1,
@@ -241,7 +241,7 @@
     },
     {
       "id": "M07",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -258,7 +258,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology.RabbitMqBusTopologyTests.DestinationAddresses_UseTheFinalConfiguredHostForBothPublicOverloads",
         "--minimum-expected-tests",
@@ -271,7 +271,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M07-topology-named-overload.json",
-      "rawResultSha256": "72a1cff5d40f004d81ba1b2e051ac082a7d98269f963c14e641ed9f5bf7df18a",
+      "rawResultSha256": "e1f4d8837033589e2c304606fdaa6e631f635a7e5224e6f43b412db6c4b86aee",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -279,7 +279,7 @@
     },
     {
       "id": "M08",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -296,7 +296,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology.RabbitMqBusTopologyTests.DestinationAddresses_UseTheFinalConfiguredHostForBothPublicOverloads",
         "--minimum-expected-tests",
@@ -309,7 +309,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M08-topology-typed-overload.json",
-      "rawResultSha256": "8dad087346cc78a4ecd9fc69b3d6f57284dec6005d75af37eacde95b6f94f9c9",
+      "rawResultSha256": "9027294ea5627cacf7c7942a8b0bc9081fc6f7c666104db547c2b3d03a9f91e2",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -317,7 +317,7 @@
     },
     {
       "id": "M09",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -334,7 +334,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.RabbitMqAddressExtensionsTests.TimeToLive_BecomesTheExactQueueArgument",
         "--minimum-expected-tests",
@@ -347,7 +347,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M09-ttl-string.json",
-      "rawResultSha256": "3b2614aaa49ebc56c3dfd4e58dc1ff1d99a9f242e4de3eb468417d2a9eccacbc",
+      "rawResultSha256": "1165090f6d0ab2e6cc2094bd599523b931205709c9d6804ac9b4c037b8a080d8",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -355,7 +355,7 @@
     },
     {
       "id": "M10",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -372,7 +372,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.ShortAddresses_ResolveAgainstTheHost",
         "--minimum-expected-tests",
@@ -385,7 +385,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M10-short-name-decoding.json",
-      "rawResultSha256": "072e2da5b47c04e741963d9dc618bfaf8e998a5816adca37a2716546c9faa1af",
+      "rawResultSha256": "f9010ee81d618bdb83d6d82551d2666b1ed11765679c5073d4f60af86bf80eb8",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -393,7 +393,7 @@
     },
     {
       "id": "M11",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -410,7 +410,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.DirectConstruction_ValidatesEveryEntityNameInput",
         "--minimum-expected-tests",
@@ -423,7 +423,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M11-direct-exchange-validation.json",
-      "rawResultSha256": "9292362f2b832f4b23e52f4f95cdd0447cab716d41b4ce577cef233f12efa15e",
+      "rawResultSha256": "8db61a423d2cd473be5783f5068d0b110942f762541572e5a8012d76d198284a",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -431,7 +431,7 @@
     },
     {
       "id": "M12",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -448,7 +448,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.DirectConstruction_ValidatesEveryEntityNameInput",
         "--minimum-expected-tests",
@@ -461,7 +461,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M12-direct-queue-validation.json",
-      "rawResultSha256": "5937b1a2f10970731b229bd22326593606aa573297365a4da9341b6d8f1888b9",
+      "rawResultSha256": "9b1b4a7bff671b7d387c6707f49fa666df0cfea98bdb838ad48683672b60fe93",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -469,7 +469,7 @@
     },
     {
       "id": "M13",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -486,7 +486,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.DirectConstruction_ValidatesEveryEntityNameInput",
         "--minimum-expected-tests",
@@ -499,7 +499,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M13-direct-alternate-validation.json",
-      "rawResultSha256": "9d6c9e1ae0d4699361e2168b230411e5ee73bfe8b8a86f2c22c529a808d3e9d6",
+      "rawResultSha256": "150a4d3ccf4b1c9358242fb072a36f59326bdd82a0f36e6414808441ec6cac0a",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -507,7 +507,7 @@
     },
     {
       "id": "M14",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -524,7 +524,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.DirectConstruction_ValidatesEveryEntityNameInput",
         "--minimum-expected-tests",
@@ -537,7 +537,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M14-direct-binding-validation.json",
-      "rawResultSha256": "456e0bcab442eaba65a97bc054d60f3e39ce8d84e9e151fa92226ae413548967",
+      "rawResultSha256": "daf389e25d3432c448cecb0578eb04762030f780b0b43d6b249da3ebe73a171b",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -545,7 +545,7 @@
     },
     {
       "id": "M15",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -562,7 +562,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
         "--filter-class",
         "ViciOne.ServiceBus.Tests.Testing.TelemetryMonitorTests",
         "--minimum-expected-tests",
@@ -575,7 +575,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M15-telemetry-half-idle-deadline.json",
-      "rawResultSha256": "eaede274477dbd420fd690cb81645cbae8fce782653a982c482cf2c8cae80bca",
+      "rawResultSha256": "c867cb962d57b4ef55338ab42541c684657c1b4131342da8ff2f8415da316b3a",
       "tests": 4,
       "passed": 1,
       "failed": 3,
@@ -583,7 +583,7 @@
     },
     {
       "id": "M16",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -600,7 +600,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology.RabbitMqBusTopologyTests.NamedDestination_RejectsUriSyntaxInsteadOfInterpretingItAsConfiguration",
         "--minimum-expected-tests",
@@ -613,7 +613,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M16-topology-name-injection.json",
-      "rawResultSha256": "0afbde04d32212c22ea78e933f9bb43a31f12a37396b11f2ec676ece411b5b86",
+      "rawResultSha256": "e69a1d6cdafdac55186c64cdcd81a67c6e1dd4cc9784ce780dbcd2d0c549145f",
       "tests": 1,
       "passed": 0,
       "failed": 1,
@@ -621,7 +621,7 @@
     },
     {
       "id": "M17",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -638,7 +638,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqEndpointAddressTests.ShortAddresses_ResolveAgainstTheHost",
         "--minimum-expected-tests",
@@ -651,7 +651,7 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M17-short-queue-name-decoding.json",
-      "rawResultSha256": "e74cb7f5f5e76ca8db2fe652bf2f88353f11f3a1e18404c79ea581417a12ed0d",
+      "rawResultSha256": "bb394450abc2ef7f4304a942731120d578ba1409a22840bbe4c7ed168cb721f6",
       "tests": 4,
       "passed": 3,
       "failed": 1,
@@ -659,7 +659,7 @@
     },
     {
       "id": "M18",
-      "workingDirectory": "/private/tmp/vsb-rmq-stationary.N8qpeA",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
       "buildArgv": [
         "/usr/local/share/dotnet/dotnet",
         "build",
@@ -676,7 +676,7 @@
       ],
       "buildExitCode": 0,
       "testArgv": [
-        "/private/tmp/vsb-rmq-stationary.N8qpeA/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
         "--filter-method",
         "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology.RabbitMqBusTopologyTests.NamedDestination_RejectsUriSyntaxInsteadOfInterpretingItAsConfiguration",
         "--minimum-expected-tests",
@@ -689,7 +689,45 @@
       ],
       "testExitCode": 2,
       "rawResult": "mutations/M18-topology-formatted-name-injection.json",
-      "rawResultSha256": "f4f8e7607153cb9ec83737476b768768d1475da626c186fbccd5c2bbe68e4c70",
+      "rawResultSha256": "e42c6e92ae1b7b480b10a4be630ae26d82b11d5c0b6fa74ecd86a6df5166d00c",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    {
+      "id": "M19",
+      "workingDirectory": "/private/tmp/vsb-rmq-lifetime.kj1Z5K",
+      "buildArgv": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "/m:1",
+        "/nr:false",
+        "/p:UseSharedCompilation=false",
+        "/p:NuGetAudit=false",
+        "-v:quiet"
+      ],
+      "buildExitCode": 0,
+      "testArgv": [
+        "/private/tmp/vsb-rmq-lifetime.kj1Z5K/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests",
+        "--filter-method",
+        "ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Topology.RabbitMqBusTopologyTests.TypedDestination_PreservesTemporaryAndDurableMessageLifetimes",
+        "--minimum-expected-tests",
+        "1",
+        "--report-xunit-ctrf",
+        "--results-directory",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations",
+        "--report-xunit-ctrf-filename",
+        "M19-topology-message-lifetime.json"
+      ],
+      "testExitCode": 2,
+      "rawResult": "mutations/M19-topology-message-lifetime.json",
+      "rawResultSha256": "dd129f67b38c3bfb77d1243447bb563d8cffb125308c77560c4e146744256841",
       "tests": 1,
       "passed": 0,
       "failed": 1,

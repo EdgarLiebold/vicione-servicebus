@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "finalTechnicalCommit": "5fd962f927c7f0fe8de0d3240f2a3129449ef41b",
-  "finalTechnicalTree": "d8f50b9995b8a457067396d49c7c4969acf0e9aa",
+  "finalTechnicalCommit": "fd0d1d1d111ba2f834cf228cf804d43e17c95063",
+  "finalTechnicalTree": "0cb7bbd170328eb0d565513e6755e554c441c4bb",
   "applicationContract": "For each recipe, verify baselineSha256, require oldText to occur exactly occurrenceCount times inside target, replace only occurrenceIndex, verify mutantSha256, execute the command bound in MUTATION_MANIFEST.md, then restore and verify baselineSha256 again.",
   "mutations": [
     {
@@ -47,12 +47,12 @@
     {
       "id": "M05",
       "target": "tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RabbitMqAddressRequirements.json",
-      "baselineSha256": "e0a0f23c740355db3035a5aa6bd45d539a3705ad5b6a382053f0a3e14d1cc9f7",
+      "baselineSha256": "acb857aaee87cebedbc4d3fd099ffec422919b619074cdd96d311bef6456914a",
       "oldText": "  { \"requirementId\": \"REQ-VSB-RABBITMQ-HOST-CONFIGURATION\", \"variantKey\": \"host-settings-port-and-root-virtual-host\", \"testAssembly\": \"ViciOne.ServiceBus.RabbitMqTransport.Tests\", \"testType\": \"ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.RabbitMqAddressExtensionsTests\", \"testMethod\": \"HostSettings_PreserveTheCanonicalPortAndRootVirtualHost\" },\n",
       "newText": "",
       "occurrenceCount": 1,
       "occurrenceIndex": 1,
-      "mutantSha256": "272aa73a2ccd6f9cb1a95785435da539b3233c50b78c0c4384c01e2575ea8b98"
+      "mutantSha256": "a1f09dcb4e8f66f3d817e27f2f94a8b7616f1c7f4a9465fa95fbf120fb86b058"
     },
     {
       "id": "M06",
@@ -183,6 +183,16 @@
       "occurrenceCount": 1,
       "occurrenceIndex": 1,
       "mutantSha256": "a9d674b6a061839e9aaeea0e1626e3bc852f5b8e1190cb177b0bb9e8eaf770e4"
+    },
+    {
+      "id": "M19",
+      "target": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/Topology/RabbitMqBusTopology.cs",
+      "baselineSha256": "8e2187c845a038e5e7757eaa98ac348ce8b727ff907f44ead0d97aeaaa6fcfa0",
+      "oldText": "            var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);",
+      "newText": "            var isTemporary = true;",
+      "occurrenceCount": 1,
+      "occurrenceIndex": 1,
+      "mutantSha256": "607acd73c13c98427081f43c8c58e7072b59d263af8c2ea66d1715d2fc2a776d"
     }
   ]
 }
