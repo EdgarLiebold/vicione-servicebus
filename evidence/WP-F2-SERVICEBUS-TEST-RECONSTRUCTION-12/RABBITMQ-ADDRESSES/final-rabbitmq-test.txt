@@ -1,9 +1,0 @@
-^DAusführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64)
-/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64) erfolgreich (521ms)
-
-Testlaufzusammenfassung: Bestanden!
-  gesamt: 94
-  fehlgeschlagen: 0
-  erfolgreich: 94
-  übersprungen: 0
-  Dauer: 1s 223ms

@@ -1,22 +1,22 @@
-^Drun identity vicione-803e2d134389, output under artifacts/run-output/vicione-803e2d134389
-fixture postgres and azurite ready on loopback: VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=33302, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=33301
-endpoints projected to artifacts/run-output/vicione-803e2d134389/endpoints.json
-Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
-/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 248ms)
-Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64)
-/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (360ms)
+run identity vicione-f840243c0d2d, output under artifacts/run-output/vicione-f840243c0d2d
+fixture postgres and azurite ready on loopback: VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=33308, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=33307
+endpoints projected to artifacts/run-output/vicione-f840243c0d2d/endpoints.json
 Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64)
-/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 837ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (3s 239ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 521ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (680ms)
 
 Testlaufzusammenfassung: Bestanden!
-  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 248ms)
-  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 837ms)
-  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (360ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (680ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (3s 239ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 521ms)
 
   gesamt: 17
   fehlgeschlagen: 0
   erfolgreich: 17
   übersprungen: 0
-  Dauer: 5s 731ms
-broker log postgres: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-803e2d134389/postgres-broker.log (92 lines)
-broker log azurite: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-803e2d134389/azurite-broker.log (6 lines)
+  Dauer: 7s 550ms
+broker log postgres: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-f840243c0d2d/postgres-broker.log (96 lines)
+broker log azurite: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-f840243c0d2d/azurite-broker.log (6 lines)

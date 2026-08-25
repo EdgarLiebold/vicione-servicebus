@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1984 |
+| Added | 1992 |
 | Modified | 4265 |
 | Deleted | 1383 |
 | Renamed | 2 |
@@ -924,15 +924,23 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-engineering-build.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-local-integration-test.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-locked-restore.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-rabbitmq-test.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-rabbitmq-test.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/final-unit-test.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M01-default-port.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M02-virtual-host-encoding.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M03-direct-name-validation.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M04-credential-suffix.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M05-ttl-option-mapping.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M06-binding-snapshot.txt` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M07-requirement-projection-omission.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M01-default-port.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M02-virtual-host-encoding.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M03-credential-suffix.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M04-binding-snapshot.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M05-requirement-projection-omission.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M06-query-truncation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M07-topology-named-overload.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M08-topology-typed-overload.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M09-ttl-string.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M10-short-name-decoding.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M11-direct-exchange-validation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M12-direct-queue-validation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M13-direct-alternate-validation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M14-direct-binding-validation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M15-telemetry-half-idle-deadline.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
 | `evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/abstractions/MUTATION_VALIDATION.md` | Added |  |
