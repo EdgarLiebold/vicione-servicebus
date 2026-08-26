@@ -738,3 +738,14 @@ future cohorts as complete.
   with zero failure or skip. The sandbox-specific MTP NamedPipe failure is not treated as product
   evidence: focused runs use the built MTP executable directly and the full CLI run executes outside
   the sandbox, as recorded by TLP-027.
+- The first scheduled-redelivery cancellation mutant survived because the end-to-end handler wrapped
+  the exception before the `RedeliveryRetryFilter` boundary. The owner test now injects the same
+  unrequested token directly in that filter's downstream pipe; the unmodified product redelivers and
+  the exact guard mutation fails at the bounded operation timeout. This was a test correction only.
+- Twelve byte-exact product mutations now prove the configured clock, leading-prefix semantics,
+  immutable scheduler, hosted-service and endpoint settings, public prefetch validation,
+  application-owned clock, persisted header and transport-property deserialization, raw trace
+  propagation, durable-job recreation and redelivery cancellation causality. All twelve build with
+  zero error, fail at their intended native owner and restore the frozen bytes exactly. The final Engineering Release
+  build is 0-warning/0-error, UnitArchitecture is 1822/1822, focused Quartz is 85/85 and
+  LocalIntegration is 17/17 against run-scoped PostgreSQL and Azurite, all with zero skip.

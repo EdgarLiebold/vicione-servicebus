@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2128 |
+| Added | 2150 |
 | Modified | 4222 |
 | Deleted | 1426 |
 | Renamed | 2 |
@@ -1024,6 +1024,28 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT/final-signalr-test.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT/final-unit-test.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/MESSAGE-JOURNAL/ACCEPTANCE_EVIDENCE.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/MUTATION_EVIDENCE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/POSITIVE_EXECUTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/REQUIREMENT_PROJECTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/final-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/final-local-integration-test.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/final-quartz-test.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/final-unit-test.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M01-configured-time-source.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M02-leading-prefix-only.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M03-scheduler-settings-snapshot.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M04-application-time-provider.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M05-serialized-metadata.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M06-raw-trace-propagation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M07-redelivery-cancellation-causality.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M08-serialized-transport-properties.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M09-hosted-settings-snapshot.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M10-endpoint-settings-snapshot.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M11-endpoint-prefetch-validation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-SCHEDULING/mutations/M12-durable-job-recreation.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/R1-SCOPE-QUESTION/SCOPE_GAP_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/MUTATION_EXECUTION.json` | Added |  |
