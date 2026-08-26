@@ -1,0 +1,3 @@
+M	.testagent/status.md
+M	tools/ci/tests/test_verification_model.py
+M	tools/ci/verification/model.py
