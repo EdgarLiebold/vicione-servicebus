@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 1998 |
-| Modified | 4265 |
-| Deleted | 1383 |
+| Added | 1991 |
+| Modified | 4236 |
+| Deleted | 1412 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -155,16 +155,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
-| `build/verification/expected/abstractions.txt` | Added |  |
 | `build/verification/expected/activemq.txt` | Added |  |
-| `build/verification/expected/analyzer.txt` | Added |  |
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/diagnostics.txt` | Added |  |
 | `build/verification/expected/entity-framework-core.txt` | Added |  |
 | `build/verification/expected/quartz.txt` | Added |  |
 | `build/verification/expected/rabbitmq.txt` | Added |  |
-| `build/verification/expected/signalr.txt` | Added |  |
 | `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
 | `docs/observability.md` | Added |  |
@@ -5750,6 +5747,18 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.AmazonSqsTransport.Tests/StartStop_Specs.cs` | Deleted | `tests/MassTransit.AmazonSqsTransport.Tests/StartStop_Specs.cs` |
 | `tests/MassTransit.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` | Deleted | `tests/MassTransit.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` |
 | `tests/MassTransit.AmazonSqsTransport.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.AmazonSqsTransport.Tests/docker-compose.yml` |
+| `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` |
+| `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` |
+| `tests/MassTransit.Analyzers.Tests/DictionaryInitializer_Specs.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/DictionaryInitializer_Specs.cs` |
+| `tests/MassTransit.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` |
+| `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticResult.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticResult.cs` |
+| `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` |
+| `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` | Deleted | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
+| `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` |
+| `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` |
+| `tests/MassTransit.Analyzers.Tests/MessageDataInitializer_Specs.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageDataInitializer_Specs.cs` |
+| `tests/MassTransit.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` |
+| `tests/MassTransit.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` |
 | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosFutureTestFixtureConfigurator.cs` | Deleted | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosFutureTestFixtureConfigurator.cs` |
 | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestAccountKeyConfigurator.cs` | Deleted | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestAccountKeyConfigurator.cs` |
 | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestConnectionStringConfigurator.cs` | Deleted | `tests/MassTransit.Azure.Cosmos.Tests/AzureCosmosTestConnectionStringConfigurator.cs` |
@@ -6265,6 +6274,23 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SagaPersistenceTests.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` |
+| `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` | Deleted | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
+| `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` | Deleted | `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` |
+| `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` | Deleted | `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/MemoryBufferWriter.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/MemoryBufferWriter.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/MockHubProtocolResolver.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/MockHubProtocolResolver.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/TaskExtensions.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/TaskExtensions.cs` |
+| `tests/MassTransit.SignalR.Tests/OfficialFramework/TestClient.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/TestClient.cs` |
+| `tests/MassTransit.SignalR.Tests/ScaleoutHubLifetimeManagerTests.cs` | Deleted | `tests/MassTransit.SignalR.Tests/ScaleoutHubLifetimeManagerTests.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/BusHubLifetimeScopeProvider.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/BusHubLifetimeScopeProvider.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/DoubleScaleoutBackplaneTestFixture.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/DoubleScaleoutBackplaneTestFixture.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/HubLifetimeManagerConsumerFactory.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/HubLifetimeManagerConsumerFactory.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/IHubManagerConsumerFactory.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/IHubManagerConsumerFactory.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/MassTransitHubLifetimeTestFixture.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/MassTransitHubLifetimeTestFixture.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/SignalRBackplaneConsumersTestHarness.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/SignalRBackplaneConsumersTestHarness.cs` |
+| `tests/MassTransit.SignalR.Tests/Utils/SingleScaleoutBackplaneTestFixture.cs` | Deleted | `tests/MassTransit.SignalR.Tests/Utils/SingleScaleoutBackplaneTestFixture.cs` |
 | `tests/MassTransit.SqlTransport.Tests/Address_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/Address_Specs.cs` |
 | `tests/MassTransit.SqlTransport.Tests/BusOutbox_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/BusOutbox_Specs.cs` |
 | `tests/MassTransit.SqlTransport.Tests/Configuration_Specs.cs` | Deleted | `tests/MassTransit.SqlTransport.Tests/Configuration_Specs.cs` |
@@ -6866,39 +6892,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/docker-compose.yml` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceState_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Await_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Await_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationToken_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/CancellationToken_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/DictionaryInitializer_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/DictionaryInitializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/HarnessIntegrity_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Helpers/DiagnosticResult.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticResult.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` | Modified | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` | Modified | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageDataInitializer_Specs.cs` | Modified | `tests/MassTransit.Analyzers.Tests/MessageDataInitializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Verifiers/CodeFixVerifier.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` | Modified | `tests/MassTransit.Analyzers.Tests/Verifiers/DiagnosticVerifier.cs` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Modified | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
-| `tests/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/HubLifeTimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/MemoryBufferWriter.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/MemoryBufferWriter.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/MockHubProtocolResolver.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/MockHubProtocolResolver.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/TaskExtensions.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/TaskExtensions.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/OfficialFramework/TestClient.cs` | Modified | `tests/MassTransit.SignalR.Tests/OfficialFramework/TestClient.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/ScaleoutHubLifetimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/ScaleoutHubLifetimeManagerTests.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/BusHubLifetimeScopeProvider.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/BusHubLifetimeScopeProvider.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/DoubleScaleoutBackplaneTestFixture.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/DoubleScaleoutBackplaneTestFixture.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/HubLifetimeManagerConsumerFactory.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/HubLifetimeManagerConsumerFactory.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/IHubManagerConsumerFactory.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/IHubManagerConsumerFactory.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/SignalRBackplaneConsumersTestHarness.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/SignalRBackplaneConsumersTestHarness.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/SingleScaleoutBackplaneTestFixture.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/SingleScaleoutBackplaneTestFixture.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/Utils/ViciOneServiceBusHubLifetimeTestFixture.cs` | Modified | `tests/MassTransit.SignalR.Tests/Utils/MassTransitHubLifetimeTestFixture.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj` | Modified | `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerTests.cs` | Modified | `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` |
-| `tests/ViciOne.ServiceBus.SignalR.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/DatabaseEndpoint.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestDatabase.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContract.cs` | Added |  |

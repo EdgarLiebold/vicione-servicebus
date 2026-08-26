@@ -68,24 +68,6 @@ jobs:
         run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
       - name: Build the engineering solution
         run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
-  analyzer:
-    name: "Required: Analyzer"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Verify
-        run: python3 tools/ci/verify.py --selection analyzer
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-analyzer
-          path: |
-            artifacts/verification
-            artifacts/run-output
   core-unit:
     name: "Required: Core/Unit"
     runs-on: ubuntu-24.04
@@ -101,24 +83,6 @@ jobs:
         if: always()
         with:
           name: required-core-unit
-          path: |
-            artifacts/verification
-            artifacts/run-output
-  signalr:
-    name: "Required: SignalR"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Verify
-        run: python3 tools/ci/verify.py --selection signalr
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-signalr
           path: |
             artifacts/verification
             artifacts/run-output
@@ -243,9 +207,7 @@ jobs:
     needs:
       - legacy-tooling
       - build
-      - analyzer
       - core-unit
-      - signalr
       - quartz
       - activemq
       - sql-transport

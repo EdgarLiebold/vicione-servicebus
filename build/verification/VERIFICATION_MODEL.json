@@ -13,10 +13,7 @@
     },
     "local": {
       "members": [
-        "analyzer",
         "core",
-        "abstractions",
-        "signalr",
         "quartz",
         "benchmarks",
         "diagnostics"
@@ -32,20 +29,9 @@
       ],
       "note": "everything that runs against the pinned Compose fixture"
     },
-    "analyzer": {
-      "members": [
-        "analyzer"
-      ]
-    },
     "core": {
       "members": [
-        "core",
-        "abstractions"
-      ]
-    },
-    "signalr": {
-      "members": [
-        "signalr"
+        "core"
       ]
     },
     "quartz": {
@@ -92,9 +78,7 @@
     }
   },
   "jobs": {
-    "analyzer": "analyzer",
     "core-unit": "core",
-    "signalr": "signalr",
     "quartz": "quartz",
     "rabbitmq": "rabbitmq",
     "activemq": "activemq",
@@ -104,6 +88,7 @@
   },
   "verificationClasses": {
     "LOCAL_REQUIRED_RUN": "A behaviour suite that runs in the required profile on the build machine alone. It needs no container and no credential.",
+    "NATIVE_TEST_ESTATE": "The inherited test project is retired after complete obligation closure. Product behavior is independently verified by the native xUnit/MTP estate under tests2 and .github/workflows/native-tests.yml; this model retains only product-project ownership and does not duplicate the native test contract.",
     "PINNED_FIXTURE_REQUIRED_RUN": "A behaviour suite that runs in the required profile against a pinned container fixture from build/test-infrastructure/compose.yaml, started by tools/ci/run_broker_category.py.",
     "REAL_EPHEMERAL_CLOUD": "A behaviour suite that needs a real, short lived cloud resource. It is not executed here and can never report a pass. This is a visible open proof, never a gate.",
     "COMPILE_AND_PACK_PROOF": "A shipped capability with no behaviour suite of its own, exercised by the suites that use it. It is proven by compiling and packing.",
@@ -127,35 +112,30 @@
   },
   "capabilities": [
     {
+      "id": "abstractions",
+      "class": "NATIVE_TEST_ESTATE",
+      "sourceProjects": [
+        "src/ViciOne.ServiceBus.Abstractions"
+      ],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [],
+      "rationale": "The inherited Abstractions project is already retired. Its 70 executing and eight non-product or non-executing obligations are terminally bound in evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json; the native Abstractions projects own the executable behavior contract.",
+      "runs": []
+    },
+    {
       "id": "analyzers",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/ViciOne.ServiceBus.Analyzers",
         "src/ViciOne.ServiceBus.Analyzers.CodeFixes",
         "src/ViciOne.ServiceBus.Analyzers.Package"
       ],
-      "testProjects": [
-        "tests/ViciOne.ServiceBus.Analyzers.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "analyzer",
-          "category": "analyzer",
-          "project": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
-          "minimumExecutedCases": 115,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/ViciOne.ServiceBus.Analyzers.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 900,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/analyzer.txt"
-        }
-      ]
+      "rationale": "All 115 inherited obligations are terminally bound in evidence/native-tests/analyzers/INHERITED_BEHAVIOR_DISPOSITION.json; the native Analyzer and CodeFix projects own the executable behavior contract.",
+      "runs": []
     },
     {
       "id": "benchmarks",
@@ -191,11 +171,9 @@
       "id": "core",
       "class": "LOCAL_REQUIRED_RUN",
       "sourceProjects": [
-        "src/ViciOne.ServiceBus",
-        "src/ViciOne.ServiceBus.Abstractions"
+        "src/ViciOne.ServiceBus"
       ],
       "testProjects": [
-        "tests/ViciOne.ServiceBus.Abstractions.Tests",
         "tests/ViciOne.ServiceBus.Tests"
       ],
       "supportProjects": [],
@@ -215,20 +193,6 @@
           "allowBrokerOutage": null,
           "oneRefusalPerVhost": null,
           "expectedIdentities": "build/verification/expected/core.txt"
-        },
-        {
-          "job": "core-unit",
-          "category": "abstractions",
-          "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
-          "minimumExecutedCases": 74,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/ViciOne.ServiceBus.Abstractions.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 600,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/abstractions.txt"
         }
       ]
     },
@@ -283,6 +247,18 @@
       "supportProjects": [],
       "toolProjects": [],
       "rationale": "Needs a real ephemeral cloud resource and is not verified here. It was linked to the transport capability of the same provider, which proved nothing: that capability has no run either, and sharing a test project is not sharing a proof.",
+      "runs": []
+    },
+    {
+      "id": "order-workflow-sample",
+      "class": "DEVELOPER_TOOL_COMPILE_PROOF",
+      "sourceProjects": [],
+      "testProjects": [],
+      "supportProjects": [],
+      "toolProjects": [
+        "samples/OrderWorkflow"
+      ],
+      "rationale": "The non-packable sample is compiled by the product and engineering solutions and carries no independent behavior category.",
       "runs": []
     },
     {
@@ -413,32 +389,15 @@
     },
     {
       "id": "signalr",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/ViciOne.ServiceBus.SignalR"
       ],
-      "testProjects": [
-        "tests/ViciOne.ServiceBus.SignalR.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "signalr",
-          "category": "signalr",
-          "project": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
-          "minimumExecutedCases": 26,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/ViciOne.ServiceBus.SignalR.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 900,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/signalr.txt"
-        }
-      ]
+      "rationale": "All 28 inherited obligations are terminally bound in evidence/native-tests/signalr/INHERITED_BEHAVIOR_DISPOSITION.json; the native SignalR project owns the executable behavior contract.",
+      "runs": []
     },
     {
       "id": "state-machine-visualizer",

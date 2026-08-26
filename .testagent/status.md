@@ -645,3 +645,22 @@ future cohorts as complete.
 - The same unfiltered validation exposed a missing causal barrier in a pre-existing Saga test. It
   now waits for actual consumption before reading state written during `Consume`; the focused test
   passed 10/10 consecutive runs without timeout, retry or product-semantic changes.
+
+## Lead implementation: retired native-replaced legacy test projects
+
+- The inherited Analyzer and SignalR NUnit/VSTest projects are retired atomically with their root
+  solution entries, legacy CI jobs and expected-identity files. Their source remains available in
+  Git history. No product source or native `tests2` source changed.
+- The inherited verification model no longer invents runs for those retired projects or for the
+  already retired Abstractions project. It classifies the retained product projects exactly once as
+  native-test-owned capabilities, and now gives the retained OrderWorkflow sample an explicit
+  compile-proof owner.
+- The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
+  eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
+  and SignalR 26 executable replacements plus two non-executing inherited methods.
+- The unchanged transition-tool self-tests pass 206/206 under `tools/ci` and 99/99 under
+  `tools/identity`. The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
+  SignalR 32/32, all without skips.
+- A locked static-graph restore and the complete Root and Engineering Release builds pass; both
+  builds have zero warnings and zero errors. The unfiltered UnitArchitecture profile remains at its
+  enforced 1699/1699 floor with zero failures and zero skips.

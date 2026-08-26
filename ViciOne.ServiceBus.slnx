@@ -11,7 +11,6 @@
     <Project Path="src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers.Package/ViciOne.ServiceBus.Analyzers.Package.csproj" />
-    <Project Path="tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj" />
   </Folder>
   <Folder Name="/Interoperability/">
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
@@ -35,7 +34,6 @@
   </Folder>
   <Folder Name="/SignalR/">
     <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
-    <Project Path="tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj" />
   </Folder>
   <Folder Name="/Transports/">
     <Project Path="src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj" />

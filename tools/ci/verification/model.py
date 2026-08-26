@@ -12,7 +12,7 @@ and does not extend this model.
 
 Run it directly to print the model:
 
-    python3 tools/ci/verification_model.py
+    python3 tools/ci/verification/model.py
 """
 
 from __future__ import annotations
@@ -460,8 +460,8 @@ def findings(root: Path) -> list[str]:
 
     explained: set[str] = set(NON_VERIFYING_JOBS)
 
-    # A category is started by exactly one run. A job may hold several distinct categories - core-unit
-    # runs core and abstractions - but two runs of one category are two truths about the same thing.
+    # A category is started by exactly one run. A job may hold several distinct categories, but two
+    # runs of one category are two truths about the same thing.
     declared = [run.get("category") for run in runs(model)]
     for category in sorted({name for name in declared if declared.count(name) > 1}):
         problems.append(f"category '{category}' is declared by more than one run")
