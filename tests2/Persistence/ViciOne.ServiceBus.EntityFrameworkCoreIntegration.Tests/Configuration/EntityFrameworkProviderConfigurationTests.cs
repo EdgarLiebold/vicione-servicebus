@@ -108,6 +108,28 @@ public sealed class EntityFrameworkProviderConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CONFIGURATION", "optimistic-api-paths-share-read-committed-default")]
+    public void SetOptimisticConcurrency_UsesTheSameReadCommittedDefaultAsTheModeProperty()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBus(configuration =>
+            configuration.AddSaga<ConfigurationSaga>().EntityFrameworkRepository(repository =>
+            {
+                var concrete = Assert.IsType<EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>>(repository);
+                concrete.ExistingDbContext<ConfigurationDbContext>();
+                concrete.SetOptimisticConcurrency();
+            }));
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        ISagaRepositoryLockStrategy<ConfigurationSaga> strategy = provider
+            .GetRequiredService<ISagaRepositoryLockStrategy<ConfigurationSaga>>();
+        var optimistic = Assert.IsType<OptimisticSagaRepositoryLockStrategy<ConfigurationSaga>>(strategy);
+
+        Assert.True(optimistic.IsTransactionEnabled);
+        Assert.Equal(IsolationLevel.ReadCommitted, optimistic.IsolationLevel);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-CONFIGURATION", "explicit-pessimistic-runtime-strategy")]
     public void SagaRegistration_ResolvesAnExplicitPessimisticStrategy()
     {

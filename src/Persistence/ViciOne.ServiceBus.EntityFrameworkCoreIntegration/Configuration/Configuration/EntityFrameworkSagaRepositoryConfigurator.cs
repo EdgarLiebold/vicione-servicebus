@@ -45,12 +45,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public ConcurrencyMode ConcurrencyMode
         {
-            set
-            {
-                _concurrencyMode = value;
-                if (_concurrencyMode == ConcurrencyMode.Optimistic && _isolationLevel == IsolationLevel.Serializable)
-                    _isolationLevel = IsolationLevel.ReadCommitted;
-            }
+            set => SetConcurrencyMode(value);
         }
 
         public ILockStatementProvider LockStatementProvider
@@ -176,8 +171,15 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void SetOptimisticConcurrency(bool useTransaction = true)
         {
-            _concurrencyMode = ConcurrencyMode.Optimistic;
+            SetConcurrencyMode(ConcurrencyMode.Optimistic);
             _isTransactionEnabled = useTransaction;
+        }
+
+        void SetConcurrencyMode(ConcurrencyMode concurrencyMode)
+        {
+            _concurrencyMode = concurrencyMode;
+            if (_concurrencyMode == ConcurrencyMode.Optimistic && _isolationLevel == IsolationLevel.Serializable)
+                _isolationLevel = IsolationLevel.ReadCommitted;
         }
     }
 }

@@ -784,3 +784,15 @@ future cohorts as complete.
   intended native owner with exit code 2 and restores the frozen source hashes exactly.
 - Full validation is recorded under
   `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/`.
+- The second Entity Framework slice proves persistent saga lifecycle, transaction policy, read-only
+  state-machine events, same-correlation PostgreSQL row-lock serialization and required two-level
+  navigation graphs through the real repository path. Read-only behavior, repository lifecycle and
+  concurrency have separate source-mirrored test owners rather than one mixed fixture.
+- A real configuration defect was found and corrected: `SetOptimisticConcurrency()` bypassed the
+  isolation policy used by the `ConcurrencyMode` property and therefore retained the pessimistic
+  `Serializable` default. Both public configuration paths now share one policy owner and produce the
+  intended `ReadCommitted` optimistic default while retaining explicit caller configuration.
+- The complete locked Engineering restore and Release build pass with zero warnings and zero errors.
+  The unfiltered UnitArchitecture profile passes 1868/1868 and LocalIntegration passes 35/35 against
+  fresh run-scoped PostgreSQL and Azurite, all with zero failure and zero skip. The inherited EF test
+  project remains unchanged until all 90 assigned obligations can be retired atomically.

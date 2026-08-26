@@ -2,8 +2,11 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tes
 
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
+using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -64,11 +67,112 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
         Assert.Equal("after", persistedName);
     }
 
-    public sealed class NavigationSaga : ISaga
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-POSTGRES-PESSIMISTIC-QUERY", "repository-inserts-and-updates-required-navigation-graph")]
+    public async Task Repository_PersistsAndReloadsTheRequiredNavigationGraph()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
+            "pessimistic-saga-graph",
+            cancellationToken);
+        DbContextOptions<NavigationSagaDbContext> options = new DbContextOptionsBuilder<NavigationSagaDbContext>()
+            .UseNpgsql(database.ConnectionString)
+            .Options;
+        await using (var setup = new NavigationSagaDbContext(options))
+            await setup.Database.EnsureCreatedAsync(cancellationToken);
+
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddSaga<NavigationSaga, NavigationSagaDefinition>()
+                    .EntityFrameworkRepository(repository =>
+                    {
+                        repository.UsePostgres();
+                        repository.CustomizeQuery(query => query
+                            .Include(saga => saga.Dependency)
+                            .ThenInclude(dependency => dependency.InnerDependency));
+                        repository.AddDbContext<DbContext, NavigationSagaDbContext>((_, builder) =>
+                            builder.UseNpgsql(database.ConnectionString));
+                    });
+            })
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            Guid sagaId = Guid.NewGuid();
+            ISendEndpoint endpoint = await harness.GetSagaEndpoint<NavigationSaga>();
+            await endpoint.Send(new CreateNavigationSaga(sagaId, "created"), cancellationToken);
+            await harness.Published.SelectAsync<NavigationSagaCreated>(
+                    observation => observation.Context.Message.CorrelationId == sagaId,
+                    cancellationToken)
+                .First();
+
+            await using (var inserted = new NavigationSagaDbContext(options))
+            {
+                NavigationSaga graph = await inserted.Sagas.AsNoTracking()
+                    .Include(saga => saga.Dependency)
+                    .ThenInclude(dependency => dependency.InnerDependency)
+                    .SingleAsync(saga => saga.CorrelationId == sagaId, cancellationToken);
+                Assert.Equal("created", graph.Dependency.InnerDependency.Name);
+            }
+
+            await endpoint.Send(new UpdateNavigationSaga(sagaId, "updated"), cancellationToken);
+            IPublishedMessage<NavigationSagaUpdated> updated = await harness.Published
+                .SelectAsync<NavigationSagaUpdated>(
+                    observation => observation.Context.Message.CorrelationId == sagaId,
+                    cancellationToken)
+                .First();
+            await using var verification = new NavigationSagaDbContext(options);
+            string persistedName = await verification.InnerDependencies.AsNoTracking()
+                .Where(inner => inner.Dependency!.Saga!.CorrelationId == sagaId)
+                .Select(inner => inner.Name)
+                .SingleAsync(cancellationToken);
+
+            Assert.Equal("updated", updated.Context.Message.Name);
+            Assert.Equal("updated", persistedName);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    public sealed record CreateNavigationSaga(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+
+    public sealed record UpdateNavigationSaga(Guid CorrelationId, string Name) : CorrelatedBy<Guid>;
+
+    public sealed record NavigationSagaCreated(Guid CorrelationId);
+
+    public sealed record NavigationSagaUpdated(Guid CorrelationId, string Name);
+
+    public sealed class NavigationSaga :
+        ISaga,
+        InitiatedBy<CreateNavigationSaga>,
+        Orchestrates<UpdateNavigationSaga>
     {
         public Guid CorrelationId { get; set; }
 
         public SagaDependency Dependency { get; set; } = null!;
+
+        public Task Consume(ConsumeContext<CreateNavigationSaga> context)
+        {
+            Dependency = new SagaDependency
+            {
+                InnerDependency = new SagaInnerDependency { Name = context.Message.Name },
+            };
+            return context.Publish(new NavigationSagaCreated(CorrelationId), context.CancellationToken);
+        }
+
+        public Task Consume(ConsumeContext<UpdateNavigationSaga> context)
+        {
+            Dependency.InnerDependency.Name = context.Message.Name;
+            return context.Publish(new NavigationSagaUpdated(CorrelationId, context.Message.Name), context.CancellationToken);
+        }
     }
 
     public sealed class SagaDependency
@@ -91,7 +195,19 @@ public sealed class PostgreSqlPessimisticSagaQueryCustomizationTests
         public string Name { get; set; } = string.Empty;
     }
 
-    private sealed class NavigationSagaDbContext(DbContextOptions<NavigationSagaDbContext> options) : DbContext(options)
+    private sealed class NavigationSagaDefinition : SagaDefinition<NavigationSaga>
+    {
+        protected override void ConfigureSaga(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            ISagaConfigurator<NavigationSaga> sagaConfigurator,
+            IRegistrationContext context)
+        {
+            sagaConfigurator.UseMessageRetry(retry => retry.Immediate(2));
+            sagaConfigurator.UseInMemoryOutbox(context);
+        }
+    }
+
+    public sealed class NavigationSagaDbContext(DbContextOptions<NavigationSagaDbContext> options) : DbContext(options)
     {
         public DbSet<SagaInnerDependency> InnerDependencies => Set<SagaInnerDependency>();
 
