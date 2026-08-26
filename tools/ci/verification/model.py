@@ -473,6 +473,30 @@ def support_job_findings(job: str, job_text: str) -> list[str]:
     ]
 
 
+def pack_needs_findings(pack_job_text: str, job_map: dict[str, str]) -> list[str]:
+    """Require pack to wait for both support gates and every model-owned verification job."""
+    needs: list[str] = []
+    inside_needs = False
+    for line in pack_job_text.splitlines():
+        if line == "    needs:":
+            inside_needs = True
+            continue
+        if not inside_needs:
+            continue
+        if line.startswith("      - "):
+            needs.append(line.removeprefix("      - "))
+            continue
+        if line.strip() and not line.lstrip().startswith("#"):
+            break
+
+    expected = {"legacy-tooling", "build", *job_map}
+    if len(needs) != len(set(needs)) or set(needs) != expected:
+        return [
+            f"pack waits for {tuple(needs)!r}; expected every required gate {tuple(sorted(expected))!r}"
+        ]
+    return []
+
+
 LINE_COMMENT = re.compile(r"//[^\n]*")
 BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.S)
 NAMESPACE_DECLARATION = re.compile(r"^\s*namespace\s+([A-Za-z_][\w.]*)", re.M)
@@ -757,12 +781,15 @@ def findings(root: Path) -> list[str]:
         problems.append(f"the required workflow cannot be read: {error}")
         return problems
 
+    job_of_selection = model.get("jobs") or {}
     explained: set[str] = set(REQUIRED_SUPPORT_JOB_CONTRACTS)
     for job in REQUIRED_SUPPORT_JOB_CONTRACTS:
         if job not in jobs:
             problems.append(f"the required workflow has no '{job}' support job")
         else:
             problems.extend(support_job_findings(job, jobs[job]))
+    if "pack" in jobs:
+        problems.extend(pack_needs_findings(jobs["pack"], job_of_selection))
 
     # A category is started by exactly one run. A job may hold several distinct categories, but two
     # runs of one category are two truths about the same thing.
@@ -786,7 +813,6 @@ def findings(root: Path) -> list[str]:
         except SelectionError as error:
             problems.append(str(error))
 
-    job_of_selection = model.get("jobs") or {}
     reached: dict[str, list[str]] = {}
     for job, selection in sorted(job_of_selection.items()):
         explained.add(job)

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -14,6 +15,12 @@ from verification import model  # noqa: E402
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+EXPECTED_SUPPORT_JOB_SHA256 = {
+    "legacy-tooling": "0726813a612a984604aac4753cdc3322c2e71fd11ff98477e001d9f5a07770a6",
+    "build": "d6e5bda334b170811d4d1049c6913a48d58651e149adf1e710dade8f5d8ab2d6",
+    "pack": "007f2c18a345683863db43d2258c2d01dd36f1097cdc894420879844b40f0669",
+}
 
 
 class VerificationWorkflowBoundaryTests(unittest.TestCase):
@@ -375,9 +382,19 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
 
     def test_required_support_jobs_match_the_repository_contract(self) -> None:
         jobs = model.workflow_jobs(REPO_ROOT)
-        for job in model.REQUIRED_SUPPORT_JOB_CONTRACTS:
+        for job, expected_hash in EXPECTED_SUPPORT_JOB_SHA256.items():
             with self.subTest(job=job):
                 self.assertEqual([], model.support_job_findings(job, jobs[job]))
+                actual_lines = tuple(
+                    line for line in jobs[job].splitlines()
+                    if line.strip() and not line.lstrip().startswith("#")
+                )
+                actual_hash = hashlib.sha256("\n".join(actual_lines).encode()).hexdigest()
+                contract_hash = hashlib.sha256(
+                    "\n".join(model.REQUIRED_SUPPORT_JOB_CONTRACTS[job]).encode()
+                ).hexdigest()
+                self.assertEqual(expected_hash, actual_hash)
+                self.assertEqual(expected_hash, contract_hash)
 
     def test_required_support_jobs_reject_noop_bodies(self) -> None:
         noop = (
@@ -413,18 +430,48 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
         for command in commands:
             with self.subTest(command=command):
                 self.assertTrue(model.support_job_findings("build", job.replace(command, "")))
-        reordered = job.replace(commands[0], "__FIRST__\n").replace(commands[1], commands[0]).replace(
-            "__FIRST__\n", commands[1])
-        self.assertTrue(model.support_job_findings("build", reordered))
+        for index in range(len(commands) - 1):
+            first = commands[index]
+            second = commands[index + 1]
+            reordered = job.replace(first, "__FIRST__\n", 1).replace(second, first, 1).replace(
+                "__FIRST__\n", second, 1)
+            with self.subTest(reordered=(index, index + 1)):
+                self.assertTrue(model.support_job_findings("build", reordered))
 
     def test_pack_requires_dependencies_commands_hash_and_upload(self) -> None:
         job = model.workflow_jobs(REPO_ROOT)["pack"]
+        job_map = model.load(REPO_ROOT)["jobs"]
+        required_needs = (
+            "legacy-tooling",
+            "build",
+            "core-unit",
+            "quartz",
+            "activemq",
+            "sql-transport",
+            "benchmarks",
+            "rabbitmq",
+            "entity-framework",
+        )
+        for need in required_needs:
+            hostile = job.replace(f"      - {need}\n", "", 1)
+            with self.subTest(need=need):
+                self.assertTrue(model.support_job_findings("pack", hostile))
+                self.assertTrue(model.pack_needs_findings(hostile, job_map))
+
         obligations = (
-            "      - legacy-tooling\n",
-            "      - entity-framework\n",
+            f"      {model.CHECKOUT_ACTION_STEP}\n",
+            f"      {model.SETUP_DOTNET_ACTION_STEP}\n",
+            "          dotnet-version: ${{ env.DOTNET_VERSION }}\n",
+            "        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode\n",
+            "        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore\n",
+            "          rm -rf artifacts/packages\n",
             "          dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages\n",
+            "          set -euo pipefail\n",
+            '          test -n "$(ls -A artifacts/packages)" || { echo "pack produced no package"; exit 1; }\n',
             "          sha256sum artifacts/packages/*.nupkg | tee artifacts/packages/SHA256SUMS\n",
             f"      {model.UPLOAD_ARTIFACT_ACTION_STEP}\n",
+            "          name: required-packages\n",
+            "          path: artifacts/packages\n",
             "          if-no-files-found: error\n",
         )
         for obligation in obligations:
