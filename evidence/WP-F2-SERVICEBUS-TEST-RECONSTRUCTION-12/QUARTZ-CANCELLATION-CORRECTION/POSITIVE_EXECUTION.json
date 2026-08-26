@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "64e88ba5b79a67234bc61f4d65468864f3c3fd46",
+  "technicalTree": "b4e4d9e33aa2631b59f1cf58a380881b25160b12",
+  "technicalParent": "d6e7b6bf2414999803653bcd591e8ae318945a6c",
+  "originalQuartzEvidenceCommit": "233c5a54f099c7920afa362479a3e577a2ae6ba3",
+  "executedAtUtcDate": "2026-08-26",
+  "environment": {
+    "dotnetExecutable": "/usr/local/share/dotnet/dotnet",
+    "sdkVersion": "10.0.302",
+    "configuration": "Release",
+    "testFramework": "xUnit 4",
+    "testPlatform": "Microsoft Testing Platform 2",
+    "sandboxDisposition": "Native MTP and the complete MSBuild graph ran outside the filesystem sandbox because the already diagnosed sandbox-only IPC and restore-evaluation restrictions are not product failures. No product, package, runner, or test workaround was applied."
+  },
+  "dependencyGraph": {
+    "verdict": "UNCHANGED",
+    "basis": "No project, package, lock, SDK, NuGet, Directory.Build, or test-platform file changed between the accepted Quartz evidence commit and this correction. The accepted locked-restore verdict remains applicable, while the final engineering build consumed that unchanged graph with --no-restore."
+  },
+  "runs": [
+    {
+      "kind": "engineering-build",
+      "argv": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "ViciOne.ServiceBus.Engineering.slnx",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "--no-incremental",
+        "-m:1",
+        "-nr:false",
+        "-p:UseSharedCompilation=false",
+        "-p:NuGetAudit=false",
+        "-v:minimal",
+        "-bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-CANCELLATION-CORRECTION/final-engineering-build.binlog"
+      ],
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "rawArtifact": "final-engineering-build.binlog",
+      "rawArtifactSha256": "d1f386a2119364f106db80d96e20659b759e05ab1a6c0099398b3d78a0724dce"
+    },
+    {
+      "kind": "unit-architecture",
+      "argv": [
+        "/usr/local/share/dotnet/dotnet",
+        "test",
+        "--solution",
+        "ViciOne.ServiceBus.Tests.Unit.slnx",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--results-directory",
+        "artifacts/test-results/unit",
+        "--minimum-expected-tests",
+        "1824",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "exitCode": 0,
+      "minimumExpectedTests": 1824,
+      "tests": 1824,
+      "passed": 1824,
+      "failed": 0,
+      "skipped": 0,
+      "rawArtifact": "final-unit-test.txt",
+      "rawArtifactSha256": "5dc5cdd1f82abd31904d230afc2f7a5ffe870054d76ae446abb66f8b10e1209f"
+    },
+    {
+      "kind": "quartz-focused",
+      "argv": [
+        "artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration.Tests/release/ViciOne.ServiceBus.QuartzIntegration.Tests",
+        "--minimum-expected-tests",
+        "87",
+        "--zero-tests-policy",
+        "strict",
+        "--fail-skips",
+        "on",
+        "--progress",
+        "off",
+        "--report-xunit-ctrf",
+        "--results-directory",
+        "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/QUARTZ-CANCELLATION-CORRECTION",
+        "--report-xunit-ctrf-filename",
+        "final-quartz-test.json"
+      ],
+      "exitCode": 0,
+      "minimumExpectedTests": 87,
+      "tests": 87,
+      "passed": 87,
+      "failed": 0,
+      "skipped": 0,
+      "rawArtifact": "final-quartz-test.json",
+      "rawArtifactSha256": "5de80e47b2abf5dcb9e539b035c32536774b4f795422fc3a8df1bb61079f85f6"
+    },
+    {
+      "kind": "local-integration",
+      "argv": [
+        "python3",
+        "tools/ci/run_broker_category.py",
+        "--broker",
+        "postgres",
+        "--broker",
+        "azurite",
+        "--command",
+        "--",
+        "/usr/local/share/dotnet/dotnet",
+        "test",
+        "--solution",
+        "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--results-directory",
+        "artifacts/test-results/local-integration",
+        "--minimum-expected-tests",
+        "17",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "environment": {
+        "VICIONE_TESTS__Profile": "LocalIntegration"
+      },
+      "fixtures": [
+        "postgres",
+        "azurite"
+      ],
+      "exitCode": 0,
+      "minimumExpectedTests": 17,
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "rawArtifact": "final-local-integration-test.txt",
+      "rawArtifactSha256": "441b1ffd8be683e23a313d0d542b5ae1113a90eac37d542292a52b45d21e3885"
+    }
+  ]
+}

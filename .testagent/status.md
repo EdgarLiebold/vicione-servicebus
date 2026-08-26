@@ -753,5 +753,9 @@ future cohorts as complete.
   Quartz execution cancellation into an immediate-refire `JobExecutionException`. The product now
   propagates requested context cancellation unchanged while retaining retry classification for an
   unrequested dependency cancellation. Two direct send-boundary tests raise the Quartz floor to
-  87 and the UnitArchitecture floor to 1824; the final correction evidence and targeted mutation
-  remain to be frozen.
+  87 and the UnitArchitecture floor to 1824.
+- The correction is frozen at technical commit `64e88ba5b79a67234bc61f4d65468864f3c3fd46`.
+  Its final Engineering Release build has zero warnings and zero errors; UnitArchitecture is
+  1824/1824, focused Quartz is 87/87 and LocalIntegration is 17/17, all with zero failure or skip.
+  M13 removes only the cancellation boundary: the requested-cancellation owner fails while the
+  unrequested-dependency control remains green, and the product source restores byte-identically.

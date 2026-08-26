@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "64e88ba5b79a67234bc61f4d65468864f3c3fd46",
+  "authoritativeProjection": "tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzIntegrationRequirements.json",
+  "authoritativeProjectionSha256": "08879bf07fe0887da06603a52e8aa8c1dbc6c37d80cff837351a84bc96890b49",
+  "totalProjectionEntries": 66,
+  "focusedExecutedCases": 87,
+  "correctionEntries": [
+    {
+      "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION",
+      "variantKey": "requested-context-cancellation-propagates",
+      "testAssembly": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+      "testType": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.ScheduledMessageJobTests",
+      "testMethod": "RequestedContextCancellation_PropagatesWithoutImmediateRefire"
+    },
+    {
+      "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION",
+      "variantKey": "unrequested-dependency-cancellation-refires",
+      "testAssembly": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+      "testType": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.ScheduledMessageJobTests",
+      "testMethod": "UnrequestedDependencyCancellation_RemainsARetryableJobFailure"
+    }
+  ]
+}
