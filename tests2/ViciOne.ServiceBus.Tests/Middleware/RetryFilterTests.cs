@@ -464,6 +464,34 @@ public sealed class RetryFilterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "unrequested-retry-context-token-is-a-dependency-failure")]
+    public async Task UnrequestedRetryContextCancellationToken_IsRetriedAsADependencyFailure()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellationToken = TestContext.Current.CancellationToken;
+        using var dependencyCancellation = new CancellationTokenSource();
+        var attempts = 0;
+        IFilter<TestPipeContext> filter = new RetryFilter<TestPipeContext>(
+            new RetryTokenPolicy(dependencyCancellation.Token, retryLimit: 2),
+            new RetryObservable());
+        IPipe<TestPipeContext> next = Pipe.Execute<TestPipeContext>(_ =>
+        {
+            int attempt = Interlocked.Increment(ref attempts);
+            if (attempt == 1)
+                throw new RetryFailureException("enter retry path");
+            if (attempt == 2)
+                throw new OperationCanceledException(
+                    "dependency canceled its retry operation",
+                    dependencyCancellation.Token);
+        });
+
+        await filter.Send(new TestPipeContext(), next).WaitAsync(timeout, testCancellationToken);
+
+        Assert.False(dependencyCancellation.IsCancellationRequested);
+        Assert.Equal(3, attempts);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "policy-cancellation-never-reports-success")]
     public async Task PolicyCancellationBeforeTheRetryAttempt_IsNeverReportedAsSuccess()
     {
@@ -666,6 +694,63 @@ public sealed class RetryFilterTests
         public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
         {
             retryContext = new TrackingRetryContext<T>(Context, Exception, RetryCount + 1, retryLimit);
+            return RetryAttempt < retryLimit;
+        }
+    }
+
+    private sealed class RetryTokenPolicy(CancellationToken cancellationToken, int retryLimit) : IRetryPolicy
+    {
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext =>
+            new RetryTokenPolicyContext<T>(context, cancellationToken, retryLimit);
+
+        public bool IsHandled(Exception exception) => true;
+    }
+
+    private sealed class RetryTokenPolicyContext<T>(T context, CancellationToken cancellationToken, int retryLimit) :
+        RetryPolicyContext<T>
+        where T : class, PipeContext
+    {
+        public T Context { get; } = context;
+
+        public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+        {
+            retryContext = new RetryTokenContext<T>(Context, exception, 0, cancellationToken, retryLimit);
+            return true;
+        }
+
+        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
+
+        public void Cancel()
+        {
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
+    private sealed class RetryTokenContext<T>(
+        T context,
+        Exception exception,
+        int retryCount,
+        CancellationToken cancellationToken,
+        int retryLimit) :
+        BaseRetryContext<T>(context, exception, retryCount, cancellationToken), RetryContext<T>
+        where T : class, PipeContext
+    {
+        public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+        {
+            retryContext = new RetryTokenContext<T>(
+                Context,
+                exception,
+                RetryCount + 1,
+                CancellationToken,
+                retryLimit);
             return RetryAttempt < retryLimit;
         }
     }

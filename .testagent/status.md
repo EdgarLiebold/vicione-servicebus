@@ -698,10 +698,14 @@ future cohorts as complete.
   Transaction scopes enable asynchronous flow by default; an external transaction remains externally
   owned, while every retry receives a fresh internally owned transaction context. The BCL adapter is
   internal and the public capability remains the neutral `TransactionContext` contract.
+- The first one-cause retry mutation proved the initial-attempt guard but exposed that the active
+  retry-attempt branch had no matching token oracle. A dedicated retry-context policy now supplies
+  that exact unrequested token; the new native test reaches a third successful attempt only when the
+  active-attempt guard remains causal.
 - Every newly written asynchronous harness boundary uses the central operation timeout and the MTP
   cancellation token. Concurrency releases are guaranteed in `finally`; no sleep, delay, stopwatch,
   random scheduling, negative wait or absence-until-timeout oracle was introduced.
 - Locked restore is current. The final focused Release build has zero warnings and zero errors and its
-  executable passes 953/953. The complete UnitArchitecture profile passes 1734/1734 and
+  executable passes 954/954. The complete UnitArchitecture profile passes 1735/1735 and
   LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all with zero failure and
   zero skip. The complete Engineering Release build has zero warnings and zero errors.

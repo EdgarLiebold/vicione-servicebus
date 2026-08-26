@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1734 predeclared unfiltered cases;
+- `UnitArchitecture`: 1735 predeclared unfiltered cases;
 - `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1444,7 +1444,7 @@ direct-constructor name input owns the same validation boundary. Public and form
 topology names are data and can no longer be reinterpreted as URI options or fragments. The
 telemetry test barrier also proves the exact idle deadline rather than merely observing an arbitrary
 timer change. The focused transport executable now contains 108 unfiltered cases and the
-UnitArchitecture floor is 1734.
+UnitArchitecture floor is 1735.
 
 ## Current cohort — native core pipeline closure
 

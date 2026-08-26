@@ -26,7 +26,8 @@ entry below records what the current work changed for anyone reading the source.
 ### Changed
 
 - Core pipeline behavior now has source-owned native xUnit/MTP coverage for dynamic consumer and
-  handler connections, observer composition, context filtering, retry cancellation, consumer,
+  handler connections, observer composition, context filtering, cancellation causality both before
+  and inside an active retry attempt, consumer,
   send and publish configuration layering, partition conventions, and transaction ownership. The
   thirteen inherited NUnit pipeline files are removed after one-to-one disposition of all 34
   inherited obligations. Public handler, context-filter and transaction boundaries fail fast;

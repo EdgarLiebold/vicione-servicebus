@@ -2516,6 +2516,13 @@
       "variantKey" : "unrequested-token-is-a-dependency-failure"
    },
    {
+      "requirementId" : "REQ-VSB-RETRY-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "UnrequestedRetryContextCancellationToken_IsRetriedAsADependencyFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests",
+      "variantKey" : "unrequested-retry-context-token-is-a-dependency-failure"
+   },
+   {
       "requirementId" : "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "Disconnect_PreventsFutureDeliveryAfterTheCurrentDispatchHasCompleted",
