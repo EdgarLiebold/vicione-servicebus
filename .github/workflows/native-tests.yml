@@ -63,5 +63,5 @@ jobs:
           dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/local-integration
-          --minimum-expected-tests 35
+          --minimum-expected-tests 51
           --max-parallel-test-modules 1

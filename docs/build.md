@@ -64,7 +64,7 @@ python3 tools/ci/run_broker_category.py \
   dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/local-integration \
-    --minimum-expected-tests 35 --max-parallel-test-modules 1
+    --minimum-expected-tests 51 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings

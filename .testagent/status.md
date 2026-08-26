@@ -801,3 +801,19 @@ future cohorts as complete.
   writable read-only event, omitted pessimistic query customization and omitted PostgreSQL row
   locking. Every changed byte restored to its recorded baseline hash before the detached worktree
   was closed.
+- The third EF tranche reconstructs `OBL-R0-PER-0018..0032` as fifteen independent semantic owners
+  plus one new rollback-hardening owner. Its source-mirrored LocalIntegration tests cover exact
+  publish/send scopes, typed constraint faults and endpoint recovery, request-saga fault identity,
+  single terminal fault after retry, OTel and scoped endpoint proxies, deterministic delayed
+  responses, EF-to-Quartz commit ordering, reliable consumer/saga rollback, real send-pipeline
+  recovery and persisted routing keys.
+- Success and retry of the reliable consumer are separate facts because they carry independent R0
+  obligations; no theory row claims both. The inherited `VSB-Fail-Delivery` header and product
+  branch are removed. The replacement failure is raised by a test-owned normal `ISendObserver` at
+  the actual serialized transport-send boundary, with two delivery attempts, one saga attempt and
+  one terminal state transition.
+- The complete locked Engineering restore passes and the complete Engineering Release build has
+  zero warnings and zero errors. The unfiltered native UnitArchitecture profile passes 1,868/1,868;
+  LocalIntegration passes 51/51 against fresh run-scoped PostgreSQL and Azurite resources
+  (`vicione-511fa6bf3885`); both have zero failure and zero skip. The inherited EF test project is
+  retained unchanged until the full 90-obligation assignment can be retired atomically.

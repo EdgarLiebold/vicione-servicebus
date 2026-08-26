@@ -107,10 +107,6 @@ namespace ViciOne.ServiceBus.Middleware
 
                     var endpoint = await context.CapturedContext.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
 
-                    var failDelivery = context.GetRetryAttempt() == 0 && (message.Headers.Get<bool>(MessageHeaders.FailDelivery) ?? false);
-                    if (failDelivery)
-                        throw new ApplicationException("Simulated Delivery Failure Requested");
-
                     StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
                     MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
                     try

@@ -10,7 +10,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 ## Current profile floors
 
 - `UnitArchitecture`: 1868 predeclared unfiltered cases;
-- `LocalIntegration`: 35 unfiltered cases.
+- `LocalIntegration`: 51 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1602,16 +1602,18 @@ test structure.
     LocalIntegration, visible External state, Engineering with zero warnings/errors and two
     independent read-only PASS reviews over separate technical and evidence commits.
 
-Current execution state: the retained provider/configuration/model phase, the first saga-
-concurrency tranche, and the first inbox/bus-outbox delivery tranche are implemented. Native UnitArchitecture now proves model-aware SQL caching,
-explicit provider selection, frozen saga/outbox configuration, one injected time source, exact
-insert-race classification, factory transaction behavior, SQLite optimistic retry/outbox behavior,
-run-scoped database naming and explicit outbox write coordination. LocalIntegration uses the
-canonical PostgreSQL fixture and proves an actual competing-session `FOR UPDATE` lock, a two-level
-customized navigation load and update, and real bus-outbox delivery through the transaction commit
-boundary. The bus-outbox proof covers deferred persistence, exact envelope and raw-header
-preservation, distinct successive batches, causal transaction-commit drain barriers and immediate
-notification without advancing the one-hour fallback poll clock. The accepted working floors for
-this still-active phase are 42 focused EF UnitArchitecture cases, 17 EF LocalIntegration cases and
-3 focused Core notification cases, all without skip; they are progress numbers, not the final
-repository floor.
+Current execution state: the retained provider/configuration/model phase, the saga-concurrency
+tranche and the inbox/bus-outbox delivery tranche through the inherited reliable-messaging boundary
+are implemented. Native UnitArchitecture proves model-aware SQL caching, explicit provider
+selection, frozen saga/outbox configuration, one injected time source, exact insert-race
+classification, factory transaction behavior, SQLite optimistic retry/outbox behavior, run-scoped
+database naming and explicit outbox write coordination. LocalIntegration uses the canonical
+PostgreSQL fixture and proves an actual competing-session `FOR UPDATE` lock, a two-level customized
+navigation load and update, bus-outbox commit delivery, scoped send/publish filters, typed database
+fault recovery, request-saga fault/trace/scope/delay semantics, EF-to-Quartz commit ordering,
+consumer and saga rollback/retry, a real send-pipeline delivery failure and transport-property
+round-trip. The inherited product-only `VSB-Fail-Delivery` test switch is removed; delivery failure
+is injected at the normal send-observer boundary. The accepted working floors for this still-active
+phase are 47 focused EF UnitArchitecture cases, 40 EF LocalIntegration cases, 3 focused Core
+notification cases, 1,868 repository UnitArchitecture cases and 51 repository LocalIntegration
+cases, all without skip. These are progress numbers, not the final 90-obligation closure.

@@ -17,11 +17,6 @@ namespace ViciOne.ServiceBus
         public const string FaultPrefix = Prefix + "Fault-";
 
         /// <summary>
-        /// Set on an outbox message to make its first delivery attempt fail, so a retry can be observed.
-        /// </summary>
-        public const string FailDelivery = Prefix + "Fail-Delivery";
-
-        /// <summary>
         /// The reason for a message action being taken
         /// </summary>
         public const string Reason = Prefix + "Reason";
