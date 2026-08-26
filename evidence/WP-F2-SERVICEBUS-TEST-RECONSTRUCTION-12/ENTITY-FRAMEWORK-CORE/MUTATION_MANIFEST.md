@@ -98,3 +98,89 @@ LocalIntegration owners use a run-scoped PostgreSQL fixture.
 After M07 all four files restored to the baseline hashes recorded above, `git status --short` was
 empty, and `git diff --check` passed in the detached worktree. The main technical branch remained
 stationary on `f1096d531e00e64f2683d4e41542630df2af4550` throughout the four probes.
+
+## Third frozen subject: outbox reliability
+
+M08 through M13 use the exact source bytes of technical commit
+`b95faaeff0be853baa4747df1366f15049d3ec0b`, tree
+`9598ce52248094920b1c59c646b50bb8f37d7288`. Every probe was applied in one isolated detached
+worktree, built in Release from locked assets, and executed only through its named native xUnit 4 / MTP
+2 owner with strict zero-test and fail-on-skip settings. LocalIntegration owners used a fresh
+run-scoped PostgreSQL fixture.
+
+## M08 — discard persisted routing keys during outbox delivery
+
+- Target: `src/ViciOne.ServiceBus/Middleware/OutboxMessageSendPipe.cs`
+- Baseline SHA-256: `501f4e342117980ae1d40fdefe0454da7255a552c569f29e10adbabd69cd962b`
+- Exact mutation: delete only the `ReadPropertiesFrom` block that restores persisted transport
+  properties onto the outgoing send context.
+- Mutant SHA-256: `be489f382fb36a05c84d9cc5181e8a43e441e2f30fdd0fd2f5e060e7e9454c1c`
+- Owner: `ReliableTransactionalOutboxTests.RoutingKeys_RoundTripThroughThePersistentOutbox`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-0c5f84b9b1cc`.
+- Causal failure: the bounded receiver wait expired because the restored message no longer carried
+  the direct-exchange routing key.
+
+## M09 — bypass the Entity Framework outbox before Quartz scheduling
+
+- Target: `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs`
+- Baseline SHA-256: `a5b221161356b72d1b1fdc2352c5994821ca3eea328596649ea29d6d86ed355c`
+- Exact setup sabotage: delete only the `UseEntityFrameworkOutbox<QuartzOutboxDbContext>` endpoint
+  configuration.
+- Mutant SHA-256: `f3d8d0481685498ffaba18cbf3f51edeb09dd11d83fd6df06644ed4ba973760e`
+- Owner: `QuartzTransactionalOutboxTests.ScheduledPublish_ReachesQuartzOnlyAfterTheEntityFrameworkTransactionCommits`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-dec4b99790c6`.
+- Causal failure: the publish observer saw one scheduling command before the commit gate was
+  released; the contract requires exactly zero.
+
+## M10 — remove the real send-boundary failure
+
+- Target: `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs`
+- Baseline SHA-256: `e45ff3984feb7b712fae6bfc0acc5ed6ad8b79f913f32355df9713b9626aab16`
+- Exact setup sabotage: replace the first `ExpectedTransportSendFailure` thrown by the test-owned
+  send observer with successful completion.
+- Mutant SHA-256: `f363d2dfed933491c59eb6adce6546ecc3b863865d8a08d853e9cd4999ca7318`
+- Owner: `ReliableTransactionalOutboxTests.TransportSendFailure_RetriesTheCommittedOutboxWithoutDuplicatingTheMessage`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-803a47eb92ad`.
+- Causal failure: the exact attempt oracle expected two transport sends but observed one.
+
+## M11 — lose the request identity on a delayed saga response
+
+- Target: `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxRequestSagaTests.cs`
+- Baseline SHA-256: `ff528f4d5de3da13ba608acea190a3f22d9aa2857978f810e080d3b8bdffb845`
+- Exact mutation: delete only the assignment of the persisted saga `RequestId` to the delayed
+  response send context.
+- Mutant SHA-256: `817d2bf093bde5ac072ce6b9625117d39b04e5f3d7396887481c33f1736fc33e`
+- Owner: `TransactionalOutboxRequestSagaTests.DelayedSagaResponse_PreservesTheRequestIdentityAcrossTheOutboxSchedule`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-7fede214c4c3`.
+- Causal failure: the requester rejected the response without its correlation identity and reached
+  the bounded request timeout.
+
+## M12 — replace the originating publish scope with an unrelated identity
+
+- Target: `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ScopedOutboxFilterTests.cs`
+- Baseline SHA-256: `9e7fb6598bae45b329796c6819b5f7be2587414c903a16363007e50d4625d960`
+- Exact setup sabotage: report `Guid.Empty` from the publish filter while still resolving the real
+  scoped dependency.
+- Mutant SHA-256: `4dd59dda378637496be194d05b2795d8b7dac86740deb28a738e0858d632c620`
+- Owner: `ScopedOutboxFilterTests.ConsumeOutboxPublishFilter_UsesTheExactConsumerScope`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-50be6e95006d`.
+- Causal failure: the exact identity assertion received only the zero identity instead of the
+  consumer scope.
+
+## M13 — suppress the first transactional failure
+
+- Target: `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxFaultTests.cs`
+- Baseline SHA-256: `eedc3eda63aa52d720057689dd7492c09fa11717ecbe2d4f745844cf03ac50fe`
+- Exact setup sabotage: change the first-attempt failure predicate from `attempt == 1` to the
+  unreachable `attempt == int.MaxValue`.
+- Mutant SHA-256: `59f81c7b5d9bd50f65468d7034d46c111b8ea5e4aca35c8b6260abece2de1a20`
+- Owner: `TransactionalOutboxFaultTests.FirstAttemptFailure_RollsBackItsOutboxAndTheRetryPublishesEachEffectOnce`
+- Result: 1 total, 1 failed, 0 skipped; run identity `vicione-029a49b0179a`.
+- Causal failure: the exact delivery-attempt oracle expected two attempts but observed one.
+
+## Third restore closure
+
+After M13 all six target files matched the baseline SHA-256 values above, `git status --short` and
+`git diff --check` were clean, and the detached mutation worktree was removed normally. The main
+product worktree was not changed by any probe. Its already prepared Quartz observer refinement was
+validated after the probe series and then frozen as part of technical commit `b95faaef`.

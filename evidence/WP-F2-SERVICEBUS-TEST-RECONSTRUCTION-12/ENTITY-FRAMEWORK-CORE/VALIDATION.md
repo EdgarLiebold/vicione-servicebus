@@ -88,3 +88,41 @@ M04 through M07 in `MUTATION_MANIFEST.md` independently prove the shared optimis
 read-only persistence boundary, pessimistic navigation query and PostgreSQL `FOR UPDATE` ownership.
 Each isolated mutant compiled, its one named owner failed for the stated cause with MTP exit code 2,
 and the detached worktree restored byte-identically to the second frozen subject.
+
+## Third frozen subject: transactional outbox reliability
+
+- Final technical commit: `b95faaeff0be853baa4747df1366f15049d3ec0b`
+- Final technical tree: `9598ce52248094920b1c59c646b50bb8f37d7288`
+- Technical range: `9e755a6a..b95faaef`
+- Component commits: `debec2dbb4e0aa582a893422678e2708860c3049` and
+  `b95faaeff0be853baa4747df1366f15049d3ec0b`
+
+The third subject replaces `OBL-R0-PER-0018..0032` with fifteen source-mirrored native
+LocalIntegration facts and adds one separately identified rollback-hardening fact. The exact
+one-to-one inherited disposition and the independent hardening entry are bound in
+`OUTBOX_RELIABILITY_DISPOSITIONS.json`; no theory row carries multiple inherited obligations.
+
+The new owners prove exact consumer/application scope identity, typed database constraint faults and
+endpoint recovery, original request-fault identity, one terminal fault after retries, exact saga
+OpenTelemetry and scoped endpoint proxies, deterministic delayed response identity, EF-to-Quartz
+commit ordering, complete consumer and saga rollback semantics, recovery from a real serialized
+transport-send failure, and routing-key persistence. The former `VSB-Fail-Delivery` product hook is
+removed; failure injection is exclusively test-owned and uses the normal observer boundary.
+
+The locked Engineering restore completed successfully for the complete graph. The final Engineering
+Release build completed with exit code 0, zero warnings and zero errors. The unfiltered serial
+UnitArchitecture profile completed with 1,868/1,868 passed, zero failed and zero skipped. The
+unfiltered LocalIntegration profile completed with 51/51 passed, zero failed and zero skipped against
+fresh run-scoped PostgreSQL and Azurite fixtures (`vicione-e96131c6c3d1`). The focused final
+EF-to-Quartz owner also passed 1/1 after its observer was made complete for both publish and send
+forms (`vicione-03350e6b178f`).
+
+M08 through M13 independently prove transport-property restoration, the EF-before-Quartz commit
+boundary, a real send-failure retry, delayed request identity, originating scope identity and
+first-attempt rollback. Every mutant compiled and its one named owner failed for the exact stated
+reason. All six target files then matched their frozen baseline hashes, the detached worktree was
+clean and it was removed normally.
+
+This is a phase disposition, not permission to delete the inherited EF project. Its physical files
+remain untouched until all 90 assigned EF obligations have terminal dispositions and the project can
+be retired atomically.

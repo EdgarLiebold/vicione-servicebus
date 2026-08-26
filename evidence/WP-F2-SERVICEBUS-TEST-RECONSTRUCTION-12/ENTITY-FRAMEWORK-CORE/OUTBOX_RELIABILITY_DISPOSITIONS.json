@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "b95faaeff0be853baa4747df1366f15049d3ec0b",
+  "technicalTree": "9598ce52248094920b1c59c646b50bb8f37d7288",
+  "profile": "LocalIntegration",
+  "inheritedRange": "OBL-R0-PER-0018..OBL-R0-PER-0032",
+  "dispositions": [
+    {
+      "obligationId": "OBL-R0-PER-0018",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SCOPED-FILTER",
+      "variant": "consume-outbox-publish-filter-retains-originating-scope",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ScopedOutboxFilterTests.ConsumeOutboxPublishFilter_UsesTheExactConsumerScope"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0019",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SCOPED-FILTER",
+      "variant": "bus-outbox-send-filter-retains-originating-scope",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ScopedOutboxFilterTests.BusOutboxSendFilter_UsesTheExactApplicationScope"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0020",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-TRANSACTION",
+      "variant": "database-constraint-fault-does-not-poison-endpoint",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxFaultTests.DuplicateKeyFailure_PublishesTheTypedDatabaseFaultAndTheEndpointRecovers"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0021",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SAGA-REQUEST",
+      "variant": "failed-request-surfaces-original-saga-fault",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxRequestSagaTests.FailedSagaRequest_ReturnsARequestFaultWithTheOriginalException"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0022",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SAGA-FAULT",
+      "variant": "retries-emit-one-terminal-fault",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxRequestSagaTests.RetriedSagaFailure_EmitsOneTerminalFaultAfterAllAttempts"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0023",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SAGA-OBSERVABILITY",
+      "variant": "successful-request-emits-saga-activity",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxRequestSagaTests.SuccessfulSagaRequest_RespondsUnderTheExactOpenTelemetrySagaActivity"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0024",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SAGA-SCOPE",
+      "variant": "state-machine-activity-receives-correlation-proxies",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxRequestSagaTests.SuccessfulSagaRequest_ProvidesCorrelationScopedEndpointsToTheStateMachineActivity"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0025",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-SAGA-SCHEDULE",
+      "variant": "delayed-response-preserves-response-address-and-request-id",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxRequestSagaTests.DelayedSagaResponse_PreservesTheRequestIdentityAcrossTheOutboxSchedule"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0026",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-QUARTZ",
+      "variant": "schedule-command-is-committed-before-quartz-registration",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.QuartzTransactionalOutboxTests.ScheduledPublish_ReachesQuartzOnlyAfterTheEntityFrameworkTransactionCommits"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0027",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-RELIABLE-CONSUMER",
+      "variant": "successful-consume-commits-complete-event-set-once",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.ReliableConsumer_SuccessCommitsTheCompleteEventSetExactlyOnce"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0028",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-RELIABLE-CONSUMER",
+      "variant": "failed-attempt-rolls-back-before-complete-retry-event-set",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.ReliableConsumer_FirstFailureRollsBackBeforeTheRetryCommitsEachEventOnce"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0029",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-RELIABLE-SAGA",
+      "variant": "self-addressed-message-commits-terminal-state",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.ReliableSaga_CommitsItsSelfAddressedMessageAndTerminalState"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0030",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-RELIABLE-SAGA",
+      "variant": "failed-first-attempt-rolls-back-before-terminal-retry",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.ReliableSaga_FirstAttemptFailureRollsBackBeforeOneTerminalRetry"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0031",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-DELIVERY-RECOVERY",
+      "variant": "real-send-pipeline-failure-retries-without-duplicate",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.TransportSendFailure_RetriesTheCommittedOutboxWithoutDuplicatingTheMessage"
+    },
+    {
+      "obligationId": "OBL-R0-PER-0032",
+      "disposition": "REPLACED_EXECUTING",
+      "requirementId": "REQ-VSB-EF-OUTBOX-TRANSPORT-PROPERTIES",
+      "variant": "routing-key-round-trips-through-persistence",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.ReliableTransactionalOutboxTests.RoutingKeys_RoundTripThroughThePersistentOutbox"
+    }
+  ],
+  "newHardening": [
+    {
+      "hardeningId": "NEW-HARDENING-EF-OUTBOX-ROLLBACK-001",
+      "requirementId": "REQ-VSB-EF-OUTBOX-TRANSACTION",
+      "variant": "failed-attempt-rolls-back-before-single-successful-retry",
+      "targetMethod": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration.TransactionalOutboxFaultTests.FirstAttemptFailure_RollsBackItsOutboxAndTheRetryPublishesEachEffectOnce"
+    }
+  ]
+}

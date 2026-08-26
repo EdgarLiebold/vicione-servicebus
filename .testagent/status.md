@@ -815,5 +815,11 @@ future cohorts as complete.
 - The complete locked Engineering restore passes and the complete Engineering Release build has
   zero warnings and zero errors. The unfiltered native UnitArchitecture profile passes 1,868/1,868;
   LocalIntegration passes 51/51 against fresh run-scoped PostgreSQL and Azurite resources
-  (`vicione-511fa6bf3885`); both have zero failure and zero skip. The inherited EF test project is
+  (`vicione-e96131c6c3d1`); both have zero failure and zero skip. The inherited EF test project is
   retained unchanged until the full 90-obligation assignment can be retired atomically.
+- The third EF subject is frozen at technical commit
+  `b95faaeff0be853baa4747df1366f15049d3ec0b`, tree
+  `9598ce52248094920b1c59c646b50bb8f37d7288`. Its fifteen inherited dispositions and one separate
+  rollback-hardening owner are bound under the EF evidence root. Six exact one-cause probes cover
+  routing-property restoration, EF-to-Quartz commit ordering, send-failure retry, delayed request
+  identity, originating publish scope and first-attempt rollback; all six restore byte-identically.
