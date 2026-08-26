@@ -759,3 +759,28 @@ future cohorts as complete.
   1824/1824, focused Quartz is 87/87 and LocalIntegration is 17/17, all with zero failure or skip.
   M13 removes only the cancellation boundary: the requested-cancellation owner fails while the
   unrequested-dependency control remains green, and the product source restores byte-identically.
+
+## Lead implementation: Entity Framework Core persistence and outbox foundation
+
+- Technical commit `8ea356043316861f0ac983de5fa8470410e2f9ca`, tree
+  `3d645d11219a32a05280f70310a72f5dc8f9afaa`, is the frozen implementation subject.
+- SQLite, PostgreSQL and SQL Server/Azure SQL remain supported; unrequired MySQL and Oracle adapter
+  APIs are removed. Provider selection is explicit and runtime configuration is immutable.
+- SQL generation resolves every table, schema, property and sort column from the exact EF model,
+  quotes provider identifiers and does not freeze the first model in a process-global cache.
+- Saga load/query and transaction behavior uses one configured strategy. Insert-race recovery is
+  cancellation-safe and accepts only the exact failed saga entry followed by the exact existing
+  identity. SQLite optimistic concurrency and real PostgreSQL pessimistic locking are both proved.
+- Outbox writes have one scoped coordination owner and pure envelope factory. Public EF execution
+  strategies govern retry; message-text heuristics and concrete-strategy type checks are gone.
+  Concurrent inbox deliveries deduplicate effects while preserving the actual outer-delivery count.
+- Outbox notification uses the injected `TimeProvider`, retains a signal delivered before waiter
+  registration and rejects a second concurrent waiter without replacing the first.
+- Locked Engineering restore passes. The complete Engineering Release build has zero warnings and
+  zero errors. UnitArchitecture passes 1867/1867 and LocalIntegration passes 28/28 against
+  run-scoped PostgreSQL and Azurite, with zero failure and zero skip.
+- Three exact one-cause mutations independently prove retained pre-wait notification, SQL Server
+  sort-column quoting and exact EF failed-entry classification. Each mutant builds, fails only its
+  intended native owner with exit code 2 and restores the frozen source hashes exactly.
+- Full validation is recorded under
+  `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/`.
