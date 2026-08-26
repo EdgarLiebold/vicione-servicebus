@@ -141,6 +141,11 @@ def workflow_jobs(root: Path) -> dict[str, str]:
         raise WorkflowShapeError(".github/workflows/build.yml is missing")
 
     lines = workflow.read_text(encoding="utf-8").splitlines()
+    for number, line in enumerate(lines, 1):
+        if line == line.lstrip() and re.match(r"^(?:defaults|['\"]defaults['\"])\s*:", line):
+            raise WorkflowShapeError(
+                f"line {number}: top-level defaults are forbidden because they can replace or "
+                "weaken every verification shell")
     if not any(line.rstrip() == "jobs:" for line in lines):
         raise WorkflowShapeError("the workflow has no plain 'jobs:' section")
 

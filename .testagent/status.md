@@ -658,7 +658,7 @@ future cohorts as complete.
 - The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
   eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
   and SignalR 26 executable replacements plus two non-executing inherited methods.
-- The transition-tool self-tests pass 217/217 under `tools/ci` and 103/103 under `tools/identity`.
+- The transition-tool self-tests pass 218/218 under `tools/ci` and 103/103 under `tools/identity`.
   The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
   SignalR 32/32, all without skips.
 - A locked static-graph restore and the complete Root and Engineering Release builds pass; both
@@ -675,3 +675,5 @@ future cohorts as complete.
   provenance oracle. Verification jobs now have exactly four allowed steps: pinned checkout, pinned
   SDK setup, the canonical selection call and pinned result upload. An independent literal legal
   contract checks all four unique source-to-target pairs and the exact NOTICE/MODIFICATIONS sections.
+- Workflow-level `defaults.run.shell` is rejected before job parsing, so the same shell override cannot
+  neutralize every otherwise valid Verify step from outside the four-step job boundary.

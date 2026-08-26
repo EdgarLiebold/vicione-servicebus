@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -110,6 +111,23 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             "- name: Verify",
             "run: python3 tools/ci/verify.py --selection core",
         ))
+
+    def test_rejects_workflow_level_default_shell_that_swallows_every_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workflow = root / ".github/workflows/build.yml"
+            workflow.parent.mkdir(parents=True)
+            workflow.write_text(
+                "defaults:\n"
+                "  run:\n"
+                "    shell: bash {0} || true\n"
+                "jobs:\n"
+                "  core-unit:\n"
+                + self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(model.WorkflowShapeError, "top-level defaults"):
+                model.workflow_jobs(root)
 
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))
