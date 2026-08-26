@@ -47,6 +47,24 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
     def assert_rejected(self, text: str, selection: str = "core") -> None:
         self.assertTrue(model.verification_step_findings("core-unit", text, selection))
 
+    def assert_workflow_rejected(self, contents: str, message: str) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workflow = root / ".github/workflows/build.yml"
+            workflow.parent.mkdir(parents=True)
+            workflow.write_text(contents, encoding="utf-8")
+            with self.assertRaisesRegex(model.WorkflowShapeError, message):
+                model.workflow_jobs(root)
+
+    def canonical_workflow(self, prefix: str = "", suffix: str = "") -> str:
+        return (
+            prefix
+            + "jobs:\n"
+            + "  core-unit:\n"
+            + self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
+            + suffix
+        )
+
     def test_accepts_exactly_one_canonical_unconditional_step(self) -> None:
         text = self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
         self.assertEqual([], model.verification_step_findings("core-unit", text, "core"))
@@ -113,21 +131,87 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
         ))
 
     def test_rejects_workflow_level_default_shell_that_swallows_every_failure(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow(
+                "defaults:\n  run:\n    shell: bash {0} || true\n",
+            ),
+            "top-level defaults",
+        )
+
+    def test_rejects_workflow_level_defaults_after_the_jobs_section(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow(
+                suffix="defaults:\n  run:\n    shell: bash {0} || true\n",
+            ),
+            "top-level defaults",
+        )
+
+    def test_rejects_single_quoted_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow("'defaults':\n  run:\n    shell: bash {0} || true\n"),
+            "supported unquoted plain form",
+        )
+
+    def test_rejects_double_quoted_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow('"defaults":\n  run:\n    shell: bash {0} || true\n'),
+            "supported unquoted plain form",
+        )
+
+    def test_rejects_escaped_double_quoted_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow('"def\\u0061ults":\n  run:\n    shell: bash {0} || true\n'),
+            "supported unquoted plain form",
+        )
+
+    def test_rejects_tagged_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow("!<tag:yaml.org,2002:str> defaults:\n  run:\n    shell: bash {0} || true\n"),
+            "supported unquoted plain form",
+        )
+
+    def test_rejects_complex_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow("? defaults\n:\n  run:\n    shell: bash {0} || true\n"),
+            "supported unquoted plain form",
+        )
+
+    def test_rejects_top_level_anchors_and_merge_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow(
+                "x-defaults: &workflow-defaults\n  run:\n    shell: bash {0} || true\n"
+                "<<: *workflow-defaults\n",
+            ),
+            "unsupported top-level workflow key",
+        )
+
+    def test_rejects_a_utf8_byte_order_mark(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow("\ufeff"),
+            "byte-order mark",
+        )
+
+    def test_rejects_duplicate_top_level_keys(self) -> None:
+        self.assert_workflow_rejected(
+            self.canonical_workflow("name: First\nname: Second\n"),
+            "declared twice",
+        )
+
+    def test_accepts_every_supported_plain_top_level_key(self) -> None:
+        contents = self.canonical_workflow(
+            "name: Required CI\n"
+            "run-name: Required CI run\n"
+            "on:\n  push:\n"
+            "permissions:\n  contents: read\n"
+            "env:\n  DOTNET_NOLOGO: 1\n"
+            "concurrency:\n  group: required-ci\n",
+        )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             workflow = root / ".github/workflows/build.yml"
             workflow.parent.mkdir(parents=True)
-            workflow.write_text(
-                "defaults:\n"
-                "  run:\n"
-                "    shell: bash {0} || true\n"
-                "jobs:\n"
-                "  core-unit:\n"
-                + self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core"),
-                encoding="utf-8",
-            )
-            with self.assertRaisesRegex(model.WorkflowShapeError, "top-level defaults"):
-                model.workflow_jobs(root)
+            workflow.write_text(contents, encoding="utf-8")
+            self.assertEqual(["core-unit"], sorted(model.workflow_jobs(root)))
 
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))

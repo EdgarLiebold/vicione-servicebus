@@ -42,6 +42,20 @@ CHECKOUT_ACTION_STEP = "- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181
 SETUP_DOTNET_ACTION_STEP = "- uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0"
 UPLOAD_ARTIFACT_ACTION_STEP = "- uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"
 
+# The line reader intentionally supports only the canonical subset used by this repository. GitHub
+# accepts additional YAML spellings, but accepting syntax that this reader does not understand would
+# let YAML semantics differ from the text being verified. Workflow-level defaults are deliberately
+# absent because they can replace the shell of every required verification step.
+WORKFLOW_TOP_LEVEL_KEYS = frozenset({
+    "name",
+    "run-name",
+    "on",
+    "permissions",
+    "env",
+    "concurrency",
+    "jobs",
+})
+
 
 class SelectionError(RuntimeError):
     """A selection that cannot be resolved to a set of categories."""
@@ -133,20 +147,41 @@ def workflow_jobs(root: Path) -> dict[str, str]:
 
     Deliberately a small line reader rather than a YAML parser, because it must not depend on a
     package to run before a restore. It therefore refuses everything it was not written for: a
-    missing or empty jobs section, a job key that is not a plain name, a flow mapping, an anchor or
-    a merge key.
+    quoted, escaped, tagged or complex top-level key, a BOM, workflow defaults, a missing or empty
+    jobs section, a job key that is not a plain name, a flow mapping, an anchor or a merge key.
     """
     workflow = root / ".github/workflows/build.yml"
     if not workflow.is_file():
         raise WorkflowShapeError(".github/workflows/build.yml is missing")
 
-    lines = workflow.read_text(encoding="utf-8").splitlines()
+    raw_workflow = workflow.read_bytes()
+    if raw_workflow.startswith(b"\xef\xbb\xbf"):
+        raise WorkflowShapeError("the workflow must be UTF-8 without a byte-order mark")
+    try:
+        lines = raw_workflow.decode("utf-8").splitlines()
+    except UnicodeDecodeError as error:
+        raise WorkflowShapeError("the workflow must be valid UTF-8") from error
+
+    top_level_keys: set[str] = set()
     for number, line in enumerate(lines, 1):
-        if line == line.lstrip() and re.match(r"^(?:defaults|['\"]defaults['\"])\s*:", line):
+        if not line or line.startswith("#") or line != line.lstrip():
+            continue
+        match = re.fullmatch(r"([a-z][a-z-]*):(?:[ \t].*)?", line)
+        if match is None:
+            raise WorkflowShapeError(
+                f"line {number}: top-level workflow keys must use the supported unquoted plain form")
+        key = match.group(1)
+        if key == "defaults":
             raise WorkflowShapeError(
                 f"line {number}: top-level defaults are forbidden because they can replace or "
                 "weaken every verification shell")
-    if not any(line.rstrip() == "jobs:" for line in lines):
+        if key not in WORKFLOW_TOP_LEVEL_KEYS:
+            raise WorkflowShapeError(f"line {number}: unsupported top-level workflow key '{key}'")
+        if key in top_level_keys:
+            raise WorkflowShapeError(f"line {number}: top-level workflow key '{key}' is declared twice")
+        top_level_keys.add(key)
+
+    if "jobs" not in top_level_keys or not any(line.rstrip() == "jobs:" for line in lines):
         raise WorkflowShapeError("the workflow has no plain 'jobs:' section")
 
     jobs: dict[str, str] = {}
