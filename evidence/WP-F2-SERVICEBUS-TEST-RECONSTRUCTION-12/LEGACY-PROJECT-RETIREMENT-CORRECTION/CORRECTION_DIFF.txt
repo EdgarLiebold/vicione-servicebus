@@ -1,0 +1,10 @@
+M	.github/workflows/build.yml
+M	.testagent/status.md
+M	CHANGELIST.md
+M	MODIFICATIONS.md
+M	NOTICE
+A	tools/ci/tests/test_verification_model.py
+M	tools/ci/verification/model.py
+M	tools/identity/identity_gate.py
+M	tools/identity/identity_rules.py
+M	tools/identity/test_identity_gate.py

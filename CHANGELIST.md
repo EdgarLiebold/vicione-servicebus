@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2003 |
+| Added | 2010 |
 | Modified | 4236 |
 | Deleted | 1412 |
 | Renamed | 2 |
@@ -911,6 +911,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/CORRECTION_DIFF.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/final-change-list.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/final-ci-tool-tests.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/final-identity-tool-tests.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION/final-verification-model.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT/RETIRED_PATHS.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT/VALIDATION.md` | Added |  |
