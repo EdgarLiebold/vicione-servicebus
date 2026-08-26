@@ -63,3 +63,28 @@ recorded baseline SHA-256 values.
 The broader inherited Activity-listener no-throw normalization is deliberately recorded in
 `TODO.md` as one path-complete observability slice. It is not partially patched in EF and is not
 claimed as closed by this evidence.
+
+## Second frozen subject: saga persistence semantics
+
+- Technical commit: `f1096d531e00e64f2683d4e41542630df2af4550`
+- Technical tree: `89ee8622c1bae270af661c3d098d4b98aaa7b17b`
+- Technical parent: `700021c7225b640ff4f54ffaed17e402d5ebd383`
+
+The second subject adds source-mirrored PostgreSQL owners for correlated saga lifecycle, exact
+pessimistic and optimistic transaction isolation, transactionless operation, read-only state-machine
+events, same-correlation row-lock serialization and required two-level navigation graphs. It also
+corrects `SetOptimisticConcurrency()` to use the same isolation-policy owner as the `ConcurrencyMode`
+property. No inherited EF test file is removed before the complete 90-obligation assignment reaches
+one atomic terminal disposition.
+
+The complete 42-project locked Engineering restore completed with exit code 0. The complete
+Engineering Release build completed with zero warnings and zero errors. The unfiltered native
+UnitArchitecture solution passed 1,868/1,868 with zero failure and zero skip. The unfiltered native
+LocalIntegration solution passed 35/35 against fresh run-scoped PostgreSQL and Azurite fixtures
+(`vicione-d545bbb0be4f`), also with zero failure and zero skip. The Entity Framework subsets passed
+47/47 UnitArchitecture and 24/24 LocalIntegration.
+
+M04 through M07 in `MUTATION_MANIFEST.md` independently prove the shared optimistic default,
+read-only persistence boundary, pessimistic navigation query and PostgreSQL `FOR UPDATE` ownership.
+Each isolated mutant compiled, its one named owner failed for the stated cause with MTP exit code 2,
+and the detached worktree restored byte-identically to the second frozen subject.

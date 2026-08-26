@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2182 |
+| Added | 2185 |
 | Modified | 4217 |
 | Deleted | 1431 |
 | Renamed | 2 |
@@ -7392,6 +7392,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaQueryCustomizationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlReadOnlySagaTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaConcurrencyTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaRepositoryIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs` | Added |  |

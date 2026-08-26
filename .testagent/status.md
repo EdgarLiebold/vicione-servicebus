@@ -796,3 +796,8 @@ future cohorts as complete.
   The unfiltered UnitArchitecture profile passes 1868/1868 and LocalIntegration passes 35/35 against
   fresh run-scoped PostgreSQL and Azurite, all with zero failure and zero skip. The inherited EF test
   project remains unchanged until all 90 assigned obligations can be retired atomically.
+- The second EF subject is frozen at technical commit `f1096d531e00e64f2683d4e41542630df2af4550`.
+  Four isolated one-cause probes independently kill a bypass of the optimistic isolation policy, a
+  writable read-only event, omitted pessimistic query customization and omitted PostgreSQL row
+  locking. Every changed byte restored to its recorded baseline hash before the detached worktree
+  was closed.
