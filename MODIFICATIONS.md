@@ -35,6 +35,16 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
 Which file each of these touched is not repeated here. The generated
 [CHANGELIST.md](CHANGELIST.md) is the section 4(b) record and holds the complete path inventory.
 
+## Changed files without an in-file modification comment
+
+The following retained baseline files are changed, but their format cannot carry a syntax-valid
+in-file comment. Their exact paths are therefore recorded here and in `NOTICE`:
+
+- `ViciOne.ServiceBus.slnx`
+- `ViciOne.ServiceBus.snk`
+- `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json`
+- `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12`
+
 ## ViciOne modification: greenfield circuit breaker and message journal, 2026-08-25
 
 The inherited circuit-breaker configurator, router-event and timer model was replaced by one

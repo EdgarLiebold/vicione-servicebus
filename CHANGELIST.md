@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2002 |
+| Added | 2003 |
 | Modified | 4236 |
 | Deleted | 1412 |
 | Renamed | 2 |
@@ -7629,6 +7629,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/ci/tests/test_record_expected.py` | Added |  |
 | `tools/ci/tests/test_run_broker_category.py` | Added |  |
 | `tools/ci/tests/test_run_test_category.py` | Added |  |
+| `tools/ci/tests/test_verification_model.py` | Added |  |
 | `tools/ci/tests/test_verify.py` | Added |  |
 | `tools/ci/validate_receipt.py` | Added |  |
 | `tools/ci/verification/__init__.py` | Added |  |

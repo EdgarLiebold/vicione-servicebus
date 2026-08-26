@@ -16,6 +16,7 @@ from identity_gate import (
     test_sabotage_findings,
     validate_evidence_records,
     validate_format_exceptions,
+    validate_legal_documents,
     validate_test_run,
 )
 from identity_rules import FORMER_PASCAL
@@ -156,6 +157,10 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
         findings = validate_format_exceptions(root, {"README.md"})
         self.assertTrue(findings)
         self.assertTrue(all(item.gate == "legal-format-exception" for item in findings))
+
+    def test_active_legal_documents_and_format_exceptions_are_consistent(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        self.assertEqual([], validate_legal_documents(root))
 
     def test_rejects_missing_baseline_evidence_record(self) -> None:
         expected = [{"baselineKey": "key-a", "targetPath": "a"}]

@@ -55,15 +55,19 @@ FORMER_TEST_URL = "".join(("http://", "m", "t.com"))
 FORMER_TRADE_TYPE = "".join(("TradeBooked", "M", "T"))
 FORMER_TRADES_TYPE = "".join(("TradesBooked", "M", "T"))
 
-COMMENTLESS_OR_BINARY_EXCEPTIONS = frozenset(
-    {
-        "ViciOne.ServiceBus.slnx",
-        "ViciOne.ServiceBus.snk",
-        "tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/texts.txt",
-        "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json",
-        "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12",
-    }
-)
+# Exact source-to-target bindings for changed baseline files whose format cannot carry a valid
+# in-file modification comment. The source path is explicit because several files moved while the
+# repository structure was normalized; deriving it from the target name would silently lose that
+# provenance.
+COMMENTLESS_OR_BINARY_BASELINE_SOURCES = {
+    "ViciOne.ServiceBus.slnx": "MassTransit.sln",
+    "ViciOne.ServiceBus.snk": "MassTransit.snk",
+    "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json":
+        "tests/MassTransit.EventHubIntegration.Tests/config.json",
+    "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12":
+        "tests/MassTransit.RabbitMqTransport.Tests/client.p12",
+}
+COMMENTLESS_OR_BINARY_EXCEPTIONS = frozenset(COMMENTLESS_OR_BINARY_BASELINE_SOURCES)
 
 
 @dataclass(frozen=True)

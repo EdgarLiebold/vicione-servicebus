@@ -47,6 +47,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # Temporary takeover runners remain executable until the behavior cohort they protect has an
       # accepted native replacement. They are not extended with new test architecture.
+      - name: Verification model
+        run: python3 tools/ci/verification/model.py
       - name: CI tool self-tests
         run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
       - name: Identity tool self-tests

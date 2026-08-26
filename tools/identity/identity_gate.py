@@ -20,6 +20,7 @@ from typing import Iterable
 from identity_rules import (
     BASELINE_COMMIT,
     COMMENTLESS_OR_BINARY_EXCEPTIONS,
+    COMMENTLESS_OR_BINARY_BASELINE_SOURCES,
     FORMER_IDENTITY_REGISTRY,
     FORMER_PASCAL,
     LEGAL_OR_PROVENANCE_PATHS,
@@ -468,6 +469,7 @@ def validate_format_exceptions(
 ) -> list[Finding]:
     findings: list[Finding] = []
     target_sources = {map_path(source): source for source in baseline_paths(root)}
+    target_sources.update(COMMENTLESS_OR_BINARY_BASELINE_SOURCES)
     for target in sorted(set(exceptions)):
         source = target_sources.get(target)
         target_path = root / target

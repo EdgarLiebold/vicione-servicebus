@@ -658,9 +658,16 @@ future cohorts as complete.
 - The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
   eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
   and SignalR 26 executable replacements plus two non-executing inherited methods.
-- The unchanged transition-tool self-tests pass 206/206 under `tools/ci` and 99/99 under
-  `tools/identity`. The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
+- The transition-tool self-tests pass 215/215 under `tools/ci` and 100/100 under `tools/identity`.
+  The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
   SignalR 32/32, all without skips.
 - A locked static-graph restore and the complete Root and Engineering Release builds pass; both
   builds have zero warnings and zero errors. The unfiltered UnitArchitecture profile remains at its
   enforced 1699/1699 floor with zero failures and zero skips.
+- The independent review found that the verification model checked only its internal job-to-selection
+  map, not the command executed by the required workflow. Every verifying job is now bound to exactly
+  one unconditional canonical `verify.py` step, with wrong, missing, duplicate, conditional,
+  continue-on-error and shell-composed calls rejected. Required CI executes the model validator.
+- The removed Abstractions text fixture is no longer a legal-format exception. The four retained
+  commentless or binary files now carry explicit baseline-source-to-current-target bindings, including
+  normalized solution and transport-test paths; `NOTICE` and `MODIFICATIONS.md` agree exactly.

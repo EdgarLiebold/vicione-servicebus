@@ -37,6 +37,8 @@ PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjec
 # Jobs of the required profile that verify nothing, so the model's job map does not name them.
 NON_VERIFYING_JOBS = ("legacy-tooling", "build", "pack")
 
+VERIFY_ENTRYPOINT = "python3 tools/ci/verify.py"
+
 
 class SelectionError(RuntimeError):
     """A selection that cannot be resolved to a set of categories."""
@@ -172,6 +174,65 @@ def workflow_jobs(root: Path) -> dict[str, str]:
         raise WorkflowShapeError("the jobs section is empty")
 
     return jobs
+
+
+def verification_step_findings(job: str, job_text: str, selection: str) -> list[str]:
+    """Refuse a workflow job that does not execute its model-owned selection exactly once.
+
+    The verification model owns the job-to-selection mapping. The workflow owns only the mechanical
+    call into that model. This boundary is deliberately narrow: the verifying step has exactly a name
+    and one canonical command. Conditions, continue-on-error, shell composition and multi-line command
+    construction would all create a second way for the workflow to weaken or replace the model.
+    """
+    problems: list[str] = []
+    expected = ("- name: Verify", f"run: {VERIFY_ENTRYPOINT} --selection {selection}")
+
+    lines = job_text.splitlines()
+    for line in lines:
+        if line.startswith("    ") and not line.startswith("      "):
+            directive = line.strip()
+            if directive.startswith(("if:", "continue-on-error:")):
+                problems.append(
+                    f"workflow job '{job}' has the job-level control '{directive}', so its required "
+                    "verification can be skipped or ignored")
+
+    blocks: list[list[str]] = []
+    current: list[str] | None = None
+    inside_steps = False
+    for line in lines:
+        if line == "    steps:":
+            inside_steps = True
+            continue
+        if not inside_steps:
+            continue
+        if line.startswith("      - "):
+            if current is not None:
+                blocks.append(current)
+            current = [line.strip()]
+        elif current is not None and line.startswith("        "):
+            stripped = line.strip()
+            if stripped and not stripped.startswith("#"):
+                current.append(stripped)
+        elif line.strip() and not line.startswith("      "):
+            if current is not None:
+                blocks.append(current)
+                current = None
+            inside_steps = False
+    if current is not None:
+        blocks.append(current)
+
+    invoking = [
+        tuple(block)
+        for block in blocks
+        if any("tools/ci/verify.py" in line for line in block)
+    ]
+    if invoking != [expected]:
+        rendered = "; ".join(" | ".join(block) for block in invoking) or "<missing>"
+        problems.append(
+            f"workflow job '{job}' must contain exactly the canonical step "
+            f"'{expected[0]} | {expected[1]}', found: {rendered}")
+
+    return problems
 
 
 LINE_COMMENT = re.compile(r"//[^\n]*")
@@ -470,9 +531,9 @@ def findings(root: Path) -> list[str]:
     for entry in sorted({tuple(t) for t in tuples if tuples.count(t) > 1}):
         problems.append(f"the run {entry} is declared more than once")
 
-    # The workflow names a selection and nothing else, so what is compared here is the map from job to
-    # selection, not the text of a step. Checking a job body for '--category x' was a second copy of the
-    # model inside YAML, and two copies of one truth are two truths.
+    # The model is the only owner of the job-to-selection map. The workflow must nevertheless prove
+    # that each job mechanically invokes that exact selection; otherwise a job can run a different,
+    # green selection while the model validates only its own disconnected map.
     # Every selection, not only the ones a job names. A selection that resolves in a circle or to
     # nothing is a scope somebody can ask for, and asking for it is where it would be found otherwise.
     for name in sorted(model.get("selections") or {}):
@@ -490,6 +551,7 @@ def findings(root: Path) -> list[str]:
             problems.append(f"the model gives job '{job}' the selection '{selection}', and the workflow "
                             "has no such job")
             continue
+        problems.extend(verification_step_findings(job, jobs[job], selection))
         try:
             for category in resolve_selection(model, selection):
                 reached.setdefault(category, []).append(job)
