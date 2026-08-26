@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Storage;
     using Microsoft.Extensions.Options;
     using Middleware;
 
@@ -21,12 +20,15 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly IsolationLevel _isolationLevel;
         readonly ILockStatementProvider _lockStatementProvider;
         readonly IServiceProvider _provider;
+        readonly TimeProvider _timeProvider;
         string _lockStatement;
 
-        public EntityFrameworkOutboxContextFactory(TDbContext dbContext, IServiceProvider provider, IOptions<EntityFrameworkOutboxOptions<TDbContext>> options)
+        public EntityFrameworkOutboxContextFactory(TDbContext dbContext, IServiceProvider provider, IOptions<EntityFrameworkOutboxOptions<TDbContext>> options,
+            TimeProvider timeProvider)
         {
             _dbContext = dbContext;
             _provider = provider;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             _lockStatementProvider = options.Value.LockStatementProvider;
             _isolationLevel = options.Value.IsolationLevel;
         }
@@ -35,6 +37,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             where T : class
         {
             var messageId = context.GetOriginalMessageId() ?? throw new MessageException(typeof(T), "MessageId required to use the outbox");
+            var updateDeliveryCount = true;
 
             _lockStatement ??= _lockStatementProvider.GetRowLockStatement<InboxState>(_dbContext, nameof(InboxState.MessageId), nameof(InboxState.ConsumerId));
 
@@ -63,9 +66,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                         {
                             MessageId = messageId,
                             ConsumerId = options.ConsumerId,
-                            Received = DateTime.UtcNow,
+                            Received = _timeProvider.GetUtcNow().UtcDateTime,
                             LockId = lockId,
-                            ReceiveCount = 0
+                            ReceiveCount = 1
                         };
 
                         await _dbContext.AddAsync(inboxState).ConfigureAwait(false);
@@ -76,12 +79,14 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     else
                     {
                         inboxState.LockId = lockId;
-                        inboxState.ReceiveCount++;
+                        if (updateDeliveryCount)
+                            inboxState.ReceiveCount++;
 
                         _dbContext.Update(inboxState);
                         await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-                        var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState);
+                        var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
+                            _timeProvider);
 
                         await next.Send(outboxContext).ConfigureAwait(false);
 
@@ -131,10 +136,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             while (continueProcessing)
             {
                 var executionStrategy = _dbContext.Database.CreateExecutionStrategy();
-                if (executionStrategy is ExecutionStrategy)
-                    continueProcessing = await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false);
-                else
-                    continueProcessing = await Execute().ConfigureAwait(false);
+                continueProcessing = await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false);
+                updateDeliveryCount = false;
             }
         }
 

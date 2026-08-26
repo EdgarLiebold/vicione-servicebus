@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 {
+    using System;
     using System.Text;
 
 
@@ -14,9 +15,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         public void AppendColumn(StringBuilder sb, int index, string columnName)
         {
             if (index == 0)
-                sb.AppendFormat("\"{0}\" = @p0", columnName);
+                sb.AppendFormat("{0} = @p0", QuoteIdentifier(columnName));
             else
-                sb.AppendFormat(" AND \"{0}\" = @p{1}", columnName, index);
+                sb.AppendFormat(" AND {0} = @p{1}", QuoteIdentifier(columnName), index);
         }
 
         public void Complete(StringBuilder sb)
@@ -26,12 +27,17 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string columnName)
         {
-            sb.AppendFormat(@"SELECT *, xmin FROM {0} ORDER BY ""{1}"" LIMIT 1 FOR UPDATE SKIP LOCKED", FormatTableName(schema, table), columnName);
+            sb.AppendFormat("SELECT *, xmin FROM {0} ORDER BY {1} LIMIT 1 FOR UPDATE SKIP LOCKED",
+                FormatTableName(schema, table), QuoteIdentifier(columnName));
         }
 
         static string FormatTableName(string schema, string table)
         {
-            return string.IsNullOrEmpty(schema) ? $"\"{table}\"" : $"\"{schema}\".\"{table}\"";
+            return string.IsNullOrEmpty(schema)
+                ? QuoteIdentifier(table)
+                : $"{QuoteIdentifier(schema)}.{QuoteIdentifier(table)}";
         }
+
+        static string QuoteIdentifier(string identifier) => $"\"{identifier.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
     }
 }

@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
@@ -12,22 +13,27 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     public class SqlLockStatementProvider :
         ILockStatementProvider
     {
-        protected static readonly ConcurrentDictionary<Type, SchemaTableColumnTrio> TableNames = new ConcurrentDictionary<Type, SchemaTableColumnTrio>();
-        readonly bool _enableSchemaCaching;
         readonly ILockStatementFormatter _formatter;
+        readonly ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>> _modelMappings;
 
-        public SqlLockStatementProvider(string defaultSchema, ILockStatementFormatter formatter, bool enableSchemaCaching = true)
+        public SqlLockStatementProvider(string defaultSchema, ILockStatementFormatter formatter)
         {
-            DefaultSchema = defaultSchema;
+            if (string.IsNullOrWhiteSpace(defaultSchema))
+                throw new ArgumentException("The default schema must not be empty.", nameof(defaultSchema));
 
+            ArgumentNullException.ThrowIfNull(formatter);
+
+            DefaultSchema = defaultSchema;
             _formatter = formatter;
-            _enableSchemaCaching = enableSchemaCaching;
+            _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
         }
 
-        public SqlLockStatementProvider(ILockStatementFormatter formatter, bool enableSchemaCaching = true)
+        public SqlLockStatementProvider(ILockStatementFormatter formatter)
         {
+            ArgumentNullException.ThrowIfNull(formatter);
+
             _formatter = formatter;
-            _enableSchemaCaching = enableSchemaCaching;
+            _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
         }
 
         string DefaultSchema { get; }
@@ -72,38 +78,57 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         SchemaTableColumnTrio GetSchemaAndTableNameAndColumnName(DbContext context, Type type, params string[] propertyNames)
         {
-            if (TableNames.TryGetValue(type, out var result) && _enableSchemaCaching)
-                return result;
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(propertyNames);
 
-            var entityType = context.Model.FindEntityType(type)
+            if (propertyNames.Length == 0)
+                throw new ArgumentException("At least one mapped property is required.", nameof(propertyNames));
+
+            string[] requestedProperties = propertyNames.ToArray();
+            if (requestedProperties.Any(string.IsNullOrWhiteSpace))
+                throw new ArgumentException("Mapped property names must not be empty.", nameof(propertyNames));
+
+            IModel model = context.Model;
+            var cache = _modelMappings.GetValue(model,
+                static _ => new ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>());
+            var key = new LockStatementCacheKey(type, string.Join('\u001f', requestedProperties));
+
+            return cache.GetOrAdd(key, _ => ResolveMapping(model, type, requestedProperties));
+        }
+
+        SchemaTableColumnTrio ResolveMapping(IModel model, Type type, IReadOnlyList<string> propertyNames)
+        {
+            var entityType = model.FindEntityType(type)
                 ?? throw new InvalidOperationException($"Entity type not found: {TypeCache.GetShortName(type)}");
 
             var schema = entityType.GetSchema();
             var tableName = entityType.GetTableName();
-
-            var columnNames = new List<string>();
-
-            for (var i = 0; i < propertyNames.Length; i++)
-            {
-                var property = entityType.GetProperties().Single(x => x.Name.Equals(propertyNames[i], StringComparison.OrdinalIgnoreCase));
-
-                var storeObjectIdentifier = StoreObjectIdentifier.Table(tableName, schema);
-                var columnName = property.GetColumnName(storeObjectIdentifier);
-
-                columnNames.Add(columnName);
-            }
-
             if (string.IsNullOrWhiteSpace(tableName))
                 throw new ViciOneServiceBusException($"Unable to determine saga table name: {TypeCache.GetShortName(type)} (using model metadata).");
 
-            result = new SchemaTableColumnTrio(schema ?? DefaultSchema, tableName, columnNames.ToArray());
+            var storeObjectIdentifier = StoreObjectIdentifier.Table(tableName, schema);
+            var columnNames = new string[propertyNames.Count];
 
-            if (_enableSchemaCaching)
-                TableNames.TryAdd(type, result);
+            for (var i = 0; i < propertyNames.Count; i++)
+            {
+                var property = entityType.FindProperty(propertyNames[i])
+                    ?? throw new InvalidOperationException(
+                        $"Property not found: {TypeCache.GetShortName(type)}.{propertyNames[i]}");
 
-            return result;
+                var columnName = property.GetColumnName(storeObjectIdentifier);
+                if (string.IsNullOrWhiteSpace(columnName))
+                    throw new InvalidOperationException(
+                        $"Column mapping not found: {TypeCache.GetShortName(type)}.{propertyNames[i]}");
+
+                columnNames[i] = columnName;
+            }
+
+            return new SchemaTableColumnTrio(schema ?? DefaultSchema, tableName, columnNames);
         }
 
+
+        readonly record struct LockStatementCacheKey(Type EntityType, string PropertyKey);
 
         protected readonly struct SchemaTableColumnTrio
         {

@@ -1,9 +1,11 @@
+#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 {
     using Microsoft.EntityFrameworkCore;
     using Saga;
     using System;
     using System.Data;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -13,7 +15,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     {
         IsolationLevel IsolationLevel { get; }
 
-        Task<TSaga> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken);
+        IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query);
+
+        Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken);
 
         Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken);
 

@@ -24,9 +24,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly IClientFactory _clientFactory;
         readonly TDbContext _dbContext;
         readonly IBusOutboxNotification _notification;
-        readonly DbSet<OutboxMessage> _outboxMessageSet;
-        readonly DbSet<OutboxState> _outboxStateSet;
         readonly IServiceProvider _provider;
+        readonly TimeProvider _timeProvider;
+        readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator;
         Guid _outboxId;
         EntityEntry<OutboxState>? _outboxState;
         IPublishEndpoint? _publishEndpoint;
@@ -34,18 +34,18 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         ISendEndpointProvider? _sendEndpointProvider;
 
         public EntityFrameworkScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification notification, IClientFactory clientFactory,
-            IServiceProvider provider)
+            IServiceProvider provider, TimeProvider timeProvider)
         {
             _bus = bus;
             _dbContext = dbContext;
             _notification = notification;
             _clientFactory = clientFactory;
             _provider = provider;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
             _outboxId = NewId.NextGuid();
 
-            _outboxMessageSet = dbContext.Set<OutboxMessage>();
-            _outboxStateSet = dbContext.Set<OutboxState>();
+            _writeCoordinator = new EntityFrameworkOutboxWriteCoordinator();
         }
 
         public void Dispose()
@@ -59,7 +59,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         public Task AddSend<T>(SendContext<T> context)
             where T : class
         {
-            lock (_outboxStateSet)
+            _writeCoordinator.Execute(() =>
             {
                 if (_outboxState == null || WasCommitted())
                 {
@@ -73,12 +73,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     _outboxState ??= _dbContext.Add(new OutboxState
                     {
                         OutboxId = _outboxId,
-                        Created = DateTime.UtcNow
+                        Created = _timeProvider.GetUtcNow().UtcDateTime
                     });
                 }
-            }
 
-            return _outboxMessageSet.AddSend(context, SystemTextJsonMessageSerializer.Instance, outboxId: _outboxId);
+                OutboxMessage message = OutboxMessageFactory.Create(
+                    context,
+                    SystemTextJsonMessageSerializer.Instance,
+                    _timeProvider,
+                    outboxId: _outboxId);
+                _dbContext.Add(message);
+            });
+
+            return Task.CompletedTask;
         }
 
         public object? GetService(Type serviceType)

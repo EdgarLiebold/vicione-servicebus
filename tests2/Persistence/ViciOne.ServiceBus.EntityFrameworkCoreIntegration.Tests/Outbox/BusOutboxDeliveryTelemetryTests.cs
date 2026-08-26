@@ -56,7 +56,8 @@ public sealed class BusOutboxDeliveryTelemetryTests
             Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>()),
             new NoNotification(),
             NullLogger<BusOutboxDeliveryService<RecordingDbContext>>.Instance,
-            provider);
+            provider,
+            TimeProvider.System);
 
         try
         {

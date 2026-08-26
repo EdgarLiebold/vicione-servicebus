@@ -32,9 +32,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 
         public async Task<IList<TSaga>> Load()
         {
-            IQueryable<TSaga> queryable = _context.Set<TSaga>();
-            if (_queryCustomization != null)
-                queryable = _queryCustomization(queryable);
+            IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(_context.Set<TSaga>(), _queryCustomization);
 
             List<TSaga> instances = await queryable.AsTracking()
                 .Where(_query.FilterExpression)

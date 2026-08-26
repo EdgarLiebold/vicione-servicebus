@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1824 predeclared unfiltered cases;
-- `LocalIntegration`: 17 unfiltered cases.
+- `UnitArchitecture`: 1867 predeclared unfiltered cases;
+- `LocalIntegration`: 28 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1579,9 +1579,10 @@ test structure.
 6. Normalize cancellation and failure ownership throughout saga, inbox and outbox paths. Caller
    cancellation is recognized only when the caller token is actually requested. Infrastructure,
    serialization, provider and observer failures retain their original identity unless the public
-   contract explicitly maps them. A duplicate saga-insert race may be recovered only through a
-   provider-owned, exact duplicate-conflict classification; broad `catch (Exception)` recovery is
-   forbidden.
+   contract explicitly maps them. A duplicate saga-insert race may be recovered only after a
+   `DbUpdateException` and a successful repository load prove that the exact saga identity now
+   exists. This provider-neutral postcondition is stricter than provider error-code tables; broad
+   `catch (Exception)` recovery is forbidden.
 7. Build source-mirrored xUnit 4/MTP v2 owners under `Configuration`, `EntityFrameworkCoreIntegration`,
    `Outbox`, `Saga` and `Testing`. UnitArchitecture proves provider-neutral logic, immutable
    configuration and exact SQL. LocalIntegration uses run-scoped real SQLite and PostgreSQL
@@ -1600,3 +1601,17 @@ test structure.
     dispositions, locked focused Release builds/tests, unfiltered UnitArchitecture, real
     LocalIntegration, visible External state, Engineering with zero warnings/errors and two
     independent read-only PASS reviews over separate technical and evidence commits.
+
+Current execution state: the retained provider/configuration/model phase, the first saga-
+concurrency tranche, and the first inbox/bus-outbox delivery tranche are implemented. Native UnitArchitecture now proves model-aware SQL caching,
+explicit provider selection, frozen saga/outbox configuration, one injected time source, exact
+insert-race classification, factory transaction behavior, SQLite optimistic retry/outbox behavior,
+run-scoped database naming and explicit outbox write coordination. LocalIntegration uses the
+canonical PostgreSQL fixture and proves an actual competing-session `FOR UPDATE` lock, a two-level
+customized navigation load and update, and real bus-outbox delivery through the transaction commit
+boundary. The bus-outbox proof covers deferred persistence, exact envelope and raw-header
+preservation, distinct successive batches, causal transaction-commit drain barriers and immediate
+notification without advancing the one-hour fallback poll clock. The accepted working floors for
+this still-active phase are 42 focused EF UnitArchitecture cases, 17 EF LocalIntegration cases and
+3 focused Core notification cases, all without skip; they are progress numbers, not the final
+repository floor.

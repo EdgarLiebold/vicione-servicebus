@@ -1874,3 +1874,73 @@ failure identity, immutable configuration, read-only query cancellation, custom 
 insert/load races, inbox deduplication, multi-batch bus-outbox delivery, notification-versus-poll
 wakeup, transient retry classification, rollback, delayed delivery, job-service lifecycle and
 durable future completion/fault reuse.
+
+The first implementation tranche found four product defects rather than encoding them into tests:
+
+- public repository load/query paths bypassed their configured lock/query strategy;
+- the generic transaction wrapper ignored the transaction-disabled setting;
+- four query-customization call sites had divergent null-result behavior;
+- concurrent outbox writes synchronized on EF `DbSet` instances instead of an explicit scoped
+  coordination owner.
+
+The corrected product routes public and consume-path saga access through the same frozen strategy,
+honors transaction disabling in both wrapper overloads, centralizes fail-closed query customization,
+and owns all outbox state/message mutations through `EntityFrameworkOutboxWriteCoordinator`.
+`OutboxMessageFactory` now owns pure envelope construction; the public raw-`DbSet` extension is no
+longer part of the Greenfield API.
+
+Real PostgreSQL verification uses the existing canonical fixture runner. Each test database derives
+its provider-safe name from the active xUnit unique test identity and a purpose string; setup and
+teardown store and use that exact name, while separate run identities cannot collide. The row-lock
+test uses two distinct server process IDs and a transaction-local PostgreSQL `lock_timeout`: the
+competing query must surface EF's transient wrapper with inner SQLSTATE `55P03`, then a fresh session
+must load the row after the owner commits. The custom-query test loads and persists a two-level
+navigation graph through the actual pessimistic executor.
+
+Native MTP report filenames accept only a filename. A path passed to
+`--report-xunit-trx-filename` exits before discovery with code 5. The repeatable command is
+`--results-directory <directory> --report-xunit-trx --report-xunit-trx-filename <file.trx>`.
+As with earlier builds, .NET/MSBuild runs must use `/usr/local/share/dotnet`, the isolated CLI home,
+disabled node reuse and execution outside the filesystem sandbox; an in-sandbox hang is an
+environment diagnosis, never a reason to change product or test code.
+
+For solution-wide Microsoft Testing Platform runs, do not pass `--disable-build-servers` to
+`dotnet test --solution`. The .NET CLI forwards that switch to the MTP test modules, where it is not
+a supported test argument; discovery then reports zero tests and exits with code 5. Build-server
+isolation is provided by `MSBUILDDISABLENODEREUSE=1` and the isolated CLI environment instead. A
+zero-discovery or hung build must therefore be classified first as CLI, SDK, sandbox or process
+isolation failure before any product or test source is changed.
+
+The bus-outbox delivery path exposed two further inherited defects before its integration tests
+were written. `BusOutboxNotification` used the system clock implicitly and allowed concurrent
+waiters to replace each other's signal. It now receives the shared `TimeProvider`, owns exactly one
+waiter fail-closed, distinguishes an actual caller cancellation from the delivery wake-up, and is
+proved by three deterministic Core tests. `BusOutboxDeliveryService` also classified PostgreSQL/EF
+transient failures by searching English fragments in `InnerException.Message` and invoked only
+execution strategies derived from EF's concrete `ExecutionStrategy` base class. The message-text
+heuristic is removed. Every provider or custom strategy is now invoked through the public
+`IExecutionStrategy.ExecuteAsync` contract, which is the provider-owned authority for retry and
+failure classification; exhausted or unknown failures remain visible through the existing error
+telemetry.
+
+The inbox deduplication boundary now uses three concurrent deliveries with one shared message
+identity and three independent EF contexts. A command interceptor proves that all three transactions
+reach the PostgreSQL `FOR UPDATE` boundary before the first consumer is released; a transaction
+interceptor then proves their commits and the final outbox drain. PostgreSQL `RepeatableRead` can
+reject a waiter after the owning transaction updates the locked row, so the fixture enables the
+provider's standard `IExecutionStrategy` retry support. The product invokes that public strategy for
+every attempt. Failed database attempts roll back without incrementing the logical delivery count,
+while the three actual deliveries produce `ReceiveCount == 3`, one consumer invocation and exactly
+one sixteen-message effect set. The test uses provider events and causal channels only; it does not
+poll the database or infer completion from transport inactivity.
+
+Three source-mirrored PostgreSQL/InMemory integration tests now cross the complete scoped bus-outbox
+boundary. They inspect the pending EF entity before commit, observe the exact delivered envelope and
+raw user header, prove two successive commits have distinct drained OutboxIds, and wait on an EF
+transaction-commit interceptor before asserting an empty store and exact delivery count. The
+notification test configures a one-hour fallback delay on a frozen clock and completes without
+advancing it. No sleep, wall-clock window, fixed database name or embedded credential is used. The
+repeatable results are 46/46 focused EF UnitArchitecture, 17/17 focused EF LocalIntegration and 4/4
+focused Core notification. The unfiltered repository profiles pass at 1867/1867 UnitArchitecture
+and 28/28 LocalIntegration; the complete Engineering Release build has zero warnings and zero
+errors. Every test run reports zero failure and zero skip.

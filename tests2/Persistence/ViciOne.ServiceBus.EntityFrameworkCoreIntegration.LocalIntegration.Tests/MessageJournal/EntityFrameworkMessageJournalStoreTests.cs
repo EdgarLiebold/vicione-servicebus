@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -17,11 +18,11 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     public async Task ConfigurationComposition_PersistsATerminalPublishEnvelope()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(cancellationToken);
-        await database.CreateJournalSchemaAsync(cancellationToken);
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-configuration", cancellationToken);
+        await CreateJournalSchemaAsync(database, cancellationToken);
         IBusControl bus = Bus.Factory.CreateUsingInMemory(configurator =>
             configurator.UseEntityFrameworkCoreMessageJournal(
-                database.Options,
+                JournalOptions(database),
                 "MessageJournal",
                 PassThroughPolicy(),
                 Limits(maximumEntries: 10),
@@ -33,7 +34,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
         {
             await bus.Publish(new JournalProbe("ef-core"), cancellationToken);
 
-            await using MessageJournalDbContext context = database.CreateContext();
+            await using MessageJournalDbContext context = CreateContext(database);
             MessageJournalRecord actual = Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken));
             Assert.Equal(MessageJournalOperation.Publish, actual.Operation);
             Assert.Contains(nameof(JournalProbe), actual.MessageTypesJson, StringComparison.Ordinal);
@@ -49,9 +50,9 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     public async Task Append_PreservesEverySanitizedFieldWithoutAnAmbientSerializer()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(cancellationToken);
-        await database.CreateJournalSchemaAsync(cancellationToken);
-        var store = database.CreateStore(Limits(maximumEntries: 10));
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-persistence", cancellationToken);
+        await CreateJournalSchemaAsync(database, cancellationToken);
+        var store = CreateStore(database, Limits(maximumEntries: 10));
         MessageJournalEntry expected = Entry(
             Guid.Parse("018cc251-f400-7000-8000-000000000001"),
             new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero),
@@ -59,7 +60,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
         await store.AppendAsync(expected, cancellationToken);
 
-        await using var context = database.CreateContext();
+        await using var context = CreateContext(database);
         MessageJournalRecord actual = Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken));
         Assert.Equal(expected.EntryId, actual.EntryId);
         Assert.Equal(expected.ObservedAt, actual.ObservedAt);
@@ -79,9 +80,9 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     public async Task Append_AtomicallyRemovesExpiredAndOldestEntriesBeforeAddingTheNewEntry()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(cancellationToken);
-        await database.CreateJournalSchemaAsync(cancellationToken);
-        var store = database.CreateStore(Limits(maximumEntries: 2, retentionPeriod: TimeSpan.FromDays(1)));
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-bounds", cancellationToken);
+        await CreateJournalSchemaAsync(database, cancellationToken);
+        var store = CreateStore(database, Limits(maximumEntries: 2, retentionPeriod: TimeSpan.FromDays(1)));
         var now = new DateTimeOffset(2030, 1, 10, 12, 0, 0, TimeSpan.Zero);
 
         await store.AppendAsync(Entry(Guid.CreateVersion7(), now.AddDays(-3)), cancellationToken);
@@ -89,7 +90,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
         await store.AppendAsync(Entry(Guid.CreateVersion7(), now.AddHours(-6)), cancellationToken);
         await store.AppendAsync(Entry(Guid.CreateVersion7(), now), cancellationToken);
 
-        await using var context = database.CreateContext();
+        await using var context = CreateContext(database);
         DateTimeOffset[] retained = await context.Entries.AsNoTracking()
             .OrderBy(record => record.ObservedAt)
             .Select(record => record.ObservedAt)
@@ -102,9 +103,9 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacity()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(cancellationToken);
-        await database.CreateJournalSchemaAsync(cancellationToken);
-        var store = database.CreateStore(Limits(maximumEntries: 1));
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-concurrency", cancellationToken);
+        await CreateJournalSchemaAsync(database, cancellationToken);
+        var store = CreateStore(database, Limits(maximumEntries: 1));
         var observedAt = new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
 
         Task<Exception?>[] attempts = Enumerable.Range(0, 8)
@@ -115,7 +116,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
             .ToArray();
         Exception?[] outcomes = await Task.WhenAll(attempts);
 
-        await using var context = database.CreateContext();
+        await using var context = CreateContext(database);
         MessageJournalRecord[] retained = await context.Entries.AsNoTracking().ToArrayAsync(cancellationToken);
         Assert.Single(retained);
         Assert.Contains(outcomes, outcome => outcome is null);
@@ -131,14 +132,14 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     public async Task MaximumRetention_AcceptsTheEarliestRepresentableObservation()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(cancellationToken);
-        await database.CreateJournalSchemaAsync(cancellationToken);
-        var store = database.CreateStore(Limits(maximumEntries: 2, retentionPeriod: TimeSpan.MaxValue));
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-retention", cancellationToken);
+        await CreateJournalSchemaAsync(database, cancellationToken);
+        var store = CreateStore(database, Limits(maximumEntries: 2, retentionPeriod: TimeSpan.MaxValue));
         MessageJournalEntry entry = Entry(Guid.CreateVersion7(), DateTimeOffset.MinValue.AddDays(1));
 
         await store.AppendAsync(entry, cancellationToken);
 
-        await using var context = database.CreateContext();
+        await using var context = CreateContext(database);
         Assert.Equal(entry.EntryId, Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken)).EntryId);
     }
 
@@ -208,78 +209,24 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
     private sealed record JournalProbe(string Source);
 
-    private sealed class PostgreSqlTestDatabase : IAsyncDisposable
+    private static DbContextOptions JournalOptions(PostgreSqlTestDatabase database) =>
+        new DbContextOptionsBuilder()
+            .UseNpgsql(database.ConnectionString)
+            .Options;
+
+    private static MessageJournalDbContext CreateContext(PostgreSqlTestDatabase database) =>
+        new(JournalOptions(database), "MessageJournal", "journal");
+
+    private static EntityFrameworkMessageJournalStore CreateStore(
+        PostgreSqlTestDatabase database,
+        MessageJournalStoreLimits limits) =>
+        new(JournalOptions(database), "MessageJournal", limits, "journal");
+
+    private static async Task CreateJournalSchemaAsync(
+        PostgreSqlTestDatabase database,
+        CancellationToken cancellationToken)
     {
-        private readonly NpgsqlConnectionStringBuilder _admin;
-        private readonly string _databaseName;
-        private readonly DbContextOptions _options;
-
-        private PostgreSqlTestDatabase(
-            NpgsqlConnectionStringBuilder admin,
-            string databaseName,
-            DbContextOptions options)
-        {
-            _admin = admin;
-            _databaseName = databaseName;
-            _options = options;
-        }
-
-        public static async Task<PostgreSqlTestDatabase> CreateAsync(CancellationToken cancellationToken)
-        {
-            ViciOneTestOptions options = TestConfigurationProvider.ForCurrentTestRun()
-                .GetValidatedLocalOptions(LocalTestResource.PostgreSql);
-            PostgreSqlLocalOptions postgreSql = options.LocalInfrastructure!.PostgreSql!;
-            int timeoutSeconds = Math.Max(1, (int)Math.Ceiling(options.OperationTimeout!.Value.TotalSeconds));
-            var admin = new NpgsqlConnectionStringBuilder
-            {
-                Host = postgreSql.Host,
-                Port = postgreSql.Port!.Value,
-                Database = postgreSql.Database,
-                Username = postgreSql.UserName,
-                Password = postgreSql.Password,
-                Pooling = false,
-                Timeout = timeoutSeconds,
-                CommandTimeout = timeoutSeconds,
-            };
-            string databaseName = $"vsbjournal{Guid.NewGuid():N}";
-
-            await using (var connection = new NpgsqlConnection(admin.ConnectionString))
-            {
-                await connection.OpenAsync(cancellationToken);
-                await using var command = new NpgsqlCommand($"CREATE DATABASE \"{databaseName}\"", connection);
-                await command.ExecuteNonQueryAsync(cancellationToken);
-            }
-
-            var database = new NpgsqlConnectionStringBuilder(admin.ConnectionString)
-            {
-                Database = databaseName,
-            };
-            DbContextOptions contextOptions = new DbContextOptionsBuilder()
-                .UseNpgsql(database.ConnectionString)
-                .Options;
-            return new PostgreSqlTestDatabase(admin, databaseName, contextOptions);
-        }
-
-        public MessageJournalDbContext CreateContext() =>
-            new(_options, "MessageJournal", "journal");
-
-        public DbContextOptions Options => _options;
-
-        public EntityFrameworkMessageJournalStore CreateStore(MessageJournalStoreLimits limits) =>
-            new(_options, "MessageJournal", limits, "journal");
-
-        public async Task CreateJournalSchemaAsync(CancellationToken cancellationToken)
-        {
-            await using MessageJournalDbContext context = CreateContext();
-            Assert.True(await context.Database.EnsureCreatedAsync(cancellationToken));
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await using var connection = new NpgsqlConnection(_admin.ConnectionString);
-            await connection.OpenAsync(CancellationToken.None);
-            await using var command = new NpgsqlCommand($"DROP DATABASE IF EXISTS \"{_databaseName}\" WITH (FORCE)", connection);
-            await command.ExecuteNonQueryAsync(CancellationToken.None);
-        }
+        await using MessageJournalDbContext context = CreateContext(database);
+        Assert.True(await context.Database.EnsureCreatedAsync(cancellationToken));
     }
 }

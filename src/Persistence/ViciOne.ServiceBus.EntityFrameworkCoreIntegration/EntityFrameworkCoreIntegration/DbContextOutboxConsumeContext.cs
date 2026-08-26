@@ -19,18 +19,20 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     {
         readonly TDbContext _dbContext;
         readonly InboxState _inboxState;
-        readonly DbSet<OutboxMessage> _outboxMessageSet;
+        readonly TimeProvider _timeProvider;
         readonly IDbContextTransaction _transaction;
+        readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator;
 
         public DbContextOutboxConsumeContext(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider, TDbContext dbContext,
-            IDbContextTransaction transaction, InboxState inboxState)
+            IDbContextTransaction transaction, InboxState inboxState, TimeProvider timeProvider)
             : base(context, options, provider)
         {
             _dbContext = dbContext;
             _transaction = transaction;
             _inboxState = inboxState;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
-            _outboxMessageSet = dbContext.Set<OutboxMessage>();
+            _writeCoordinator = new EntityFrameworkOutboxWriteCoordinator();
         }
 
         public override Guid? MessageId => _inboxState.MessageId;
@@ -46,7 +48,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public override async Task SetConsumed()
         {
-            _inboxState.Consumed = DateTime.UtcNow;
+            _inboxState.Consumed = _timeProvider.GetUtcNow().UtcDateTime;
             _dbContext.Update(_inboxState);
 
             await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -56,7 +58,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public override async Task SetDelivered()
         {
-            _inboxState.Delivered = DateTime.UtcNow;
+            _inboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
             _dbContext.Update(_inboxState);
 
             await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -102,7 +104,15 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         public override Task AddSend<T>(SendContext<T> context)
             where T : class
         {
-            return _outboxMessageSet.AddSend(context, SerializerContext, MessageId, ConsumerId);
+            OutboxMessage message = OutboxMessageFactory.Create(
+                context,
+                SerializerContext,
+                _timeProvider,
+                MessageId,
+                ConsumerId);
+            _writeCoordinator.Execute(() => _dbContext.Add(message));
+
+            return Task.CompletedTask;
         }
     }
 }

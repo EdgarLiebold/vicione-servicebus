@@ -9,6 +9,6 @@ namespace ViciOne.ServiceBus
         where TDbContext : DbContext
     {
         public IsolationLevel IsolationLevel { get; set; } = IsolationLevel.RepeatableRead;
-        public ILockStatementProvider LockStatementProvider { get; set; } = new SqlServerLockStatementProvider();
+        public ILockStatementProvider LockStatementProvider { get; set; }
     }
 }

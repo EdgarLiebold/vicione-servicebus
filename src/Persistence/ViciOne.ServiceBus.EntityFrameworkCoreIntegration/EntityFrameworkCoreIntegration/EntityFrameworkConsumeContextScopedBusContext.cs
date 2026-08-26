@@ -19,8 +19,8 @@ public class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     readonly IServiceProvider _provider;
 
     public EntityFrameworkConsumeContextScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification notification, IClientFactory clientFactory,
-        IServiceProvider provider, ConsumeContext consumeContext)
-        : base(bus, dbContext, notification, clientFactory, provider)
+        IServiceProvider provider, ConsumeContext consumeContext, TimeProvider timeProvider)
+        : base(bus, dbContext, notification, clientFactory, provider, timeProvider)
     {
         _bus = bus;
         _clientFactory = clientFactory;

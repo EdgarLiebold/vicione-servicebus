@@ -44,6 +44,17 @@ namespace ViciOne.ServiceBus.Configuration
         {
             configure?.Invoke(this);
 
+            if (MessageDeliveryLimit <= 0)
+                throw new ConfigurationException("MessageDeliveryLimit must be greater than zero.");
+            if (MessageDeliveryTimeout <= TimeSpan.Zero)
+                throw new ConfigurationException("MessageDeliveryTimeout must be greater than zero.");
+
+            TimeSpan queryDelay = _outboxConfigurator.QueryDelay;
+            int queryMessageLimit = _outboxConfigurator.QueryMessageLimit;
+            TimeSpan queryTimeout = _outboxConfigurator.QueryTimeout;
+            int messageDeliveryLimit = MessageDeliveryLimit;
+            TimeSpan messageDeliveryTimeout = MessageDeliveryTimeout;
+
             _configurator.ReplaceScoped<IScopedBusContextProvider<IBus>, EntityFrameworkScopedBusContextProvider<IBus, TDbContext>>();
             _configurator.AddSingleton<IBusOutboxNotification, BusOutboxNotification>();
 
@@ -53,11 +64,11 @@ namespace ViciOne.ServiceBus.Configuration
                 _configurator.AddOptions<OutboxDeliveryServiceOptions>()
                     .Configure(options =>
                     {
-                        options.QueryDelay = _outboxConfigurator.QueryDelay;
-                        options.QueryMessageLimit = _outboxConfigurator.QueryMessageLimit;
-                        options.QueryTimeout = _outboxConfigurator.QueryTimeout;
-                        options.MessageDeliveryLimit = MessageDeliveryLimit;
-                        options.MessageDeliveryTimeout = MessageDeliveryTimeout;
+                        options.QueryDelay = queryDelay;
+                        options.QueryMessageLimit = queryMessageLimit;
+                        options.QueryTimeout = queryTimeout;
+                        options.MessageDeliveryLimit = messageDeliveryLimit;
+                        options.MessageDeliveryTimeout = messageDeliveryTimeout;
                     });
             }
         }

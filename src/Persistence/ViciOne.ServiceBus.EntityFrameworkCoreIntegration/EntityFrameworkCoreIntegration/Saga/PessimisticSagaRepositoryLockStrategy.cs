@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 {
     using System;
@@ -14,10 +15,13 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
         where TSaga : class, ISaga
     {
         readonly ILoadQueryExecutor<TSaga> _executor;
+        readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
 
-        public PessimisticSagaRepositoryLockStrategy(ILoadQueryExecutor<TSaga> executor, IsolationLevel isolationLevel)
+        public PessimisticSagaRepositoryLockStrategy(ILoadQueryExecutor<TSaga> executor,
+            Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization, IsolationLevel isolationLevel)
         {
-            _executor = executor;
+            _executor = executor ?? throw new ArgumentNullException(nameof(executor));
+            _queryCustomization = queryCustomization;
 
             IsolationLevel = isolationLevel;
         }
@@ -29,14 +33,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
         /// </summary>
         public bool IsTransactionEnabled => true;
 
-        public Task<TSaga> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken)
+        public IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query)
+        {
+            return SagaQueryCustomization.Apply(query, _queryCustomization);
+        }
+
+        public Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken)
         {
             return _executor.Load(context, correlationId, cancellationToken);
         }
 
         public async Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken)
         {
-            IList<Guid> instances = await context.Set<TSaga>()
+            IList<Guid> instances = await ApplyQueryCustomization(context.Set<TSaga>())
                 .AsNoTracking()
                 .Where(query.FilterExpression)
                 .Select(x => x.CorrelationId)

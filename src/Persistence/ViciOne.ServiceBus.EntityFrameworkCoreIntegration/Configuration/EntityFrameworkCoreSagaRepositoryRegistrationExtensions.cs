@@ -108,6 +108,7 @@ namespace ViciOne.ServiceBus
         public static IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlServer<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             configurator.LockStatementProvider = new SqlServerLockStatementProvider();
 
             return configurator;
@@ -124,6 +125,7 @@ namespace ViciOne.ServiceBus
             string schemaName)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             if (schemaName == null)
                 throw new ArgumentNullException(nameof(schemaName));
 
@@ -139,6 +141,7 @@ namespace ViciOne.ServiceBus
         /// <returns></returns>
         public static IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(this IEntityFrameworkSagaRepositoryConfigurator configurator)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             configurator.LockStatementProvider = new SqlServerLockStatementProvider();
 
             return configurator;
@@ -153,6 +156,7 @@ namespace ViciOne.ServiceBus
         public static IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(this IEntityFrameworkSagaRepositoryConfigurator configurator,
             string schemaName)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             if (schemaName == null)
                 throw new ArgumentNullException(nameof(schemaName));
 
@@ -170,6 +174,7 @@ namespace ViciOne.ServiceBus
         public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             configurator.LockStatementProvider = new PostgresLockStatementProvider();
 
             return configurator;
@@ -186,6 +191,7 @@ namespace ViciOne.ServiceBus
             string schemaName)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             if (schemaName == null)
                 throw new ArgumentNullException(nameof(schemaName));
 
@@ -201,6 +207,7 @@ namespace ViciOne.ServiceBus
         /// <returns></returns>
         public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             configurator.LockStatementProvider = new PostgresLockStatementProvider();
 
             return configurator;
@@ -215,6 +222,7 @@ namespace ViciOne.ServiceBus
         public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator,
             string schemaName)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
             if (schemaName == null)
                 throw new ArgumentNullException(nameof(schemaName));
 
@@ -224,33 +232,8 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Configure the repository for use with MySQL
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEntityFrameworkSagaRepositoryConfigurator<T> UseMySql<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
-            where T : class, ISaga
-        {
-            configurator.LockStatementProvider = new MySqlLockStatementProvider();
-
-            return configurator;
-        }
-
-        /// <summary>
-        /// Configure the repository for use with MySQL
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <returns></returns>
-        public static IEntityFrameworkSagaRepositoryConfigurator UseMySql(this IEntityFrameworkSagaRepositoryConfigurator configurator)
-        {
-            configurator.LockStatementProvider = new MySqlLockStatementProvider();
-
-            return configurator;
-        }
-
-        /// <summary>
-        /// Configure the repository for use with SQLite
+        /// Configure the repository for use with SQLite. SQLite has no row-level locking, so saga
+        /// concurrency is configured as optimistic and must use an application-managed concurrency token.
         /// </summary>
         /// <param name="configurator"></param>
         /// <typeparam name="T"></typeparam>
@@ -258,45 +241,22 @@ namespace ViciOne.ServiceBus
         public static IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlite<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
             where T : class, ISaga
         {
-            configurator.LockStatementProvider = new SqliteLockStatementProvider();
+            ArgumentNullException.ThrowIfNull(configurator);
+            configurator.SetOptimisticConcurrency();
 
             return configurator;
         }
 
         /// <summary>
-        /// Configure the repository for use with SQLite
+        /// Configure the repository for use with SQLite. SQLite has no row-level locking, so saga
+        /// concurrency is configured as optimistic and must use an application-managed concurrency token.
         /// </summary>
         /// <param name="configurator"></param>
         /// <returns></returns>
         public static IEntityFrameworkSagaRepositoryConfigurator UseSqlite(this IEntityFrameworkSagaRepositoryConfigurator configurator)
         {
-            configurator.LockStatementProvider = new SqliteLockStatementProvider();
-
-            return configurator;
-        }
-
-        /// <summary>
-        /// Configure the repository for use with Oracle
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEntityFrameworkSagaRepositoryConfigurator<T> UseOracle<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
-            where T : class, ISaga
-        {
-            configurator.LockStatementProvider = new OracleLockStatementProvider();
-
-            return configurator;
-        }
-
-        /// <summary>
-        /// Configure the repository for use with Oracle
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <returns></returns>
-        public static IEntityFrameworkSagaRepositoryConfigurator UseOracle(this IEntityFrameworkSagaRepositoryConfigurator configurator)
-        {
-            configurator.LockStatementProvider = new OracleLockStatementProvider();
+            ArgumentNullException.ThrowIfNull(configurator);
+            configurator.SetOptimisticConcurrency();
 
             return configurator;
         }

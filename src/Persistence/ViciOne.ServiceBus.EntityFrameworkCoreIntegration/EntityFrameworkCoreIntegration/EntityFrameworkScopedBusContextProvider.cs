@@ -14,17 +14,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     {
         public EntityFrameworkScopedBusContextProvider(TBus bus, TDbContext dbContext, IBusOutboxNotification notification,
             Bind<TBus, IClientFactory> clientFactory, Bind<TBus, IScopedConsumeContextProvider> consumeContextProvider,
-            IScopedConsumeContextProvider globalConsumeContextProvider, IServiceProvider provider)
+            IScopedConsumeContextProvider globalConsumeContextProvider, IServiceProvider provider, TimeProvider timeProvider)
         {
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
             if (consumeContextProvider.Value.HasContext)
                 Context = new ConsumeContextScopedBusContext(consumeContextProvider.Value.GetContext(), clientFactory.Value);
             else if (globalConsumeContextProvider.HasContext)
             {
                 Context = new EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory.Value, provider,
-                    globalConsumeContextProvider.GetContext());
+                    globalConsumeContextProvider.GetContext(), timeProvider);
             }
             else
-                Context = new EntityFrameworkScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory.Value, provider);
+                Context = new EntityFrameworkScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory.Value, provider, timeProvider);
         }
 
         public void Dispose()

@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.ExceptionServices;
     using System.Threading;
     using System.Threading.Tasks;
     using Context;
@@ -57,14 +58,33 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 
                 return await _factory.CreateSagaConsumeContext(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (DbUpdateException exception)
             {
-                // Because we will still be using the same dbContext, we need to reset the entry we just tried to pre-insert (likely a duplicate), so
-                // on the next save changes (which is the update), it will pass.
-                // see here for details: https://www.davideguida.com/how-to-reset-the-entities-state-on-a-entity-framework-db-context/
+                // Insert-on-initial can lose a race to another consumer. Provider exception codes are
+                // not a portable proof of that condition. The failed EF entry must be this exact saga
+                // instance and the exact saga identity must now be loadable through the configured lock
+                // strategy. Every other persistence failure remains the original failure and is never
+                // converted into a missing Insert result.
+                if (exception.Entries.Any(failedEntry => ReferenceEquals(failedEntry.Entity, instance)) == false)
+                    throw;
+
                 entry.State = EntityState.Detached;
 
-                _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
+                TSaga existing;
+                try
+                {
+                    existing = await _lockStrategy.Load(_dbContext, instance.CorrelationId, CancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    ExceptionDispatchInfo.Capture(exception).Throw();
+                    throw;
+                }
+
+                if (existing == null)
+                    throw;
+
+                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
 
                 return default;
             }
@@ -157,23 +177,26 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
         where TSaga : class, ISaga
     {
         readonly DbContext _dbContext;
+        readonly ISagaRepositoryLockStrategy<TSaga> _lockStrategy;
 
-        public DbContextSagaRepositoryContext(DbContext dbContext, CancellationToken cancellationToken)
+        public DbContextSagaRepositoryContext(DbContext dbContext, ISagaRepositoryLockStrategy<TSaga> lockStrategy,
+            CancellationToken cancellationToken)
             : base(cancellationToken)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _lockStrategy = lockStrategy ?? throw new ArgumentNullException(nameof(lockStrategy));
         }
 
-        public Task<TSaga> Load(Guid correlationId)
+        public async Task<TSaga> Load(Guid correlationId)
         {
-            return _dbContext.Set<TSaga>()
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.CorrelationId == correlationId);
+            return (await _lockStrategy.Load(_dbContext, correlationId, CancellationToken).ConfigureAwait(false))!;
         }
 
         public async Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
         {
-            IList<Guid> results = await _dbContext.Set<TSaga>()
+            ArgumentNullException.ThrowIfNull(query);
+
+            IList<Guid> results = await _lockStrategy.ApplyQueryCustomization(_dbContext.Set<TSaga>())
                 .AsNoTracking()
                 .Where(query.FilterExpression)
                 .Select(x => x.CorrelationId)

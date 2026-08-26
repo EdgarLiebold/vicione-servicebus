@@ -31,7 +31,6 @@ namespace ViciOne.ServiceBus.Configuration
         {
             _isolationLevel = IsolationLevel.Serializable;
             _concurrencyMode = ConcurrencyMode.Pessimistic;
-            _lockStatementProvider = new SqlServerLockStatementProvider();
         }
 
         public IsolationLevel IsolationLevel
@@ -41,7 +40,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void CustomizeQuery(Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization)
         {
-            _queryCustomization = queryCustomization;
+            _queryCustomization = queryCustomization ?? throw new ArgumentNullException(nameof(queryCustomization));
         }
 
         public ConcurrencyMode ConcurrencyMode
@@ -56,7 +55,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public ILockStatementProvider LockStatementProvider
         {
-            set => _lockStatementProvider = value;
+            set => _lockStatementProvider = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
@@ -71,11 +70,14 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void DatabaseFactory(Func<DbContext> databaseFactory)
         {
+            ArgumentNullException.ThrowIfNull(databaseFactory);
             DatabaseFactory(_ => databaseFactory);
         }
 
         public void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory)
         {
+            ArgumentNullException.ThrowIfNull(databaseFactory);
+
             _configureDbContext = configurator =>
             {
                 configurator.TryAddScoped<ISagaDbContextFactory<TSaga>>(provider => new DelegateSagaDbContextFactory<TSaga>(databaseFactory(provider)));
@@ -95,16 +97,22 @@ namespace ViciOne.ServiceBus.Configuration
         {
             if (_configureDbContext == null)
                 yield return this.Failure("DbContext", "must be specified");
+
+            if (_concurrencyMode == ConcurrencyMode.Pessimistic && _lockStatementProvider == null)
+                yield return this.Failure("LockStatementProvider", "must be selected explicitly for pessimistic concurrency");
         }
 
         public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             _configureDbContext?.Invoke(configurator);
 
-            if (_concurrencyMode == ConcurrencyMode.Optimistic)
-                configurator.TryAddSingleton(provider => CreateOptimisticLockStrategy());
-            else
-                configurator.TryAddSingleton(provider => CreatePessimisticLockStrategy());
+            ISagaRepositoryLockStrategy<TSaga> lockStrategy = _concurrencyMode == ConcurrencyMode.Optimistic
+                ? CreateOptimisticLockStrategy()
+                : CreatePessimisticLockStrategy();
+
+            configurator.TryAddSingleton(_ => lockStrategy);
 
             configurator.RegisterLoadSagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
             configurator.RegisterQuerySagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
@@ -158,11 +166,12 @@ namespace ViciOne.ServiceBus.Configuration
 
         ISagaRepositoryLockStrategy<TSaga> CreatePessimisticLockStrategy()
         {
-            var statementProvider = _lockStatementProvider ?? new SqlServerLockStatementProvider();
+            var statementProvider = _lockStatementProvider
+                ?? throw new ConfigurationException("A lock statement provider must be selected explicitly for pessimistic concurrency.");
 
             var queryExecutor = new PessimisticLoadQueryExecutor<TSaga>(statementProvider, _queryCustomization);
 
-            return new PessimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _isolationLevel);
+            return new PessimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _queryCustomization, _isolationLevel);
         }
 
         public void SetOptimisticConcurrency(bool useTransaction = true)

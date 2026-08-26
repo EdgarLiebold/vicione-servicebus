@@ -3,13 +3,13 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     public class SqlServerLockStatementProvider :
         SqlLockStatementProvider
     {
-        public SqlServerLockStatementProvider(bool enableSchemaCaching = true, bool serializable = false)
-            : base(new SqlServerLockStatementFormatter(serializable), enableSchemaCaching)
+        public SqlServerLockStatementProvider(bool serializable = false)
+            : base(new SqlServerLockStatementFormatter(serializable))
         {
         }
 
-        public SqlServerLockStatementProvider(string schemaName, bool enableSchemaCaching = true, bool serializable = false)
-            : base(schemaName, new SqlServerLockStatementFormatter(serializable), enableSchemaCaching)
+        public SqlServerLockStatementProvider(string schemaName, bool serializable = false)
+            : base(schemaName, new SqlServerLockStatementFormatter(serializable))
         {
         }
     }

@@ -25,13 +25,15 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly InboxCleanupServiceOptions<TDbContext> _options;
         readonly IServiceProvider _provider;
         readonly IRetryPolicy _retryPolicy;
+        readonly TimeProvider _timeProvider;
 
         public InboxCleanupService(IOptions<InboxCleanupServiceOptions<TDbContext>> options, ILogger<InboxCleanupService<TDbContext>> logger,
-            IServiceProvider provider)
+            IServiceProvider provider, TimeProvider timeProvider)
         {
             _options = options.Value;
             _logger = logger;
             _provider = provider;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
             _retryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         }
@@ -44,7 +46,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 try
                 {
                     if (removed == 0)
-                        await Task.Delay(_options.QueryDelay, stoppingToken).ConfigureAwait(false);
+                        await Task.Delay(_options.QueryDelay, _timeProvider, stoppingToken).ConfigureAwait(false);
                     else
                         removed = 0;
 
@@ -73,10 +75,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-                using var queryTimeout = new CancellationTokenSource(_options.QueryTimeout);
+                using var queryTimeout = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
                 using var queryToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, queryTimeout.Token);
 
-                var removeTimestamp = DateTime.UtcNow - _options.DuplicateDetectionWindow;
+                DateTime removeTimestamp = _timeProvider.GetUtcNow().UtcDateTime - _options.DuplicateDetectionWindow;
 
                 var count = await dbContext.Set<InboxState>()
                     .Where(x => x.Delivered != null && x.Delivered.Value < removeTimestamp)

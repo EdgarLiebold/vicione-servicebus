@@ -34,17 +34,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly Func<TDbContext, Guid, long, int, IAsyncEnumerable<OutboxMessage>> _outboxMessagesQuery;
         readonly IServiceProvider _provider;
         readonly IRetryPolicy _retryPolicy;
+        readonly TimeProvider _timeProvider;
 
         string _getOutboxIdStatement;
 
         public BusOutboxDeliveryService(IBusControl busControl, IOptions<OutboxDeliveryServiceOptions> options,
             IOptions<EntityFrameworkOutboxOptions<TDbContext>> outboxOptions, IBusOutboxNotification notification,
-            ILogger<BusOutboxDeliveryService<TDbContext>> logger, IServiceProvider provider)
+            ILogger<BusOutboxDeliveryService<TDbContext>> logger, IServiceProvider provider, TimeProvider timeProvider)
         {
             _busControl = busControl;
             _notification = notification;
             _provider = provider;
             _logger = logger;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
             _options = options.Value;
 
@@ -93,9 +95,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 catch (DbUpdateConcurrencyException)
                 {
                 }
-                catch (InvalidOperationException exception) when (IsTransientFailure(exception))
-                {
-                }
                 catch (Exception exception)
                 {
                     _logger.LogError(exception, "ProcessMessageBatch faulted");
@@ -117,7 +116,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 {
                     var lockId = NewId.NextGuid();
 
-                    using var timeoutToken = new CancellationTokenSource(_options.QueryTimeout);
+                    using var timeoutToken = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
 
                     await using var transaction = await dbContext.Database.BeginTransactionAsync(_isolationLevel, timeoutToken.Token)
                         .ConfigureAwait(false);
@@ -159,10 +158,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     {
                         throw;
                     }
-                    catch (InvalidOperationException exception) when (IsTransientFailure(exception))
-                    {
-                        throw;
-                    }
                     catch (Exception)
                     {
                         await RollbackTransaction(transaction).ConfigureAwait(false);
@@ -175,9 +170,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 var messageCount = 0;
                 while (messageCount < resultLimit)
                 {
-                    var executeResult = executionStrategy is ExecutionStrategy
-                        ? await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false)
-                        : await Execute().ConfigureAwait(false);
+                    // Provider-owned execution strategies are the only authoritative source for transient-failure
+                    // classification. Always execute through the public strategy contract; inspecting provider error
+                    // message text or recognizing only EF's built-in base class would make custom strategies unsafe.
+                    var executeResult = await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false);
 
                     // executeResult < 0: no outbox found (nothing to do)
                     // executeResult == 0: pending outbox locked but no messages delivered (send fault or poison
@@ -199,13 +195,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
                 await scope.DisposeAsync().ConfigureAwait(false);
             }
-        }
-
-        static bool IsTransientFailure(Exception exception)
-        {
-            return exception.InnerException != null &&
-                (exception.InnerException.Message.Contains("concurrent update")
-                    || exception.InnerException.Message.Contains("transient failure"));
         }
 
         static async Task RemoveOutbox(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
@@ -257,7 +246,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 {
                     try
                     {
-                        using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout);
+                        using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout, _timeProvider);
                         using var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendToken.Token);
 
                         var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
@@ -324,7 +313,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
             if (messageIndex == messages.Count && messages.Count < messageLimit)
             {
-                outboxState.Delivered = DateTime.UtcNow;
+                outboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
 
                 if (hasLastSequenceNumber == false)
                 {

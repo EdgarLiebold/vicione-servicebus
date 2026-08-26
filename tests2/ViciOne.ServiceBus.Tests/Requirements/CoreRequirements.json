@@ -2570,5 +2570,33 @@
       "testMethod" : "Filter_RejectsNullRuntimeCollaboratorsAtTheirExactBoundaries",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
       "variantKey" : "invalid-runtime-collaborators"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClock",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
+      "variantKey" : "delivery-signal-bypasses-poll-delay"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DeliveredBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClock",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
+      "variantKey" : "delivery-signal-before-wait-is-retained"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PollDelay_CompletesOnlyAfterTheInjectedClockReachesTheDeadline",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
+      "variantKey" : "poll-delay-uses-injected-clock"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignal",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
+      "variantKey" : "second-waiter-fails-closed"
    }
 ]

@@ -72,13 +72,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 else
                 {
                     var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                    if (executionStrategy is ExecutionStrategy)
-                    {
-                        await executionStrategy.ExecuteAsync(() => WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback))
-                            .ConfigureAwait(false);
-                    }
-                    else
-                        await WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback).ConfigureAwait(false);
+                    await executionStrategy.ExecuteAsync(() => WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback))
+                        .ConfigureAwait(false);
                 }
             }
             finally
@@ -120,10 +115,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 }
 
                 var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                if (executionStrategy is ExecutionStrategy)
-                    await executionStrategy.ExecuteAsync(() => SendQueryAsync()).ConfigureAwait(false);
-                else
-                    await SendQueryAsync().ConfigureAwait(false);
+                await executionStrategy.ExecuteAsync(() => SendQueryAsync()).ConfigureAwait(false);
             }
             finally
             {
@@ -141,17 +133,14 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 {
                     return WithinTransaction(dbContext, cancellationToken, () =>
                     {
-                        var sagaRepositoryContext = new DbContextSagaRepositoryContext<TSaga>(dbContext, cancellationToken);
+                        var sagaRepositoryContext = new DbContextSagaRepositoryContext<TSaga>(dbContext, _lockStrategy, cancellationToken);
 
                         return asyncMethod(sagaRepositoryContext);
                     });
                 }
 
                 var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                if (executionStrategy is ExecutionStrategy)
-                    return await executionStrategy.ExecuteAsync(() => ExecuteAsync()).ConfigureAwait(false);
-                else
-                    return await ExecuteAsync().ConfigureAwait(false);
+                return await executionStrategy.ExecuteAsync(() => ExecuteAsync()).ConfigureAwait(false);
             }
             finally
             {
@@ -175,6 +164,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 
         async Task<T> WithinTransaction<T>(DbContext context, CancellationToken cancellationToken, Func<Task<T>> callback)
         {
+            if (!_lockStrategy.IsTransactionEnabled)
+                return await callback().ConfigureAwait(false);
+
             await using var transaction = await context.Database.BeginTransactionAsync(_lockStrategy.IsolationLevel, cancellationToken).ConfigureAwait(false);
 
             static async Task Rollback(IDbContextTransaction transaction)

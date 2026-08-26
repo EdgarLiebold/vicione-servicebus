@@ -190,6 +190,24 @@ The transport- and SQL-Server-backed benchmark scenarios remain tracked in
 [`benchmarks/ToDo.md`](benchmarks/ToDo.md). Complete them only with their real infrastructure and do
 not replace them with inventory-only or skipped green results.
 
+## Make Activity telemetry observationally no-throw
+
+Meter recording is already isolated through no-throw helpers in the current product, but inherited
+`ActivitySource` creation and `StartedActivity` notification still occur directly at multiple call
+sites. A throwing or otherwise hostile listener must never change message delivery, persistence,
+retry, scheduling, outbox or transport semantics. Do not patch only the Entity Framework outbox
+path; that would create inconsistent telemetry behavior and a second policy.
+
+Run one path-complete observability slice that inventories every activity source, listener callback,
+`StartedActivity` notification and activity-lifetime owner. Introduce one explicit no-throw
+observation boundary while preserving the current OpenTelemetry source names, tags, status,
+parentage and timing. Product exceptions and cancellation must retain their original identity, and
+listener failures must not be converted into retries, faults or delivery failures.
+
+Acceptance requires deterministic tests with throwing activity listeners at every distinct
+emission owner, one-cause mutations that remove the isolation, exact OpenTelemetry schema checks,
+all affected unfiltered native profiles, and zero behavior or public-API loss.
+
 ## Complete MessageJournal external provider validation
 
 The current provider contract is covered hermetically and against ephemeral PostgreSQL and Azurite
