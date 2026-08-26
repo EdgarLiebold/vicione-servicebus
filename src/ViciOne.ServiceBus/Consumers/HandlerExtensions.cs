@@ -17,6 +17,9 @@ namespace ViciOne.ServiceBus
             Action<IHandlerConfigurator<T>> configure = null)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(handler);
+
             var handlerConfigurator = new HandlerConfigurator<T>(handler, configurator);
 
             configure?.Invoke(handlerConfigurator);
@@ -37,6 +40,9 @@ namespace ViciOne.ServiceBus
             IBuildPipeConfigurator<ConsumeContext<T>> configurator = null)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(handler);
+
             return HandlerConnectorCache<T>.Connector.ConnectHandler(connector, handler, configurator);
         }
 
@@ -53,6 +59,10 @@ namespace ViciOne.ServiceBus
             IBuildPipeConfigurator<ConsumeContext<T>> configurator)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(connector);
+            ArgumentNullException.ThrowIfNull(handler);
+            ArgumentNullException.ThrowIfNull(configurator);
+
             return HandlerConnectorCache<T>.Connector.ConnectRequestHandler(connector, requestId, handler, configurator);
         }
     }

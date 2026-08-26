@@ -1702,3 +1702,66 @@ timer was still armed; the subsequent one-minute idle interval then began at the
 the test waited on time it never advanced. The observer now registers a waiter for the next timer
 change inside `PostReceive` and exposes completion only after that exact change. This is a causal
 barrier, not a retry, delay, increased timeout or accommodation of product behavior.
+
+## Core pipeline retirement cohort
+
+The accepted starting point is evidence commit `fb90c8e841cc7c5348193bba8105ea3543b45c01`
+(tree `ca3a703c1688c998eb1edfa9577cae7d9b033261`). The remaining inherited
+`tests/ViciOne.ServiceBus.Tests/Pipeline` directory contains thirteen files and exactly thirty-four
+executed R0 obligations, `OBL-R0-CORE-B-0426` through `OBL-R0-CORE-B-0459`. The already retired
+circuit-breaker fixture is not part of this cohort.
+
+Every inherited file and the complete connected product paths for limits, dynamic consumer,
+instance, handler and observer connections, context filtering, message retry, configuration
+layering, send/publish layering, partitioning and `System.Transactions` middleware were read before
+the first edit. The old tests are useful defect history but not the target architecture: they use
+wall-clock delays, negative timeout waits, static counters, console output and several completion-
+only assertions. None of those mechanisms may be copied as an oracle.
+
+The following accepted native carriers are already strictly stronger than their inherited lower
+bounds and must be reused rather than duplicated:
+
+- `RateAndConcurrencyLimitTests` owns exact concurrency admission, queued overflow, virtual-time
+  rate replenishment and equal permit ownership for success and failure (`0426`--`0429`).
+- `ConsumeObserverTests` owns typed and untyped success/fault ordering and exact error propagation;
+  the dynamic connector tests need only prove the connection-specific part (`0434`--`0437`).
+- `MessageRetryConfigurationExtensionsTests` and `RetryFilterTests` own success/exhaustion, exact
+  attempt metadata, nested policy ownership and typed-dispatch composition (`0439`--`0441` and
+  `0451`--`0454`).
+- `PartitionerTests` owns equal-key serialization, cross-partition overlap and complete delivery;
+  only the endpoint-level correlation convention and its missing-convention failure remain
+  uncovered (`0448`--`0450`).
+- `SendPipeConfigurationTests` owns send-layer ordering. Publish-layer exact-once behavior and the
+  concrete/base-contract distinction still require their own source-owner carrier (`0444`--`0447`).
+
+The genuine new test responsibilities are therefore dynamic connection/disconnection and observer
+composition (`0430`--`0438`), consumer versus instance configuration layering (`0442`--`0443`),
+publish and polymorphic send/publish exact-once behavior (`0444`--`0447`), endpoint correlation
+partition conventions (`0448`--`0450`) and transaction lifecycle/retry ownership (`0455`--`0459`).
+Tests belong to their source owners under `Consumers`, `Configuration`, `Middleware` and
+`Transactions`; no generic replacement `Pipeline` dumping ground is created.
+
+Source analysis exposed public-boundary defects that tests must reproduce before correction:
+`HandlerExtensions` does not validate its connector/configurator or handler arguments;
+`ContextFilter<TContext>` does not validate its delegate, context, next pipe or a null task returned
+by the delegate; `UseTransaction` does not validate its configurator; and retry currently treats an
+`OperationCanceledException` carrying an equal but non-requested token as caller cancellation.
+These are not compatibility promises. They are normalized to explicit fail-fast .NET argument
+contracts and causal cancellation semantics.
+
+`SystemTransactionContext` is a BCL adapter around `CommittableTransaction`. The retained feature is
+the public `TransactionContext` payload and `CreateTransactionScope` contract, not the concrete
+adapter type. Microsoft documents that a `CommittableTransaction` is not reusable after commit or
+rollback and that the transaction timeout is owned by `System.Transactions`. Consequently the new
+suite proves that the exact configured options reach a fresh owned transaction context for every
+retry and that success, missing `Complete`, downstream failure and cleanup have exact lifecycle
+effects. It does not sleep until the BCL clock expires or pretend a fake clock controls the BCL.
+Timeout propagation is tested through an internal transaction-context factory boundary; the BCL's
+own timer implementation is not reimplemented.
+
+The one permitted static source-to-test scan was run through the Microsoft Roslyn finder. It found
+3,888 production files, 1,152 test files and 3,086 heuristic unpaired files. Connector caches and
+context extensions appeared among the candidates, but extension methods, reflection and the
+temporarily retained TestFramework make the raw pairing count intentionally non-authoritative. It
+is triage evidence only; source-derived contracts, the frozen R0 ledger and executable tests remain
+the acceptance truth.

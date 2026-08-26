@@ -683,3 +683,25 @@ future cohorts as complete.
   timeout, optional fixture environment and steps. The required tooling, build and pack jobs bind every
   executable line, dependency and pinned action. YAML spelling or a no-op job therefore cannot hide or
   replace any required gate.
+
+## Lead implementation: native core pipeline closure
+
+- All 34 executed inherited obligations `OBL-R0-CORE-B-0426` through `0459` have one terminal,
+  machine-readable replacement disposition. The thirteen retired NUnit Pipeline files are removed;
+  no generic replacement Pipeline folder or second verdict mechanism exists.
+- Source-owned xUnit 4/MTP 2 tests now cover dynamic consumer, instance and handler connections,
+  completed disconnects, typed and untyped observer lifecycle, synchronous and asynchronous context
+  filtering, exact retry attempts and cancellation causality, consumer/send/publish configuration
+  layering, partition conventions, and transaction configuration, scope and retry ownership.
+- Product boundaries fail fast for invalid handler, context-filter and transaction collaborators.
+  Retry distinguishes an equal but unrequested cancellation token from caller cancellation.
+  Transaction scopes enable asynchronous flow by default; an external transaction remains externally
+  owned, while every retry receives a fresh internally owned transaction context. The BCL adapter is
+  internal and the public capability remains the neutral `TransactionContext` contract.
+- Every newly written asynchronous harness boundary uses the central operation timeout and the MTP
+  cancellation token. Concurrency releases are guaranteed in `finally`; no sleep, delay, stopwatch,
+  random scheduling, negative wait or absence-until-timeout oracle was introduced.
+- Locked restore is current. The final focused Release build has zero warnings and zero errors and its
+  executable passes 953/953. The complete UnitArchitecture profile passes 1734/1734 and
+  LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all with zero failure and
+  zero skip. The complete Engineering Release build has zero warnings and zero errors.

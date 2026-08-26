@@ -25,6 +25,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Core pipeline behavior now has source-owned native xUnit/MTP coverage for dynamic consumer and
+  handler connections, observer composition, context filtering, retry cancellation, consumer,
+  send and publish configuration layering, partition conventions, and transaction ownership. The
+  thirteen inherited NUnit pipeline files are removed after one-to-one disposition of all 34
+  inherited obligations. Public handler, context-filter and transaction boundaries fail fast;
+  transaction scopes enable asynchronous flow by default, externally supplied transactions retain
+  ownership, and every retry receives a fresh owned transaction context. The concrete
+  `SystemTransactionContext` adapter is now internal; the public capability remains the neutral
+  `TransactionContext` contract.
 - RabbitMQ host and endpoint addresses are immutable value objects with strict option parsing,
   scheme-owned TLS semantics, canonical port and URI rendering, defensive binding ownership and
   UTF-8 byte-accurate entity limits. Credentials retain password suffixes after the first colon;

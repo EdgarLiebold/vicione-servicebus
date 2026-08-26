@@ -14,9 +14,10 @@ namespace ViciOne.ServiceBus
         /// <returns></returns>
         public static TransactionScope CreateTransactionScope(this PipeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var transactionContext = context.GetPayload<TransactionContext>();
 
-            return new TransactionScope(transactionContext.Transaction);
+            return new TransactionScope(transactionContext.Transaction, TransactionScopeAsyncFlowOption.Enabled);
         }
 
         /// <summary>
@@ -28,9 +29,10 @@ namespace ViciOne.ServiceBus
         /// <returns></returns>
         public static TransactionScope CreateTransactionScope(this PipeContext context, TimeSpan scopeTimeout)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var transactionContext = context.GetPayload<TransactionContext>();
 
-            return new TransactionScope(transactionContext.Transaction, scopeTimeout);
+            return new TransactionScope(transactionContext.Transaction, scopeTimeout, TransactionScopeAsyncFlowOption.Enabled);
         }
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace ViciOne.ServiceBus
         /// <returns></returns>
         public static TransactionScope CreateTransactionScope(this PipeContext context, TimeSpan scopeTimeout, TransactionScopeAsyncFlowOption asyncFlowOptions)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var transactionContext = context.GetPayload<TransactionContext>();
 
             return new TransactionScope(transactionContext.Transaction, scopeTimeout, asyncFlowOptions);

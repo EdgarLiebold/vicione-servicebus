@@ -1,5 +1,6 @@
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
@@ -164,11 +165,14 @@ public sealed class RateAndConcurrencyLimitTests
         await Task.WhenAll(second, third);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(1)]
+    [InlineData(32)]
     [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "exact-configured-maximum")]
-    public async Task ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder()
+    public async Task ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder(int limit)
     {
-        const int limit = 3;
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var allSlotsEntered = NewSignal();
         var additionalEntry = NewSignal();
         var release = NewSignal();
@@ -196,15 +200,21 @@ public sealed class RateAndConcurrencyLimitTests
         Task[] sends = Enumerable.Range(0, limit + 2)
             .Select(_ => pipe.Send(new LimitContext()))
             .ToArray();
-        await allSlotsEntered.Task;
+        try
+        {
+            await allSlotsEntered.Task.WaitAsync(timeout, cancellationToken);
 
-        Assert.Equal(limit, Volatile.Read(ref entered));
-        Assert.Equal(limit, Volatile.Read(ref executing));
-        Assert.Equal(limit, Volatile.Read(ref maximum));
-        Assert.False(additionalEntry.Task.IsCompleted);
+            Assert.Equal(limit, Volatile.Read(ref entered));
+            Assert.Equal(limit, Volatile.Read(ref executing));
+            Assert.Equal(limit, Volatile.Read(ref maximum));
+            Assert.False(additionalEntry.Task.IsCompleted);
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
 
-        release.SetResult();
-        await Task.WhenAll(sends);
+        await Task.WhenAll(sends).WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(limit + 2, entered);
         Assert.Equal(0, executing);
@@ -252,6 +262,10 @@ public sealed class RateAndConcurrencyLimitTests
 
     private static TaskCompletionSource NewSignal() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
+        .GetValidatedOptions()
+        .OperationTimeout!.Value;
 
     private static void UpdateMaximum(ref int maximum, int candidate)
     {

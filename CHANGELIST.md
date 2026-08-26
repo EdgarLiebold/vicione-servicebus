@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2064 |
-| Modified | 4236 |
-| Deleted | 1412 |
+| Added | 2076 |
+| Modified | 4224 |
+| Deleted | 1424 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -906,6 +906,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M12-open-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M13-probe-in-progress-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M14-concurrency-test-setup.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
@@ -4211,6 +4212,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Contexts/Context/ExecuteContextScope.cs` | Modified | `src/MassTransit/Contexts/Context/ExecuteContextScope.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/HostCompensateActivityContext.cs` | Modified | `src/MassTransit/Contexts/Context/HostCompensateActivityContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/HostExecuteActivityContext.cs` | Modified | `src/MassTransit/Contexts/Context/HostExecuteActivityContext.cs` |
+| `src/ViciOne.ServiceBus/Contexts/Context/IManagedTransactionContext.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Contexts/Context/ITransactionContextFactory.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Contexts/Context/MediatorConsumeContext.cs` | Modified | `src/MassTransit/Contexts/Context/MediatorConsumeContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/MediatorSendMessageContext.cs` | Modified | `src/MassTransit/Contexts/Context/MediatorSendMessageContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/MessageConsumeContext.cs` | Modified | `src/MassTransit/Contexts/Context/MessageConsumeContext.cs` |
@@ -4222,6 +4225,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Contexts/Context/SagaConsumeContextProxy.cs` | Modified | `src/MassTransit/Contexts/Context/SagaConsumeContextProxy.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/ScheduleMessageRedeliveryContext.cs` | Modified | `src/MassTransit/Contexts/Context/ScheduleMessageRedeliveryContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/SystemTransactionContext.cs` | Modified | `src/MassTransit/Contexts/Context/SystemTransactionContext.cs` |
+| `src/ViciOne.ServiceBus/Contexts/Context/SystemTransactionContextFactory.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Contexts/Context/TransportReceiveContext.cs` | Modified | `src/MassTransit/Contexts/Context/TransportReceiveContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/Context/TransportSendContext.cs` | Modified | `src/MassTransit/Contexts/Context/TransportSendContext.cs` |
 | `src/ViciOne.ServiceBus/Contexts/TransactionContext.cs` | Modified | `src/MassTransit/Contexts/TransactionContext.cs` |
@@ -6505,6 +6509,18 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Observer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Observer_Specs.cs` |
 | `tests/MassTransit.Tests/Outbox_Specs.cs` | Deleted | `tests/MassTransit.Tests/Outbox_Specs.cs` |
 | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/Concurrency_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/Concurrency_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/ConnectConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/ConnectConsumer_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/ConnectHandler_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/ConnectHandler_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/ConnectObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/ConnectObserver_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/ContentFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/ContentFilter_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/MessageTestFixture.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/MessageTestFixture.cs` |
+| `tests/MassTransit.Tests/Pipeline/Message_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/Message_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/OneMessageConsumer.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/OneMessageConsumer.cs` |
+| `tests/MassTransit.Tests/Pipeline/PartitionByKey_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/PartitionByKey_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/Transaction_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/Transaction_Specs.cs` |
+| `tests/MassTransit.Tests/Pipeline/TwoMessageConsumer.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/TwoMessageConsumer.cs` |
 | `tests/MassTransit.Tests/PollingAlgorithm_Specs.cs` | Deleted | `tests/MassTransit.Tests/PollingAlgorithm_Specs.cs` |
 | `tests/MassTransit.Tests/PublishHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishHeader_Specs.cs` |
 | `tests/MassTransit.Tests/PublishObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishObserver_Specs.cs` |
@@ -7105,19 +7121,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs` | Modified | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NoLicensingResidue_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/NoOutboundVendorCall_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Concurrency_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectHandler_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectHandler_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ConnectObserver_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/ContentFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/ContentFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/MessageRetryPipe_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/MessageTestFixture.cs` | Modified | `tests/MassTransit.Tests/Pipeline/MessageTestFixture.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Message_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/OneMessageConsumer.cs` | Modified | `tests/MassTransit.Tests/Pipeline/OneMessageConsumer.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/PartitionByKey_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/PartitionByKey_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Retry_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs` | Modified | `tests/MassTransit.Tests/Pipeline/Transaction_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Pipeline/TwoMessageConsumer.cs` | Modified | `tests/MassTransit.Tests/Pipeline/TwoMessageConsumer.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PolymorphicFault_Specs.cs` | Modified | `tests/MassTransit.Tests/PolymorphicFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PublishSubscribe_Specs.cs` | Modified | `tests/MassTransit.Tests/PublishSubscribe_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReceiveEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` |
@@ -7375,6 +7378,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
@@ -7506,6 +7510,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/PublishPipeConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs` | Added |  |
@@ -7514,12 +7520,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/ConversationContextTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/MessageContextFlowTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contexts/TransactionContextExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
@@ -7570,6 +7580,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
@@ -7587,6 +7598,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs` | Added |  |

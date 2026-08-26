@@ -22,12 +22,13 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Apply(IPipeBuilder<T> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
             builder.AddFilter(new TransactionFilter<T>(_isolationLevel, _timeout));
         }
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (_timeout == TimeSpan.Zero)
+            if (_timeout <= TimeSpan.Zero)
                 yield return this.Failure("Timeout", "Must be > 0");
         }
 

@@ -55,6 +55,43 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "consume-context-succeeds-with-exact-attempt-sequence")]
+    public async Task ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumber()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new SuccessfulRetryObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<RetryUntilThirdAttemptConsumer>((_, consumer) =>
+                    consumer.UseMessageRetry(retry => retry.Immediate(2)));
+            })
+            .BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            await harness.Bus.Publish(new RetryUntilThirdAttemptMessage(), cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal([0, 1, 2], observation.Attempts);
+            Assert.Equal([0, 0, 1], observation.RetryCounts);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData(3)]
     [InlineData(5)]
@@ -319,6 +356,8 @@ public sealed class MessageRetryConfigurationExtensionsTests
 
     private sealed record ObservedRetryMessage;
 
+    private sealed record RetryUntilThirdAttemptMessage;
+
     private sealed class ObservedRetryConsumer(RetryObservation observation) : IConsumer<ObservedRetryMessage>
     {
         public Task Consume(ConsumeContext<ObservedRetryMessage> context)
@@ -328,6 +367,57 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 throw new ExpectedRetryException("retry requested");
 
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class RetryUntilThirdAttemptConsumer(SuccessfulRetryObservation observation)
+        : IConsumer<RetryUntilThirdAttemptMessage>
+    {
+        public Task Consume(ConsumeContext<RetryUntilThirdAttemptMessage> context)
+        {
+            if (observation.Record(context.GetRetryAttempt(), context.GetRetryCount()) < 3)
+                throw new ExpectedRetryException("retry until the third attempt");
+
+            observation.Completed.TrySetResult(true);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class SuccessfulRetryObservation
+    {
+        private readonly object _lock = new();
+        private readonly List<int> _attempts = [];
+        private readonly List<int> _retryCounts = [];
+
+        public TaskCompletionSource<bool> Completed { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int[] Attempts
+        {
+            get
+            {
+                lock (_lock)
+                    return _attempts.ToArray();
+            }
+        }
+
+        public int[] RetryCounts
+        {
+            get
+            {
+                lock (_lock)
+                    return _retryCounts.ToArray();
+            }
+        }
+
+        public int Record(int attempt, int retryCount)
+        {
+            lock (_lock)
+            {
+                _attempts.Add(attempt);
+                _retryCounts.Add(retryCount);
+                return _attempts.Count;
+            }
         }
     }
 

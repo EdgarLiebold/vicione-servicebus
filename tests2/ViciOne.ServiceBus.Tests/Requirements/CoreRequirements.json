@@ -2360,5 +2360,208 @@
       "testMethod" : "InMemoryOutbox_DeliveryFailurePreservesTheSuccessfulEnqueueOutcome",
       "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
       "variantKey" : "delivery-failure-does-not-rewrite-successful-enqueue"
+   },
+   {
+      "requirementId" : "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerFactoryConnection_DeliversTheExactMessageValues",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests",
+      "variantKey" : "factory-delivers-exact-message-values"
+   },
+   {
+      "requirementId" : "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ObjectInstanceConnection_DeliversEveryImplementedMessageContractExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests",
+      "variantKey" : "object-instance-multiple-contracts"
+   },
+   {
+      "requirementId" : "REQ-VSB-DYNAMIC-HANDLER-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HandlerConnection_DeliversTheExactMessageValues",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests",
+      "variantKey" : "exact-message-values"
+   },
+   {
+      "requirementId" : "REQ-VSB-DYNAMIC-HANDLER-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HandlerConnection_RejectsNullPublicArgumentsAtTheBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests",
+      "variantKey" : "null-public-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_ForwardsOnlyAnAcceptedContext",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.ContextFilterTests",
+      "variantKey" : "matching-context-only"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_WaitsForTheAsynchronousDecisionBeforeApplyingIt",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.ContextFilterTests",
+      "variantKey" : "asynchronous-decision-is-awaited"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_RejectsNullCollaboratorsAndANullDecisionTask",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.ContextFilterTests",
+      "variantKey" : "invalid-public-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUMER-MESSAGE-LAYERING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests",
+      "variantKey" : "consumer-and-instance-registration"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-PIPE-LAYERING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.Configuration.PublishPipeConfigurationTests",
+      "variantKey" : "topology-bus-endpoint-and-message-contracts"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-PARTITION-CONVENTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MessagePartitioner_DeliversEveryMessageWithExplicitAndConventionBasedKeys",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.PartitionMessageConfigurationTests",
+      "variantKey" : "explicit-and-convention-deliver-every-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-PARTITION-CONVENTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MessagePartitioner_RejectsAMessageWithoutACorrelationConvention",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.PartitionMessageConfigurationTests",
+      "variantKey" : "missing-correlation-id-is-actionable"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_UsesTheExactConfiguredOptionsAndOwnsCommitAndDisposal",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "exact-options-and-lifecycle"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_RollsBackAndDisposesBeforeRethrowingTheExactFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "failure-rolls-back-and-preserves-identity"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NestedFilters_ReuseTheActiveTransactionWithoutTakingDuplicateOwnership",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "nested-filter-reuses-active-context"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Configuration_RejectsNullAndNonPositiveTimeouts",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "invalid-public-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CompletedScope_CommitsAndFlowsAcrossAnAsyncContinuation",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
+      "variantKey" : "completed-scope-commits-across-await"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "IncompleteScope_AbortsTheOwnedTransaction",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
+      "variantKey" : "incomplete-scope-aborts"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DownstreamFailure_IsRethrownWithoutReplacement",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
+      "variantKey" : "downstream-failure-identity"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-RETRY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Retry_CreatesAFreshTransactionContextForEveryAttempt",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
+      "variantKey" : "fresh-owned-context-per-attempt"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUME-OBSERVER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "TypedObserver_ReportsPreAndPostAroundAConsumerInvocation",
+      "testType" : "ViciOne.ServiceBus.Tests.Testing.ConsumeObserverTests",
+      "variantKey" : "consumer-success-pre-and-post"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-RETRY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumber",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.MessageRetryConfigurationExtensionsTests",
+      "variantKey" : "consume-context-succeeds-with-exact-attempt-sequence"
+   },
+   {
+      "requirementId" : "REQ-VSB-RETRY-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "UnrequestedOperationCanceledException_IsRetriedAsADependencyFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests",
+      "variantKey" : "unrequested-token-is-a-dependency-failure"
+   },
+   {
+      "requirementId" : "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Disconnect_PreventsFutureDeliveryAfterTheCurrentDispatchHasCompleted",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests",
+      "variantKey" : "disconnect-stops-future-delivery"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExistingTransactionContext_IsReusedWithoutTakingOwnership",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "existing-context-remains-externally-owned"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExplicitAsyncFlowOption_PreservesTheAmbientTransactionAcrossAwait",
+      "testType" : "ViciOne.ServiceBus.Tests.Contexts.TransactionContextExtensionsTests",
+      "variantKey" : "explicit-async-flow-option"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ScopeFactories_RejectNullContextsAtEveryPublicOverload",
+      "testType" : "ViciOne.ServiceBus.Tests.Contexts.TransactionContextExtensionsTests",
+      "variantKey" : "null-context-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-SCOPE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "TimeoutOverload_PreservesTheAmbientTransactionAcrossAwait",
+      "testType" : "ViciOne.ServiceBus.Tests.Contexts.TransactionContextExtensionsTests",
+      "variantKey" : "timeout-overload-enables-async-flow"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InternalFactoryBoundary_RejectsNullFactoryAndNullFactoryResult",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests",
+      "variantKey" : "internal-factory-fails-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-TRANSACTION-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Filter_RejectsNullRuntimeCollaboratorsAtTheirExactBoundaries",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests",
+      "variantKey" : "invalid-runtime-collaborators"
    }
 ]

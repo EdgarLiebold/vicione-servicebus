@@ -5,9 +5,8 @@ namespace ViciOne.ServiceBus.Context
     using System.Transactions;
 
 
-    public class SystemTransactionContext :
-        TransactionContext,
-        IDisposable
+    internal sealed class SystemTransactionContext :
+        IManagedTransactionContext
     {
         readonly CommittableTransaction _transaction;
         bool _completed;
@@ -29,6 +28,8 @@ namespace ViciOne.ServiceBus.Context
         }
 
         public Transaction Transaction => _transaction;
+
+        public bool IsActive => !_completed && !_disposed;
 
         public async Task Commit()
         {

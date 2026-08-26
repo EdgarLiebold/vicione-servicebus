@@ -25,20 +25,21 @@ public sealed class ConsumeObserverTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ObservedMessage>(_ => Task.CompletedTask);
 
-        await harness.Start(cancellationToken);
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             using ConnectHandle typedHandle = harness.Bus.ConnectConsumeMessageObserver(typed);
             using ConnectHandle untypedHandle = harness.Bus.ConnectConsumeObserver(untyped);
             var source = new ObservedMessage(NewId.NextGuid(), "expected");
 
-            await harness.Bus.Publish(source, cancellationToken);
+            await harness.Bus.Publish(source, cancellationToken).WaitAsync(timeout, cancellationToken);
 
             ObservedMessage preConsumed = await typed.PreConsumed.WaitAsync(timeout, cancellationToken);
             ObservedMessage postConsumed = await typed.PostConsumed.WaitAsync(timeout, cancellationToken);
             IReceivedMessage<ObservedMessage> observed = await untyped.Messages
                 .SelectAsync<ObservedMessage>(cancellationToken)
-                .First();
+                .First()
+                .WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(source, preConsumed);
             Assert.Equal(source, postConsumed);
@@ -56,7 +57,7 @@ public sealed class ConsumeObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -73,21 +74,22 @@ public sealed class ConsumeObserverTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<FailingObservedMessage>(_ => Task.FromException(expected));
 
-        await harness.Start(cancellationToken);
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             using ConnectHandle typedHandle = harness.Bus.ConnectConsumeMessageObserver(typed);
             using ConnectHandle untypedHandle = harness.Bus.ConnectConsumeObserver(untyped);
             var source = new FailingObservedMessage(NewId.NextGuid());
 
-            await harness.Bus.Publish(source, cancellationToken);
+            await harness.Bus.Publish(source, cancellationToken).WaitAsync(timeout, cancellationToken);
 
             FailingObservedMessage preConsumed = await typed.PreConsumed.WaitAsync(timeout, cancellationToken);
             InvalidOperationException typedFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 typed.ConsumeFaulted.WaitAsync(timeout, cancellationToken));
             IReceivedMessage<FailingObservedMessage> observed = await untyped.Messages
                 .SelectAsync<FailingObservedMessage>(cancellationToken)
-                .First();
+                .First()
+                .WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(source, preConsumed);
             Assert.Same(expected, typedFailure);
@@ -97,7 +99,42 @@ public sealed class ConsumeObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUME-OBSERVER", "consumer-success-pre-and-post")]
+    public async Task TypedObserver_ReportsPreAndPostAroundAConsumerInvocation()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness(timeout, new FakeTimeProvider(ObservationTime));
+        TestConsumeMessageObserver<ConsumerObservedMessage> observer = harness.GetConsumeObserver<ConsumerObservedMessage>();
+        var consumed = new TaskCompletionSource<ConsumerObservedMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+            configurator.Consumer(() => new ObservedConsumer(consumed));
+
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            using ConnectHandle observerHandle = harness.Bus.ConnectConsumeMessageObserver(observer);
+            var source = new ConsumerObservedMessage(NewId.NextGuid());
+
+            await harness.Bus.Publish(source, cancellationToken).WaitAsync(timeout, cancellationToken);
+
+            ConsumerObservedMessage preConsumed = await observer.PreConsumed.WaitAsync(timeout, cancellationToken);
+            ConsumerObservedMessage consumerMessage = await consumed.Task.WaitAsync(timeout, cancellationToken);
+            ConsumerObservedMessage postConsumed = await observer.PostConsumed.WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal(source, preConsumed);
+            Assert.Equal(source, consumerMessage);
+            Assert.Equal(source, postConsumed);
+            Assert.False(observer.ConsumeFaulted.IsCompleted);
+        }
+        finally
+        {
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -117,7 +154,7 @@ public sealed class ConsumeObserverTests
         harness.OnConfigureMediator += configurator => configurator.Handler<ObservedRequest>(context =>
             context.RespondAsync(new ObservedResponse(context.Message.CorrelationId, $"response:{context.Message.Value}")));
 
-        await harness.Start();
+        await harness.Start().WaitAsync(timeout, cancellationToken);
         using ConnectHandle typedHandle = harness.Mediator.ConnectConsumeMessageObserver(typed);
         using ConnectHandle untypedHandle = harness.Mediator.ConnectConsumeObserver(untyped);
         Guid correlationId = NewId.NextGuid();
@@ -125,15 +162,17 @@ public sealed class ConsumeObserverTests
 
         Response<ObservedResponse> response = await client.GetResponse<ObservedResponse>(
             new ObservedRequest(correlationId, "request"),
-            cancellationToken);
+            cancellationToken).WaitAsync(timeout, cancellationToken);
 
         ObservedRequest typedRequest = await typed.PostConsumed.WaitAsync(timeout, cancellationToken);
         IReceivedMessage<ObservedRequest> request = await untyped.Messages
             .SelectAsync<ObservedRequest>(cancellationToken)
-            .First();
+            .First()
+            .WaitAsync(timeout, cancellationToken);
         IReceivedMessage<ObservedResponse> observedResponse = await untyped.Messages
             .SelectAsync<ObservedResponse>(cancellationToken)
-            .First();
+            .First()
+            .WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(new ObservedRequest(correlationId, "request"), typedRequest);
         Assert.Equal(typedRequest, request.Context.Message);
@@ -163,4 +202,16 @@ public sealed class ConsumeObserverTests
     private sealed record ObservedRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     private sealed record ObservedResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
+
+    private sealed record ConsumerObservedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    private sealed class ObservedConsumer(TaskCompletionSource<ConsumerObservedMessage> consumed)
+        : IConsumer<ConsumerObservedMessage>
+    {
+        public Task Consume(ConsumeContext<ConsumerObservedMessage> context)
+        {
+            consumed.TrySetResult(context.Message);
+            return Task.CompletedTask;
+        }
+    }
 }

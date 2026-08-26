@@ -43,7 +43,10 @@ public sealed class SystemTextJsonExtensionDataTests
             if (mode == JsonTransportMode.Raw)
             {
                 configurator.ClearSerialization();
-                configurator.UseRawJsonSerializer(RawSerializerOptions.All);
+                // Preserve transport type headers so the ExtensibleMessage and ReceiveFault handlers
+                // remain distinct. AnyMessageType deliberately treats one raw body as every requested
+                // contract and would turn this failure observer into a race with the message under test.
+                configurator.UseRawJsonSerializer(RawSerializerOptions.Default);
             }
 
             configurator.ConfigureJsonSerializerOptions(options =>

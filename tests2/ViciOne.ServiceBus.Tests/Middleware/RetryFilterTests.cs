@@ -430,6 +430,39 @@ public sealed class RetryFilterTests
         Assert.Equal(1, attempts);
     }
 
+    [Theory]
+    [InlineData(false, 2)]
+    [InlineData(true, 3)]
+    [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "unrequested-token-is-a-dependency-failure")]
+    public async Task UnrequestedOperationCanceledException_IsRetriedAsADependencyFailure(
+        bool cancellationOccursDuringRetry,
+        int expectedAttempts)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellationToken = TestContext.Current.CancellationToken;
+        using var cancellation = new CancellationTokenSource();
+        var attempts = 0;
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseRetry(retry => retry.Immediate(2));
+            configuration.UseExecute(_ =>
+            {
+                int attempt = Interlocked.Increment(ref attempts);
+                if (cancellationOccursDuringRetry && attempt == 1)
+                    throw new RetryFailureException("enter retry path");
+
+                if ((!cancellationOccursDuringRetry && attempt == 1)
+                    || (cancellationOccursDuringRetry && attempt == 2))
+                    throw new OperationCanceledException("dependency canceled its operation", cancellation.Token);
+            });
+        });
+
+        await pipe.Send(new TestPipeContext(cancellation.Token)).WaitAsync(timeout, testCancellationToken);
+
+        Assert.False(cancellation.IsCancellationRequested);
+        Assert.Equal(expectedAttempts, attempts);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "policy-cancellation-never-reports-success")]
     public async Task PolicyCancellationBeforeTheRetryAttempt_IsNeverReportedAsSuccess()

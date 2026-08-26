@@ -220,16 +220,21 @@ public sealed class MessageContextFlowTests
             var concreteRequest = Assert.IsType<ClientRequestHandle<RequestMessage>>(request);
             Task<Response<AcceptedResponse>> response = request.GetResponse<AcceptedResponse>();
 
+            // Message represents completion of the request send callback. Establish that causal
+            // boundary before advancing the virtual timeout; otherwise the timeout may race the
+            // send callback and fault Message even though this test is about response timeout.
+            Assert.Same(requestMessage, await request.Message.WaitAsync(timeout, cancellationToken));
+
             await timeProvider.WaitForTimerCount(1).WaitAsync(cancellationToken);
             timeProvider.Advance(TimeSpan.FromMinutes(1));
 
             RequestTimeoutException exception =
-                await Assert.ThrowsAsync<RequestTimeoutException>(() => response);
+                await Assert.ThrowsAsync<RequestTimeoutException>(() =>
+                    response.WaitAsync(timeout, cancellationToken));
 
             Assert.Equal(
                 $"Timeout waiting for response, RequestId: {concreteRequest.RequestId}",
                 exception.Message);
-            Assert.Same(requestMessage, await request.Message);
         }
         finally
         {

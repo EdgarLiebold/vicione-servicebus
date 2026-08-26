@@ -62,7 +62,8 @@ namespace ViciOne.ServiceBus.Middleware
                 throw;
             }
             catch (OperationCanceledException exception)
-                when (exception.CancellationToken == policyContext.Context.CancellationToken)
+                when (exception.CancellationToken.IsCancellationRequested
+                    && exception.CancellationToken == policyContext.Context.CancellationToken)
             {
                 throw;
             }
@@ -169,7 +170,8 @@ namespace ViciOne.ServiceBus.Middleware
                     throw;
                 }
                 catch (OperationCanceledException exception)
-                    when (exception.CancellationToken == retryContext.CancellationToken)
+                    when (exception.CancellationToken.IsCancellationRequested
+                        && exception.CancellationToken == retryContext.CancellationToken)
                 {
                     throw;
                 }

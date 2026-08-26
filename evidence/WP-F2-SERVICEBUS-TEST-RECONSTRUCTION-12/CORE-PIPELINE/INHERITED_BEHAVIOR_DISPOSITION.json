@@ -1,0 +1,342 @@
+[
+  {
+    "obligationId": "OBL-R0-CORE-B-0426",
+    "strengthRationale": "The replacement asserts the exact configured admission count and a causally blocked remainder without wall-clock delay.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONCURRENCY-LIMIT/exact-configured-maximum",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder",
+    "variantSelector": "limit=32",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0427",
+    "strengthRationale": "The same causal admission barrier covers the single-permit boundary with an exact count rather than an eventual observation.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONCURRENCY-LIMIT/exact-configured-maximum",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder",
+    "variantSelector": "limit=1",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0428",
+    "strengthRationale": "The replacement proves that successful and faulted attempts consume the same permit budget using exact counts.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RATE-LIMIT/faults-consume-permits",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_CountsFaultedAndSuccessfulAttemptsEqually",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0429",
+    "strengthRationale": "The replacement uses the configured TimeProvider and proves replenishment immediately before and at the exact boundary.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Concurrency_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RATE-LIMIT/virtual-time-replenishment",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RateAndConcurrencyLimitTests.RateLimit_ReplenishesExactlyWhenTheConfiguredTimeProviderAdvances",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0430",
+    "strengthRationale": "The replacement exercises the real runtime connector and asserts the exact delivered record and invocation count.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION/factory-delivers-exact-message-values",
+    "targetTest": "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests.ConsumerFactoryConnection_DeliversTheExactMessageValues",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0431",
+    "strengthRationale": "The replacement connects a real object instance and proves exact delivery to every implemented message contract.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION/object-instance-multiple-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests.ObjectInstanceConnection_DeliversEveryImplementedMessageContractExactlyOnce",
+    "variantSelector": "object-instance",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0432",
+    "strengthRationale": "Both message contracts are sent with distinct identities and each is asserted exactly once on the same object instance.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectConsumer_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION/object-instance-multiple-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests.ObjectInstanceConnection_DeliversEveryImplementedMessageContractExactlyOnce",
+    "variantSelector": "two-message-contracts",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0433",
+    "strengthRationale": "The replacement uses the real handler connector and asserts the exact message identity received by the handler.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectHandler_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-DYNAMIC-HANDLER-CONNECTION/exact-message-values",
+    "targetTest": "ViciOne.ServiceBus.Tests.Consumers.DynamicConsumePipeConnectionTests.HandlerConnection_DeliversTheExactMessageValues",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0434",
+    "strengthRationale": "The replacement proves pre-consume, consume-fault, absent post-consume, and exact exception identity.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUME-OBSERVER/bus-fault-typed-and-untyped",
+    "targetTest": "ViciOne.ServiceBus.Tests.Testing.ConsumeObserverTests.BusObservers_RecordAndPropagateTheExactConsumeFailureWithoutPostConsume",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0435",
+    "strengthRationale": "The replacement asserts the exact successful message and observer metadata after handler completion.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUME-OBSERVER/bus-success-typed-and-untyped",
+    "targetTest": "ViciOne.ServiceBus.Tests.Testing.ConsumeObserverTests.BusObservers_RecordTheExactSuccessfulMessageAndObservationMetadata",
+    "variantSelector": "post-handler",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0436",
+    "strengthRationale": "The typed observer replacement proves ordered pre/post callbacks around one real consumer invocation.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUME-OBSERVER/consumer-success-pre-and-post",
+    "targetTest": "ViciOne.ServiceBus.Tests.Testing.ConsumeObserverTests.TypedObserver_ReportsPreAndPostAroundAConsumerInvocation",
+    "variantSelector": "post-consumer",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0437",
+    "strengthRationale": "The replacement asserts the exact pre-consume message identity and successful callback lifecycle.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ConnectObserver_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUME-OBSERVER/bus-success-typed-and-untyped",
+    "targetTest": "ViciOne.ServiceBus.Tests.Testing.ConsumeObserverTests.BusObservers_RecordTheExactSuccessfulMessageAndObservationMetadata",
+    "variantSelector": "pre-handler",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0438",
+    "strengthRationale": "One theory proves both accept and reject branches, exact downstream counts, and the public null boundaries.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/ContentFilter_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONTEXT-FILTER/matching-context-only",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.ContextFilterTests.Filter_ForwardsOnlyAnAcceptedContext",
+    "variantSelector": "accepted=false-and-true",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0439",
+    "strengthRationale": "The replacement proves success on the third attempt and the complete exact attempt sequence 0, 1, 2.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/MessageRetryPipe_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-RETRY/consume-context-succeeds-with-exact-attempt-sequence",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.MessageRetryConfigurationExtensionsTests.ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumber",
+    "variantSelector": "attempts=0,1,2",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0440",
+    "strengthRationale": "The replacement separates two consumer-scoped budgets and asserts each exact configured limit.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/MessageRetryPipe_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-RETRY/consumer-scoped-policy-budget",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.MessageRetryConfigurationExtensionsTests.ConsumerScopedRetry_AppliesOnlyTheConfiguredConsumerBudget",
+    "variantSelector": "retryLimit=3-and-5",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0441",
+    "strengthRationale": "The replacement reads the real retry-attempt payload and asserts every exposed attempt number exactly.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/MessageRetryPipe_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-RETRY/consume-context-succeeds-with-exact-attempt-sequence",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.MessageRetryConfigurationExtensionsTests.ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumber",
+    "variantSelector": "retry-attempt-payload",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0442",
+    "strengthRationale": "The replacement proves consumer, message, and consumer-message layers compose in order and exactly once for a factory.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUMER-MESSAGE-LAYERING/consumer-and-instance-registration",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests.Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnce",
+    "variantSelector": "ConsumerFactory",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0443",
+    "strengthRationale": "The same exact ordered layering contract is independently exercised for an instance consumer.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-CONSUMER-MESSAGE-LAYERING/consumer-and-instance-registration",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests.Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnce",
+    "variantSelector": "Instance",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0444",
+    "strengthRationale": "The replacement proves topology, bus, and endpoint send layers compose in the required order exactly once.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-SEND-PIPE-LAYERING/topology-bus-endpoint-and-message-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.SendPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "variantSelector": "concrete",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0445",
+    "strengthRationale": "The replacement proves topology, bus, and endpoint publish layers compose in the required order exactly once.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-PUBLISH-PIPE-LAYERING/topology-bus-endpoint-and-message-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.PublishPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "variantSelector": "concrete",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0446",
+    "strengthRationale": "Both interface and concrete send-message registrations are exercised and counted independently without duplication.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-SEND-PIPE-LAYERING/topology-bus-endpoint-and-message-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.SendPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "variantSelector": "interface-and-concrete",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0447",
+    "strengthRationale": "Both interface and concrete publish-message registrations are exercised and counted independently without duplication.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Message_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-PUBLISH-PIPE-LAYERING/topology-bus-endpoint-and-message-contracts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.Configuration.PublishPipeConfigurationTests.EndpointSpecification_ComposesTopologyBusAndEndpointLayersExactlyOnce",
+    "variantSelector": "interface-and-concrete",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0448",
+    "strengthRationale": "Every explicitly keyed message identity is delivered and same-key serialization remains owned by the dedicated partitioner tests.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/PartitionByKey_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-PARTITION-CONVENTION/explicit-and-convention-deliver-every-message",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.PartitionMessageConfigurationTests.MessagePartitioner_DeliversEveryMessageWithExplicitAndConventionBasedKeys",
+    "variantSelector": "explicitKey=true",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0449",
+    "strengthRationale": "Every convention-keyed message identity is delivered and same-key serialization remains owned by the dedicated partitioner tests.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/PartitionByKey_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-PARTITION-CONVENTION/explicit-and-convention-deliver-every-message",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.PartitionMessageConfigurationTests.MessagePartitioner_DeliversEveryMessageWithExplicitAndConventionBasedKeys",
+    "variantSelector": "explicitKey=false",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0450",
+    "strengthRationale": "The replacement asserts fail-fast configuration failure and its actionable missing-correlation diagnostic.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/PartitionByKey_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-MESSAGE-PARTITION-CONVENTION/missing-correlation-id-is-actionable",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.PartitionMessageConfigurationTests.MessagePartitioner_RejectsAMessageWithoutACorrelationConvention",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0451",
+    "strengthRationale": "The replacement proves all five attempts, the complete observer lifecycle, and exact terminal exception identity.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RETRY-OBSERVERS/exhausted-lifecycle-and-exact-failure",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests.ExhaustedRetry_EmitsTheExactObserverLifecycleAndRethrowsTheTerminalFailure",
+    "variantSelector": "five-attempts",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0452",
+    "strengthRationale": "The replacement proves the outer retry owns a single budget when it precedes the non-retrying inner policy.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RETRY-COMPOSITION/same-exception-policies-do-not-multiply",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests.NestedRetryPolicies_DoNotMultiplyTheDownstreamRetryBudget",
+    "variantSelector": "retryingPolicyFirst=true;expectedAttempts=1",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0453",
+    "strengthRationale": "The replacement proves the retrying inner policy owns exactly five attempts when policy order is reversed.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RETRY-COMPOSITION/same-exception-policies-do-not-multiply",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests.NestedRetryPolicies_DoNotMultiplyTheDownstreamRetryBudget",
+    "variantSelector": "retryingPolicyFirst=false;expectedAttempts=5",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0454",
+    "strengthRationale": "The replacement crosses typed dispatch and proves that only one retry budget owns the terminal failure.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Retry_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-RETRY-DISPATCH/typed-dispatch-retains-single-owner",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests.RetryAcrossTypedDispatch_PreservesExactlyOneOwningBudget",
+    "variantSelector": "OuterRetryThenNone;expectedAttempts=1",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0455",
+    "strengthRationale": "The replacement proves an incomplete scope aborts the exact transaction owned by the filter.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-TRANSACTION-SCOPE/incomplete-scope-aborts",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests.IncompleteScope_AbortsTheOwnedTransaction",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0456",
+    "strengthRationale": "The replacement proves rollback and disposal while preserving the exact downstream exception instance.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-TRANSACTION-CONFIGURATION/failure-rolls-back-and-preserves-identity",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests.Filter_RollsBackAndDisposesBeforeRethrowingTheExactFailure",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0457",
+    "strengthRationale": "The replacement proves commit and ambient transaction flow across a real asynchronous continuation.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-TRANSACTION-SCOPE/completed-scope-commits-across-await",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests.CompletedScope_CommitsAndFlowsAcrossAnAsyncContinuation",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0458",
+    "strengthRationale": "The replacement deterministically proves that the exact configured timeout and isolation level cross the owned ServiceBus boundary into a fresh transaction context. System.Transactions owns and tests the BCL timer itself, so the replacement removes the inherited five-second wall-clock oracle without weakening the ServiceBus contract.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-TRANSACTION-CONFIGURATION/exact-options-and-lifecycle",
+    "targetTest": "ViciOne.ServiceBus.Tests.Configuration.TransactionConfigurationTests.Filter_UsesTheExactConfiguredOptionsAndOwnsCommitAndDisposal",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  },
+  {
+    "obligationId": "OBL-R0-CORE-B-0459",
+    "strengthRationale": "The replacement proves every retry attempt receives a fresh owned transaction context with an independent lifecycle.",
+    "sourceFile": "tests/ViciOne.ServiceBus.Tests/Pipeline/Transaction_Specs.cs",
+    "disposition": "REPLACED_EXECUTING",
+    "targetRequirement": "REQ-VSB-TRANSACTION-RETRY/fresh-owned-context-per-attempt",
+    "targetTest": "ViciOne.ServiceBus.Tests.Middleware.TransactionFilterTests.Retry_CreatesAFreshTransactionContextForEveryAttempt",
+    "variantSelector": "single",
+    "profile": "UnitArchitecture"
+  }
+]

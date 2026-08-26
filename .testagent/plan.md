@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1699 predeclared unfiltered cases;
+- `UnitArchitecture`: 1734 predeclared unfiltered cases;
 - `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1444,4 +1444,59 @@ direct-constructor name input owns the same validation boundary. Public and form
 topology names are data and can no longer be reinterpreted as URI options or fragments. The
 telemetry test barrier also proves the exact idle deadline rather than merely observing an arbitrary
 timer change. The focused transport executable now contains 108 unfiltered cases and the
-UnitArchitecture floor is 1699.
+UnitArchitecture floor is 1734.
+
+## Current cohort — native core pipeline closure
+
+Work from the clean accepted product baseline `fb90c8e841cc7c5348193bba8105ea3543b45c01`.
+This is one source-derived xUnit 4/MTP 2 cohort. It must not recreate the NUnit fixture architecture,
+the discarded Python policy system or a second verdict path.
+
+1. Freeze a machine-readable 34-row disposition for `OBL-R0-CORE-B-0426` through `0459`. Each row
+   names exactly one terminal replacement carrier and states why it is equal or stronger. Existing
+   native tests are reused where the research section names them; they are not copied.
+2. Add the missing source-owner tests:
+   - `Consumers/DynamicConsumePipeConnectionTests.cs` for consumer factory, object instance,
+     multi-message consumer, handler and disconnect behavior;
+   - `Testing/ConsumeObserverTests.cs` for exact observer lifecycle and error identity;
+   - `Middleware/ContextFilterTests.cs` for true, false, asynchronous and invalid delegate results;
+   - `Configuration/Configuration/ConsumerMessageConfigurationTests.cs` for the consumer,
+     message and consumer-message layers on both factory and instance registration;
+   - extend the send configuration owner and add the publish owner for exactly-once concrete/base
+     application without transport or wall-clock involvement;
+   - `Configuration/PartitionMessageConfigurationTests.cs` for explicit correlation convention and
+     missing-convention failure, while the existing `PartitionerTests` retain concurrency ownership;
+   - `Configuration/TransactionConfigurationTests.cs`, `Middleware/TransactionFilterTests.cs` and
+     `Contexts/TransactionContextExtensionsTests.cs` for exact options, ownership, commit, rollback,
+     original error, fresh retry context, ambient-scope flow and argument boundaries.
+3. Write each failing source-derived boundary test before its minimal product correction. Normalize
+   handler, context-filter and transaction argument contracts; require actual cancellation request
+   before retry treats a token-bearing `OperationCanceledException` as cancellation. Introduce only
+   the smallest internal transaction-context factory necessary to observe exact options and
+   lifecycle without replacing `System.Transactions`.
+4. Use `TestContext.Current.CancellationToken` and the central `OperationTimeout` only as fail-fast
+   guards. Use `TaskCompletionSource` with asynchronous continuations and explicit release in
+   `finally` for coordination. No `Thread.Sleep`, `Task.Delay`, stopwatch, random scheduling,
+   absence-until-timeout or shared running harness is an assertion oracle.
+5. After focused tests pass, reread every changed assertion and production branch. Perform targeted
+   test-gap, assertion-quality, anti-pattern and smell reviews. Execute one-cause mutations for each
+   new product correction and for the 34-row projection; bind exact recipes, commands, exit codes,
+   raw-result hashes and post-restore hashes.
+6. Only after 34/34 terminal closure, delete all thirteen inherited Pipeline files and remove the
+   empty directory. Update the passive Core requirement projection, profile floor, English build
+   documentation, TODO/CHANGELOG as applicable and generated CHANGELIST.
+7. Run locked restore and Release build for the focused Core project, the unfiltered focused test
+   executable, complete UnitArchitecture, LocalIntegration and Engineering profiles. Required
+   outcome is zero failed, skipped or warning tests and zero build warnings/errors. Freeze separate
+   technical and evidence commits, then request two independent read-only reviews: product/API and
+   test/evidence/34-row closure.
+
+The inherited obligation grouping is fixed:
+
+- `0426`--`0429`: accepted limit carriers;
+- `0430`--`0438`: dynamic connection, observer and context-filter carriers;
+- `0439`--`0441`: accepted consume-aware retry carriers;
+- `0442`--`0447`: configuration plus send/publish layering carriers;
+- `0448`--`0450`: accepted partition concurrency plus new convention carriers;
+- `0451`--`0454`: accepted retry composition/dispatch carriers;
+- `0455`--`0459`: new transaction lifecycle and retry-ownership carriers.

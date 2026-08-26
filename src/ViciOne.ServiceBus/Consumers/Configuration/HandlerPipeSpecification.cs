@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using Middleware;
 
@@ -16,18 +17,15 @@ namespace ViciOne.ServiceBus.Configuration
 
         public HandlerPipeSpecification(MessageHandler<T> handler)
         {
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         void IPipeSpecification<ConsumeContext<T>>.Apply(IPipeBuilder<ConsumeContext<T>> builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
             builder.AddFilter(new HandlerMessageFilter<T>(_handler));
         }
 
-        IEnumerable<ValidationResult> ISpecification.Validate()
-        {
-            if (_handler == null)
-                yield return this.Failure("Handler", "must not be null");
-        }
+        IEnumerable<ValidationResult> ISpecification.Validate() => [];
     }
 }

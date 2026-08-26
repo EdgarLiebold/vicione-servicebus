@@ -17,12 +17,16 @@ namespace ViciOne.ServiceBus.Middleware
 
         public ContextFilter(Func<TContext, Task<bool>> filter)
         {
-            _filter = filter;
+            _filter = filter ?? throw new ArgumentNullException(nameof(filter));
         }
 
         public Task Send(TContext context, IPipe<TContext> next)
         {
-            Task<bool> filterTask = _filter(context);
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(next);
+
+            Task<bool> filterTask = _filter(context)
+                ?? throw new InvalidOperationException("The context filter returned a null decision task.");
             if (filterTask.Status == TaskStatus.RanToCompletion && filterTask.Result)
                 return next.Send(context);
 
@@ -38,6 +42,7 @@ namespace ViciOne.ServiceBus.Middleware
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             context.CreateFilterScope("context");
         }
     }

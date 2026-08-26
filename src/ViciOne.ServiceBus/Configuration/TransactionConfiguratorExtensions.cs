@@ -15,6 +15,8 @@ namespace ViciOne.ServiceBus
         public static void UseTransaction<T>(this IPipeConfigurator<T> configurator, Action<ITransactionConfigurator> configure = null)
             where T : class, PipeContext
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             var transactionConfigurator = new TransactionPipeSpecification<T>();
 
             configure?.Invoke(transactionConfigurator);
