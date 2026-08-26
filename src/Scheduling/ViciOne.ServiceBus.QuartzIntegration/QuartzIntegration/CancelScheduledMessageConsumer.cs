@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.QuartzIntegration
 {
+    using System;
     using System.Threading.Tasks;
     using Quartz;
     using Scheduling;
@@ -13,11 +14,12 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public CancelScheduledMessageConsumer(ISchedulerFactory schedulerFactory)
         {
-            _schedulerFactory = schedulerFactory;
+            _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
         }
 
         public async Task Consume(ConsumeContext<CancelScheduledMessage> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var correlationId = context.Message.TokenId.ToString("N");
             var triggerKey = new TriggerKey(correlationId);
 
@@ -33,14 +35,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public async Task Consume(ConsumeContext<CancelScheduledRecurringMessage> context)
         {
-            var scheduleId = context.Message.ScheduleId;
-
-            if (!scheduleId.StartsWith(QuartzConstants.RecurringTriggerPrefix))
-                scheduleId = string.Concat(QuartzConstants.RecurringTriggerPrefix, scheduleId);
-
+            ArgumentNullException.ThrowIfNull(context);
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 
-            var unscheduledJob = await scheduler.UnscheduleJob(new TriggerKey(scheduleId, context.Message.ScheduleGroup), context.CancellationToken)
+            var triggerKey = QuartzTriggerKey.ForRecurring(context.Message.ScheduleId, context.Message.ScheduleGroup);
+            var unscheduledJob = await scheduler.UnscheduleJob(triggerKey, context.CancellationToken)
                 .ConfigureAwait(false);
 
             if (unscheduledJob)

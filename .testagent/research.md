@@ -1765,3 +1765,71 @@ context extensions appeared among the candidates, but extension methods, reflect
 temporarily retained TestFramework make the raw pairing count intentionally non-authoritative. It
 is triage evidence only; source-derived contracts, the frozen R0 ledger and executable tests remain
 the acceptance truth.
+
+## Quartz scheduling integration cohort
+
+The accepted starting point is evidence commit `951e0068e64dd9c8b7614f12f4dde413026f0d90`
+(tree `99f03931f86fa5838c4da73b89d818115c85d0a1`). The inherited Quartz test project
+contains twenty-six C# files and exactly eighty-seven executed obligations,
+`OBL-R0-PER-0200` through `OBL-R0-PER-0286`. Every row is owned by
+`src/Scheduling/ViciOne.ServiceBus.QuartzIntegration` and belongs to the hermetic
+UnitArchitecture profile. The separate Entity Framework Quartz-outbox row is not part of this
+cohort.
+
+All twenty product files, all twenty-six inherited test files and the existing native scheduling,
+outbox, saga and job-service carriers were read before the first edit. The inherited project is
+useful defect history, not a target architecture: it uses NUnit/VSTest/TestFramework, process-global
+Quartz clock delegates, wall-clock delays and stopwatches, ordered shared fixtures, negative timeout
+windows and completion-only assertions. None of those mechanisms may be copied.
+
+The eighty-seven obligations form these retained behavior families:
+
+- DI/manual registration and serializer/header fidelity (`0200`--`0201`, `0242`--`0243`);
+- courier retry/redelivery and scheduled redelivery composition (`0202`--`0211`, `0240`);
+- job factory and Quartz job-data binding (`0212`--`0213`);
+- missing-saga, outbox and schedule replacement semantics (`0214`--`0223`);
+- recurring scheduling, pause, resume, cancel and temporal headers (`0224`--`0228`);
+- saga request, timeout, reschedule and multi-schedule behavior (`0229`--`0244`);
+- job cancellation, completion, concurrency, status, fault, retry, suspect-attempt and late-attempt
+  suppression (`0245`--`0286`).
+
+Source analysis found product defects which native tests must reproduce before correction:
+
+- `QuartzTimeAdjustment` mutates the process-global `Quartz.SystemTime` and restores it to a new
+  wall-clock delegate, so parallel schedulers and tests can corrupt each other's time truth;
+- `ScheduledMessageJob` recomputes expiration against `DateTime.UtcNow` instead of the scheduler's
+  configured time source;
+- header and transport-property JSON are stored as strings but `JobDataMessageContext` attempts a
+  direct collection cast, which does not perform deserialization;
+- the recurring prefix is removed with unrestricted `string.Replace`, so the same text inside a
+  legitimate schedule name is also deleted;
+- pause and resume duplicate the recurring-trigger prefix literal instead of using its semantic
+  owner;
+- retained mutable options and caller arrays/delegates can change runtime behavior after the bus
+  topology has been built; public dependencies and queue names are not consistently validated.
+
+Quartz.NET 3.19.1 is the current stable upstream release and is a documented drop-in update from
+3.19.0. It includes scheduler and daylight-saving correctness fixes absent from the repository's
+3.18.1 pin. Official Quartz sources use `TimeProvider` as the modern clock boundary and remove
+`SystemTime` in the next major line. This cohort therefore updates both Quartz packages together to
+3.19.1, registers one `TimeProvider`, injects it into ViciOne scheduling code and removes the public
+global-clock adjustment helper. The standard provider is `TimeProvider.System`; tests use
+`FakeTimeProvider` through DI and never mutate process-global time.
+
+The target owner is
+`tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests`. Its physical folders and namespaces
+mirror the product `Configuration` and `QuartzIntegration` owners; local test-only composition
+helpers live under `Testing`. The project is a signed xUnit 4 executable on Microsoft Testing
+Platform v2, references the Quartz product and common native test infrastructure directly, and
+joins both the UnitArchitecture and Engineering solution graphs together with its product project.
+No old test project is compiled as part of those graphs.
+
+Native tests use real public integration boundaries where the retained behavior is a composition
+contract and small deterministic collaborators where the product owns mapping or lifecycle logic.
+All coordination uses observable barriers plus the central `OperationTimeout` as a fail-fast guard.
+There are no sleeps, stopwatch thresholds, absence-until-timeout assertions, mutable static clocks,
+shared running schedulers or assertion-free smoke tests. Deterministic clock-contract tests inject a
+`FakeTimeProvider`; integration tests that intentionally exercise Quartz's real scheduler obtain time
+only through `TimeProvider.System`. Multiple inherited assertions may map to one
+stronger carrier only when that carrier proves their complete precondition, effect, boundary and
+failure semantics.

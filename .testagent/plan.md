@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1735 predeclared unfiltered cases;
+- `UnitArchitecture`: 1822 predeclared unfiltered cases;
 - `LocalIntegration`: 17 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1444,7 +1444,7 @@ direct-constructor name input owns the same validation boundary. Public and form
 topology names are data and can no longer be reinterpreted as URI options or fragments. The
 telemetry test barrier also proves the exact idle deadline rather than merely observing an arbitrary
 timer change. The focused transport executable now contains 108 unfiltered cases and the
-UnitArchitecture floor is 1735.
+UnitArchitecture floor is 1822.
 
 ## Current cohort — native core pipeline closure
 
@@ -1500,3 +1500,46 @@ The inherited obligation grouping is fixed:
 - `0448`--`0450`: accepted partition concurrency plus new convention carriers;
 - `0451`--`0454`: accepted retry composition/dispatch carriers;
 - `0455`--`0459`: new transaction lifecycle and retry-ownership carriers.
+
+## Quartz scheduling integration execution plan
+
+1. Freeze the accepted Core-pipeline evidence commit and inventory exactly the eighty-seven Quartz
+   obligations `OBL-R0-PER-0200..0286`. Keep the separate EF Quartz-outbox obligation outside this
+   cohort. Bind one terminal disposition for every included row before deleting the old project.
+2. Create the signed source-mirrored executable project
+   `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests` using only xUnit 4 and Microsoft
+   Testing Platform v2. Add it and the Quartz product project to UnitArchitecture and Engineering;
+   do not add the inherited NUnit/VSTest project to any native graph.
+3. Update `Quartz` and `Quartz.Extensions.Hosting` together from 3.18.1 to the current stable 3.19.1
+   line and restore only the affected modern graph. Locked restores must not renew unrelated old
+   test-project lock files.
+4. Establish one clock truth. Remove `QuartzTimeAdjustment`; register/inject `TimeProvider` and use
+   it for scheduler and outgoing-expiration calculations. Freeze mutable scheduler options before
+   runtime use. No process-global delegate, `DateTime.Now`, `DateTime.UtcNow`, sleep or stopwatch is
+   permitted in the target product/test paths.
+5. Correct the source-derived data-contract defects before accepting their tests: deserialize stored
+   header/property JSON through the configured System.Text.Json object deserializer, remove only a
+   leading recurring prefix, centralize scheduling keys and validate public arguments and queue
+   names. Preserve useful scheduling features; API compatibility with unsuitable inherited shapes
+   is not required.
+6. Build ordinary xUnit carriers under `Configuration` and `QuartzIntegration` for registration,
+   one-shot and recurring trigger construction, exact job data and envelope restoration, cancel,
+   pause, resume, replacement, misfire, expiration, job-factory and bus/scheduler lifecycle. Each
+   assertion uses an external exact oracle and each asynchronous path has a causal completion
+   barrier.
+7. Build the retained composition matrix for serializer/header fidelity, courier retry/redelivery,
+   missing-saga redelivery, outbox rollback contrast, request/timeout/reschedule, independent saga
+   schedules and the complete job-service lifecycle. Reuse existing stronger Core carriers only as
+   explicit joint evidence; never count generic Core behavior as Quartz integration without a real
+   Quartz boundary.
+8. Reread every changed product and test line. Apply the Microsoft test-gap, assertion-quality and
+   anti-pattern reviews; then execute bounded one-cause mutations for each product correction and
+   every high-risk schedule/control/lifecycle boundary. Restore and hash-check the technical tree
+   after each mutation.
+9. Only after 87/87 terminal closure and a green focused project remove the inherited Quartz test
+   project and its empty directories. Update requirement projection, profile floor, English root
+   documentation, TODO/CHANGELOG where applicable and generated CHANGELIST.
+10. Run locked restore, Release build and unfiltered focused tests, then complete UnitArchitecture,
+    LocalIntegration and Engineering Release profiles. Required outcome is zero failed, skipped or
+    warning tests and zero build warnings/errors. Freeze separate technical and evidence commits and
+    obtain two independent read-only reviews: product/API and test/evidence/87-row closure.

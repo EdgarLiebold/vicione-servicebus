@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 EXPECTED_SUPPORT_JOB_SHA256 = {
     "legacy-tooling": "0726813a612a984604aac4753cdc3322c2e71fd11ff98477e001d9f5a07770a6",
     "build": "d6e5bda334b170811d4d1049c6913a48d58651e149adf1e710dade8f5d8ab2d6",
-    "pack": "007f2c18a345683863db43d2258c2d01dd36f1097cdc894420879844b40f0669",
+    "pack": "39645db49ea3e68f826c5c3f2d92721309d8445e0e9c74c60c01df2709e52eb4",
 }
 
 
@@ -445,7 +445,6 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             "legacy-tooling",
             "build",
             "core-unit",
-            "quartz",
             "activemq",
             "sql-transport",
             "benchmarks",

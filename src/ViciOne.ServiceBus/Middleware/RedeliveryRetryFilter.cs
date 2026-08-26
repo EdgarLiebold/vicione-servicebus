@@ -49,8 +49,14 @@ namespace ViciOne.ServiceBus.Middleware
                 {
                     await next.Send(policyContext.Context).ConfigureAwait(false);
                 }
+                catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    throw;
+                }
                 catch (OperationCanceledException exception)
-                    when (exception.CancellationToken == policyContext.Context.CancellationToken || exception.CancellationToken == context.CancellationToken)
+                    when (exception.CancellationToken.IsCancellationRequested
+                        && exception.CancellationToken == policyContext.Context.CancellationToken)
                 {
                     throw;
                 }

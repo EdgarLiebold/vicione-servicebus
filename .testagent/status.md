@@ -709,3 +709,32 @@ future cohorts as complete.
   executable passes 954/954. The complete UnitArchitecture profile passes 1735/1735 and
   LocalIntegration passes 17/17 against run-scoped PostgreSQL and Azurite, all with zero failure and
   zero skip. The complete Engineering Release build has zero warnings and zero errors.
+
+## Lead implementation: Quartz scheduling integration
+
+- All 87 inherited Quartz obligations `OBL-R0-PER-0200` through `0286` have one terminal,
+  machine-readable disposition. Eighty-five are carried by executable native tests; the two
+  non-product rows are explicitly classified as upstream Quartz compatibility and an invalid
+  duplicate inherited test rather than counted as local behavior.
+- The replacement is a signed, source-mirrored xUnit 4 executable on Microsoft Testing Platform 2.
+  It covers scheduler registration and lifecycle, immutable options, one-time and recurring
+  controls, payload/header/transport-property restoration, trace and expiration propagation,
+  redelivery scopes and intervals, courier, outbox, missing-saga, nested request, saga scheduling
+  and the complete retained job-service lifecycle.
+- Product corrections remove the process-global Quartz clock hook, use the standard `TimeProvider`
+  boundary for outgoing expiration, deserialize persisted System.Text.Json metadata correctly,
+  centralize recurring trigger identities, preserve raw-serializer trace headers, recreate a
+  deleted durable job and distinguish requested cancellation from a dependency-thrown
+  `OperationCanceledException` during scheduled redelivery.
+- Runtime configuration is validated and frozen into immutable settings before bus start. The test
+  harness uses causal completion barriers and the central operation timeout; no skip, sleep, delay,
+  stopwatch threshold, direct `DateTime.Now/UtcNow`, blocking wait or assertion inside an
+  asynchronous consumer remains. Early assertions cannot strand concurrency-controlled jobs.
+- The inherited Quartz NUnit/VSTest project, its expected-identity file and its old workflow job are
+  removed; the product root solution no longer compiles any inherited `tests/**` project. Empty
+  retired directories and the misplaced empty root `TestResults` directory are gone.
+- The focused Release build has zero warnings and zero errors and the native Quartz executable passes
+  85/85 with zero failure or skip. The complete serial UnitArchitecture profile passes 1822/1822
+  with zero failure or skip. The sandbox-specific MTP NamedPipe failure is not treated as product
+  evidence: focused runs use the built MTP executable directly and the full CLI run executes outside
+  the sandbox, as recorded by TLP-027.

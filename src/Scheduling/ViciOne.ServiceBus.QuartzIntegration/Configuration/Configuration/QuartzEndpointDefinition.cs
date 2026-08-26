@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using Microsoft.Extensions.Options;
     using Middleware;
     using QuartzIntegration;
@@ -11,13 +12,26 @@ namespace ViciOne.ServiceBus.Configuration
         IEndpointDefinition<PauseScheduledMessageConsumer>,
         IEndpointDefinition<ResumeScheduledMessageConsumer>
     {
-        readonly QuartzEndpointOptions _options;
+        readonly int? _concurrentMessageLimit;
+        readonly int? _prefetchCount;
+        readonly string _queueName;
 
         public QuartzEndpointDefinition(IOptions<QuartzEndpointOptions> options)
         {
-            _options = options.Value;
+            ArgumentNullException.ThrowIfNull(options);
+            QuartzEndpointOptions value = options.Value;
+            ArgumentException.ThrowIfNullOrWhiteSpace(value.QueueName);
+            if (value.PrefetchCount is <= 0)
+                throw new ArgumentOutOfRangeException(nameof(value.PrefetchCount), value.PrefetchCount, "PrefetchCount must be greater than zero.");
+            if (value.ConcurrentMessageLimit is <= 0)
+                throw new ArgumentOutOfRangeException(nameof(value.ConcurrentMessageLimit), value.ConcurrentMessageLimit,
+                    "ConcurrentMessageLimit must be greater than zero.");
 
-            Partition = new Partitioner(_options.ConcurrentMessageLimit ?? _options.PrefetchCount ?? 32, new Murmur3UnsafeHashGenerator());
+            _prefetchCount = value.PrefetchCount;
+            _concurrentMessageLimit = value.ConcurrentMessageLimit;
+            _queueName = value.QueueName;
+
+            Partition = new Partitioner(_concurrentMessageLimit ?? _prefetchCount ?? 32, new Murmur3UnsafeHashGenerator());
         }
 
         public IPartitioner Partition { get; }
@@ -26,13 +40,13 @@ namespace ViciOne.ServiceBus.Configuration
 
         public virtual bool IsTemporary => false;
 
-        public virtual int? PrefetchCount => _options.PrefetchCount;
+        public virtual int? PrefetchCount => _prefetchCount;
 
-        public virtual int? ConcurrentMessageLimit => _options.ConcurrentMessageLimit;
+        public virtual int? ConcurrentMessageLimit => _concurrentMessageLimit;
 
         string IEndpointDefinition.GetEndpointName(IEndpointNameFormatter formatter)
         {
-            return _options.QueueName;
+            return _queueName;
         }
 
         public void Configure<T>(T configurator, IRegistrationContext? context)

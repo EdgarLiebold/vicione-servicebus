@@ -14,14 +14,17 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         IJob
     {
         readonly IBus _bus;
+        readonly TimeProvider _timeProvider;
 
-        public ScheduledMessageJob(IBus bus)
+        public ScheduledMessageJob(IBus bus, TimeProvider timeProvider)
         {
-            _bus = bus;
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var jobData = context.MergedJobDataMap;
             var messageContext = new JobDataMessageContext(context, SystemTextJsonMessageSerializer.Instance);
 
@@ -35,7 +38,13 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             try
             {
-                var pipe = new ForwardScheduledMessagePipe(contentType, messageContext, body, destinationAddress, supportedMessageTypes);
+                var pipe = new ForwardScheduledMessagePipe(
+                    contentType,
+                    messageContext,
+                    body,
+                    destinationAddress,
+                    supportedMessageTypes,
+                    _timeProvider);
 
                 var endpoint = await _bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
 
@@ -60,15 +69,17 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             readonly Uri? _destinationAddress;
             readonly string[] _supportedMessageTypes;
             readonly JobDataMessageContext _messageContext;
+            readonly TimeProvider _timeProvider;
 
             public ForwardScheduledMessagePipe(ContentType? contentType, JobDataMessageContext messageContext, string body, Uri? destinationAddress,
-                string[] supportedMessageTypes)
+                string[] supportedMessageTypes, TimeProvider timeProvider)
             {
                 _contentType = contentType;
                 _messageContext = messageContext;
                 _body = body;
                 _destinationAddress = destinationAddress;
                 _supportedMessageTypes = supportedMessageTypes;
+                _timeProvider = timeProvider;
             }
 
             public Task Send(SendContext context)
@@ -93,8 +104,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 if (_supportedMessageTypes.Any())
                     context.SupportedMessageTypes = _supportedMessageTypes;
 
-                if (_messageContext.ExpirationTime.HasValue)
-                    context.TimeToLive = _messageContext.ExpirationTime.Value.ToUniversalTime() - DateTime.UtcNow;
+                context.TimeToLive = ScheduledMessageExpiration.GetRemainingTimeToLive(_messageContext.ExpirationTime, _timeProvider);
 
                 foreach (KeyValuePair<string, object> header in _messageContext.Headers.GetAll())
                     context.Headers.Set(header.Key, header.Value);

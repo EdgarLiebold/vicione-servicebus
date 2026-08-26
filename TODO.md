@@ -205,17 +205,16 @@ difference from the local PostgreSQL/Azurite results.
 
 ## Finalize solution composition after native-test promotion
 
-The inherited `ViciOne.ServiceBus.slnx` still contains old test projects. Three of them are not
-executable Microsoft Testing Platform projects and therefore correctly fail the xUnit 4 executable-
-project gate. Do not retrofit those projects merely to make the inherited solution green. Replace
-their meaningful behavior in the source-owner projects, remove them when their obligation sets are
-terminal, and then rebuild the root solution composition.
+`ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited
+`tests/**` projects. Do not reintroduce those projects merely to make the old NUnit/VSTest graph
+available. Replace their meaningful behavior in the source-owner native projects and retire each
+inherited project only when its obligation set is terminal.
 
-The final product and engineering solution closure must include every retained `src/**` project and
-every promoted native test, sample, benchmark, and engineering tool that belongs to its declared
-role. Acceptance requires locked restore, zero-warning Release builds, all applicable unfiltered
-profiles, and an architecture test that fails when a retained project is omitted from the relevant
-solution.
+The remaining finalization is to promote `tests2` to `tests` and then revalidate that the product,
+unit, local-integration and engineering solutions each contain every retained project belonging to
+their declared role. Acceptance requires locked restore, zero-warning Release builds, all applicable
+unfiltered profiles, and architecture tests that fail when a retained project is omitted from the
+relevant solution.
 
 ## Retire the inherited Python/VSTest/NUnit verification stack at promotion
 

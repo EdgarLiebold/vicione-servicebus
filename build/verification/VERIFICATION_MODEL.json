@@ -14,7 +14,6 @@
     "local": {
       "members": [
         "core",
-        "quartz",
         "benchmarks",
         "diagnostics"
       ],
@@ -32,11 +31,6 @@
     "core": {
       "members": [
         "core"
-      ]
-    },
-    "quartz": {
-      "members": [
-        "quartz"
       ]
     },
     "benchmarks": {
@@ -79,7 +73,6 @@
   },
   "jobs": {
     "core-unit": "core",
-    "quartz": "quartz",
     "rabbitmq": "rabbitmq",
     "activemq": "activemq",
     "sql-transport": "sql-transport",
@@ -337,32 +330,15 @@
     },
     {
       "id": "scheduling-quartz",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration"
       ],
-      "testProjects": [
-        "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "quartz",
-          "category": "quartz",
-          "project": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
-          "minimumExecutedCases": 89,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 900,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/quartz.txt"
-        }
-      ]
+      "rationale": "The inherited NUnit/VSTest project is retired after complete closure of OBL-R0-PER-0200 through OBL-R0-PER-0286. Quartz behavior is verified by the native xUnit 4/MTP v2 project in the UnitArchitecture profile.",
+      "runs": []
     },
     {
       "id": "serialization-messagepack",

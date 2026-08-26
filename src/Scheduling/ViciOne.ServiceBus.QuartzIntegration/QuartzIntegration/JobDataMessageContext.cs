@@ -34,9 +34,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public JobDataMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
         {
-            _executionContext = executionContext;
+            _executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
             _jobDataMap = executionContext.MergedJobDataMap;
-            _objectDeserializer = objectDeserializer;
+            _objectDeserializer = objectDeserializer ?? throw new ArgumentNullException(nameof(objectDeserializer));
 
             Guid? messageId = _jobDataMap.TryGetString(nameof(MessageId), out var text) ? ConvertIdToGuid(text) : default;
 
@@ -132,16 +132,24 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         public HostInfo Host => _hostInfo ??= _jobDataMap.TryGetValue(nameof(Host), out HostInfo? value) ? value! : HostMetadataCache.Empty;
 
         public IReadOnlyDictionary<string, object>? TransportProperties =>
-            _jobDataMap.TryGetValue<IReadOnlyDictionary<string, object>>("TransportProperties", out var properties) ? properties : default;
+            _jobDataMap.TryGetValue("TransportProperties", out object? value)
+                ? _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value)
+                : default;
 
         Headers GetHeaders()
         {
             var headers = new DictionarySendHeaders();
 
-            if (_jobDataMap.TryGetValue("HeadersAsJson", out IEnumerable<KeyValuePair<string, object>> headerElements))
+            if (_jobDataMap.TryGetValue("HeadersAsJson", out object? value))
             {
-                foreach (KeyValuePair<string, object> element in headerElements)
-                    headers.Set(element.Key, element.Value);
+                IEnumerable<KeyValuePair<string, object>>? headerElements =
+                    _objectDeserializer.DeserializeObject<IEnumerable<KeyValuePair<string, object>>>(value);
+
+                if (headerElements != null)
+                {
+                    foreach (KeyValuePair<string, object> element in headerElements)
+                        headers.Set(element.Key, element.Value);
+                }
             }
 
             headers.Set(MessageHeaders.Quartz.Sent, _executionContext.FireTimeUtc);
@@ -159,7 +167,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 headers.Set(MessageHeaders.SchedulingTokenId, tokenId);
 
             if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Name))
-                headers.Set(MessageHeaders.Quartz.ScheduleId, _executionContext.Trigger.Key.Name.Replace(QuartzConstants.RecurringTriggerPrefix, ""));
+                headers.Set(MessageHeaders.Quartz.ScheduleId, QuartzTriggerKey.GetScheduleId(_executionContext.Trigger.Key));
 
             if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Group))
                 headers.Set(MessageHeaders.Quartz.ScheduleGroup, _executionContext.Trigger.Key.Group);

@@ -8,21 +8,21 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     /// <summary>
     /// Used to start and stop an in-memory scheduler using Quartz
     /// </summary>
-    public class SchedulerBusObserver :
+    internal sealed class SchedulerBusObserver :
         IBusObserver
     {
-        readonly QuartzSchedulerOptions _options;
+        readonly QuartzSchedulerSettings _settings;
         readonly Uri _schedulerEndpointAddress;
         IScheduler? _scheduler;
 
         /// <summary>
         /// Creates the bus observer to initialize the Quartz scheduler.
         /// </summary>
-        /// <param name="options">Configuration to initialize with.</param>
-        public SchedulerBusObserver(QuartzSchedulerOptions options)
+        /// <param name="settings">Validated immutable scheduler settings.</param>
+        public SchedulerBusObserver(QuartzSchedulerSettings settings)
         {
-            _options = options;
-            _schedulerEndpointAddress = new Uri($"queue:{options.QueueName}");
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _schedulerEndpointAddress = new Uri($"queue:{settings.QueueName}");
         }
 
         public void PostCreate(IBus bus)
@@ -37,15 +37,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         {
             LogContext.Debug?.Log("Creating Quartz Scheduler: {InputAddress}", _schedulerEndpointAddress);
 
-            _scheduler = await _options.SchedulerFactory.GetScheduler().ConfigureAwait(false);
+            _scheduler = await _settings.SchedulerFactory.GetScheduler().ConfigureAwait(false);
 
-            if (_options.JobFactoryFactory != null)
-                _scheduler.JobFactory = _options.JobFactoryFactory(bus);
+            if (_settings.CreateJobFactory != null)
+                _scheduler.JobFactory = _settings.CreateJobFactory(bus, _settings.TimeProvider);
         }
 
         public async Task PostStart(IBus bus, Task<BusReady> busReady)
         {
-            if (!_options.StartScheduler)
+            if (!_settings.StartScheduler)
             {
                 LogContext.Debug?.Log("Quartz Scheduler: {InputAddress} ({Name}/{InstanceId}) initialized, but not started",
                     _schedulerEndpointAddress,
@@ -73,7 +73,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public async Task PreStop(IBus bus)
         {
-            if (!_options.StartScheduler)
+            if (!_settings.StartScheduler)
                 return;
 
             await _scheduler!.Standby().ConfigureAwait(false);

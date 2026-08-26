@@ -7,6 +7,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     using System.Threading;
     using System.Threading.Tasks;
     using Context;
+    using Logging;
     using Quartz;
     using Quartz.Util;
     using Scheduling;
@@ -20,15 +21,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         const string ScheduleMessageJobId = "ViciOneServiceBusScheduleMessageJob";
 
         readonly ISchedulerFactory _schedulerFactory;
-        JobKey? _jobKey;
 
         public ScheduleMessageConsumer(ISchedulerFactory schedulerFactory)
         {
-            _schedulerFactory = schedulerFactory;
+            _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
         }
 
         public async Task Consume(ConsumeContext<ScheduleMessage> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var jobKey = await EnsureJobExists(context.CancellationToken).ConfigureAwait(false);
 
             var messageBody = context.SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
@@ -58,13 +59,14 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public async Task Consume(ConsumeContext<ScheduleRecurringMessage> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var jobKey = await EnsureJobExists(context.CancellationToken).ConfigureAwait(false);
 
             var messageBody = context.SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
                 .GetMessageBody(new MessageSendContext<ScheduleRecurringMessage>(context.Message));
 
             var schedule = context.Message.Schedule;
-            var triggerKey = new TriggerKey(QuartzConstants.RecurringTriggerPrefix + schedule.ScheduleId, schedule.ScheduleGroup);
+            var triggerKey = QuartzTriggerKey.ForRecurring(schedule.ScheduleId, schedule.ScheduleGroup);
 
             var tz = TimeZoneInfo.Local;
             if (!string.IsNullOrWhiteSpace(schedule.TimeZoneId) && schedule.TimeZoneId != tz.Id)
@@ -145,7 +147,10 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             if (tokenId.HasValue)
                 builder = builder.UsingJobData("TokenId", tokenId.Value.ToString("N"));
 
-            IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+            List<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+            PreserveTraceHeader(context.Headers, headers, DiagnosticHeaders.ActivityId);
+            PreserveTraceHeader(context.Headers, headers, DiagnosticHeaders.ActivityCorrelationContext);
+            PreserveTraceHeader(context.Headers, headers, DiagnosticHeaders.ActivityPropagation);
             if (headers.Any())
                 builder = builder.UsingJobData("HeadersAsJson", JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options));
 
@@ -162,13 +167,20 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             return trigger;
         }
 
+        static void PreserveTraceHeader(Headers source, List<KeyValuePair<string, object>> destination, string key)
+        {
+            // Raw serializers intentionally exclude VSB system headers from their user-header enumeration.
+            // Scheduling is a temporal transport boundary, so trace propagation metadata must cross it explicitly.
+            if (destination.Any(header => string.Equals(header.Key, key, StringComparison.OrdinalIgnoreCase)))
+                return;
+
+            if (source.TryGetHeader(key, out var value))
+                destination.Add(new KeyValuePair<string, object>(key, value));
+        }
+
         async Task<JobKey> EnsureJobExists(CancellationToken cancellationToken)
         {
-            var jobKey = Volatile.Read(ref _jobKey);
-            if (jobKey != null)
-                return jobKey;
-
-            jobKey = new JobKey(ScheduleMessageJobId);
+            var jobKey = new JobKey(ScheduleMessageJobId);
 
             var scheduler = await _schedulerFactory.GetScheduler(cancellationToken).ConfigureAwait(false);
 
@@ -183,8 +195,6 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 .Build();
 
             await scheduler.AddJob(jobDetail, true, cancellationToken).ConfigureAwait(false);
-
-            Interlocked.CompareExchange(ref _jobKey, jobKey, null);
 
             return jobKey;
         }

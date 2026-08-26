@@ -18,6 +18,10 @@ namespace ViciOne.ServiceBus
         /// <param name="configure">Configure the Quartz options</param>
         public static void AddQuartzConsumers(this IBusRegistrationConfigurator configurator, Action<QuartzEndpointOptions>? configure = null)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
+            configurator.TryAddSingleton(TimeProvider.System);
+
             OptionsBuilder<QuartzEndpointOptions> options = configurator.AddOptions<QuartzEndpointOptions>();
             if (configure != null)
                 options.Configure(configure);
@@ -39,6 +43,9 @@ namespace ViciOne.ServiceBus
         /// <param name="context"></param>
         public static void ConfigureQuartzConsumers(this IReceiveEndpointConfigurator configurator, IBusRegistrationContext context)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(context);
+
             configurator.ConfigureConsumer<ScheduleMessageConsumer>(context);
             configurator.ConfigureConsumer<CancelScheduledMessageConsumer>(context);
             configurator.ConfigureConsumer<PauseScheduledMessageConsumer>(context);

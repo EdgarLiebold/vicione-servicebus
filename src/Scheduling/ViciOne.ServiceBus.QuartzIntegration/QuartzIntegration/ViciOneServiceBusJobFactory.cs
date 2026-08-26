@@ -9,15 +9,20 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         IJobFactory
     {
         readonly IBus _bus;
+        readonly TimeProvider _timeProvider;
 
-        public ViciOneServiceBusJobFactory(IBus bus)
+        public ViciOneServiceBusJobFactory(IBus bus, TimeProvider timeProvider)
         {
-            _bus = bus;
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            return new ScheduledMessageJob(_bus);
+            ArgumentNullException.ThrowIfNull(bundle);
+            ArgumentNullException.ThrowIfNull(scheduler);
+
+            return new ScheduledMessageJob(_bus, _timeProvider);
         }
 
         public void ReturnJob(IJob job)

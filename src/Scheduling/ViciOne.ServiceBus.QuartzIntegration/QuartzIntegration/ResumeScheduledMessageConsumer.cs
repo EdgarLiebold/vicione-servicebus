@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.QuartzIntegration
 {
+    using System;
     using System.Threading.Tasks;
     using Quartz;
     using Scheduling;
@@ -12,21 +13,16 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public ResumeScheduledMessageConsumer(ISchedulerFactory schedulerFactory)
         {
-            _schedulerFactory = schedulerFactory;
+            _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
         }
 
         public async Task Consume(ConsumeContext<ResumeScheduledRecurringMessage> context)
         {
-            const string prependedValue = "Recurring.Trigger.";
-
-            var scheduleId = context.Message.ScheduleId;
-
-            if (!scheduleId.StartsWith(prependedValue))
-                scheduleId = string.Concat(prependedValue, scheduleId);
-
+            ArgumentNullException.ThrowIfNull(context);
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 
-            await scheduler.ResumeTrigger(new TriggerKey(scheduleId, context.Message.ScheduleGroup), context.CancellationToken)
+            var triggerKey = QuartzTriggerKey.ForRecurring(context.Message.ScheduleId, context.Message.ScheduleGroup);
+            await scheduler.ResumeTrigger(triggerKey, context.CancellationToken)
                 .ConfigureAwait(false);
 
             LogContext.Debug?.Log("ResumeScheduledRecurringMessage: {ScheduleId}/{ScheduleGroup} at {Timestamp}", context.Message.ScheduleId,

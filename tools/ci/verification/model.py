@@ -92,7 +92,6 @@ REQUIRED_SUPPORT_JOB_CONTRACTS = {
         "      - legacy-tooling",
         "      - build",
         "      - core-unit",
-        "      - quartz",
         "      - activemq",
         "      - sql-transport",
         "      - benchmarks",

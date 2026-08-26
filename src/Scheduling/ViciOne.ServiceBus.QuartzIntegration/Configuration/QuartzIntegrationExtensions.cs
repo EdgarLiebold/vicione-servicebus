@@ -37,9 +37,7 @@ namespace ViciOne.ServiceBus
             {
                 options.SchedulerFactory = schedulerFactory;
 
-                IJobFactory OptionsJobFactoryFactory(IBus bus) => new ViciOneServiceBusJobFactory(bus);
-
-                options.JobFactoryFactory = OptionsJobFactoryFactory;
+                options.CreateJobFactory = static (bus, timeProvider) => new ViciOneServiceBusJobFactory(bus, timeProvider);
                 options.QueueName = queueName;
             });
         }
@@ -62,27 +60,25 @@ namespace ViciOne.ServiceBus
 
             var options = new QuartzSchedulerOptions();
             configure?.Invoke(options);
-
-            if (options.SchedulerFactory == null)
-                throw new ArgumentNullException(nameof(options.SchedulerFactory));
+            QuartzSchedulerSettings settings = options.CreateSettings();
 
             Uri? inputAddress = null;
 
-            var observer = new SchedulerBusObserver(options);
+            var observer = new SchedulerBusObserver(settings);
 
-            configurator.ReceiveEndpoint(options.QueueName, e =>
+            configurator.ReceiveEndpoint(settings.QueueName, e =>
             {
                 var partitioner = configurator.CreatePartitioner(Environment.ProcessorCount);
 
-                e.Consumer(() => new ScheduleMessageConsumer(options.SchedulerFactory), x =>
+                e.Consumer(() => new ScheduleMessageConsumer(settings.SchedulerFactory), x =>
                     x.Message<ScheduleMessage>(m => m.UsePartitioner(partitioner, p => p.Message.CorrelationId)));
 
-                e.Consumer(() => new CancelScheduledMessageConsumer(options.SchedulerFactory), x =>
+                e.Consumer(() => new CancelScheduledMessageConsumer(settings.SchedulerFactory), x =>
                     x.Message<CancelScheduledMessage>(m => m.UsePartitioner(partitioner, p => p.Message.TokenId)));
 
-                e.Consumer(() => new PauseScheduledMessageConsumer(options.SchedulerFactory));
+                e.Consumer(() => new PauseScheduledMessageConsumer(settings.SchedulerFactory));
 
-                e.Consumer(() => new ResumeScheduledMessageConsumer(options.SchedulerFactory));
+                e.Consumer(() => new ResumeScheduledMessageConsumer(settings.SchedulerFactory));
 
                 configurator.UseMessageScheduler(e.InputAddress);
 

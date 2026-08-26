@@ -12,14 +12,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     public class QuartzBusObserver :
         IBusObserver
     {
-        readonly IOptions<QuartzHostedServiceOptions> _options;
+        readonly QuartzHostedServiceSettings _settings;
         readonly ISchedulerFactory _schedulerFactory;
         IScheduler? _scheduler;
 
         public QuartzBusObserver(ISchedulerFactory schedulerFactory, IOptions<QuartzHostedServiceOptions> options)
         {
-            _schedulerFactory = schedulerFactory;
-            _options = options;
+            _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
+            ArgumentNullException.ThrowIfNull(options);
+            _settings = QuartzHostedServiceSettings.From(options.Value);
         }
 
         public void PostCreate(IBus bus)
@@ -41,8 +42,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             _scheduler = await _schedulerFactory.GetScheduler().ConfigureAwait(false);
 
-            if (_options.Value.StartDelay.HasValue)
-                await _scheduler.StartDelayed(_options.Value.StartDelay.Value).ConfigureAwait(false);
+            if (_settings.StartDelay.HasValue)
+                await _scheduler.StartDelayed(_settings.StartDelay.Value).ConfigureAwait(false);
             else
                 await _scheduler.Start().ConfigureAwait(false);
         }
@@ -59,7 +60,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public Task PostStop(IBus bus)
         {
-            return _scheduler != null ? _scheduler.Shutdown(_options.Value.WaitForJobsToComplete) : Task.CompletedTask;
+            return _scheduler != null ? _scheduler.Shutdown(_settings.WaitForJobsToComplete) : Task.CompletedTask;
         }
 
         public Task StopFaulted(IBus bus, Exception exception)

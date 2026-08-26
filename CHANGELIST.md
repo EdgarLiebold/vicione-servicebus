@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2116 |
-| Modified | 4224 |
-| Deleted | 1424 |
+| Added | 2128 |
+| Modified | 4222 |
+| Deleted | 1426 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -160,7 +160,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/diagnostics.txt` | Added |  |
 | `build/verification/expected/entity-framework-core.txt` | Added |  |
-| `build/verification/expected/quartz.txt` | Added |  |
 | `build/verification/expected/rabbitmq.txt` | Added |  |
 | `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
@@ -1784,6 +1783,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj.DotSettings` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/MassTransit.HangfireIntegration.csproj.DotSettings` |
 | `src/Scheduling/MassTransit.HangfireIntegration/NullableAttributes.cs` | Deleted | `src/Scheduling/MassTransit.HangfireIntegration/NullableAttributes.cs` |
 | `src/Scheduling/MassTransit.QuartzIntegration/NullableAttributes.cs` | Deleted | `src/Scheduling/MassTransit.QuartzIntegration/NullableAttributes.cs` |
+| `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzConstants.cs` | Deleted | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzConstants.cs` |
+| `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzTimeAdjustment.cs` | Deleted | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzTimeAdjustment.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/CancelScheduledMessageConsumerDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/CancelScheduledMessageConsumerDefinition.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/PauseScheduledMessageConsumerDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/PauseScheduledMessageConsumerDefinition.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/Configuration/QuartzEndpointDefinition.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/Configuration/Configuration/QuartzEndpointDefinition.cs` |
@@ -1796,14 +1797,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/JobDataMessageContext.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/JobDataMessageContext.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/PauseScheduledMessageConsumer.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/PauseScheduledMessageConsumer.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/QuartzBusObserver.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzBusObserver.cs` |
-| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/QuartzConstants.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzConstants.cs` |
-| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/QuartzTimeAdjustment.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/QuartzTimeAdjustment.cs` |
+| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/QuartzHostedServiceSettings.cs` | Added |  |
+| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/QuartzTriggerKey.cs` | Added |  |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/ResumeScheduledMessageConsumer.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/ResumeScheduledMessageConsumer.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/ScheduleMessageConsumer.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/ScheduleMessageConsumer.cs` |
+| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/ScheduledMessageExpiration.cs` | Added |  |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/ScheduledMessageJob.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/ScheduledMessageJob.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/SchedulerBusObserver.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/SchedulerBusObserver.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzIntegration/ViciOneServiceBusJobFactory.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzIntegration/MassTransitJobFactory.cs` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzSchedulerOptions.cs` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/QuartzSchedulerOptions.cs` |
+| `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/QuartzSchedulerSettings.cs` | Added |  |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj.DotSettings` | Modified | `src/Scheduling/MassTransit.QuartzIntegration/MassTransit.QuartzIntegration.csproj.DotSettings` |
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/packages.lock.json` | Added |  |
@@ -6698,34 +6701,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/docker-compose.yml` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Container_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Courier_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/DelayRetry_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/FrozenSchedulerClockTestFixture.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/JobDetail_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/MissingInstanceRedelivery_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/OutboxScheduler_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/PastEvent_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzInMemoryActivityTestFixture.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzInMemoryTestFixture.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzPublish_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Recurring_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/RequestRequest_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/RequestTimeout_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Request_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Reschedule_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ScheduleMessage_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ScheduleTimeout_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ScheduledRedelivery_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/SchedulerLoadInMemory_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Service_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Canceled_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Complete_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Turnout/Faulted_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/TwoMessage_Specs.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Utils.cs` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Added |  |
-| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
@@ -7382,6 +7357,43 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzContainerIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzEndpointDefinitionTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzRegistrationExtensionsTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzSchedulerOptionsTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobDataMessageContextTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceFaultIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceLifecycleIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceSuspectAttemptIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzChainedSchedulingIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzCourierRedeliveryIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzExplicitRedeliveryIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzHostedServiceSettingsTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzIntegrationCollection.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzMissingSagaRedeliveryIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzNestedRequestIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzOutboxSchedulingIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzRecurringDeliveryIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaRequestTimeoutIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaSchedulingIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduleTimingIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryScopeTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzTriggerKeyTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageExpirationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerBusObserverTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerCommandIntegrationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/InheritedBehaviorDispositionTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzIntegrationRequirements.json` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ConsumeCompletionObserver.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzJobServiceTestBus.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzTestBus.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageCapture.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageSequenceCapture.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedInitializer.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedMessageContractDiagnostic.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenario.cs` | Added |  |
