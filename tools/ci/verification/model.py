@@ -56,6 +56,10 @@ WORKFLOW_TOP_LEVEL_KEYS = frozenset({
     "jobs",
 })
 
+VERIFICATION_JOB_KEYS = ("name", "runs-on", "timeout-minutes", "steps")
+VERIFICATION_JOB_KEYS_WITH_ENV = ("name", "runs-on", "timeout-minutes", "env", "steps")
+VERIFICATION_JOB_ENVIRONMENT = ("      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false",)
+
 
 class SelectionError(RuntimeError):
     """A selection that cannot be resolved to a set of categories."""
@@ -226,19 +230,60 @@ def verification_step_findings(job: str, job_text: str, selection: str) -> list[
     call into that model. This boundary is deliberately narrow: checkout, SDK setup, verification and
     result upload are the only steps, in that order, and every executable action is commit-pinned.
     Conditions, defaults, extra commands and shell composition would all create a second way for the
-    workflow to weaken or replace the model.
+    workflow to weaken or replace the model. The job mapping itself is therefore a canonical plain-key
+    structure as well; YAML aliases or escaped keys cannot hide controls from this reader.
     """
     problems: list[str] = []
     expected = ("- name: Verify", f"run: {VERIFY_ENTRYPOINT} --selection {selection}")
 
     lines = job_text.splitlines()
-    for line in lines:
+    direct_keys: list[str] = []
+    direct_lines: dict[str, tuple[int, str]] = {}
+    for number, line in enumerate(lines, 1):
+        if not line.strip() or line.startswith("    #"):
+            continue
         if line.startswith("    ") and not line.startswith("      "):
-            directive = line.strip()
-            if directive.startswith(("if:", "continue-on-error:", "defaults:", "container:", "uses:")):
+            directive = line[4:]
+            match = re.fullmatch(r"([a-z][a-z-]*):(.*)", directive)
+            if match is None:
                 problems.append(
-                    f"workflow job '{job}' has the job-level control '{directive}', so its required "
-                    "verification can be skipped or ignored")
+                    f"workflow job '{job}' line {number} does not use a supported unquoted plain key")
+                continue
+            key = match.group(1)
+            if key in direct_lines:
+                problems.append(f"workflow job '{job}' declares job key '{key}' twice")
+                continue
+            direct_keys.append(key)
+            direct_lines[key] = (number - 1, directive)
+
+    key_sequence = tuple(direct_keys)
+    if key_sequence not in (VERIFICATION_JOB_KEYS, VERIFICATION_JOB_KEYS_WITH_ENV):
+        problems.append(
+            f"workflow job '{job}' has job keys {key_sequence!r}; expected the canonical verification "
+            "job structure")
+
+    if "name" in direct_lines and re.fullmatch(r"name: .+", direct_lines["name"][1]) is None:
+        problems.append(f"workflow job '{job}' must have a non-empty display name")
+    if "runs-on" in direct_lines and direct_lines["runs-on"][1] != "runs-on: ubuntu-24.04":
+        problems.append(f"workflow job '{job}' must run on ubuntu-24.04")
+    if "timeout-minutes" in direct_lines and re.fullmatch(
+        r"timeout-minutes: [1-9][0-9]*", direct_lines["timeout-minutes"][1]
+    ) is None:
+        problems.append(f"workflow job '{job}' must have a positive integer timeout")
+    if "steps" in direct_lines and direct_lines["steps"][1] != "steps:":
+        problems.append(f"workflow job '{job}' must declare steps as a block sequence")
+
+    if "env" in direct_lines and "steps" in direct_lines:
+        env_start = direct_lines["env"][0] + 1
+        env_end = direct_lines["steps"][0]
+        environment = tuple(
+            line for line in lines[env_start:env_end]
+            if line.strip() and not line.lstrip().startswith("#")
+        )
+        if environment != VERIFICATION_JOB_ENVIRONMENT:
+            problems.append(
+                f"workflow job '{job}' has environment {environment!r}; only the globalization "
+                "setting required by the database fixtures is supported")
 
     blocks: list[list[str]] = []
     current: list[str] | None = None

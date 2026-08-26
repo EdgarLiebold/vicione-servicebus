@@ -42,7 +42,14 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             f"      {line}" if line.startswith("- ") else f"        {line}"
             for line in all_steps
         )
-        return f"    name: Required\n{controls}    steps:\n{steps}\n"
+        return (
+            "    name: Required\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    timeout-minutes: 40\n"
+            f"{controls}"
+            "    steps:\n"
+            f"{steps}\n"
+        )
 
     def assert_rejected(self, text: str, selection: str = "core") -> None:
         self.assertTrue(model.verification_step_findings("core-unit", text, selection))
@@ -121,6 +128,69 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             "    defaults:\n      run:\n        shell: bash {0} || true\n    steps:\n",
         )
         self.assert_rejected(text)
+
+    def test_accepts_the_single_supported_job_environment(self) -> None:
+        text = self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=("env:", "  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false"),
+        )
+        self.assertEqual([], model.verification_step_findings("core-unit", text, "core"))
+
+    def test_rejects_quoted_job_level_defaults(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=('"defaults":', "  run:", "    shell: bash {0} || true"),
+        ))
+
+    def test_rejects_escaped_job_level_defaults(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=('"def\\u0061ults":', "  run:", "    shell: bash {0} || true"),
+        ))
+
+    def test_rejects_quoted_job_level_condition(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=('"if": false',),
+        ))
+
+    def test_rejects_hidden_job_controls_after_steps(self) -> None:
+        text = self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
+        text += '    "def\\u0061ults":\n      run:\n        shell: bash {0} || true\n'
+        self.assert_rejected(text)
+
+    def test_rejects_duplicate_job_keys(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=("name: Duplicate",),
+        ))
+
+    def test_rejects_reordered_job_keys(self) -> None:
+        text = self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
+        text = text.replace(
+            "    name: Required\n    runs-on: ubuntu-24.04\n",
+            "    runs-on: ubuntu-24.04\n    name: Required\n",
+        )
+        self.assert_rejected(text)
+
+    def test_rejects_an_uncontrolled_job_environment(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=("env:", "  PATH: /tmp/attacker"),
+        ))
+
+    def test_rejects_complex_job_keys(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+            job_controls=("? defaults", ":", "  run:", "    shell: bash {0} || true"),
+        ))
 
     def test_rejects_an_additional_shell_step_that_can_replace_the_verifier(self) -> None:
         self.assert_rejected(self.job(
