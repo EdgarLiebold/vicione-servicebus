@@ -60,12 +60,34 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             workflow = root / ".github/workflows/build.yml"
             workflow.parent.mkdir(parents=True)
             workflow.write_text(contents, encoding="utf-8")
+            (root / "global.json").write_text(
+                '{"sdk":{"version":"10.0.302"}}\n',
+                encoding="utf-8",
+            )
             with self.assertRaisesRegex(model.WorkflowShapeError, message):
                 model.workflow_jobs(root)
 
-    def canonical_workflow(self, prefix: str = "", suffix: str = "") -> str:
+    @staticmethod
+    def canonical_header() -> str:
         return (
-            prefix
+            "name: Required CI\n"
+            "on:\n"
+            "  push:\n"
+            "    branches:\n"
+            "      - '**'\n"
+            "  pull_request:\n"
+            "  workflow_dispatch:\n"
+            "permissions:\n"
+            "  contents: read\n"
+            "env:\n"
+            "  DOTNET_VERSION: '10.0.302'\n"
+            "  DOTNET_CLI_TELEMETRY_OPTOUT: 1\n"
+            "  DOTNET_NOLOGO: 1\n"
+        )
+
+    def canonical_workflow(self, prefix: str | None = None, suffix: str = "") -> str:
+        return (
+            (self.canonical_header() if prefix is None else prefix)
             + "jobs:\n"
             + "  core-unit:\n"
             + self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
@@ -267,21 +289,62 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
             "declared twice",
         )
 
-    def test_accepts_every_supported_plain_top_level_key(self) -> None:
-        contents = self.canonical_workflow(
-            "name: Required CI\n"
-            "run-name: Required CI run\n"
-            "on:\n  push:\n"
-            "permissions:\n  contents: read\n"
-            "env:\n  DOTNET_NOLOGO: 1\n"
-            "concurrency:\n  group: required-ci\n",
-        )
+    def test_accepts_the_canonical_workflow_header(self) -> None:
+        contents = self.canonical_workflow()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             workflow = root / ".github/workflows/build.yml"
             workflow.parent.mkdir(parents=True)
             workflow.write_text(contents, encoding="utf-8")
+            (root / "global.json").write_text(
+                '{"sdk":{"version":"10.0.302"}}\n',
+                encoding="utf-8",
+            )
             self.assertEqual(["core-unit"], sorted(model.workflow_jobs(root)))
+
+    def test_rejects_a_workflow_path_override(self) -> None:
+        contents = self.canonical_workflow().replace(
+            "  DOTNET_NOLOGO: 1\n",
+            "  DOTNET_NOLOGO: 1\n  PATH: ${{ github.workspace }}/.ci-shim:/usr/bin:/bin\n",
+        )
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_a_workflow_pythonpath_override(self) -> None:
+        contents = self.canonical_workflow().replace(
+            "  DOTNET_NOLOGO: 1\n",
+            "  DOTNET_NOLOGO: 1\n  PYTHONPATH: .ci-shim\n",
+        )
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_a_missing_push_trigger(self) -> None:
+        contents = self.canonical_workflow().replace(
+            "  push:\n    branches:\n      - '**'\n",
+            "",
+        )
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_a_missing_pull_request_trigger(self) -> None:
+        contents = self.canonical_workflow().replace("  pull_request:\n", "")
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_a_filtered_push_trigger(self) -> None:
+        contents = self.canonical_workflow().replace("      - '**'\n", "      - main\n")
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_workflow_concurrency_controls(self) -> None:
+        contents = self.canonical_workflow().replace(
+            "jobs:\n",
+            "concurrency:\n  group: required-ci\njobs:\n",
+        )
+        self.assert_workflow_rejected(contents, "unsupported top-level workflow key")
+
+    def test_rejects_elevated_workflow_permissions(self) -> None:
+        contents = self.canonical_workflow().replace("  contents: read\n", "  contents: write\n")
+        self.assert_workflow_rejected(contents, "canonical required header")
+
+    def test_rejects_an_sdk_version_that_differs_from_global_json(self) -> None:
+        contents = self.canonical_workflow().replace("10.0.302", "10.0.999")
+        self.assert_workflow_rejected(contents, "canonical required header")
 
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))

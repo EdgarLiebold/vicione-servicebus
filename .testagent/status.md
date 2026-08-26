@@ -658,7 +658,7 @@ future cohorts as complete.
 - The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
   eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
   and SignalR 26 executable replacements plus two non-executing inherited methods.
-- The transition-tool self-tests pass 237/237 under `tools/ci` and 103/103 under `tools/identity`.
+- The transition-tool self-tests pass 245/245 under `tools/ci` and 103/103 under `tools/identity`.
   The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
   SignalR 32/32, all without skips.
 - A locked static-graph restore and the complete Root and Engineering Release builds pass; both
@@ -677,6 +677,7 @@ future cohorts as complete.
   contract checks all four unique source-to-target pairs and the exact NOTICE/MODIFICATIONS sections.
 - The workflow reader accepts only the canonical unquoted plain top-level keys used by this repository.
   Workflow-level defaults and quoted, escaped, tagged, complex, anchored, merged or BOM-prefixed key
-  forms are rejected before job parsing. Every modeled Verify job independently enforces its exact
-  plain-key structure, runner, timeout, optional fixture environment and steps, so the same YAML
-  spelling cannot hide job-level controls either.
+  forms are rejected before job parsing. The complete header also binds the required push, pull-request
+  and manual triggers, read-only permission and exact global environment; its SDK value is derived from
+  `global.json`. Every modeled Verify job independently enforces its exact plain-key structure, runner,
+  timeout, optional fixture environment and steps, so YAML spelling cannot hide job-level controls.

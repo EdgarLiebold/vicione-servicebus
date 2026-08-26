@@ -46,15 +46,7 @@ UPLOAD_ARTIFACT_ACTION_STEP = "- uses: actions/upload-artifact@043fb46d1a93c77aa
 # accepts additional YAML spellings, but accepting syntax that this reader does not understand would
 # let YAML semantics differ from the text being verified. Workflow-level defaults are deliberately
 # absent because they can replace the shell of every required verification step.
-WORKFLOW_TOP_LEVEL_KEYS = frozenset({
-    "name",
-    "run-name",
-    "on",
-    "permissions",
-    "env",
-    "concurrency",
-    "jobs",
-})
+WORKFLOW_TOP_LEVEL_KEYS = ("name", "on", "permissions", "env", "jobs")
 
 VERIFICATION_JOB_KEYS = ("name", "runs-on", "timeout-minutes", "steps")
 VERIFICATION_JOB_KEYS_WITH_ENV = ("name", "runs-on", "timeout-minutes", "env", "steps")
@@ -146,6 +138,41 @@ class WorkflowShapeError(RuntimeError):
     """
 
 
+def canonical_workflow_header(root: Path) -> tuple[str, ...]:
+    """The exact non-comment header of the required workflow.
+
+    Trigger, permission and environment changes alter whether or how verification runs. They are
+    therefore part of the same executable contract as the job commands, not free-form workflow
+    decoration. The SDK value is derived from global.json so there is one version truth.
+    """
+    global_json = root / "global.json"
+    if not global_json.is_file():
+        raise WorkflowShapeError("global.json is missing, so the workflow SDK cannot be verified")
+    try:
+        sdk_version = json.loads(global_json.read_text(encoding="utf-8"))["sdk"]["version"]
+    except (json.JSONDecodeError, KeyError, TypeError) as error:
+        raise WorkflowShapeError("global.json has no readable sdk.version") from error
+    if not isinstance(sdk_version, str) or re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", sdk_version) is None:
+        raise WorkflowShapeError("global.json sdk.version is not an exact stable SDK version")
+
+    return (
+        "name: Required CI",
+        "on:",
+        "  push:",
+        "    branches:",
+        "      - '**'",
+        "  pull_request:",
+        "  workflow_dispatch:",
+        "permissions:",
+        "  contents: read",
+        "env:",
+        f"  DOTNET_VERSION: '{sdk_version}'",
+        "  DOTNET_CLI_TELEMETRY_OPTOUT: 1",
+        "  DOTNET_NOLOGO: 1",
+        "jobs:",
+    )
+
+
 def workflow_jobs(root: Path) -> dict[str, str]:
     """Job name to the text of that job, read from the required workflow.
 
@@ -166,7 +193,7 @@ def workflow_jobs(root: Path) -> dict[str, str]:
     except UnicodeDecodeError as error:
         raise WorkflowShapeError("the workflow must be valid UTF-8") from error
 
-    top_level_keys: set[str] = set()
+    top_level_keys: list[str] = []
     for number, line in enumerate(lines, 1):
         if not line or line.startswith("#") or line != line.lstrip():
             continue
@@ -183,10 +210,23 @@ def workflow_jobs(root: Path) -> dict[str, str]:
             raise WorkflowShapeError(f"line {number}: unsupported top-level workflow key '{key}'")
         if key in top_level_keys:
             raise WorkflowShapeError(f"line {number}: top-level workflow key '{key}' is declared twice")
-        top_level_keys.add(key)
+        top_level_keys.append(key)
 
     if "jobs" not in top_level_keys or not any(line.rstrip() == "jobs:" for line in lines):
         raise WorkflowShapeError("the workflow has no plain 'jobs:' section")
+    if tuple(top_level_keys) != WORKFLOW_TOP_LEVEL_KEYS:
+        raise WorkflowShapeError(
+            f"workflow top-level keys are {tuple(top_level_keys)!r}; expected {WORKFLOW_TOP_LEVEL_KEYS!r}")
+
+    jobs_line = next(number for number, line in enumerate(lines) if line.rstrip() == "jobs:")
+    actual_header = tuple(
+        line for line in lines[:jobs_line + 1]
+        if line.strip() and not line.lstrip().startswith("#")
+    )
+    expected_header = canonical_workflow_header(root)
+    if actual_header != expected_header:
+        raise WorkflowShapeError(
+            "workflow triggers, permissions and environment do not match the canonical required header")
 
     jobs: dict[str, str] = {}
     current: str | None = None
