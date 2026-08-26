@@ -184,3 +184,34 @@ After M13 all six target files matched the baseline SHA-256 values above, `git s
 `git diff --check` were clean, and the detached mutation worktree was removed normally. The main
 product worktree was not changed by any probe. Its already prepared Quartz observer refinement was
 validated after the probe series and then frozen as part of technical commit `b95faaef`.
+
+## Final frozen subject: execution-strategy retry state
+
+M14 uses technical commit `ab2da0885823c5ae1cfc4d5e8ca51da06d528ebb`, tree
+`ef1b360aae901e9b8db94e10712200681d37c626`. The test creates a real PostgreSQL-backed consume
+outbox, mutates an `InboxState` tracked by the first consumer attempt, and throws an actual
+PostgreSQL serialization failure. Npgsql's execution strategy reexecutes the complete transaction.
+The successful product must start that retry without the rolled-back tracked state.
+
+An earlier diagnostic deletion of the same product line survived the older concurrency-only owner.
+That result was rejected rather than repeated until red. The final owner was added specifically to
+make the required retry state observable without scheduler timing or a source-code assertion.
+
+## M14 — retain rolled-back tracked state across an execution-strategy retry
+
+- Target: `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkOutboxContextFactory.cs`
+- Baseline SHA-256: `e120211cdcc85578a2d15f1b3035b3a60b0632995669cfe1a891a8017f3aa83d`
+- Exact mutation: delete only `_dbContext.ChangeTracker.Clear();` and its following blank line from
+  the rollback catch.
+- Mutant SHA-256: `24aafbf20b45d3be838a69d75b7ee6df83aa286a30a3193dad357afc33cf8f6d`
+- Owner: `EntityFrameworkExecutionStrategyRetryTests.TransientRetry_DiscardsRolledBackTrackedStateBeforeReexecutingTheConsumer`
+- Build result: zero warnings, zero errors, exit code 0.
+- Test result: 1 total, 0 passed, 1 failed, 0 skipped, exit code 2; run identity
+  `vicione-45a00d18e9fc`.
+- Causal failure: the exact persisted-state oracle expected `ReceiveCount == 1` but observed the
+  rolled-back sentinel value `41`.
+- Machine-readable command and result binding: `M14_RESULT.json`.
+
+After M14 the detached worktree contained exactly the one declared product mutation. It was removed
+normally with `git worktree remove --force`; the main product worktree remained on the unmutated
+technical commit throughout the probe.

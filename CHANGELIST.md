@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2191 |
+| Added | 2142 |
 | Modified | 4217 |
 | Deleted | 1431 |
 | Renamed | 2 |
@@ -159,7 +159,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/diagnostics.txt` | Added |  |
-| `build/verification/expected/entity-framework-core.txt` | Added |  |
 | `build/verification/expected/rabbitmq.txt` | Added |  |
 | `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
@@ -946,8 +945,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/M14_RESULT.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/MUTATION_MANIFEST.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/OUTBOX_RELIABILITY_DISPOSITIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/R0_TERMINAL_DISPOSITIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/VALIDATION.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
@@ -6682,64 +6684,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SimpleSaga.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Container_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/FutureSagaDbContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Future_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/JobConsumer_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReadOnly_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/BusOutbox_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/InboxLock_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/MigrationHostedService.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/OutboxScopedFilter_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/OutboxTransactionFault_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/Outbox_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/QuartzOutbox_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableConsumerDefinition.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableDbContext.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableDbContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableStateDefinition.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableStateMachine.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/ReliableStateMap.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/Reliable_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ReliableMessaging/TraceConfig.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/DataAccess/SagaDependency.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/DataAccess/SagaInnerDependency.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/DataAccess/SagaWithDependencyContext.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/DataAccess/SagaWithDependencyContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/DataAccess/SagaWithDependencyMap.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/Messages/UpdateSagaDependency.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/SagaWithDependency.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SagaWithDependency/Using_custom_include_in_repository.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/EntityFrameworkTestFixture.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/ITestDbParameters.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/PostgresTestDbParameters.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/QuartzEntityFrameworkTestFixture.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/SqlServerResiliencyTestDbParameters.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Shared/SqlServerTestDbParameters.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SimpleSaga/DataAccess/SimpleSagaContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SimpleSaga/DataAccess/SimpleSagaDbContext.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SimpleSaga/DataAccess/SimpleSagaMap.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SimpleSaga/SagaLocator_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/DataAccess/SlowConcurrentSaga.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/DataAccess/SlowConcurrentSagaContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/DataAccess/SlowConcurrentSagaDbContext.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/DataAccess/SlowConcurrentSagaMap.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/Events/Begin.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/Events/IncrementCounterSlowly.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/SlowConcurrentSagaStateMachine.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SlowConcurrentSaga/SlowConcurrentSaga_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/TransactionConfiguration/Configurator_TransactionConfiguration_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/TransactionConfiguration/Integration_TransactionConfiguration_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/TransactionConfiguration/LockStrategy_TransactionConfiguration_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/TransactionConfiguration/RepositoryFactory_TransactionConfiguration_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/TransactionalBusOutbox_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Turnout/Canceled_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Turnout/Complete_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Turnout/Faulted_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Turnout/JobServiceSagaDbContextFactory.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/docker-compose.yml` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
@@ -7362,6 +7306,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs` | Added |  |
+| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs` | Added |  |
@@ -7386,6 +7331,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/BusOutboxDeliveryServiceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkTransactionalBusIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs` | Added |  |
@@ -7681,6 +7631,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheRecoveryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |

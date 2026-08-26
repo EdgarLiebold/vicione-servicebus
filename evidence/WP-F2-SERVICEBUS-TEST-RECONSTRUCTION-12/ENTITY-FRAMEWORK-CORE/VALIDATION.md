@@ -126,3 +126,38 @@ clean and it was removed normally.
 This is a phase disposition, not permission to delete the inherited EF project. Its physical files
 remain untouched until all 90 assigned EF obligations have terminal dispositions and the project can
 be retired atomically.
+
+## Final frozen subject: complete native Entity Framework closure
+
+- Technical commit: `ab2da0885823c5ae1cfc4d5e8ca51da06d528ebb`
+- Technical tree: `ef1b360aae901e9b8db94e10712200681d37c626`
+- Technical parent: `0216ebb6734654cdace5d9d829972b4ee10e84d5`
+- Complete final range after the third subject: `2e02f013..ab2da088`
+
+All 90 inherited Entity Framework obligations have exactly one terminal `REPLACED_EXECUTING`
+disposition in `R0_TERMINAL_DISPOSITIONS.json`. Their sorted identity hash is
+`891925e887790487c7d1db1df2b1f4dd19ef4b3b35f30d3b0216f15ce9ea5896`, exactly matching the
+assigned R0 ledger closure. The inherited EF test project and its obsolete verification-model edges
+are removed atomically only in this final range; no native replacement or capability is removed.
+
+The final product adds complete native owners for job-service persistence, futures including
+routing-slip composition, ambient and explicit transactional-bus behavior, and execution-strategy
+retry isolation. Process-clock access in the migrated Future and Job lifecycle paths is replaced by
+the context `TimeProvider`. The separately bounded cron-year horizon remains explicitly listed in
+`TODO.md`; it is not disguised as closed.
+
+The complete final verification against the stationary technical commit is:
+
+1. Engineering Release build: exit 0, zero warnings, zero errors.
+2. Unfiltered UnitArchitecture: 1,875 total, 1,875 passed, zero failed, zero skipped, exit 0.
+3. Unfiltered LocalIntegration through run-scoped PostgreSQL and Azurite fixtures: 67 total, 67
+   passed, zero failed, zero skipped, exit 0; run identity `vicione-4946a172b4ce`.
+4. CI tooling: the final exact rerun completed 253/253 passed with exit code 0.
+5. The native verification model classifies Entity Framework as `NATIVE_TEST_ESTATE`; no retired
+   legacy expected-list or old EF project remains a required run.
+
+The concurrency diagnosis was not accepted on correlation. Deleting the proposed tracker reset
+survived the pre-hardening concurrency test, so that test was not misreported as causal. A separate
+real PostgreSQL/Npgsql execution-strategy owner now constructs the exact failed-unit-of-work state.
+With the product reset it persists `ReceiveCount == 1`; M14 without the reset persists the stale
+sentinel `41` and fails deterministically. This is the required behavioral proof for the fix.
