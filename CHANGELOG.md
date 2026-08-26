@@ -25,6 +25,9 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Quartz scheduled-message execution now propagates a causally requested job cancellation instead
+  of converting it into up to five immediate refires. A dependency-thrown cancellation remains a
+  retryable job failure when the Quartz execution token was not requested.
 - Core pipeline behavior now has source-owned native xUnit/MTP coverage for dynamic consumer and
   handler connections, observer composition, context filtering, cancellation causality both before
   and inside an active retry attempt, consumer,

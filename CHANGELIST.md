@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2150 |
+| Added | 2151 |
 | Modified | 4222 |
 | Deleted | 1426 |
 | Renamed | 2 |
@@ -7403,6 +7403,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryScopeTests.cs` | Added |  |
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzTriggerKeyTests.cs` | Added |  |
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageExpirationTests.cs` | Added |  |
+| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageJobTests.cs` | Added |  |
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerBusObserverTests.cs` | Added |  |
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerCommandIntegrationTests.cs` | Added |  |
 | `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/InheritedBehaviorDispositionTests.cs` | Added |  |

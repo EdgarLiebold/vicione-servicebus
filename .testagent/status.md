@@ -749,3 +749,9 @@ future cohorts as complete.
   zero error, fail at their intended native owner and restore the frozen bytes exactly. The final Engineering Release
   build is 0-warning/0-error, UnitArchitecture is 1822/1822, focused Quartz is 85/85 and
   LocalIntegration is 17/17 against run-scoped PostgreSQL and Azurite, all with zero skip.
+- The independent product review found that `ScheduledMessageJob` converted a causally requested
+  Quartz execution cancellation into an immediate-refire `JobExecutionException`. The product now
+  propagates requested context cancellation unchanged while retaining retry classification for an
+  unrequested dependency cancellation. Two direct send-boundary tests raise the Quartz floor to
+  87 and the UnitArchitecture floor to 1824; the final correction evidence and targeted mutation
+  remain to be frozen.
