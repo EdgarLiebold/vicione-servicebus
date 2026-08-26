@@ -346,6 +346,101 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
         contents = self.canonical_workflow().replace("10.0.302", "10.0.999")
         self.assert_workflow_rejected(contents, "canonical required header")
 
+    def test_sdk_binding_rejects_a_global_json_only_change(self) -> None:
+        contents = self.canonical_workflow()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workflow = root / ".github/workflows/build.yml"
+            workflow.parent.mkdir(parents=True)
+            workflow.write_text(contents, encoding="utf-8")
+            (root / "global.json").write_text(
+                '{"sdk":{"version":"10.0.303"}}\n',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(model.WorkflowShapeError, "canonical required header"):
+                model.workflow_jobs(root)
+
+    def test_sdk_binding_accepts_another_matching_stable_version(self) -> None:
+        contents = self.canonical_workflow().replace("10.0.302", "10.0.303")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workflow = root / ".github/workflows/build.yml"
+            workflow.parent.mkdir(parents=True)
+            workflow.write_text(contents, encoding="utf-8")
+            (root / "global.json").write_text(
+                '{"sdk":{"version":"10.0.303"}}\n',
+                encoding="utf-8",
+            )
+            self.assertEqual(["core-unit"], sorted(model.workflow_jobs(root)))
+
+    def test_required_support_jobs_match_the_repository_contract(self) -> None:
+        jobs = model.workflow_jobs(REPO_ROOT)
+        for job in model.REQUIRED_SUPPORT_JOB_CONTRACTS:
+            with self.subTest(job=job):
+                self.assertEqual([], model.support_job_findings(job, jobs[job]))
+
+    def test_required_support_jobs_reject_noop_bodies(self) -> None:
+        noop = (
+            "    name: Required\n"
+            "    runs-on: ubuntu-24.04\n"
+            "    timeout-minutes: 10\n"
+            "    steps:\n"
+            "      - run: true\n"
+        )
+        for job in model.REQUIRED_SUPPORT_JOB_CONTRACTS:
+            with self.subTest(job=job):
+                self.assertTrue(model.support_job_findings(job, noop))
+
+    def test_legacy_tooling_requires_every_tool_check(self) -> None:
+        job = model.workflow_jobs(REPO_ROOT)["legacy-tooling"]
+        commands = (
+            "        run: python3 tools/ci/verification/model.py\n",
+            "        run: python3 -m unittest discover -s tools/ci -p 'test_*.py'\n",
+            "        run: python3 -m unittest discover -s tools/identity -p 'test_*.py'\n",
+        )
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertTrue(model.support_job_findings("legacy-tooling", job.replace(command, "")))
+
+    def test_build_requires_every_restore_and_build_in_order(self) -> None:
+        job = model.workflow_jobs(REPO_ROOT)["build"]
+        commands = (
+            "        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode\n",
+            "        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore\n",
+            "        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode\n",
+            "        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore\n",
+        )
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertTrue(model.support_job_findings("build", job.replace(command, "")))
+        reordered = job.replace(commands[0], "__FIRST__\n").replace(commands[1], commands[0]).replace(
+            "__FIRST__\n", commands[1])
+        self.assertTrue(model.support_job_findings("build", reordered))
+
+    def test_pack_requires_dependencies_commands_hash_and_upload(self) -> None:
+        job = model.workflow_jobs(REPO_ROOT)["pack"]
+        obligations = (
+            "      - legacy-tooling\n",
+            "      - entity-framework\n",
+            "          dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages\n",
+            "          sha256sum artifacts/packages/*.nupkg | tee artifacts/packages/SHA256SUMS\n",
+            f"      {model.UPLOAD_ARTIFACT_ACTION_STEP}\n",
+            "          if-no-files-found: error\n",
+        )
+        for obligation in obligations:
+            with self.subTest(obligation=obligation):
+                self.assertTrue(model.support_job_findings("pack", job.replace(obligation, "")))
+
+    def test_required_support_jobs_reject_quoted_controls(self) -> None:
+        jobs = model.workflow_jobs(REPO_ROOT)
+        for job in model.REQUIRED_SUPPORT_JOB_CONTRACTS:
+            hostile = jobs[job].replace(
+                "    steps:\n",
+                '    "if": false\n    steps:\n',
+            )
+            with self.subTest(job=job):
+                self.assertTrue(model.support_job_findings(job, hostile))
+
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))
 

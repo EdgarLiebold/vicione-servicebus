@@ -658,7 +658,7 @@ future cohorts as complete.
 - The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
   eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
   and SignalR 26 executable replacements plus two non-executing inherited methods.
-- The transition-tool self-tests pass 245/245 under `tools/ci` and 103/103 under `tools/identity`.
+- The transition-tool self-tests pass 253/253 under `tools/ci` and 103/103 under `tools/identity`.
   The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
   SignalR 32/32, all without skips.
 - A locked static-graph restore and the complete Root and Engineering Release builds pass; both
@@ -680,4 +680,6 @@ future cohorts as complete.
   forms are rejected before job parsing. The complete header also binds the required push, pull-request
   and manual triggers, read-only permission and exact global environment; its SDK value is derived from
   `global.json`. Every modeled Verify job independently enforces its exact plain-key structure, runner,
-  timeout, optional fixture environment and steps, so YAML spelling cannot hide job-level controls.
+  timeout, optional fixture environment and steps. The required tooling, build and pack jobs bind every
+  executable line, dependency and pinned action. YAML spelling or a no-op job therefore cannot hide or
+  replace any required gate.

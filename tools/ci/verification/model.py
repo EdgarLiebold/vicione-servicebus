@@ -34,9 +34,6 @@ EXPECTED_DIRECTORY = "build/verification/expected"
 
 PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjects")
 
-# Jobs of the required profile that verify nothing, so the model's job map does not name them.
-NON_VERIFYING_JOBS = ("legacy-tooling", "build", "pack")
-
 VERIFY_ENTRYPOINT = "python3 tools/ci/verify.py"
 CHECKOUT_ACTION_STEP = "- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1"
 SETUP_DOTNET_ACTION_STEP = "- uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0"
@@ -51,6 +48,81 @@ WORKFLOW_TOP_LEVEL_KEYS = ("name", "on", "permissions", "env", "jobs")
 VERIFICATION_JOB_KEYS = ("name", "runs-on", "timeout-minutes", "steps")
 VERIFICATION_JOB_KEYS_WITH_ENV = ("name", "runs-on", "timeout-minutes", "env", "steps")
 VERIFICATION_JOB_ENVIRONMENT = ("      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false",)
+
+# These required jobs do not map to one verification selection, but they are executable gates rather
+# than decorative workflow entries. Their normalized non-comment lines are kept as explicit contracts
+# so deleting, reordering or weakening any command cannot leave the required profile falsely green.
+REQUIRED_SUPPORT_JOB_CONTRACTS = {
+    "legacy-tooling": (
+        '    name: "Required: Legacy Test Tooling"',
+        "    runs-on: ubuntu-24.04",
+        "    timeout-minutes: 10",
+        "    steps:",
+        f"      {CHECKOUT_ACTION_STEP}",
+        "      - name: Verification model",
+        "        run: python3 tools/ci/verification/model.py",
+        "      - name: CI tool self-tests",
+        "        run: python3 -m unittest discover -s tools/ci -p 'test_*.py'",
+        "      - name: Identity tool self-tests",
+        "        run: python3 -m unittest discover -s tools/identity -p 'test_*.py'",
+    ),
+    "build": (
+        '    name: "Required: Build"',
+        "    runs-on: ubuntu-24.04",
+        "    timeout-minutes: 30",
+        "    steps:",
+        f"      {CHECKOUT_ACTION_STEP}",
+        f"      {SETUP_DOTNET_ACTION_STEP}",
+        "        with:",
+        "          dotnet-version: ${{ env.DOTNET_VERSION }}",
+        "      - name: Restore",
+        "        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode",
+        "      - name: Build",
+        "        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore",
+        "      - name: Restore the engineering solution",
+        "        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode",
+        "      - name: Build the engineering solution",
+        "        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore",
+    ),
+    "pack": (
+        '    name: "Required: Pack"',
+        "    runs-on: ubuntu-24.04",
+        "    timeout-minutes: 30",
+        "    needs:",
+        "      - legacy-tooling",
+        "      - build",
+        "      - core-unit",
+        "      - quartz",
+        "      - activemq",
+        "      - sql-transport",
+        "      - benchmarks",
+        "      - rabbitmq",
+        "      - entity-framework",
+        "    steps:",
+        f"      {CHECKOUT_ACTION_STEP}",
+        f"      {SETUP_DOTNET_ACTION_STEP}",
+        "        with:",
+        "          dotnet-version: ${{ env.DOTNET_VERSION }}",
+        "      - name: Restore",
+        "        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode",
+        "      - name: Build",
+        "        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore",
+        "      - name: Pack",
+        "        run: |",
+        "          rm -rf artifacts/packages",
+        "          dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages",
+        "      - name: Hash packages",
+        "        run: |",
+        "          set -euo pipefail",
+        '          test -n "$(ls -A artifacts/packages)" || { echo "pack produced no package"; exit 1; }',
+        "          sha256sum artifacts/packages/*.nupkg | tee artifacts/packages/SHA256SUMS",
+        f"      {UPLOAD_ARTIFACT_ACTION_STEP}",
+        "        with:",
+        "          name: required-packages",
+        "          path: artifacts/packages",
+        "          if-no-files-found: error",
+    ),
+}
 
 
 class SelectionError(RuntimeError):
@@ -381,6 +453,26 @@ def verification_step_findings(job: str, job_text: str, selection: str) -> list[
     return problems
 
 
+def support_job_findings(job: str, job_text: str) -> list[str]:
+    """Compare a required support job with its explicit executable contract."""
+    expected = REQUIRED_SUPPORT_JOB_CONTRACTS[job]
+    actual = tuple(
+        line for line in job_text.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    )
+    if actual == expected:
+        return []
+
+    common = min(len(actual), len(expected))
+    first_difference = next((index for index in range(common) if actual[index] != expected[index]), common)
+    actual_line = actual[first_difference] if first_difference < len(actual) else "<missing>"
+    expected_line = expected[first_difference] if first_difference < len(expected) else "<no further line>"
+    return [
+        f"required workflow job '{job}' differs at executable line {first_difference + 1}: "
+        f"expected {expected_line!r}, found {actual_line!r}"
+    ]
+
+
 LINE_COMMENT = re.compile(r"//[^\n]*")
 BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.S)
 NAMESPACE_DECLARATION = re.compile(r"^\s*namespace\s+([A-Za-z_][\w.]*)", re.M)
@@ -665,7 +757,12 @@ def findings(root: Path) -> list[str]:
         problems.append(f"the required workflow cannot be read: {error}")
         return problems
 
-    explained: set[str] = set(NON_VERIFYING_JOBS)
+    explained: set[str] = set(REQUIRED_SUPPORT_JOB_CONTRACTS)
+    for job in REQUIRED_SUPPORT_JOB_CONTRACTS:
+        if job not in jobs:
+            problems.append(f"the required workflow has no '{job}' support job")
+        else:
+            problems.extend(support_job_findings(job, jobs[job]))
 
     # A category is started by exactly one run. A job may hold several distinct categories, but two
     # runs of one category are two truths about the same thing.
