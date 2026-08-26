@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Scheduling;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -21,7 +22,8 @@ public sealed class QuartzTransactionalOutboxTests
         await using QuartzOutboxFixture fixture = await QuartzOutboxFixture.CreateAsync();
         var command = new ScheduleThroughOutbox(NewId.NextGuid());
         var scheduleObserver = new ScheduleMessageObserver();
-        using ConnectHandle observer = fixture.Harness.Bus.ConnectConsumeObserver(scheduleObserver);
+        using ConnectHandle sendObserver = fixture.Harness.Bus.ConnectSendObserver(scheduleObserver);
+        using ConnectHandle publishObserver = fixture.Harness.Bus.ConnectPublishObserver(scheduleObserver);
 
         await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
         ScheduledMessage<ScheduledOutboxPayload> scheduled = await fixture.Gate.Scheduled
@@ -45,7 +47,7 @@ public sealed class QuartzTransactionalOutboxTests
                 fixture.CancellationToken)
             .First()
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        ScheduleMessage observedSchedule = await scheduleObserver.Completed
+        Guid? observedScheduleCorrelationId = await scheduleObserver.Completed
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
             await fixture.Scheduler.GetTrigger(triggerKey, fixture.CancellationToken)
@@ -53,7 +55,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         Assert.Null(consumed.Exception);
         Assert.Equal(1, scheduleObserver.ObservedCount);
-        Assert.Equal(scheduled.TokenId, observedSchedule.CorrelationId);
+        Assert.Equal(scheduled.TokenId, observedScheduleCorrelationId);
         Assert.Equal(ScheduledTime, trigger.GetNextFireTimeUtc()?.UtcDateTime);
 
         await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, fixture.CancellationToken)
@@ -143,27 +145,57 @@ public sealed class QuartzTransactionalOutboxTests
         }
     }
 
-    private sealed class ScheduleMessageObserver : IConsumeObserver
+    private sealed class ScheduleMessageObserver : ISendObserver, IPublishObserver
     {
-        private readonly TaskCompletionSource<ScheduleMessage> _completed =
+        private readonly TaskCompletionSource<Guid?> _completed =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         private int _observedCount;
 
-        public Task<ScheduleMessage> Completed => _completed.Task;
+        public Task<Guid?> Completed => _completed.Task;
 
         public int ObservedCount => Volatile.Read(ref _observedCount);
 
-        public Task PreConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
-
-        public Task PostConsume<T>(ConsumeContext<T> context) where T : class
+        public Task PreSend<T>(SendContext<T> context) where T : class
         {
-            if (context.Message is ScheduleMessage schedule && Interlocked.Increment(ref _observedCount) == 1)
-                _completed.TrySetResult(schedule);
+            if (context.Message is ScheduleMessage or SerializedMessageBody)
+                Interlocked.Increment(ref _observedCount);
 
             return Task.CompletedTask;
         }
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+        public Task PostSend<T>(SendContext<T> context) where T : class
+        {
+            if (context.Message is ScheduleMessage or SerializedMessageBody)
+                _completed.TrySetResult(context.CorrelationId);
+
+            return Task.CompletedTask;
+        }
+
+        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
+        {
+            if (context.Message is ScheduleMessage or SerializedMessageBody)
+                _completed.TrySetException(exception);
+
+            return Task.CompletedTask;
+        }
+
+        public Task PrePublish<T>(PublishContext<T> context) where T : class
+        {
+            if (context.Message is ScheduleMessage)
+                Interlocked.Increment(ref _observedCount);
+
+            return Task.CompletedTask;
+        }
+
+        public Task PostPublish<T>(PublishContext<T> context) where T : class
+        {
+            if (context.Message is ScheduleMessage)
+                _completed.TrySetResult(context.CorrelationId);
+
+            return Task.CompletedTask;
+        }
+
+        public Task PublishFault<T>(PublishContext<T> context, Exception exception) where T : class
         {
             if (context.Message is ScheduleMessage)
                 _completed.TrySetException(exception);
