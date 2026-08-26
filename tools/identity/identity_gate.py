@@ -39,6 +39,8 @@ FORBIDDEN_COMPATIBILITY_FORMS = (
 BUILD_OUTPUT_PARTS = frozenset({".git", "bin", "obj"})
 PUBLIC_DECLARATION = re.compile(r"^\s*public\s+.+", re.MULTILINE)
 TEST_SABOTAGE_FORMS = ("[Ignore", "[Explicit", "Assert.Pass(", ".Skip =", "Skip =")
+NOTICE_EXCEPTION_HEADING = "covered by exact path-bound entries in MODIFICATIONS.md:"
+MODIFICATIONS_EXCEPTION_HEADING = "## Changed files without an in-file modification comment"
 _BASELINE_ARCHIVES: dict[Path, dict[str, bytes]] = {}
 _BASELINE_TREE_ENTRIES: dict[Path, dict[str, tuple[str, str]]] = {}
 
@@ -468,9 +470,21 @@ def validate_format_exceptions(
     exceptions: Iterable[str] = COMMENTLESS_OR_BINARY_EXCEPTIONS,
 ) -> list[Finding]:
     findings: list[Finding] = []
+    exception_targets = set(exceptions)
     target_sources = {map_path(source): source for source in baseline_paths(root)}
     target_sources.update(COMMENTLESS_OR_BINARY_BASELINE_SOURCES)
-    for target in sorted(set(exceptions)):
+    explicit_sources = [
+        COMMENTLESS_OR_BINARY_BASELINE_SOURCES[target]
+        for target in exception_targets
+        if target in COMMENTLESS_OR_BINARY_BASELINE_SOURCES
+    ]
+    for source in sorted({source for source in explicit_sources if explicit_sources.count(source) > 1}):
+        findings.append(Finding(
+            "legal-format-exception",
+            source,
+            "baseline source is bound to more than one current exception target",
+        ))
+    for target in sorted(exception_targets):
         source = target_sources.get(target)
         target_path = root / target
         if source is None or not target_path.is_file():
@@ -484,16 +498,46 @@ def validate_format_exceptions(
     return findings
 
 
+def notice_format_exception_targets(text: str) -> list[str]:
+    """The complete ordered exception list from NOTICE, or an empty list for a malformed section."""
+    if text.count(NOTICE_EXCEPTION_HEADING) != 1:
+        return []
+    section = text.split(NOTICE_EXCEPTION_HEADING, 1)[1]
+    return [line.strip() for line in section.splitlines() if line.strip()]
+
+
+def modification_format_exception_bindings(text: str) -> list[tuple[str, str]]:
+    """The ordered baseline-source/current-target pairs in the dedicated modification section."""
+    if text.count(MODIFICATIONS_EXCEPTION_HEADING) != 1:
+        return []
+    section = text.split(MODIFICATIONS_EXCEPTION_HEADING, 1)[1]
+    if "\n## " in section:
+        section = section.split("\n## ", 1)[0]
+    pattern = re.compile(r"^- `([^`]+)` -> `([^`]+)`$", re.MULTILINE)
+    return pattern.findall(section)
+
+
 def validate_legal_documents(root: Path) -> list[Finding]:
     findings = validate_format_exceptions(root)
     notice = (root / "NOTICE").read_text(encoding="utf-8")
     modifications = (root / "MODIFICATIONS.md").read_text(encoding="utf-8")
-    notice_lines = notice.splitlines()
-    for path in sorted(COMMENTLESS_OR_BINARY_EXCEPTIONS):
-        if notice_lines.count(path) != 1:
-            findings.append(Finding("legal-exception-list", "NOTICE", f"exact exception occurrence count for {path} is not 1"))
-        if modifications.count(f"`{path}`") != 1:
-            findings.append(Finding("legal-exception-list", "MODIFICATIONS.md", f"exact exception occurrence count for {path} is not 1"))
+    expected_targets = sorted(COMMENTLESS_OR_BINARY_EXCEPTIONS)
+    if notice_format_exception_targets(notice) != expected_targets:
+        findings.append(Finding(
+            "legal-exception-list",
+            "NOTICE",
+            "format-exception section does not equal the exact ordered current-target set",
+        ))
+    expected_bindings = [
+        (COMMENTLESS_OR_BINARY_BASELINE_SOURCES[target], target)
+        for target in expected_targets
+    ]
+    if modification_format_exception_bindings(modifications) != expected_bindings:
+        findings.append(Finding(
+            "legal-exception-list",
+            "MODIFICATIONS.md",
+            "format-exception section does not equal the exact ordered baseline-source/current-target map",
+        ))
     unchanged_container = ".devcontainer/devcontainer.json"
     if unchanged_container in notice or unchanged_container in modifications:
         findings.append(Finding("legal-exception-list", unchanged_container, "unchanged commentable file is listed as an exception"))

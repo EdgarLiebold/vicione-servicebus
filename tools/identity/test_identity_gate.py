@@ -10,6 +10,8 @@ from pathlib import Path
 
 from identity_gate import (
     legal_identity_contexts,
+    modification_format_exception_bindings,
+    notice_format_exception_targets,
     omitted_baseline_findings,
     scan_entry,
     scan_tree,
@@ -19,10 +21,22 @@ from identity_gate import (
     validate_legal_documents,
     validate_test_run,
 )
-from identity_rules import FORMER_PASCAL
+from identity_rules import (
+    COMMENTLESS_OR_BINARY_BASELINE_SOURCES,
+    COMMENTLESS_OR_BINARY_EXCEPTIONS,
+    FORMER_PASCAL,
+)
 
 
 OLD = FORMER_PASCAL
+EXPECTED_FORMAT_EXCEPTION_BINDINGS = {
+    "ViciOne.ServiceBus.slnx": "MassTransit.sln",
+    "ViciOne.ServiceBus.snk": "MassTransit.snk",
+    "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json":
+        "tests/MassTransit.EventHubIntegration.Tests/config.json",
+    "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12":
+        "tests/MassTransit.RabbitMqTransport.Tests/client.p12",
+}
 
 
 class IdentityGateHostileFixtureTests(unittest.TestCase):
@@ -161,6 +175,36 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
     def test_active_legal_documents_and_format_exceptions_are_consistent(self) -> None:
         root = Path(__file__).resolve().parents[2]
         self.assertEqual([], validate_legal_documents(root))
+
+    def test_format_exception_map_matches_the_independent_exact_contract(self) -> None:
+        self.assertEqual(EXPECTED_FORMAT_EXCEPTION_BINDINGS, COMMENTLESS_OR_BINARY_BASELINE_SOURCES)
+        self.assertEqual(set(EXPECTED_FORMAT_EXCEPTION_BINDINGS), set(COMMENTLESS_OR_BINARY_EXCEPTIONS))
+        self.assertEqual(
+            len(EXPECTED_FORMAT_EXCEPTION_BINDINGS.values()),
+            len(set(EXPECTED_FORMAT_EXCEPTION_BINDINGS.values())),
+        )
+
+    def test_notice_parser_exposes_an_additional_stale_exception(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        notice = (root / "NOTICE").read_text(encoding="utf-8") + "stale/deleted.txt\n"
+        self.assertNotEqual(
+            sorted(EXPECTED_FORMAT_EXCEPTION_BINDINGS),
+            notice_format_exception_targets(notice),
+        )
+
+    def test_modifications_parser_exposes_an_incorrect_baseline_source(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        modifications = (root / "MODIFICATIONS.md").read_text(encoding="utf-8")
+        modifications = modifications.replace(
+            "- `MassTransit.sln` -> `ViciOne.ServiceBus.slnx`",
+            "- `MassTransit.snk` -> `ViciOne.ServiceBus.slnx`",
+            1,
+        )
+        expected = [
+            (source, target)
+            for target, source in sorted(EXPECTED_FORMAT_EXCEPTION_BINDINGS.items())
+        ]
+        self.assertNotEqual(expected, modification_format_exception_bindings(modifications))
 
     def test_rejects_missing_baseline_evidence_record(self) -> None:
         expected = [{"baselineKey": "key-a", "targetPath": "a"}]

@@ -38,6 +38,9 @@ PROJECT_KEYS = ("sourceProjects", "testProjects", "supportProjects", "toolProjec
 NON_VERIFYING_JOBS = ("legacy-tooling", "build", "pack")
 
 VERIFY_ENTRYPOINT = "python3 tools/ci/verify.py"
+CHECKOUT_ACTION_STEP = "- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1"
+SETUP_DOTNET_ACTION_STEP = "- uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0"
+UPLOAD_ARTIFACT_ACTION_STEP = "- uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"
 
 
 class SelectionError(RuntimeError):
@@ -180,9 +183,10 @@ def verification_step_findings(job: str, job_text: str, selection: str) -> list[
     """Refuse a workflow job that does not execute its model-owned selection exactly once.
 
     The verification model owns the job-to-selection mapping. The workflow owns only the mechanical
-    call into that model. This boundary is deliberately narrow: the verifying step has exactly a name
-    and one canonical command. Conditions, continue-on-error, shell composition and multi-line command
-    construction would all create a second way for the workflow to weaken or replace the model.
+    call into that model. This boundary is deliberately narrow: checkout, SDK setup, verification and
+    result upload are the only steps, in that order, and every executable action is commit-pinned.
+    Conditions, defaults, extra commands and shell composition would all create a second way for the
+    workflow to weaken or replace the model.
     """
     problems: list[str] = []
     expected = ("- name: Verify", f"run: {VERIFY_ENTRYPOINT} --selection {selection}")
@@ -191,7 +195,7 @@ def verification_step_findings(job: str, job_text: str, selection: str) -> list[
     for line in lines:
         if line.startswith("    ") and not line.startswith("      "):
             directive = line.strip()
-            if directive.startswith(("if:", "continue-on-error:")):
+            if directive.startswith(("if:", "continue-on-error:", "defaults:", "container:", "uses:")):
                 problems.append(
                     f"workflow job '{job}' has the job-level control '{directive}', so its required "
                     "verification can be skipped or ignored")
@@ -221,16 +225,33 @@ def verification_step_findings(job: str, job_text: str, selection: str) -> list[
     if current is not None:
         blocks.append(current)
 
-    invoking = [
-        tuple(block)
-        for block in blocks
-        if any("tools/ci/verify.py" in line for line in block)
-    ]
-    if invoking != [expected]:
-        rendered = "; ".join(" | ".join(block) for block in invoking) or "<missing>"
+    expected_checkout = (CHECKOUT_ACTION_STEP,)
+    expected_setup = (
+        SETUP_DOTNET_ACTION_STEP,
+        "with:",
+        "dotnet-version: ${{ env.DOTNET_VERSION }}",
+    )
+    upload_is_exact = (
+        len(blocks) == 4
+        and len(blocks[3]) == 7
+        and blocks[3][0] == UPLOAD_ARTIFACT_ACTION_STEP
+        and blocks[3][1] == "if: always()"
+        and blocks[3][2] == "with:"
+        and re.fullmatch(r"name: required-[a-z0-9-]+", blocks[3][3]) is not None
+        and blocks[3][4:] == ["path: |", "artifacts/verification", "artifacts/run-output"]
+    )
+    if not (
+        len(blocks) == 4
+        and tuple(blocks[0]) == expected_checkout
+        and tuple(blocks[1]) == expected_setup
+        and tuple(blocks[2]) == expected
+        and upload_is_exact
+    ):
+        rendered = "; ".join(" | ".join(block) for block in blocks) or "<missing>"
         problems.append(
-            f"workflow job '{job}' must contain exactly the canonical step "
-            f"'{expected[0]} | {expected[1]}', found: {rendered}")
+            f"workflow job '{job}' must contain exactly pinned checkout, pinned SDK setup, the "
+            f"canonical step '{expected[0]} | {expected[1]}', and pinned result upload; found: "
+            f"{rendered}")
 
     return problems
 

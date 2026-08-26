@@ -658,7 +658,7 @@ future cohorts as complete.
 - The terminal disposition evidence remains complete: Abstractions 70 executable replacements plus
   eight non-product or non-executing obligations, Analyzer 115/115 with 143 replacement bindings,
   and SignalR 26 executable replacements plus two non-executing inherited methods.
-- The transition-tool self-tests pass 215/215 under `tools/ci` and 100/100 under `tools/identity`.
+- The transition-tool self-tests pass 217/217 under `tools/ci` and 103/103 under `tools/identity`.
   The focused native suites pass Analyzer 114/114, Analyzer CodeFixes 29/29 and
   SignalR 32/32, all without skips.
 - A locked static-graph restore and the complete Root and Engineering Release builds pass; both
@@ -671,3 +671,7 @@ future cohorts as complete.
 - The removed Abstractions text fixture is no longer a legal-format exception. The four retained
   commentless or binary files now carry explicit baseline-source-to-current-target bindings, including
   normalized solution and transport-test paths; `NOTICE` and `MODIFICATIONS.md` agree exactly.
+- The second review rejected job-level default shells, additional shell steps and a self-derived
+  provenance oracle. Verification jobs now have exactly four allowed steps: pinned checkout, pinned
+  SDK setup, the canonical selection call and pinned result upload. An independent literal legal
+  contract checks all four unique source-to-target pairs and the exact NOTICE/MODIFICATIONS sections.

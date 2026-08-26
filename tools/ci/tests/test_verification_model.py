@@ -16,12 +16,30 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 class VerificationWorkflowBoundaryTests(unittest.TestCase):
+    CHECKOUT = "- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1"
+    SETUP = "- uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0"
+    UPLOAD = "- uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"
+
     @staticmethod
     def job(*step_lines: str, job_controls: tuple[str, ...] = ()) -> str:
         controls = "".join(f"    {line}\n" for line in job_controls)
+        all_steps = (
+            VerificationWorkflowBoundaryTests.CHECKOUT,
+            VerificationWorkflowBoundaryTests.SETUP,
+            "with:",
+            "dotnet-version: ${{ env.DOTNET_VERSION }}",
+            *step_lines,
+            VerificationWorkflowBoundaryTests.UPLOAD,
+            "if: always()",
+            "with:",
+            "name: required-core-unit",
+            "path: |",
+            "artifacts/verification",
+            "artifacts/run-output",
+        )
         steps = "\n".join(
             f"      {line}" if line.startswith("- ") else f"        {line}"
-            for line in step_lines
+            for line in all_steps
         )
         return f"    name: Required\n{controls}    steps:\n{steps}\n"
 
@@ -76,6 +94,22 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
                 job_controls=("if: false",),
             )
         )
+
+    def test_rejects_job_level_default_shell_that_swallows_failure(self) -> None:
+        text = self.job("- name: Verify", "run: python3 tools/ci/verify.py --selection core")
+        text = text.replace(
+            "    steps:\n",
+            "    defaults:\n      run:\n        shell: bash {0} || true\n    steps:\n",
+        )
+        self.assert_rejected(text)
+
+    def test_rejects_an_additional_shell_step_that_can_replace_the_verifier(self) -> None:
+        self.assert_rejected(self.job(
+            "- name: Replace verifier",
+            "run: cd tools/ci && printf 'raise SystemExit(0)\\n' > verify.py",
+            "- name: Verify",
+            "run: python3 tools/ci/verify.py --selection core",
+        ))
 
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))
