@@ -1833,3 +1833,44 @@ shared running schedulers or assertion-free smoke tests. Deterministic clock-con
 only through `TimeProvider.System`. Multiple inherited assertions may map to one
 stronger carrier only when that carrier proves their complete precondition, effect, boundary and
 failure semantics.
+
+## Entity Framework Core persistence and outbox cohort
+
+The accepted baseline is Quartz evidence commit `a1195e574e99716b2a10bae390836b1c6c09dcce`
+(tree `9362c94e32b30705c2e1566420853714aa5f90d0`). The inherited EF project carries ninety
+obligations: `OBL-R0-PER-0004..0092` plus `OBL-R0-PER-0119`. All seventy-three EF product source
+files, the inherited fixtures and the already accepted native MessageJournal EF tests were read
+before the first product edit.
+
+The active architecture corrects an initially over-narrow provider disposition. SQLite is not a
+legacy-only compatibility provider: A05 requires it for NodeLocal and Standalone stores and requires
+real SQLite/PostgreSQL provider equivalence. The retained ServiceBus EF matrix is therefore SQLite,
+PostgreSQL and SQL Server/Azure SQL. MySQL and Oracle have no active product requirement and are not
+kept speculatively. The old Suite contains both the earlier `UseSqlite` consumer-outbox composition
+and the later brokerless owner-store design; the Greenfield suite contract remains the owner-store
+design, while the generic ServiceBus feature still keeps a correct SQLite adapter.
+
+Source and upstream-history analysis identified deliberate mechanisms that must be generalized,
+not deleted mechanically:
+
+- the synchronous lock around EF outbox additions came from upstream commit
+  `491db95b4f5a039672aa43fbb840e45f2f70ba56` to prevent duplicate `IsDelivered` outcomes under
+  concurrent `AddSend`; its purpose remains valid, but a `DbSet` is not an A+ synchronization owner;
+- saga DbContext serialization was introduced after real concurrent-context failures and remains a
+  necessary EF ownership boundary;
+- the broad saga-insert catch is an old optimistic pre-insert race recovery, but it also swallows
+  cancellation and unrelated infrastructure faults and therefore cannot remain as written;
+- the static `SqlLockStatementProvider` cache is keyed only by CLR type even though generated SQL
+  depends on EF model, schema, table and property mapping; the executor then freezes the first
+  statement it sees. Both caches are unsafe across multiple DbContext models;
+- SQL Server is a historical hidden default, not a provider-neutral design decision. Greenfield
+  runtime configuration must select one retained provider explicitly and freeze that choice.
+
+The current product path also owns seven `DateTime.UtcNow` calls, one direct `Task.Delay` and three
+timed cancellation-source constructions. They are one hidden-time defect family and will be
+replaced by the standard injected `TimeProvider`; elapsed OTel duration may continue to use
+`Stopwatch`. Other high-risk paths for native proof are exact cancellation causality, provider
+failure identity, immutable configuration, read-only query cancellation, custom includes, saga
+insert/load races, inbox deduplication, multi-batch bus-outbox delivery, notification-versus-poll
+wakeup, transient retry classification, rollback, delayed delivery, job-service lifecycle and
+durable future completion/fault reuse.

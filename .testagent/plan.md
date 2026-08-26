@@ -1544,3 +1544,59 @@ The inherited obligation grouping is fixed:
     LocalIntegration and Engineering Release profiles. Required outcome is zero failed, skipped or
     warning tests and zero build warnings/errors. Freeze separate technical and evidence commits and
     obtain two independent read-only reviews: product/API and test/evidence/87-row closure.
+
+## Entity Framework Core persistence and outbox execution plan
+
+Work from the accepted Quartz evidence commit `a1195e574e99716b2a10bae390836b1c6c09dcce`
+(tree `9362c94e32b30705c2e1566420853714aa5f90d0`). Reconstruct all ninety inherited
+obligations `OBL-R0-PER-0004..0092` and `OBL-R0-PER-0119` as one coherent native persistence
+cohort. The inherited fixtures are defect history and a semantic lower bound, never the target
+test structure.
+
+1. Preserve exactly the current product providers: SQLite for the architecture's NodeLocal and
+   Standalone stores, PostgreSQL for the authoritative Master store, and SQL Server including Azure
+   SQL as the retained Microsoft relational option. Remove MySQL and Oracle configuration and SQL
+   generators only after the retained provider matrix and every affected public call site are
+   closed. There is no hidden SQL Server default: configuration must select a provider before the
+   runtime graph is materialized.
+2. Replace the static type-only lock-statement cache and the executor's first-context snapshot with
+   a model-aware provider-owned cache. Its key includes the immutable EF model identity, saga type
+   and ordered property set; schema/table/column resolution is therefore never reused across
+   incompatible models. Prefer weak model ownership so dynamic models are not retained forever.
+   SQLite, PostgreSQL and SQL Server each receive exact positive and hostile SQL-generation tests.
+3. Inject `TimeProvider` once through the persistence runtime and replace every product-owned
+   `DateTime.UtcNow`, cleanup delay and timed cancellation source in this cohort. Stopwatch use is
+   permitted only for elapsed OTel measurement. Tests use deterministic time and causal barriers,
+   not sleep, wall-clock windows or absence-until-timeout assertions.
+4. Freeze configurator input into immutable runtime settings. Caller-owned delegates, lists, type
+   arrays and configurator instances may not mutate saga, inbox, outbox, delivery or cleanup
+   behavior after the graph is built. Validate missing context/provider, invalid timing/batch
+   values and incompatible concurrency/transaction combinations before runtime start.
+5. Keep the deliberate concurrent outbox-add protection introduced upstream to fix duplicate
+   `IsDelivered` outcomes, but give synchronization an explicit outbox coordination owner rather
+   than locking EF `DbSet` objects. Preserve exact message identity, ordering and single-state-row
+   creation under concurrent send/publish and prove cleanup after failure and cancellation.
+6. Normalize cancellation and failure ownership throughout saga, inbox and outbox paths. Caller
+   cancellation is recognized only when the caller token is actually requested. Infrastructure,
+   serialization, provider and observer failures retain their original identity unless the public
+   contract explicitly maps them. A duplicate saga-insert race may be recovered only through a
+   provider-owned, exact duplicate-conflict classification; broad `catch (Exception)` recovery is
+   forbidden.
+7. Build source-mirrored xUnit 4/MTP v2 owners under `Configuration`, `EntityFrameworkCoreIntegration`,
+   `Outbox`, `Saga` and `Testing`. UnitArchitecture proves provider-neutral logic, immutable
+   configuration and exact SQL. LocalIntegration uses run-scoped real SQLite and PostgreSQL
+   databases. SQL Server/Azure SQL remains a visible fail-closed External profile until credentials
+   are available; it is never counted green by inventory or skip.
+8. Reconstruct the cohort in four larger, internally coherent phases: configuration/provider/model
+   contracts; saga repository and concurrency; inbox/bus-outbox delivery and Quartz composition;
+   job-service/future persistence and final closure. Reuse stronger accepted native carriers rather
+   than duplicating them, while every joint carrier must cross the actual EF boundary it claims.
+9. Reread every changed product and test line after each phase. Apply the Microsoft test-gap,
+   assertion-quality and anti-pattern rules, then run targeted one-cause mutations for product
+   corrections and high-risk transaction, locking, deduplication, rollback, cancellation and
+   lifecycle boundaries. Bind exact mutation bytes, commands, results and restore hashes.
+10. Delete an inherited EF test file only when every behavior it carried has an equal or stronger
+    native owner. Delete resulting empty directories. Final acceptance requires 90/90 terminal
+    dispositions, locked focused Release builds/tests, unfiltered UnitArchitecture, real
+    LocalIntegration, visible External state, Engineering with zero warnings/errors and two
+    independent read-only PASS reviews over separate technical and evidence commits.
