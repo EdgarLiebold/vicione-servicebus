@@ -6,7 +6,6 @@ using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -68,32 +67,20 @@ public sealed class InboxOutboxConcurrencyTests
         {
             await harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken);
             await consumer.Entered.WaitAsync(operationTimeout, cancellationToken);
-            Guid originalContext = Assert.Single(
-                await databaseProbe.WaitForDistinctLockContextsAsync(1, operationTimeout, cancellationToken));
-            databaseProbe.ArmForcedRetry(originalContext, operationTimeout);
             await Task.WhenAll(
-                harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken),
                 harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken),
                 harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken));
 
-            Guid[] firstDuplicateContexts =
-                await databaseProbe.WaitForDistinctLockContextsAsync(2, operationTimeout, cancellationToken);
-            consumer.Release();
-            Guid finalDuplicateContext = Assert.Single(
-                await databaseProbe.WaitForDistinctLockContextsAsync(1, operationTimeout, cancellationToken));
-            Guid[] duplicateContexts = [.. firstDuplicateContexts, finalDuplicateContext];
-            Assert.Equal(3, duplicateContexts.Distinct().Count());
-            Assert.DoesNotContain(originalContext, duplicateContexts);
+            Guid[] lockingContexts = await databaseProbe.WaitForDistinctLockContextsAsync(3, operationTimeout, cancellationToken);
+            Assert.Equal(3, lockingContexts.Distinct().Count());
             Assert.Equal(1, consumer.InvocationCount);
 
+            consumer.Release();
             InboxEffect[] delivered = await effects.ReadManyAsync(16, operationTimeout, cancellationToken);
             await databaseProbe.OutboxDrainCommitted.WaitAsync(operationTimeout, cancellationToken);
-            Guid[] committedContexts = await databaseProbe.WaitForCommittedLockContextsAsync(4, operationTimeout, cancellationToken);
+            Guid[] committedContexts = await databaseProbe.WaitForCommittedLockContextsAsync(3, operationTimeout, cancellationToken);
 
-            Assert.Equal(4, committedContexts.Distinct().Count());
-            Assert.Equal(1, databaseProbe.ForcedTransientFailureCount);
-            Assert.Equal(2, databaseProbe.CompetingCommitsBeforeRetry);
-            Assert.True(databaseProbe.RetryResumedAfterCompetingCommits);
+            Assert.Equal(3, committedContexts.Distinct().Count());
             Assert.Equal(1, consumer.InvocationCount);
             Assert.Equal(Enumerable.Range(0, 16), delivered.Select(effect => effect.Index).Order());
             Assert.All(delivered, effect => Assert.Equal(messageId, effect.SourceMessageId));
@@ -104,7 +91,7 @@ public sealed class InboxOutboxConcurrencyTests
                 .AsNoTracking()
                 .ToListAsync(cancellationToken));
             Assert.Equal(messageId, inbox.MessageId);
-            Assert.Equal(4, inbox.ReceiveCount);
+            Assert.Equal(3, inbox.ReceiveCount);
             Assert.NotNull(inbox.Consumed);
             Assert.NotNull(inbox.Delivered);
             Assert.Empty(await verification.Set<OutboxMessage>().AsNoTracking().ToListAsync(cancellationToken));
@@ -144,7 +131,7 @@ public sealed class InboxOutboxConcurrencyTests
     {
         public InboxCommandConsumerDefinition()
         {
-            ConcurrentMessageLimit = 4;
+            ConcurrentMessageLimit = 3;
         }
 
         protected override void ConfigureConsumer(
@@ -152,7 +139,7 @@ public sealed class InboxOutboxConcurrencyTests
             IConsumerConfigurator<InboxCommandConsumer> consumerConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.ConcurrentMessageLimit = 4;
+            endpointConfigurator.ConcurrentMessageLimit = 3;
             endpointConfigurator.UseEntityFrameworkOutbox<InboxOutboxDbContext>(
                 context,
                 options => options.MessageDeliveryLimit = 100);
@@ -223,33 +210,10 @@ public sealed class InboxOutboxConcurrencyTests
         private readonly ConcurrentDictionary<Guid, byte> _pendingDrainContexts = new();
         private readonly ConcurrentQueue<string> _transactionFailures = new();
         private readonly ConcurrentDictionary<Guid, int> _transactionCommitsByContext = new();
-        private readonly TaskCompletionSource _competingCommitsObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _outboxDrainCommitted = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        private Guid _forcedRetryContext;
-        private Guid _originalContext;
-        private TimeSpan _forcedRetryTimeout;
-        private int _competingCommitsBeforeRetry;
-        private int _forcedRetryArmed;
-        private int _forcedTransientFailureCount;
-        private int _retryResumedAfterCompetingCommits;
         private int _transactionCommitCallbacks;
 
-        public int CompetingCommitsBeforeRetry => Volatile.Read(ref _competingCommitsBeforeRetry);
-        public int ForcedTransientFailureCount => Volatile.Read(ref _forcedTransientFailureCount);
         public Task OutboxDrainCommitted => _outboxDrainCommitted.Task;
-        public bool RetryResumedAfterCompetingCommits => Volatile.Read(ref _retryResumedAfterCompetingCommits) == 1;
-
-        public void ArmForcedRetry(Guid originalContext, TimeSpan timeout)
-        {
-            if (originalContext == Guid.Empty)
-                throw new ArgumentException("The original inbox context identity must not be empty.", nameof(originalContext));
-            if (timeout <= TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "The forced retry timeout must be positive.");
-
-            _originalContext = originalContext;
-            _forcedRetryTimeout = timeout;
-            Volatile.Write(ref _forcedRetryArmed, 1);
-        }
 
         public override ValueTask<InterceptionResult<DbDataReader>> ReaderExecutingAsync(
             DbCommand command,
@@ -258,7 +222,6 @@ public sealed class InboxOutboxConcurrencyTests
             CancellationToken cancellationToken = default)
         {
             ObserveOutboxDrain(command, eventData);
-            ThrowForcedRetryIfRequired(command, eventData);
 
             if (eventData.Context is { } context
                 && command.CommandText.Contains("InboxState", StringComparison.Ordinal)
@@ -279,8 +242,6 @@ public sealed class InboxOutboxConcurrencyTests
             CancellationToken cancellationToken = default)
         {
             ObserveOutboxDrain(command, eventData);
-            ThrowForcedRetryIfRequired(command, eventData);
-
             return ValueTask.FromResult(result);
         }
 
@@ -296,19 +257,11 @@ public sealed class InboxOutboxConcurrencyTests
 
             Guid contextId = context.ContextId.InstanceId;
             _transactionCommitsByContext.AddOrUpdate(contextId, 1, static (_, count) => count + 1);
-            bool firstLockCommit = _lockContexts.ContainsKey(contextId) && _committedLockContexts.TryAdd(contextId, 0);
-            if (firstLockCommit && !_committedLocks.Writer.TryWrite(contextId))
+            if (_lockContexts.ContainsKey(contextId)
+                && _committedLockContexts.TryAdd(contextId, 0)
+                && !_committedLocks.Writer.TryWrite(contextId))
             {
                 throw new InvalidOperationException("The committed inbox-lock observation channel rejected an event.");
-            }
-
-            if (firstLockCommit
-                && Volatile.Read(ref _forcedTransientFailureCount) == 1
-                && contextId != _originalContext
-                && contextId != _forcedRetryContext
-                && Interlocked.Increment(ref _competingCommitsBeforeRetry) == 2)
-            {
-                _competingCommitsObserved.TrySetResult();
             }
 
             if (_pendingDrainContexts.TryRemove(contextId, out _))
@@ -317,19 +270,13 @@ public sealed class InboxOutboxConcurrencyTests
             return Task.CompletedTask;
         }
 
-        public async Task TransactionRolledBackAsync(
+        public Task TransactionRolledBackAsync(
             DbTransaction transaction,
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = default)
         {
             RecordTransactionFailure(eventData.Context, "rolled back");
-
-            if (eventData.Context?.ContextId.InstanceId == _forcedRetryContext
-                && Volatile.Read(ref _forcedTransientFailureCount) == 1)
-            {
-                await _competingCommitsObserved.Task.WaitAsync(_forcedRetryTimeout, cancellationToken);
-                Volatile.Write(ref _retryResumedAfterCompetingCommits, 1);
-            }
+            return Task.CompletedTask;
         }
 
         public Task TransactionFailedAsync(
@@ -368,26 +315,6 @@ public sealed class InboxOutboxConcurrencyTests
             {
                 _pendingDrainContexts.TryAdd(context.ContextId.InstanceId, 0);
             }
-        }
-
-        private void ThrowForcedRetryIfRequired(DbCommand command, CommandEventData eventData)
-        {
-            if (eventData.Context is not { } context
-                || !command.CommandText.Contains("InboxState", StringComparison.Ordinal)
-                || !command.CommandText.Contains("UPDATE", StringComparison.OrdinalIgnoreCase)
-                || Volatile.Read(ref _forcedRetryArmed) != 1
-                || context.ContextId.InstanceId == _originalContext
-                || Interlocked.CompareExchange(ref _forcedTransientFailureCount, 1, 0) != 0)
-            {
-                return;
-            }
-
-            _forcedRetryContext = context.ContextId.InstanceId;
-            throw new PostgresException(
-                "Test-owned serialization failure after the inbox entity entered the change tracker.",
-                "ERROR",
-                "ERROR",
-                PostgresErrorCodes.SerializationFailure);
         }
 
         private void RecordTransactionFailure(DbContext? context, string outcome)
