@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2076 |
+| Added | 2116 |
 | Modified | 4224 |
 | Deleted | 1424 |
 | Renamed | 2 |
@@ -907,6 +907,46 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M13-probe-in-progress-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M14-concurrency-test-setup.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_EXECUTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_MANIFEST.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_RECIPES.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/POSITIVE_EXECUTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/final-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/final-unit-locked-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/local-integration/edgar.liebold_Edgars-iMac-2_2026-08-26_07_45_19.359670.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/local-integration/edgar.liebold_Edgars-iMac-2_2026-08-26_07_45_23.779248.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/local-integration/edgar.liebold_Edgars-iMac-2_2026-08-26_07_45_26.273602.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M01-handler-null-construction.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M02-context-null-task.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M03-context-sync-decision.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M04-context-async-decision.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M05-retry-initial-unrequested-cancellation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M06-retry-attempt-unrequested-cancellation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M07-transaction-exact-timeout.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M08-transaction-active-state.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M09-transaction-external-ownership.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M10-transaction-commit-lifecycle.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M11-transaction-rollback-lifecycle.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M12-transaction-null-factory-result.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M13-transaction-default-async-flow.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M14-transaction-timeout-async-flow.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M15-transaction-negative-timeout.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/mutations/M16-requirement-projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_11.502518.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_13.026347.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_17.828431.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_20.081427.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_56.171229.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_43_59.260904.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_00.830883.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_04.837623.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_06.396971.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_24.651545.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1A/F1A_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
