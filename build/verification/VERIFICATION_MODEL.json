@@ -23,8 +23,7 @@
       "members": [
         "rabbitmq",
         "activemq",
-        "sql-transport",
-        "entity-framework-core"
+        "sql-transport"
       ],
       "note": "everything that runs against the pinned Compose fixture"
     },
@@ -58,11 +57,6 @@
         "sql-transport"
       ]
     },
-    "entity-framework": {
-      "members": [
-        "entity-framework-core"
-      ]
-    },
     "engineering": {
       "members": [
         "benchmarks",
@@ -76,7 +70,6 @@
     "rabbitmq": "rabbitmq",
     "activemq": "activemq",
     "sql-transport": "sql-transport",
-    "entity-framework": "entity-framework",
     "benchmarks": "engineering"
   },
   "verificationClasses": {
@@ -284,35 +277,15 @@
     },
     {
       "id": "persistence-entity-framework-core",
-      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration"
       ],
-      "testProjects": [
-        "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "entity-framework",
-          "category": "entity-framework-core",
-          "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
-          "minimumExecutedCases": 154,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 2400,
-          "brokers": [
-            "mssql",
-            "postgres"
-          ],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/entity-framework-core.txt"
-        }
-      ]
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of all 90 assigned R0 obligations. EF Core behavior is verified by the native xUnit 4/MTP v2 UnitArchitecture and LocalIntegration projects.",
+      "runs": []
     },
     {
       "id": "rider-azure-event-hubs",

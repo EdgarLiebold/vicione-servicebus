@@ -47,5 +47,19 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.NativeTestSourceLayoutTests",
     "testMethod": "EveryNativeTestSourceNamespace_MirrorsItsProjectFolder"
+  },
+  {
+    "requirementId": "REQ-VSB-TIME-SOURCE-ARCHITECTURE",
+    "variantKey": "future-and-job-metadata-use-context-bound-time",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TimeSourceArchitectureTests",
+    "testMethod": "FutureAndJobMetadataPaths_UseOnlyContextBoundTimeSources"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "public-local-integration-commands-use-predeclared-floor",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "PublicLocalIntegrationProfileCommands_UseThePredeclaredFloor"
   }
 ]

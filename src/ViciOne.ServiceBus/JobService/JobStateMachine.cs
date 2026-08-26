@@ -503,7 +503,7 @@ namespace ViciOne.ServiceBus
 
             var cronExpression = new CronExpression(context.Saga.CronExpression) { TimeZone = timeZone };
 
-            var now = DateTimeOffset.UtcNow;
+            DateTimeOffset now = context.GetTimeProvider().GetUtcNow();
 
             DateTimeOffset? nextStartDate = cronExpression.GetTimeAfter(context.Saga.StartDate.HasValue
                 ? context.Saga.StartDate.Value > now
@@ -803,7 +803,7 @@ namespace ViciOne.ServiceBus
             return binder
                 .Then(context =>
                 {
-                    context.Saga.Faulted = DateTime.UtcNow;
+                    context.Saga.Faulted = context.GetUtcDateTime();
                     context.Saga.Reason = getReason(context.Message);
                 })
                 .Publish<JobSaga, T, JobCanceled>(context => new JobCanceledEvent

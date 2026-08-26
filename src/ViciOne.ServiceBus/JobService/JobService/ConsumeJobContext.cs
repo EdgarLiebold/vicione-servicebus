@@ -2,7 +2,6 @@
 namespace ViciOne.ServiceBus.JobService;
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +24,8 @@ public class ConsumeJobContext<TJob> :
     readonly Uri _instanceAddress;
     readonly JobOptions<TJob> _jobOptions;
     readonly CancellationTokenSource _source;
-    readonly Stopwatch _stopwatch;
+    readonly long _startedAt;
+    readonly TimeProvider _timeProvider;
     string? _cancellationReason;
     JobProgressBuffer? _updateBuffer;
 
@@ -50,8 +50,9 @@ public class ConsumeJobContext<TJob> :
 
         JobProperties = jobProperties;
 
-        _source = new CancellationTokenSource(jobOptions.JobTimeout);
-        _stopwatch = Stopwatch.StartNew();
+        _timeProvider = context.GetTimeProvider();
+        _source = new CancellationTokenSource(jobOptions.JobTimeout, _timeProvider);
+        _startedAt = _timeProvider.GetTimestamp();
     }
 
     public override CancellationToken CancellationToken => _source.Token;
@@ -87,7 +88,7 @@ public class ConsumeJobContext<TJob> :
         {
             JobId = JobId,
             AttemptId = AttemptId,
-            Timestamp = DateTime.UtcNow,
+            Timestamp = UtcNow,
             Reason = string.IsNullOrWhiteSpace(_cancellationReason) ? JobCancellationReasons.ConsumerInitiated : _cancellationReason!
         }).ConfigureAwait(false);
     }
@@ -96,7 +97,7 @@ public class ConsumeJobContext<TJob> :
     {
         LogContext.Debug?.Log("Job Started: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
-        var timestamp = DateTime.UtcNow;
+        var timestamp = UtcNow;
 
         await Notify<JobAttemptStarted>(new JobAttemptStartedEvent
         {
@@ -130,7 +131,7 @@ public class ConsumeJobContext<TJob> :
             JobId = JobId,
             AttemptId = AttemptId,
             RetryAttempt = RetryAttempt,
-            Timestamp = DateTime.UtcNow,
+            Timestamp = UtcNow,
             Duration = ElapsedTime,
             InstanceProperties = _jobOptions.InstanceProperties,
             JobTypeProperties = _jobOptions.JobTypeProperties
@@ -155,7 +156,7 @@ public class ConsumeJobContext<TJob> :
             AttemptId = AttemptId,
             RetryAttempt = RetryAttempt,
             RetryDelay = delay,
-            Timestamp = DateTime.UtcNow,
+            Timestamp = UtcNow,
             Exceptions = new FaultExceptionInfo(exception)
         }).ConfigureAwait(false);
     }
@@ -167,11 +168,11 @@ public class ConsumeJobContext<TJob> :
     public long? LastProgressLimit { get; }
     public TJob Job { get; }
 
-    public TimeSpan ElapsedTime => _stopwatch.Elapsed;
+    public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_startedAt);
 
     public Task SetJobProgress(long value, long? limit)
     {
-        _updateBuffer ??= new JobProgressBuffer(this, _jobOptions.ProgressBuffer);
+        _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
 
         return _updateBuffer.Update(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), CancellationToken.None);
     }
@@ -203,6 +204,8 @@ public class ConsumeJobContext<TJob> :
     public IPropertyCollection JobProperties { get; set; }
     public IPropertyCollection JobTypeProperties => _jobOptions.JobTypeProperties;
     public IPropertyCollection InstanceProperties => _jobOptions.InstanceProperties;
+
+    DateTime UtcNow => _timeProvider.GetUtcNow().UtcDateTime;
 
     async Task Notify<T>(T message)
         where T : class

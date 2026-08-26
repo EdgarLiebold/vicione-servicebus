@@ -86,6 +86,10 @@ services:
 
   postgres:
     image: postgres:16@sha256:95206741a5b214807675e14165369d05b93a9cf692223b616d07cca227e74b0b
+    # Npgsql promotes an ambient transaction that also contains a volatile ServiceBus enlistment to
+    # PostgreSQL's prepared-transaction protocol. The default image disables that protocol, which
+    # would test a deliberately incomplete server instead of the supported System.Transactions path.
+    command: ["postgres", "-c", "max_prepared_transactions=100"]
     environment:
       POSTGRES_USER: ${VICIONE_SERVICEBUS_PG_USER:?run credentials are missing, source new-run-credentials.sh}
       POSTGRES_PASSWORD: ${VICIONE_SERVICEBUS_PG_PASS:?run credentials are missing, source new-run-credentials.sh}

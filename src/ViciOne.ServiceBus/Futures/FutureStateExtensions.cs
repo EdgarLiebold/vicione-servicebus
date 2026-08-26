@@ -113,7 +113,7 @@ namespace ViciOne.ServiceBus
 
         public static void SetCompleted(this BehaviorContext<FutureState> context, Guid id)
         {
-            var timestamp = context.SentTime ?? DateTime.UtcNow;
+            var timestamp = context.SentTime ?? context.GetUtcDateTime();
 
             var future = context.Saga;
 
@@ -130,7 +130,7 @@ namespace ViciOne.ServiceBus
 
         public static void SetFaulted(this BehaviorContext<FutureState> context, Guid id, DateTime? timestamp = default)
         {
-            timestamp ??= context.SentTime ?? DateTime.UtcNow;
+            timestamp ??= context.SentTime ?? context.GetUtcDateTime();
 
             var future = context.Saga;
 
@@ -164,7 +164,7 @@ namespace ViciOne.ServiceBus
             where T : class
             where TFault : class
         {
-            var timestamp = context.SentTime ?? DateTime.UtcNow;
+            var timestamp = context.SentTime ?? context.GetUtcDateTime();
 
             if (future.HasPending())
                 future.Pending?.Remove(id);

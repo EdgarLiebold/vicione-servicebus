@@ -22,6 +22,17 @@ public static class PipeContextTimeProviderExtensions
     }
 
     /// <summary>
+    /// Returns the current UTC timestamp from the provider attached to the context. Message features
+    /// use this method as their sole fallback when the transport did not supply a sent timestamp.
+    /// </summary>
+    public static DateTime GetUtcDateTime(this PipeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return context.GetTimeProvider().GetUtcNow().UtcDateTime;
+    }
+
+    /// <summary>
     /// Sets the provider used by subsequent time-dependent decisions on this context. Middleware and
     /// deterministic tests can use the standard .NET abstraction without introducing another clock.
     /// </summary>

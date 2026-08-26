@@ -158,8 +158,8 @@ consume faults and independent process-clock regressions are covered by native t
 The remaining work is deliberately a separate path-complete product slice. Inventory and normalize
 the wall-clock reads used by `AsyncTestHarness`/`ContainerTestHarness` budgets,
 `RollingTimer`/`InactivityTestObserver`, saga polling, scheduling,
-delayed redelivery, copy-context TTL, request state, outbox/transport deadlines, health waits and
-retained adapters. Preserve domain-owned timestamp
+job-service heartbeat intervals, delayed redelivery, copy-context TTL, request state,
+outbox/transport deadlines, health waits and retained adapters. Preserve domain-owned timestamp
 providers where they are actual public behavior; replace accidental process-clock reads with the
 same standard context/provider model only after every caller and persisted/wire consequence is
 understood. Acceptance requires deterministic boundary tests, RabbitMQ and every retained affected
@@ -207,6 +207,39 @@ listener failures must not be converted into retries, faults or delivery failure
 Acceptance requires deterministic tests with throwing activity listeners at every distinct
 emission owner, one-cause mutations that remove the isolation, exact OpenTelemetry schema checks,
 all affected unfiltered native profiles, and zero behavior or public-API loss.
+
+## Normalize the job-service cron year horizon
+
+`src/ViciOne.ServiceBus/JobService/JobService/Scheduling/Defaults.cs` still derives the maximum
+accepted cron year once from the process clock. This is a parser-policy boundary, not a message,
+job-lifecycle or persistence timestamp, and must not be folded into metadata clock normalization by
+silently choosing an arbitrary fixed year.
+
+Define one stable, documented year-range contract for the job-service cron grammar after reading
+the complete parser, range expansion and next-fire calculation paths. The result must not vary with
+process start time, must preserve or deliberately expand the currently useful scheduling horizon,
+must remain bounded for memory and search complexity, and must handle the upper date boundary
+without overflow. Acceptance requires exact lower/upper/out-of-range parsing tests, wildcard and
+explicit-year performance checks, next-fire behavior at both bounds, public API documentation and
+one-cause boundary mutations.
+
+## Separate ambient and explicitly buffered transactional bus contracts
+
+`src/ViciOne.ServiceBus/Transactions/TransactionalEnlistmentBus.cs` and
+`src/ViciOne.ServiceBus/Transactions/TransactionalBus.cs` currently implement the same
+`ITransactionalBus` contract even though only the explicit buffer has a meaningful `Release`
+operation. The ambient enlistment implementation therefore exposes a member that intentionally
+throws. This is a public-API design debt, not an Entity Framework persistence defect, and must not
+be hidden in a test adapter or compatibility shim.
+
+Read the complete send/publish forwarding, ambient enlistment, commit, rollback and buffer-release
+paths and replace the shared shape with capability-specific Greenfield contracts: an ambient bus
+whose messages follow the active transaction and an explicit buffered bus whose asynchronous
+release operation is part of its own contract. API compatibility is not required, but every useful
+delivery feature must remain available and no public member may exist only to throw. Acceptance
+requires exact no-transaction, commit, rollback, duplicate-release, empty-release, cancellation and
+failure tests; public API and package comparisons; one-cause mutations for every lifecycle edge;
+and all affected unfiltered native profiles.
 
 ## Complete MessageJournal external provider validation
 

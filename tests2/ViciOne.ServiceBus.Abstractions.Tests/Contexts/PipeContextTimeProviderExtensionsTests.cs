@@ -36,6 +36,20 @@ public sealed class PipeContextTimeProviderExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONTEXT-TIME-PROVIDER", "utc-timestamp-from-context-provider")]
+    public void UtcTimestamp_UsesTheProviderAttachedToTheContext()
+    {
+        DateTimeOffset expected = new(2031, 2, 3, 4, 5, 6, TimeSpan.Zero);
+        var context = new TestPipeContext();
+        context.SetTimeProvider(new FakeTimeProvider(expected));
+
+        DateTime actual = context.GetUtcDateTime();
+
+        Assert.Equal(expected.UtcDateTime, actual);
+        Assert.Equal(DateTimeKind.Utc, actual.Kind);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONTEXT-TIME-PROVIDER", "null-boundaries")]
     public void NullContextAndProvider_AreRejectedAtThePublicBoundary()
     {
@@ -49,6 +63,10 @@ public sealed class PipeContextTimeProviderExtensionsTests
             "context",
             Assert.Throws<ArgumentNullException>(() =>
                 PipeContextTimeProviderExtensions.SetTimeProvider(null!, TimeProvider.System)).ParamName);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() =>
+                PipeContextTimeProviderExtensions.GetUtcDateTime(null!)).ParamName);
         Assert.Equal(
             "timeProvider",
             Assert.Throws<ArgumentNullException>(() => context.SetTimeProvider(null!)).ParamName);

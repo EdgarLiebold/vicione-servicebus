@@ -96,7 +96,6 @@ REQUIRED_SUPPORT_JOB_CONTRACTS = {
         "      - sql-transport",
         "      - benchmarks",
         "      - rabbitmq",
-        "      - entity-framework",
         "    steps:",
         f"      {CHECKOUT_ACTION_STEP}",
         f"      {SETUP_DOTNET_ACTION_STEP}",

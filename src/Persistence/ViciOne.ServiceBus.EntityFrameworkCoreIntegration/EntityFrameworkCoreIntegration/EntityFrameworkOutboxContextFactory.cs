@@ -128,6 +128,12 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                         //
                     }
 
+                    // An execution strategy may invoke this transaction again. Entity state from
+                    // the rolled-back unit of work must not survive into that retry; otherwise a
+                    // tracked InboxState can overwrite a newer receive count after a concurrent
+                    // delivery committed while this transaction was waiting for the row lock.
+                    _dbContext.ChangeTracker.Clear();
+
                     throw;
                 }
             }

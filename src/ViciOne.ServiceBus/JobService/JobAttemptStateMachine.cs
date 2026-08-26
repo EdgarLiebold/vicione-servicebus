@@ -301,7 +301,7 @@ namespace ViciOne.ServiceBus
                     JobId = context.Saga.JobId,
                     AttemptId = context.Saga.CorrelationId,
                     RetryAttempt = context.Saga.RetryAttempt,
-                    Timestamp = DateTime.UtcNow,
+                    Timestamp = context.GetUtcDateTime(),
                     RetryDelay = context.GetRetryDelay(),
                     Exceptions = new FaultExceptionInfo(new TimeoutException("The job status check timed out."))
                 });
@@ -316,7 +316,7 @@ namespace ViciOne.ServiceBus
                     JobId = context.Saga.JobId,
                     AttemptId = context.Saga.CorrelationId,
                     RetryAttempt = context.Saga.RetryAttempt,
-                    Timestamp = DateTime.UtcNow,
+                    Timestamp = context.GetUtcDateTime(),
                     RetryDelay = context.GetRetryDelay(),
                     Exceptions = new FaultExceptionInfo(new TimeoutException($"The job service failed to respond: {context.Saga.InstanceAddress} (Suspect)"))
                 });

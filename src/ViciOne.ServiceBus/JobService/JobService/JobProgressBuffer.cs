@@ -13,13 +13,15 @@ public class JobProgressBuffer
     readonly Channel<ProgressUpdate> _channel;
     readonly INotifyJobContext _notifyJobContext;
     readonly ProgressBufferSettings _settings;
+    readonly TimeProvider _timeProvider;
 
     readonly Task _updateTask;
     long _latestSequenceNumber;
 
-    public JobProgressBuffer(INotifyJobContext notifyJobContext, ProgressBufferSettings? settings = null)
+    public JobProgressBuffer(INotifyJobContext notifyJobContext, TimeProvider timeProvider, ProgressBufferSettings? settings = null)
     {
-        _notifyJobContext = notifyJobContext;
+        _notifyJobContext = notifyJobContext ?? throw new ArgumentNullException(nameof(notifyJobContext));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _settings = settings ?? new ProgressBufferSettings();
 
         var channelOptions = new BoundedChannelOptions(_settings.UpdateLimit)
@@ -64,7 +66,7 @@ public class JobProgressBuffer
 
     async Task ReadUpdate()
     {
-        var updateToken = new CancellationTokenSource(_settings.TimeLimit);
+        using var updateToken = new CancellationTokenSource(_settings.TimeLimit, _timeProvider);
 
         try
         {
@@ -115,10 +117,6 @@ public class JobProgressBuffer
         catch (Exception exception)
         {
             LogContext.Error?.Log(exception, "ReadUpdate faulted");
-        }
-        finally
-        {
-            updateToken.Dispose();
         }
     }
 

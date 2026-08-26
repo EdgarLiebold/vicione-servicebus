@@ -28,6 +28,27 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         Assert.Equal(1, database.Observer.StartedCount);
     }
 
+    [Theory]
+    [InlineData(true, 1)]
+    [InlineData(false, 0)]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-explicit-transaction-option-governs-execution")]
+    public async Task CreateOptimistic_ExplicitTransactionOptionGovernsExecution(
+        bool transactionEnabled,
+        int expectedStartedTransactions)
+    {
+        await using FactoryDatabase database = await FactoryDatabase.Create();
+        database.Observer.Reset();
+        ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>.CreateOptimistic(
+            database.CreateContext,
+            isTransactionEnabled: transactionEnabled);
+
+        FactorySaga loaded = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
+
+        Assert.NotNull(loaded);
+        Assert.Equal(database.VisibleSagaId, loaded.CorrelationId);
+        Assert.Equal(expectedStartedTransactions, database.Observer.StartedCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-options-govern-execution")]
     public async Task CreateOptimistic_AppliesTransactionAndQueryOptionsToExecution()

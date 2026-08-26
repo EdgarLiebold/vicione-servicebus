@@ -97,7 +97,7 @@ namespace ViciOne.ServiceBus
         {
             if (context.Saga.OverrideLimitExpiration.HasValue)
             {
-                if (context.Saga.OverrideLimitExpiration.Value <= DateTime.Now)
+                if (context.Saga.OverrideLimitExpiration.Value <= context.GetUtcDateTime())
                 {
                     context.Saga.OverrideLimitExpiration = null;
                     context.Saga.OverrideJobLimit = null;
@@ -118,7 +118,7 @@ namespace ViciOne.ServiceBus
                 return true; // duplicate assignment just acknowledge and let state machine sort it out
             }
 
-            var timestamp = DateTime.UtcNow;
+            var timestamp = context.GetUtcDateTime();
 
             List<KeyValuePair<Uri, JobTypeInstance>> expiredInstances =
                 context.Saga.Instances.Where(x => timestamp - x.Value.Updated > heartbeatTimeout).ToList();
@@ -182,7 +182,7 @@ namespace ViciOne.ServiceBus
                 var instanceAddress = context.Message.InstanceAddress;
                 if (instanceAddress != null)
                 {
-                    DateTime? instanceUpdated = context.SentTime;
+                    DateTime instanceUpdated = context.SentTime ?? context.GetUtcDateTime();
 
                     if (context.Saga.Instances.TryGetValue(instanceAddress, out var instance))
                     {
@@ -236,7 +236,7 @@ namespace ViciOne.ServiceBus
                 else if (context.Message.Kind == ConcurrentLimitKind.Override)
                 {
                     context.Saga.OverrideJobLimit = context.Message.ConcurrentJobLimit;
-                    context.Saga.OverrideLimitExpiration = DateTime.Now + (context.Message.Duration ?? TimeSpan.FromMinutes(30));
+                    context.Saga.OverrideLimitExpiration = context.GetUtcDateTime() + (context.Message.Duration ?? TimeSpan.FromMinutes(30));
 
                     LogContext.Debug?.Log("Override Concurrent Job Limit: {ConcurrencyLimit}", context.Saga.OverrideJobLimit);
                 }

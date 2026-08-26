@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
@@ -16,7 +17,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 1868;
+    private const int ExpectedUnitTestFloor = 1875;
+    private const int ExpectedLocalIntegrationTestFloor = 66;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -111,6 +113,20 @@ public sealed class TestingPlatformConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-TEST-203", "public-local-integration-commands-use-predeclared-floor")]
+    public void PublicLocalIntegrationProfileCommands_UseThePredeclaredFloor()
+    {
+        string[] commandOwners =
+        [
+            Path.Combine(RepositoryLayout.Root, "docs", "build.md"),
+            Path.Combine(RepositoryLayout.Root, ".github", "workflows", "native-tests.yml"),
+        ];
+
+        Assert.All(commandOwners, path =>
+            Assert.Equal(ExpectedLocalIntegrationTestFloor, ReadLocalIntegrationProfileFloor(path)));
+    }
+
+    [Fact]
     public void PublicBuildCommands_DoNotUseConcurrentRebuild()
     {
         string[] commandOwners =
@@ -145,5 +161,20 @@ public sealed class TestingPlatformConfigurationTests
         Assert.True(matches.Count == 1, $"expected exactly one documented Unit profile command in {path}, found {matches.Count}");
         Match match = matches[0];
         return int.Parse(match.Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static int ReadLocalIntegrationProfileFloor(string path)
+    {
+        const string localCommandPattern =
+            @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.LocalIntegration\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
+        MatchCollection matches = Regex.Matches(
+            File.ReadAllText(path),
+            localCommandPattern,
+            RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        Assert.True(
+            matches.Count == 1,
+            $"expected exactly one documented LocalIntegration profile command in {path}, found {matches.Count}");
+        return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 }

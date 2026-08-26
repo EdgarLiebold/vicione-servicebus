@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.JobService
                 {
                     JobId = context.Message.JobId,
                     AttemptId = context.Message.AttemptId,
-                    Timestamp = DateTime.UtcNow,
+                    Timestamp = context.GetUtcDateTime(),
                     Status = jobHandle.JobTask.Status switch
                     {
                         TaskStatus.RanToCompletion => JobStatus.Completed,

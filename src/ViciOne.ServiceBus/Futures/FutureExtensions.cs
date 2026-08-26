@@ -18,7 +18,7 @@ namespace ViciOne.ServiceBus
             return binder
                 .Then(context =>
                 {
-                    context.Saga.Created = DateTime.UtcNow;
+                    context.Saga.Created = context.SentTime ?? context.GetUtcDateTime();
                     context.Saga.Command = context.CreateFutureMessage(context.Message);
                     context.Saga.Location = new FutureLocation(context.Saga.CorrelationId, context.ReceiveContext.InputAddress);
 

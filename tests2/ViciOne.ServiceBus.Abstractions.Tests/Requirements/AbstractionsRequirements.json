@@ -709,6 +709,13 @@
    {
       "requirementId" : "REQ-VSB-CONTEXT-TIME-PROVIDER",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UtcTimestamp_UsesTheProviderAttachedToTheContext",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.PipeContextTimeProviderExtensionsTests",
+      "variantKey" : "utc-timestamp-from-context-provider"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONTEXT-TIME-PROVIDER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "NullContextAndProvider_AreRejectedAtThePublicBoundary",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Contexts.PipeContextTimeProviderExtensionsTests",
       "variantKey" : "null-boundaries"

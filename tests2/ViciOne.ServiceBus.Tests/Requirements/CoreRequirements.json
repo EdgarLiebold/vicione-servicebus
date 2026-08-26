@@ -2572,6 +2572,20 @@
       "variantKey" : "invalid-runtime-collaborators"
    },
    {
+      "requirementId" : "REQ-VSB-JOB-PROGRESS-TIME",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FlushDeadline_UsesTheProvidedTimeProviderAndPublishesTheLatestProgress",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobProgressBufferTests",
+      "variantKey" : "provided-clock-controls-flush-deadline"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-PROGRESS-TIME",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Constructor_RejectsMissingNotificationContextAndTimeProvider",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobProgressBufferTests",
+      "variantKey" : "required-collaborators"
+   },
+   {
       "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClock",

@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus.JobService
                     CronExpression.ValidateExpression(context.Message.Schedule.CronExpression!);
             }
 
-            return PublishJobSubmitted(context, context.Message.JobId, context.Message.Job, context.SentTime ?? DateTime.UtcNow, context.Message.Schedule,
+            return PublishJobSubmitted(context, context.Message.JobId, context.Message.Job, context.SentTime ?? context.GetUtcDateTime(), context.Message.Schedule,
                 context.Message.Properties);
         }
 
@@ -46,7 +46,7 @@ namespace ViciOne.ServiceBus.JobService
         {
             var jobId = context.RequestId ?? NewId.NextGuid();
 
-            return PublishJobSubmitted(context, jobId, context.Message, context.SentTime ?? DateTime.UtcNow, null, null);
+            return PublishJobSubmitted(context, jobId, context.Message, context.SentTime ?? context.GetUtcDateTime(), null, null);
         }
 
         async Task PublishJobSubmitted(ConsumeContext context, Guid jobId, TJob job, DateTime timestamp, RecurringJobSchedule? schedule,
