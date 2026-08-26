@@ -1,0 +1,52 @@
+test_accepts_exactly_one_canonical_unconditional_step (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_accepts_the_canonical_workflow_header (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_accepts_the_single_supported_job_environment (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_build_requires_every_restore_and_build_in_order (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_legacy_tooling_requires_every_tool_check (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_pack_requires_dependencies_commands_hash_and_upload (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_filtered_push_trigger (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_missing_pull_request_trigger (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_missing_push_trigger (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_utf8_byte_order_mark (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_workflow_path_override (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_a_workflow_pythonpath_override (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_an_additional_shell_step_that_can_replace_the_verifier (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_an_sdk_version_that_differs_from_global_json (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_an_uncontrolled_job_environment (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_complex_job_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_complex_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_conditional_step (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_continue_on_error (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_double_quoted_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_duplicate_job_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_duplicate_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_duplicate_verification_steps (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_elevated_workflow_permissions (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_escaped_double_quoted_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_escaped_job_level_defaults (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_hidden_job_controls_after_steps (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_job_level_default_shell_that_swallows_failure (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_job_level_skip (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_missing_verification_step (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_quoted_job_level_condition (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_quoted_job_level_defaults (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_reordered_job_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_shell_composition (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_single_quoted_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_tagged_top_level_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_top_level_anchors_and_merge_keys (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_workflow_concurrency_controls (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_workflow_level_default_shell_that_swallows_every_failure (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_workflow_level_defaults_after_the_jobs_section (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_rejects_wrong_selection (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_repository_model_and_required_workflow_are_consistent (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_required_support_jobs_match_the_repository_contract (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_required_support_jobs_reject_noop_bodies (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_required_support_jobs_reject_quoted_controls (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_sdk_binding_accepts_another_matching_stable_version (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+test_sdk_binding_rejects_a_global_json_only_change (tools.ci.tests.test_verification_model.VerificationWorkflowBoundaryTests) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 1.379s
+
+OK
