@@ -25,11 +25,14 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
             configure: configurator => configurator.ReceiveEndpoint("quartz-redelivery-input", endpoint =>
             {
                 endpoint.UseScheduledRedelivery(redelivery => redelivery.Intervals(TimeSpan.Zero));
-                endpoint.Handler<RedeliveryPayload>(context =>
+                endpoint.UseExecute(context =>
                 {
                     if (Interlocked.Increment(ref attempts) == 1)
                         throw new OperationCanceledException("dependency canceled its operation", context.CancellationToken);
+                });
 
+                endpoint.Handler<RedeliveryPayload>(context =>
+                {
                     delivered.TrySetResult(new RedeliveryObservation(
                         context.GetRedeliveryCount(),
                         context.CancellationToken.IsCancellationRequested));
