@@ -2001,3 +2001,13 @@ The helper now samples `(count, signal task)` atomically under the owning transi
 on that coherent snapshot. This is a test-infrastructure correction discovered by the full gate,
 not an Azure Table product workaround. The focused KillSwitch class then passed 17/17 and the
 unfiltered UnitArchitecture rerun passed 1946/1946 with zero skip.
+
+The independent frozen reviews found four additional boundaries before final acceptance. Requested
+caller cancellation must be classified from the forwarded caller token's requested state; an SDK
+or HTTP layer may lawfully attach a linked or default token to its `OperationCanceledException`.
+The public Greenfield configuration surface must say `TableClientFactory`, while the saga-specific
+provider abstraction remains internal and uses only current `TableClient` vocabulary. The journal
+concurrency test must hold all eight real Azurite `$batch` requests after their shared lease read and
+query so exactly one ETag owner succeeds and seven receive 412. Separately, a hermetic recording
+`TableClient` must prove that lease update, every required prune and the new entry cross one ordered
+`SubmitTransactionAsync` boundary; the real-provider end-state alone cannot prove atomicity.

@@ -22,7 +22,7 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddSaga<PersistentSaga, PersistentSagaDefinition>()
-                    .AzureTableRepository(repository => repository.ConnectionFactory(() => fixture.Table));
+                    .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
@@ -74,7 +74,7 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddSagaStateMachine<ReadOnlyStateMachine, ReadOnlyState, ReadOnlyStateDefinition>()
-                    .AzureTableRepository(repository => repository.ConnectionFactory(() => fixture.Table));
+                    .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);

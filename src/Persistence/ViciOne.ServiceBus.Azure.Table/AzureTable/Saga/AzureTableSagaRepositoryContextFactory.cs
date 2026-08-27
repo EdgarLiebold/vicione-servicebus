@@ -12,27 +12,27 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
         ILoadSagaRepositoryContextFactory<TSaga>
         where TSaga : class, ISaga
     {
-        readonly ICloudTableProvider<TSaga> _cloudTableProvider;
+        readonly ITableClientProvider<TSaga> _tableClientProvider;
         readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
         readonly ISagaKeyFormatter<TSaga> _keyFormatter;
 
-        public AzureTableSagaRepositoryContextFactory(ICloudTableProvider<TSaga> cloudTableProvider,
+        internal AzureTableSagaRepositoryContextFactory(ITableClientProvider<TSaga> tableClientProvider,
             ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
             ISagaKeyFormatter<TSaga> keyFormatter)
         {
-            ArgumentNullException.ThrowIfNull(cloudTableProvider);
+            ArgumentNullException.ThrowIfNull(tableClientProvider);
             ArgumentNullException.ThrowIfNull(factory);
             ArgumentNullException.ThrowIfNull(keyFormatter);
 
-            _cloudTableProvider = cloudTableProvider;
+            _tableClientProvider = tableClientProvider;
             _factory = factory;
             _keyFormatter = keyFormatter;
         }
 
-        public AzureTableSagaRepositoryContextFactory(TableClient cloudTable,
+        public AzureTableSagaRepositoryContextFactory(TableClient tableClient,
             ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
             ISagaKeyFormatter<TSaga> keyFormatter)
-            : this(new ConstCloudTableProvider<TSaga>(cloudTable), factory, keyFormatter)
+            : this(new FixedTableClientProvider<TSaga>(tableClient), factory, keyFormatter)
         {
         }
 
@@ -41,7 +41,7 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
         {
             ArgumentNullException.ThrowIfNull(asyncMethod);
 
-            var database = _cloudTableProvider.GetCloudTable();
+            var database = _tableClientProvider.GetTableClient();
 
             var databaseContext = new AzureTableDatabaseContext<TSaga>(database, _keyFormatter);
             var repositoryContext = new AzureTableLoadSagaRepositoryContext<TSaga>(databaseContext, cancellationToken);
@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
             ArgumentNullException.ThrowIfNull(context);
             ArgumentNullException.ThrowIfNull(next);
 
-            var database = _cloudTableProvider.GetCloudTable();
+            var database = _tableClientProvider.GetTableClient();
 
             var databaseContext = new AzureTableDatabaseContext<TSaga>(database, _keyFormatter);
 

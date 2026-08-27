@@ -256,7 +256,7 @@ public sealed class AzureTableJobServiceIntegrationTests
                         .Endpoint(endpoint => endpoint.Name = $"persistent-job-{NewId.NextGuid():N}");
                     configuration.SetJobConsumerOptions(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10));
                     configuration.AddJobSagaStateMachines(options => options.FinalizeCompleted = false)
-                        .AzureTableRepository(repository => repository.ConnectionFactory(() => table.Table));
+                        .AzureTableRepository(repository => repository.TableClientFactory(() => table.Table));
                     configuration.UsingInMemory((context, bus) =>
                     {
                         if (timeProvider is not null)

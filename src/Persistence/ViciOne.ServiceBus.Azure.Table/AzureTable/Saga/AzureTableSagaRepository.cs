@@ -15,9 +15,9 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
             var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
 
-            var cloudTableProvider = new DelegateCloudTableProvider<TSaga>(tableFactory);
+            var tableClientProvider = new DelegateTableClientProvider<TSaga>(tableFactory);
 
-            var repositoryContextFactory = new AzureTableSagaRepositoryContextFactory<TSaga>(cloudTableProvider, consumeContextFactory, keyFormatter);
+            var repositoryContextFactory = new AzureTableSagaRepositoryContextFactory<TSaga>(tableClientProvider, consumeContextFactory, keyFormatter);
 
             return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
         }

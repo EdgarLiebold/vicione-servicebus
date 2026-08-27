@@ -3,9 +3,9 @@ namespace ViciOne.ServiceBus.AzureTable
     using Azure.Data.Tables;
 
 
-    public interface ICloudTableProvider<in TSaga>
+    internal interface ITableClientProvider<in TSaga>
         where TSaga : class, ISaga
     {
-        TableClient GetCloudTable();
+        TableClient GetTableClient();
     }
 }

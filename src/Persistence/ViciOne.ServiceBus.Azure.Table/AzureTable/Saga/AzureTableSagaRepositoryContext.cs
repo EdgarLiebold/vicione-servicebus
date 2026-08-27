@@ -94,9 +94,8 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
                 await _context.Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace, context.CancellationToken).ConfigureAwait(false);
             }
-            catch (OperationCanceledException exception)
-                when (context.CancellationToken.IsCancellationRequested
-                    && exception.CancellationToken == context.CancellationToken)
+            catch (OperationCanceledException)
+                when (context.CancellationToken.IsCancellationRequested)
             {
                 throw;
             }
@@ -117,9 +116,8 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
                     .DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)
                     .ConfigureAwait(false);
             }
-            catch (OperationCanceledException exception)
-                when (context.CancellationToken.IsCancellationRequested
-                    && exception.CancellationToken == context.CancellationToken)
+            catch (OperationCanceledException)
+                when (context.CancellationToken.IsCancellationRequested)
             {
                 throw;
             }

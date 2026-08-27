@@ -20,15 +20,15 @@ namespace ViciOne.ServiceBus
     public interface IAzureTableSagaRepositoryConfigurator
     {
         /// <summary>
-        /// Use a simple factory method to create the connection
+        /// Use a simple factory method to create the Azure Data Tables client.
         /// </summary>
-        /// <param name="connectionFactory"></param>
-        void ConnectionFactory(Func<TableClient> connectionFactory);
+        /// <param name="tableClientFactory">The table-client factory.</param>
+        void TableClientFactory(Func<TableClient> tableClientFactory);
 
         /// <summary>
-        /// Supply factory for retrieving the Cloud Table.
+        /// Use a service-provider-aware factory method to create the Azure Data Tables client.
         /// </summary>
-        /// <param name="connectionFactory"></param>
-        void ConnectionFactory(Func<IServiceProvider, TableClient> connectionFactory);
+        /// <param name="tableClientFactory">The table-client factory.</param>
+        void TableClientFactory(Func<IServiceProvider, TableClient> tableClientFactory);
     }
 }

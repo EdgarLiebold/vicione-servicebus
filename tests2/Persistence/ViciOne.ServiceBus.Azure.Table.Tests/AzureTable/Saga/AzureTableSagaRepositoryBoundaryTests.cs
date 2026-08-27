@@ -54,14 +54,16 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-INSERT", "non-conflict-storage-failure-preserves-identity")]
     public async Task Insert_PropagatesANonConflictStorageFailureUnchanged()
     {
+        Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000307");
         var expected = new RequestFailedException(500, "test-owned service failure");
         var table = new FailingWriteTableClient(insertFailure: expected);
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
-            CancellationToken.None);
+            CancellationToken.None,
+            correlationId);
 
         RequestFailedException actual = await Assert.ThrowsAsync<RequestFailedException>(() =>
-            context.Insert(new BoundarySaga { CorrelationId = Guid.NewGuid() }));
+            context.Insert(new BoundarySaga { CorrelationId = correlationId }));
 
         Assert.Same(expected, actual);
         Assert.Equal(500, actual.Status);
@@ -85,14 +87,28 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     }
 
     [Theory]
-    [InlineData(WriteOperation.Update)]
-    [InlineData(WriteOperation.Delete)]
+    [InlineData(WriteOperation.Update, DependencyCancellationToken.Caller)]
+    [InlineData(WriteOperation.Delete, DependencyCancellationToken.Caller)]
+    [InlineData(WriteOperation.Update, DependencyCancellationToken.Default)]
+    [InlineData(WriteOperation.Delete, DependencyCancellationToken.Default)]
+    [InlineData(WriteOperation.Update, DependencyCancellationToken.Linked)]
+    [InlineData(WriteOperation.Delete, DependencyCancellationToken.Linked)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CANCELLATION", "write-propagates-caller-cancellation-token-and-instance")]
-    public async Task Write_PropagatesCallerCancellationWithTheExactTokenAndException(WriteOperation operation)
+    public async Task Write_PropagatesCallerCancellationWithTheExactTokenAndException(
+        WriteOperation operation,
+        DependencyCancellationToken dependencyToken)
     {
         using var caller = new CancellationTokenSource();
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(caller.Token);
         caller.Cancel();
-        var expected = new OperationCanceledException("caller canceled", innerException: null, caller.Token);
+        CancellationToken exceptionToken = dependencyToken switch
+        {
+            DependencyCancellationToken.Caller => caller.Token,
+            DependencyCancellationToken.Default => default,
+            DependencyCancellationToken.Linked => linked.Token,
+            _ => throw new ArgumentOutOfRangeException(nameof(dependencyToken), dependencyToken, null),
+        };
+        var expected = new OperationCanceledException("caller canceled", innerException: null, exceptionToken);
         var table = new FailingWriteTableClient(updateFailure: expected, deleteFailure: expected);
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
@@ -106,8 +122,10 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             ExecuteWrite(context, sagaContext, operation));
 
         Assert.Same(expected, actual);
-        Assert.Equal(caller.Token, actual.CancellationToken);
+        Assert.Equal(exceptionToken, actual.CancellationToken);
         Assert.Equal(caller.Token, table.ObservedCancellationToken);
+        if (dependencyToken is not DependencyCancellationToken.Caller)
+            Assert.NotEqual(caller.Token, actual.CancellationToken);
     }
 
     [Theory]
@@ -290,6 +308,13 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     {
         Update,
         Delete,
+    }
+
+    public enum DependencyCancellationToken
+    {
+        Caller,
+        Default,
+        Linked,
     }
 
     private sealed class FailingLoadTableClient(OperationCanceledException failure) : TableClient

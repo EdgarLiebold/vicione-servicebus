@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1946 predeclared unfiltered cases;
+- `UnitArchitecture`: 1953 predeclared unfiltered cases;
 - `LocalIntegration`: 87 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1631,7 +1631,7 @@ the native suite or carried visibly by that external work item, never by a hidde
 
 Work from the clean accepted commit `1d63a7adca71e9e3bac135240d3ff979f7121de1` (tree
 `0b024b527475282d378585acd00eea7817a128e7`) under architecture assignment
-`PO-2026-08-27-01`. This cohort owns exactly `OBL-R0-PER-0400..0430` and `0450..0452` plus
+`PO-2026-08-27-01`. This cohort owns exactly `OBL-R0-PER-0400..0430` and `0450..0457` plus
 source-derived gaps in the complete Azure Table product path.
 
 1. Centralize the Table key contract and validate both built-in and caller-supplied saga keys before

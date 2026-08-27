@@ -194,7 +194,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
                     configuration.SetKebabCaseEndpointNameFormatter();
                     configuration.AddFuture<TransformValueFuture>();
                     configuration.AddSagaRepository<FutureState>()
-                        .AzureTableRepository(repository => repository.ConnectionFactory(() => table.Table));
+                        .AzureTableRepository(repository => repository.TableClientFactory(() => table.Table));
                     configuration.UsingInMemory((context, bus) =>
                     {
                         bus.ReceiveEndpoint(executeQueueName, endpoint =>

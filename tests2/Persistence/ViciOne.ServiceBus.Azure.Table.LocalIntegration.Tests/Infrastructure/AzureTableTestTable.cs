@@ -19,7 +19,8 @@ internal sealed class AzureTableTestTable : IAsyncDisposable
 
     public static async Task<AzureTableTestTable> CreateAsync(
         string purpose,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        TableClientOptions? clientOptions = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(purpose);
 
@@ -28,7 +29,9 @@ internal sealed class AzureTableTestTable : IAsyncDisposable
         AzureTableLocalOptions azureTable = options.LocalInfrastructure!.AzureTable!;
         var endpoint = new Uri($"http://{azureTable.Host}:{azureTable.Port}/{azureTable.AccountName}");
         var credential = new TableSharedKeyCredential(azureTable.AccountName, azureTable.AccountKey);
-        var service = new TableServiceClient(endpoint, credential);
+        var service = clientOptions is null
+            ? new TableServiceClient(endpoint, credential)
+            : new TableServiceClient(endpoint, credential, clientOptions);
         string prefix = new(purpose.Where(char.IsLetterOrDigit).ToArray());
         if (prefix.Length == 0 || !char.IsLetter(prefix[0]))
             prefix = $"T{prefix}";

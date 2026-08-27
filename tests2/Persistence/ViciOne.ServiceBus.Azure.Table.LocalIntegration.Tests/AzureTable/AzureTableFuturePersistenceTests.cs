@@ -604,7 +604,7 @@ public sealed class AzureTableFuturePersistenceTests
                     configuration.AddFuture<ComposedFuture>();
 
                     configuration.AddSagaRepository<FutureState>()
-                        .AzureTableRepository(repository => repository.ConnectionFactory(() => table.Table));
+                        .AzureTableRepository(repository => repository.TableClientFactory(() => table.Table));
                     configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
                 });
                 ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);

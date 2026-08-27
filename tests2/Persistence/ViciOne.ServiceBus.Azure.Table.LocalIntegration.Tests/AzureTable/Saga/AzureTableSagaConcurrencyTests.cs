@@ -26,7 +26,7 @@ public sealed class AzureTableSagaConcurrencyTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddSagaStateMachine<ConcurrentStateMachine, ConcurrentState, ConcurrentStateDefinition>()
-                    .AzureTableRepository(repository => repository.ConnectionFactory(() => fixture.Table));
+                    .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);

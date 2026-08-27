@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Configuration
     using Azure.Data.Tables;
     using AzureTable;
     using AzureTable.Saga;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Saga;
 
@@ -14,29 +15,29 @@ namespace ViciOne.ServiceBus.Configuration
         ISpecification
         where TSaga : class, ISaga
     {
-        Func<IServiceProvider, TableClient> _connectionFactory;
+        Func<IServiceProvider, TableClient> _tableClientFactory;
 
         Func<IServiceProvider, ISagaKeyFormatter<TSaga>> _formatterFactory = provider =>
             new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name);
 
         /// <summary>
-        /// Supply factory for retrieving the Cloud Table.
+        /// Supply a factory for retrieving the Azure Data Tables client.
         /// </summary>
-        /// <param name="connectionFactory"></param>
-        public void ConnectionFactory(Func<TableClient> connectionFactory)
+        /// <param name="tableClientFactory">The table-client factory.</param>
+        public void TableClientFactory(Func<TableClient> tableClientFactory)
         {
-            ArgumentNullException.ThrowIfNull(connectionFactory);
-            _connectionFactory = provider => connectionFactory();
+            ArgumentNullException.ThrowIfNull(tableClientFactory);
+            _tableClientFactory = provider => tableClientFactory();
         }
 
         /// <summary>
-        /// Supply factory for retrieving the Cloud Table.
+        /// Supply a service-provider-aware factory for retrieving the Azure Data Tables client.
         /// </summary>
-        /// <param name="connectionFactory"></param>
-        public void ConnectionFactory(Func<IServiceProvider, TableClient> connectionFactory)
+        /// <param name="tableClientFactory">The table-client factory.</param>
+        public void TableClientFactory(Func<IServiceProvider, TableClient> tableClientFactory)
         {
-            ArgumentNullException.ThrowIfNull(connectionFactory);
-            _connectionFactory = connectionFactory;
+            ArgumentNullException.ThrowIfNull(tableClientFactory);
+            _tableClientFactory = tableClientFactory;
         }
 
         /// <summary>
@@ -51,19 +52,32 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            if (_connectionFactory == null)
-                yield return this.Failure("ConnectionFactory", "must be specified");
+            if (_tableClientFactory == null)
+                yield return this.Failure("TableClientFactory", "must be specified");
         }
 
         public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
         {
             ArgumentNullException.ThrowIfNull(configurator);
 
-            configurator.TryAddSingleton<ICloudTableProvider<TSaga>>(provider => new ConstCloudTableProvider<TSaga>(_connectionFactory(provider)));
+            configurator.TryAddSingleton<ITableClientProvider<TSaga>>(provider =>
+                new FixedTableClientProvider<TSaga>(_tableClientFactory(provider)));
             configurator.TryAddSingleton(_formatterFactory);
             configurator.RegisterLoadSagaRepository<TSaga, AzureTableSagaRepositoryContextFactory<TSaga>>();
             configurator.RegisterSagaRepository<TSaga, DatabaseContext<TSaga>, SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>,
                 AzureTableSagaRepositoryContextFactory<TSaga>>();
+
+            // The provider stays assembly-internal so the public API exposes only TableClient vocabulary.
+            // Register the factory explicitly because the default DI activator considers public constructors
+            // only and would otherwise try to resolve the public TableClient constructor directly.
+            configurator.AddScoped(provider => new AzureTableSagaRepositoryContextFactory<TSaga>(
+                provider.GetRequiredService<ITableClientProvider<TSaga>>(),
+                provider.GetRequiredService<ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>>(),
+                provider.GetRequiredService<ISagaKeyFormatter<TSaga>>()));
+            configurator.Replace(ServiceDescriptor.Scoped<ILoadSagaRepositoryContextFactory<TSaga>>(provider =>
+                provider.GetRequiredService<AzureTableSagaRepositoryContextFactory<TSaga>>()));
+            configurator.Replace(ServiceDescriptor.Scoped<ISagaRepositoryContextFactory<TSaga>>(provider =>
+                provider.GetRequiredService<AzureTableSagaRepositoryContextFactory<TSaga>>()));
         }
     }
 }

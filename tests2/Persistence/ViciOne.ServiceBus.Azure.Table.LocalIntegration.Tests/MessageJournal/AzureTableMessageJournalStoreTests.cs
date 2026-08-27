@@ -2,6 +2,8 @@ namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal;
 
 using System.Text.Json;
 using global::Azure;
+using global::Azure.Core;
+using global::Azure.Core.Pipeline;
 using global::Azure.Data.Tables;
 using ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AzureTable.MessageJournal;
@@ -169,20 +171,40 @@ public sealed class AzureTableMessageJournalStoreTests
     public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacity()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
+        const int writerCount = 8;
+        var barrier = new BatchSubmitBarrierPolicy(writerCount, OperationTimeout());
+        var clientOptions = new TableClientOptions();
+        clientOptions.AddPolicy(barrier, HttpPipelinePosition.PerCall);
+        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync(
+            "Journal",
+            cancellationToken,
+            clientOptions);
         var store = CreateStore(fixture.Table, Limits(maximumEntries: 1));
         var observedAt = new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
 
-        Task<Exception?>[] attempts = Enumerable.Range(0, 8)
+        Task<Exception?>[] attempts = Enumerable.Range(0, writerCount)
             .Select(index => TryAppendAsync(
                 store,
                 Entry(Guid.CreateVersion7(), observedAt.AddTicks(index)),
                 cancellationToken))
             .ToArray();
-        Exception?[] outcomes = await Task.WhenAll(attempts);
+        Exception? barrierFailure = await Record.ExceptionAsync(() =>
+            barrier.WaitUntilAllBatchSubmitsArrive(cancellationToken));
+        barrier.Release();
+        Exception?[]? outcomes = null;
+        Exception? completionFailure = await Record.ExceptionAsync(async () =>
+        {
+            outcomes = await Task.WhenAll(attempts)
+                .WaitAsync(OperationTimeout(), cancellationToken);
+        });
 
+        Assert.Null(barrierFailure);
+        Assert.Null(completionFailure);
+        Assert.NotNull(outcomes);
+        Assert.Equal(writerCount, barrier.ArrivalCount);
         Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken));
-        Assert.Contains(outcomes, outcome => outcome is null);
+        Assert.Single(outcomes, outcome => outcome is null);
+        Assert.Equal(writerCount - 1, outcomes.Count(outcome => outcome is not null));
         Assert.All(outcomes.Where(outcome => outcome is not null), outcome =>
         {
             RequestFailedException conflict = Assert.IsAssignableFrom<RequestFailedException>(outcome);
@@ -314,5 +336,53 @@ public sealed class AzureTableMessageJournalStoreTests
     }
 
     private sealed record JournalProbe(string Source);
+
+    private sealed class BatchSubmitBarrierPolicy(int expectedArrivals, TimeSpan operationTimeout) :
+        HttpPipelinePolicy
+    {
+        private readonly TaskCompletionSource _allArrived =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _arrivalCount;
+
+        public int ArrivalCount => Volatile.Read(ref _arrivalCount);
+
+        public override void Process(
+            HttpMessage message,
+            ReadOnlyMemory<HttpPipelinePolicy> pipeline) =>
+            throw new InvalidOperationException("The batch barrier supports asynchronous requests only.");
+
+        public override async ValueTask ProcessAsync(
+            HttpMessage message,
+            ReadOnlyMemory<HttpPipelinePolicy> pipeline)
+        {
+            if (message.Request.Method == RequestMethod.Post
+                && message.Request.Uri.ToUri().AbsolutePath.EndsWith("/$batch", StringComparison.Ordinal))
+            {
+                int arrivals = Interlocked.Increment(ref _arrivalCount);
+                if (arrivals > expectedArrivals)
+                    throw new InvalidOperationException("More batch submits arrived than the test declared.");
+                if (arrivals == expectedArrivals)
+                    _allArrived.TrySetResult();
+
+                await _release.Task
+                    .WaitAsync(operationTimeout, message.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            await ProcessNextAsync(message, pipeline).ConfigureAwait(false);
+        }
+
+        public async Task WaitUntilAllBatchSubmitsArrive(CancellationToken cancellationToken) =>
+            await _allArrived.Task
+                .WaitAsync(operationTimeout, cancellationToken)
+                .ConfigureAwait(false);
+
+        public void Release()
+        {
+            _release.TrySetResult();
+        }
+    }
 
 }
