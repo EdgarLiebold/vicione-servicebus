@@ -31,30 +31,30 @@ namespace ViciOne.ServiceBus.Caching.Internals
             get
             {
                 Used();
-                return _value;
+                return Volatile.Read(ref _value);
             }
         }
 
         public bool HasValue => true;
-        public bool IsValid => _value.Status == TaskStatus.RanToCompletion;
+        public bool IsValid => Volatile.Read(ref _value).Status == TaskStatus.RanToCompletion;
 
-        public Bucket<TValue> Bucket => _bucket;
-        public IBucketNode<TValue> Next => _next;
+        public Bucket<TValue> Bucket => Volatile.Read(ref _bucket);
+        public IBucketNode<TValue> Next => Volatile.Read(ref _next);
 
         public Task<TValue> GetValue(IPendingValue<TValue> pendingValue)
         {
-            return _value;
+            return Volatile.Read(ref _value);
         }
 
         public void SetBucket(Bucket<TValue> bucket, IBucketNode<TValue> next)
         {
-            _bucket = bucket;
-            _next = next;
+            Volatile.Write(ref _next, next);
+            Volatile.Write(ref _bucket, bucket);
         }
 
         public void AssignToBucket(Bucket<TValue> bucket)
         {
-            _bucket = bucket;
+            Volatile.Write(ref _bucket, bucket);
         }
 
         public bool TryEvict(out TValue value)
@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             value = storedValue.GetAwaiter().GetResult();
 
-            _bucket = null;
+            Volatile.Write(ref _bucket, null);
 
             // The owning bucket still needs the link to traverse past this tombstone.
             // Pop clears it when the bucket is compacted.
@@ -84,16 +84,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         public IBucketNode<TValue> Pop()
         {
-            IBucketNode<TValue> next = _next;
-
-            _next = null;
-
-            return next;
+            return Interlocked.Exchange(ref _next, null);
         }
 
         void Used()
         {
-            _bucket?.Used(this);
+            Volatile.Read(ref _bucket)?.Used(this);
         }
 
 

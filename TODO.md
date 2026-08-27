@@ -106,6 +106,22 @@ one engine and one naming model at the end, no compatibility wrapper left behind
 native profiles, transport integration tests, package comparison, and targeted concurrency
 mutations.
 
+## Separate cache index projection from external observation
+
+`GreenCache<T>` currently uses the same observer fan-out for correctness-critical index projection
+and optional external observers. Concurrent operations may publish those callbacks concurrently and
+without a global order; the public contract now states that honestly. Do not add an unbounded
+single-drainer queue: a blocked observer would let committed values and closures accumulate without
+backpressure, and catch-all isolation would also hide a failed index key projection.
+
+Normalize this as a dedicated API slice, preferably together with the cache-engine consolidation.
+Give internal index projection its own fail-closed correctness path and define a separate bounded,
+backpressure-aware external notification contract with an explicit failure channel, reentrancy rule
+and ordering guarantee. Preserve complete observer fan-out and the current index generation guards.
+Acceptance requires hostile key providers, blocking/throwing/reentrant observers, concurrent
+add/remove/clear, bounded memory under backpressure, exact index consistency, and one-cause
+mutations for ordering, failure isolation and queue bounds.
+
 ## Scope System.Text.Json options per bus
 
 `SystemTextJsonMessageSerializer.Options` is mutable process-global state, and

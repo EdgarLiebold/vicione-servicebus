@@ -150,7 +150,14 @@ namespace ViciOne.ServiceBus.Caching.Internals
         public void Rebucket(IBucketNode<TValue> node)
         {
             lock (_lock)
+            {
+                Bucket<TValue> sourceBucket = node.Bucket;
+                if (!node.IsValid || sourceBucket == null || ReferenceEquals(sourceBucket, _currentBucket))
+                    return;
+
                 node.AssignToBucket(_currentBucket);
+                sourceBucket.ValueUsed();
+            }
         }
 
         public ConnectHandle Connect(ICacheValueObserver<TValue> observer)
@@ -394,9 +401,11 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
                 var expiration = now - _maxAge;
                 var aged = now - _minAge;
-                while (AreLowOnBuckets
-                       || bucket.HasExpired(expiration)
-                       || (itemsAboveCapacity > 0 && bucket.IsOldEnough(aged)))
+                while (!IsCurrentBucketOldest
+                       && bucket.IsOldEnough(aged)
+                       && (AreLowOnBuckets
+                           || bucket.HasExpired(expiration)
+                           || itemsAboveCapacity > 0))
                 {
                     IBucketNode<TValue> node = bucket.Head;
 
@@ -428,14 +437,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
                         node = next;
                     }
 
-                    if (IsCurrentBucketOldest)
-                        break;
-
                     bucket = _buckets[++OldestBucketIndex];
                 }
 
                 if (CanOpenBucketWithoutForcingEviction)
                     OpenBucket(++CurrentBucketIndex, now);
+
             }
             finally
             {
@@ -512,6 +519,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             _ = DisposeEvictedValue(value);
         }
+
 
         static void ScheduleResetRelease(IReadOnlyList<EvictedValue> evictedValues)
         {

@@ -1,7 +1,11 @@
 namespace ViciOne.ServiceBus.Caching
 {
     /// <summary>
-    /// Observes behavior within the cache
+    /// Observes behavior within the cache. Notifications from concurrent cache operations may be
+    /// concurrent and are not globally ordered; implementations must therefore be thread-safe.
+    /// Cache state is committed before notification and is never rolled back by an observer
+    /// exception. Synchronous operations may propagate the first observer failure after every
+    /// observer has been called.
     /// </summary>
     /// <typeparam name="TValue">The value type</typeparam>
     public interface ICacheValueObserver<TValue>
@@ -12,7 +16,6 @@ namespace ViciOne.ServiceBus.Caching
         /// </summary>
         /// <param name="node">The cached node</param>
         /// <param name="value">The cached value, to avoid awaiting</param>
-        /// <returns>An awaitable task for the observer</returns>
         void ValueAdded(INode<TValue> node, TValue value);
 
         /// <summary>
@@ -20,7 +23,6 @@ namespace ViciOne.ServiceBus.Caching
         /// </summary>
         /// <param name="node">The cached node</param>
         /// <param name="value">The cached value, to avoid awaiting</param>
-        /// <returns>An awaitable task for the observer</returns>
         void ValueRemoved(INode<TValue> node, TValue value);
 
         /// <summary>

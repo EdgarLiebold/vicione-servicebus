@@ -229,6 +229,54 @@ public sealed class GreenCacheCapacityTests
             Assert.Same(value, await index.Get(value.Id));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-RETENTION", "stalled-current-bucket-honors-minimum-age")]
+    public void FreshValueInAStalledCurrentBucket_SurvivesUntilItsMinimumAgeElapses()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 1,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
+        {
+            BucketCount = 1,
+            CurrentTime = DateTime.UnixEpoch,
+            TimeSlots = 1,
+        };
+        var pendingCleanup = new Queue<Action>();
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
+        var observer = new RemovedValueObserver<CacheValue>();
+        using ConnectHandle connection = cache.Connect(observer);
+
+        cache.Add(new CacheValue("old-0", "The first old value"));
+        cache.Add(new CacheValue("old-1", "The second old value"));
+        cache.Add(new CacheValue("old-2", "The third old value"));
+
+        settings.CurrentTime += TimeSpan.FromMinutes(6);
+        var fresh = new CacheValue("fresh", "The fresh value in the stalled bucket");
+        cache.Add(fresh);
+        DrainPendingCleanup(pendingCleanup);
+
+        settings.CurrentTime += TimeSpan.FromSeconds(30);
+        cache.Add(new CacheValue("middle-0", "The first intermediate value"));
+        cache.Add(new CacheValue("middle-1", "The second intermediate value"));
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.DoesNotContain(fresh, observer.RemovedValues);
+
+        settings.CurrentTime += TimeSpan.FromSeconds(31);
+        cache.Add(new CacheValue("late", "The value that triggers eligible cleanup"));
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.Contains(fresh, observer.RemovedValues);
+        Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
+    }
+
     [Theory]
     [InlineData(1, false)]
     [InlineData(1, true)]
@@ -621,6 +669,24 @@ public sealed class GreenCacheCapacityTests
             if (throwOnRemoved)
                 throw new InvalidOperationException("Observer failure.");
         }
+
+        public void CacheCleared()
+        {
+        }
+    }
+
+    private sealed class RemovedValueObserver<TValue> : ICacheValueObserver<TValue>
+        where TValue : class
+    {
+        private readonly List<TValue> _removedValues = [];
+
+        public IReadOnlyList<TValue> RemovedValues => _removedValues;
+
+        public void ValueAdded(INode<TValue> node, TValue value)
+        {
+        }
+
+        public void ValueRemoved(INode<TValue> node, TValue value) => _removedValues.Add(value);
 
         public void CacheCleared()
         {

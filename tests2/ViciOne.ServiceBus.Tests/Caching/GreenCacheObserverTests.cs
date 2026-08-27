@@ -314,4 +314,5 @@ public sealed class GreenCacheObserverTests
             ReleaseValueAdded();
         }
     }
+
 }

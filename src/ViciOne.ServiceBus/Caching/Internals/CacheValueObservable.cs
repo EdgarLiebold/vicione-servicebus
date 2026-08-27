@@ -61,7 +61,6 @@ namespace ViciOne.ServiceBus.Caching.Internals
         /// Enumerate the connections invoking the callback for each connection
         /// </summary>
         /// <param name="callback">The callback</param>
-        /// <returns>An awaitable Task for the operation</returns>
         public void ForEach(Action<ICacheValueObserver<TValue>> callback)
         {
             if (callback == null)

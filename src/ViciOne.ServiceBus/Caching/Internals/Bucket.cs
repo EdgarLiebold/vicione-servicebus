@@ -8,29 +8,32 @@ namespace ViciOne.ServiceBus.Caching.Internals
     public class Bucket<TValue>
         where TValue : class
     {
+        const long ActiveTimestamp = long.MinValue;
         readonly INodeTracker<TValue> _tracker;
         int _count;
         IBucketNode<TValue> _head;
-        DateTime _startTime;
-        DateTime? _stopTime;
+        long _startTimestamp;
+        long _stopTimestamp = ActiveTimestamp;
 
         public Bucket(INodeTracker<TValue> tracker)
         {
             _tracker = tracker;
         }
 
-        public IBucketNode<TValue> Head => _head;
+        public IBucketNode<TValue> Head => Volatile.Read(ref _head);
 
-        public int Count => _count;
+        public int Count => Volatile.Read(ref _count);
 
         public bool HasExpired(DateTime expirationTime)
         {
-            return _startTime < expirationTime;
+            return Volatile.Read(ref _startTimestamp) < expirationTime.Ticks;
         }
 
         public bool IsOldEnough(DateTime agedTime)
         {
-            return _stopTime < agedTime;
+            long stopTimestamp = Volatile.Read(ref _stopTimestamp);
+
+            return stopTimestamp != ActiveTimestamp && stopTimestamp < agedTime.Ticks;
         }
 
         /// <summary>
@@ -38,22 +41,21 @@ namespace ViciOne.ServiceBus.Caching.Internals
         /// </summary>
         public void Clear()
         {
-            _head = null;
-            _count = 0;
+            Volatile.Write(ref _head, null);
+            Volatile.Write(ref _count, 0);
         }
 
         public void Stop(DateTime now)
         {
-            _stopTime = now;
+            Volatile.Write(ref _stopTimestamp, now.Ticks);
         }
 
         public void Start(DateTime now)
         {
-            _startTime = now;
-            _stopTime = default;
-
-            _head = null;
-            _count = 0;
+            Volatile.Write(ref _head, null);
+            Volatile.Write(ref _count, 0);
+            Volatile.Write(ref _startTimestamp, now.Ticks);
+            Volatile.Write(ref _stopTimestamp, ActiveTimestamp);
         }
 
         /// <summary>
@@ -63,12 +65,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
         /// <returns></returns>
         public void Push(IBucketNode<TValue> node)
         {
-            Debug.Assert(_stopTime.HasValue == false, "Bucket is stopped");
+            Debug.Assert(Volatile.Read(ref _stopTimestamp) == ActiveTimestamp, "Bucket is stopped");
 
             IBucketNode<TValue> next;
             do
             {
-                next = _head;
+                next = Volatile.Read(ref _head);
 
                 node.SetBucket(this, next);
             }
@@ -84,11 +86,14 @@ namespace ViciOne.ServiceBus.Caching.Internals
         public void Used(IBucketNode<TValue> node)
         {
             // a stopped bucket is no longer the current bucket, so give the node back to the manager
-            if (!_stopTime.HasValue)
+            if (Volatile.Read(ref _stopTimestamp) == ActiveTimestamp)
                 return;
 
             _tracker.Rebucket(node);
+        }
 
+        internal void ValueUsed()
+        {
             Interlocked.Decrement(ref _count);
         }
     }

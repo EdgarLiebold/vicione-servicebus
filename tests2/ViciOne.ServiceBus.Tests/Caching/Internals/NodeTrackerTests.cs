@@ -122,6 +122,29 @@ public sealed class NodeTrackerTests
         Assert.Equal(0, tracker.Statistics.Count);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-BUCKET", "rebucket-transfers-source-count-once")]
+    public void Rebucket_TransfersTheSourceBucketCountExactlyOnce()
+    {
+        var tracker = new NodeTracker<CacheValue>(new CacheSettings(nowProvider: () => DateTime.UnixEpoch));
+        var sourceBucket = new Bucket<CacheValue>(tracker);
+        var node = new BucketNode<CacheValue>(new CacheValue("value-1"));
+        sourceBucket.Start(DateTime.UnixEpoch);
+        sourceBucket.Push(node);
+        sourceBucket.Stop(DateTime.UnixEpoch.AddSeconds(1));
+
+        tracker.Rebucket(node);
+
+        Bucket<CacheValue> currentBucket = node.Bucket;
+        Assert.Equal(0, sourceBucket.Count);
+        Assert.NotSame(sourceBucket, currentBucket);
+
+        tracker.Rebucket(node);
+
+        Assert.Equal(0, sourceBucket.Count);
+        Assert.Same(currentBucket, node.Bucket);
+    }
+
     private static TimeSpan OperationTimeout => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
