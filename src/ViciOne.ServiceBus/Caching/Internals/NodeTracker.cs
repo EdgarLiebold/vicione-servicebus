@@ -22,6 +22,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         readonly TimeSpan _validityCheckInterval;
         BucketCollection<TValue> _buckets;
         DateTime _cacheResetTime;
+        bool _cleanupRequested;
         bool _cleanupScheduled;
         Bucket<TValue> _currentBucket;
         int _currentBucketIndex;
@@ -145,7 +146,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         bool IsCleanupRequired(DateTime now)
         {
-            return _cleanupScheduled == false && (_currentBucket.Count > _bucketSize || now > _nextValidityCheck);
+            return _currentBucket.Count > _bucketSize || now > _nextValidityCheck;
         }
 
         async Task AddNode(INodeValueFactory<TValue> nodeValueFactory)
@@ -250,6 +251,16 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 if (!IsCleanupRequired(now))
                     return;
 
+                if (_cleanupScheduled)
+                {
+                    _cleanupRequested = true;
+
+                    // Keep the bucket's size and time range bounded even when the queued cleanup
+                    // cannot acquire the lock before a producer adds more values.
+                    OpenBucket(++CurrentBucketIndex);
+                    return;
+                }
+
                 if (CurrentBucketIndex > 1000000000 || now >= _cacheResetTime)
                     Clear();
                 else
@@ -264,6 +275,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         void Cleanup(DateTime now)
         {
             var lockTaken = false;
+            var scheduleFollowUp = false;
             try
             {
                 Monitor.Enter(_lock, ref lockTaken);
@@ -319,15 +331,19 @@ namespace ViciOne.ServiceBus.Caching.Internals
             {
                 if (lockTaken)
                 {
-                    // Publish the completed cleanup before another addition can inspect the state.
-                    // Resetting this flag after releasing the lock loses the only follow-up signal
-                    // when additions arrived while the cleanup task was waiting for the lock.
-                    _cleanupScheduled = false;
+                    // Publish completion and reserve any requested follow-up atomically. Additions
+                    // that arrived while this pass was queued must not lose their cleanup signal.
+                    scheduleFollowUp = _cleanupRequested;
+                    _cleanupRequested = false;
+                    _cleanupScheduled = scheduleFollowUp;
                     Monitor.Exit(_lock);
                 }
                 else
                     Volatile.Write(ref _cleanupScheduled, false);
             }
+
+            if (scheduleFollowUp)
+                Task.Run(() => Cleanup(_nowProvider()));
         }
 
         async Task EvictNode(IBucketNode<TValue> node)
