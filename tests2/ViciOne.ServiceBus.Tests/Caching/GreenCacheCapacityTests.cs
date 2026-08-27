@@ -157,7 +157,11 @@ public sealed class GreenCacheCapacityTests
         var pendingCleanup = new Queue<Action>();
         GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
             settings,
-            pendingCleanup.Enqueue);
+            cleanup =>
+            {
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
         var observer = new CacheEventObserver<CacheValue>(
             expectedAdded: Capacity * 2,
             expectedRemoved: Capacity - cache.Statistics.BucketSize);
@@ -173,15 +177,189 @@ public sealed class GreenCacheCapacityTests
 
         Assert.Single(pendingCleanup);
 
-        var executedCleanups = 0;
-        while (pendingCleanup.TryDequeue(out Action? cleanup))
+        Assert.True(pendingCleanup.TryDequeue(out Action? firstCleanup));
+        firstCleanup();
+        Assert.NotEmpty(pendingCleanup);
+
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.Empty(pendingCleanup);
+        AssertBoundedAndNonEmpty(cache, observer, Capacity * 2);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "queued-cleanup-ring-preserves-live-values")]
+    public async Task BurstBeyondBucketRingWhileCleanupIsQueued_PreservesEveryLiveValue()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 1,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
         {
-            cleanup();
-            Assert.True(++executedCleanups <= 2, "The single-flight cleanup did not converge.");
+            BucketCount = 1,
+            CurrentTime = DateTime.UnixEpoch,
+            TimeSlots = 1,
+        };
+        var pendingCleanup = new Queue<Action>();
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
+        IIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
+        CacheValue[] values = Enumerable.Range(0, 32)
+            .Select(indexValue => new CacheValue($"key-{indexValue}", $"The key is key-{indexValue}"))
+            .ToArray();
+
+        foreach (CacheValue value in values)
+            cache.Add(value);
+
+        Assert.Single(pendingCleanup);
+        Assert.Equal(values.Length, cache.Statistics.Count);
+        Assert.Equal(values.Length, cache.GetAll().Count());
+        foreach (CacheValue value in values)
+            Assert.Same(value, await index.Get(value.Id));
+
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.Empty(pendingCleanup);
+        Assert.Equal(values.Length, cache.Statistics.Count);
+        Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
+        foreach (CacheValue value in values)
+            Assert.Same(value, await index.Get(value.Id));
+    }
+
+    [Theory]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "scheduler-rejection-falls-back-inline")]
+    public void RejectedCleanupScheduling_DoesNotStrandTheReservation(
+        int rejectedPass,
+        bool throwInsteadOfRejecting)
+    {
+        TestCacheSettings settings = CreateSettings(maximumAgeSeconds: 60);
+        var pendingCleanup = new Queue<Action>();
+        var schedulingPasses = 0;
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                int pass = ++schedulingPasses;
+                if (pass == rejectedPass)
+                {
+                    if (throwInsteadOfRejecting)
+                        throw new InvalidOperationException("The scheduler rejected the cleanup.");
+
+                    return false;
+                }
+
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
+        var observer = new CacheEventObserver<CacheValue>(
+            expectedAdded: Capacity * 2,
+            expectedRemoved: Capacity - cache.Statistics.BucketSize);
+        using ConnectHandle connection = cache.Connect(observer);
+
+        for (var indexValue = 0; indexValue < Capacity * 2; indexValue++)
+        {
+            if (indexValue % 2 == 0)
+                settings.CurrentTime += TimeSpan.FromSeconds(1);
+
+            cache.Add(new CacheValue($"key-{indexValue}", $"The key is key-{indexValue}"));
         }
 
-        Assert.Equal(2, executedCleanups);
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.True(schedulingPasses >= rejectedPass);
+        Assert.Empty(pendingCleanup);
         AssertBoundedAndNonEmpty(cache, observer, Capacity * 2);
+        Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "follow-up-handoff-remains-single-flight")]
+    public void ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 4,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
+        {
+            BucketCount = 1,
+            CurrentTime = DateTime.UnixEpoch,
+            TimeSlots = 1,
+        };
+        var pendingCleanup = new Queue<Action>();
+        GreenCache<CacheValue> cache = null!;
+        var schedulingPasses = 0;
+        cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                int pass = ++schedulingPasses;
+                if (pass == 2)
+                {
+                    for (var indexValue = 10; indexValue < 15; indexValue++)
+                        cache.Add(new CacheValue($"key-{indexValue}", $"The key is key-{indexValue}"));
+                }
+
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
+
+        for (var indexValue = 0; indexValue < 10; indexValue++)
+            cache.Add(new CacheValue($"key-{indexValue}", $"The key is key-{indexValue}"));
+
+        Assert.Single(pendingCleanup);
+        Assert.True(pendingCleanup.TryDequeue(out Action? firstCleanup));
+        firstCleanup();
+
+        Assert.Equal(2, schedulingPasses);
+        Assert.Single(pendingCleanup);
+
+        DrainPendingCleanup(pendingCleanup);
+
+        Assert.Empty(pendingCleanup);
+        Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
+        Assert.InRange(cache.Statistics.Count, 1, settings.Capacity + cache.Statistics.BucketSize);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "observer-failure-does-not-strand-cleanup")]
+    public void ObserverFailureAfterReservation_StillDispatchesTheCleanup()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 1,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
+        {
+            CurrentTime = DateTime.UnixEpoch,
+        };
+        var pendingCleanup = new Queue<Action>();
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                pendingCleanup.Enqueue(cleanup);
+                return true;
+            });
+        cache.Add(new CacheValue("key-0", "The key is key-0"));
+        ConnectHandle connection = cache.Connect(new ThrowingCacheObserver<CacheValue>());
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+            () => cache.Add(new CacheValue("key-1", "The key is key-1")));
+        connection.Disconnect();
+
+        Assert.Equal("Observer failure.", exception.Message);
+        Assert.Single(pendingCleanup);
+        DrainPendingCleanup(pendingCleanup);
+        Assert.Empty(pendingCleanup);
+        Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
     }
 
     private static TestCacheSettings CreateSettings(int maximumAgeSeconds)
@@ -202,6 +380,16 @@ public sealed class GreenCacheCapacityTests
 
     private static Task<UsageAwareCacheValue> CreateUsageAwareValue(string key) =>
         Task.FromResult(new UsageAwareCacheValue(key, $"The key is {key}"));
+
+    private static void DrainPendingCleanup(Queue<Action> pendingCleanup)
+    {
+        var executedCleanups = 0;
+        while (pendingCleanup.TryDequeue(out Action? cleanup))
+        {
+            Assert.True(++executedCleanups <= 8, "The single-flight cleanup did not converge.");
+            cleanup();
+        }
+    }
 
     private static async Task<int> FillToCount<TValue>(
         IIndex<string, TValue> index,
@@ -329,6 +517,21 @@ public sealed class GreenCacheCapacityTests
                 source.SetResult();
 
             return source;
+        }
+    }
+
+    private sealed class ThrowingCacheObserver<TValue> : ICacheValueObserver<TValue>
+        where TValue : class
+    {
+        public void ValueAdded(INode<TValue> node, TValue value) =>
+            throw new InvalidOperationException("Observer failure.");
+
+        public void ValueRemoved(INode<TValue> node, TValue value)
+        {
+        }
+
+        public void CacheCleared()
+        {
         }
     }
 }

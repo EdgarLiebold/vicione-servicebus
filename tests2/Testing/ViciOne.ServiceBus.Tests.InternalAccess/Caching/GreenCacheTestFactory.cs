@@ -6,12 +6,12 @@ public static class GreenCacheTestFactory
 {
     public static GreenCache<TValue> Create<TValue>(
         CacheSettings settings,
-        Action<Action> scheduleCleanup)
+        Func<Action, bool> tryScheduleCleanup)
         where TValue : class
     {
         ArgumentNullException.ThrowIfNull(settings);
-        ArgumentNullException.ThrowIfNull(scheduleCleanup);
+        ArgumentNullException.ThrowIfNull(tryScheduleCleanup);
 
-        return new GreenCache<TValue>(settings, scheduleCleanup);
+        return new GreenCache<TValue>(settings, tryScheduleCleanup);
     }
 }

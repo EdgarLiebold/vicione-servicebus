@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         readonly TimeSpan _minAge;
         readonly CurrentTimeProvider _nowProvider;
         readonly CacheValueObservable<TValue> _observers;
-        readonly Action<Action> _scheduleCleanup;
+        readonly Func<Action, bool> _tryScheduleCleanup;
         readonly TimeSpan _validityCheckInterval;
         BucketCollection<TValue> _buckets;
         DateTime _cacheResetTime;
@@ -31,13 +31,13 @@ namespace ViciOne.ServiceBus.Caching.Internals
         int _oldestBucketIndex;
 
         public NodeTracker(CacheSettings settings)
-            : this(settings, cleanup => Task.Run(cleanup))
+            : this(settings, TryScheduleOnThreadPool)
         {
         }
 
-        internal NodeTracker(CacheSettings settings, Action<Action> scheduleCleanup)
+        internal NodeTracker(CacheSettings settings, Func<Action, bool> tryScheduleCleanup)
         {
-            _scheduleCleanup = scheduleCleanup ?? throw new ArgumentNullException(nameof(scheduleCleanup));
+            _tryScheduleCleanup = tryScheduleCleanup ?? throw new ArgumentNullException(nameof(tryScheduleCleanup));
             _nowProvider = settings.NowProvider;
 
             _observers = new CacheValueObservable<TValue>();
@@ -175,6 +175,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         void AddValue(TValue value)
         {
             var node = new BucketNode<TValue>(value);
+            Action cleanup;
 
             lock (_lock)
             {
@@ -182,10 +183,18 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
                 Statistics.ValueAdded();
 
-                CheckCacheStatus();
+                cleanup = CheckCacheStatus();
             }
 
-            _observers.ValueAdded(node, value);
+            try
+            {
+                _observers.ValueAdded(node, value);
+            }
+            finally
+            {
+                // Once the reservation is published, observer failures must not strand it.
+                DispatchCleanup(cleanup);
+            }
         }
 
         async Task RemoveNode(IBucketNode<TValue> node)
@@ -197,9 +206,17 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
                 Statistics.ValueRemoved();
 
-                CheckCacheStatus();
+                Action cleanup = CheckCacheStatus();
 
-                _observers.ValueRemoved(node, value);
+                try
+                {
+                    _observers.ValueRemoved(node, value);
+                }
+                finally
+                {
+                    // Once the reservation is published, observer failures must not strand it.
+                    DispatchCleanup(cleanup);
+                }
 
                 switch (value)
                 {
@@ -249,34 +266,69 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
         }
 
-        void CheckCacheStatus()
+        Action CheckCacheStatus()
         {
             lock (_lock)
             {
                 var now = _nowProvider();
 
                 if (!IsCleanupRequired(now))
-                    return;
+                    return null;
 
                 if (_cleanupScheduled)
                 {
                     _cleanupRequested = true;
 
-                    // Keep the bucket's size and time range bounded even when the queued cleanup
-                    // cannot acquire the lock before a producer adds more values.
-                    OpenBucket(++CurrentBucketIndex);
-                    return;
+                    // Preserve size and time segmentation while the reserved cleanup waits, but
+                    // never wrap onto a bucket that the cleanup has not reclaimed yet.
+                    if (!AreLowOnBuckets)
+                        OpenBucket(++CurrentBucketIndex);
+
+                    return null;
                 }
 
                 if (CurrentBucketIndex > 1000000000 || now >= _cacheResetTime)
+                {
                     Clear();
+                    return null;
+                }
                 else
                 {
                     Volatile.Write(ref _cleanupScheduled, true);
 
-                    _scheduleCleanup(() => Cleanup(now));
+                    return () => Cleanup(now);
                 }
             }
+        }
+
+        void DispatchCleanup(Action cleanup)
+        {
+            if (cleanup == null)
+                return;
+
+            var invoked = 0;
+            void RunOnce()
+            {
+                if (Interlocked.Exchange(ref invoked, 1) == 0)
+                    cleanup();
+            }
+
+            var accepted = false;
+            try
+            {
+                // Ownership is offered outside the tracker lock. A rejecting or throwing
+                // scheduler leaves ownership with this thread, which completes the reserved pass
+                // inline. RunOnce also protects against a scheduler that invokes and then throws.
+                accepted = _tryScheduleCleanup(RunOnce);
+            }
+            catch
+            {
+                // The inline owner below preserves cache progress and keeps Add/Remove atomic from
+                // the caller's perspective.
+            }
+
+            if (!accepted)
+                RunOnce();
         }
 
         void Cleanup(DateTime now)
@@ -350,7 +402,20 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
 
             if (scheduleFollowUp)
-                _scheduleCleanup(() => Cleanup(_nowProvider()));
+                DispatchCleanup(() => Cleanup(_nowProvider()));
+        }
+
+        static bool TryScheduleOnThreadPool(Action cleanup)
+        {
+            try
+            {
+                _ = Task.Run(cleanup);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         async Task EvictNode(IBucketNode<TValue> node)

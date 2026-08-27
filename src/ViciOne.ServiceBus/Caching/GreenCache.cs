@@ -19,15 +19,19 @@ namespace ViciOne.ServiceBus.Caching
         /// </summary>
         /// <param name="settings">The cache settings</param>
         public GreenCache(CacheSettings settings = null)
-            : this(settings, cleanup => Task.Run(cleanup))
+            : this(new NodeTracker<TValue>(settings ?? new CacheSettings()))
         {
         }
 
-        internal GreenCache(CacheSettings settings, Action<Action> scheduleCleanup)
+        internal GreenCache(CacheSettings settings, Func<Action, bool> tryScheduleCleanup)
+            : this(new NodeTracker<TValue>(settings ?? new CacheSettings(), tryScheduleCleanup))
+        {
+        }
+
+        GreenCache(INodeTracker<TValue> nodeTracker)
         {
             _indices = new Dictionary<string, ICacheIndex<TValue>>();
-
-            _nodeTracker = new NodeTracker<TValue>(settings ?? new CacheSettings(), scheduleCleanup);
+            _nodeTracker = nodeTracker;
         }
 
         public CacheStatistics Statistics => _nodeTracker.Statistics;
