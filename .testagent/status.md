@@ -895,3 +895,37 @@ future cohorts as complete.
   central profile guard. Neither result is counted as product evidence.
 - Independent product and test/evidence re-reviews of this exact correction remain required before
   the active product worktree may advance.
+
+## Lead correction: consumed EF stop sentinel and retained cache cleanup signal
+
+- This section supersedes the final-review conclusion immediately above. The preceding correction
+  remains append-only history; its reviewers correctly found that the post-success retry-guard
+  projection had no executing owner.
+- The final technical subject is commit `2a3926b0bb906e7b89c5001a3301634414ac9acc`, tree
+  `41657e4d9ee0f472c5af5261f4c0e7f8c829dff6`. Its direct evidence child is commit
+  `d3a59f0b6a3e69d3658940574568db7e23290519`, tree
+  `9f26bfa4a31e70891967de28a15e0d5ce88ae0b0`, under
+  `ENTITY-FRAMEWORK-CORE-CORRECTION-04/`.
+- A deliberately consuming custom `IExecutionStrategy` now proves that incomplete outbox rollback
+  cannot be turned into success: one business attempt and one rollback attempt occur, the cleanup
+  failure remains observable in the consumed sentinel and the exact original business exception
+  crosses the outer boundary. M14 removes only the post-return projection and the exact owner fails.
+- The unfiltered gate then found a real pre-existing `GreenCache` race. A capacity signal arriving
+  while the single cleanup was already queued could be lost, leaving the cache permanently above
+  capacity if no later operation arrived. The tracker now retains one follow-up signal and reserves
+  it atomically while preserving single-flight cleanup. A deterministic internal scheduler seam
+  proves convergence without sleeps, wall-clock timing or a further cache operation. M15 discards
+  only that retained signal and the exact owner fails in 41 ms.
+- The final locked Engineering restore and complete Engineering Release build pass with zero
+  warnings and zero errors. UnitArchitecture passes 1888/1888; focused EF UnitArchitecture passes
+  56/56; LocalIntegration passes 70/70 against fresh PostgreSQL and Azurite; focused EF
+  LocalIntegration passes 59/59 against fresh PostgreSQL. Every accepted run has zero failure and
+  zero skip.
+- The inherited EF disposition is unchanged: 90 obligations expand to 156 execution identities;
+  77 execute, 39 are provider-neutral and 40 SQL Server/Azure SQL identities remain visibly
+  `EXTERNAL_PENDING`. The complete EF mutation set is now M01 through M15.
+- Two failed full runs are retained only as fail-closed diagnostics: the first rejected a stale CI
+  floor and the second exposed the lost cache cleanup signal. Neither is counted as positive
+  evidence; both causes are corrected in the final technical commit.
+- Independent product and test/evidence reviews of this exact technical/evidence pair remain the
+  final acceptance gate. No active product worktree or remote reference has advanced yet.
