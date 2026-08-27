@@ -2011,3 +2011,122 @@ concurrency test must hold all eight real Azurite `$batch` requests after their 
 query so exactly one ETag owner succeeds and seven receive 412. Separately, a hermetic recording
 `TableClient` must prove that lease update, every required prune and the new entry cross one ordered
 `SubmitTransactionAsync` boundary; the real-provider end-state alone cannot prove atomicity.
+
+## AWS native transport and persistence closure research
+
+The accepted Azure Table evidence commit `427894348e992551c8d2ae15095c416d2cc1b329`
+(tree `ae33fd04f6a3957b00ccb4ee59889d91383678e5`) is the clean product baseline for
+architecture assignment `PO-2026-08-27-02`. Before any product or test edit, the complete AWS
+surface was read: all 162 Amazon SQS/SNS product C# files, all 28 inherited SQS test files, all 12
+DynamoDB product files, all five inherited DynamoDB test files, all three Amazon S3 product files,
+the mixed inherited SQS/S3 storage test, and every one of the 111 frozen R0 obligations. The existing
+native test infrastructure, test configuration, UnitArchitecture and LocalIntegration solutions,
+both workflow command contracts, verification model, canonical broker runner, Compose fixture and
+its self-tests were also read. The mandatory source-to-test pairing analyzer was run once; its
+heuristic output is only a gap prompt, never a coverage verdict.
+
+The frozen set is exactly 95 SQS/SNS obligations (`OBL-R0-CLOUD-0161..0246` plus
+`0265..0273`), ten DynamoDB obligations (`OBL-R0-PER-0500..0503` plus `0520..0525`) and six
+Amazon S3 obligations (`OBL-R0-PER-0600..0605`). Thirty are hermetic UnitArchitecture contracts,
+seventy were initially classified LocalIntegration and eleven require or originally claimed real
+AWS. The final carrier/disposition projection is frozen separately in
+`.testagent/aws-native-obligation-map.tsv`; no inherited test name or project structure is treated
+as the target design.
+
+### Provider boundary
+
+LocalStack is one run-scoped local provider, started only by the canonical fixture runner with a
+pinned calendar-version image and digest, an ephemeral loopback port, generated per-run credentials,
+isolated Compose project name, complete endpoint projection, broker log and guarded teardown. It
+owns locally reproducible SQS, SNS, S3 and DynamoDB data-plane behavior. It cannot prove AWS IAM,
+credential refresh, service quota enforcement, provisioned-throughput throttling, background
+DynamoDB TTL deletion, background S3 lifecycle deletion or every long-poll/batch edge of the real
+service. Those remain explicit External work and never appear as skipped or inventory-only green.
+The official AWS contract says DynamoDB TTL is a numeric epoch-second attribute and deletion is a
+background action normally occurring within days; that makes local attribute construction and real
+service deletion two different obligations. The AWS SDK v4 contract likewise prefers its provider
+chain and supports cancellable asynchronous resolution; configuration-time synchronous credential
+resolution is not acceptable.
+
+The local fixture extends the existing typed, secret-free `ViciOneTestOptions` graph with exactly one
+`LocalStack` resource: host, edge port, region and run account. Credentials are supplied by the
+fixture environment only. The existing External AWS group remains region plus run-unique resource
+prefix and delegates authentication exclusively to the AWS SDK provider chain. No secret is added
+to `testsettings.json`, evidence, process arguments, probe output or checked-in configuration.
+
+### Greenfield API decisions
+
+The public SQS host contract currently exposes raw `AccessKey` and `SecretKey` strings, resolves
+credentials synchronously during configuration, places the access key in probe output and carries a
+product `LocalstackHost()` helper with fixed credentials and port. This is inherited MassTransit
+v8.5.10 code, not a ViciOne requirement. The Greenfield contract removes raw secret-string methods,
+secret-bearing transport options, URI user-info credentials, public secret getters and the product
+test harness. Explicit advanced configuration retains `AWSCredentials`; the default path lets AWS
+SDK v4 own the complete provider chain. LocalStack endpoint/configuration construction belongs to
+the test fixture, not the shipped product API. The old raw-key obligation `0180` is therefore
+superseded by the approved Greenfield credential boundary; explicit credential-object injection is
+still executed locally and the real provider chain remains External.
+
+ViciOne keeps its own `_error` and `_skipped` queues. They preserve two distinct service-bus
+outcomes and copy product diagnostic metadata before the original message is deleted. Native SQS
+redrive is based only on receive count and cannot distinguish skipped from faulted messages. Running
+both owners on one source queue can copy a message to `_error` and later redrive the undeleted
+original to another DLQ. The A+ contract therefore rejects `RedrivePolicy` on a ViciOne-owned receive
+queue before topology creation. A future explicit native-redrive mode would require a different
+settlement pipeline and is not silently inferred from a raw queue attribute.
+
+### Product findings that tests must not accommodate
+
+The complete SQS/SNS path contains concrete defects beyond the inherited tests: direct and URI
+address construction do not share one validation path; topology interpolates caller names into URI
+control syntax; queue/topic validators accept characters AWS rejects; delay conversion truncates,
+overflows and accepts negative values; the host equality comparer violates the equality/hash-code
+contract; the receive loop permanently exits after one non-cancellation provider error; dependency
+`OperationCanceledException` can be mistaken for caller stop; visibility renewal uses wall time and
+real delays, swallows broad failures and can lose cancellation ownership; topology configuration
+contains an unexplained duplicate create pass; purge-on-start is racy; subscription-attribute update
+failure is logged and ignored; public mutable static batch settings can change a running connection;
+and credentials are resolved/exposed on the wrong boundary. Each accepted correction needs a causal
+positive regression and a one-cause mutation. Provider behavior is asserted against LocalStack only
+where the provider is actually the subject.
+
+The DynamoDB path contains similarly concrete correctness defects. Insert catches every failure,
+logs it and returns a null context; update increments the caller's saga version before a network call
+and leaves it advanced on failure; requested cancellation is wrapped as `SagaException`; database
+operations omit the caller token; expiration uses `DateTimeOffset.UtcNow`; a null expiration is
+serialized as a null numeric primitive instead of omitting the attribute; mutable SDK configuration
+is read on every operation; the validation boundary contradicts itself at thirty seconds; and public
+`LockSuffix`/`LockTimeout` settings are dead configuration with no lock owner. The A+ correction
+injects `TimeProvider`, freezes runtime configuration, passes and causally classifies cancellation,
+restores version state on failed update, propagates persistence failure and removes dead lock API.
+Real throttling and TTL deletion stay External.
+
+The S3 repository swallows bucket/lifecycle setup failures and lets the bus report ready, deletes the
+entire lifecycle configuration before installing its own rule, reads a mutable global TTL, lacks
+precise bucket/address/stream validation and uses client-constructing overloads as the primary
+composition API. Startup must be fail-fast and cancellation-aware; lifecycle reconciliation must
+own only `s3-messagedata-rule`; options and client ownership must be immutable and explicit; URN
+parsing must reject traversal/empty/malformed keys. The interface's per-message TTL cannot be made a
+true arbitrary S3 deletion deadline by pretending a bucket-age lifecycle rule proves it. That broader
+semantic normalization is bound as explicit product work unless this slice can supply a complete
+application-visible expiry plus deletion owner; no test may claim background deletion from LocalStack.
+
+### Test design
+
+Six source-mirrored xUnit 4/Microsoft Testing Platform 2 projects own hermetic and LocalStack tests:
+SQS UnitArchitecture and LocalIntegration under `tests2/Transports`, DynamoDB UnitArchitecture and
+LocalIntegration under `tests2/Persistence`, and Amazon S3 UnitArchitecture and LocalIntegration
+under `tests2/Persistence`. Shared provider startup/configuration lives only in the existing Testing
+infrastructure project and the canonical Python fixture runner. Individual projects own run-unique
+queues, topics, tables and buckets and perform bounded cleanup. No product test harness, fixed port,
+fixed resource name, shared table/bucket, sleep, stopwatch window, random scheduling, environment
+mutation, global mutable default or absence-until-timeout is an oracle.
+
+The inherited suite is particularly weak around filter routing, topology deployment, telemetry,
+FIFO concurrency, error moves and long-running consumers. Replacements use distinct recorders for
+positive and negative filter routes, list actual SNS topics for topology presence/absence, capture
+exact activities/tags/linkage, coordinate FIFO groups with causal barriers, inspect the complete
+error envelope and use real queue/message state rather than elapsed-time guesses. The 13 inherited
+error-header rows intentionally consolidate into one complete provider-crossing carrier; duplicate
+tests are not added just to preserve old method count. The old projects remain untouched until every
+locally executable row has a terminal carrier and every External row has a visible work binding.

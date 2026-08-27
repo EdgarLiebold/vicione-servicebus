@@ -1028,3 +1028,20 @@ future cohorts as complete.
   wrapper stdout/stderr, endpoint projection, broker log, empty teardown findings, CTRF, exact command
   and byte-identical post-restore source. This section supersedes only that missing-evidence statement;
   all technical conclusions and the explicit External cloud boundary remain unchanged.
+
+## AWS native closure preparation
+
+- Architecture assignment `PO-2026-08-27-02` authorizes analysis and an immutable pre-edit plan from
+  accepted product baseline `427894348e992551c8d2ae15095c416d2cc1b329`, tree
+  `ae33fd04f6a3957b00ccb4ee59889d91383678e5`. No product, test, build, fixture or CI file has been
+  edited in this preparation phase.
+- The complete SQS/SNS, DynamoDB and Amazon S3 product/test boundary and all 111 selected R0 rows are
+  read. The exact carrier projection contains 101 locally executable replacements, nine explicit
+  External-pending real-AWS proofs and one PO-superseded raw-secret API row. It is stored in
+  `.testagent/aws-native-obligation-map.tsv` and has no missing, duplicate or extra obligation ID.
+- The Greenfield decisions are fixed before implementation: credentials are AWS-SDK-chain or an
+  explicit `AWSCredentials` object, never public raw secret strings; LocalStack is test-owned; and
+  ViciOne's distinct `_error`/`_skipped` transports reject a simultaneous native receive-queue
+  RedrivePolicy instead of allowing two settlement owners.
+- The next permitted action after this preparation commit is architecture hash binding. Product and
+  test edits remain blocked until that binding names the exact research, plan and 111-row map bytes.

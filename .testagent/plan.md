@@ -1674,3 +1674,76 @@ source-derived gaps in the complete Azure Table product path.
     is zero failures, skips, warnings or errors, separate technical/evidence commits and two
     independent read-only reviews over the exact frozen bytes. Real Azure remains a visible External
     follow-up rather than a local or skipped green claim.
+
+## AWS native transport and persistence execution plan
+
+Work from accepted product commit `427894348e992551c8d2ae15095c416d2cc1b329`, tree
+`ae33fd04f6a3957b00ccb4ee59889d91383678e5`, under architecture assignment
+`PO-2026-08-27-02`. The immutable R0 input is the 111-row set projected in
+`.testagent/aws-native-obligation-map.tsv`. This plan and the research section above must be committed,
+pushed and hash-bound by the architecture order before the first product or test edit.
+
+1. Extend the one existing test configuration and fixture pipeline rather than creating AWS-specific
+   environment readers. Add `LocalTestResource.LocalStack`, typed host/port/region/account options,
+   exact environment projections and independent configuration tests. Add one LocalStack service to
+   the canonical Compose file, pinned by immutable calendar-version tag and image digest, published
+   on loopback with Docker-selected port. Extend runner/log/teardown self-tests before using it.
+2. Create six source-mirrored xUnit 4/MTP v2 projects: SQS UnitArchitecture and LocalIntegration,
+   DynamoDB UnitArchitecture and LocalIntegration, S3 UnitArchitecture and LocalIntegration. Add
+   product projects to matching solution configuration maps so Release tests cannot inspect Debug
+   assemblies. No inherited NUnit/VSTest project enters a native graph. Do not activate GitHub runs;
+   keep their checked-in command contracts internally consistent for later reactivation.
+3. Normalize SQS host composition first. Remove raw access/secret string API, secret-bearing options,
+   URI credentials, secret probe fields, `LocalstackHost()` and the shipped `AmazonSqsTestHarness`.
+   Retain explicit `AWSCredentials`, injectable service configs/client ownership and AWS SDK v4's
+   default provider chain without synchronous configuration-time resolution. Freeze all runtime host
+   settings. Prove no public secret surface, no probe secret and exact explicit/default composition.
+4. Correct SQS deterministic boundaries before provider tests: one address-construction authority;
+   caller names as data, never URI query syntax; exact AWS SQS/SNS grammar and FIFO suffix rules;
+   delay, wait, visibility and batch bounds without truncation/overflow; equality/hash consistency;
+   immutable batch settings; and fail-fast rejection of receive-queue `RedrivePolicy` while ViciOne
+   owns `_error`/`_skipped`. Preserve product error metadata and FIFO grouping semantics.
+5. Correct SQS lifecycle and failure ownership. A transient receive/provider failure must back off
+   and continue or fault the endpoint explicitly, never silently end a green receiver. Requested
+   caller stop is recognized from the requested caller token; dependency cancellation/failure keeps
+   its identity. Inject `TimeProvider` into visibility renewal and replace wall-time delay with timer
+   ownership. Make purge single-flight, remove the duplicate topology pass and propagate failed
+   subscription attribute updates. Every asynchronous test uses a bounded causal barrier and cleanup
+   in `finally`.
+6. Implement SQS LocalStack carriers in coherent feature groups: connection/configuration and dynamic
+   endpoints; exact request/publish/send flows; FIFO/order/filter; error/skipped/redelivery/outbox;
+   raw JSON, metadata and OTel; topology/tags/scopes; scheduling and lifecycle. Cross SQS+S3 only in
+   the single inherited MessageData transport carrier. LocalStack resource names are derived from the
+   run identity plus test identity and are always removed by the owning fixture.
+7. Normalize DynamoDB persistence as one saga slice. Remove dead lock options; validate and freeze
+   table/config/time input; inject `TimeProvider`; omit null TTL attributes; forward caller tokens;
+   propagate requested cancellation unchanged; preserve original provider failures; never return
+   null after failed insert; restore the in-memory saga version on failed update; and bind option
+   propagation once. LocalStack tests use a unique table and real conditional writes. TTL deletion
+   and provisioned-throughput throttling remain explicit External work.
+8. Normalize S3 MessageData as one repository slice. Require explicit non-null client and valid
+   immutable options at the primary API; fail startup if bucket/lifecycle reconciliation fails;
+   create the bucket idempotently; update only the owned lifecycle rule; pass cancellation; validate
+   stream, bucket and URN/key boundaries; and preserve exact round-trip bytes. Bind background object
+   deletion only to External. If arbitrary per-message TTL cannot receive a complete A+ owner in this
+   slice, record it as a release-blocking product TODO rather than silently claiming lifecycle parity.
+9. Keep the External matrix visible and fail closed. AWS credential-chain/refresh, real long-running
+   receive/visibility behavior, real payload/quota enforcement, partial batch semantics, DynamoDB TTL
+   deletion/throttling and S3 lifecycle deletion receive explicit `EXTERNAL_PENDING` rows and a
+   source-mirrored External work item. LocalStack evidence never changes those rows to green.
+10. After each product group, reread every changed product/test line and the complete associated
+    call path. Run focused locked Release restore/build and unfiltered project execution. Then apply
+    the mandatory .NET test-gap, assertion-quality, anti-pattern and smell reviews. Correct product
+    defects in product code; never weaken expected behavior or test an implementation duplicate.
+11. Execute bounded one-cause mutations for each product correction and the high-risk route/error/
+    cancellation/ETag/batch/topology boundaries. Bind baseline hash, exact replacement and occurrence,
+    mutant hash, fully expanded build/test command, exit code, causal raw output hash and post-restore
+    hash. Equivalent mutants are explained and excluded, never counted killed.
+12. Delete inherited AWS test files only when all their meaningful rows have equal or stronger native
+    carriers and the full 111-row projection is mechanically complete. Delete resulting empty
+    directories. Update passive requirements, solutions, floors, docs, TODO, verification ownership,
+    generated CHANGELIST and disabled workflow contracts atomically. Final acceptance requires clean
+    locked Engineering Release with zero warnings/errors, complete unfiltered UnitArchitecture and
+    LocalIntegration with zero failure/skip, focused AWS runs, separate technical/evidence commits,
+    two independent read-only PASS reviews and remote backup. External rows stay open until actually
+    executed against real AWS.
