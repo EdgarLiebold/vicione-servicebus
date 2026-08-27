@@ -46,6 +46,82 @@ public sealed class NodeTrackerTests
         Assert.Equal(0, tracker.Statistics.CreateFaults);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "time-provider-runs-before-tracker-lock")]
+    public async Task TimeProvider_CanCoordinateWithTheTrackerWithoutRunningUnderItsLock()
+    {
+        NodeTracker<CacheValue>? tracker = null;
+        IBucketNode<CacheValue>? existingNode = null;
+        var probeEnabled = false;
+        var probeCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        DateTime Now()
+        {
+            if (probeEnabled)
+            {
+                probeEnabled = false;
+                try
+                {
+                    Task.Run(() => tracker!.Rebucket(existingNode!))
+                        .WaitAsync(OperationTimeout, TestCancellationToken)
+                        .GetAwaiter()
+                        .GetResult();
+                    probeCompleted.TrySetResult(true);
+                }
+                catch
+                {
+                    probeCompleted.TrySetResult(false);
+                }
+            }
+
+            return DateTime.UnixEpoch;
+        }
+
+        tracker = new NodeTracker<CacheValue>(new CacheSettings(nowProvider: Now));
+        var observer = new CapturingObserver<CacheValue>();
+        using ConnectHandle connection = tracker.Connect(observer);
+        tracker.Add(new CacheValue("value-1"));
+        (INode<CacheValue> node, _) = await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
+        existingNode = Assert.IsAssignableFrom<IBucketNode<CacheValue>>(node);
+
+        probeEnabled = true;
+        tracker.Add(new CacheValue("value-2"));
+
+        Assert.True(await probeCompleted.Task.WaitAsync(OperationTimeout, TestCancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "usage-detach-runs-after-tracker-unlock")]
+    public async Task UsageEventDetach_CanCoordinateWithClearWithoutRunningUnderTheTrackerLock()
+    {
+        var tracker = new NodeTracker<UsageAwareValue>(new CacheSettings(nowProvider: () => DateTime.UnixEpoch));
+        var observer = new CapturingObserver<UsageAwareValue>();
+        using ConnectHandle connection = tracker.Connect(observer);
+        var detachCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var value = new UsageAwareValue(() =>
+        {
+            try
+            {
+                Task.Run(tracker.Clear)
+                    .WaitAsync(OperationTimeout, TestCancellationToken)
+                    .GetAwaiter()
+                    .GetResult();
+                detachCompleted.TrySetResult(true);
+            }
+            catch
+            {
+                detachCompleted.TrySetResult(false);
+                throw;
+            }
+        });
+        tracker.Add(value);
+        (INode<UsageAwareValue> node, _) = await observer.Added.WaitAsync(OperationTimeout, TestCancellationToken);
+
+        tracker.Remove(Assert.IsAssignableFrom<IBucketNode<UsageAwareValue>>(node));
+
+        Assert.True(await detachCompleted.Task.WaitAsync(OperationTimeout, TestCancellationToken));
+        Assert.Equal(0, tracker.Statistics.Count);
+    }
+
     private static TimeSpan OperationTimeout => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -53,6 +129,21 @@ public sealed class NodeTrackerTests
     private static CancellationToken TestCancellationToken => TestContext.Current.CancellationToken;
 
     private sealed record CacheValue(string Id);
+
+    private sealed class UsageAwareValue(Action onDetached) : INotifyValueUsed
+    {
+        private Action? _used;
+
+        public event Action? Used
+        {
+            add => _used += value;
+            remove
+            {
+                onDetached();
+                _used -= value;
+            }
+        }
+    }
 
     private sealed class CapturingObserver<TValue> : ICacheValueObserver<TValue>
         where TValue : class

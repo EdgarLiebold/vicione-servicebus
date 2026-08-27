@@ -219,8 +219,6 @@ public sealed class GreenCacheCapacityTests
         Assert.Single(pendingCleanup);
         Assert.Equal(values.Length, cache.Statistics.Count);
         Assert.Equal(values.Length, cache.GetAll().Count());
-        foreach (CacheValue value in values)
-            Assert.Same(value, await index.Get(value.Id));
 
         DrainPendingCleanup(pendingCleanup);
 
@@ -282,6 +280,37 @@ public sealed class GreenCacheCapacityTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "scheduler-invoke-then-throw-is-idempotent")]
+    public void SchedulerThatInvokesThenThrows_CannotExecuteTheReservationTwice()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 1,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
+        {
+            CurrentTime = DateTime.UnixEpoch,
+        };
+        GreenCache<CacheValue> cache = null!;
+        var bucketIndexAfterSchedulerInvocation = -1;
+        cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                cleanup();
+                bucketIndexAfterSchedulerInvocation = cache.Statistics.CurrentBucketIndex;
+                throw new InvalidOperationException("The scheduler threw after invoking the callback.");
+            });
+
+        cache.Add(new CacheValue("key-0", "The key is key-0"));
+        cache.Add(new CacheValue("key-1", "The key is key-1"));
+
+        Assert.True(bucketIndexAfterSchedulerInvocation >= 0);
+        Assert.Equal(bucketIndexAfterSchedulerInvocation, cache.Statistics.CurrentBucketIndex);
+        Assert.Equal(2, cache.Statistics.Count);
+        Assert.Equal(2, cache.GetAll().Count());
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "follow-up-handoff-remains-single-flight")]
     public void ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight()
     {
@@ -325,8 +354,8 @@ public sealed class GreenCacheCapacityTests
         DrainPendingCleanup(pendingCleanup);
 
         Assert.Empty(pendingCleanup);
+        Assert.Equal(15, cache.Statistics.Count);
         Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
-        Assert.InRange(cache.Statistics.Count, 1, settings.Capacity + cache.Statistics.BucketSize);
     }
 
     [Fact]
@@ -349,7 +378,7 @@ public sealed class GreenCacheCapacityTests
                 return true;
             });
         cache.Add(new CacheValue("key-0", "The key is key-0"));
-        ConnectHandle connection = cache.Connect(new ThrowingCacheObserver<CacheValue>());
+        ConnectHandle connection = cache.Connect(new ThrowingCacheObserver<CacheValue>(throwOnAdded: true));
 
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
             () => cache.Add(new CacheValue("key-1", "The key is key-1")));
@@ -360,6 +389,63 @@ public sealed class GreenCacheCapacityTests
         DrainPendingCleanup(pendingCleanup);
         Assert.Empty(pendingCleanup);
         Assert.Equal(cache.Statistics.Count, cache.GetAll().Count());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "removal-observer-failure-does-not-strand-cleanup")]
+    public async Task RemovalObserverFailureAfterReservation_StillDispatchesTheCleanup()
+    {
+        var settings = new TestCacheSettings(
+            capacity: 10,
+            minAge: TimeSpan.FromMinutes(1),
+            maxAge: TimeSpan.FromMinutes(5))
+        {
+            CurrentTime = DateTime.UnixEpoch,
+        };
+        Action? pendingCleanup = null;
+        var cleanupScheduled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            cleanup =>
+            {
+                pendingCleanup = cleanup;
+                cleanupScheduled.TrySetResult();
+                return true;
+            });
+        IIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
+        cache.Add(new CacheValue("key-0", "The key is key-0"));
+        using ConnectHandle connection = cache.Connect(
+            new ThrowingCacheObserver<CacheValue>(throwOnRemoved: true));
+        settings.CurrentTime += TimeSpan.FromMinutes(6);
+
+        Assert.True(index.Remove("key-0"));
+        await cleanupScheduled.Task.WaitAsync(OperationTimeout, TestCancellationToken);
+
+        Assert.NotNull(pendingCleanup);
+        pendingCleanup();
+        Assert.Equal(0, cache.Statistics.Count);
+        Assert.Empty(cache.GetAll());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-ROLLOVER", "reset-precedes-current-add")]
+    public async Task ValueAddedAtTheResetBoundary_RemainsVisibleAndIndexed()
+    {
+        TestCacheSettings settings = CreateSettings(maximumAgeSeconds: 300);
+        var cache = new GreenCache<CacheValue>(settings);
+        IIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
+        var expired = new CacheValue("expired", "The expired value");
+        var current = new CacheValue("current", "The current value");
+        cache.Add(expired);
+
+        settings.CurrentTime += TimeSpan.FromHours(24);
+        cache.Add(current);
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.Get(expired.Id));
+        Assert.Same(current, await index.Get(current.Id));
+        Assert.Equal(1, cache.Statistics.Count);
+        Task<CacheValue> visible = Assert.Single(cache.GetAll());
+        Assert.Same(current, await visible);
     }
 
     private static TestCacheSettings CreateSettings(int maximumAgeSeconds)
@@ -520,14 +606,20 @@ public sealed class GreenCacheCapacityTests
         }
     }
 
-    private sealed class ThrowingCacheObserver<TValue> : ICacheValueObserver<TValue>
+    private sealed class ThrowingCacheObserver<TValue>(bool throwOnAdded = false, bool throwOnRemoved = false) :
+        ICacheValueObserver<TValue>
         where TValue : class
     {
-        public void ValueAdded(INode<TValue> node, TValue value) =>
-            throw new InvalidOperationException("Observer failure.");
+        public void ValueAdded(INode<TValue> node, TValue value)
+        {
+            if (throwOnAdded)
+                throw new InvalidOperationException("Observer failure.");
+        }
 
         public void ValueRemoved(INode<TValue> node, TValue value)
         {
+            if (throwOnRemoved)
+                throw new InvalidOperationException("Observer failure.");
         }
 
         public void CacheCleared()

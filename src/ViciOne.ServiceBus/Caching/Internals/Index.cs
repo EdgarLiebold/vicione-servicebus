@@ -70,7 +70,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
             var key = _keyProvider(value);
 
             lock (_lock)
-                _index[key] = node;
+            {
+                // Add notifications are published after tracker state changes. A delayed
+                // notification for an already-evicted node must not replace a newer live value.
+                if (node.IsValid)
+                    _index[key] = node;
+            }
         }
 
         public void ValueRemoved(INode<TValue> node, TValue value)
@@ -78,7 +83,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
             var key = _keyProvider(value);
 
             lock (_lock)
-                _index.Remove(key);
+            {
+                // A removal may be published after another value with the same key was added.
+                // Remove only the exact generation that produced this notification.
+                if (_index.TryGetValue(key, out INode<TValue> current) && ReferenceEquals(current, node))
+                    _index.Remove(key);
+            }
         }
 
         public void CacheCleared()
@@ -88,6 +98,8 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         public Task<TValue> Get(TKey key, MissingValueFactory<TKey, TValue> missingValueFactory)
         {
+            INode<TValue> valueNode = null;
+
             lock (_lock)
             {
                 if (TryGetExistingNode(key, out INode<TValue> existingNode))
@@ -95,32 +107,40 @@ namespace ViciOne.ServiceBus.Caching.Internals
                     if (existingNode.HasValue)
                     {
                         _nodeTracker.Statistics.Hit();
-                        return existingNode.Value;
+                        valueNode = existingNode;
                     }
+                    else
+                    {
+                        var pending = new PendingValue<TKey, TValue>(key, missingValueFactory);
 
-                    var pending = new PendingValue<TKey, TValue>(key, missingValueFactory);
-
-                    return existingNode.GetValue(pending);
+                        return existingNode.GetValue(pending);
+                    }
                 }
-
-                if (missingValueFactory == null)
+                else if (missingValueFactory == null)
                 {
                     _nodeTracker.Statistics.Miss();
                     throw new KeyNotFoundException($"Key not found: {key}");
                 }
+                else
+                {
+                    var pendingValue = new PendingValue<TKey, TValue>(key, missingValueFactory);
 
-                var pendingValue = new PendingValue<TKey, TValue>(key, missingValueFactory);
+                    var nodeValueFactory = new NodeValueFactory<TValue>(pendingValue, 0);
 
-                var nodeValueFactory = new NodeValueFactory<TValue>(pendingValue, 0);
+                    var node = new FactoryNode<TValue>(nodeValueFactory);
 
-                var node = new FactoryNode<TValue>(nodeValueFactory);
+                    _index[key] = node;
 
-                _index[key] = node;
+                    _nodeTracker.Add(nodeValueFactory);
 
-                _nodeTracker.Add(nodeValueFactory);
-
-                return pendingValue.Value;
+                    return pendingValue.Value;
+                }
             }
+
+            // Reading a bucket node records usage and may rebucket it. Never do that while the
+            // index lock is held: cleanup publishes index notifications after releasing the
+            // tracker lock, and the two independent locks must not be acquired in opposite order.
+            return valueNode.Value;
         }
 
         public bool Remove(TKey key)

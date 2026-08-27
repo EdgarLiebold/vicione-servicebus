@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.ExceptionServices;
     using System.Threading;
 
 
@@ -75,13 +76,20 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 connected = _connected;
             }
 
-            if (connected.Length == 1)
-                callback(connected[0]);
-            else
+            ExceptionDispatchInfo firstFailure = null;
+            for (var index = 0; index < connected.Length; index++)
             {
-                for (var i = 0; i < connected.Length; i++)
-                    callback(connected[i]);
+                try
+                {
+                    callback(connected[index]);
+                }
+                catch (Exception exception)
+                {
+                    firstFailure ??= ExceptionDispatchInfo.Capture(exception);
+                }
             }
+
+            firstFailure?.Throw();
         }
 
         void Disconnect(long id)

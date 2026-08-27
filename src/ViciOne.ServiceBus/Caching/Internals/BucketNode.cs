@@ -68,15 +68,18 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             value = storedValue.GetAwaiter().GetResult();
 
-            if (value is INotifyValueUsed notify)
-                notify.Used -= Used;
-
             _bucket = null;
 
             // The owning bucket still needs the link to traverse past this tombstone.
             // Pop clears it when the bucket is compacted.
 
             return true;
+        }
+
+        internal void DetachUsageNotification(TValue value)
+        {
+            if (value is INotifyValueUsed notify)
+                notify.Used -= Used;
         }
 
         public IBucketNode<TValue> Pop()

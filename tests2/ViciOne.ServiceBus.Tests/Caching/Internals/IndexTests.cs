@@ -1,6 +1,8 @@
 using ViciOne.ServiceBus.Caching;
+using ViciOne.ServiceBus.Caching.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Util;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Caching.Internals;
@@ -110,6 +112,61 @@ public sealed class IndexTests
         Assert.Equal(Key, fallbackKey);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "indexed-read-releases-index-before-node-usage")]
+    public async Task ExistingValue_ReadsTheNodeOnlyAfterReleasingTheIndexLock()
+    {
+        var tracker = new StubNodeTracker<CacheValue>();
+        var index = new Index<string, CacheValue>(tracker, value => value.Id);
+        IIndex<string, CacheValue> cacheIndex = index;
+        var value = new CacheValue(Key, "The key is hello");
+        CallbackNode<CacheValue>? node = null;
+        node = new CallbackNode<CacheValue>(value, () => index.ValueRemoved(node, value));
+        index.ValueAdded(node, value);
+
+        CacheValue actual = await cacheIndex.Get(Key).WaitAsync(OperationTimeout, TestCancellationToken);
+
+        Assert.Same(value, actual);
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await cacheIndex.Get(Key));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-INDEX-EVENT-ORDER", "stale-removal-preserves-new-generation")]
+    public async Task DelayedRemovalOfAnOldGeneration_PreservesTheNewValueWithTheSameKey()
+    {
+        var tracker = new StubNodeTracker<CacheValue>();
+        var index = new Index<string, CacheValue>(tracker, value => value.Id);
+        IIndex<string, CacheValue> cacheIndex = index;
+        var oldValue = new CacheValue(Key, "old");
+        var currentValue = new CacheValue(Key, "current");
+        var oldNode = new MutableNode<CacheValue>(oldValue);
+        var currentNode = new MutableNode<CacheValue>(currentValue);
+        index.ValueAdded(oldNode, oldValue);
+        index.ValueAdded(currentNode, currentValue);
+
+        index.ValueRemoved(oldNode, oldValue);
+
+        Assert.Same(currentValue, await cacheIndex.Get(Key));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-INDEX-EVENT-ORDER", "stale-add-cannot-replace-live-generation")]
+    public async Task DelayedAddOfAnEvictedGeneration_CannotReplaceTheCurrentValue()
+    {
+        var tracker = new StubNodeTracker<CacheValue>();
+        var index = new Index<string, CacheValue>(tracker, value => value.Id);
+        IIndex<string, CacheValue> cacheIndex = index;
+        var oldValue = new CacheValue(Key, "old");
+        var currentValue = new CacheValue(Key, "current");
+        var oldNode = new MutableNode<CacheValue>(oldValue) { IsValid = false };
+        var currentNode = new MutableNode<CacheValue>(currentValue);
+        index.ValueAdded(currentNode, currentValue);
+
+        index.ValueAdded(oldNode, oldValue);
+
+        Assert.Same(currentValue, await cacheIndex.Get(Key));
+    }
+
     private static IIndex<string, CacheValue> CreateIndex()
     {
         var settings = new CacheSettings(
@@ -147,5 +204,66 @@ public sealed class IndexTests
         }
 
         public void Fail(Exception exception) => _value.TrySetException(exception);
+    }
+
+    private sealed class CallbackNode<TValue>(TValue value, Action onValue) : INode<TValue>
+        where TValue : class
+    {
+        public Task<TValue> Value
+        {
+            get
+            {
+                Task.Run(onValue)
+                    .WaitAsync(OperationTimeout, TestCancellationToken)
+                    .GetAwaiter()
+                    .GetResult();
+
+                return Task.FromResult(value);
+            }
+        }
+
+        public bool HasValue => true;
+
+        public bool IsValid => true;
+
+        public Task<TValue> GetValue(IPendingValue<TValue> pendingValue) => Task.FromResult(value);
+    }
+
+    private sealed class MutableNode<TValue>(TValue value) : INode<TValue>
+        where TValue : class
+    {
+        public Task<TValue> Value => Task.FromResult(value);
+
+        public bool HasValue => true;
+
+        public bool IsValid { get; set; } = true;
+
+        public Task<TValue> GetValue(IPendingValue<TValue> pendingValue) => Task.FromResult(value);
+    }
+
+    private sealed class StubNodeTracker<TValue> : INodeTracker<TValue>
+        where TValue : class
+    {
+        public CacheStatistics Statistics { get; } = new(
+            capacity: 1,
+            bucketCount: 6,
+            bucketSize: 1,
+            minAge: TimeSpan.Zero,
+            maxAge: TimeSpan.FromMinutes(1),
+            validityCheckInterval: TimeSpan.FromSeconds(1));
+
+        public void Add(INodeValueFactory<TValue> nodeValueFactory) => throw new NotSupportedException();
+
+        public void Add(TValue value) => throw new NotSupportedException();
+
+        public void Rebucket(IBucketNode<TValue> node) => throw new NotSupportedException();
+
+        public void Remove(IBucketNode<TValue> existingNode) => throw new NotSupportedException();
+
+        public IEnumerable<INode<TValue>> GetAll() => [];
+
+        public void Clear() => throw new NotSupportedException();
+
+        public ConnectHandle Connect(ICacheValueObserver<TValue> observer) => new EmptyConnectHandle();
     }
 }

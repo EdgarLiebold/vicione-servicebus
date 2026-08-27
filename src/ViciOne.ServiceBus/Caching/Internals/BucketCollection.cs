@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.Caching.Internals
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
 
@@ -39,8 +40,9 @@ namespace ViciOne.ServiceBus.Caching.Internals
         /// <summary>
         /// Empties every bucket in the collection, evicting all the nodes
         /// </summary>
-        public void Empty()
+        public IReadOnlyList<(IBucketNode<TValue> Node, TValue Value)> Empty()
         {
+            var evictedValues = new List<(IBucketNode<TValue>, TValue)>();
             foreach (Bucket<TValue> bucket in _buckets)
             {
                 IBucketNode<TValue> node = bucket.Head;
@@ -49,10 +51,14 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 while (node != null)
                 {
                     IBucketNode<TValue> next = node.Pop();
-                    node.TryEvict(out _);
+                    if (node.TryEvict(out TValue value))
+                        evictedValues.Add((node, value));
+
                     node = next;
                 }
             }
+
+            return evictedValues;
         }
     }
 }

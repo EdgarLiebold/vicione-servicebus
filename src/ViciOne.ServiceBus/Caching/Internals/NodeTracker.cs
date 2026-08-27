@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.ExceptionServices;
     using System.Threading;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus.Internals;
@@ -24,6 +25,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         BucketCollection<TValue> _buckets;
         DateTime _cacheResetTime;
         bool _cleanupRequested;
+        DateTime _cleanupRequestedAt;
         bool _cleanupScheduled;
         Bucket<TValue> _currentBucket;
         int _currentBucketIndex;
@@ -39,6 +41,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         {
             _tryScheduleCleanup = tryScheduleCleanup ?? throw new ArgumentNullException(nameof(tryScheduleCleanup));
             _nowProvider = settings.NowProvider;
+            var now = _nowProvider();
 
             _observers = new CacheValueObservable<TValue>();
 
@@ -48,7 +51,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
             _maxAge = TimeSpan.FromMilliseconds(maxAgeInMilliseconds);
 
             _validityCheckInterval = TimeSpan.FromMilliseconds(maxAgeInMilliseconds / settings.TimeSlots);
-            _cacheResetTime = _nowProvider().Add(TimeSpan.FromMilliseconds(MaxAgeUpperLimit));
+            _cacheResetTime = now.Add(TimeSpan.FromMilliseconds(MaxAgeUpperLimit));
 
             _bucketSize = Math.Max(settings.Capacity / settings.BucketCount, 1);
 
@@ -59,7 +62,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             Statistics = new CacheStatistics(settings.Capacity, _bucketCount, _bucketSize, _minAge, _maxAge, _validityCheckInterval);
 
-            OpenBucket(0);
+            OpenBucket(0, now);
         }
 
         int OldestBucketIndex
@@ -83,6 +86,9 @@ namespace ViciOne.ServiceBus.Caching.Internals
         }
 
         bool AreLowOnBuckets => CurrentBucketIndex - OldestBucketIndex > _buckets.Count - 5;
+
+        bool CanOpenBucketWithoutForcingEviction =>
+            CurrentBucketIndex - OldestBucketIndex < _buckets.Count - 5;
 
         bool IsCurrentBucketOldest => OldestBucketIndex == CurrentBucketIndex;
 
@@ -122,22 +128,16 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         public void Clear()
         {
+            var now = _nowProvider();
+            List<EvictedValue> evictedValues;
             lock (_lock)
-            {
-                _buckets.Empty();
+                evictedValues = ResetCache(now);
 
-                _buckets = new BucketCollection<TValue>(this, _bucketCount);
+            ScheduleResetRelease(evictedValues);
 
-                _cacheResetTime = _nowProvider().Add(TimeSpan.FromMilliseconds(MaxAgeUpperLimit));
-
-                OldestBucketIndex = 0;
-
-                OpenBucket(0);
-
-                Statistics.Reset();
-
-                _observers.CacheCleared();
-            }
+            // Observer callbacks may acquire index locks. They must never execute while the
+            // tracker lock is held, otherwise a concurrent indexed read can invert the order.
+            _observers.CacheCleared();
         }
 
         public void Rebucket(IBucketNode<TValue> node)
@@ -174,43 +174,84 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         void AddValue(TValue value)
         {
+            var now = _nowProvider();
             var node = new BucketNode<TValue>(value);
             Action cleanup;
+            var cacheReset = false;
+            List<EvictedValue> resetValues = null;
 
             lock (_lock)
             {
+                if (CurrentBucketIndex > 1000000000 || now >= _cacheResetTime)
+                {
+                    resetValues = ResetCache(now);
+                    cacheReset = true;
+                }
+
                 _currentBucket.Push(node);
 
                 Statistics.ValueAdded();
 
-                cleanup = CheckCacheStatus();
+                cleanup = CheckCacheStatus(now);
+            }
+
+            if (resetValues is not null)
+                ScheduleResetRelease(resetValues);
+
+            ExceptionDispatchInfo observerFailure = null;
+            try
+            {
+                if (cacheReset)
+                    _observers.CacheCleared();
+            }
+            catch (Exception exception)
+            {
+                observerFailure = ExceptionDispatchInfo.Capture(exception);
             }
 
             try
             {
                 _observers.ValueAdded(node, value);
             }
+            catch (Exception exception)
+            {
+                observerFailure ??= ExceptionDispatchInfo.Capture(exception);
+            }
             finally
             {
                 // Once the reservation is published, observer failures must not strand it.
                 DispatchCleanup(cleanup);
             }
+
+            observerFailure?.Throw();
         }
 
         async Task RemoveNode(IBucketNode<TValue> node)
         {
             try
             {
-                if (!node.TryEvict(out TValue value))
-                    return;
+                var now = _nowProvider();
+                TValue value;
+                Action cleanup;
+                lock (_lock)
+                {
+                    if (!node.TryEvict(out value))
+                        return;
 
-                Statistics.ValueRemoved();
+                    Statistics.ValueRemoved();
+                    cleanup = CheckCacheStatus(now);
+                }
 
-                Action cleanup = CheckCacheStatus();
+                DetachUsageNotification(node, value);
 
+                ExceptionDispatchInfo observerFailure = null;
                 try
                 {
                     _observers.ValueRemoved(node, value);
+                }
+                catch (Exception exception)
+                {
+                    observerFailure = ExceptionDispatchInfo.Capture(exception);
                 }
                 finally
                 {
@@ -227,6 +268,8 @@ namespace ViciOne.ServiceBus.Caching.Internals
                         disposable.Dispose();
                         break;
                 }
+
+                observerFailure?.Throw();
             }
             catch
             {
@@ -234,15 +277,13 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
         }
 
-        void OpenBucket(int index)
+        void OpenBucket(int index, DateTime now)
         {
             var lockTaken = false;
 
             try
             {
                 Monitor.Enter(_lock, ref lockTaken);
-
-                var now = _nowProvider();
 
                 if (_currentBucket != null)
                 {
@@ -266,38 +307,31 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
         }
 
-        Action CheckCacheStatus()
+        Action CheckCacheStatus(DateTime now)
         {
             lock (_lock)
             {
-                var now = _nowProvider();
-
                 if (!IsCleanupRequired(now))
                     return null;
 
                 if (_cleanupScheduled)
                 {
+                    if (!_cleanupRequested || now > _cleanupRequestedAt)
+                        _cleanupRequestedAt = now;
+
                     _cleanupRequested = true;
 
                     // Preserve size and time segmentation while the reserved cleanup waits, but
                     // never wrap onto a bucket that the cleanup has not reclaimed yet.
-                    if (!AreLowOnBuckets)
-                        OpenBucket(++CurrentBucketIndex);
+                    if (CanOpenBucketWithoutForcingEviction)
+                        OpenBucket(++CurrentBucketIndex, now);
 
                     return null;
                 }
 
-                if (CurrentBucketIndex > 1000000000 || now >= _cacheResetTime)
-                {
-                    Clear();
-                    return null;
-                }
-                else
-                {
-                    Volatile.Write(ref _cleanupScheduled, true);
+                Volatile.Write(ref _cleanupScheduled, true);
 
-                    return () => Cleanup(now);
-                }
+                return () => Cleanup(now);
             }
         }
 
@@ -333,7 +367,9 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
         void Cleanup(DateTime now)
         {
+            List<EvictedValue> evictedValues = null;
             var lockTaken = false;
+            var followUpAt = default(DateTime);
             var scheduleFollowUp = false;
             try
             {
@@ -361,12 +397,12 @@ namespace ViciOne.ServiceBus.Caching.Internals
                             // if the node is in its original bucket, it's ripe for the pickin
                             if (node.Bucket == bucket)
                             {
-                                --itemsAboveCapacity;
-
-                                // so if we don't await this, can't be too bad can it?
-                                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                EvictNode(node);
-                                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                if (node.TryEvict(out TValue value))
+                                {
+                                    --itemsAboveCapacity;
+                                    Statistics.ValueRemoved();
+                                    (evictedValues ??= []).Add(new EvictedValue(node, value));
+                                }
                             }
                             else
                             {
@@ -378,13 +414,14 @@ namespace ViciOne.ServiceBus.Caching.Internals
                         node = next;
                     }
 
-                    bucket = _buckets[++OldestBucketIndex];
-
                     if (IsCurrentBucketOldest)
                         break;
+
+                    bucket = _buckets[++OldestBucketIndex];
                 }
 
-                OpenBucket(++CurrentBucketIndex);
+                if (CanOpenBucketWithoutForcingEviction)
+                    OpenBucket(++CurrentBucketIndex, now);
             }
             finally
             {
@@ -393,6 +430,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
                     // Publish completion and reserve any requested follow-up atomically. Additions
                     // that arrived while this pass was queued must not lose their cleanup signal.
                     scheduleFollowUp = _cleanupRequested;
+                    followUpAt = _cleanupRequestedAt;
                     _cleanupRequested = false;
                     _cleanupScheduled = scheduleFollowUp;
                     Monitor.Exit(_lock);
@@ -401,8 +439,34 @@ namespace ViciOne.ServiceBus.Caching.Internals
                     Volatile.Write(ref _cleanupScheduled, false);
             }
 
+            // Index and user observers are external lock owners. Publish only after the tracker
+            // state is committed and its lock is released, preserving a single lock order.
+            if (evictedValues is not null)
+            {
+                foreach (EvictedValue evicted in evictedValues)
+                    PublishEviction(evicted.Node, evicted.Value);
+            }
+
             if (scheduleFollowUp)
-                DispatchCleanup(() => Cleanup(_nowProvider()));
+                DispatchCleanup(() => Cleanup(followUpAt));
+        }
+
+        List<EvictedValue> ResetCache(DateTime now)
+        {
+            IReadOnlyList<(IBucketNode<TValue> Node, TValue Value)> resetValues = _buckets.Empty();
+            var evictedValues = new List<EvictedValue>(resetValues.Count);
+            foreach ((IBucketNode<TValue> node, TValue value) in resetValues)
+                evictedValues.Add(new EvictedValue(node, value));
+
+            _buckets = new BucketCollection<TValue>(this, _bucketCount);
+            _cacheResetTime = now.Add(TimeSpan.FromMilliseconds(MaxAgeUpperLimit));
+
+            OldestBucketIndex = 0;
+            OpenBucket(0, now);
+
+            Statistics.Reset();
+
+            return evictedValues;
         }
 
         static bool TryScheduleOnThreadPool(Action cleanup)
@@ -418,15 +482,42 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
         }
 
-        async Task EvictNode(IBucketNode<TValue> node)
+        void PublishEviction(IBucketNode<TValue> node, TValue value)
         {
-            if (!node.TryEvict(out TValue value))
+            DetachUsageNotification(node, value);
+
+            try
+            {
+                _observers.ValueRemoved(node, value);
+            }
+            catch
+            {
+                // Observer fan-out is best effort after all observers, including indices, have
+                // received the event. Cleanup progress must not be abandoned by user callbacks.
+            }
+
+            _ = DisposeEvictedValue(value);
+        }
+
+        static void ScheduleResetRelease(IReadOnlyList<EvictedValue> evictedValues)
+        {
+            if (evictedValues.Count == 0)
                 return;
 
-            Statistics.ValueRemoved();
+            // Clear is explicitly non-blocking. One background batch avoids a task per cached
+            // value while still isolating disposal failures per item.
+            _ = Task.Run(async () =>
+            {
+                foreach (EvictedValue evicted in evictedValues)
+                {
+                    DetachUsageNotification(evicted.Node, evicted.Value);
+                    await DisposeEvictedValue(evicted.Value).ConfigureAwait(false);
+                }
+            });
+        }
 
-            _observers.ValueRemoved(node, value);
-
+        static async Task DisposeEvictedValue(TValue value)
+        {
             try
             {
                 switch (value)
@@ -444,5 +535,24 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 //
             }
         }
+
+        static void DetachUsageNotification(IBucketNode<TValue> node, TValue value)
+        {
+            if (node is not BucketNode<TValue> bucketNode)
+                return;
+
+            try
+            {
+                // Event accessors are user code. The atomic eviction is complete before this
+                // callback and no tracker lock is held while it runs.
+                bucketNode.DetachUsageNotification(value);
+            }
+            catch
+            {
+                // A hostile event accessor cannot roll back eviction or block index publication.
+            }
+        }
+
+        readonly record struct EvictedValue(IBucketNode<TValue> Node, TValue Value);
     }
 }
