@@ -1,7 +1,7 @@
-51145aa9e7501ce2cfdb5b6abddf01ef0f074c0c5b334fce476145eaf397b7e0  ./FINAL_RESULTS.json
+aab8701ac87a7ff0b338aacc2b3009b9632506ec317afa48d2456edb2ba7676c  ./FINAL_RESULTS.json
 5bef3c7540e9968f293ad334f6a8984950ed3e382d3c91a8f864e11be7b28d07  ./MUTATION_MANIFEST.json
 7b133d7447b8bb0026317edd562afacfb86efcaa67ab65b1a8f99d9ff941e337  ./R0_TERMINAL_DISPOSITIONS.json
-46d8c338f483460e30ab1913058fecb6e7ea0d686b19c6114f2ddc81ad483c0d  ./VALIDATION.md
+045ae7154f5c1a372b062b4c6642ad91f5f639520dc37b3fd89ea452306dc7d8  ./VALIDATION.md
 420fd66d0e9b67f90765d7e24506d3abd0711c1ff99a5c5502d7aa28e90028e5  ./mutations/M01-build.log
 3e09f9e6712f48e65999d870ddecd6af862b1c0ba5d9a4cfef970c63cd36156a  ./mutations/M01-test.log
 3f1a78c7e69b9fc018ef12bd17332d48fb0c55867de22552cac3311a575053cf  ./mutations/M01.json
@@ -41,10 +41,11 @@ d35d7a127d2baa97344cb473a42d52035fc8417c6c7873b693cd429fd325f12e  ./mutations/M1
 9099c46192d3f9baf14970aad8536d62ecc5e0966b50a58505e813a8c1d48ed7  ./positive/final-azure-unit-build.log
 a53fab65b04440e9e228ce37d03a883db03519cecc2a803323c85edcd9072110  ./positive/final-azure-unit-test.log
 0758e6d58255d26f29d8c26a4d1b3c7c83903d8c6d51f60aca1cc089ca3875ae  ./positive/final-azure-unit.json
+8ca4b8d099c86a9951c5555fcdece575fbefd5be2e086a773672855fd8709a9e  ./positive/final-change-list.log
 47b4ea3f9d5c8850e84dd3696caad083e781445f056e50ae56d7c024609bc36f  ./positive/final-ci-selftests.log
 8a7996da457047f93baa3dab6a02b84f223ae49094316a856c3890329400b7fe  ./positive/final-engineering-build.binlog.gz
 d7006683471674f4eac2a922f5c1f7731bba27e882c592b33378ad13d3046743  ./positive/final-engineering-restore.binlog.gz
-80d4ee5197b4100caa4a916c7f7189c59e879f79f137ee374b409fd4d77e3923  ./positive/final-identity-selftests.log
+b71fffd7714b82f0d2b5399167a4b64ae741dace9e27ce9345c279fba0dae47c  ./positive/final-identity-selftests.log
 674fbb363a8d71936e86c40eb4b98061e682f1e39173e28a46be697d0070251a  ./positive/final-local-integration-test.log
 4e9d9d5c2b61ba6f2bc0c34facd6662b3cbee1cfb2008a78dbe3ea5db0ce7071  ./positive/final-unit-test.log
 4fd246797c18173abb225d61aa909d4fcec892b2d4011468ac2d50f667a2caed  ./positive/final-verification-model.log

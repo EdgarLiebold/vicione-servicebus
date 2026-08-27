@@ -84,7 +84,11 @@
     "ciSelfTests": { "tests": 253, "passed": 253, "exitCode": 0, "rawLog": "positive/final-ci-selftests.log" },
     "identitySelfTests": { "tests": 103, "passed": 103, "exitCode": 0, "rawLog": "positive/final-identity-selftests.log" },
     "verificationModel": { "exitCode": 0, "rawLog": "positive/final-verification-model.log" },
-    "changeList": { "entries": 8021, "exitCode": 0 }
+    "changeList": {
+      "entries": 8055,
+      "exitCode": 0,
+      "rawLog": "positive/final-change-list.log"
+    }
   },
   "cloudBoundary": {
     "realAzureAccountExecuted": false,

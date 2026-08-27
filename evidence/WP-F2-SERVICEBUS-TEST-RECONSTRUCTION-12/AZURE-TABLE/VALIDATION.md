@@ -28,7 +28,7 @@ and build binlogs, provider endpoint metadata and broker logs are bound under `p
 credential or fixed resource name is stored in the evidence.
 
 The repository tooling remains green after the evidence set is materialized: 253/253 CI self-tests,
-103/103 identity self-tests, the complete verification model and the generated 8021-entry
+103/103 identity self-tests, the complete verification model and the generated 8055-entry
 CHANGELIST all pass. These focused tool results do not reinterpret the separately known historical
 full-identity baseline findings as part of this technical Azure Table gate.
 

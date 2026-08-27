@@ -16,7 +16,7 @@ FAIL change-list has 1 line(s) too many
 .FAIL change-list has 1 line(s) too many
 ................................................................................
 ----------------------------------------------------------------------
-Ran 103 tests in 6.497s
+Ran 103 tests in 6.475s
 
 OK
 PASS change-list written CHANGELIST.md
@@ -27,7 +27,7 @@ PASS change-list written CHANGELIST.md
 PASS change-list written CHANGELIST.md
 PASS change-list written CHANGELIST.md
 PASS change-list written CHANGELIST.md
-PASS change-list matches the generated evidence (8020 entries)
+PASS change-list matches the generated evidence (8055 entries)
 PASS change-list written CHANGELIST.md
 PASS change-list matches the generated evidence (4 entries)
 PASS change-list written CHANGELIST.md
