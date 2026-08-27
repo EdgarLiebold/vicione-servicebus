@@ -112,6 +112,8 @@ public sealed class GreenCacheObserverTests
         var probe = new DisposalProbe();
         TValue value = valueFactory(probe);
         cache.Add(value);
+        var orderingObserver = new ResetOrderingObserver<TValue>();
+        using ConnectHandle orderingConnection = cache.Connect(orderingObserver);
 
         Task reset = Task.Run(() =>
         {
@@ -124,11 +126,29 @@ public sealed class GreenCacheObserverTests
                 cache.Clear();
         });
 
-        await probe.Started.WaitAsync(OperationTimeout, TestCancellationToken);
-        await reset.WaitAsync(OperationTimeout, TestCancellationToken);
-        Assert.Equal(0, probe.Count);
+        try
+        {
+            await orderingObserver.CacheClearedEntered.WaitAsync(OperationTimeout, TestCancellationToken);
+            Assert.False(probe.Started.IsCompleted);
+            orderingObserver.ReleaseCacheCleared();
 
-        probe.Release();
+            if (automaticRollover)
+            {
+                await orderingObserver.ValueAddedEntered.WaitAsync(OperationTimeout, TestCancellationToken);
+                Assert.False(probe.Started.IsCompleted);
+                orderingObserver.ReleaseValueAdded();
+            }
+
+            await probe.Started.WaitAsync(OperationTimeout, TestCancellationToken);
+            await reset.WaitAsync(OperationTimeout, TestCancellationToken);
+            Assert.Equal(0, probe.Count);
+        }
+        finally
+        {
+            orderingObserver.ReleaseAll();
+            probe.Release();
+        }
+
         await probe.Completed.WaitAsync(OperationTimeout, TestCancellationToken);
         Assert.Equal(1, probe.Count);
     }
@@ -245,6 +265,53 @@ public sealed class GreenCacheObserverTests
 
         public void CacheCleared()
         {
+        }
+    }
+
+    private sealed class ResetOrderingObserver<TValue> : ICacheValueObserver<TValue>
+        where TValue : class
+    {
+        private readonly TaskCompletionSource _cacheClearedEntered =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _releaseCacheCleared =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _releaseValueAdded =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _valueAddedEntered =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task CacheClearedEntered => _cacheClearedEntered.Task;
+
+        public Task ValueAddedEntered => _valueAddedEntered.Task;
+
+        public void ValueAdded(INode<TValue> node, TValue value)
+        {
+            _valueAddedEntered.TrySetResult();
+            _releaseValueAdded.Task.WaitAsync(OperationTimeout, TestCancellationToken)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        public void ValueRemoved(INode<TValue> node, TValue value)
+        {
+        }
+
+        public void CacheCleared()
+        {
+            _cacheClearedEntered.TrySetResult();
+            _releaseCacheCleared.Task.WaitAsync(OperationTimeout, TestCancellationToken)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        public void ReleaseCacheCleared() => _releaseCacheCleared.TrySetResult();
+
+        public void ReleaseValueAdded() => _releaseValueAdded.TrySetResult();
+
+        public void ReleaseAll()
+        {
+            ReleaseCacheCleared();
+            ReleaseValueAdded();
         }
     }
 }

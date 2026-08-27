@@ -133,11 +133,18 @@ namespace ViciOne.ServiceBus.Caching.Internals
             lock (_lock)
                 evictedValues = ResetCache(now);
 
-            ScheduleResetRelease(evictedValues);
-
             // Observer callbacks may acquire index locks. They must never execute while the
             // tracker lock is held, otherwise a concurrent indexed read can invert the order.
-            _observers.CacheCleared();
+            try
+            {
+                _observers.CacheCleared();
+            }
+            finally
+            {
+                // The reset must be observable before any evicted resource begins disposal.
+                // A failing observer cannot prevent the asynchronous release batch.
+                ScheduleResetRelease(evictedValues);
+            }
         }
 
         public void Rebucket(IBucketNode<TValue> node)
@@ -195,9 +202,6 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 cleanup = CheckCacheStatus(now);
             }
 
-            if (resetValues is not null)
-                ScheduleResetRelease(resetValues);
-
             ExceptionDispatchInfo observerFailure = null;
             try
             {
@@ -220,7 +224,17 @@ namespace ViciOne.ServiceBus.Caching.Internals
             finally
             {
                 // Once the reservation is published, observer failures must not strand it.
-                DispatchCleanup(cleanup);
+                try
+                {
+                    DispatchCleanup(cleanup);
+                }
+                finally
+                {
+                    // On rollover, CacheCleared and the current ValueAdded notification are one
+                    // ordered publication. Release the old generation only after both complete.
+                    if (resetValues is not null)
+                        ScheduleResetRelease(resetValues);
+                }
             }
 
             observerFailure?.Throw();
