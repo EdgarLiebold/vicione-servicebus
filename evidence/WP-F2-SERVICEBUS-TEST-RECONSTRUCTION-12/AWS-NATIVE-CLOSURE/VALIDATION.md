@@ -7,7 +7,9 @@ This package validates technical commit
 `52702c9b1012aa1d98d403ec5702a54c96086f35`, descended from the accepted product
 baseline `427894348e992551c8d2ae15095c416d2cc1b329`. Architecture authority is
 `d284f7afeb6902296ac322a7c9c58a480bfb7279` under assignment `PO-2026-08-27-02`.
-The remote branch `origin/feature/aws-native-closure` points at the technical subject.
+The technical subject was pushed to `origin/feature/aws-native-closure` before the evidence freeze
+and remains an ancestor of that remote ref. The ref may advance only through additive evidence or
+correction descendants; its tip is therefore not used as an immutable technical identifier.
 
 `TECHNICAL_DIFF.txt` is the exact 195-path `git diff --name-status` projection from the accepted
 baseline through the technical subject. The evidence child does not alter product, test, build,
