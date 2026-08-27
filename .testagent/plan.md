@@ -1686,7 +1686,8 @@ pushed and hash-bound by the architecture order before the first product or test
 1. Extend the one existing test configuration and fixture pipeline rather than creating AWS-specific
    environment readers. Add `LocalTestResource.LocalStack`, typed host/port/region/account options,
    exact environment projections and independent configuration tests. Add one LocalStack service to
-   the canonical Compose file, pinned by immutable calendar-version tag and image digest, published
+   the canonical Compose file, pinned to the final token-free Community release 4.14.0 and its immutable
+   multi-architecture image digest, published
    on loopback with Docker-selected port. Extend runner/log/teardown self-tests before using it.
 2. Create six source-mirrored xUnit 4/MTP v2 projects: SQS UnitArchitecture and LocalIntegration,
    DynamoDB UnitArchitecture and LocalIntegration, S3 UnitArchitecture and LocalIntegration. Add

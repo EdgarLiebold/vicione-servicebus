@@ -2130,3 +2130,32 @@ error envelope and use real queue/message state rather than elapsed-time guesses
 error-header rows intentionally consolidate into one complete provider-crossing carrier; duplicate
 tests are not added just to preserve old method count. The old projects remain untouched until every
 locally executable row has a terminal carrier and every External row has a visible work binding.
+
+### Local .NET/MTP sandbox diagnostic
+
+The first focused infrastructure run on this machine failed before build or discovery with exit 134
+and `SocketException (13): Permission denied` in
+`Microsoft.DotNet.Cli.Commands.Test.IPC.NamedPipeServer`. The SDK path and pinned version were valid;
+the filesystem sandbox denied the local IPC socket used by the native MTP host. This signature is an
+execution-environment failure, not a test, restore or MSBuild defect.
+
+The repeatable correction is to keep the command and its inputs unchanged, use the repository-pinned
+`/usr/local/share/dotnet/dotnet` 10.0.302, isolate `DOTNET_CLI_HOME` under `/private/tmp`, reuse the
+read-only local NuGet cache, disable node reuse and run that exact process outside the socket sandbox.
+Do not change product/tests, enable VSTest, add retries or run an unpinned restore to work around this
+failure. With only that permission boundary changed, the same focused run passed 81/81 with no skip.
+
+### LocalStack licensing boundary
+
+The initially selected digest-bound `2026.08.0` image was executed through the canonical runner and
+exited before readiness with code 55: LocalStack requires an account-bound auth token and active
+license from the unified `2026.03.0` line onward. Requiring that secret would make local tests depend
+on a personal/cloud entitlement, prevent a true offline run and introduce a credential that could
+leak through CI or evidence. It is therefore not an acceptable test-platform dependency.
+
+The fixture instead binds `localstack/localstack:4.14.0` at multi-architecture digest
+`sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a`, the final token-free
+Community release. It runs only SQS, SNS, DynamoDB and S3, on a Docker-selected loopback port with
+in-memory state. This local compatibility substrate does not claim current AWS service behavior;
+real IAM, OIDC, quotas, throttling, long-running visibility/receive behavior and service-managed TTL
+or lifecycle deletion remain explicit External contracts against real AWS.
