@@ -9,7 +9,8 @@
 
 This evidence supersedes correction 05 as the active cache conclusion. Earlier evidence remains immutable
 historical input. The EF retry contract and its 90 obligations / 156 execution identities remain
-unchanged: 77 provider-neutral, 39 PostgreSQL-backed and 40 explicit SQL Server External owners.
+unchanged: 77 executing identities, 39 provider-neutral consolidations and 40 explicit SQL Server
+External owners.
 
 ## Product result
 

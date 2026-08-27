@@ -933,8 +933,8 @@ future cohorts as complete.
 ## Lead correction: cache ring, lifecycle and concurrency safety
 
 - This section supersedes correction 05 as the active cache conclusion. Earlier EF/cache sections
-  remain immutable history; the EF 90-to-156 disposition is unchanged at 77 provider-neutral,
-  39 PostgreSQL-backed and 40 explicit SQL Server External identities.
+  remain immutable history; the EF 90-to-156 disposition is unchanged at 77 executing identities,
+  39 provider-neutral consolidations and 40 explicit SQL Server External identities.
 - The final technical subject is commit `9a3b9fb98f8ad1669570c16a2d18ef9642520d92`,
   tree `52385f1b94f8d5cbc384f6690c9a765294b6815f`, parent
   `f43db446c915d6554510a9eed60e019876693205`. Its active raw evidence is

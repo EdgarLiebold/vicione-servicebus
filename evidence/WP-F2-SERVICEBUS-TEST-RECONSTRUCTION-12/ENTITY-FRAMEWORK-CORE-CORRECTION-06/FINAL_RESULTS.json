@@ -68,7 +68,7 @@
   "unchangedClosure": {
     "efR0Obligations": 90,
     "efExecutionIdentities": 156,
-    "variantDisposition": {"providerNeutral": 77, "postgresql": 39, "externalSqlServer": 40},
+    "variantDisposition": {"executing": 77, "providerNeutralConsolidated": 39, "externalSqlServer": 40},
     "localIntegrationFloor": 70,
     "unitArchitectureFloor": 1914
   }
