@@ -2,6 +2,7 @@ using ViciOne.ServiceBus.Caching;
 using ViciOne.ServiceBus.Caching.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Caching;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Caching;
@@ -146,6 +147,41 @@ public sealed class GreenCacheCapacityTests
 
         AssertBoundedAndNonEmpty(cache, observer, added);
         Assert.Same(first, await index.Get(first.Id));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "queued-cleanup-signal-is-retained")]
+    public void BurstWhileCleanupIsQueued_ConvergesWithoutAnotherCacheOperation()
+    {
+        TestCacheSettings settings = CreateSettings(maximumAgeSeconds: 60);
+        var pendingCleanup = new Queue<Action>();
+        GreenCache<CacheValue> cache = GreenCacheTestFactory.Create<CacheValue>(
+            settings,
+            pendingCleanup.Enqueue);
+        var observer = new CacheEventObserver<CacheValue>(
+            expectedAdded: Capacity * 2,
+            expectedRemoved: Capacity - cache.Statistics.BucketSize);
+        using ConnectHandle connection = cache.Connect(observer);
+
+        for (var indexValue = 0; indexValue < Capacity * 2; indexValue++)
+        {
+            if (indexValue % 2 == 0)
+                settings.CurrentTime += TimeSpan.FromSeconds(1);
+
+            cache.Add(new CacheValue($"key-{indexValue}", $"The key is key-{indexValue}"));
+        }
+
+        Assert.Single(pendingCleanup);
+
+        var executedCleanups = 0;
+        while (pendingCleanup.TryDequeue(out Action? cleanup))
+        {
+            cleanup();
+            Assert.True(++executedCleanups <= 2, "The single-flight cleanup did not converge.");
+        }
+
+        Assert.Equal(2, executedCleanups);
+        AssertBoundedAndNonEmpty(cache, observer, Capacity * 2);
     }
 
     private static TestCacheSettings CreateSettings(int maximumAgeSeconds)

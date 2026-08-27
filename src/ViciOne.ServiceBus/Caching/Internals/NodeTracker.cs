@@ -19,6 +19,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
         readonly TimeSpan _minAge;
         readonly CurrentTimeProvider _nowProvider;
         readonly CacheValueObservable<TValue> _observers;
+        readonly Action<Action> _scheduleCleanup;
         readonly TimeSpan _validityCheckInterval;
         BucketCollection<TValue> _buckets;
         DateTime _cacheResetTime;
@@ -30,7 +31,13 @@ namespace ViciOne.ServiceBus.Caching.Internals
         int _oldestBucketIndex;
 
         public NodeTracker(CacheSettings settings)
+            : this(settings, cleanup => Task.Run(cleanup))
         {
+        }
+
+        internal NodeTracker(CacheSettings settings, Action<Action> scheduleCleanup)
+        {
+            _scheduleCleanup = scheduleCleanup ?? throw new ArgumentNullException(nameof(scheduleCleanup));
             _nowProvider = settings.NowProvider;
 
             _observers = new CacheValueObservable<TValue>();
@@ -267,7 +274,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
                 {
                     Volatile.Write(ref _cleanupScheduled, true);
 
-                    Task.Run(() => Cleanup(now));
+                    _scheduleCleanup(() => Cleanup(now));
                 }
             }
         }
@@ -343,7 +350,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
             }
 
             if (scheduleFollowUp)
-                Task.Run(() => Cleanup(_nowProvider()));
+                _scheduleCleanup(() => Cleanup(_nowProvider()));
         }
 
         async Task EvictNode(IBucketNode<TValue> node)
