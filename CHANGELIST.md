@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2249 |
+| Added | 2274 |
 | Modified | 4217 |
 | Deleted | 1431 |
 | Renamed | 2 |
@@ -995,6 +995,30 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-03/raw/engineering-restore.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-03/raw/local-integration.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-03/raw/unit.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/FAIL_CLOSED_DIAGNOSTICS.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/M14.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/M15.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/TECHNICAL_DIFF.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/mutations/M14-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/mutations/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/mutations/M15-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/mutations/M15.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/ef-local-test.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/ef-local-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/ef-unit-test.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/ef-unit-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/engineering-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/engineering-restore.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/fail-closed-lost-cleanup-signal.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/fail-closed-stale-workflow-floor.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/local-integration-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-04/positive/unit-test.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/MUTATION_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/MUTATION_MANIFEST.md` | Added |  |
@@ -7541,6 +7565,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Caching/GreenCacheTestFactory.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
