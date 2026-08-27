@@ -32,6 +32,13 @@
       "reference": "mcr.microsoft.com/azure-storage/azurite:3.36.0@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98",
       "rationale": "Microsoft's current stable Azurite release provides the real Azure Table wire contract for local integration tests. The multi-architecture OCI index digest fixes the exact image bytes while retaining native amd64 and arm64 execution. A run-scoped custom account replaces the public development account, and the in-memory data directory prevents state or credentials from surviving a run."
     },
+    "localstack": {
+      "repository": "localstack/localstack",
+      "tag": "4.14.0",
+      "digest": "sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a",
+      "reference": "localstack/localstack:4.14.0@sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a",
+      "rationale": "LocalStack 4.14.0 is the final token-free Community release and provides the local SQS, SNS, DynamoDB and S3 wire contracts without making a personal or CI license secret part of the test platform. Starting with 2026.03.0 the unified image refuses startup without account-bound activation; a mandatory cloud license would violate the local, offline-capable fixture boundary. The manifest-list digest fixes linux/amd64 and linux/arm64 bytes. The fixture is ephemeral and loopback-only; current real IAM, quotas and service-managed delayed deletion remain External evidence."
+    },
     "mssql": {
       "repository": "mcr.microsoft.com/mssql/server",
       "tag": "2025-CU8-ubuntu-24.04",

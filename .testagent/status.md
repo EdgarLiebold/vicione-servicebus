@@ -1045,3 +1045,26 @@ future cohorts as complete.
   RedrivePolicy instead of allowing two settlement owners.
 - The next permitted action after this preparation commit is architecture hash binding. Product and
   test edits remain blocked until that binding names the exact research, plan and 111-row map bytes.
+
+## AWS native closure: accepted infrastructure foundation
+
+- Architecture commit `d284f7a` binds the corrected research/plan checkpoint and opens the exact
+  implementation scope. The correction records the measured LocalStack licensing boundary rather
+  than silently introducing a cloud auth token.
+- LocalStack Community 4.14.0 is pinned at multi-architecture digest
+  `sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a`.
+  The canonical runner started SQS, SNS, DynamoDB and S3 on Docker-selected loopback port 33506,
+  projected fresh standard AWS provider-chain credentials only to the child, verified all four
+  services and removed the container/network afterwards. The rejected 2026.08.0 run is retained only
+  as research evidence that current unified images require an account-bound license.
+- The single typed test configuration now owns non-secret LocalStack host, port, region and account
+  coordinates. The configuration project passes 81/81; CI tool tests pass 257/257; UnitArchitecture
+  and LocalIntegration solution graphs build Release with zero warnings and zero errors.
+- Six xUnit 4/MTP v2 project boundaries and their locked package closures are present: SQS/SNS,
+  DynamoDB and S3 each have separate UnitArchitecture and LocalIntegration owners. No NUnit, VSTest,
+  adapter or framework-specific ArchUnit package enters any new closure. The projects are structural
+  owners only at this checkpoint; no empty project is counted as a test result or AWS behavior proof.
+- The repeatable local execution diagnosis is now durable in `.testagent/research.md`: an MTP
+  NamedPipe `SocketException (13)` and process-tree tests denied `ps` are sandbox boundary failures;
+  identical commands pass outside that boundary. Restore network stalls are handled the same way,
+  without modifying tests, runner selection or package truth.

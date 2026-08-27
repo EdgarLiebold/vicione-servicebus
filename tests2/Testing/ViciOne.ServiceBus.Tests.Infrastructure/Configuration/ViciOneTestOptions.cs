@@ -168,6 +168,7 @@ public sealed class ViciOneTestOptions
                 LocalTestResource.RabbitMq => LocalInfrastructure.RabbitMq,
                 LocalTestResource.PostgreSql => LocalInfrastructure.PostgreSql,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
+                LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
                 _ => throw new UnreachableException(),
             };
 
@@ -191,6 +192,8 @@ public enum LocalTestResource
     RabbitMq = 0,
     PostgreSql = 1,
     AzureTable = 2,
+
+    LocalStack = 3,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -208,6 +211,8 @@ public sealed class LocalInfrastructureOptions
     public PostgreSqlLocalOptions? PostgreSql { get; set; }
 
     public AzureTableLocalOptions? AzureTable { get; set; }
+
+    public LocalStackLocalOptions? LocalStack { get; set; }
 }
 
 public interface ILocalTestResourceConfiguration
@@ -272,6 +277,30 @@ public sealed class AzureTableLocalOptions : ILocalTestResourceConfiguration
         if (Port is null or < 1 or > 65535) yield return nameof(Port);
         if (string.IsNullOrWhiteSpace(AccountName)) yield return nameof(AccountName);
         if (string.IsNullOrWhiteSpace(AccountKey)) yield return nameof(AccountKey);
+    }
+}
+
+/// <summary>
+/// Non-secret LocalStack coordinates. Authentication remains exclusively in the AWS SDK provider
+/// chain, populated with run-scoped environment credentials by the canonical fixture runner.
+/// </summary>
+public sealed class LocalStackLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? Port { get; set; }
+
+    public string? Region { get; set; }
+
+    public string? AccountId { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (string.IsNullOrWhiteSpace(Region)) yield return nameof(Region);
+        if (AccountId is null || AccountId.Length != 12 || AccountId.Any(character => !char.IsAsciiDigit(character)))
+            yield return nameof(AccountId);
     }
 }
 

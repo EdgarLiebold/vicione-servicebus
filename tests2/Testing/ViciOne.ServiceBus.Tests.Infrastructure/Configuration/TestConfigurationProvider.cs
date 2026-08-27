@@ -153,6 +153,10 @@ public sealed class TestConfigurationProvider
             ["VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"] = "LocalInfrastructure:AzureTable:Port",
             ["VICIONE_SERVICEBUS_AZURITE_ACCOUNT"] = "LocalInfrastructure:AzureTable:AccountName",
             ["VICIONE_SERVICEBUS_AZURITE_KEY"] = "LocalInfrastructure:AzureTable:AccountKey",
+            ["VICIONE_SERVICEBUS_LOCALSTACK_HOST"] = "LocalInfrastructure:LocalStack:Host",
+            ["VICIONE_SERVICEBUS_LOCALSTACK_PORT"] = "LocalInfrastructure:LocalStack:Port",
+            ["VICIONE_SERVICEBUS_LOCALSTACK_REGION"] = "LocalInfrastructure:LocalStack:Region",
+            ["VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID"] = "LocalInfrastructure:LocalStack:AccountId",
         };
 
         foreach (KeyValuePair<string, string?> entry in environment)

@@ -15,6 +15,12 @@
     "AzureTable": {
       "Host": "localhost",
       "Port": 10002
+    },
+    "LocalStack": {
+      "Host": "localhost",
+      "Port": 4566,
+      "Region": "eu-central-1",
+      "AccountId": "000000000000"
     }
   }
 }

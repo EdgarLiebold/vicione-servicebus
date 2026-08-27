@@ -51,7 +51,7 @@ def digest_of(path: Path) -> str | None:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build_environment() -> dict[str, str]:
+def build_environment(brokers: list[str]) -> dict[str, str]:
     """Generate a fresh account for every broker in the compose file, not only the started one.
 
     Compose interpolates the whole file even when a single service is started, so a variable of the
@@ -73,6 +73,18 @@ def build_environment() -> dict[str, str]:
     environment["VICIONE_SERVICEBUS_PG_DATABASE"] = "postgres"
     environment[broker_logs.MSSQL_USER_VARIABLE] = broker_logs.MSSQL_ACCOUNT_NAME
     environment[broker_logs.MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
+    if "localstack" in brokers:
+        # These are run credentials, not product configuration. Standard AWS SDK variables make the
+        # provider chain the one credential owner while the typed test configuration contains only
+        # non-secret endpoint coordinates. They are generated only for an actual LocalStack run, so
+        # unrelated fixture runs cannot accidentally acquire an AWS identity.
+        environment["AWS_ACCESS_KEY_ID"] = "AKIA" + secrets.token_hex(8).upper()
+        environment["AWS_SECRET_ACCESS_KEY"] = secrets.token_urlsafe(32)
+        environment["AWS_REGION"] = "eu-central-1"
+        environment["AWS_DEFAULT_REGION"] = "eu-central-1"
+        environment["AWS_EC2_METADATA_DISABLED"] = "true"
+        environment["VICIONE_SERVICEBUS_LOCALSTACK_REGION"] = "eu-central-1"
+        environment["VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID"] = "000000000000"
     return environment
 
 
@@ -321,7 +333,7 @@ def main(argv: list[str] | None = None) -> int:
     validate(parser, args)
 
     brokers = list(dict.fromkeys(args.broker))
-    credentials = build_environment()
+    credentials = build_environment(brokers)
     if os.environ.get("GITHUB_ACTIONS") == "true":
         for value in credentials.values():
             print(f"::add-mask::{value}")

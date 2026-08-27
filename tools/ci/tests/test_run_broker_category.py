@@ -78,6 +78,53 @@ class Refusing_a_contradictory_command_line(unittest.TestCase):
                                     "--command", "--", "true"]))
 
 
+class Supplying_a_run_scoped_localstack_identity(unittest.TestCase):
+    """AWS credentials exist only for the LocalStack child and are never fixture defaults."""
+
+    def test_an_unrelated_fixture_run_receives_no_aws_identity(self) -> None:
+        environment = runner.build_environment(["rabbitmq"])
+
+        self.assertNotIn("AWS_ACCESS_KEY_ID", environment)
+        self.assertNotIn("AWS_SECRET_ACCESS_KEY", environment)
+        self.assertNotIn("AWS_REGION", environment)
+
+    def test_localstack_receives_fresh_standard_provider_chain_inputs(self) -> None:
+        first = runner.build_environment(["localstack"])
+        second = runner.build_environment(["localstack"])
+
+        self.assertRegex(first["AWS_ACCESS_KEY_ID"], r"^AKIA[0-9A-F]{16}$")
+        self.assertGreaterEqual(len(first["AWS_SECRET_ACCESS_KEY"]), 32)
+        self.assertNotEqual(first["AWS_ACCESS_KEY_ID"], second["AWS_ACCESS_KEY_ID"])
+        self.assertNotEqual(first["AWS_SECRET_ACCESS_KEY"], second["AWS_SECRET_ACCESS_KEY"])
+        self.assertEqual("eu-central-1", first["AWS_REGION"])
+        self.assertEqual(first["AWS_REGION"], first["AWS_DEFAULT_REGION"])
+        self.assertEqual("true", first["AWS_EC2_METADATA_DISABLED"])
+        self.assertEqual("000000000000", first["VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID"])
+
+    def test_localstack_gateway_is_one_loopback_projected_port(self) -> None:
+        self.assertEqual(
+            {4566: "VICIONE_SERVICEBUS_LOCALSTACK_PORT"},
+            compose_fixture.BROKER_PORTS["localstack"])
+        self.assertEqual(
+            "VICIONE_SERVICEBUS_LOCALSTACK_HOST",
+            broker_logs.BROKER_HOST_VARIABLE["localstack"])
+
+    def test_localstack_image_and_service_set_are_immutably_bound(self) -> None:
+        image_lock = json.loads(
+            (compose_fixture.REPO_ROOT / "build/test-infrastructure/images.lock.json")
+            .read_text(encoding="utf-8"))
+        localstack = image_lock["baseImages"]["localstack"]
+        expected_reference = (
+            "localstack/localstack:4.14.0@"
+            "sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a")
+        compose = compose_fixture.COMPOSE_FILE.read_text(encoding="utf-8")
+
+        self.assertEqual(expected_reference, localstack["reference"])
+        self.assertEqual(1, compose.count(f"image: {expected_reference}"))
+        self.assertEqual(1, compose.count("SERVICES: sqs,sns,dynamodb,s3"))
+        self.assertIn('"127.0.0.1::4566"', compose)
+
+
 class Reporting_a_teardown_that_did_not_happen(unittest.TestCase):
     """A fixture that could not be removed is not a green run.
 

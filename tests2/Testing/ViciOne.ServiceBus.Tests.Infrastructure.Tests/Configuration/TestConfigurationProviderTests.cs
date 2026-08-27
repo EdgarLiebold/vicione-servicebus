@@ -28,6 +28,7 @@ public sealed class TestConfigurationProviderTests
         RabbitMqLocalOptions rabbitMq = Assert.IsType<RabbitMqLocalOptions>(localInfrastructure.RabbitMq);
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
+        LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
         Assert.Equal("localhost", rabbitMq.Host);
         Assert.Equal(5672, rabbitMq.Port);
         Assert.Equal("localhost", postgreSql.Host);
@@ -35,6 +36,10 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal("postgres", postgreSql.Database);
         Assert.Equal("localhost", azureTable.Host);
         Assert.Equal(10002, azureTable.Port);
+        Assert.Equal("localhost", localStack.Host);
+        Assert.Equal(4566, localStack.Port);
+        Assert.Equal("eu-central-1", localStack.Region);
+        Assert.Equal("000000000000", localStack.AccountId);
     }
 
     [Theory]
@@ -171,6 +176,48 @@ public sealed class TestConfigurationProviderTests
         Assert.DoesNotContain(
             "LocalInfrastructure:PostgreSql:Port",
             options.ValidateForLocal(LocalTestResource.PostgreSql));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Host", "", "LocalInfrastructure:LocalStack:Host")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Port", "0", "LocalInfrastructure:LocalStack:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Region", "", "LocalInfrastructure:LocalStack:Region")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__AccountId", "not-an-account", "LocalInfrastructure:LocalStack:AccountId")]
+    public void LocalStackSelection_RejectsAnInvalidCoordinate(
+        string key,
+        string value,
+        string expectedError)
+    {
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            (key, value)).GetOptions();
+
+        Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.LocalStack));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_LOCALSTACK_HOST", "127.0.0.1", "127.0.0.1")]
+    [InlineData("VICIONE_SERVICEBUS_LOCALSTACK_PORT", "34567", "34567")]
+    [InlineData("VICIONE_SERVICEBUS_LOCALSTACK_REGION", "eu-west-1", "eu-west-1")]
+    [InlineData("VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID", "123456789012", "123456789012")]
+    public void CanonicalLocalStackVariables_MapIntoTheSingleTypedConfiguration(
+        string key,
+        string value,
+        string expected)
+    {
+        LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.LocalStack);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_LOCALSTACK_HOST" => localStack.Host!,
+            "VICIONE_SERVICEBUS_LOCALSTACK_PORT" => localStack.Port!.Value.ToString(),
+            "VICIONE_SERVICEBUS_LOCALSTACK_REGION" => localStack.Region!,
+            "VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID" => localStack.AccountId!,
+            _ => throw new InvalidOperationException(key),
+        };
+
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -332,7 +379,7 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["AzureTable", "PostgreSql", "RabbitMq"],
+            ["AzureTable", "LocalStack", "PostgreSql", "RabbitMq"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "Password", "Port", "UserName"],
@@ -343,6 +390,9 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(
             ["AccountKey", "AccountName", "Host", "Port"],
             PublicPropertyNames<AzureTableLocalOptions>());
+        Assert.Equal(
+            ["AccountId", "Host", "Port", "Region"],
+            PublicPropertyNames<LocalStackLocalOptions>());
         Assert.Equal(
             ["Aws", "Azure"],
             PublicPropertyNames<ExternalProviderOptions>());
@@ -357,6 +407,7 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<RabbitMqLocalOptions>());
         Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
+        Assert.Empty(PublicFields<LocalStackLocalOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
         Assert.Empty(PublicFields<AwsProviderOptions>());
         Assert.Empty(PublicFields<ExternalProviderOptions>());
