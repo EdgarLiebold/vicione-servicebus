@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Runtime.Serialization;
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
@@ -40,9 +41,23 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
             var value = await _database.LoadAsync<DynamoDbSaga>(_options.FormatSagaKey(correlationId), DynamoDbSaga.DefaultEntityType,
                 _options.CreateLoadConfig(), cancellationToken).ConfigureAwait(false);
 
-            return value == null
-                ? null
-                : JsonSerializer.Deserialize<TSaga>(value.Properties, SystemTextJsonMessageSerializer.Options);
+            if (value == null)
+                return null;
+
+            TSaga instance = JsonSerializer.Deserialize<TSaga>(value.Properties, SystemTextJsonMessageSerializer.Options);
+            if (instance == null)
+                throw new SerializationException($"The DynamoDB saga payload for {typeof(TSaga).Name} was null.");
+
+            string expectedKey = _options.FormatSagaKey(correlationId);
+            if (!string.Equals(value.CorrelationId, expectedKey, StringComparison.Ordinal)
+                || instance.CorrelationId != correlationId
+                || instance.Version != value.VersionNumber)
+            {
+                throw new SerializationException(
+                    $"The DynamoDB saga payload for {typeof(TSaga).Name} does not match its persisted identity or version.");
+            }
+
+            return instance;
         }
 
         public async Task Update(TSaga instance, CancellationToken cancellationToken)

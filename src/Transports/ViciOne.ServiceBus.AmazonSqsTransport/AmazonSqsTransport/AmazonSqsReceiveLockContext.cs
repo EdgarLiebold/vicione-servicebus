@@ -164,6 +164,7 @@ public class AmazonSqsReceiveLockContext :
                 {
                     LogContext.Warning?.Log("Maximum visibility timeout {MaxVisibilityTimeout} for message {ReceiptHandle} reached.",
                         _maxVisibilityTimeout, _message.ReceiptHandle);
+                    Interlocked.Exchange(ref _locked, 0);
                     return;
                 }
 

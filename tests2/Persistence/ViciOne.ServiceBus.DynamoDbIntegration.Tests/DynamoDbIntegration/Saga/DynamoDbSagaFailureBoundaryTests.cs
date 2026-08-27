@@ -1,16 +1,65 @@
 namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
 
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.Json;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using ViciOne.ServiceBus.DynamoDbIntegration.Saga;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 public sealed class DynamoDbSagaFailureBoundaryTests
 {
+    [Theory]
+    [InlineData("null-payload")]
+    [InlineData("foreign-payload-id")]
+    [InlineData("foreign-row-key")]
+    [InlineData("version-mismatch")]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "corrupt-persisted-saga-never-masquerades-as-absent-or-valid")]
+    public async Task CorruptPersistedSaga_FailsClosed(string corruption)
+    {
+        Guid requestedId = Guid.NewGuid();
+        Guid foreignId = Guid.NewGuid();
+        var persisted = new TestSaga { CorrelationId = requestedId, Version = 7 };
+        var row = new DynamoDbSaga
+        {
+            CorrelationId = requestedId.ToString("D"),
+            VersionNumber = persisted.Version,
+            Properties = JsonSerializer.Serialize(persisted, SystemTextJsonMessageSerializer.Options),
+        };
+
+        switch (corruption)
+        {
+            case "null-payload":
+                row.Properties = "null";
+                break;
+            case "foreign-payload-id":
+                persisted.CorrelationId = foreignId;
+                row.Properties = JsonSerializer.Serialize(persisted, SystemTextJsonMessageSerializer.Options);
+                break;
+            case "foreign-row-key":
+                row.CorrelationId = foreignId.ToString("D");
+                break;
+            case "version-mismatch":
+                row.VersionNumber++;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(corruption), corruption, null);
+        }
+
+        IDynamoDBContext database = LoadedSagaContextProbe.Create(row);
+        using var context = new DynamoDbDatabaseContext<TestSaga>(database, new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+
+        SerializationException actual = await Assert.ThrowsAsync<SerializationException>(
+            () => context.Load(requestedId, TestContext.Current.CancellationToken));
+
+        Assert.Contains(nameof(TestSaga), actual.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "provider-failures-preserve-identity-and-update-version")]
     public async Task ProviderFailure_IsPreservedAndFailedUpdateRestoresVersion()
@@ -271,5 +320,26 @@ public sealed class DynamoDbSagaFailureBoundaryTests
                 }
             }
         }
+    }
+
+    private class LoadedSagaContextProbe : DispatchProxy
+    {
+        private DynamoDbSaga _row = null!;
+
+        public static IDynamoDBContext Create(DynamoDbSaga row)
+        {
+            ArgumentNullException.ThrowIfNull(row);
+
+            IDynamoDBContext context = DispatchProxy.Create<IDynamoDBContext, LoadedSagaContextProbe>();
+            ((LoadedSagaContextProbe)(object)context)._row = row;
+            return context;
+        }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) => targetMethod?.Name switch
+        {
+            "LoadAsync" => Task.FromResult(_row),
+            "Dispose" => null,
+            _ => throw new NotSupportedException(targetMethod?.Name),
+        };
     }
 }

@@ -63,7 +63,10 @@ namespace ViciOne.ServiceBus.Configuration
         {
             ArgumentNullException.ThrowIfNull(configurator);
 
-            configurator.TryAddSingleton<Func<IDynamoDBContext>>(provider => () => _contextFactory(provider));
+            Func<IServiceProvider, IDynamoDBContext> contextFactory = _contextFactory
+                ?? throw new InvalidOperationException("The DynamoDB context factory must be configured before registration.");
+
+            configurator.TryAddSingleton<Func<IDynamoDBContext>>(provider => () => contextFactory(provider));
             configurator.TryAddSingleton(new DynamoDbSagaRepositoryOptions<TSaga>(TableName, Expiration, TimeProvider, ConsistentRead,
                 IsEmptyStringValueEnabled, RetrieveDateTimeInUtc, Conversion));
             configurator.RegisterLoadSagaRepository<TSaga, DynamoDbSagaRepositoryContextFactory<TSaga>>();

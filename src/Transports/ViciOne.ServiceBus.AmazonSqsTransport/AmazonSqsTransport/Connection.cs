@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 using System;
+using System.Runtime.ExceptionServices;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
@@ -47,7 +48,33 @@ public class Connection :
 
     public void Dispose()
     {
-        SnsClient.Dispose();
-        SqsClient.Dispose();
+        Exception? snsException = null;
+        Exception? sqsException = null;
+
+        try
+        {
+            SnsClient.Dispose();
+        }
+        catch (Exception exception)
+        {
+            snsException = exception;
+        }
+
+        try
+        {
+            SqsClient.Dispose();
+        }
+        catch (Exception exception)
+        {
+            sqsException = exception;
+        }
+
+        if (snsException != null && sqsException != null)
+            throw new AggregateException("Disposing the Amazon SNS and SQS clients failed.", snsException, sqsException);
+
+        if (snsException != null)
+            ExceptionDispatchInfo.Capture(snsException).Throw();
+        if (sqsException != null)
+            ExceptionDispatchInfo.Capture(sqsException).Throw();
     }
 }

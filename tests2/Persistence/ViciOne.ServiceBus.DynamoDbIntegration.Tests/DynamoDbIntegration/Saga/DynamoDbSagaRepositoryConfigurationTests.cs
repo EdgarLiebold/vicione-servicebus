@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
 using System.Reflection;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DynamoDbIntegration.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -10,6 +11,46 @@ using Xunit;
 
 public sealed class DynamoDbSagaRepositoryConfigurationTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "registered-context-factory-snapshot-is-immutable")]
+    public void RegisteredContextFactory_IsFrozenAgainstRetainedConfiguratorMutation(bool useServiceProviderFactory)
+    {
+        IDynamoDBContext registered = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
+        IDynamoDBContext later = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
+        IDynamoDbSagaRepositoryConfigurator<TestSaga>? retained = null;
+
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+        {
+            configuration.AddSaga<TestSaga>()
+                .DynamoDbRepository(repository =>
+                {
+                    retained = repository;
+                    repository.TableName = "valid-table";
+                    if (useServiceProviderFactory)
+                        repository.ContextFactory(_ => registered);
+                    else
+                        repository.ContextFactory(() => registered);
+                });
+
+            Assert.NotNull(retained);
+            if (useServiceProviderFactory)
+                retained.ContextFactory(_ => later);
+            else
+                retained.ContextFactory(() => later);
+        });
+
+        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
+        Assert.NotNull(descriptor.ImplementationFactory);
+        var runtimeFactory = Assert.IsType<Func<IDynamoDBContext>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
+
+        IDynamoDBContext actual = runtimeFactory();
+        Assert.Same(registered, actual);
+        Assert.NotSame(later, actual);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "invalid-input-rejected-and-runtime-options-frozen")]
     public void InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration()
@@ -99,5 +140,12 @@ public sealed class DynamoDbSagaRepositoryConfigurationTests
     {
         protected override object? Invoke(System.Reflection.MethodInfo? targetMethod, object?[]? args) =>
             throw new NotSupportedException(targetMethod?.Name);
+    }
+
+    private sealed class EmptyServiceProvider : IServiceProvider
+    {
+        public static EmptyServiceProvider Instance { get; } = new();
+
+        public object? GetService(Type serviceType) => null;
     }
 }

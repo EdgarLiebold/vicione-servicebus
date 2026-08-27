@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2032 predeclared unfiltered cases;
+- `UnitArchitecture`: 2043 predeclared unfiltered cases;
 - `LocalIntegration`: 149 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1766,3 +1766,29 @@ LocalStack, and S3 6 Unit and 5 LocalStack; plus a complete Engineering locked r
 build with zero warnings/errors. Architecture source/namespace and exact solution-closure guards
 pass. Mutation evidence, frozen technical/evidence commits, independent read-only review and remote
 backup remain acceptance work; none is inferred from these green executions.
+
+### AWS native correction plan — failure boundaries and deterministic time
+
+The frozen AWS candidate exposed four product defects and one test-oracle defect during the Lead's
+mandatory line-by-line audit. Correct them as one bounded follow-up before requesting independent
+acceptance; the real-AWS External boundary and the 111-row inherited disposition remain unchanged.
+
+1. Freeze the DynamoDB context factory at registration so retaining and later mutating the
+   configurator cannot alter an already registered runtime repository. Cover both public factory
+   overloads against a retained-configurator mutation.
+2. Make DynamoDB saga loading fail closed when a persisted row contains a JSON null payload or when
+   row key, payload correlation id, payload version and row version disagree. Corrupt persistence
+   is never reported as an absent or valid saga.
+3. Dispose owned SNS and SQS clients independently. A failure from one client may not suppress the
+   other's disposal; preserve the exact sole failure and aggregate both failures in deterministic
+   SNS/SQS order when both occur.
+4. Mark an SQS receive lock lost when the total visibility-renewal window expires. Prove the state
+   transition with an injected monotonic sequence and no wall-clock wait.
+5. Replace the LocalStack SentTimestamp wall-clock range with a hermetic exact Unix-millisecond
+   parser owner. The provider-crossing test retains only provider-origin, UTC and millisecond-shape
+   assertions plus the exact envelope timestamp.
+6. Raise the predeclared UnitArchitecture floor by exactly eleven materialized cases, from 2032 to
+   2043. Run both focused projects, locked UnitArchitecture and LocalIntegration restores/builds,
+   complete unfiltered 2043/149 profiles, and the Engineering Release build. Then execute exact
+   one-cause mutations in a disposable worktree, freeze separate technical/evidence commits and
+   require the same two independent read-only reviews. Do not represent real AWS as locally green.

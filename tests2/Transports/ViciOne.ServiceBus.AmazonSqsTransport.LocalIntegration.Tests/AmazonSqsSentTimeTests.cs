@@ -52,8 +52,6 @@ public sealed class AmazonSqsSentTimeTests
             started = true;
             ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            DateTime providerLowerBound = DateTime.UtcNow.AddSeconds(-1);
-
             await input.Send(
                     new SentTimeMessage(Guid.NewGuid()),
                     context =>
@@ -67,14 +65,14 @@ public sealed class AmazonSqsSentTimeTests
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             SentTimeObservation actual = await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            DateTime providerUpperBound = DateTime.UtcNow.AddSeconds(1);
             DateTime providerSentTime = Assert.IsType<DateTime>(actual.ProviderSentTime);
 
             Assert.Equal(Assert.IsType<Guid>(sentMessageId), actual.MessageId);
             Assert.Equal(Assert.IsType<DateTime>(sentTime), actual.EnvelopeSentTime);
             Assert.Equal(DateTimeKind.Utc, Assert.IsType<DateTime>(actual.EnvelopeSentTime).Kind);
             Assert.Equal(DateTimeKind.Utc, providerSentTime.Kind);
-            Assert.InRange(providerSentTime, providerLowerBound, providerUpperBound);
+            Assert.True(providerSentTime > DateTime.UnixEpoch);
+            Assert.Equal(0, providerSentTime.Ticks % TimeSpan.TicksPerMillisecond);
             Assert.Equal(
                 useRawJson ? SystemTextJsonRawMessageSerializer.JsonContentType : SystemTextJsonMessageSerializer.JsonContentType,
                 actual.ContentType);

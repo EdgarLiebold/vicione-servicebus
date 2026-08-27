@@ -2147,6 +2147,23 @@ read-only local NuGet cache, disable node reuse and run that exact process outsi
 Do not change product/tests, enable VSTest, add retries or run an unpinned restore to work around this
 failure. With only that permission boundary changed, the same focused run passed 81/81 with no skip.
 
+The later AWS correction audit exposed two additional symptoms of the same local execution boundary.
+A sandboxed project build could remain asleep without a child process or console output while
+orphaned MSBuild worker nodes from an earlier interrupted parallel attempt remained alive. The
+reproducible recovery is: identify only the Lead-owned processes outside the sandbox, terminate only
+the exact stuck CLI and orphaned worker PIDs, run `dotnet build-server shutdown`, and restart the
+command outside the sandbox with `MSBUILDDISABLENODEREUSE=1`, `--disable-build-servers` for restore or
+build, and `/p:UseSharedCompilation=false`. The unchanged SQS build then completed with zero warnings
+and errors. This is the standard diagnosis for a silent local build hang; no test or product edit is
+an acceptable workaround.
+
+Direct MTP project execution also needs the profile projected explicitly. The same built SQS artifact
+listed exactly 51 tests, but `dotnet test --project ...` without
+`VICIONE_TESTS__Profile=UnitArchitecture` intentionally selected no executable module and returned
+the minimum-count violation. Repeating the unchanged command with that profile produced 51/51. A
+zero-test result at this boundary is therefore diagnosed by independently listing the built artifact
+and checking profile projection before investigating discovery or changing the runner.
+
 The full AWS candidate exposed a second, distinct local diagnostic. A reduced-output unfiltered run
 appeared to end inside the Architecture assembly, but no process remained. Running the assembly
 serially with `--stop-on-fail` revealed ordinary fail-closed findings: the exact Unit solution

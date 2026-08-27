@@ -123,6 +123,46 @@ public sealed class AmazonSqsHostConfigurationTests
         Assert.Equal(2, Volatile.Read(ref snsDisposed));
     }
 
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "owned-client-disposal-attempts-both-clients-and-preserves-failures")]
+    public void OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(bool sqsFails, bool snsFails)
+    {
+        var sqsFailure = new InvalidOperationException("SQS dispose failed");
+        var snsFailure = new InvalidOperationException("SNS dispose failed");
+        var sqsDisposed = 0;
+        var snsDisposed = 0;
+        var configurator = new AmazonSqsHostConfigurator(new Uri("amazonsqs://eu-central-1"));
+        configurator.ClientFactories(
+            () => CreateSqsClient(() =>
+            {
+                sqsDisposed++;
+                if (sqsFails)
+                    throw sqsFailure;
+            }),
+            () => CreateSnsClient(() =>
+            {
+                snsDisposed++;
+                if (snsFails)
+                    throw snsFailure;
+            }));
+        IConnection connection = configurator.Settings.CreateConnection();
+
+        Exception actual = Assert.ThrowsAny<Exception>(connection.Dispose);
+
+        Assert.Equal(1, sqsDisposed);
+        Assert.Equal(1, snsDisposed);
+        if (sqsFails && snsFails)
+        {
+            AggregateException aggregate = Assert.IsType<AggregateException>(actual);
+            Assert.Equal([snsFailure, sqsFailure], aggregate.InnerExceptions);
+        }
+        else
+            Assert.Same(sqsFails ? sqsFailure : snsFailure, actual);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "host-equality-and-hash-contract")]
     public void HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing()

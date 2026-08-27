@@ -95,6 +95,38 @@ public sealed class AmazonSqsReceiveLifecycleTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "maximum-renewal-window-expiry-loses-lock")]
+    public async Task MaximumRenewalWindowExpiry_MarksTheReceiveLockLost()
+    {
+        QueueReceiveSettings settings = CreateSettings();
+        settings.VisibilityTimeout = 0;
+        settings.MaxVisibilityTimeout = TimeSpan.FromSeconds(30);
+        var renewalCalls = 0;
+        var timeProvider = new SequenceTimeProvider(
+            StartTime,
+            TimeSpan.Zero,
+            settings.MaxVisibilityTimeout + TimeSpan.FromTicks(1));
+
+        var receiveLock = new AmazonSqsReceiveLockContext(
+            new Uri("amazonsqs://eu-central-1/orders"),
+            new Message { ReceiptHandle = "receipt" },
+            settings,
+            CancellationToken.None,
+            timeProvider,
+            (_, _, _, _) =>
+            {
+                renewalCalls++;
+                return Task.CompletedTask;
+            },
+            (_, _, _) => Task.CompletedTask,
+            () => false);
+
+        await Assert.ThrowsAsync<TransportException>(receiveLock.ValidateLockStatus);
+        Assert.Equal(0, renewalCalls);
+        await receiveLock.Faulted(new InvalidOperationException("business failure"));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "settings-snapshot-and-settlement-order")]
     public async Task Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessage()
     {
@@ -140,5 +172,21 @@ public sealed class AmazonSqsReceiveLifecycleTests
             QueueUrl = "https://sqs.eu-central-1.amazonaws.com/123456789012/orders"
         };
         return settings;
+    }
+
+    private sealed class SequenceTimeProvider(DateTimeOffset utcNow, params TimeSpan[] elapsed) : TimeProvider
+    {
+        private readonly long[] _timestamps = elapsed.Select(value => value.Ticks).ToArray();
+        private int _index = -1;
+
+        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+
+        public override DateTimeOffset GetUtcNow() => utcNow;
+
+        public override long GetTimestamp()
+        {
+            int index = Math.Min(Interlocked.Increment(ref _index), _timestamps.Length - 1);
+            return _timestamps[index];
+        }
     }
 }
