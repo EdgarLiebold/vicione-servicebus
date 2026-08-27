@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 2,
+  "technicalCommit": "497a7cd5570969bee13f35abb46bb37a7372dbee",
+  "technicalTree": "8e25a9d98d39bd71e1afc05e73e6b18b462d932d",
+  "technicalParent": "1faa2710dfeb0b961110fdc67818c34bd1f04377",
+  "authorizingArchitectureCommit": "2c8efb961dc28b45906eaedd92853ecb4997c18b",
+  "executionManifest": "MUTATION_EXECUTION.tsv",
+  "resultContract": "Every mutation was the only source-byte change, built with exit 0 and zero warnings/errors, failed its exact owning xUnit 4/MTP 2 test with exit 2, had zero skipped cases, and restored the target to postRestoreSha256 before the next mutation.",
+  "mutations": [
+    {
+      "id": "M01",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "value.Length > MaximumKeyCharacters", "newText": "value.Length >= MaximumKeyCharacters", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "905e142f118b4e6496466183f259556a6a9fbed9e4d295f69f8a763165af83f0",
+      "postRestoreSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal.AzureTableMessageJournalOptionsTests.PartitionKey_UsesTheOfficial1024CharacterBoundary",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "The accepted 1024-character boundary is rejected"
+    },
+    {
+      "id": "M02",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "value is '/' or '\\\\' or '#' or '?'", "newText": "false", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "a15e4bcb20b5e693670c42d05c7b4be710b6d6a96dd0a8b484cf916416036f7c",
+      "postRestoreSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal.AzureTableMessageJournalOptionsTests.PartitionKey_RejectsEveryAzureUnsafeCharacter",
+      "expectedCount": 5,
+      "actual": { "tests": 5, "passed": 1, "failed": 4, "skipped": 0 },
+      "expectedFailure": "Four forbidden printable key characters are accepted"
+    },
+    {
+      "id": "M03",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "correlationId == Guid.Empty", "newText": "correlationId == Guid.Empty && parameterName.Length < 0", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "60d7ed2f517bb1a8bb8aa68c59e09358dbc2d8fbfacb19ee9c1e90bcc317808b",
+      "postRestoreSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.BuiltInFormatters_RejectAnEmptyCorrelationId",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "Guid.Empty is accepted as a persisted saga key"
+    },
+    {
+      "id": "M04",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs",
+      "baselineSha256": "a23af6839670ada8a829f2b26486381b361a501f41219738694e2853e6ba446c",
+      "replacements": [
+        {
+          "oldText": "return (\n                AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey)),\n                AzureTableKeyValidator.Validate(rowKey, nameof(rowKey)));",
+          "newText": "return (partitionKey, rowKey);",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "eedba184f7c46b14b82895fee94e3347e0a069886ce099d290eb7021b348d06c",
+      "postRestoreSha256": "a23af6839670ada8a829f2b26486381b361a501f41219738694e2853e6ba446c",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.DatabaseContext_RejectsUnsafeCustomFormatterOutputBeforeNetworkUse",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "Unsafe custom formatter output crosses the repository boundary"
+    },
+    {
+      "id": "M05",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "replacements": [
+        { "oldText": "catch (RequestFailedException exception) when (exception.Status == 409)", "newText": "catch (RequestFailedException exception)", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "eba93793b1aef69c51434642724a963b3a973ace54355423c60a511785f292b1",
+      "postRestoreSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_PropagatesANonConflictStorageFailureUnchanged",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "The broad catch suppresses the expected HTTP 500 instead of preserving the original exception; the test fails directly because no exception is thrown"
+    },
+    {
+      "id": "M06",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "replacements": [
+        {
+          "oldText": ".GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken).ConfigureAwait(false);",
+          "newText": ".GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken.None).ConfigureAwait(false);",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "3349cc93eb1bbd719970f259f98cbfb89f2fed624cf95e8a06c0f7e06c83a14f",
+      "postRestoreSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Load_PropagatesCallerCancellationWithTheExactTokenAndException",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "The caller cancellation token is not forwarded to TableClient"
+    },
+    {
+      "id": "M07",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "replacements": [
+        {
+          "oldText": "catch (OperationCanceledException)\n                when (context.CancellationToken.IsCancellationRequested)",
+          "newText": "catch (OperationCanceledException exception)\n                when (exception.CancellationToken == context.CancellationToken)",
+          "occurrenceCount": 2
+        }
+      ],
+      "mutantSha256": "1c9fc1e6a14c5ebd23b65bc04b5529e01ee4128729f02c3fabf39917f5949e17",
+      "postRestoreSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Write_DoesNotMisclassifyANonRequestedDependencyCancellationAsCallerCancellation",
+      "expectedCount": 2,
+      "actual": { "tests": 2, "passed": 0, "failed": 2, "skipped": 0 },
+      "expectedFailure": "Both non-requested dependency cancellations escape as caller cancellation"
+    },
+    {
+      "id": "M08",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "replacements": [
+        { "oldText": "new TableEntity(dict) { ETag = new ETag(eTag.ETag) }", "newText": "new TableEntity(dict) { ETag = ETag.All }", "occurrenceCount": 1 },
+        { "oldText": "DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)", "newText": "DeleteEntityAsync(partitionKey, rowKey, ETag.All, context.CancellationToken)", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "d4d1059bf6e3252a6139a7687843515a7d7d847d708d0db3b741f3e33f6e302b",
+      "postRestoreSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Write_ClassifiesAStaleEtagAsASagaFailureWithTheOriginalStorageError",
+      "expectedCount": 2,
+      "actual": { "tests": 2, "passed": 0, "failed": 2, "skipped": 0 },
+      "expectedFailure": "Update and delete send wildcard ETags instead of the exact concurrency token"
+    },
+    {
+      "id": "M09",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyConverter.cs",
+      "baselineSha256": "92bd23a4e08a99be52f261c6e145da14f92d4763fd528f289291c500c9db68ae",
+      "replacements": [
+        {
+          "oldText": "throw new InvalidOperationException(\n                    $\"Azure Table property '{_name}' cannot be converted to '{typeof(TProperty)}'.\");",
+          "newText": "return;",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "fe87b307204f81c62e80bf0552ca918fb624d8669e02f8b27a71cf0cf3a0411c",
+      "postRestoreSha256": "92bd23a4e08a99be52f261c6e145da14f92d4763fd528f289291c500c9db68ae",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues",
+      "expectedCount": 3,
+      "actual": { "tests": 3, "passed": 0, "failed": 3, "skipped": 0 },
+      "expectedFailure": "All three malformed persisted values are silently ignored"
+    },
+    {
+      "id": "M10",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyTypeConverter.cs",
+      "baselineSha256": "5ba91f2c46423f327becd26548383496235c794c049d330899865633929e5a7c",
+      "replacements": [
+        {
+          "oldText": "if (input is string text\n                && !string.IsNullOrWhiteSpace(text)\n                && _timeSpanConverter.TryConvert(text, out var value))\n            {\n                result = value;",
+          "newText": "if (input is string text\n                && !string.IsNullOrWhiteSpace(text))\n            {\n                _timeSpanConverter.TryConvert(text, out var value);\n                result = value;",
+          "occurrenceCount": 2,
+          "occurrenceIndex": 0
+        }
+      ],
+      "mutantSha256": "ae5e12b37fd17423ea637f17d2588c5298454044849bc1815cb547e3e50839cd",
+      "postRestoreSha256": "5ba91f2c46423f327becd26548383496235c794c049d330899865633929e5a7c",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues",
+      "expectedCount": 3,
+      "actual": { "tests": 3, "passed": 2, "failed": 1, "skipped": 0 },
+      "expectedFailure": "Malformed TimeSpan text is accepted as the default duration"
+    },
+    {
+      "id": "M11",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/DelegateTableClientProvider.cs",
+      "baselineSha256": "82404d029017db113a1687a507a94c3190280bccb5dc93f51d4ac277bec3cd6f",
+      "replacements": [
+        {
+          "oldText": "return _tableClientFactory()\n                ?? throw new InvalidOperationException(\"The Azure Table client factory returned null.\");",
+          "newText": "return _tableClientFactory()!;",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "281ede6f03c67d36c324df8c86d390cb77bf59150ac2357aaee1a2c444199249",
+      "postRestoreSha256": "82404d029017db113a1687a507a94c3190280bccb5dc93f51d4ac277bec3cd6f",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "Null client output reaches repository construction instead of the owner exception"
+    },
+    {
+      "id": "M12",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryRegistrationProvider.cs",
+      "baselineSha256": "9c94a62bdf9cbf213ba85d9b1f9eaa47ede5c3eb0ffb6626bc4773273878682e",
+      "replacements": [
+        { "oldText": "            ArgumentNullException.ThrowIfNull(configure);\n", "newText": "", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "0740beaec66c6d49ff45145972edea2531c676ab59319e93dc092b8af60af7d4",
+      "postRestoreSha256": "9c94a62bdf9cbf213ba85d9b1f9eaa47ede5c3eb0ffb6626bc4773273878682e",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Configuration.AzureTableConfigurationContractTests.RegistrationProvider_RejectsANullConfigurationDelegate",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "A null registration delegate is retained instead of rejected"
+    },
+    {
+      "id": "M13",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "replacements": [
+        {
+          "oldText": "catch (OperationCanceledException)\n                when (context.CancellationToken.IsCancellationRequested)",
+          "newText": "catch (OperationCanceledException exception)\n                when (context.CancellationToken.IsCancellationRequested\n                    && exception.CancellationToken == context.CancellationToken)",
+          "occurrenceCount": 2
+        }
+      ],
+      "mutantSha256": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+      "postRestoreSha256": "01af83ae82a1a44cc58e69ebc5ec18a923e2ae681cee55dfad0e7658d418a386",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Write_PropagatesCallerCancellationWithTheExactTokenAndException",
+      "expectedCount": 6,
+      "actual": { "tests": 6, "passed": 2, "failed": 4, "skipped": 0 },
+      "expectedFailure": "Default-token and linked-token SDK cancellations are wrapped for both update and delete while the same-token controls remain green"
+    },
+    {
+      "id": "M14",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStore.cs",
+      "baselineSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+      "replacements": [
+        { "oldText": "            new(TableTransactionActionType.UpdateReplace, lease, lease.ETag),\n", "newText": "", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "6eecbc00d83356aac654bd6de7b6db9145ec178ffc0be3688ed12356c0fe02b3",
+      "postRestoreSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal.AzureTableMessageJournalStoreTests.ConcurrentAppends_NeverExceedTheDeclaredCapacity",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "Without the ETag lease action all eight synchronized real Azurite appends succeed and the capacity grows to eight"
+    },
+    {
+      "id": "M15",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStore.cs",
+      "baselineSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+      "replacements": [
+        { "oldText": "SubmitTransactionAsync(actions, cancellationToken)", "newText": "SubmitTransactionAsync(actions.Take(1), cancellationToken)", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "bff4f012b11c9452ddc6ddd31b38fc2caeaa267075775bc634768e7e8abd72d2",
+      "postRestoreSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal.AzureTableMessageJournalStoreTests.Append_SubmitsLeasePruningAndEntryAsOneOrderedTransaction",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "The transaction contains only the lease action instead of the exact four ordered actions"
+    },
+    {
+      "id": "M16",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryConfigurator.cs",
+      "baselineSha256": "612eda22ef47f2fcefa9819b3f750d14d6a9c28900f77069b24ade289a59dfae",
+      "replacements": [
+        {
+          "oldText": "            configurator.Replace(ServiceDescriptor.Scoped<ILoadSagaRepositoryContextFactory<TSaga>>(provider =>\n                provider.GetRequiredService<AzureTableSagaRepositoryContextFactory<TSaga>>()));\n            configurator.Replace(ServiceDescriptor.Scoped<ISagaRepositoryContextFactory<TSaga>>(provider =>\n                provider.GetRequiredService<AzureTableSagaRepositoryContextFactory<TSaga>>()));\n",
+          "newText": "",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "e46340a93640842cee8719bbafd7c53fa72eee18e88602058cb612eb9ba36f7e",
+      "postRestoreSha256": "612eda22ef47f2fcefa9819b3f750d14d6a9c28900f77069b24ade289a59dfae",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Configuration.AzureTableConfigurationContractTests.Registration_ResolvesBothRepositoryContractsThroughTheInternalTableClientProvider",
+      "expectedCount": 1,
+      "actual": { "tests": 1, "passed": 0, "failed": 1, "skipped": 0 },
+      "expectedFailure": "The public repository contracts fall back to constructor activation and fail while attempting to resolve TableClient"
+    }
+  ]
+}

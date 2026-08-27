@@ -1,0 +1,27 @@
+Ausführen von Tests von /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 496ms)
+Ausführen von Tests von /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (14s 323ms)
+Ausführen von Tests von /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (430ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_17_45.468647.ctrf
+    - /private/tmp/vsb-azure-table-native-20260827/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_17_48.767586.ctrf
+    - /private/tmp/vsb-azure-table-native-20260827/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_18_03.875344.ctrf
+
+Testlaufzusammenfassung: Bestanden!
+  /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (430ms)
+  /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (14s 323ms)
+  /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 496ms)
+
+  gesamt: 87
+  fehlgeschlagen: 0
+  erfolgreich: 87
+  übersprungen: 0
+  Dauer: 19s 549ms
+run identity vicione-0b216ddcfb45, output under artifacts/run-output/vicione-0b216ddcfb45
+fixture postgres and azurite ready on loopback: VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=33503, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=33502
+endpoints projected to artifacts/run-output/vicione-0b216ddcfb45/endpoints.json
+broker log postgres: /private/tmp/vsb-azure-table-native-20260827/artifacts/run-output/vicione-0b216ddcfb45/postgres-broker.log (225 lines)
+broker log azurite: /private/tmp/vsb-azure-table-native-20260827/artifacts/run-output/vicione-0b216ddcfb45/azurite-broker.log (6 lines)

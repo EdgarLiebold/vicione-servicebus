@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "technicalCommit": "497a7cd5570969bee13f35abb46bb37a7372dbee",
+  "technicalTree": "8e25a9d98d39bd71e1afc05e73e6b18b462d932d",
+  "technicalParent": "1faa2710dfeb0b961110fdc67818c34bd1f04377",
+  "authorizingArchitectureCommit": "2c8efb961dc28b45906eaedd92853ecb4997c18b",
+  "sdk": "10.0.302",
+  "positiveRuns": {
+    "engineeringRestore": {
+      "solution": "ViciOne.ServiceBus.Engineering.slnx",
+      "configuration": "locked mode",
+      "exitCode": 0,
+      "rawLog": "positive/final-engineering-restore.log",
+      "binaryLog": "positive/final-engineering-restore.binlog"
+    },
+    "engineeringBuild": {
+      "solution": "ViciOne.ServiceBus.Engineering.slnx",
+      "configuration": "Release, no restore",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "rawLog": "positive/final-engineering-build.log",
+      "binaryLog": "positive/final-engineering-build.binlog"
+    },
+    "unitArchitecture": {
+      "command": "/usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit --minimum-expected-tests 1953 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "exitCode": 0,
+      "tests": 1953,
+      "passed": 1953,
+      "failed": 0,
+      "skipped": 0,
+      "moduleResults": 14,
+      "rawLog": "positive/final-unit-test.log",
+      "resultsDirectory": "positive/unit"
+    },
+    "localIntegration": {
+      "command": "VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --evidence-dir evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local-fixture --command -- /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local --minimum-expected-tests 87 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "exitCode": 0,
+      "tests": 87,
+      "passed": 87,
+      "failed": 0,
+      "skipped": 0,
+      "moduleResults": 3,
+      "runIdentity": "vicione-0b216ddcfb45",
+      "providers": [
+        "PostgreSQL",
+        "Azurite Table"
+      ],
+      "rawLog": "positive/final-local-integration-test.log",
+      "resultsDirectory": "positive/local"
+    },
+    "focusedAzureTableUnit": {
+      "command": "/usr/local/share/dotnet/dotnet test --project tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/azure-unit --minimum-expected-tests 50 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "exitCode": 0,
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "rawLog": "positive/final-azure-table-unit-test.log",
+      "resultsDirectory": "positive/azure-unit"
+    }
+  },
+  "r0Disposition": {
+    "total": 39,
+    "replacedExecuting": 26,
+    "supersededByPoDecision": 10,
+    "externalPending": 3,
+    "externalRequirementIds": [
+      "OBL-R0-PER-0455",
+      "OBL-R0-PER-0456",
+      "OBL-R0-PER-0457"
+    ],
+    "canonicalDispositionFile": "../R0_TERMINAL_DISPOSITIONS.json"
+  },
+  "nativeAzureTableCounts": {
+    "unitArchitectureRuntimeCases": 50,
+    "localIntegrationRuntimeCases": 25,
+    "unitRequirementVariants": 29,
+    "localRequirementVariants": 23
+  },
+  "mutations": {
+    "count": 16,
+    "built": 16,
+    "killed": 16,
+    "skipped": 0,
+    "manifest": "MUTATION_MANIFEST.json",
+    "rawDirectory": "mutations"
+  },
+  "toolValidation": {
+    "ciSelfTests": {
+      "tests": 253,
+      "passed": 253,
+      "exitCode": 0,
+      "executionBoundary": "outside filesystem sandbox because process-tree tests deliberately invoke ps",
+      "rawLog": "positive/final-ci-selftests.log"
+    },
+    "identitySelfTests": {
+      "tests": 103,
+      "passed": 103,
+      "exitCode": 0,
+      "rawLog": "positive/final-identity-selftests.log"
+    },
+    "verificationModel": {
+      "exitCode": 0,
+      "rawLog": "positive/final-verification-model.log"
+    },
+    "changeList": {
+      "entries": 8126,
+      "exitCode": 0,
+      "rawLog": "positive/final-change-list.log"
+    }
+  },
+  "cloudBoundary": {
+    "realAzureAccountExecuted": false,
+    "localAzuriteExecuted": true,
+    "claim": "Azurite proves the local Azure.Data.Tables entity, partition, ETag, transaction, conflict, Future, saga, job-service and MessageJournal paths. Cosmos DB for Table compatibility and 429 behavior, Entra ID authentication and token refresh, and real Azure service limits remain explicit External work and are not reported as green."
+  },
+  "legacyProject": {
+    "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests",
+    "remainingFiles": 0,
+    "remainingEmptyDirectories": 0
+  }
+}

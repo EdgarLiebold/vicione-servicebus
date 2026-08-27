@@ -985,3 +985,35 @@ future cohorts as complete.
   correction, not an Azure Table product workaround.
 - Independent frozen product/code and test/evidence reviews remain the final acceptance gate before
   this branch is merged or the next persistence cohort begins.
+
+## Lead correction: Azure Table cancellation, API, atomicity and DI closure
+
+- This section supersedes the mutable Azure Table conclusion immediately above. The accepted R0
+  disposition remains unchanged: 26 native executing replacements, 10 PO-superseded suite-audit
+  rows and 3 explicit External cloud obligations. No External result is counted green.
+- The corrected technical subject is commit `497a7cd5570969bee13f35abb46bb37a7372dbee`, tree
+  `8e25a9d98d39bd71e1afc05e73e6b18b462d932d`, parent
+  `1faa2710dfeb0b961110fdc67818c34bd1f04377`. Its correction evidence is under
+  `AZURE-TABLE/CORRECTION/` and is authorized by architecture commit
+  `2c8efb961dc28b45906eaedd92853ecb4997c18b`.
+- Requested caller cancellation now survives update/delete even when the Azure SDK reports default
+  or linked exception tokens; non-requested dependency cancellation remains a saga failure. The
+  public composition API uses `TableClientFactory` exclusively, legacy CloudTable provider names are
+  removed, and the implementation-only provider stays internal.
+- Default Microsoft DI resolves both repository contracts through the internal provider-backed
+  concrete factory. A real `ServiceCollection` regression owner protects that mapping.
+- MessageJournal capacity is protected by a real eight-writer Azurite ETag barrier with exactly one
+  successful append and seven HTTP 412 conflicts. A separate hermetic owner proves one ordered
+  entity-group transaction containing lease update, exact pruning and add; neither test substitutes
+  for the other.
+- Locked Engineering restore and complete Engineering Release build pass with zero warnings and
+  errors. UnitArchitecture passes 1953/1953; LocalIntegration passes 87/87 against fresh run-scoped
+  PostgreSQL and Azurite; focused Azure Table Unit passes 50/50. Every accepted run has zero failure
+  and zero skip.
+- Sixteen exact one-cause mutations M01 through M16 build cleanly and each fails its owning xUnit 4 /
+  Microsoft Testing Platform test with exit 2. M13 protects alternate-token cancellation, M14 the
+  real ETag lease, M15 the complete atomic action list and M16 the DI projection. The HTTP-500 M05
+  now fails at its intended no-exception assertion without a helper-induced secondary failure.
+- Real Azure was not executed. Cosmos DB for Table behavior, Entra ID and service-limit evidence stay
+  visibly External in `TODO.md`. The product branch remains unpushed until both independent read-only
+  reviewers accept the exact technical/evidence pair.

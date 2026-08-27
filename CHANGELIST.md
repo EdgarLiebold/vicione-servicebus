@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2405 |
-| Modified | 4217 |
-| Deleted | 1431 |
+| Added | 2476 |
+| Modified | 4214 |
+| Deleted | 1434 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -811,6 +811,73 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/LEDGER_DRAFT.jsonl` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/READ_MANIFEST.tsv` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/MUTATION_EXECUTION.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M09-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M10-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M11-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M12-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M13-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M13.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M14-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M15-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M15.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M16-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/mutations/M16.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/azure-unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_18_22.882668.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-azure-table-unit-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-local-integration-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-mutation-reconstruction.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-unit-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/final-verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_17_45.468647.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_17_48.767586.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/local/edgar.liebold_Edgars-iMac-2_2026-08-27_12_18_03.875344.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_14_12.240978.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_14_14.736115.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_14_18.864726.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_14_55.019257.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_14_56.307004.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_15.318929.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_20.649106.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_22.036663.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_23.289036.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_43.078467.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_47.004088.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_55.137939.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_56.350688.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION/positive/unit/edgar.liebold_Edgars-iMac-2_2026-08-27_12_15_57.686482.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/R0_TERMINAL_DISPOSITIONS.json` | Added |  |
@@ -1732,7 +1799,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/AuditRecord.cs` |
 | `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/AzureTableAuditStore.cs` |
 | `src/Persistence/MassTransit.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/DefaultPartitionKeyFormatter.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/ICloudTableProvider.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/ICloudTableProvider.cs` |
 | `src/Persistence/MassTransit.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/IPartitionKeyFormatter.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ConstCloudTableProvider.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ConstCloudTableProvider.cs` |
+| `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs` |
 | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` | Deleted | `src/Persistence/MassTransit.Azure.Table/Configuration/AzureTableAuditStoreConfiguratorExtensions.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/Configuration/Configuration/DapperSagaRepositoryRegistrationProvider.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/Configuration/Configuration/DapperSagaRepositoryRegistrationProvider.cs` |
 | `src/Persistence/MassTransit.DapperIntegration/Configuration/DapperSagaRepositoryRegistrationExtensions.cs` | Deleted | `src/Persistence/MassTransit.DapperIntegration/Configuration/DapperSagaRepositoryRegistrationExtensions.cs` |
@@ -1932,9 +2002,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/packages.lock.json` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/DatabaseContext.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ICloudTableProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/ICloudTableProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/IEntityConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/IEntityConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ISagaKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/ISagaKeyFormatter.cs` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ITableClientProvider.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStore.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStoreOptions.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/MessageJournalCapacityLease.cs` | Added |  |
@@ -1943,14 +2013,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepository.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableSagaRepository.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContextFactory.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContextFactory.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ConstCloudTableProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ConstCloudTableProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ConstPartitionSagaKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ConstPartitionSagaKeyFormatter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ConstRowSagaKeyFormatter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ConstRowSagaKeyFormatter.cs` |
-| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/DelegateTableClientProvider.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/EntityConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityConverterFactory.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/EntityConverterFactory.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/EntityPropertyConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyTypeConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/EntityPropertyTypeConverter.cs` |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/FixedTableClientProvider.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/IEntityPropertyConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/IEntityPropertyConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/ObjectEntityPropertyConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/ObjectEntityPropertyConverter.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/SagaETag.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/Saga/SagaETag.cs` |
@@ -7582,6 +7652,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/SagaKeyFormatterTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
