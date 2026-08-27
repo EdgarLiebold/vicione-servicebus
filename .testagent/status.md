@@ -1124,3 +1124,19 @@ future cohorts as complete.
   was not executed and no cloud-only result is counted green.
 - The evidence candidate is ready for its separate commit, remote backup, architecture binding and
   independent read-only acceptance reviews. No such independent PASS is claimed in this section.
+
+## AWS native closure — remote freeze and review boundary
+
+- This section supersedes only the final pre-commit sentence immediately above. The technical
+  subject remains `e18fcc071ba5bd42d51237a8be8cf5785f00e5c9`, tree
+  `52702c9b1012aa1d98d403ec5702a54c96086f35`. Its direct evidence child is
+  `a3d32c07a084b7f6996467beb8db4ed3282d1675`, tree
+  `e7803344e323e9e0ff76688df1caddf248d53b39`; the additive wording correction is
+  `5cac5a391a435b651afe58e9fcc08b109ac22c21`, tree
+  `4c79119beefa84516cdc3134ef3446a9a952408c`.
+- The complete chain is backed up on `origin/feature/aws-native-closure`. Architecture commit
+  `5982fe32b27ef3c8dd2bbb3c385894f3df2d19ed` binds the exact technical, evidence and correction
+  identities, the measured result set and both deliberately open boundaries.
+- The local execution and evidence package are stationary and complete. Final acceptance still
+  requires two independent static read-only PASS reviews. Real AWS remains a separate External
+  release gate; neither condition is represented as locally green.
