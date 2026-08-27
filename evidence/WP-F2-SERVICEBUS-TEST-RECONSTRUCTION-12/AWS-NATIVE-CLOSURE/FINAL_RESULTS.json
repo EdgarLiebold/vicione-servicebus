@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "kind": "AWS_NATIVE_CLOSURE_FINAL_RESULTS",
+  "acceptedProductBaseline": {
+    "commit": "427894348e992551c8d2ae15095c416d2cc1b329",
+    "tree": "ae33fd04f6a3957b00ccb4ee59889d91383678e5"
+  },
+  "architectureAuthority": {
+    "commit": "d284f7afeb6902296ac322a7c9c58a480bfb7279",
+    "tree": "be79c5d23f30aaab1753098cb9786db6dafcf396",
+    "assignment": "PO-2026-08-27-02"
+  },
+  "technicalSubject": {
+    "commit": "e18fcc071ba5bd42d51237a8be8cf5785f00e5c9",
+    "tree": "52702c9b1012aa1d98d403ec5702a54c96086f35",
+    "remote": "origin/feature/aws-native-closure",
+    "technicalPathCount": 195
+  },
+  "obligationClosure": {
+    "frozenRows": 111,
+    "replacedExecuting": 100,
+    "externalPendingRealAws": 9,
+    "invalidDuplicateRetired": 1,
+    "poSupersededGreenfieldApi": 1,
+    "externalCountedGreen": 0
+  },
+  "positiveExecution": {
+    "unitArchitecture": {
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory /private/tmp/vsb-aws-evidence/positive/unit-solution-results --minimum-expected-tests 2032 --max-parallel-test-modules 1",
+      "exitCode": 0,
+      "tests": 2032,
+      "passed": 2032,
+      "failed": 0,
+      "skipped": 0,
+      "rawLog": "positive/unit-solution.log.gz",
+      "moduleCtrfDirectory": "positive/unit-modules",
+      "moduleCtrfFiles": 17
+    },
+    "localIntegration": {
+      "command": "env VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --broker localstack --command -- zsh /private/tmp/vsb-aws-positive-local.zsh",
+      "exitCode": 0,
+      "tests": 149,
+      "passed": 149,
+      "failed": 0,
+      "skipped": 0,
+      "rawLog": "positive/local-fixture.log.gz",
+      "moduleCtrfDirectory": "positive/local-modules",
+      "moduleCtrfFiles": 6,
+      "fixture": {
+        "runIdentity": "vicione-be7f1700b72f",
+        "brokers": ["postgres", "azurite", "localstack"],
+        "loopbackOnly": true,
+        "findings": 0,
+        "evidenceDirectory": "positive/local-fixture"
+      }
+    },
+    "builds": [
+      {
+        "subject": "ViciOne.ServiceBus.Tests.Unit.slnx",
+        "configuration": "Release",
+        "lockedRestore": true,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "binlog": "positive/unit-build.binlog"
+      },
+      {
+        "subject": "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+        "configuration": "Release",
+        "lockedRestore": true,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "binlog": "positive/local-build.binlog"
+      },
+      {
+        "subject": "ViciOne.ServiceBus.Engineering.slnx",
+        "configuration": "Release",
+        "lockedRestore": true,
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "binlog": "positive/engineering-build.binlog"
+      }
+    ]
+  },
+  "focusedAwsCounts": {
+    "amazonSqsUnit": 46,
+    "amazonSqsLocalStack": 48,
+    "dynamoDbUnit": 6,
+    "dynamoDbLocalStack": 9,
+    "amazonS3Unit": 6,
+    "amazonS3LocalStack": 5
+  },
+  "mutationExecution": {
+    "manifest": "MUTATION_MANIFEST.json",
+    "mutants": 14,
+    "builtSuccessfully": 14,
+    "killedByOwningTest": 14,
+    "testExitCode": 2,
+    "failedTests": 14,
+    "skippedTests": 0,
+    "postRestoreClean": true
+  },
+  "cloudBoundary": {
+    "localStackExecuted": true,
+    "realAwsExecuted": false,
+    "realAwsClaims": 0,
+    "releaseBlockingExternalRowsRemainVisible": true
+  }
+}

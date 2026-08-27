@@ -1099,3 +1099,28 @@ future cohorts as complete.
 - This is a technical candidate only. The worktree is not yet the final frozen technical/evidence
   pair; exact one-cause mutation evidence, clean commit binding, independent read-only review and
   remote backup remain required before final acceptance. Real AWS was not executed.
+
+## AWS native closure — frozen technical and evidence candidate
+
+- This section supersedes only the unfinished-evidence statement immediately above. The frozen
+  technical subject is commit `e18fcc071ba5bd42d51237a8be8cf5785f00e5c9`, tree
+  `52702c9b1012aa1d98d403ec5702a54c96086f35`, and is remotely backed up at
+  `origin/feature/aws-native-closure`. Its accepted baseline, architecture authority and exact
+  195-path technical projection are bound under `AWS-NATIVE-CLOSURE/`.
+- The unfiltered UnitArchitecture solution passes 2,032/2,032. Seventeen independently named CTRFs
+  sum to the same 2,032 results. The unfiltered LocalIntegration solution passes 149/149 against one
+  fresh PostgreSQL/Azurite/LocalStack fixture; six independently named CTRFs sum to the same 149.
+  Every accepted result has zero failure, skip, pending or other status.
+- Unit, LocalIntegration and complete Engineering Release builds finish with zero warnings and
+  errors and have bound MSBuild binlogs. The positive broker fixture has no teardown finding and
+  binds all three broker-log digests without committing its run-scoped ownership token.
+- Exact one-occurrence mutations M01–M14 were reconstructed from the frozen technical bytes. All 14
+  build successfully and each owning xUnit 4 / Microsoft Testing Platform test exits 2 with one
+  causal failure and zero skip. M11 and M12 additionally bind a fresh LocalStack lifecycle from
+  wrapper start through endpoint projection, broker log and clean teardown. Every source restores
+  byte-identically; the disposable mutation worktree is clean at the technical commit.
+- The 111-row disposition is unchanged and honest: 100 executing replacements, nine real-AWS
+  External rows, one invalid duplicate retired row and one PO-superseded raw-secret API row. Real AWS
+  was not executed and no cloud-only result is counted green.
+- The evidence candidate is ready for its separate commit, remote backup, architecture binding and
+  independent read-only acceptance reviews. No such independent PASS is claimed in this section.

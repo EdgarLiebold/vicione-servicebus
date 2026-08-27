@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2528 |
+| Added | 2602 |
 | Modified | 4213 |
 | Deleted | 1435 |
 | Renamed | 2 |
@@ -812,6 +812,80 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/LEDGER_DRAFT.jsonl` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/READ_MANIFEST.tsv` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/TECHNICAL_DIFF.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11-wrapper/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11-wrapper/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11-wrapper/fixture.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11-wrapper/localstack-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12-wrapper/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12-wrapper/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12-wrapper/fixture.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12-wrapper/localstack-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M13-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M13.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M14-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/mutations/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture/azurite-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture/localstack-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-fixture/postgres-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/local-modules/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Abstractions.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.AmazonS3.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.AmazonSqsTransport.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Analyzers.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Architecture.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Azure.Table.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.DynamoDbIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.MessagePack.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.QuartzIntegration.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.RabbitMqTransport.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.SignalR.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.StateMachineVisualizer.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Tests.Infrastructure.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-modules/ViciOne.ServiceBus.Tests.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/positive/unit-solution.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/M14_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/VALIDATION.md` | Added |  |
