@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight (44ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight() in /private/tmp/vsb-c06-mutations.IsEX62/tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs:399
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-c06-mutation-results/M18-followup.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-c06-mutations.IsEX62/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 719ms

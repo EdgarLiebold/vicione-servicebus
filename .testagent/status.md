@@ -929,3 +929,33 @@ future cohorts as complete.
   evidence; both causes are corrected in the final technical commit.
 - Independent product and test/evidence reviews of this exact technical/evidence pair remain the
   final acceptance gate. No active product worktree or remote reference has advanced yet.
+
+## Lead correction: cache ring, lifecycle and concurrency safety
+
+- This section supersedes correction 05 as the active cache conclusion. Earlier EF/cache sections
+  remain immutable history; the EF 90-to-156 disposition is unchanged at 77 provider-neutral,
+  39 PostgreSQL-backed and 40 explicit SQL Server External identities.
+- The final technical subject is commit `9a3b9fb98f8ad1669570c16a2d18ef9642520d92`,
+  tree `52385f1b94f8d5cbc384f6690c9a765294b6815f`, parent
+  `f43db446c915d6554510a9eed60e019876693205`. Its active raw evidence is
+  `ENTITY-FRAMEWORK-CORE-CORRECTION-06/`.
+- Cache cleanup remains single-flight and cannot lose ownership across scheduler rejection,
+  synchronous callback-then-throw, reentrancy, observer failure or follow-up handoff. Ring
+  segmentation cannot overwrite live buckets, and every eviction cause obeys MinAge.
+- Rebucket and source-count transfer are atomic under the tracker lock. Bucket and node state have
+  explicit volatile/interlocked publication; stale same-key index events cannot remove or overwrite
+  a newer generation. Clock, observer, usage-event and disposal callbacks execute outside the
+  tracker lock. Reset disposal is non-blocking and starts only after reset/add publication.
+- The public observer contract remains explicitly concurrent and unordered. The rejected unbounded
+  publication-queue experiment is absent. A separate A+ design for fail-closed internal index
+  projection and bounded external notification is preserved in `TODO.md`.
+- Locked Engineering restore and the complete Engineering Release build pass; the build has zero
+  warnings and errors. UnitArchitecture passes 1914/1914 and LocalIntegration passes 70/70 against
+  fresh run-scoped PostgreSQL and Azurite, all with zero failures and skips. Each of the four new
+  cache owners also passes independently with a bound CTRF.
+- Eight exact one-cause probes M16 through M23 build successfully and each fails its owning test
+  with exit 2 for its own reason. A ninth exploratory current-bucket predicate mutation is logically
+  equivalent and is explicitly excluded from the mutation score.
+- Both independent technical reviews passed the frozen technical commit with no BLOCKER, MAJOR or
+  MINOR. The direct Evidence-child and its independent Evidence-only review are the remaining
+  acceptance step.

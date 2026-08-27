@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Caching.Internals.BucketTests.UsedCallback_CannotDecrementAReusedBucketGenerationAfterRebucketReturns (26ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 1
+  Actual:   0
+    um ViciOne.ServiceBus.Tests.Caching.Internals.BucketTests.UsedCallback_CannotDecrementAReusedBucketGenerationAfterRebucketReturns() in /private/tmp/vsb-c06-mutations.IsEX62/tests2/ViciOne.ServiceBus.Tests/Caching/Internals/BucketTests.cs:46
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-c06-mutation-results/M21-bucket-aba.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-c06-mutations.IsEX62/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 693ms
