@@ -43,7 +43,7 @@ internal static class EntityFrameworkExecutionStrategy
             cancellationToken);
     }
 
-    public static Task ExecuteAsync<TMessage>(
+    public static async Task ExecuteAsync<TMessage>(
         DbContext dbContext,
         IExecutionStrategy strategy,
         ConsumeContext<TMessage> consumeContext,
@@ -54,11 +54,27 @@ internal static class EntityFrameworkExecutionStrategy
 
         var retryGuard = new OutboxRollbackRetryGuard();
 
-        return ExecuteAsync(
-            dbContext,
-            strategy,
-            () => ExecuteAttemptAsync(consumeContext, operation, retryGuard),
-            consumeContext.CancellationToken);
+        try
+        {
+            await ExecuteAsync(
+                    dbContext,
+                    strategy,
+                    () => ExecuteAttemptAsync(consumeContext, operation, retryGuard),
+                    consumeContext.CancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (Exception) when (retryGuard.IsBlocked)
+        {
+            // A provider strategy may wrap its last delegate failure (for example in
+            // RetryLimitExceededException). Once rollback cleanup failed, the first business
+            // failure remains authoritative and must cross the strategy boundary unchanged.
+            retryGuard.ThrowOriginalFailure();
+            throw;
+        }
+
+        // A custom strategy is allowed to consume a delegate exception and return. It must not be
+        // able to turn an attempt with an incomplete outbox rollback into a successful operation.
+        retryGuard.ThrowOriginalFailure();
     }
 
     private static async Task ExecuteAttemptAsync<TMessage>(
@@ -88,10 +104,12 @@ internal static class EntityFrameworkExecutionStrategy
                 }
                 catch (Exception cleanupException)
                 {
-                    retryGuard.Block(operationException);
+                    retryGuard.Block(operationException, cleanupException);
                     LogContext.Warning?.Log(
                         cleanupException,
                         "The failed Entity Framework attempt could not discard every pending outbox action; the business attempt will not be retried.");
+
+                    throw new OutboxRollbackRetryStoppedException(cleanupException);
                 }
             }
 
@@ -118,19 +136,37 @@ internal static class EntityFrameworkExecutionStrategy
 
     private sealed class OutboxRollbackRetryGuard
     {
-        private ExceptionDispatchInfo? _blockedFailure;
+        private BlockedFailure? _blockedFailure;
 
-        public void Block(Exception operationException)
+        public bool IsBlocked => Volatile.Read(ref _blockedFailure) is not null;
+
+        public void Block(Exception operationException, Exception cleanupException)
         {
             Interlocked.CompareExchange(
                 ref _blockedFailure,
-                ExceptionDispatchInfo.Capture(operationException),
+                new BlockedFailure(
+                    ExceptionDispatchInfo.Capture(operationException),
+                    ExceptionDispatchInfo.Capture(cleanupException)),
                 comparand: null);
         }
 
         public void ThrowIfBlocked()
         {
-            Volatile.Read(ref _blockedFailure)?.Throw();
+            BlockedFailure? blockedFailure = Volatile.Read(ref _blockedFailure);
+            if (blockedFailure is not null)
+                throw new OutboxRollbackRetryStoppedException(blockedFailure.CleanupFailure.SourceException);
         }
+
+        public void ThrowOriginalFailure()
+        {
+            Volatile.Read(ref _blockedFailure)?.OperationFailure.Throw();
+        }
+
+        private sealed record BlockedFailure(
+            ExceptionDispatchInfo OperationFailure,
+            ExceptionDispatchInfo CleanupFailure);
     }
+
+    private sealed class OutboxRollbackRetryStoppedException(Exception cleanupFailure)
+        : Exception("The failed outbox attempt cannot be retried because rollback cleanup did not complete.", cleanupFailure);
 }

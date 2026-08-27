@@ -2,7 +2,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFramewor
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Reflection;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
@@ -89,13 +91,18 @@ public sealed class EntityFrameworkExecutionStrategyTests
     public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesTheOriginalFailure()
     {
         await using var dbContext = CreateDbContext();
-        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
+        var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
         var operationFailure = new RetryRequestedException();
         var cleanupFailure = new InvalidOperationException("The outbox rollback failed.");
+        var scheduler = DispatchProxy.Create<IMessageScheduler, FailingCancellationSchedulerProxy>();
+        var schedulerProxy = (FailingCancellationSchedulerProxy)(object)scheduler;
+        schedulerProxy.EnqueueCancellationFailure(cleanupFailure);
         ConsumeContext<RetryMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
             new RetryMessage(),
-            TestContext.Current.CancellationToken);
-        var outboxContext = new RollbackFailingOutboxContext<RetryMessage>(consumeContext, cleanupFailure);
+            TestContext.Current.CancellationToken,
+            scheduler);
+        var outboxContext = new InMemoryOutboxConsumeContext<RetryMessage>(consumeContext);
+        Assert.True(outboxContext.TryGetPayload(out MessageSchedulerContext schedulerContext));
         var attempts = 0;
 
         Exception actual = await Assert.ThrowsAsync<RetryRequestedException>(() =>
@@ -103,17 +110,28 @@ public sealed class EntityFrameworkExecutionStrategyTests
                 dbContext,
                 strategy,
                 outboxContext,
-                () =>
+                async () =>
                 {
                     attempts++;
-                    return Task.FromException(operationFailure);
+                    await schedulerContext.SchedulePublish(
+                        new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc),
+                        new RetryMessage(),
+                        typeof(RetryMessage),
+                        TestContext.Current.CancellationToken);
+                    throw operationFailure;
                 }));
 
         Assert.Same(operationFailure, actual);
         Assert.Equal(1, attempts);
-        Assert.Equal(1, outboxContext.RollbackCount);
         Assert.Equal(2, strategy.ExecutionCount);
-        Assert.Same(cleanupFailure, outboxContext.CleanupFailure);
+        Assert.Same(cleanupFailure, strategy.FirstObservedFailure?.InnerException);
+        Assert.Same(cleanupFailure, strategy.SecondObservedFailure?.InnerException);
+        Assert.Equal(1, schedulerProxy.ScheduledCount);
+        Assert.Equal(1, schedulerProxy.CancellationCount);
+
+        await outboxContext.DiscardPendingActions();
+
+        Assert.Equal(2, schedulerProxy.CancellationCount);
     }
 
     [Fact]
@@ -121,7 +139,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
     public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheBusinessAttempt()
     {
         await using var dbContext = CreateDbContext();
-        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
+        var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
         using var cancellationSource = new CancellationTokenSource();
         cancellationSource.Cancel();
         var operationFailure = new OperationCanceledException(cancellationSource.Token);
@@ -146,6 +164,8 @@ public sealed class EntityFrameworkExecutionStrategyTests
         Assert.Equal(1, attempts);
         Assert.Equal(1, outboxContext.RollbackCount);
         Assert.Equal(2, strategy.ExecutionCount);
+        Assert.Same(cleanupFailure, strategy.FirstObservedFailure?.InnerException);
+        Assert.Same(cleanupFailure, strategy.SecondObservedFailure?.InnerException);
     }
 
     private static RetryDbContext CreateDbContext() => new(
@@ -184,6 +204,49 @@ public sealed class EntityFrameworkExecutionStrategyTests
         }
     }
 
+    private class FailingCancellationSchedulerProxy : DispatchProxy
+    {
+        private readonly Queue<Exception> _cancellationFailures = [];
+
+        public int CancellationCount { get; private set; }
+
+        public int ScheduledCount { get; private set; }
+
+        public void EnqueueCancellationFailure(Exception exception)
+        {
+            ArgumentNullException.ThrowIfNull(exception);
+            _cancellationFailures.Enqueue(exception);
+        }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            ArgumentNullException.ThrowIfNull(args);
+
+            if (targetMethod.Name == nameof(IMessageScheduler.SchedulePublish)
+                && targetMethod.ReturnType == typeof(Task<ScheduledMessage>))
+            {
+                ScheduledCount++;
+                var scheduledMessage = new ScheduledMessageHandle<object>(
+                    NewId.NextGuid(),
+                    (DateTime)args[0]!,
+                    new Uri("loopback://localhost/scheduled"),
+                    args[1]!);
+                return Task.FromResult<ScheduledMessage>(scheduledMessage);
+            }
+
+            if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledSend))
+            {
+                CancellationCount++;
+                return _cancellationFailures.TryDequeue(out Exception? failure)
+                    ? Task.FromException(failure)
+                    : Task.CompletedTask;
+            }
+
+            throw new NotSupportedException(targetMethod.Name);
+        }
+    }
+
     private sealed class RetryOnceExecutionStrategy(DbContext dbContext) : IExecutionStrategy
     {
         public bool RetriesOnFailure => true;
@@ -215,9 +278,13 @@ public sealed class EntityFrameworkExecutionStrategyTests
         }
     }
 
-    private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) : IExecutionStrategy
+    private sealed class WrappingRetryEveryExceptionExecutionStrategy(DbContext dbContext) : IExecutionStrategy
     {
         public int ExecutionCount { get; private set; }
+
+        public Exception? FirstObservedFailure { get; private set; }
+
+        public Exception? SecondObservedFailure { get; private set; }
 
         public bool RetriesOnFailure => true;
 
@@ -238,10 +305,20 @@ public sealed class EntityFrameworkExecutionStrategyTests
                 ExecutionCount++;
                 return await operation(dbContext, state, cancellationToken);
             }
-            catch
+            catch (Exception firstFailure)
             {
+                FirstObservedFailure = firstFailure;
                 ExecutionCount++;
-                return await operation(dbContext, state, cancellationToken);
+
+                try
+                {
+                    return await operation(dbContext, state, cancellationToken);
+                }
+                catch (Exception secondFailure)
+                {
+                    SecondObservedFailure = secondFailure;
+                    throw new RetryLimitExceededException("The execution strategy exhausted its retry limit.", secondFailure);
+                }
             }
         }
     }
