@@ -823,3 +823,38 @@ future cohorts as complete.
   rollback-hardening owner are bound under the EF evidence root. Six exact one-cause probes cover
   routing-property restoration, EF-to-Quartz commit ordering, send-failure retry, delayed request
   identity, originating publish scope and first-attempt rollback; all six restore byte-identically.
+
+## Lead closure: Entity Framework Core retry state and inherited-project retirement
+
+- This section supersedes the earlier mutable EF status paragraphs above. They remain append-only
+  history only. In particular, the former statements that the inherited EF project remains retained
+  and that `ENTITY-FRAMEWORK-CORE/` is the current evidence root are no longer active.
+- The final technical subject is commit `6bf471d954fb50138473cb1f2c0275362df5aebe`, tree
+  `098f6dcb9bae0c69f626d3cecbeb41cd91327738`. Its evidence is bound by direct child commit
+  `fc7a1fef03c898a243d29139ae72e0fc5ae0059e`, tree
+  `4afc7becf1bb1bb73dec21e1fe2b9bfa35e6d2dc`, under
+  `ENTITY-FRAMEWORK-CORE-CORRECTION-02/`.
+- All 90 inherited EF obligations expand to 156 execution identities and have one explicit final
+  disposition: 77 execute natively, 39 are consolidated only where behavior is genuinely
+  provider-neutral, and 40 SQL Server/Azure SQL identities remain visible as `EXTERNAL_PENDING`.
+  Pending identities are not counted green. The inherited EF test project is retired; its source
+  remains available in Git history.
+- Failed EF retry attempts clear stale tracker state and roll back only the attempt-owned in-memory
+  outbox tail. If rollback cleanup itself fails, provider re-entry is blocked and the exact original
+  operation failure is rethrown; cleanup failure is logged separately and cannot cause a duplicate
+  business attempt.
+- In-memory outbox checkpoints are opaque and owner-bound. Batch checkpoints compose the parent and
+  every child context. Scheduler rollback is exercised through the real outer checkpoint API, and a
+  scheduled item is removed only after cancellation succeeds, so failed cleanup remains recoverable.
+- The locked Engineering restore and complete Engineering Release build pass with zero warnings and
+  zero errors. UnitArchitecture passes 1,886/1,886; focused EF UnitArchitecture passes 55/55;
+  LocalIntegration passes 70/70 against fresh PostgreSQL and Azurite; focused EF LocalIntegration
+  passes 59/59 against fresh PostgreSQL. Every run has zero failure and zero skip.
+- Five byte-exact one-cause probes M07 through M11 independently protect scheduler delegation,
+  retry blocking after cleanup failure, retention after failed unschedule, child checkpoint capture
+  and child rollback. Every mutant builds cleanly, fails its exact xUnit 4/MTP 2 owner with exit 2,
+  and restores the frozen source bytes exactly. Thirty evidence files are SHA-256 complete.
+- The repeatable execution rule is explicit: local integration requires
+  `VICIONE_TESTS__Profile=LocalIntegration`; the CI process-tree tests must execute outside the
+  filesystem sandbox because they deliberately invoke `ps`; and builds sharing one `artifacts/sdk`
+  tree run serially to avoid artificial output contention.
