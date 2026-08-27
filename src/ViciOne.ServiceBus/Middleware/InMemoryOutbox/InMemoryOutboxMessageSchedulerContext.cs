@@ -52,8 +52,6 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
                 scheduledMessages = count == 0
                     ? []
                     : _scheduledMessages.GetRange(checkpoint.ScheduledMessageCount, count).ToArray();
-                if (count > 0)
-                    _scheduledMessages.RemoveRange(checkpoint.ScheduledMessageCount, count);
             }
 
             await _cancelMessages.DiscardSince(checkpoint.CancelMessageCount).ConfigureAwait(false);
@@ -63,9 +61,21 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
 
             var tasks = new PendingTaskCollection(scheduledMessages.Length);
             foreach (var scheduledMessage in scheduledMessages)
-                tasks.Add(_scheduler.Value.CancelScheduledSend(scheduledMessage.Destination, scheduledMessage.TokenId));
+                tasks.Add(CancelScheduledMessage(scheduledMessage));
 
             await tasks.Completed().ConfigureAwait(false);
+
+            async Task CancelScheduledMessage(ScheduledMessage scheduledMessage)
+            {
+                await _scheduler.Value.CancelScheduledSend(scheduledMessage.Destination, scheduledMessage.TokenId).ConfigureAwait(false);
+
+                lock (_listLock)
+                {
+                    int index = _scheduledMessages.FindIndex(candidate => ReferenceEquals(candidate, scheduledMessage));
+                    if (index >= checkpoint.ScheduledMessageCount)
+                        _scheduledMessages.RemoveAt(index);
+                }
+            }
         }
 
         public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, CancellationToken cancellationToken)

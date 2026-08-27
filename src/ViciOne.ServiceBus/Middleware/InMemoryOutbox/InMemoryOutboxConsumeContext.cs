@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
             return _deferredMethods.Add(method);
         }
 
-        public OutboxCheckpoint CreateCheckpoint()
+        public virtual OutboxCheckpoint CreateCheckpoint()
         {
             return new OutboxCheckpoint(
                 this,
@@ -171,6 +171,32 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
                 await base.DiscardPendingActions().ConfigureAwait(false);
 
                 await Task.WhenAll(_messages.Select(x => x.DiscardPendingActions())).ConfigureAwait(false);
+            }
+
+            public override OutboxCheckpoint CreateCheckpoint()
+            {
+                OutboxCheckpoint parentCheckpoint = base.CreateCheckpoint();
+                OutboxCheckpoint[] childCheckpoints = _messages.Select(message => message.CreateCheckpoint()).ToArray();
+
+                return new OutboxCheckpoint(
+                    this,
+                    parentCheckpoint.DeferredMethodCount,
+                    parentCheckpoint.SchedulerCheckpoint,
+                    childCheckpoints);
+            }
+
+            public override async Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+            {
+                ArgumentNullException.ThrowIfNull(checkpoint);
+                if (!ReferenceEquals(checkpoint.Owner, this))
+                    throw new ArgumentException("The checkpoint belongs to a different outbox context.", nameof(checkpoint));
+                if (checkpoint.ChildCheckpoints.Count != _messages.Count)
+                    throw new ArgumentException("The checkpoint does not describe this batch outbox.", nameof(checkpoint));
+
+                await base.DiscardPendingActions(checkpoint).ConfigureAwait(false);
+
+                await Task.WhenAll(_messages.Select((message, index) =>
+                    message.DiscardPendingActions(checkpoint.ChildCheckpoints[index]))).ConfigureAwait(false);
             }
         }
     }

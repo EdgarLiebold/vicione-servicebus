@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using ViciOne.ServiceBus.Batching;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Testing;
@@ -167,6 +168,109 @@ public sealed class InMemoryOutboxCheckpointTests
         Assert.Equal([discarded.TokenId], schedulerProxy.CanceledTokens);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "failed-schedule-cancellation-remains-recoverable")]
+    public async Task FailedScheduleCancellation_RemainsTrackedForFinalCleanup()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var scheduler = DispatchProxy.Create<IMessageScheduler, RecordingSchedulerProxy>();
+        var schedulerProxy = (RecordingSchedulerProxy)(object)scheduler;
+        ConsumeContext consumeContext = CreateConsumeContext(new Uri("loopback://localhost/input"));
+        var clearToSend = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var context = new InMemoryOutboxMessageSchedulerContext(
+            consumeContext,
+            _ => scheduler,
+            clearToSend.Task);
+        var cleanupFailure = new InvalidOperationException("The scheduler rejected the first cancellation.");
+        schedulerProxy.EnqueueCancelSendFailure(cleanupFailure);
+        ScheduledMessage? scheduled = null;
+
+        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            InMemoryOutboxCheckpointDriver.DiscardActionsCreatedByAttempt(context, async () =>
+            {
+                scheduled = await context.SchedulePublish(
+                    new DateTime(2030, 1, 2, 2, 0, 0, DateTimeKind.Utc),
+                    new ScheduledCheckpointResult("failed-cleanup"),
+                    typeof(ScheduledCheckpointResult),
+                    cancellationToken);
+            }));
+
+        Assert.Same(cleanupFailure, actual);
+        Assert.NotNull(scheduled);
+        Assert.Equal([scheduled.TokenId], schedulerProxy.CanceledTokens);
+
+        await context.CancelAllScheduledMessages();
+
+        Assert.Equal([scheduled.TokenId, scheduled.TokenId], schedulerProxy.CanceledTokens);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "batch-checkpoint-composes-parent-and-child-outboxes")]
+    public async Task BatchCheckpoint_DiscardsEveryParentAndChildActionCreatedByTheAttempt()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var firstScheduler = DispatchProxy.Create<IMessageScheduler, RecordingSchedulerProxy>();
+        var secondScheduler = DispatchProxy.Create<IMessageScheduler, RecordingSchedulerProxy>();
+        ConsumeContext<BatchCheckpointMessage> first = InMemoryOutboxTestContextFactory.Create(
+            new BatchCheckpointMessage("first"), cancellationToken, firstScheduler);
+        ConsumeContext<BatchCheckpointMessage> second = InMemoryOutboxTestContextFactory.Create(
+            new BatchCheckpointMessage("second"), cancellationToken, secondScheduler);
+        var messageBatch = new MessageBatch<BatchCheckpointMessage>(
+            new DateTime(2030, 1, 2, 1, 0, 0, DateTimeKind.Utc),
+            new DateTime(2030, 1, 2, 1, 1, 0, DateTimeKind.Utc),
+            BatchCompletionMode.Size,
+            [first, second]);
+        ConsumeContext<Batch<BatchCheckpointMessage>> consumeContext = InMemoryOutboxTestContextFactory.Create<Batch<BatchCheckpointMessage>>(
+            messageBatch,
+            cancellationToken);
+        var outbox = new InMemoryOutboxConsumeContext<BatchCheckpointMessage>.Batch(consumeContext);
+        var parent = (OutboxContext)outbox;
+        var firstChild = Assert.IsAssignableFrom<OutboxContext>(outbox.Message[0]);
+        var secondChild = Assert.IsAssignableFrom<OutboxContext>(outbox.Message[1]);
+        var executed = new ConcurrentQueue<string>();
+        Assert.True(outbox.Message[0].TryGetPayload(out MessageSchedulerContext? firstSchedulerContext));
+        Assert.True(outbox.Message[1].TryGetPayload(out MessageSchedulerContext? secondSchedulerContext));
+        Guid retainedCancellation = Guid.Parse("e51ce48d-3896-45d7-a9fd-a17b2fdbe7dd");
+        Guid discardedCancellation = Guid.Parse("7f4bff3a-55fa-48f4-a0c7-69ca0b3b54a3");
+
+        await parent.Add(() => Record("parent-retained", executed));
+        await firstChild.Add(() => Record("first-retained", executed));
+        await secondChild.Add(() => Record("second-retained", executed));
+        ScheduledMessage retainedSchedule = await firstSchedulerContext.SchedulePublish(
+            new DateTime(2030, 1, 2, 2, 0, 0, DateTimeKind.Utc),
+            new ScheduledCheckpointResult("retained"),
+            typeof(ScheduledCheckpointResult),
+            cancellationToken);
+        await secondSchedulerContext.CancelScheduledPublish(
+            typeof(ScheduledCheckpointResult),
+            retainedCancellation,
+            cancellationToken);
+
+        OutboxCheckpoint checkpoint = parent.CreateCheckpoint();
+
+        await parent.Add(() => Record("parent-discarded", executed));
+        await firstChild.Add(() => Record("first-send-discarded", executed));
+        await firstChild.Add(() => Record("first-publish-discarded", executed));
+        await secondChild.Add(() => Record("second-discarded", executed));
+        ScheduledMessage discardedSchedule = await firstSchedulerContext.SchedulePublish(
+            new DateTime(2030, 1, 2, 3, 0, 0, DateTimeKind.Utc),
+            new ScheduledCheckpointResult("discarded"),
+            typeof(ScheduledCheckpointResult),
+            cancellationToken);
+        await secondSchedulerContext.CancelScheduledPublish(
+            typeof(ScheduledCheckpointResult),
+            discardedCancellation,
+            cancellationToken);
+
+        await parent.DiscardPendingActions(checkpoint);
+        await parent.ExecutePendingActions(concurrentMessageDelivery: false);
+
+        Assert.Equal(["parent-retained", "first-retained", "second-retained"], executed);
+        Assert.Equal([retainedSchedule.TokenId, discardedSchedule.TokenId], ((RecordingSchedulerProxy)(object)firstScheduler).Scheduled.Select(x => x.TokenId));
+        Assert.Equal([discardedSchedule.TokenId], ((RecordingSchedulerProxy)(object)firstScheduler).CanceledTokens);
+        Assert.Equal([retainedCancellation], ((RecordingSchedulerProxy)(object)secondScheduler).CanceledPublishTokens);
+    }
+
     private static Task Record(string value, ConcurrentQueue<string> executed)
     {
         executed.Enqueue(value);
@@ -182,6 +286,8 @@ public sealed class InMemoryOutboxCheckpointTests
     private sealed record CheckpointOwnerCommand(int Sequence);
 
     private sealed record ScheduledCheckpointResult(string Value);
+
+    public sealed record BatchCheckpointMessage(string Value);
 
     private static ConsumeContext CreateConsumeContext(Uri inputAddress)
     {
@@ -215,9 +321,19 @@ public sealed class InMemoryOutboxCheckpointTests
 
     private class RecordingSchedulerProxy : DispatchProxy
     {
+        private readonly Queue<Exception> _cancelSendFailures = [];
+
         public List<ScheduledMessage> Scheduled { get; } = [];
 
         public List<Guid> CanceledTokens { get; } = [];
+
+        public List<Guid> CanceledPublishTokens { get; } = [];
+
+        public void EnqueueCancelSendFailure(Exception exception)
+        {
+            ArgumentNullException.ThrowIfNull(exception);
+            _cancelSendFailures.Enqueue(exception);
+        }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -239,6 +355,14 @@ public sealed class InMemoryOutboxCheckpointTests
             if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledSend))
             {
                 CanceledTokens.Add((Guid)args[1]!);
+                return _cancelSendFailures.TryDequeue(out Exception? failure)
+                    ? Task.FromException(failure)
+                    : Task.CompletedTask;
+            }
+
+            if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledPublish))
+            {
+                CanceledPublishTokens.Add((Guid)args[1]!);
                 return Task.CompletedTask;
             }
 

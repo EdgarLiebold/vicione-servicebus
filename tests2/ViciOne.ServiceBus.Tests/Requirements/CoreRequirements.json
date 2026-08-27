@@ -2633,5 +2633,19 @@
       "testMethod" : "FailedAttempt_CancelsOnlySchedulesCreatedAfterItsCheckpoint",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
       "variantKey" : "cancel-only-failed-attempt-schedules"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedScheduleCancellation_RemainsTrackedForFinalCleanup",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "failed-schedule-cancellation-remains-recoverable"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BatchCheckpoint_DiscardsEveryParentAndChildActionCreatedByTheAttempt",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "batch-checkpoint-composes-parent-and-child-outboxes"
    }
 ]

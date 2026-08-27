@@ -1,4 +1,8 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+using System;
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -10,12 +14,16 @@ public sealed class OutboxCheckpoint
     internal OutboxCheckpoint(
         InMemoryOutboxConsumeContext owner,
         int deferredMethodCount,
-        InMemoryOutboxMessageSchedulerContext.Checkpoint schedulerCheckpoint)
+        InMemoryOutboxMessageSchedulerContext.Checkpoint schedulerCheckpoint,
+        IReadOnlyList<OutboxCheckpoint>? childCheckpoints = null)
     {
         Owner = owner;
         DeferredMethodCount = deferredMethodCount;
         SchedulerCheckpoint = schedulerCheckpoint;
+        ChildCheckpoints = childCheckpoints ?? Array.Empty<OutboxCheckpoint>();
     }
+
+    internal IReadOnlyList<OutboxCheckpoint> ChildCheckpoints { get; }
 
     internal int DeferredMethodCount { get; }
 

@@ -2,7 +2,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFramewor
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
 
 public sealed class EntityFrameworkExecutionStrategyTests
@@ -82,6 +84,70 @@ public sealed class EntityFrameworkExecutionStrategyTests
         Assert.Equal(cancellationTokenSource.Token, strategy.RecordedCancellationToken);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "failed-outbox-rollback-blocks-business-retry")]
+    public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesTheOriginalFailure()
+    {
+        await using var dbContext = CreateDbContext();
+        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
+        var operationFailure = new RetryRequestedException();
+        var cleanupFailure = new InvalidOperationException("The outbox rollback failed.");
+        ConsumeContext<RetryMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
+            new RetryMessage(),
+            TestContext.Current.CancellationToken);
+        var outboxContext = new RollbackFailingOutboxContext<RetryMessage>(consumeContext, cleanupFailure);
+        var attempts = 0;
+
+        Exception actual = await Assert.ThrowsAsync<RetryRequestedException>(() =>
+            EntityFrameworkExecutionStrategy.ExecuteAsync(
+                dbContext,
+                strategy,
+                outboxContext,
+                () =>
+                {
+                    attempts++;
+                    return Task.FromException(operationFailure);
+                }));
+
+        Assert.Same(operationFailure, actual);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, outboxContext.RollbackCount);
+        Assert.Equal(2, strategy.ExecutionCount);
+        Assert.Same(cleanupFailure, outboxContext.CleanupFailure);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "failed-outbox-rollback-blocks-canceled-business-retry")]
+    public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheBusinessAttempt()
+    {
+        await using var dbContext = CreateDbContext();
+        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+        var operationFailure = new OperationCanceledException(cancellationSource.Token);
+        var cleanupFailure = new InvalidOperationException("The canceled attempt could not clean up its outbox.");
+        ConsumeContext<RetryMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(new RetryMessage(), cancellationSource.Token);
+        var outboxContext = new RollbackFailingOutboxContext<RetryMessage>(consumeContext, cleanupFailure);
+        var attempts = 0;
+
+        Exception actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            EntityFrameworkExecutionStrategy.ExecuteAsync(
+                dbContext,
+                strategy,
+                outboxContext,
+                () =>
+                {
+                    attempts++;
+                    return Task.FromException(operationFailure);
+                }));
+
+        Assert.Same(operationFailure, actual);
+        Assert.Equal(cancellationSource.Token, ((OperationCanceledException)actual).CancellationToken);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, outboxContext.RollbackCount);
+        Assert.Equal(2, strategy.ExecutionCount);
+    }
+
     private static RetryDbContext CreateDbContext() => new(
         new DbContextOptionsBuilder<RetryDbContext>()
             .UseSqlite("Data Source=:memory:")
@@ -99,6 +165,23 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
     private sealed class RetryRequestedException : Exception
     {
+    }
+
+    public sealed record RetryMessage;
+
+    private sealed class RollbackFailingOutboxContext<T>(ConsumeContext<T> context, Exception cleanupFailure)
+        : InMemoryOutboxConsumeContext<T>(context)
+        where T : class
+    {
+        public Exception CleanupFailure { get; } = cleanupFailure;
+
+        public int RollbackCount { get; private set; }
+
+        public override Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+        {
+            RollbackCount++;
+            return Task.FromException(CleanupFailure);
+        }
     }
 
     private sealed class RetryOnceExecutionStrategy(DbContext dbContext) : IExecutionStrategy
@@ -127,6 +210,37 @@ public sealed class EntityFrameworkExecutionStrategyTests
             }
             catch (RetryRequestedException)
             {
+                return await operation(dbContext, state, cancellationToken);
+            }
+        }
+    }
+
+    private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) : IExecutionStrategy
+    {
+        public int ExecutionCount { get; private set; }
+
+        public bool RetriesOnFailure => true;
+
+        public TResult Execute<TState, TResult>(
+            TState state,
+            Func<DbContext, TState, TResult> operation,
+            Func<DbContext, TState, ExecutionResult<TResult>>? verifySucceeded) =>
+            throw new NotSupportedException("This test exercises only asynchronous execution.");
+
+        public async Task<TResult> ExecuteAsync<TState, TResult>(
+            TState state,
+            Func<DbContext, TState, CancellationToken, Task<TResult>> operation,
+            Func<DbContext, TState, CancellationToken, Task<ExecutionResult<TResult>>>? verifySucceeded,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                ExecutionCount++;
+                return await operation(dbContext, state, cancellationToken);
+            }
+            catch
+            {
+                ExecutionCount++;
                 return await operation(dbContext, state, cancellationToken);
             }
         }

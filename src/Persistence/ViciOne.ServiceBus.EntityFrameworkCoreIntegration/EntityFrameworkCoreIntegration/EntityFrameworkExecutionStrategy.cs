@@ -1,6 +1,8 @@
+#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -50,29 +52,33 @@ internal static class EntityFrameworkExecutionStrategy
     {
         ArgumentNullException.ThrowIfNull(consumeContext);
 
+        var retryGuard = new OutboxRollbackRetryGuard();
+
         return ExecuteAsync(
             dbContext,
             strategy,
-            () => ExecuteAttemptAsync(dbContext, consumeContext, operation),
+            () => ExecuteAttemptAsync(consumeContext, operation, retryGuard),
             consumeContext.CancellationToken);
     }
 
     private static async Task ExecuteAttemptAsync<TMessage>(
-        DbContext dbContext,
         ConsumeContext<TMessage> consumeContext,
-        Func<Task> operation)
+        Func<Task> operation,
+        OutboxRollbackRetryGuard retryGuard)
         where TMessage : class
     {
-        OutboxContext outboxContext = consumeContext.TryGetPayload(out InMemoryOutboxConsumeContext inMemoryOutbox)
+        retryGuard.ThrowIfBlocked();
+
+        OutboxContext? outboxContext = consumeContext.TryGetPayload(out OutboxContext? inMemoryOutbox)
             ? inMemoryOutbox
             : null;
-        OutboxCheckpoint checkpoint = outboxContext?.CreateCheckpoint();
+        OutboxCheckpoint? checkpoint = outboxContext?.CreateCheckpoint();
 
         try
         {
             await operation().ConfigureAwait(false);
         }
-        catch
+        catch (Exception operationException)
         {
             if (checkpoint is not null)
             {
@@ -80,13 +86,17 @@ internal static class EntityFrameworkExecutionStrategy
                 {
                     await outboxContext!.DiscardPendingActions(checkpoint).ConfigureAwait(false);
                 }
-                catch (Exception exception)
+                catch (Exception cleanupException)
                 {
-                    LogContext.Warning?.Log(exception, "The failed Entity Framework attempt could not discard every pending outbox action.");
+                    retryGuard.Block(operationException);
+                    LogContext.Warning?.Log(
+                        cleanupException,
+                        "The failed Entity Framework attempt could not discard every pending outbox action; the business attempt will not be retried.");
                 }
             }
 
-            throw;
+            ExceptionDispatchInfo.Capture(operationException).Throw();
+            throw new InvalidOperationException("The captured operation exception was not rethrown.");
         }
     }
 
@@ -103,6 +113,24 @@ internal static class EntityFrameworkExecutionStrategy
             // without entities from the failed unit of work.
             dbContext.ChangeTracker.Clear();
             throw;
+        }
+    }
+
+    private sealed class OutboxRollbackRetryGuard
+    {
+        private ExceptionDispatchInfo? _blockedFailure;
+
+        public void Block(Exception operationException)
+        {
+            Interlocked.CompareExchange(
+                ref _blockedFailure,
+                ExceptionDispatchInfo.Capture(operationException),
+                comparand: null);
+        }
+
+        public void ThrowIfBlocked()
+        {
+            Volatile.Read(ref _blockedFailure)?.Throw();
         }
     }
 }
