@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 2,
+  "technicalCommit": "6632dfa2017348f94a9f18e35bb2a08415dadc77",
+  "technicalTree": "e3a039081f9a7e96917e1f08a3b82dea21627096",
+  "technicalParent": "d259900bdedbbc49f339815ab5921002fcea3596",
+  "sdk": "10.0.302",
+  "environment": {
+    "DOTNET_ROOT": "/usr/local/share/dotnet",
+    "DOTNET_MULTILEVEL_LOOKUP": "0",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_NOLOGO": "1",
+    "MSBUILDDISABLENODEREUSE": "1"
+  },
+  "engineeringRestore": {
+    "solution": "ViciOne.ServiceBus.Engineering.slnx",
+    "commandArguments": ["/usr/local/share/dotnet/dotnet", "restore", "ViciOne.ServiceBus.Engineering.slnx", "--locked-mode", "--disable-build-servers", "/bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-restore.binlog"],
+    "lockedMode": true,
+    "exitCode": 0,
+    "rawLog": "positive/engineering-restore.log.gz",
+    "binlog": "positive/engineering-restore.binlog"
+  },
+  "engineeringBuild": {
+    "solution": "ViciOne.ServiceBus.Engineering.slnx",
+    "commandArguments": ["/usr/local/share/dotnet/dotnet", "build", "ViciOne.ServiceBus.Engineering.slnx", "--configuration", "Release", "--no-restore", "--disable-build-servers", "--no-incremental", "/m:1", "/nr:false", "/p:UseSharedCompilation=false", "/p:NuGetAudit=false", "/p:TreatWarningsAsErrors=true", "-v:minimal", "/bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-build.binlog"],
+    "configuration": "Release",
+    "noRestore": true,
+    "warnings": 0,
+    "errors": 0,
+    "exitCode": 0,
+    "rawLog": "positive/engineering-build.log.gz",
+    "binlog": "positive/engineering-build.binlog"
+  },
+  "unitArchitecture": {
+    "solution": "ViciOne.ServiceBus.Tests.Unit.slnx",
+    "commandArguments": ["/usr/local/share/dotnet/dotnet", "test", "--solution", "ViciOne.ServiceBus.Tests.Unit.slnx", "--configuration", "Release", "--no-build", "--no-restore", "--results-directory", "artifacts/test-results/unit", "--minimum-expected-tests", "1882", "--max-parallel-test-modules", "1"],
+    "minimumExpectedTests": 1882,
+    "total": 1882,
+    "passed": 1882,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "rawLog": "positive/unit-test.log.gz"
+  },
+  "entityFrameworkUnitArchitecture": {
+    "project": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+    "commandArguments": ["artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests", "--minimum-expected-tests", "53", "--report-xunit-ctrf", "--results-directory", "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-unit-results", "--report-xunit-ctrf-filename", "entity-framework-unit.json"],
+    "minimumExpectedTests": 53,
+    "total": 53,
+    "passed": 53,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "rawLog": "positive/ef-unit-test.log.gz",
+    "ctrf": "positive/ef-unit-results/entity-framework-unit.json"
+  },
+  "localIntegration": {
+    "solution": "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+    "commandArguments": ["python3", "tools/ci/run_broker_category.py", "--broker", "postgres", "--broker", "azurite", "--command", "--", "/usr/local/share/dotnet/dotnet", "test", "--solution", "ViciOne.ServiceBus.Tests.LocalIntegration.slnx", "--configuration", "Release", "--no-build", "--no-restore", "--results-directory", "artifacts/test-results/local-integration", "--minimum-expected-tests", "70", "--max-parallel-test-modules", "1"],
+    "fixtureOwner": "tools/ci/run_broker_category.py",
+    "brokers": ["postgres", "azurite"],
+    "minimumExpectedTests": 70,
+    "total": 70,
+    "passed": 70,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "runIdentity": "vicione-6adceb0711bd",
+    "rawLog": "positive/local-integration-test.log.gz",
+    "fixtureEvidence": "positive/local-fixture"
+  },
+  "entityFrameworkLocalIntegration": {
+    "project": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj",
+    "commandArguments": ["python3", "tools/ci/run_broker_category.py", "--broker", "postgres", "--command", "--", "artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests", "--minimum-expected-tests", "59", "--report-xunit-ctrf", "--results-directory", "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-results", "--report-xunit-ctrf-filename", "entity-framework-local.json"],
+    "fixtureOwner": "tools/ci/run_broker_category.py",
+    "brokers": ["postgres"],
+    "minimumExpectedTests": 59,
+    "total": 59,
+    "passed": 59,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "runIdentity": "vicione-3f3f39c3fe96",
+    "rawLog": "positive/ef-local-test.log.gz",
+    "ctrf": "positive/ef-local-results/entity-framework-local.json",
+    "fixtureEvidence": "positive/ef-local-fixture"
+  },
+  "ciVerificationModel": {
+    "command": "python3 tools/ci/verification/model.py",
+    "exitCode": 0,
+    "rawLog": "positive/verification-model.log.gz"
+  },
+  "ciToolTests": {
+    "command": "python3 -m unittest discover -s tools/ci/tests -p test_*.py",
+    "total": 253,
+    "passed": 253,
+    "failed": 0,
+    "exitCode": 0,
+    "rawLog": "positive/ci-tool-tests.log.gz"
+  },
+  "identityToolTests": {
+    "command": "python3 -m unittest discover -s tools/identity -p test_*.py",
+    "total": 103,
+    "passed": 103,
+    "failed": 0,
+    "exitCode": 0,
+    "rawLog": "positive/identity-tool-tests.log.gz"
+  },
+  "changeList": {
+    "command": "python3 tools/identity/change_list.py",
+    "entries": 7848,
+    "exitCode": 0,
+    "rawLog": "positive/change-list.log.gz"
+  },
+  "providerVariantClosure": {
+    "obligations": 90,
+    "executionIdentities": 156,
+    "executing": 77,
+    "providerNeutralConsolidated": 39,
+    "externalPending": 40,
+    "validationStatus": "PASS",
+    "matrix": "R0_VARIANT_DISPOSITIONS.json",
+    "validation": "R0_VARIANT_DISPOSITION_VALIDATION.json"
+  }
+}

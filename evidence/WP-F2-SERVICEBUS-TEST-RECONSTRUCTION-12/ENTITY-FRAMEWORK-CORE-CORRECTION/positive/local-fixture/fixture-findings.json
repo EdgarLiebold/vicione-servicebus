@@ -1,0 +1,1 @@
+{"allowedBrokerOutage": null, "brokers": ["postgres", "azurite"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"azurite": "9ecfacd8612170f1636fb5f83172bda754e50a1a7ea22c566fbde3c28c9edcc4", "postgres": "ff9363169c4f35439e10bb2ffddffa9720471b3332ffb2f29faa7abbe88497b1"}, "schemaVersion": 1}

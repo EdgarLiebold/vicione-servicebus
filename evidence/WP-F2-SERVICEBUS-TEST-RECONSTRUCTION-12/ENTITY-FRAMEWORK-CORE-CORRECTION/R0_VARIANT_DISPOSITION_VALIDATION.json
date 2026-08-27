@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "technicalCommit": "6632dfa2017348f94a9f18e35bb2a08415dadc77",
+  "technicalTree": "e3a039081f9a7e96917e1f08a3b82dea21627096",
+  "matrix": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/R0_VARIANT_DISPOSITIONS.json",
+  "matrixSha256": "d76bb501ecf0177f4c9c375bfdb99bebaf70ee595f578d5745ad65e723042400",
+  "checks": [
+    "exactly 90 unique obligations selected from the old obligation disposition",
+    "exactly 156 unique obligation and variant identities selected from the frozen R0 set",
+    "exactly 48 unparameterized, 42 PostgreSQL, 42 SQL Server and 24 SQL Server resiliency identities",
+    "exactly 77 executing, 39 provider-neutral consolidated and 40 external-pending identities",
+    "every executing or consolidated identity has at least one native target method",
+    "no external-pending identity has an executing target method",
+    "all 40 external contract identifiers are present and unique",
+    "all 58 distinct semantic or executing target methods exist in native requirement projections",
+    "OBL-R0-PER-0004 PostgreSQL is owned by the real PostgreSQL retry-state regression"
+  ]
+}

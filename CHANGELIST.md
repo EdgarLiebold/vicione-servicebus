@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2142 |
+| Added | 2198 |
 | Modified | 4217 |
 | Deleted | 1431 |
 | Renamed | 2 |
@@ -945,6 +945,57 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/MUTATION_EXECUTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/MUTATION_MANIFEST.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/R0_VARIANT_DISPOSITIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/R0_VARIANT_DISPOSITION_VALIDATION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M01-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M01-retry-clears-tracker.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M01-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M02-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M02-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M03-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M03-outbox-retry-tail.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M03-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M04-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M04-inbox-save-token.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M04-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M05-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M05-foreign-checkpoint.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M05-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M06-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M06-success-preserves-tracker.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M06-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/change-list.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ci-tool-tests.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-fixture/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-fixture/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-fixture/postgres-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-results/entity-framework-local.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-local-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-unit-results/entity-framework-unit.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/ef-unit-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/engineering-restore.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/identity-tool-tests.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/local-fixture/azurite-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/local-fixture/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/local-fixture/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/local-fixture/postgres-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/local-integration-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/unit-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/positive/verification-model.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/M14_RESULT.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE/MUTATION_MANIFEST.md` | Added |  |
@@ -1734,6 +1785,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbContextOutboxConsumeContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbContextOutboxConsumeContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbTransactionContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/DbTransactionContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkConsumeContextScopedBusContext.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkConsumeContextScopedBusContext.cs` |
+| `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkOutboxContextFactory.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkOutboxContextFactory.cs` |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkOutboxWriteCoordinator.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkSagaRepository.cs` | Modified | `src/Persistence/MassTransit.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkSagaRepository.cs` |
@@ -4978,6 +5030,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxPublishEndpointProvider.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutbox/InMemoryOutboxPublishEndpointProvider.cs` |
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxReceiveContext.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutbox/InMemoryOutboxReceiveContext.cs` |
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxSendEndpointProvider.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutbox/InMemoryOutboxSendEndpointProvider.cs` |
+| `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/OutboxCheckpoint.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/OutboxContext.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutbox/OutboxContext.cs` |
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/OutboxSendEndpoint.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutbox/OutboxSendEndpoint.cs` |
 | `src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs` | Modified | `src/MassTransit/Middleware/InMemoryOutboxFilter.cs` |
@@ -7356,6 +7409,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTimeProviderTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs` | Added |  |
@@ -7437,6 +7491,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
@@ -7649,6 +7704,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
