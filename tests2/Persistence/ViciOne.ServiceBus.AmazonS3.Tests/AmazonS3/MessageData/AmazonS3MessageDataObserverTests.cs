@@ -58,6 +58,76 @@ public sealed class AmazonS3MessageDataObserverTests
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StopFaulted(bus, null!));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "owned-rule-is-canonical-and-foreign-rule-is-preserved")]
+    public async Task EnsureReady_CanonicalizesOnlyTheProductOwnedLifecycleRule()
+    {
+        var foreignTransition = new LifecycleTransition
+        {
+            Days = 90,
+            StorageClass = S3StorageClass.Glacier,
+        };
+        var foreign = new LifecycleRule
+        {
+            Id = "caller-owned-archive",
+            Status = LifecycleRuleStatus.Enabled,
+            Filter = new LifecycleFilter
+            {
+                LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = "caller/" },
+            },
+            Expiration = new LifecycleRuleExpiration { Days = 365 },
+            Transitions = [foreignTransition],
+        };
+        var ownedWithUnconfiguredAction = new LifecycleRule
+        {
+            Id = AmazonS3MessageDataRepository.LifecycleRuleId,
+            Status = LifecycleRuleStatus.Enabled,
+            Filter = new LifecycleFilter
+            {
+                LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = string.Empty },
+            },
+            Expiration = new LifecycleRuleExpiration { Days = 14 },
+            Transitions =
+            [
+                new LifecycleTransition
+                {
+                    Days = 30,
+                    StorageClass = S3StorageClass.Glacier,
+                },
+            ],
+        };
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.Rules = [foreign, ownedWithUnconfiguredAction];
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("canonical-lifecycle", lifecycleExpirationDays: 14));
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        await repository.EnsureReady(cancellationToken);
+
+        PutLifecycleConfigurationRequest request = Assert.IsType<PutLifecycleConfigurationRequest>(proxy.PutRequest);
+        Assert.Equal(cancellationToken, proxy.ObservedCancellationToken);
+        LifecycleRule actualForeign = Assert.Single(request.Configuration.Rules, rule => rule.Id == foreign.Id);
+        Assert.Equal(365, actualForeign.Expiration.Days);
+        Assert.Equal("caller/", Assert.IsType<LifecyclePrefixPredicate>(actualForeign.Filter.LifecycleFilterPredicate).Prefix);
+        LifecycleTransition actualForeignTransition = Assert.Single(actualForeign.Transitions);
+        Assert.Equal(90, actualForeignTransition.Days);
+        Assert.Equal(S3StorageClass.Glacier, actualForeignTransition.StorageClass);
+        LifecycleRule actualOwned = Assert.Single(
+            request.Configuration.Rules,
+            rule => rule.Id == AmazonS3MessageDataRepository.LifecycleRuleId);
+        Assert.Equal(LifecycleRuleStatus.Enabled, actualOwned.Status);
+        Assert.Equal(14, actualOwned.Expiration.Days);
+        Assert.Empty(actualOwned.Transitions ?? []);
+        Assert.Null(actualOwned.AbortIncompleteMultipartUpload);
+        Assert.Null(actualOwned.NoncurrentVersionExpiration);
+        Assert.Empty(actualOwned.NoncurrentVersionTransitions ?? []);
+        Assert.Equal(
+            string.Empty,
+            Assert.IsType<LifecyclePrefixPredicate>(actualOwned.Filter.LifecycleFilterPredicate).Prefix);
+    }
+
     private class NoOpDispatchProxy : DispatchProxy
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
@@ -75,6 +145,38 @@ public sealed class AmazonS3MessageDataObserverTests
             Assert.Equal(nameof(IAmazonS3.GetBucketAclAsync), targetMethod?.Name);
             ObservedCancellationToken = Assert.IsType<CancellationToken>(args![1]);
             return Task.FromException<GetBucketAclResponse>(Failure);
+        }
+    }
+
+    private class LifecycleS3DispatchProxy : DispatchProxy
+    {
+        public IReadOnlyList<LifecycleRule> Rules { get; set; } = [];
+
+        public PutLifecycleConfigurationRequest? PutRequest { get; private set; }
+
+        public CancellationToken ObservedCancellationToken { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            switch (targetMethod?.Name)
+            {
+                case nameof(IAmazonS3.GetBucketAclAsync):
+                    ObservedCancellationToken = Assert.IsType<CancellationToken>(args![1]);
+                    return Task.FromResult(new GetBucketAclResponse());
+                case nameof(IAmazonS3.GetLifecycleConfigurationAsync):
+                    ObservedCancellationToken = Assert.IsType<CancellationToken>(args![1]);
+                    return Task.FromResult(
+                        new GetLifecycleConfigurationResponse
+                        {
+                            Configuration = new LifecycleConfiguration { Rules = Rules.ToList() },
+                        });
+                case nameof(IAmazonS3.PutLifecycleConfigurationAsync):
+                    PutRequest = Assert.IsType<PutLifecycleConfigurationRequest>(args![0]);
+                    ObservedCancellationToken = Assert.IsType<CancellationToken>(args[1]);
+                    return Task.FromResult(new PutLifecycleConfigurationResponse());
+                default:
+                    throw new NotSupportedException(targetMethod?.Name);
+            }
         }
     }
 }

@@ -8,9 +8,12 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
     public static class DynamoDbSagaRepository<TSaga>
         where TSaga : class, ISagaVersion
     {
-        public static ISagaRepository<TSaga> Create(Func<IDynamoDBContext> dynamoDbFactory, string tableName, TimeSpan? expiration = null)
+        public static ISagaRepository<TSaga> Create(Func<IDynamoDBContext> dynamoDbFactory, string tableName, TimeSpan? expiration = null,
+            TimeProvider timeProvider = null)
         {
-            var options = new DynamoDbSagaRepositoryOptions<TSaga>(tableName, expiration);
+            ArgumentNullException.ThrowIfNull(dynamoDbFactory);
+
+            var options = new DynamoDbSagaRepositoryOptions<TSaga>(tableName, expiration, timeProvider ?? TimeProvider.System);
 
             var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
 

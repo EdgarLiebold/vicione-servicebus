@@ -50,7 +50,11 @@ public class AmazonSqsHostConfiguration :
         get => _hostSettings;
         set
         {
-            _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
+
+            _hostSettings = value is ConfigurationHostSettings settings
+                ? settings.Freeze()
+                : value;
 
             var hostAddress = new AmazonSqsHostAddress(value.HostAddress);
 

@@ -1068,3 +1068,34 @@ future cohorts as complete.
   NamedPipe `SocketException (13)` and process-tree tests denied `ps` are sandbox boundary failures;
   identical commands pass outside that boundary. Restore network stalls are handled the same way,
   without modifying tests, runner selection or package truth.
+
+## AWS native closure — technical candidate, not final acceptance
+
+- The 111 frozen AWS obligations are still unique and complete. Their current dispositions are
+  exactly 100 native executing replacements, nine real-AWS `EXTERNAL_PENDING` rows, one invalid
+  duplicate retired row and one PO-superseded raw-secret API row. No External result is counted
+  green.
+- SQS/SNS now has one immutable host/configuration boundary, no public raw-secret path, exact
+  address/name/range/equality rules, explicit product-owned error/skipped settlement, provider-failure
+  continuity, cancellation ownership, single-flight lifecycle operations and causal visibility
+  renewal. Its native projects pass 46/46 Unit and 48/48 LocalStack cases.
+- DynamoDB now freezes and validates configuration, creates a fresh SDK context per operation,
+  forwards cancellation, preserves provider exceptions, restores failed-update versions, rejects
+  overflow before I/O, writes numeric TTL from injected time and conditionally protects both update
+  and delete. Its native projects pass 6/6 Unit and 9/9 LocalStack cases, including a real
+  four-writer saga convergence test and stale-delete protection.
+- S3 retains its accepted real-client boundary and now canonicalizes only the complete product-owned
+  lifecycle rule while preserving foreign rules/actions. It passes 6/6 Unit and 5/5 LocalStack.
+  Arbitrary per-message TTL and real service-controlled lifecycle deletion remain explicit product /
+  External work in `TODO.md`.
+- The obsolete inherited SQS project (31 files) and DynamoDB project (7 files) are removed only after
+  carrier closure; their empty directories are gone. The native source tree mirrors product owners,
+  including the corrected SQS deploy-topology contract folder.
+- Locked UnitArchitecture and LocalIntegration restores pass. Release builds are zero-warning and
+  zero-error. The final unfiltered local runs pass UnitArchitecture 2032/2032 and LocalIntegration
+  149/149 against fresh run-scoped PostgreSQL, Azurite and LocalStack, with zero failure and zero
+  skip. The complete Engineering locked restore and Release build also pass with zero warnings and
+  errors. Verification-model classification passes.
+- This is a technical candidate only. The worktree is not yet the final frozen technical/evidence
+  pair; exact one-cause mutation evidence, clean commit binding, independent read-only review and
+  remote backup remain required before final acceptance. Real AWS was not executed.

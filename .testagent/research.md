@@ -2119,8 +2119,10 @@ LocalIntegration under `tests2/Persistence`, and Amazon S3 UnitArchitecture and 
 under `tests2/Persistence`. Shared provider startup/configuration lives only in the existing Testing
 infrastructure project and the canonical Python fixture runner. Individual projects own run-unique
 queues, topics, tables and buckets and perform bounded cleanup. No product test harness, fixed port,
-fixed resource name, shared table/bucket, sleep, stopwatch window, random scheduling, environment
-mutation, global mutable default or absence-until-timeout is an oracle.
+fixed resource name, shared table/bucket, sleep, random scheduling, environment mutation, global
+mutable default or absence-until-timeout is an oracle. Where provider time or delay is itself the
+subject, a monotonic lower bound plus causal delivery, or a request/response timestamp interval,
+owns the assertion; elapsed time is never used as a substitute for a missing state observation.
 
 The inherited suite is particularly weak around filter routing, topology deployment, telemetry,
 FIFO concurrency, error moves and long-running consumers. Replacements use distinct recorders for
@@ -2144,6 +2146,16 @@ The repeatable correction is to keep the command and its inputs unchanged, use t
 read-only local NuGet cache, disable node reuse and run that exact process outside the socket sandbox.
 Do not change product/tests, enable VSTest, add retries or run an unpinned restore to work around this
 failure. With only that permission boundary changed, the same focused run passed 81/81 with no skip.
+
+The full AWS candidate exposed a second, distinct local diagnostic. A reduced-output unfiltered run
+appeared to end inside the Architecture assembly, but no process remained. Running the assembly
+serially with `--stop-on-fail` revealed ordinary fail-closed findings: the exact Unit solution
+closure lacked the six promoted AWS project entries, and one SQS deploy-contract source file did not
+mirror its namespace. After those source-truth corrections the serial Architecture run passed
+113/113. A later full Solution build also proved that a focused MTP run can execute a previously
+built binary when its source has not been rebuilt; therefore every focused verdict in this slice is
+preceded by an explicit Release build, and the final authority is the complete clean Solution build
+plus unfiltered profile. Neither symptom is repaired by changing the sandbox, runner or test floor.
 
 ### LocalStack licensing boundary
 

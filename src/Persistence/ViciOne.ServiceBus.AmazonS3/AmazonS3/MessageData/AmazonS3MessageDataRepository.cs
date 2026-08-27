@@ -168,28 +168,19 @@ public sealed class AmazonS3MessageDataRepository :
         if (ownedRules.Length == 1 && IsCurrentOwnedRule(ownedRules[0], expirationDays))
             return;
 
-        LifecycleRule ownedRule;
-        if (ownedRules.Length == 0)
-        {
-            ownedRule = new LifecycleRule
+        int ownedRuleIndex = rules.FindIndex(rule =>
+            string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal));
+        rules.RemoveAll(rule =>
+            string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal));
+        rules.Insert(
+            ownedRuleIndex < 0 ? rules.Count : ownedRuleIndex,
+            new LifecycleRule
             {
                 Id = LifecycleRuleId,
                 Status = LifecycleRuleStatus.Enabled,
                 Filter = AllObjectsFilter(),
-            };
-            rules.Add(ownedRule);
-        }
-        else
-        {
-            ownedRule = ownedRules[0];
-            rules.RemoveAll(rule =>
-                !ReferenceEquals(rule, ownedRule) &&
-                string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal));
-        }
-
-        ownedRule.Status = LifecycleRuleStatus.Enabled;
-        ownedRule.Filter = AllObjectsFilter();
-        ownedRule.Expiration = new LifecycleRuleExpiration { Days = expirationDays };
+                Expiration = new LifecycleRuleExpiration { Days = expirationDays },
+            });
 
         await _client.PutLifecycleConfigurationAsync(
                 new PutLifecycleConfigurationRequest
@@ -204,7 +195,11 @@ public sealed class AmazonS3MessageDataRepository :
     private static bool IsCurrentOwnedRule(LifecycleRule rule, int expirationDays) =>
         rule.Status == LifecycleRuleStatus.Enabled &&
         IsAllObjectsFilter(rule.Filter) &&
-        rule.Expiration?.Days == expirationDays;
+        rule.Expiration?.Days == expirationDays &&
+        rule.AbortIncompleteMultipartUpload is null &&
+        rule.NoncurrentVersionExpiration is null &&
+        rule.NoncurrentVersionTransitions is not { Count: > 0 } &&
+        rule.Transitions is not { Count: > 0 };
 
     private static LifecycleFilter AllObjectsFilter() =>
         new()

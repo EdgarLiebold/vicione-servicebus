@@ -1,15 +1,19 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using Amazon.DynamoDBv2;
     using Amazon.DynamoDBv2.DataModel;
 
 
     public interface IDynamoDbSagaRepositoryConfigurator
     {
         string TableName { set; }
-        string LockSuffix { set; }
-        TimeSpan LockTimeout { set; }
         TimeSpan? Expiration { set; }
+        TimeProvider TimeProvider { set; }
+        bool ConsistentRead { set; }
+        bool IsEmptyStringValueEnabled { set; }
+        bool RetrieveDateTimeInUtc { set; }
+        DynamoDBEntryConversion Conversion { set; }
 
         /// <summary>
         /// Factory method to get the DynamoDb context

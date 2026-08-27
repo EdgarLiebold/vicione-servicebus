@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using Amazon.DynamoDBv2.DataModel;
     using Amazon.DynamoDBv2.DocumentModel;
 
@@ -28,14 +29,19 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
         public Document ToDocument()
         {
-            return new Document(new Dictionary<string, DynamoDBEntry>
+            var attributes = new Dictionary<string, DynamoDBEntry>
             {
                 { "PK", new Primitive(CorrelationId) },
                 { "SK", new Primitive(DefaultEntityType) },
-                { nameof(VersionNumber), new Primitive(VersionNumber.ToString(), true) },
-                { nameof(Properties), new Primitive(Properties) },
-                { nameof(ExpirationEpochSeconds), new Primitive(ExpirationEpochSeconds?.ToString(), true) }
-            });
+                { nameof(VersionNumber), new Primitive(VersionNumber.ToString(CultureInfo.InvariantCulture), true) },
+                { nameof(Properties), new Primitive(Properties) }
+            };
+
+            if (ExpirationEpochSeconds.HasValue)
+                attributes.Add(nameof(ExpirationEpochSeconds),
+                    new Primitive(ExpirationEpochSeconds.Value.ToString(CultureInfo.InvariantCulture), true));
+
+            return new Document(attributes);
         }
     }
 }

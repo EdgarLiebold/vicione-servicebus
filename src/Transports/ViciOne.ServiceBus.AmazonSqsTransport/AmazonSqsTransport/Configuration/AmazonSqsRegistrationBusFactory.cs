@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 using System;
 using System.Collections.Generic;
 using Amazon;
-using Amazon.Runtime.Credentials;
 using ViciOne.ServiceBus.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -44,13 +43,6 @@ public class AmazonSqsRegistrationBusFactory :
                 if (!string.IsNullOrWhiteSpace(options.Scope))
                     h.Scope(options.Scope!);
 
-                if (!string.IsNullOrWhiteSpace(options.AccessKey) && !string.IsNullOrWhiteSpace(options.SecretKey))
-                {
-                    h.AccessKey(options.AccessKey!);
-                    h.SecretKey(options.SecretKey!);
-                }
-                else
-                    h.Credentials(DefaultAWSCredentialsIdentityResolver.GetCredentials());
             });
         }
 

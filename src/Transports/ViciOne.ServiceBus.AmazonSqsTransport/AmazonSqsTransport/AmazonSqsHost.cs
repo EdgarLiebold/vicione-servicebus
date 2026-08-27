@@ -23,12 +23,20 @@ public class AmazonSqsHost :
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+        Action<IAmazonSqsReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+        Action<IAmazonSqsReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(queueName, configure);
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
@@ -63,8 +71,7 @@ public class AmazonSqsHost :
         context.Set(new
         {
             Type = "AmazonSQS",
-            _hostConfiguration.Settings.Region,
-            _hostConfiguration.Settings.AccessKey
+            _hostConfiguration.Settings.Region
         });
 
         _hostConfiguration.ConnectionContextSupervisor.Probe(context);

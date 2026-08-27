@@ -55,16 +55,16 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 1953 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2032 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py \
-  --broker postgres --broker azurite --command -- \
+  --broker postgres --broker azurite --broker localstack --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/local-integration \
-    --minimum-expected-tests 87 --max-parallel-test-modules 1
+    --minimum-expected-tests 149 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -132,10 +132,12 @@ and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
 application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
 one unambiguous current-host capture path and all eight host fields after real envelope transport.
 The LocalIntegration floor is independent and includes only host-resource tests in that profile.
-Its 87 cases cover run-scoped PostgreSQL and Azurite resources, including `MessageJournal`, EF Core
-saga/outbox/job/future persistence and TransactionalBus commit, rollback and explicit-release
-behavior. Store retention is applied transactionally on every append; there is deliberately no
-background maintenance queue.
+Its 149 cases cover run-scoped PostgreSQL, Azurite and LocalStack resources, including
+`MessageJournal`, EF Core saga/outbox/job/future persistence, TransactionalBus commit/rollback/
+explicit-release behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3
+message-data/lifecycle-policy composition. Store retention is applied transactionally on every
+append; there is deliberately no background maintenance queue. Emulator-backed AWS cases never
+claim the separately listed real-AWS credential, quota, throttling or service-controlled TTL work.
 
 It is a floor, not a completeness proof. Exact cohort membership is protected separately by durable
 requirement projections under each owning test project. The framework-neutral verifier in

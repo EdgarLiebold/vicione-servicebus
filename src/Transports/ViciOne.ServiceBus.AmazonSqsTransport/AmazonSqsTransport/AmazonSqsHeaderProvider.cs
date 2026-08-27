@@ -48,7 +48,10 @@ public class AmazonSqsHeaderProvider :
             {
                 if (long.TryParse(sentTimestamp, out var milliseconds))
                 {
-                    value = DateTimeConstants.Epoch + TimeSpan.FromMilliseconds(milliseconds);
+                    // SQS defines SentTimestamp as Unix epoch milliseconds, which is an absolute UTC instant.
+                    // DateTimeConstants.Epoch is intentionally kind-agnostic for general conversions, so using it
+                    // here would incorrectly expose a provider timestamp as DateTimeKind.Unspecified.
+                    value = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).UtcDateTime;
                     return true;
                 }
             }

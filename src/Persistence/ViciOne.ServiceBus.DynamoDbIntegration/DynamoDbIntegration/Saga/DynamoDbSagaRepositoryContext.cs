@@ -44,7 +44,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         {
             try
             {
-                await _context.Insert(instance).ConfigureAwait(false);
+                await _context.Insert(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
 
                 _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
@@ -54,13 +54,13 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
             {
                 _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
 
-                return default;
+                throw;
             }
         }
 
         public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
         {
-            var instance = await _context.Load(correlationId).ConfigureAwait(false);
+            var instance = await _context.Load(correlationId, _consumeContext.CancellationToken).ConfigureAwait(false);
             if (instance == null)
                 return default;
 
@@ -69,17 +69,17 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
         public Task Save(SagaConsumeContext<TSaga> context)
         {
-            return _context.Add(context);
+            return _context.Add(context.Saga, context.CancellationToken);
         }
 
         public Task Update(SagaConsumeContext<TSaga> context)
         {
-            return _context.Update(context);
+            return _context.Update(context.Saga, context.CancellationToken);
         }
 
         public Task Delete(SagaConsumeContext<TSaga> context)
         {
-            return _context.Delete(context);
+            return _context.Delete(context.Saga, context.CancellationToken);
         }
 
         public Task Discard(SagaConsumeContext<TSaga> context)
@@ -121,7 +121,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
         public Task<TSaga> Load(Guid correlationId)
         {
-            return _context.Load(correlationId);
+            return _context.Load(correlationId, CancellationToken);
         }
     }
 }

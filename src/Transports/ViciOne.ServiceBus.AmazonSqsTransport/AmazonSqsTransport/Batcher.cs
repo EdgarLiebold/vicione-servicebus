@@ -120,19 +120,49 @@ public abstract class Batcher<TEntry> :
 
     protected abstract Task SendBatch(IList<BatchEntry<TEntry>> batch);
 
-    protected void Complete(IList<BatchEntry<TEntry>> batch, IEnumerable<string> successfulIds)
+    protected void ApplyResponse(
+        IList<BatchEntry<TEntry>> batch,
+        IEnumerable<string>? successfulIds,
+        IEnumerable<(string Id, string Code, string Message)>? failures)
     {
-        foreach (var id in successfulIds)
+        var completed = new HashSet<int>();
+        var successful = new List<int>();
+        var faulted = new List<(int EntryId, string Code, string Message)>();
+
+        foreach (var id in successfulIds ?? [])
         {
-            if (int.TryParse(id, out var entryId))
-                batch[entryId].SetCompleted();
+            var entryId = ParseEntryId(id, batch.Count);
+            if (!completed.Add(entryId))
+                throw new AmazonSqsTransportException($"The AWS batch response contains entry id '{id}' more than once.");
+
+            successful.Add(entryId);
         }
+
+        foreach (var failure in failures ?? [])
+        {
+            var entryId = ParseEntryId(failure.Id, batch.Count);
+            if (!completed.Add(entryId))
+                throw new AmazonSqsTransportException($"The AWS batch response contains entry id '{failure.Id}' more than once.");
+
+            faulted.Add((entryId, failure.Code, failure.Message));
+        }
+
+        if (completed.Count != batch.Count)
+            throw new AmazonSqsTransportException($"The AWS batch response accounted for {completed.Count} of {batch.Count} request entries.");
+
+        foreach (var entryId in successful)
+            batch[entryId].SetCompleted();
+
+        foreach (var failure in faulted)
+            batch[failure.EntryId].SetFaulted(new AmazonSqsTransportException($"Send failed: {failure.Code}-{failure.Message}"));
     }
 
-    protected void Fail(IList<BatchEntry<TEntry>> batch, string id, string code, string message)
+    static int ParseEntryId(string id, int batchCount)
     {
-        if (int.TryParse(id, out var entryId))
-            batch[entryId].SetFaulted(new AmazonSqsTransportException($"Send failed: {code}-{message}"));
+        if (!int.TryParse(id, out var entryId) || entryId < 0 || entryId >= batchCount)
+            throw new AmazonSqsTransportException($"The AWS batch response contains unknown entry id '{id}'.");
+
+        return entryId;
     }
 
     async Task ExecuteBatch(IList<BatchEntry<TEntry>> batch)

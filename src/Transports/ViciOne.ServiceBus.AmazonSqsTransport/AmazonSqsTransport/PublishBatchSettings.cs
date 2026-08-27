@@ -3,26 +3,14 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport;
 using System;
 
 
-public static class PublishBatchSettings
+static class PublishBatchSettings
 {
     const int MaxMessageLimit = 10;
-
-    static PublishBatchSettings()
-    {
-        MessageLimit = MaxMessageLimit;
-        BatchLimit = 10;
-        SizeLimit = 240 * 1024;
-        Timeout = TimeSpan.FromMilliseconds(1);
-    }
-
-    public static int MessageLimit { get; set; }
-    public static int BatchLimit { get; set; }
-    public static int SizeLimit { get; set; }
-    public static TimeSpan Timeout { get; set; }
+    static readonly BatchSettings _defaults = new SnsPublishBatchSettings(MaxMessageLimit, 10, 240 * 1024, TimeSpan.FromMilliseconds(1));
 
     public static BatchSettings GetBatchSettings()
     {
-        return new SnsPublishBatchSettings(Math.Min(MaxMessageLimit, MessageLimit), BatchLimit, Math.Min(256 * 1024, SizeLimit), Timeout);
+        return _defaults;
     }
 
 
@@ -38,10 +26,10 @@ public static class PublishBatchSettings
             Timeout = timeout;
         }
 
-        public bool Enabled { get; set; }
-        public int MessageLimit { get; set; }
-        public int BatchLimit { get; set; }
-        public int SizeLimit { get; set; }
-        public TimeSpan Timeout { get; set; }
+        public bool Enabled { get; }
+        public int MessageLimit { get; }
+        public int BatchLimit { get; }
+        public int SizeLimit { get; }
+        public TimeSpan Timeout { get; }
     }
 }

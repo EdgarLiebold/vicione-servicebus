@@ -300,20 +300,14 @@ namespace ViciOne.ServiceBus.Util
                 foreach (var result in orderCallback(results))
                 {
                     await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-
-                    async Task RunResultCallback()
+                    try
                     {
-                        try
-                        {
-                            await resultCallback(result, cancellationToken).ConfigureAwait(false);
-                        }
-                        finally
-                        {
-                            _resultSemaphore.Release();
-                        }
+                        await resultCallback(result, cancellationToken).ConfigureAwait(false);
                     }
-
-                    Add(Task.Run(() => RunResultCallback(), cancellationToken));
+                    finally
+                    {
+                        _resultSemaphore.Release();
+                    }
                     count++;
                 }
             }

@@ -20,16 +20,11 @@ public sealed class AmazonSqsHostEqualityComparer :
         if (ReferenceEquals(y, null))
             return false;
 
-        return string.Equals(x.Region?.SystemName, y.Region?.SystemName, StringComparison.OrdinalIgnoreCase);
+        return x.ScopeTopics == y.ScopeTopics && x.HostAddress.Equals(y.HostAddress);
     }
 
     public int GetHashCode(AmazonSqsHostSettings obj)
     {
-        unchecked
-        {
-            var hashCode = obj.AccessKey?.GetHashCode() ?? 0;
-            hashCode = (hashCode * 397) ^ (obj.Region?.GetHashCode() ?? 0);
-            return hashCode;
-        }
+        return HashCode.Combine(obj.HostAddress, obj.ScopeTopics);
     }
 }

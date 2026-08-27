@@ -44,7 +44,10 @@ public class AmazonSqsBusTopology :
 
     public Uri GetDestinationAddress(string topicName, Action<IAmazonSqsTopicConfigurator>? configure = null)
     {
-        var address = new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, new Uri($"topic:{topicName}"));
+        var address = new AmazonSqsEndpointAddress(
+            _hostConfiguration.HostAddress,
+            topicName,
+            type: AmazonSqsEndpointAddress.AddressType.Topic);
 
         var publishSettings = new TopicPublishSettings(address);
 
@@ -57,7 +60,12 @@ public class AmazonSqsBusTopology :
     {
         var topicName = _messageNameFormatter.GetMessageName(messageType);
         var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);
-        var address = new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, new Uri($"topic:{topicName}?temporary={isTemporary}"));
+        var address = new AmazonSqsEndpointAddress(
+            _hostConfiguration.HostAddress,
+            topicName,
+            durable: !isTemporary,
+            autoDelete: isTemporary,
+            type: AmazonSqsEndpointAddress.AddressType.Topic);
 
         var publishSettings = new TopicPublishSettings(address);
 

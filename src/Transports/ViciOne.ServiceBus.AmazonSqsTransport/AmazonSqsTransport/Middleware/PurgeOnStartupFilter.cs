@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 
+using System;
 using System.Threading.Tasks;
 
 
@@ -9,8 +10,9 @@ using System.Threading.Tasks;
 public class PurgeOnStartupFilter :
     IFilter<ClientContext>
 {
+    readonly object _lock = new();
     readonly string _queueName;
-    bool _queueAlreadyPurged;
+    Task? _purgeTask;
 
     public PurgeOnStartupFilter(string queueName)
     {
@@ -24,22 +26,39 @@ public class PurgeOnStartupFilter :
 
     async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
     {
-        await PurgeIfRequested(context, _queueName).ConfigureAwait(false);
+        await PurgeIfRequested(context).ConfigureAwait(false);
 
         await next.Send(context).ConfigureAwait(false);
     }
 
-    async Task PurgeIfRequested(ClientContext context, string queueName)
+    internal async Task PurgeIfRequested(ClientContext context)
     {
-        if (!_queueAlreadyPurged)
+        ArgumentNullException.ThrowIfNull(context);
+
+        Task purgeTask;
+        lock (_lock)
+            purgeTask = _purgeTask ??= Purge(context);
+
+        try
         {
-            await context.PurgeQueue(queueName, context.CancellationToken).ConfigureAwait(false);
-
-            LogContext.Debug?.Log("Purged queue {QueueName}", queueName);
-
-            _queueAlreadyPurged = true;
+            await purgeTask.ConfigureAwait(false);
         }
-        else
-            LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
+        catch
+        {
+            lock (_lock)
+            {
+                if (ReferenceEquals(_purgeTask, purgeTask))
+                    _purgeTask = null;
+            }
+
+            throw;
+        }
+    }
+
+    async Task Purge(ClientContext context)
+    {
+        await context.PurgeQueue(_queueName, context.CancellationToken).ConfigureAwait(false);
+
+        LogContext.Debug?.Log("Purged queue {QueueName}", _queueName);
     }
 }

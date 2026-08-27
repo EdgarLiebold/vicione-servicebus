@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 using Middleware;
@@ -15,8 +16,6 @@ public class AmazonSqsReceiveEndpointConfiguration :
     IAmazonSqsReceiveEndpointConfiguration,
     IAmazonSqsReceiveEndpointConfigurator
 {
-    static readonly TimeSpan MaxAllowedVisibilityTimeout = TimeSpan.FromHours(12);
-
     readonly IBuildPipeConfigurator<ClientContext> _clientConfigurator;
     readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
     readonly IAmazonSqsEndpointConfiguration _endpointConfiguration;
@@ -95,6 +94,18 @@ public class AmazonSqsReceiveEndpointConfiguration :
         if (_settings.PrefetchCount <= 0)
             yield return this.Failure("PrefetchCount", "must be >= 1");
 
+        if (_settings.ConcurrentMessageLimit <= 0)
+            yield return this.Failure("ConcurrentMessageLimit", "must be >= 1");
+
+        if (_settings.ConcurrentDeliveryLimit <= 0)
+            yield return this.Failure("ConcurrentDeliveryLimit", "must be >= 1");
+
+        if (_settings.WaitTimeSeconds is < 0 or > AmazonSqsReceiveSettingsLimits.MaximumWaitTimeSeconds)
+            yield return this.Failure("WaitTimeSeconds", $"must be between 0 and {AmazonSqsReceiveSettingsLimits.MaximumWaitTimeSeconds}");
+
+        if (_settings.RedeliverVisibilityTimeout is < 0 or > AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds)
+            yield return this.Failure("RedeliverVisibilityTimeout", $"must be between 0 and {AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds}");
+
         var queueName = $"{_settings.EntityName}";
 
         if (!AmazonSqsEntityNameValidator.Validator.IsValidEntityName(_settings.EntityName))
@@ -110,8 +121,11 @@ public class AmazonSqsReceiveEndpointConfiguration :
         if (_settings.MaxVisibilityTimeoutRenewal < 0)
             yield return this.Failure("MaxVisibilityTimeoutRenewal", "must be >= 0 (values less than 60 will be set to 60)");
 
-        if (_settings.MaxVisibilityTimeoutRenewal > 43200)
-            yield return this.Failure("MaxVisibilityTimeoutRenewal", "must be <= 43200 seconds (12 hours per AWS SQS limits)");
+        if (_settings.MaxVisibilityTimeoutRenewal > AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds)
+            yield return this.Failure("MaxVisibilityTimeoutRenewal", $"must be <= {AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeoutSeconds} seconds (12 hours per AWS SQS limits)");
+
+        if (_settings.QueueAttributes.Keys.Any(key => string.Equals(key, global::Amazon.SQS.QueueAttributeName.RedrivePolicy, StringComparison.Ordinal)))
+            yield return this.Failure("RedrivePolicy", "must not be configured while ViciOne owns the distinct error and skipped queues");
 
         foreach (var result in base.Validate())
             yield return result.WithParentKey(queueName);
@@ -139,12 +153,12 @@ public class AmazonSqsReceiveEndpointConfiguration :
 
     public int ConcurrentDeliveryLimit
     {
-        set => _settings.ConcurrentDeliveryLimit = value;
+        set => _settings.ConcurrentDeliveryLimit = AmazonSqsReceiveSettingsLimits.PositiveConcurrency(value, nameof(ConcurrentDeliveryLimit));
     }
 
     public ushort WaitTimeSeconds
     {
-        set => _settings.WaitTimeSeconds = value;
+        set => _settings.WaitTimeSeconds = AmazonSqsReceiveSettingsLimits.WaitTimeSeconds(value);
     }
 
     public bool PurgeOnStartup
@@ -166,17 +180,17 @@ public class AmazonSqsReceiveEndpointConfiguration :
 
     public int RedeliverVisibilityTimeout
     {
-        set => _settings.RedeliverVisibilityTimeout = value;
+        set => _settings.RedeliverVisibilityTimeout = AmazonSqsReceiveSettingsLimits.VisibilityTimeoutSeconds(value, nameof(RedeliverVisibilityTimeout));
     }
 
     public TimeSpan MaxVisibilityTimeout
     {
-        set => _settings.MaxVisibilityTimeout = value > MaxAllowedVisibilityTimeout ? MaxAllowedVisibilityTimeout : value;
+        set => _settings.MaxVisibilityTimeout = AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeout(value);
     }
 
     public int MaxVisibilityTimeoutRenewal
     {
-        set => _settings.MaxVisibilityTimeoutRenewal = value < 60 ? 60 : value;
+        set => _settings.MaxVisibilityTimeoutRenewal = AmazonSqsReceiveSettingsLimits.VisibilityRenewalSeconds(value);
     }
 
     public void Subscribe<T>(Action<IAmazonSqsTopicSubscriptionConfigurator>? configure = null)

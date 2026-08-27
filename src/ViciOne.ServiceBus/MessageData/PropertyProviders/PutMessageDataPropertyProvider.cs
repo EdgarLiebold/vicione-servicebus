@@ -72,25 +72,25 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
                 var value = await valueTask.ConfigureAwait(false);
                 if (value is string stringValue)
                 {
-                    MessageData<string> messageData = await _repository.PutString(stringValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
+                    MessageData<string> messageData = await repository.PutString(stringValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
                     return (MessageData<TValue>)messageData;
                 }
 
                 if (value is byte[] bytesValue)
                 {
-                    MessageData<byte[]> messageData = await _repository.PutBytes(bytesValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
+                    MessageData<byte[]> messageData = await repository.PutBytes(bytesValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
                     return (MessageData<TValue>)messageData;
                 }
 
                 if (value is Stream streamValue)
                 {
-                    MessageData<Stream> messageData = await _repository.PutStream(streamValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
+                    MessageData<Stream> messageData = await repository.PutStream(streamValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
                     return (MessageData<TValue>)messageData;
                 }
 
                 if (value is { } && TypeMetadataCache.IsValidMessageDataType(value.GetType()))
                 {
-                    var messageData = await _repository.PutObject(value, value.GetType(), timeToLive, context.CancellationToken).ConfigureAwait(false);
+                    var messageData = await repository.PutObject(value, value.GetType(), timeToLive, context.CancellationToken).ConfigureAwait(false);
 
                     if (messageData is IInlineMessageData inlineMessageData)
                         return new InlineMessageData<TValue>(messageData.Address, value, inlineMessageData);

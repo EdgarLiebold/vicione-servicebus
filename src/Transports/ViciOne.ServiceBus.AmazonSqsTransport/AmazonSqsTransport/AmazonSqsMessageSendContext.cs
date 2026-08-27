@@ -21,7 +21,9 @@ public class AmazonSqsMessageSendContext<T> :
 
     public int? DelaySeconds
     {
-        set => Delay = value.HasValue ? TimeSpan.FromSeconds(value.Value) : default;
+        set => Delay = value.HasValue
+            ? TimeSpan.FromSeconds(AmazonSqsDelay.FromTimeSpan(TimeSpan.FromSeconds(value.Value)))
+            : null;
     }
 
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)

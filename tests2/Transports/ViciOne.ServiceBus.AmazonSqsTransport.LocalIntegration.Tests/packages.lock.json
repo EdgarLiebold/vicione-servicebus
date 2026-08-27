@@ -29,6 +29,34 @@
           "AWSSDK.Core": "[4.0.3.28, 5.0.0)"
         }
       },
+      "Microsoft.Extensions.DependencyInjection": {
+        "type": "Direct",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "PSmotV19c7E3lKed++uYo1kSiXFI+uTl37CBSrhq+CfLC3FCHjG7R91+xPnNehQfHS1b0Tzo/CCLPWH3qaEheg==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "Direct",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Options": {
+        "type": "Direct",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "eY1GAKcTfD2maP27J84X9IovT3yjHJ2dVDzPmDg6/XqYvt3jMzJhtfQCLjG9pVsZGAd+8DQ2QrjaDcs2+VQLGw==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Primitives": "10.0.11"
+        }
+      },
       "xunit.v3.mtp-v2": {
         "type": "Direct",
         "requested": "[4.0.0, )",
@@ -164,6 +192,16 @@
         "resolved": "5.0.0",
         "contentHash": "dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg=="
       },
+      "Quartz.Extensions.DependencyInjection": {
+        "type": "Transitive",
+        "resolved": "3.19.1",
+        "contentHash": "6UKrPvWQBgOslVnhD6OgFBjBA3kO7kUc4bM2EXG8b+vSgB/EHqVP8cLOb9RePZQJb5OJeNunN9dNEmGLpg5wuw==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0",
+          "Quartz": "3.19.1"
+        }
+      },
       "System.Security.AccessControl": {
         "type": "Transitive",
         "resolved": "6.0.1",
@@ -254,6 +292,14 @@
         "dependencies": {
           "AWSSDK.SQS": "[4.0.2.24, )",
           "AWSSDK.SimpleNotificationService": "[4.0.2.26, )",
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "ViciOne.ServiceBus.Quartz": {
+        "type": "Project",
+        "dependencies": {
+          "Quartz": "[3.19.1, )",
+          "Quartz.Extensions.Hosting": "[3.19.1, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -358,23 +404,23 @@
           "Microsoft.Extensions.Logging.Abstractions": "10.0.11"
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions": {
+      "Quartz": {
         "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
+        "requested": "[3.19.1, )",
+        "resolved": "3.19.1",
+        "contentHash": "u+kAlmReZLLpKRG9TcPt8gP0H5e8Nff11fh9tz52e4B+GtXm9cLBOe/bfGcDs4IQftmEcxakpfTzOlsZdv9ekg==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Logging.Abstractions": "2.1.1"
         }
       },
-      "Microsoft.Extensions.Options": {
+      "Quartz.Extensions.Hosting": {
         "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "eY1GAKcTfD2maP27J84X9IovT3yjHJ2dVDzPmDg6/XqYvt3jMzJhtfQCLjG9pVsZGAd+8DQ2QrjaDcs2+VQLGw==",
+        "requested": "[3.19.1, )",
+        "resolved": "3.19.1",
+        "contentHash": "gp6EUrreKcU/Az6b2bZNeebxJWMrmlLItXRmR9nX9zUSmMzQTIDWR7NTm3SsdmsoDBbrIU9vhkLD3uv1y5mMzA==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
+          "Quartz.Extensions.DependencyInjection": "3.19.1"
         }
       }
     }

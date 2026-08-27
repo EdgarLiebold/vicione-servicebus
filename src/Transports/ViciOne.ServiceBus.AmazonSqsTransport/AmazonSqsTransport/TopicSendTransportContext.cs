@@ -74,6 +74,8 @@ public class TopicSendTransportContext :
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
+        AmazonSqsDelay.EnsureNotSetForTopic(context.Delay);
+
         await _configureTopologyPipe.Send(transportContext).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();

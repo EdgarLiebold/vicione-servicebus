@@ -13,9 +13,6 @@ public class AmazonSqsHostConfigurator :
 {
     readonly ConfigurationHostSettings _settings;
 
-    string? _accessKey;
-    string? _secretKey;
-
     public AmazonSqsHostConfigurator(Uri address)
     {
         var hostAddress = new AmazonSqsHostAddress(address);
@@ -25,31 +22,14 @@ public class AmazonSqsHostConfigurator :
         _settings = new ConfigurationHostSettings
         {
             Scope = hostAddress.Scope,
-            Region = regionEndpoint,
-            AmazonSqsConfig = new AmazonSQSConfig { RegionEndpoint = regionEndpoint },
-            AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint }
+            Region = regionEndpoint
         };
 
         if (!string.IsNullOrEmpty(address.UserInfo))
-        {
-            var parts = address.UserInfo.Split(':');
-            _accessKey = parts[0];
-
-            if (parts.Length >= 2)
-            {
-                _secretKey = parts[1];
-                SetBasicCredentials();
-            }
-        }
+            throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI. Use the AWS SDK credential chain or Credentials(AWSCredentials).");
     }
 
-    public AmazonSqsHostSettings Settings => _settings;
-
-    public void AccessKey(string accessKey)
-    {
-        _accessKey = accessKey;
-        SetBasicCredentials();
-    }
+    public AmazonSqsHostSettings Settings => _settings.Freeze();
 
     public void Scope(string scope, bool scopeTopics)
     {
@@ -64,25 +44,14 @@ public class AmazonSqsHostConfigurator :
         _settings.ScopeTopics = true;
     }
 
-    public void SecretKey(string secretKey)
-    {
-        _secretKey = secretKey;
-        SetBasicCredentials();
-    }
-
     public void Credentials(AWSCredentials credentials)
     {
-        _settings.Credentials = credentials;
+        _settings.SetCredentials(credentials);
     }
 
-    public void Config(AmazonSQSConfig? config)
+    public void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
     {
-        _settings.AmazonSqsConfig = config;
-    }
-
-    public void Config(AmazonSimpleNotificationServiceConfig? config)
-    {
-        _settings.AmazonSnsConfig = config;
+        _settings.SetClientFactories(sqsClientFactory, snsClientFactory);
     }
 
     public void AllowTransportHeader(AllowTransportHeader? allowTransportHeader)
@@ -90,11 +59,4 @@ public class AmazonSqsHostConfigurator :
         _settings.AllowTransportHeader = allowTransportHeader;
     }
 
-    void SetBasicCredentials()
-    {
-        if (string.IsNullOrEmpty(_accessKey) || string.IsNullOrEmpty(_secretKey))
-            return;
-
-        _settings.Credentials = new BasicAWSCredentials(_accessKey, _secretKey);
-    }
 }

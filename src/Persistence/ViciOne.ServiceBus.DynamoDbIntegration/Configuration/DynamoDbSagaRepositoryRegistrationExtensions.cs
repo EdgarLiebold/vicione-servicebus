@@ -17,6 +17,8 @@ namespace ViciOne.ServiceBus
             Action<IDynamoDbSagaRepositoryConfigurator<T>> configure = null)
             where T : class, ISagaVersion
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             var repositoryConfigurator = new DynamoDbSagaRepositoryConfigurator<T>();
 
             configure?.Invoke(repositoryConfigurator);
@@ -35,6 +37,9 @@ namespace ViciOne.ServiceBus
         /// <param name="configure"></param>
         public static void SetDynamoDbSagaRepositoryProvider(this IRegistrationConfigurator configurator, Action<IDynamoDbSagaRepositoryConfigurator> configure)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
+
             configurator.SetSagaRepositoryProvider(new DynamoDbSagaRepositoryRegistrationProvider(configure));
         }
     }

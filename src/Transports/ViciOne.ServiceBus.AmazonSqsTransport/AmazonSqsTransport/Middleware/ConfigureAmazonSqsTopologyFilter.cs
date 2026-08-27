@@ -81,7 +81,7 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         return _brokerTopology.Topics.Any(x => x.AutoDelete) || _brokerTopology.Queues.Any(x => x.AutoDelete);
     }
 
-    static async Task<TopicInfo> Declare(ClientContext context, Topic topic, CancellationToken cancellationToken)
+    internal static async Task<TopicInfo> Declare(ClientContext context, Topic topic, CancellationToken cancellationToken)
     {
         var topicInfo = await context.CreateTopic(topic, cancellationToken).ConfigureAwait(false);
 
@@ -90,9 +90,6 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
             LogContext.Debug?.Log("Existing topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
             return topicInfo;
         }
-
-        // Why? I don't know, but damn, it takes two times, or it doesn't catch properly
-        topicInfo = await context.CreateTopic(topic, cancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Created topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
 
@@ -106,7 +103,7 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
             subscription.Source, subscription.Destination);
     }
 
-    static async Task<QueueInfo> Declare(ClientContext context, Queue queue, CancellationToken cancellationToken)
+    internal static async Task<QueueInfo> Declare(ClientContext context, Queue queue, CancellationToken cancellationToken)
     {
         var queueInfo = await context.CreateQueue(queue, cancellationToken).ConfigureAwait(false);
         if (queueInfo.Existing)
@@ -114,9 +111,6 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
             LogContext.Debug?.Log("Existing queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
             return queueInfo;
         }
-
-        // Why? I don't know, but damn, it takes two times, or it doesn't catch properly
-        queueInfo = await context.CreateQueue(queue, cancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Created queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
 

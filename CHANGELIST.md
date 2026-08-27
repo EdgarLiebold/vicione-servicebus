@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2487 |
-| Modified | 4214 |
-| Deleted | 1434 |
+| Added | 2528 |
+| Modified | 4213 |
+| Deleted | 1435 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -26,6 +26,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.github/workflows/native-tests.yml` | Added |  |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
+| `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
 | `.testagent/status.md` | Added |  |
@@ -1998,6 +1999,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/MassTransit.RedisIntegration/RedisIntegration/Saga/RedisSagaRepositoryContext.cs` | Deleted | `src/Persistence/MassTransit.RedisIntegration/RedisIntegration/Saga/RedisSagaRepositoryContext.cs` |
 | `src/Persistence/MassTransit.RedisIntegration/RedisIntegration/Saga/RedisSagaRepositoryContextFactory.cs` | Deleted | `src/Persistence/MassTransit.RedisIntegration/RedisIntegration/Saga/RedisSagaRepositoryContextFactory.cs` |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepository.cs` | Modified | `src/Persistence/MassTransit.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepository.cs` |
+| `src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/Configuration/AmazonS3ClientExtensions.cs` | Modified | `src/Persistence/MassTransit.AmazonS3/Configuration/AmazonS3ClientExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/Configuration/AmazonS3MessageDataRepositorySelectorExtensions.cs` | Modified | `src/Persistence/MassTransit.AmazonS3/Configuration/AmazonS3MessageDataRepositorySelectorExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj` | Modified | `src/Persistence/MassTransit.AmazonS3/MassTransit.AmazonS3.csproj` |
@@ -2199,6 +2201,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
+| `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
 | `src/Transports/MassTransit.Azure.ServiceBus.Core/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.Azure.ServiceBus.Core/NullableAttributes.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaApiConfigurator.cs` |
 | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` | Deleted | `src/Transports/MassTransit.KafkaIntegration/Configuration/IKafkaFactoryConfigurator.cs` |
@@ -2499,6 +2502,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` |
+| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsDelay.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHost.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHost.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsMessageNameFormatter.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsMessageNameFormatter.cs` |
@@ -2526,6 +2530,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsQueueSubscriptionConfigurator.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsQueueSubscriptionConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointBuilder.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointBuilder.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointConfiguration.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointConfiguration.cs` |
+| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsReceiveSettingsLimits.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsTopicConfigurator.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsTopicConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsTopicSubscriptionConfigurator.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsTopicSubscriptionConfigurator.cs` |
@@ -2643,7 +2648,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsConnectionException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsConnectionException.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportConfigurationException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsTransportConfigurationException.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Exceptions/AmazonSqsTransportException.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Exceptions/AmazonSqsTransportException.cs` |
-| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsBusTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsBusTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsConsumeTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsConsumeTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Topology/IAmazonSqsMessageConsumeTopology.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/Topology/IAmazonSqsMessageConsumeTopology.cs` |
@@ -7004,13 +7008,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
 | `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Choir_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Container_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Messages.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SagaPersistenceTests.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/SimpleSaga.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
@@ -7054,37 +7051,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/docker-compose.yml` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/jolokia-access.xml` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsAddress_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsTestFixture.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Configure_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Connector_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/DelayedRedelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/EndpointConfiguration_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/EntityNameLength_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ErrorQueue_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Fifo_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Filter_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/InMemoryOutboxRedelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/LongConsumer_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MessageBodyLength_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MessageBody_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/MultiBus_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/OpenTelemetry_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Persistence/EmptyConsumer.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Persistence/SimpleMessage.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Persistence/Storage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/PublishMessage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/PublishTopology_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/RawJson_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Redelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ScheduleMessage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Scope_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/SentTime_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/StartStop_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TopicEndpoint_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/docker-compose.yml` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Address_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusEndpointUriCreator.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusTestFixture.cs` | Added |  |
@@ -7647,6 +7613,18 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
 | `tests2/Directory.Build.props` | Added |  |
 | `tests2/Directory.Build.targets` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/AmazonS3/MessageData/AmazonS3MessageDataRepositoryTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Infrastructure/AmazonS3TestBucket.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/AmazonS3LocalIntegrationRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataObserverTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/AmazonS3Requirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableFuturePersistenceTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableJobServiceIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableRoutingSlipFuturePersistenceTests.cs` | Added |  |
@@ -7668,6 +7646,21 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConcurrencyTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConfigurationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaExpirationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaPersistenceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Infrastructure/DynamoDbTestTable.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/DynamoDbLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaFailureBoundaryTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/BusOutboxDeliveryServiceTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs` | Added |  |
@@ -7787,6 +7780,53 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsConnectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDeployTopologyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDynamicEndpointTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsErrorTransportTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFaultOwnershipTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFifoTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFilterPolicyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsHandlerFlowTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsLifecycleTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMessageDataTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMultiBusTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsOutboxRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsPublishTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsQuartzSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRawJsonTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsReceiveLockTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRequestResponseTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsScopeTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSentTimeTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTelemetryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopicEndpointTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopologyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/DeployTopologyContracts/AmazonSqsDeployTopologyContracts.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Infrastructure/AmazonSqsLocalStack.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/PublishContracts/AmazonSqsPublishContracts.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/AmazonSqsLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsDelayTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEntityNameTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEnvelopeTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsLifecycleBoundaryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsMessageBodyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/packages.lock.json` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
@@ -7984,6 +8024,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |

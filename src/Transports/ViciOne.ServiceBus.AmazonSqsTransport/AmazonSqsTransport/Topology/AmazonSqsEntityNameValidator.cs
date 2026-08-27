@@ -1,12 +1,14 @@
 namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
+using System;
 using System.Text.RegularExpressions;
 
 
 public class AmazonSqsEntityNameValidator :
     IEntityNameValidator
 {
-    static readonly Regex _regex = new(@"^[A-Za-z0-9\-_\.:]+$", RegexOptions.Compiled);
+    const string FifoSuffix = ".fifo";
+    static readonly Regex _baseNameRegex = new(@"^[A-Za-z0-9\-_]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
@@ -19,13 +21,20 @@ public class AmazonSqsEntityNameValidator :
         if (!success)
         {
             throw new AmazonSqsTransportConfigurationException(
-                "The entity name length must be <= 80 and a sequence of these characters: letters, digits, hyphen, underscore, period, or colon.");
+                "An SQS queue name must be at most 80 characters and contain only letters, digits, hyphens, and underscores, with an optional final '.fifo' suffix.");
         }
     }
 
     public bool IsValidEntityName(string name)
     {
-        return _regex.Match(name).Success && name.Length <= 80;
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 80)
+            return false;
+
+        var baseName = name.EndsWith(FifoSuffix, StringComparison.Ordinal)
+            ? name[..^FifoSuffix.Length]
+            : name;
+
+        return baseName.Length > 0 && _baseNameRegex.IsMatch(baseName);
     }
 
 

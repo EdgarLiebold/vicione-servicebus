@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus;
 
 using System;
+using AmazonSqsTransport;
 
 
 public static class AmazonSqsSendContextExtensions
@@ -69,7 +70,7 @@ public static class AmazonSqsSendContextExtensions
         if (!context.TryGetPayload(out AmazonSqsSendContext? sendContext))
             throw new ArgumentException("The AmazonSqsSendContext was not available");
 
-        sendContext.DelaySeconds = (int)delay.TotalSeconds;
+        sendContext.DelaySeconds = AmazonSqsDelay.FromTimeSpan(delay);
     }
 
     /// <summary>
@@ -82,7 +83,7 @@ public static class AmazonSqsSendContextExtensions
         if (!context.TryGetPayload(out AmazonSqsSendContext? sendContext))
             return false;
 
-        sendContext.DelaySeconds = (int)delay.TotalSeconds;
+        sendContext.DelaySeconds = AmazonSqsDelay.FromTimeSpan(delay);
         return true;
     }
 }

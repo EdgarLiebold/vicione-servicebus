@@ -16,28 +16,19 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
         readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
 
-        public DynamoDbSagaRepositoryContextFactory(IDynamoDBContext dbContext, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
-            DynamoDbSagaRepositoryOptions<TSaga> options)
-        {
-            _databaseFactory = () => dbContext;
-
-            _factory = factory;
-            _options = options;
-        }
-
         public DynamoDbSagaRepositoryContextFactory(Func<IDynamoDBContext> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
             DynamoDbSagaRepositoryOptions<TSaga> options)
         {
-            _databaseFactory = databaseFactory;
+            _databaseFactory = databaseFactory ?? throw new ArgumentNullException(nameof(databaseFactory));
 
-            _factory = factory;
-            _options = options;
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            var database = _databaseFactory();
+            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
 
             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
             try
@@ -60,7 +51,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
             where T : class
         {
-            var database = _databaseFactory();
+            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
 
             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
             try

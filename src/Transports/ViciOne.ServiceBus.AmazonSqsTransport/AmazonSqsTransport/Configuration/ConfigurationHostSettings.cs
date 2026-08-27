@@ -11,44 +11,106 @@ using Transports;
 public class ConfigurationHostSettings :
     AmazonSqsHostSettings
 {
-    readonly Lazy<Uri> _hostAddress;
+    AllowTransportHeader? _allowTransportHeader;
+    Func<IConnection>? _connectionFactory;
     AWSCredentials? _credentials;
-    ImmutableCredentials? _immutableCredentials;
+    bool _frozen;
+    RegionEndpoint? _region;
+    string? _scope;
+    bool _scopeTopics;
 
-    public ConfigurationHostSettings()
-    {
-        _hostAddress = new Lazy<Uri>(FormatHostAddress);
-    }
-
-    public AWSCredentials? Credentials
+    internal AWSCredentials? Credentials
     {
         get => _credentials;
         set
         {
+            ThrowIfFrozen();
             _credentials = value;
-            _immutableCredentials = null;
         }
     }
 
-    public AmazonSQSConfig? AmazonSqsConfig { get; set; }
+    internal string? Scope
+    {
+        get => _scope;
+        set
+        {
+            ThrowIfFrozen();
+            _scope = value;
+        }
+    }
 
-    public AmazonSimpleNotificationServiceConfig? AmazonSnsConfig { get; set; }
+    public RegionEndpoint? Region
+    {
+        get => _region;
+        internal set
+        {
+            ThrowIfFrozen();
+            _region = value;
+        }
+    }
 
-    public string? Scope { get; set; }
+    public AllowTransportHeader? AllowTransportHeader
+    {
+        get => _allowTransportHeader;
+        internal set
+        {
+            ThrowIfFrozen();
+            _allowTransportHeader = value;
+        }
+    }
 
-    public RegionEndpoint? Region { get; set; }
-    public string AccessKey => (_immutableCredentials ??= GetImmutableCredentials()).AccessKey;
-    public string SecretKey => (_immutableCredentials ??= GetImmutableCredentials()).SecretKey;
+    public bool ScopeTopics
+    {
+        get => _scopeTopics;
+        internal set
+        {
+            ThrowIfFrozen();
+            _scopeTopics = value;
+        }
+    }
 
-    public AllowTransportHeader? AllowTransportHeader { get; set; }
-
-    public bool ScopeTopics { get; set; }
-
-    public Uri HostAddress => _hostAddress.Value;
+    public Uri HostAddress => FormatHostAddress();
 
     public IConnection CreateConnection()
     {
-        return new Connection(Credentials, Region, AmazonSqsConfig, AmazonSnsConfig);
+        Freeze();
+        return (_connectionFactory ?? throw new InvalidOperationException("The host settings do not have a connection factory."))();
+    }
+
+    internal ConfigurationHostSettings Freeze()
+    {
+        if (_frozen)
+            return this;
+
+        _ = FormatHostAddress();
+        AWSCredentials? credentials = _credentials;
+        RegionEndpoint? region = _region;
+        _connectionFactory ??= () => new Connection(credentials, region);
+        _frozen = true;
+        return this;
+    }
+
+    internal void SetClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
+    {
+        ThrowIfFrozen();
+        ArgumentNullException.ThrowIfNull(sqsClientFactory);
+        ArgumentNullException.ThrowIfNull(snsClientFactory);
+
+        if (_credentials != null)
+            throw new InvalidOperationException("Explicit AWS credentials and custom client factories are mutually exclusive.");
+
+        _connectionFactory = () => new Connection(sqsClientFactory, snsClientFactory);
+    }
+
+    internal void SetCredentials(AWSCredentials credentials)
+    {
+        ThrowIfFrozen();
+        ArgumentNullException.ThrowIfNull(credentials);
+
+        if (_connectionFactory != null)
+            throw new InvalidOperationException("Custom client factories and explicit AWS credentials are mutually exclusive.");
+
+        _credentials = credentials;
     }
 
     Uri FormatHostAddress()
@@ -71,8 +133,9 @@ public class ConfigurationHostSettings :
         }.Uri.ToString();
     }
 
-    ImmutableCredentials GetImmutableCredentials()
+    void ThrowIfFrozen()
     {
-        return Credentials?.GetCredentials() ?? throw new ArgumentNullException(nameof(Credentials));
+        if (_frozen)
+            throw new InvalidOperationException("Amazon SQS host settings are immutable after they are assigned to a host.");
     }
 }

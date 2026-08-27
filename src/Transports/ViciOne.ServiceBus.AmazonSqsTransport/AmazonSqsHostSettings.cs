@@ -16,17 +16,6 @@ public interface AmazonSqsHostSettings
     /// </summary>
     RegionEndpoint? Region { get; }
 
-    /// <summary>
-    /// The AccessKey for connecting to the host
-    /// </summary>
-    string AccessKey { get; }
-
-    /// <summary>
-    /// The password for connection to the host
-    /// MAYBE this should be a SecureString instead of a regular string
-    /// </summary>
-    string SecretKey { get; }
-
     AllowTransportHeader? AllowTransportHeader { get; }
 
     /// <summary>

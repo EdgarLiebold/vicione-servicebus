@@ -15,12 +15,17 @@ namespace ViciOne.ServiceBus.Util
         readonly Lazy<TaskExecutor>[] _partitions;
 
         public PartitionChannelExecutorPool(PartitionKeyProvider<T> partitionKeyProvider, IHashGenerator hashGenerator, int concurrencyLimit,
-            int concurrentDeliveryLimit = 1)
+            int concurrentDeliveryLimit = 1, int? partitionCapacity = null)
         {
+            if (partitionCapacity is < 1)
+                throw new ArgumentOutOfRangeException(nameof(partitionCapacity), partitionCapacity, "Must be >= 1");
+
             _partitionKeyProvider = partitionKeyProvider;
             _hashGenerator = hashGenerator;
             _partitions = Enumerable.Range(0, concurrencyLimit)
-                .Select(_ => new Lazy<TaskExecutor>(() => new TaskExecutor(concurrentDeliveryLimit)))
+                .Select(_ => new Lazy<TaskExecutor>(() => partitionCapacity.HasValue
+                    ? new TaskExecutor(partitionCapacity.Value, concurrentDeliveryLimit)
+                    : new TaskExecutor(concurrentDeliveryLimit)))
                 .ToArray();
         }
 

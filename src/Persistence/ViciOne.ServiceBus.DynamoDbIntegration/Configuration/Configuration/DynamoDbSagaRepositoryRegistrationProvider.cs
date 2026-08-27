@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public DynamoDbSagaRepositoryRegistrationProvider(Action<IDynamoDbSagaRepositoryConfigurator> configure)
         {
-            _configure = configure;
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
         }
 
         void ISagaRepositoryRegistrationProvider.Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus.Configuration
         protected virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
             where TSaga : class, ISagaVersion
         {
-            configurator.DynamoDbRepository(r => _configure?.Invoke(r));
+            configurator.DynamoDbRepository(r => _configure(r));
         }
 
 

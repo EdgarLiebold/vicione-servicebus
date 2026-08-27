@@ -27,7 +27,7 @@ public class AmazonSqsBusFactoryConfigurator :
 
     public ushort WaitTimeSeconds
     {
-        set => _settings.WaitTimeSeconds = value;
+        set => _settings.WaitTimeSeconds = AmazonSqsReceiveSettingsLimits.WaitTimeSeconds(value);
     }
 
     public bool Durable

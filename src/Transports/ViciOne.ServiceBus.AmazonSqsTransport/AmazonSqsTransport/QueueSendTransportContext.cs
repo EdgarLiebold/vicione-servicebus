@@ -94,9 +94,9 @@ public class QueueSendTransportContext :
         if (!string.IsNullOrEmpty(context.GroupId))
             message.MessageGroupId = context.GroupId;
 
-        var delay = context.Delay?.TotalSeconds;
-        if (delay > 0)
-            message.DelaySeconds = (int)Math.Min(delay.Value, 15 * 60);
+        var delaySeconds = AmazonSqsDelay.ForQueue(context.Delay, AmazonSqsEndpointAddress.IsFifo(EntityName));
+        if (delaySeconds.HasValue)
+            message.DelaySeconds = delaySeconds.Value;
 
         await transportContext.SendMessage(EntityName, message, sendContext.CancellationToken).ConfigureAwait(false);
     }

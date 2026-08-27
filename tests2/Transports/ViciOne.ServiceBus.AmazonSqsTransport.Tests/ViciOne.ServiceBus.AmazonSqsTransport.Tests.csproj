@@ -10,11 +10,19 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.SimpleNotificationService" />
     <PackageReference Include="AWSSDK.SQS" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/AmazonSqsRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/AmazonSqsRequirements.json"
+      LogicalName="ViciOne.ServiceBus.AmazonSqsTransport.Tests.Requirements.AmazonSqsRequirements.json" />
   </ItemGroup>
 </Project>

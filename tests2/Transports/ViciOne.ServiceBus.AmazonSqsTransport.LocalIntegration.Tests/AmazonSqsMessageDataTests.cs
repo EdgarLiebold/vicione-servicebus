@@ -1,0 +1,95 @@
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
+
+using System.Text;
+using Amazon.S3.Model;
+using Amazon.S3.Util;
+using ViciOne.ServiceBus.AmazonS3.MessageData;
+using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
+using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+public sealed class AmazonSqsMessageDataTests
+{
+    [Fact]
+    [RequirementCoverage("OBL-R0-CLOUD-0228", "s3-backed-payload-round-trips-through-sqs")]
+    public async Task S3BackedPayload_RoundTripsThroughSqs()
+    {
+        await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("message-data");
+        string queueName = fixture.Name("input");
+        string bucketName = fixture.BucketName("payload");
+        string expected = string.Concat(Enumerable.Repeat("ViciOne-ÄΩ-0123456789|", 350));
+        var repository = new AmazonS3MessageDataRepository(
+            fixture.S3Client,
+            new AmazonS3MessageDataRepositoryOptions(bucketName));
+        var handled = new TaskCompletionSource<MessageDataObservation>(TaskCreationOptions.RunContinuationsAsynchronously);
+        IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
+        {
+            fixture.ConfigureHost(configurator);
+            configurator.UseMessageData(_ => repository);
+            configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<S3PayloadMessage>(async context =>
+            {
+                try
+                {
+                    MessageData<string> payload = context.Message.Payload;
+                    string value = await payload.Value.WaitAsync(fixture.OperationTimeout, context.CancellationToken);
+                    handled.TrySetResult(new MessageDataObservation(payload.Address, value));
+                }
+                catch (Exception exception)
+                {
+                    handled.TrySetException(exception);
+                    throw;
+                }
+            }));
+        });
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        bool started = false;
+
+        try
+        {
+            Assert.False(await AmazonS3Util
+                .DoesS3BucketExistV2Async(fixture.S3Client, bucketName)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            Assert.True(await AmazonS3Util
+                .DoesS3BucketExistV2Async(fixture.S3Client, bucketName)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+            await bus.Publish(
+                    new S3PayloadMessage(new PutMessageData<string>(expected)),
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            MessageDataObservation observation = await handled.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            Assert.Equal(expected, observation.Value);
+            Assert.Equal("urn", observation.Address.Scheme);
+            Assert.StartsWith("urn:file:", observation.Address.OriginalString, StringComparison.Ordinal);
+            string objectKey = observation.Address.OriginalString["urn:file:".Length..];
+            ListObjectsV2Response objects = await fixture.S3Client.ListObjectsV2Async(
+                    new ListObjectsV2Request { BucketName = bucketName },
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            S3Object storedObject = Assert.Single(objects.S3Objects);
+            Assert.Equal(objectKey, storedObject.Key);
+            using GetObjectResponse stored = await fixture.S3Client.GetObjectAsync(
+                    bucketName,
+                    objectKey,
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            using var bytes = new MemoryStream();
+            await stored.ResponseStream.CopyToAsync(bytes, cancellationToken);
+            Assert.Equal(Encoding.UTF8.GetBytes(expected), bytes.ToArray());
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        }
+    }
+
+    public sealed record S3PayloadMessage(MessageData<string> Payload);
+
+    private sealed record MessageDataObservation(Uri Address, string Value);
+}

@@ -163,9 +163,12 @@ public sealed class RepositoryGraphTests
 
         Assert.Equal(
             [
+                "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
                 "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+                "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
                 "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
                 "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
+                "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
                 "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
                 "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
                 "src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj",
@@ -175,7 +178,9 @@ public sealed class RepositoryGraphTests
                 "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
                 "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
                 "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+                "tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
                 "tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+                "tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
                 "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
                 "tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
                 "tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj",
@@ -184,6 +189,7 @@ public sealed class RepositoryGraphTests
                 "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj",
                 "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
                 "tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+                "tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
                 "tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
                 "tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
                 "tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj",

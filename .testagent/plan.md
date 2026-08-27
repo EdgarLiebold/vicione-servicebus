@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1953 predeclared unfiltered cases;
-- `LocalIntegration`: 87 unfiltered cases.
+- `UnitArchitecture`: 2032 predeclared unfiltered cases;
+- `LocalIntegration`: 149 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1748,3 +1748,21 @@ pushed and hash-bound by the architecture order before the first product or test
     LocalIntegration with zero failure/skip, focused AWS runs, separate technical/evidence commits,
     two independent read-only PASS reviews and remote backup. External rows stay open until actually
     executed against real AWS.
+
+### Current AWS technical candidate — validation checkpoint
+
+The implementation and locally executable carrier migration are complete but not yet finally
+accepted. The 111-row map is mechanically unique and currently resolves to 100
+`REPLACED_EXECUTING`, nine `EXTERNAL_PENDING`, one `INVALID_DUPLICATE_RETIRED` and one
+`PO_SUPERSEDED_GREENFIELD_API`. The obsolete SQS and DynamoDB projects are removed from the working
+tree together with their empty directories. Real AWS remains unexecuted and release-blocking under
+`TODO.md`.
+
+The stationary-candidate gates now measured locally are: locked UnitArchitecture and
+LocalIntegration restores; both Release solution builds with zero warnings/errors; unfiltered
+UnitArchitecture 2032/2032 and LocalIntegration 149/149 with zero failure/skip against one fresh
+PostgreSQL/Azurite/LocalStack run; focused SQS 46 Unit and 48 LocalStack, DynamoDB 6 Unit and 9
+LocalStack, and S3 6 Unit and 5 LocalStack; plus a complete Engineering locked restore and Release
+build with zero warnings/errors. Architecture source/namespace and exact solution-closure guards
+pass. Mutation evidence, frozen technical/evidence commits, independent read-only review and remote
+backup remain acceptance work; none is inferred from these green executions.

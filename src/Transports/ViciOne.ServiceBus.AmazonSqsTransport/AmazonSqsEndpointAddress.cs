@@ -3,7 +3,6 @@ namespace ViciOne.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using AmazonSqsTransport.Topology;
 using Initializers;
 using Initializers.TypeConverters;
@@ -57,13 +56,14 @@ public readonly struct AmazonSqsEndpointAddress
             case "queue":
                 ParseLeft(hostAddress, out Scheme, out Host, out Scope);
 
-                Name = address.AbsolutePath;
+                Name = Uri.UnescapeDataString(address.AbsolutePath);
                 break;
 
             case "topic":
                 ParseLeft(hostAddress, out Scheme, out Host, out Scope);
 
-                Name = Scope == "/" ? address.AbsolutePath : $"{Scope}_{address.AbsolutePath}";
+                var topicName = Uri.UnescapeDataString(address.AbsolutePath);
+                Name = Scope == "/" ? topicName : $"{Scope}_{topicName}";
                 Type = AddressType.Topic;
                 break;
 
@@ -71,33 +71,43 @@ public readonly struct AmazonSqsEndpointAddress
                 throw new ArgumentException($"The address scheme is not supported: {address.Scheme}", nameof(address));
         }
 
+        var queryKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var (key, value) in address.SplitQueryString())
         {
+            if (!queryKeys.Add(key))
+                throw new AmazonSqsTransportConfigurationException($"The endpoint address contains the option '{key}' more than once.");
+
             switch (key)
             {
-                case TemporaryKey when bool.TryParse(value, out var result):
+                case TemporaryKey when TryParseBooleanOption(value, out var result):
                     AutoDelete = result;
                     Durable = !result;
                     break;
 
-                case DurableKey when bool.TryParse(value, out var result):
+                case DurableKey when TryParseBooleanOption(value, out var result):
                     Durable = result;
                     break;
 
-                case AutoDeleteKey when bool.TryParse(value, out var result):
+                case AutoDeleteKey when TryParseBooleanOption(value, out var result):
                     AutoDelete = result;
                     break;
 
                 case TypeKey when value != null && _parseConverter.TryConvert(value, out var result):
                     Type = result;
                     break;
+
+                case TemporaryKey:
+                case DurableKey:
+                case AutoDeleteKey:
+                case TypeKey:
+                    throw new AmazonSqsTransportConfigurationException($"The endpoint address option '{key}' has an invalid value '{value}'.");
+
+                default:
+                    throw new AmazonSqsTransportConfigurationException($"The endpoint address option '{key}' is not supported.");
             }
         }
 
-        if (Type == AddressType.Queue)
-            AmazonSqsEntityNameValidator.Validator.ThrowIfInvalidEntityName(Name!);
-        else
-            AmazonSnsTopicNameValidator.Validator.ThrowIfInvalidEntityName(Name!);
+        ValidateName(Name, Type);
     }
 
     public AmazonSqsEndpointAddress(Uri hostAddress, string name, bool durable = true, bool autoDelete = false, AddressType type = AddressType.Queue)
@@ -109,6 +119,8 @@ public readonly struct AmazonSqsEndpointAddress
         Durable = durable;
         AutoDelete = autoDelete;
         Type = type;
+
+        ValidateName(Name, Type);
     }
 
     static void ParseLeft(Uri address, out string scheme, out string host, out string scope)
@@ -137,7 +149,7 @@ public readonly struct AmazonSqsEndpointAddress
 
     public static bool IsFifo(string name)
     {
-        return name.EndsWith(".fifo", true, CultureInfo.InvariantCulture);
+        return name.EndsWith(".fifo", StringComparison.OrdinalIgnoreCase);
     }
 
     public Uri TopicAddress
@@ -170,5 +182,22 @@ public readonly struct AmazonSqsEndpointAddress
 
         if (Type != AddressType.Queue)
             yield return $"{TypeKey}=topic";
+    }
+
+    static bool TryParseBooleanOption(string? value, out bool result)
+    {
+        if (value != null && bool.TryParse(value, out result))
+            return true;
+
+        result = default;
+        return false;
+    }
+
+    static void ValidateName(string name, AddressType type)
+    {
+        if (type == AddressType.Queue)
+            AmazonSqsEntityNameValidator.Validator.ThrowIfInvalidEntityName(name);
+        else
+            AmazonSnsTopicNameValidator.Validator.ThrowIfInvalidEntityName(name);
     }
 }

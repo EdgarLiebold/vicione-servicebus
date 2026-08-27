@@ -213,14 +213,14 @@
     },
     {
       "id": "message-data-amazon-s3",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Persistence/ViciOne.ServiceBus.AmazonS3"
       ],
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "Needs a real ephemeral cloud resource and is not verified here. It was linked to the transport capability of the same provider, which proved nothing: that capability has no run either, and sharing a test project is not sharing a proof.",
+      "rationale": "Five of the six Amazon S3 message-data obligations are owned by native xUnit 4/MTP v2 UnitArchitecture and LocalStack LocalIntegration tests. Real S3 lifecycle execution remains explicit External work and is not counted green.",
       "runs": []
     },
     {
@@ -261,16 +261,14 @@
     },
     {
       "id": "persistence-dynamodb",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration"
       ],
-      "testProjects": [
-        "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of all 10 DynamoDB obligations: eight are replaced by native xUnit 4/MTP v2 UnitArchitecture and LocalStack LocalIntegration tests, while two real-AWS service behaviors remain explicitly External and are not counted green.",
       "runs": []
     },
     {
@@ -431,16 +429,14 @@
     },
     {
       "id": "transport-amazon-sqs",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of all 70 SQS obligations: 66 are replaced by executing native xUnit 4/MTP v2 tests, two remain explicit real-AWS External work, one raw-secret API obligation is superseded by the PO-approved SDK credential model, and one inherited scheduler case is a byte-semantic duplicate. The native UnitArchitecture and LocalIntegration projects own the executable behavior contract.",
       "runs": []
     },
     {

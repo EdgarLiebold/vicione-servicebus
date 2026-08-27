@@ -13,98 +13,131 @@ public class AmazonSqsReceiveLockContext :
     ReceiveLockContext
 {
     readonly CancellationTokenSource _activeTokenSource;
-    readonly ClientContext _clientContext;
     readonly CancellationToken _cancellationToken;
+    readonly Func<string, string, int, CancellationToken, Task> _changeMessageVisibility;
+    readonly Func<bool> _connectionCancellationRequested;
+    readonly Func<string, string, CancellationToken, Task> _deleteMessage;
+    readonly string _entityName;
     readonly Uri _inputAddress;
+    readonly TimeSpan _maxVisibilityTimeout;
+    readonly int _maxVisibilityTimeoutRenewal;
     readonly Message _message;
-
-    readonly ReceiveSettings _settings;
-    readonly DateTime _startedAt;
+    readonly string? _queueUrl;
+    readonly int _redeliverVisibilityTimeout;
+    readonly CancellationTokenSource _renewalTokenSource;
+    readonly long _startedAt;
+    readonly TimeProvider _timeProvider;
+    readonly int _visibilityTimeout;
     readonly Task _visibilityTask;
-    bool _locked;
+    int _locked;
 
     public AmazonSqsReceiveLockContext(Uri inputAddress, Message message, ReceiveSettings settings, ClientContext clientContext,
         CancellationToken cancellationToken)
+        : this(inputAddress, message, settings, cancellationToken, TimeProvider.System, clientContext.ChangeMessageVisibility,
+            clientContext.DeleteMessage, () => clientContext.CancellationToken.IsCancellationRequested)
     {
-        _startedAt = DateTime.UtcNow;
+    }
+
+    internal AmazonSqsReceiveLockContext(Uri inputAddress, Message message, ReceiveSettings settings, CancellationToken cancellationToken,
+        TimeProvider timeProvider, Func<string, string, int, CancellationToken, Task> changeMessageVisibility,
+        Func<string, string, CancellationToken, Task> deleteMessage, Func<bool> connectionCancellationRequested)
+    {
+        ArgumentNullException.ThrowIfNull(inputAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        ArgumentNullException.ThrowIfNull(changeMessageVisibility);
+        ArgumentNullException.ThrowIfNull(deleteMessage);
+        ArgumentNullException.ThrowIfNull(connectionCancellationRequested);
+
         _inputAddress = inputAddress;
         _message = message;
-        _settings = settings;
-        _clientContext = clientContext;
         _cancellationToken = cancellationToken;
-        _activeTokenSource = new CancellationTokenSource();
-        _locked = true;
+        _timeProvider = timeProvider;
+        _changeMessageVisibility = changeMessageVisibility;
+        _deleteMessage = deleteMessage;
+        _connectionCancellationRequested = connectionCancellationRequested;
 
-        _visibilityTask = Task.Run(() => RenewMessageVisibility());
+        // A receive lock is a runtime snapshot. Later endpoint configuration changes must not
+        // alter the timing or settlement contract of a message that is already in flight.
+        _entityName = settings.EntityName;
+        _queueUrl = settings.QueueUrl;
+        _visibilityTimeout = settings.VisibilityTimeout;
+        _maxVisibilityTimeout = settings.MaxVisibilityTimeout;
+        _maxVisibilityTimeoutRenewal = settings.MaxVisibilityTimeoutRenewal;
+        _redeliverVisibilityTimeout = settings.RedeliverVisibilityTimeout;
+
+        _startedAt = _timeProvider.GetTimestamp();
+        _activeTokenSource = new CancellationTokenSource();
+        _renewalTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_activeTokenSource.Token, cancellationToken);
+        _locked = 1;
+
+        _visibilityTask = RenewMessageVisibility();
     }
 
     public async Task Complete()
     {
-        _activeTokenSource.Cancel();
+        await StopRenewal().ConfigureAwait(false);
 
         try
         {
-            await _clientContext.DeleteMessage(_settings.EntityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
-
-            await _visibilityTask.ConfigureAwait(false);
+            await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
+            Interlocked.Exchange(ref _locked, 0);
         }
         catch (MessageNotInflightException)
         {
-            _locked = false;
+            Interlocked.Exchange(ref _locked, 0);
             throw;
         }
         catch (ReceiptHandleIsInvalidException)
         {
-            _locked = false;
+            Interlocked.Exchange(ref _locked, 0);
             throw;
         }
         finally
         {
-            _activeTokenSource.Dispose();
+            DisposeRenewalTokens();
         }
     }
 
     public async Task Faulted(Exception exception)
     {
-        if (_activeTokenSource?.IsCancellationRequested is false)
-            _activeTokenSource.Cancel();
+        ArgumentNullException.ThrowIfNull(exception);
+
+        await StopRenewal().ConfigureAwait(false);
 
         try
         {
-            await _visibilityTask.ConfigureAwait(false);
-
-            if (!_clientContext.CancellationToken.IsCancellationRequested && _settings.QueueUrl != null)
+            if (!_connectionCancellationRequested() && _queueUrl != null)
             {
-                await _clientContext.ChangeMessageVisibility(_settings.QueueUrl, _message.ReceiptHandle, _settings.RedeliverVisibilityTimeout,
-                    _cancellationToken).ConfigureAwait(false);
+                await _changeMessageVisibility(_queueUrl, _message.ReceiptHandle, _redeliverVisibilityTimeout, _cancellationToken)
+                    .ConfigureAwait(false);
             }
-
-            _locked = false;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested || _connectionCancellationRequested())
         {
         }
         catch (MessageNotInflightException)
         {
-            _locked = false;
         }
         catch (ReceiptHandleIsInvalidException)
         {
-            _locked = false;
         }
-        catch (Exception ex)
+        catch (Exception redeliveryException)
         {
-            LogContext.Error?.Log(ex, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}", _message.ReceiptHandle, exception);
+            LogContext.Error?.Log(redeliveryException, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}",
+                _message.ReceiptHandle, exception);
         }
         finally
         {
-            _activeTokenSource?.Dispose();
+            Interlocked.Exchange(ref _locked, 0);
+            DisposeRenewalTokens();
         }
     }
 
     public Task ValidateLockStatus()
     {
-        if (_locked)
+        if (Volatile.Read(ref _locked) == 1)
             return Task.CompletedTask;
 
         throw new TransportException(_inputAddress, $"Message Lock Lost: {_message.ReceiptHandle}");
@@ -112,80 +145,76 @@ public class AmazonSqsReceiveLockContext :
 
     async Task RenewMessageVisibility()
     {
-        TimeSpan CalculateDelay(int timeout)
-        {
-            return TimeSpan.FromSeconds(timeout * 0.7);
-        }
+        var delay = CalculateDelay(_visibilityTimeout);
 
-        var visibilityTimeout = _settings.VisibilityTimeout;
-
-        var delay = CalculateDelay(visibilityTimeout);
-
-        visibilityTimeout = Math.Min(_settings.MaxVisibilityTimeoutRenewal, visibilityTimeout);
-
-        while (_locked && !_activeTokenSource.IsCancellationRequested)
+        while (Volatile.Read(ref _locked) == 1 && !_renewalTokenSource.IsCancellationRequested)
         {
             try
             {
                 if (delay > TimeSpan.Zero)
+                    await Task.Delay(delay, _timeProvider, _renewalTokenSource.Token).ConfigureAwait(false);
+
+                if (_renewalTokenSource.IsCancellationRequested)
+                    return;
+
+                var elapsed = _timeProvider.GetElapsedTime(_startedAt);
+                var remaining = _maxVisibilityTimeout - elapsed;
+                var renewalSeconds = Math.Min(_maxVisibilityTimeoutRenewal, (int)Math.Floor(remaining.TotalSeconds));
+                if (renewalSeconds <= 0)
                 {
-                    await Task.Delay(delay, _activeTokenSource.Token)
-                        .ContinueWith(t => t, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default)
-                        .ConfigureAwait(false);
+                    LogContext.Warning?.Log("Maximum visibility timeout {MaxVisibilityTimeout} for message {ReceiptHandle} reached.",
+                        _maxVisibilityTimeout, _message.ReceiptHandle);
+                    return;
                 }
 
-                if (_activeTokenSource.IsCancellationRequested)
-                    break;
-
-                if (_settings.QueueUrl != null)
-                    await _clientContext
-                        .ChangeMessageVisibility(_settings.QueueUrl, _message.ReceiptHandle, visibilityTimeout, _cancellationToken)
+                if (_queueUrl != null)
+                    await _changeMessageVisibility(_queueUrl, _message.ReceiptHandle, renewalSeconds, _renewalTokenSource.Token)
                         .ConfigureAwait(false);
 
-                if (DateTime.UtcNow - _startedAt.AddSeconds(visibilityTimeout) >= _settings.MaxVisibilityTimeout)
-                {
-                    LogContext.Warning?.Log("Maximum visibility timeout {MaxVisibilityTimeout} for message {ReceiptHandle} exceeded.",
-                        _settings.MaxVisibilityTimeout, _message.ReceiptHandle);
-                    break;
-                }
-
-                delay = CalculateDelay(visibilityTimeout);
+                delay = CalculateDelay(renewalSeconds);
             }
             catch (MessageNotInflightException exception)
             {
                 LogContext.Warning?.Log(exception, "Message no longer in flight: {ReceiptHandle}", _message.ReceiptHandle);
-
-                _locked = false;
-
-                break;
+                Interlocked.Exchange(ref _locked, 0);
+                return;
             }
             catch (ReceiptHandleIsInvalidException exception)
             {
                 LogContext.Warning?.Log(exception, "Message receipt handle is invalid: {ReceiptHandle}", _message.ReceiptHandle);
-
-                _locked = false;
-
-                break;
+                Interlocked.Exchange(ref _locked, 0);
+                return;
             }
-            catch (AmazonSQSException exception)
+            catch (OperationCanceledException) when (_renewalTokenSource.IsCancellationRequested)
             {
-                LogContext.Error?.Log(exception, "Failed to extend message {ReceiptHandle} visibility to {VisibilityTimeout} ({ElapsedTime})",
-                    _message.ReceiptHandle, TimeSpan.FromSeconds(visibilityTimeout).ToFriendlyString(), DateTime.UtcNow - _startedAt);
-
-                break;
+                return;
             }
-            catch (TimeoutException)
+            catch (Exception exception)
             {
-                delay = TimeSpan.Zero;
-            }
-            catch (OperationCanceledException)
-            {
-                break;
-            }
-            catch (Exception)
-            {
-                break;
+                LogContext.Error?.Log(exception, "Failed to extend message {ReceiptHandle} visibility ({ElapsedTime})",
+                    _message.ReceiptHandle, _timeProvider.GetElapsedTime(_startedAt));
+                Interlocked.Exchange(ref _locked, 0);
+                return;
             }
         }
     }
+
+    async Task StopRenewal()
+    {
+        if (!_activeTokenSource.IsCancellationRequested)
+            await _activeTokenSource.CancelAsync().ConfigureAwait(false);
+
+        await _visibilityTask.ConfigureAwait(false);
+    }
+
+    void DisposeRenewalTokens()
+    {
+        _renewalTokenSource.Dispose();
+        _activeTokenSource.Dispose();
+    }
+
+    static TimeSpan CalculateDelay(int visibilityTimeout) =>
+        visibilityTimeout <= 0
+            ? TimeSpan.Zero
+            : TimeSpan.FromSeconds(visibilityTimeout * 0.7);
 }

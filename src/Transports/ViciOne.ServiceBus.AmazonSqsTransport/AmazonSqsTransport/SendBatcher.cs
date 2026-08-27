@@ -15,7 +15,8 @@ public class SendBatcher :
     readonly IAmazonSQS _client;
     readonly string _queueUrl;
 
-    public SendBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken)
+    public SendBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken, BatchSettings? settings = null)
+        : base(settings)
     {
         _client = client;
         _queueUrl = queueUrl;
@@ -41,13 +42,9 @@ public class SendBatcher :
 
         response.EnsureSuccessfulResponse();
 
-        if (response.Successful != null)
-            Complete(batch, response.Successful.Select(x => x.Id));
-
-        if (response.Failed != null)
-        {
-            foreach (var error in response.Failed)
-                Fail(batch, error.Id, error.Code, error.Message);
-        }
+        ApplyResponse(
+            batch,
+            response.Successful?.Select(x => x.Id),
+            response.Failed?.Select(x => (x.Id, x.Code, x.Message)));
     }
 }

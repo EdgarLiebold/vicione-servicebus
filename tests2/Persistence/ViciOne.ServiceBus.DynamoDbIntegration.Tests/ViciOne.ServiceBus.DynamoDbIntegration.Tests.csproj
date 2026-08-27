@@ -16,4 +16,11 @@
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/DynamoDbRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/DynamoDbRequirements.json"
+      LogicalName="ViciOne.ServiceBus.DynamoDbIntegration.Tests.Requirements.DynamoDbRequirements.json" />
+  </ItemGroup>
 </Project>

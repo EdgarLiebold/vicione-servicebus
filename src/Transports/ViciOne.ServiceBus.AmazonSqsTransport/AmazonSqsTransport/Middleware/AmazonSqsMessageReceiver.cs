@@ -2,6 +2,10 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,21 +71,31 @@ public sealed class AmazonSqsMessageReceiver :
             var lockContext = new AmazonSqsReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, Stopped);
 
             return _receiveSettings.IsOrdered
-                ? _executorPool.Run(message, () => HandleMessage(message, lockContext), cancellationToken)
+                ? _executorPool.Push(message, () => HandleMessage(message, lockContext), cancellationToken)
                 : HandleMessage(message, lockContext);
         }
 
         try
         {
             while (!IsStopping)
-                await algorithm.Run(ReceiveMessages, (m, c) => Handle(m, c), Stopping).ConfigureAwait(false);
+            {
+                if (_receiveSettings is { IsOrdered: true, ConcurrentDeliveryLimit: 1 })
+                {
+                    await algorithm.Run(
+                            ReceiveMessages,
+                            (message, cancellationToken) => Handle(message, cancellationToken),
+                            GroupByMessageGroup,
+                            OrderBySequenceNumber,
+                            Stopping)
+                        .ConfigureAwait(false);
+                }
+                else
+                    await algorithm.Run(ReceiveMessages, (message, cancellationToken) => Handle(message, cancellationToken), Stopping)
+                        .ConfigureAwait(false);
+            }
         }
         catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
         {
-        }
-        catch (Exception exception)
-        {
-            LogContext.Warning?.Log(exception, "Consume Loop faulted");
         }
     }
 
@@ -125,18 +139,49 @@ public sealed class AmazonSqsMessageReceiver :
 
     async Task<IEnumerable<Message>> ReceiveMessages(int messageLimit, CancellationToken cancellationToken)
     {
-        try
-        {
-            IList<Message> messages = await _client
-                .ReceiveMessages(_receiveSettings.EntityName, messageLimit, _receiveSettings.WaitTimeSeconds, cancellationToken)
-                .ConfigureAwait(false);
+        return await ReceiveMessages(
+                token => _client.ReceiveMessages(_receiveSettings.EntityName, messageLimit, _receiveSettings.WaitTimeSeconds, token),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-            return messages;
-        }
-        catch (OperationCanceledException)
-        {
-            return [];
-        }
+    internal static async Task<IEnumerable<Message>> ReceiveMessages(
+        Func<CancellationToken, Task<IList<Message>>> receive,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(receive);
+
+        return await receive(cancellationToken).ConfigureAwait(false);
+    }
+
+    static IEnumerable<IGrouping<string, Message>> GroupByMessageGroup(IEnumerable<Message> messages)
+    {
+        return messages.GroupBy(GetMessageGroupId, StringComparer.Ordinal);
+    }
+
+    static IEnumerable<Message> OrderBySequenceNumber(IEnumerable<Message> messages)
+    {
+        return messages.OrderBy(GetSequenceNumber);
+    }
+
+    static string GetMessageGroupId(Message message)
+    {
+        if (message.Attributes != null
+            && message.Attributes.TryGetValue(MessageSystemAttributeName.MessageGroupId, out var groupId)
+            && !string.IsNullOrWhiteSpace(groupId))
+            return groupId;
+
+        throw new InvalidDataException("An ordered Amazon SQS message is missing its MessageGroupId system attribute.");
+    }
+
+    static BigInteger GetSequenceNumber(Message message)
+    {
+        if (message.Attributes != null
+            && message.Attributes.TryGetValue(MessageSystemAttributeName.SequenceNumber, out var sequenceNumber)
+            && BigInteger.TryParse(sequenceNumber, NumberStyles.None, CultureInfo.InvariantCulture, out var parsed))
+            return parsed;
+
+        throw new InvalidDataException("An ordered Amazon SQS message is missing a valid SequenceNumber system attribute.");
     }
 
 
@@ -148,8 +193,11 @@ public sealed class AmazonSqsMessageReceiver :
         public FifoChannelExecutorPool(ReceiveSettings receiveSettings)
         {
             IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
+            int partitionCapacity = Math.Max(
+                1,
+                (receiveSettings.PrefetchCount + receiveSettings.ConcurrentMessageLimit - 1) / receiveSettings.ConcurrentMessageLimit);
             _keyExecutorPool = new PartitionChannelExecutorPool<Message>(MessageGroupIdProvider, hashGenerator,
-                receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit);
+                receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit, partitionCapacity);
         }
 
         public Task Push(Message result, Func<Task> handle, CancellationToken cancellationToken)
@@ -169,10 +217,7 @@ public sealed class AmazonSqsMessageReceiver :
 
         static byte[] MessageGroupIdProvider(Message message)
         {
-            return message.Attributes != null && message.Attributes.TryGetValue(MessageSystemAttributeName.MessageGroupId, out var groupId)
-                && !string.IsNullOrEmpty(groupId)
-                    ? Encoding.UTF8.GetBytes(groupId)
-                    : [];
+            return Encoding.UTF8.GetBytes(GetMessageGroupId(message));
         }
     }
 }

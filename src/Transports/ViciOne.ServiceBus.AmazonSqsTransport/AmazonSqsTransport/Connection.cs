@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
+using System;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
@@ -22,6 +23,23 @@ public class Connection :
         SnsClient = credentials == null
             ? new AmazonSimpleNotificationServiceClient(amazonSnsConfig)
             : new AmazonSimpleNotificationServiceClient(credentials, amazonSnsConfig);
+    }
+
+    internal Connection(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
+    {
+        ArgumentNullException.ThrowIfNull(sqsClientFactory);
+        ArgumentNullException.ThrowIfNull(snsClientFactory);
+
+        SqsClient = sqsClientFactory() ?? throw new InvalidOperationException("The SQS client factory returned null.");
+        try
+        {
+            SnsClient = snsClientFactory() ?? throw new InvalidOperationException("The SNS client factory returned null.");
+        }
+        catch
+        {
+            SqsClient.Dispose();
+            throw;
+        }
     }
 
     public IAmazonSQS SqsClient { get; }

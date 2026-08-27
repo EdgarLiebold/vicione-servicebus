@@ -2,7 +2,9 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text.Json;
+    using System.Threading;
     using System.Threading.Tasks;
     using Amazon.DynamoDBv2.DataModel;
     using Amazon.DynamoDBv2.DocumentModel;
@@ -19,77 +21,82 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
         public DynamoDbDatabaseContext(IDynamoDBContext database, DynamoDbSagaRepositoryOptions<TSaga> options)
         {
-            _database = database;
-            _options = options;
+            _database = database ?? throw new ArgumentNullException(nameof(database));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public Task Add(SagaConsumeContext<TSaga> context)
+        public Task Add(TSaga instance, CancellationToken cancellationToken)
         {
-            return Save(context.Saga);
+            return Save(instance, cancellationToken);
         }
 
-        public Task Insert(TSaga instance)
+        public Task Insert(TSaga instance, CancellationToken cancellationToken)
         {
-            return Save(instance);
+            return Save(instance, cancellationToken);
         }
 
-        public async Task<TSaga> Load(Guid correlationId)
+        public async Task<TSaga> Load(Guid correlationId, CancellationToken cancellationToken)
         {
-            var value = await _database.LoadAsync<DynamoDbSaga>(_options.FormatSagaKey(correlationId), DynamoDbSaga.DefaultEntityType, new LoadConfig
-            {
-                ConsistentRead = _options.Config.ConsistentRead,
-                Conversion = _options.Config.Conversion,
-                IsEmptyStringValueEnabled = _options.Config.IsEmptyStringValueEnabled,
-                OverrideTableName = _options.Config.OverrideTableName,
-                RetrieveDateTimeInUtc = _options.Config.RetrieveDateTimeInUtc,
-                TableNamePrefix =   _options.Config.TableNamePrefix,
-            });
+            var value = await _database.LoadAsync<DynamoDbSaga>(_options.FormatSagaKey(correlationId), DynamoDbSaga.DefaultEntityType,
+                _options.CreateLoadConfig(), cancellationToken).ConfigureAwait(false);
+
             return value == null
                 ? null
                 : JsonSerializer.Deserialize<TSaga>(value.Properties, SystemTextJsonMessageSerializer.Options);
         }
 
-        public async Task Update(SagaConsumeContext<TSaga> context)
+        public async Task Update(TSaga instance, CancellationToken cancellationToken)
         {
-            var instance = context.Saga;
+            var expectedVersion = instance.Version;
+
             try
             {
-                var operationConfig = BuildUpdateItemOperationConfig(instance.Version);
+                var operationConfig = BuildUpdateItemOperationConfig(expectedVersion);
+                int nextVersion = checked(expectedVersion + 1);
 
-                ++instance.Version;
+                instance.Version = nextVersion;
 
                 var updateSaga = GetDynamoDbSaga(instance);
 
-                await _database.GetTargetTable<DynamoDbSaga>(new GetTargetTableConfig
-                {
-                    Conversion = _options.Config.Conversion,
-                    IsEmptyStringValueEnabled = _options.Config.IsEmptyStringValueEnabled,
-                    OverrideTableName = _options.Config.OverrideTableName,
-                    TableNamePrefix = _options.Config.TableNamePrefix
-                })
+                await _database.GetTargetTable<DynamoDbSaga>(_options.CreateTargetTableConfig())
                     .UpdateItemAsync(updateSaga.ToDocument(), new Primitive(updateSaga.CorrelationId), new Primitive(DynamoDbSaga.DefaultEntityType),
-                        operationConfig);
+                        operationConfig, cancellationToken).ConfigureAwait(false);
             }
-            catch (ConditionalCheckFailedException)
+            catch (ConditionalCheckFailedException exception)
             {
-                throw new DynamoDbSagaConcurrencyException("Saga version conflict", typeof(TSaga), instance.CorrelationId);
+                instance.Version = expectedVersion;
+                throw new DynamoDbSagaConcurrencyException("Saga version conflict", typeof(TSaga), instance.CorrelationId, exception);
             }
-            catch (Exception exception)
+            catch
             {
-                throw new SagaException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
+                instance.Version = expectedVersion;
+                throw;
             }
         }
 
-        public Task Delete(SagaConsumeContext<TSaga> context)
+        public async Task Delete(TSaga instance, CancellationToken cancellationToken)
         {
-            return _database.DeleteAsync(new DynamoDbSaga { CorrelationId = _options.FormatSagaKey(context.Saga.CorrelationId) }, new DeleteConfig
+            ArgumentNullException.ThrowIfNull(instance);
+
+            try
             {
-                Conversion = _options.Config.Conversion,
-                IsEmptyStringValueEnabled = _options.Config.IsEmptyStringValueEnabled,
-                OverrideTableName = _options.Config.OverrideTableName,
-                SkipVersionCheck = _options.Config.SkipVersionCheck,
-                TableNamePrefix = _options.Config.TableNamePrefix
-            });
+                var operationConfig = new DeleteItemOperationConfig
+                {
+                    ConditionalExpression = BuildVersionCondition(instance.Version)
+                };
+
+                await _database.GetTargetTable<DynamoDbSaga>(_options.CreateTargetTableConfig())
+                    .DeleteItemAsync(
+                        new Primitive(_options.FormatSagaKey(instance.CorrelationId)),
+                        new Primitive(DynamoDbSaga.DefaultEntityType),
+                        operationConfig,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (ConditionalCheckFailedException exception)
+            {
+                throw new DynamoDbSagaConcurrencyException("Saga version conflict", typeof(TSaga), instance.CorrelationId, exception);
+            }
         }
 
         public void Dispose()
@@ -111,33 +118,24 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         long? GetExpirationEpochSeconds()
         {
             return _options.Expiration.HasValue
-                ? DateTimeOffset.UtcNow.Add(_options.Expiration.Value).ToUnixTimeSeconds()
+                ? _options.TimeProvider.GetUtcNow().Add(_options.Expiration.Value).ToUnixTimeSeconds()
                 : (long?)null;
         }
 
-        async Task Save(TSaga instance)
+        async Task Save(TSaga instance, CancellationToken cancellationToken)
         {
             try
             {
                 var addSaga = GetDynamoDbSaga(instance);
 
-                var operationConfig = BuildPutItemOperationConfig(addSaga.CorrelationId);
+                var operationConfig = BuildPutItemOperationConfig();
 
-                await _database.GetTargetTable<DynamoDbSaga>(new GetTargetTableConfig
-                {
-                    Conversion = _options.Config.Conversion,
-                    IsEmptyStringValueEnabled = _options.Config.IsEmptyStringValueEnabled,
-                    OverrideTableName = _options.Config.OverrideTableName,
-                    TableNamePrefix = _options.Config.TableNamePrefix,
-                }).PutItemAsync(addSaga.ToDocument(), operationConfig);
+                await _database.GetTargetTable<DynamoDbSaga>(_options.CreateTargetTableConfig())
+                    .PutItemAsync(addSaga.ToDocument(), operationConfig, cancellationToken).ConfigureAwait(false);
             }
-            catch (ConditionalCheckFailedException)
+            catch (ConditionalCheckFailedException exception)
             {
-                throw new DynamoDbSagaConcurrencyException("Saga version conflict", typeof(TSaga), instance.CorrelationId);
-            }
-            catch (Exception exception)
-            {
-                throw new SagaException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
+                throw new DynamoDbSagaConcurrencyException("Saga version conflict", typeof(TSaga), instance.CorrelationId, exception);
             }
         }
 
@@ -145,26 +143,29 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         {
             return new UpdateItemOperationConfig
             {
-                ConditionalExpression = new Expression
+                ConditionalExpression = BuildVersionCondition(expectedVersion)
+            };
+        }
+
+        static Expression BuildVersionCondition(int expectedVersion)
+        {
+            return new Expression
+            {
+                ExpressionStatement = "VersionNumber = :versionNumber",
+                ExpressionAttributeValues = new Dictionary<string, DynamoDBEntry>
                 {
-                    ExpressionStatement = "VersionNumber = :versionNumber",
-                    ExpressionAttributeValues = new Dictionary<string, DynamoDBEntry> { { ":versionNumber", new Primitive(expectedVersion.ToString(), true) } }
+                    { ":versionNumber", new Primitive(expectedVersion.ToString(CultureInfo.InvariantCulture), true) }
                 }
             };
         }
 
-        static PutItemOperationConfig BuildPutItemOperationConfig(string correlationId)
+        static PutItemOperationConfig BuildPutItemOperationConfig()
         {
             return new PutItemOperationConfig
             {
                 ConditionalExpression = new Expression
                 {
-                    ExpressionStatement = "CorrelationId <> :correlationId AND EntityType <> :entityType",
-                    ExpressionAttributeValues = new Dictionary<string, DynamoDBEntry>
-                    {
-                        { ":correlationId", new Primitive(correlationId) },
-                        { ":entityType", new Primitive("SAGA") }
-                    }
+                    ExpressionStatement = "attribute_not_exists(PK) AND attribute_not_exists(SK)"
                 }
             };
         }
