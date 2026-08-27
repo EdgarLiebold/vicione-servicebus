@@ -30,7 +30,7 @@
     },
     {
       "name": "unitArchitecture",
-      "command": ["/usr/local/share/dotnet/dotnet", "test", "--solution", "ViciOne.ServiceBus.Tests.UnitArchitecture.slnx", "--configuration", "Release", "--no-build", "--no-restore", "--minimum-expected-tests", "1914", "--max-parallel-test-modules", "1"],
+      "command": ["/usr/local/share/dotnet/dotnet", "test", "--solution", "ViciOne.ServiceBus.Tests.Unit.slnx", "--configuration", "Release", "--no-build", "--no-restore", "--minimum-expected-tests", "1914", "--max-parallel-test-modules", "1"],
       "exitCode": 0,
       "tests": 1914,
       "passed": 1914,
