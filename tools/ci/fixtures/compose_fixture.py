@@ -39,7 +39,9 @@ BROKER_PORTS = {
     # Artemis is a separate broker behind the 'artemis' flavor of a few ActiveMQ specs. It is not a
     # required gate; it is listed here so the branch has a run-scoped endpoint instead of a fixed port.
     "artemis": {
-        61616: "VICIONE_SERVICEBUS_ARTEMIS_OPENWIRE_PORT",
+        # Artemis exposes one multi-protocol acceptor here. Calling it OpenWire hid the AMQP owner
+        # and encouraged callers to infer a second endpoint that does not exist.
+        61616: "VICIONE_SERVICEBUS_ARTEMIS_PORT",
         8161: "VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT",
     },
     # Not brokers, but the Entity Framework specs need them and they obey the same rules.

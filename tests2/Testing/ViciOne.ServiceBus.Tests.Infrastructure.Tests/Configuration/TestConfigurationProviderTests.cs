@@ -26,11 +26,20 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(TestProfile.UnitArchitecture, options.Profile);
         Assert.Equal(TimeSpan.FromSeconds(30), options.OperationTimeout);
         RabbitMqLocalOptions rabbitMq = Assert.IsType<RabbitMqLocalOptions>(localInfrastructure.RabbitMq);
+        ActiveMqLocalOptions activeMq = Assert.IsType<ActiveMqLocalOptions>(localInfrastructure.ActiveMq);
+        ArtemisLocalOptions artemis = Assert.IsType<ArtemisLocalOptions>(localInfrastructure.Artemis);
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
         LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
         Assert.Equal("localhost", rabbitMq.Host);
         Assert.Equal(5672, rabbitMq.Port);
+        Assert.Equal("localhost", activeMq.Host);
+        Assert.Equal(61616, activeMq.OpenWirePort);
+        Assert.Equal(5672, activeMq.AmqpPort);
+        Assert.Equal(8161, activeMq.JolokiaPort);
+        Assert.Equal("localhost", artemis.Host);
+        Assert.Equal(61616, artemis.Port);
+        Assert.Equal(8161, artemis.JolokiaPort);
         Assert.Equal("localhost", postgreSql.Host);
         Assert.Equal(5432, postgreSql.Port);
         Assert.Equal("postgres", postgreSql.Database);
@@ -221,6 +230,77 @@ public sealed class TestConfigurationProviderTests
     }
 
     [Theory]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_HOST", "127.0.0.1", "127.0.0.1")]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT", "36161", "36161")]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_AMQP_PORT", "35672", "35672")]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT", "38161", "38161")]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_USER", "run-user", "run-user")]
+    [InlineData("VICIONE_SERVICEBUS_AMQ_PASS", "run-secret", "run-secret")]
+    public void CanonicalActiveMqVariables_MapIntoTheSingleTypedConfiguration(
+        string key,
+        string value,
+        string expected)
+    {
+        ActiveMqLocalOptions activeMq = Assert.IsType<ActiveMqLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.ActiveMq);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_AMQ_HOST" => activeMq.Host!,
+            "VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT" => activeMq.OpenWirePort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_AMQ_AMQP_PORT" => activeMq.AmqpPort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT" => activeMq.JolokiaPort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_AMQ_USER" => activeMq.UserName!,
+            "VICIONE_SERVICEBUS_AMQ_PASS" => activeMq.Password!,
+            _ => throw new InvalidOperationException(key),
+        };
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_ARTEMIS_HOST", "127.0.0.1", "127.0.0.1")]
+    [InlineData("VICIONE_SERVICEBUS_ARTEMIS_PORT", "46161", "46161")]
+    [InlineData("VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT", "48161", "48161")]
+    [InlineData("VICIONE_SERVICEBUS_ARTEMIS_USER", "run-user", "run-user")]
+    [InlineData("VICIONE_SERVICEBUS_ARTEMIS_PASS", "run-secret", "run-secret")]
+    public void CanonicalArtemisVariables_MapIntoTheSingleTypedConfiguration(
+        string key,
+        string value,
+        string expected)
+    {
+        ArtemisLocalOptions artemis = Assert.IsType<ArtemisLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.Artemis);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_ARTEMIS_HOST" => artemis.Host!,
+            "VICIONE_SERVICEBUS_ARTEMIS_PORT" => artemis.Port!.Value.ToString(),
+            "VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT" => artemis.JolokiaPort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_ARTEMIS_USER" => artemis.UserName!,
+            "VICIONE_SERVICEBUS_ARTEMIS_PASS" => artemis.Password!,
+            _ => throw new InvalidOperationException(key),
+        };
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData(LocalTestResource.ActiveMq, "LocalInfrastructure:ActiveMq:UserName")]
+    [InlineData(LocalTestResource.ActiveMq, "LocalInfrastructure:ActiveMq:Password")]
+    [InlineData(LocalTestResource.Artemis, "LocalInfrastructure:Artemis:UserName")]
+    [InlineData(LocalTestResource.Artemis, "LocalInfrastructure:Artemis:Password")]
+    public void BrokerSelection_RejectsMissingRunCredentials(
+        LocalTestResource resource,
+        string expectedError)
+    {
+        ViciOneTestOptions options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration")).GetOptions();
+
+        Assert.Contains(expectedError, options.ValidateForLocal(resource));
+    }
+
+    [Theory]
     [InlineData("VICIONE_SERVICEBUS_PG_HOST", "db.internal", "db.internal")]
     [InlineData("VICIONE_SERVICEBUS_PG_PORT", "55432", "55432")]
     [InlineData("VICIONE_SERVICEBUS_PG_DATABASE", "journal", "journal")]
@@ -379,11 +459,17 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["AzureTable", "LocalStack", "PostgreSql", "RabbitMq"],
+            ["ActiveMq", "Artemis", "AzureTable", "LocalStack", "PostgreSql", "RabbitMq"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "Password", "Port", "UserName"],
             PublicPropertyNames<RabbitMqLocalOptions>());
+        Assert.Equal(
+            ["AmqpPort", "Host", "JolokiaPort", "OpenWirePort", "Password", "UserName"],
+            PublicPropertyNames<ActiveMqLocalOptions>());
+        Assert.Equal(
+            ["Host", "JolokiaPort", "Password", "Port", "UserName"],
+            PublicPropertyNames<ArtemisLocalOptions>());
         Assert.Equal(
             ["Database", "Host", "Password", "Port", "UserName"],
             PublicPropertyNames<PostgreSqlLocalOptions>());
@@ -405,6 +491,8 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<ViciOneTestOptions>());
         Assert.Empty(PublicFields<LocalInfrastructureOptions>());
         Assert.Empty(PublicFields<RabbitMqLocalOptions>());
+        Assert.Empty(PublicFields<ActiveMqLocalOptions>());
+        Assert.Empty(PublicFields<ArtemisLocalOptions>());
         Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
         Assert.Empty(PublicFields<LocalStackLocalOptions>());

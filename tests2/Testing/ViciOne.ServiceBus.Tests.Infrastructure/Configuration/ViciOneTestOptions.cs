@@ -166,6 +166,8 @@ public sealed class ViciOneTestOptions
             ILocalTestResourceConfiguration? configuration = resource switch
             {
                 LocalTestResource.RabbitMq => LocalInfrastructure.RabbitMq,
+                LocalTestResource.ActiveMq => LocalInfrastructure.ActiveMq,
+                LocalTestResource.Artemis => LocalInfrastructure.Artemis,
                 LocalTestResource.PostgreSql => LocalInfrastructure.PostgreSql,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
                 LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
@@ -194,6 +196,10 @@ public enum LocalTestResource
     AzureTable = 2,
 
     LocalStack = 3,
+
+    ActiveMq = 4,
+
+    Artemis = 5,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -207,6 +213,10 @@ public enum ExternalProvider
 public sealed class LocalInfrastructureOptions
 {
     public RabbitMqLocalOptions? RabbitMq { get; set; }
+
+    public ActiveMqLocalOptions? ActiveMq { get; set; }
+
+    public ArtemisLocalOptions? Artemis { get; set; }
 
     public PostgreSqlLocalOptions? PostgreSql { get; set; }
 
@@ -234,6 +244,57 @@ public sealed class RabbitMqLocalOptions : ILocalTestResourceConfiguration
     {
         if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
         if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (string.IsNullOrWhiteSpace(UserName)) yield return nameof(UserName);
+        if (string.IsNullOrWhiteSpace(Password)) yield return nameof(Password);
+    }
+}
+
+/// <summary>Run-scoped ActiveMQ Classic endpoints and account.</summary>
+public sealed class ActiveMqLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? OpenWirePort { get; set; }
+
+    public int? AmqpPort { get; set; }
+
+    public int? JolokiaPort { get; set; }
+
+    public string? UserName { get; set; }
+
+    public string? Password { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (!IsValidPort(OpenWirePort)) yield return nameof(OpenWirePort);
+        if (!IsValidPort(AmqpPort)) yield return nameof(AmqpPort);
+        if (!IsValidPort(JolokiaPort)) yield return nameof(JolokiaPort);
+        if (string.IsNullOrWhiteSpace(UserName)) yield return nameof(UserName);
+        if (string.IsNullOrWhiteSpace(Password)) yield return nameof(Password);
+    }
+
+    private static bool IsValidPort(int? port) => port is >= 1 and <= 65535;
+}
+
+/// <summary>Run-scoped Artemis multi-protocol endpoint and account.</summary>
+public sealed class ArtemisLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? Port { get; set; }
+
+    public int? JolokiaPort { get; set; }
+
+    public string? UserName { get; set; }
+
+    public string? Password { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (JolokiaPort is null or < 1 or > 65535) yield return nameof(JolokiaPort);
         if (string.IsNullOrWhiteSpace(UserName)) yield return nameof(UserName);
         if (string.IsNullOrWhiteSpace(Password)) yield return nameof(Password);
     }

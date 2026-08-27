@@ -7,6 +7,17 @@
       "Host": "localhost",
       "Port": 5672
     },
+    "ActiveMq": {
+      "Host": "localhost",
+      "OpenWirePort": 61616,
+      "AmqpPort": 5672,
+      "JolokiaPort": 8161
+    },
+    "Artemis": {
+      "Host": "localhost",
+      "Port": 61616,
+      "JolokiaPort": 8161
+    },
     "PostgreSql": {
       "Host": "localhost",
       "Port": 5432,
