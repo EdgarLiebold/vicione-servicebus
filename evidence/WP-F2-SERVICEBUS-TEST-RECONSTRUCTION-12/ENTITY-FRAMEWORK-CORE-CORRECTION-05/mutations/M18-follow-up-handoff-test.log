@@ -1,0 +1,14 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight (36ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight() in /private/tmp/vsb-ef-mutation-worktree/tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs:322
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-ef-mutation-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 559ms

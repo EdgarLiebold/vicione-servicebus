@@ -1,0 +1,13 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.BurstBeyondBucketRingWhileCleanupIsQueued_PreservesEveryLiveValue (42ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 32
+  Actual:   29
+    um ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.BurstBeyondBucketRingWhileCleanupIsQueued_PreservesEveryLiveValue() in /private/tmp/vsb-ef-mutation-worktree/tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs:221
+    --- End of stack trace from previous location ---
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-ef-mutation-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 587ms

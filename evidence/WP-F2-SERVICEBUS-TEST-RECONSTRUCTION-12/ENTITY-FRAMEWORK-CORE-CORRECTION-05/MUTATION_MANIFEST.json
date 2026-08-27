@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "763de920e75e1e3c8f342ca0693be4cd02c9afcb",
+  "target": "src/ViciOne.ServiceBus/Caching/Internals/NodeTracker.cs",
+  "baselineSha256": "8e27b1577ada29bbddb89e9b111ff6a3ae31a4f638374a51d0ea82bf03af7675",
+  "postRestoreSha256": "8e27b1577ada29bbddb89e9b111ff6a3ae31a4f638374a51d0ea82bf03af7675",
+  "mutations": [
+    {
+      "id": "M16",
+      "purpose": "Remove the live-ring guard while cleanup ownership is queued",
+      "oldText": "                    if (!AreLowOnBuckets)\n                        OpenBucket(++CurrentBucketIndex);",
+      "newText": "                    OpenBucket(++CurrentBucketIndex);",
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "d18d2c7828eef6f18a307651a4f01f25b1833795004d513dfa4f47a2fb8e8ff9",
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "testMethod": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.BurstBeyondBucketRingWhileCleanupIsQueued_PreservesEveryLiveValue",
+      "expectedFailure": "Expected 32 visible live values; only 29 remain after ring overwrite",
+      "buildLog": "mutations/M16-ring-overwrite-build.log",
+      "testLog": "mutations/M16-ring-overwrite-test.log"
+    },
+    {
+      "id": "M17",
+      "purpose": "Discard cleanup ownership when a scheduler rejects or throws",
+      "oldText": "            if (!accepted)\n                RunOnce();",
+      "newText": "            if (!accepted)\n                return;",
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "9014c7708f3717459588763b4e6e5bb366bd89d9038f2a9ac69dc8a970848c4d",
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "testMethod": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.RejectedCleanupScheduling_DoesNotStrandTheReservation",
+      "expectedFailure": "All four rejection/exception variants fail bounded convergence",
+      "buildLog": "mutations/M17-scheduler-rejection-build.log",
+      "testLog": "mutations/M17-scheduler-rejection-test.log"
+    },
+    {
+      "id": "M18",
+      "purpose": "Release the follow-up reservation before scheduler handoff",
+      "oldText": "                    _cleanupScheduled = scheduleFollowUp;",
+      "newText": "                    _cleanupScheduled = false;",
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "83c1a2d304e0126c70328377b1f847818344cfb5cc2b0a1eaaa3a4ef2674042d",
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "testMethod": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ReentrantBurstDuringFollowUpHandoff_RemainsSingleFlight",
+      "expectedFailure": "Three scheduling owners observed instead of two",
+      "buildLog": "mutations/M18-follow-up-handoff-build.log",
+      "testLog": "mutations/M18-follow-up-handoff-test.log"
+    },
+    {
+      "id": "M19",
+      "purpose": "Suppress dispatch of an already reserved cleanup after observer failure",
+      "oldText": "                DispatchCleanup(cleanup);",
+      "newText": "                GC.KeepAlive(cleanup);",
+      "occurrenceCount": 2,
+      "occurrenceIndex": 0,
+      "mutantSha256": "128787851259751217e8aa6133b9a7f8d6681fd030569546d5e024d8a02d5b31",
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "testMethod": "ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ObserverFailureAfterReservation_StillDispatchesTheCleanup",
+      "expectedFailure": "Expected one queued cleanup; collection is empty",
+      "buildLog": "mutations/M19-observer-reservation-build.log",
+      "testLog": "mutations/M19-observer-reservation-test.log"
+    }
+  ],
+  "commands": {
+    "build": [
+      "/usr/local/share/dotnet/dotnet", "build",
+      "tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "-c", "Release", "--no-restore", "--disable-build-servers", "-v:minimal"
+    ],
+    "testPrefix": [
+      "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
+      "--filter-method", "<testMethod>", "--minimum-expected-tests", "<expectedCount>",
+      "--parallel", "none"
+    ],
+    "expectedCounts": { "M16": 1, "M17": 4, "M18": 1, "M19": 1 }
+  }
+}

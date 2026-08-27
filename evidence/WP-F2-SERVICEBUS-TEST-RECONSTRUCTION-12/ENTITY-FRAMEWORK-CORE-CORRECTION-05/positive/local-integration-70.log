@@ -1,0 +1,22 @@
+Ausführen von Tests von /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (10s 950ms)
+Ausführen von Tests von /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 306ms)
+Ausführen von Tests von /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64)
+/private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (382ms)
+
+Testlaufzusammenfassung: Bestanden!
+  /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 306ms)
+  /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (10s 950ms)
+  /private/tmp/vsb-ef-correction-VFgyvI/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (382ms)
+
+  gesamt: 70
+  fehlgeschlagen: 0
+  erfolgreich: 70
+  übersprungen: 0
+  Dauer: 14s 011ms
+run identity vicione-4c5b4d94a34e, output under artifacts/run-output/vicione-4c5b4d94a34e
+fixture postgres and azurite ready on loopback: VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=33479, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=33478
+endpoints projected to artifacts/run-output/vicione-4c5b4d94a34e/endpoints.json
+broker log postgres: /private/tmp/vsb-ef-correction-VFgyvI/artifacts/run-output/vicione-4c5b4d94a34e/postgres-broker.log (255 lines)
+broker log azurite: /private/tmp/vsb-ef-correction-VFgyvI/artifacts/run-output/vicione-4c5b4d94a34e/azurite-broker.log (6 lines)

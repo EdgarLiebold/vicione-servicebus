@@ -1,0 +1,12 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ObserverFailureAfterReservation_StillDispatchesTheCleanup (38ms)
+  Assert.Single() Failure: The collection was empty
+    um ViciOne.ServiceBus.Tests.Caching.GreenCacheCapacityTests.ObserverFailureAfterReservation_StillDispatchesTheCleanup() in /private/tmp/vsb-ef-mutation-worktree/tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs:359
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-ef-mutation-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 621ms
