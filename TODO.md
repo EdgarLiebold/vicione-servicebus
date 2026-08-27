@@ -324,6 +324,42 @@ database names, cleanup evidence, one-cause retry/transaction/provider mutations
 product and test/evidence PASS reviews. Only then may the 40 rows move from `EXTERNAL_PENDING` to an
 executing terminal disposition.
 
+## AWS real-service closure
+
+The native AWS cohort uses one run-scoped LocalStack fixture to prove actual AWS SDK request,
+serialization, persistence, concurrency and lifecycle-composition paths for SQS/SNS, DynamoDB and
+S3. It does not claim IAM/OIDC, quota, throttling or service-controlled delayed behavior from an
+emulator. The following frozen obligations therefore remain release-blocking `EXTERNAL_PENDING`:
+
+- `OBL-R0-CLOUD-0216` and `OBL-R0-CLOUD-0217`: real long-running SQS visibility renewal and
+  isolation between slow consumers;
+- `OBL-R0-CLOUD-0265`: the default AWS SDK credential chain, short-lived OIDC credentials and
+  in-flight refresh;
+- `OBL-R0-CLOUD-0266`, `OBL-R0-CLOUD-0268` and `OBL-R0-CLOUD-0272`: real SQS/SNS payload and
+  attribute quotas, long polling/cancellation and partial batch-failure semantics;
+- `OBL-R0-PER-0523` and `OBL-R0-PER-0524`: service-controlled DynamoDB TTL deletion and provisioned
+  throughput throttling, distinct from optimistic concurrency;
+- `OBL-R0-PER-0603`: service-controlled S3 lifecycle deletion after the configured retention.
+
+Run these in source-mirrored xUnit 4 / Microsoft Testing Platform 2 External projects against a
+short-lived real AWS account boundary. Configuration must fail before discovery when the selected
+role, region or resource owner is incomplete; tests must never skip or fall back to LocalStack.
+Use OIDC and the normal AWS SDK provider chain, create only run-owned resources, persist no access
+key, secret, session token or signed URL, and delete the exact run-owned resources even after a
+failed test. Acceptance requires zero failure/skip, exact provider error identities, bounded causal
+barriers instead of wall-clock sleeps, resource-cleanup evidence and an explicit LocalStack-versus-
+AWS disposition for every observed semantic difference.
+
+S3 arbitrary per-message retention is a separate release-blocking product decision. The current
+repository deliberately accepts either no TTL or a positive whole-day TTL exactly equal to its
+immutable bucket lifecycle policy; it rejects every value that would otherwise promise unsupported
+per-object deletion. Before exposing arbitrary TTL, choose and implement one complete ownership
+model (for example object tags plus owned lifecycle rules with bounded policy cardinality, or a
+separate expiration index and deletion worker). Prove concurrent policy updates, restart recovery,
+partial failure, cancellation, exact object retention, bounded resource growth and real AWS
+eventual deletion. Do not silently round durations, create one lifecycle rule per object, or accept
+a TTL that the product cannot enforce.
+
 ## Finalize solution composition after native-test promotion
 
 `ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited

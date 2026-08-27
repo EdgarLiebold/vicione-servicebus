@@ -1,149 +1,301 @@
 namespace ViciOne.ServiceBus.AmazonS3.MessageData;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using Amazon.S3.Util;
 using Util;
 
 
-public class AmazonS3MessageDataRepository :
+/// <summary>
+/// Stores message payloads in one caller-owned Amazon S3 bucket.
+/// </summary>
+public sealed class AmazonS3MessageDataRepository :
     IMessageDataRepository,
     IBusObserver
 {
-    const string RuleName = "s3-messagedata-rule";
-    readonly string _bucket;
-    readonly IAmazonS3 _s3Client;
+    internal const string LifecycleRuleId = "s3-messagedata-rule";
 
-    public AmazonS3MessageDataRepository(string bucket)
-        : this(new AmazonS3Client(), bucket)
+    private readonly IAmazonS3 _client;
+    private readonly AmazonS3MessageDataRepositoryOptions _options;
+
+    public AmazonS3MessageDataRepository(
+        IAmazonS3 client,
+        AmazonS3MessageDataRepositoryOptions options)
     {
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(options);
+
+        _client = client;
+        _options = options;
     }
 
-    public AmazonS3MessageDataRepository(AmazonS3Config config, string bucket)
-        : this(new AmazonS3Client(config), bucket)
-    {
-    }
+    public void PostCreate(IBus bus) => ArgumentNullException.ThrowIfNull(bus);
 
-    public AmazonS3MessageDataRepository(IAmazonS3 client, string bucket)
-    {
-        _s3Client = client;
-        _bucket = bucket;
-    }
+    public void CreateFaulted(Exception exception) => ArgumentNullException.ThrowIfNull(exception);
 
-    public void PostCreate(IBus bus)
+    public Task PreStart(IBus bus)
     {
-    }
-
-    public void CreateFaulted(Exception exception)
-    {
-    }
-
-    public Task PreStop(IBus bus)
-    {
-        return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(bus);
+        return EnsureReady(CancellationToken.None);
     }
 
     public Task PostStart(IBus bus, Task<BusReady> busReady)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(busReady);
         return Task.CompletedTask;
     }
 
     public Task StartFaulted(IBus bus, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(exception);
         return Task.CompletedTask;
     }
 
-    public async Task PreStart(IBus bus)
+    public Task PreStop(IBus bus)
     {
-        try
-        {
-            var bucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, _bucket);
-            if (!bucketExists)
-            {
-                try
-                {
-                    await _s3Client.PutBucketAsync(new PutBucketRequest
-                    {
-                        BucketName = _bucket,
-                        UseClientRegion = true
-                    }).ConfigureAwait(false);
-                }
-                catch (AmazonS3Exception exception)
-                {
-                    LogContext.Warning?.Log(exception, "Amazon S3 Bucket does not exist: {Address}", _bucket);
-                }
-            }
-
-            if (MessageDataDefaults.TimeToLive != null && MessageDataDefaults.TimeToLive.Value.Days > 0)
-            {
-                // Do no delete life cycle rule if TimeToLive is not available. Allow user to create rule in the S3 console.
-                await _s3Client.DeleteLifecycleConfigurationAsync(_bucket).ConfigureAwait(false);
-                await _s3Client.PutLifecycleConfigurationAsync(new PutLifecycleConfigurationRequest
-                {
-                    BucketName = _bucket,
-                    Configuration = new LifecycleConfiguration
-                    {
-                        Rules =
-                        [
-                            new LifecycleRule
-                            {
-                                Id = RuleName,
-                                Expiration = new LifecycleRuleExpiration { Days = MessageDataDefaults.TimeToLive.Value.Days }
-                            }
-                        ]
-                    }
-                }).ConfigureAwait(false);
-            }
-        }
-        catch (Exception exception)
-        {
-            LogContext.Error?.Log(exception, "S3 Storage failure.");
-        }
+        ArgumentNullException.ThrowIfNull(bus);
+        return Task.CompletedTask;
     }
 
     public Task PostStop(IBus bus)
     {
+        ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
     public Task StopFaulted(IBus bus, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(exception);
         return Task.CompletedTask;
     }
 
     public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
     {
-        var filePath = ParseFilePath(address);
-        var transferUtility = new TransferUtility(_s3Client);
-        return await transferUtility.OpenStreamAsync(_bucket, filePath, cancellationToken).ConfigureAwait(false);
+        string objectKey = ParseObjectKey(address);
+        using var transfer = new TransferUtility(_client);
+
+        return await transfer
+            .OpenStreamAsync(_options.BucketName, objectKey, cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
+    public async Task<Uri> Put(
+        Stream stream,
+        TimeSpan? timeToLive = null,
+        CancellationToken cancellationToken = default)
     {
-        var filePath = FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
-        var transferUtility = new TransferUtility(_s3Client);
-        await transferUtility.UploadAsync(stream, _bucket, filePath, cancellationToken).ConfigureAwait(false);
-        return new Uri($"urn:file:{filePath.Replace(Path.DirectorySeparatorChar, ':')}");
+        ArgumentNullException.ThrowIfNull(stream);
+        if (!stream.CanRead)
+            throw new ArgumentException("The message-data stream must be readable.", nameof(stream));
+
+        _options.ValidateTimeToLive(timeToLive);
+
+        string objectKey = FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
+        using var transfer = new TransferUtility(_client);
+        await transfer
+            .UploadAsync(stream, _options.BucketName, objectKey, cancellationToken)
+            .ConfigureAwait(false);
+
+        return new Uri($"urn:file:{objectKey}", UriKind.Absolute);
     }
 
-    static string ParseFilePath(Uri address)
+    internal async Task EnsureReady(CancellationToken cancellationToken)
     {
-        if (address.Scheme != "urn")
-            throw new ArgumentException("The address must be a urn");
+        bool bucketExists = await BucketExists(cancellationToken).ConfigureAwait(false);
 
-        var parts = address.Segments[0].Split(':');
-        if (parts[0] != "file")
-            throw new ArgumentException("The address must be a urn:file");
+        if (!bucketExists)
+        {
+            try
+            {
+                await _client.PutBucketAsync(
+                        new PutBucketRequest
+                        {
+                            BucketName = _options.BucketName,
+                            BucketRegionName = ClientRegion(),
+                        },
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (AmazonS3Exception exception) when (
+                exception.ErrorCode is "BucketAlreadyOwnedByYou")
+            {
+                // Another instance completed the same idempotent startup transition.
+            }
+        }
 
-        var length = parts.Length - 1;
-        var elements = new string[length];
-        Array.Copy(parts, 1, elements, 0, length);
+        if (_options.LifecycleExpirationDays is { } expirationDays)
+            await ReconcileOwnedLifecycleRule(expirationDays, cancellationToken).ConfigureAwait(false);
+    }
 
-        return Path.Combine(elements);
+    private async Task ReconcileOwnedLifecycleRule(
+        int expirationDays,
+        CancellationToken cancellationToken)
+    {
+        List<LifecycleRule> rules;
+        try
+        {
+            GetLifecycleConfigurationResponse response = await _client
+                .GetLifecycleConfigurationAsync(
+                    new GetLifecycleConfigurationRequest { BucketName = _options.BucketName },
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            rules = response.Configuration?.Rules?
+                .Select(NormalizeRuleForWrite)
+                .ToList() ?? [];
+        }
+        catch (AmazonS3Exception exception) when (
+            exception.StatusCode == HttpStatusCode.NotFound ||
+            exception.ErrorCode is "NoSuchLifecycleConfiguration")
+        {
+            rules = [];
+        }
+
+        LifecycleRule[] ownedRules = rules
+            .Where(rule => string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal))
+            .ToArray();
+
+        if (ownedRules.Length == 1 && IsCurrentOwnedRule(ownedRules[0], expirationDays))
+            return;
+
+        LifecycleRule ownedRule;
+        if (ownedRules.Length == 0)
+        {
+            ownedRule = new LifecycleRule
+            {
+                Id = LifecycleRuleId,
+                Status = LifecycleRuleStatus.Enabled,
+                Filter = AllObjectsFilter(),
+            };
+            rules.Add(ownedRule);
+        }
+        else
+        {
+            ownedRule = ownedRules[0];
+            rules.RemoveAll(rule =>
+                !ReferenceEquals(rule, ownedRule) &&
+                string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal));
+        }
+
+        ownedRule.Status = LifecycleRuleStatus.Enabled;
+        ownedRule.Filter = AllObjectsFilter();
+        ownedRule.Expiration = new LifecycleRuleExpiration { Days = expirationDays };
+
+        await _client.PutLifecycleConfigurationAsync(
+                new PutLifecycleConfigurationRequest
+                {
+                    BucketName = _options.BucketName,
+                    Configuration = new LifecycleConfiguration { Rules = rules },
+                },
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private static bool IsCurrentOwnedRule(LifecycleRule rule, int expirationDays) =>
+        rule.Status == LifecycleRuleStatus.Enabled &&
+        IsAllObjectsFilter(rule.Filter) &&
+        rule.Expiration?.Days == expirationDays;
+
+    private static LifecycleFilter AllObjectsFilter() =>
+        new()
+        {
+            LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = string.Empty },
+        };
+
+    private static bool IsAllObjectsFilter(LifecycleFilter? filter) =>
+        filter is not null &&
+        (filter.LifecycleFilterPredicate is null or LifecyclePrefixPredicate { Prefix: "" });
+
+    private async Task<bool> BucketExists(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _client.GetBucketAclAsync(
+                    new GetBucketAclRequest { BucketName = _options.BucketName },
+                    cancellationToken)
+                .ConfigureAwait(false);
+            return true;
+        }
+        catch (AmazonS3Exception exception) when (
+            exception.StatusCode == HttpStatusCode.NotFound ||
+            exception.ErrorCode is "NoSuchBucket")
+        {
+            return false;
+        }
+        catch (AmazonS3Exception exception) when (
+            exception.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.MovedPermanently ||
+            exception.ErrorCode is "AccessDenied" or "PermanentRedirect")
+        {
+            // Existence is established even when this client must use another endpoint or lacks ACL access.
+            return true;
+        }
+    }
+
+    private static LifecycleRule NormalizeRuleForWrite(LifecycleRule source)
+    {
+        LifecycleFilter? filter = source.Filter;
+        if (filter is null)
+        {
+            // The AWS response model still exposes legacy Prefix-only configurations. Convert that
+            // wire-compatible input once and emit only the current Filter representation.
+#pragma warning disable CS0618
+            string prefix = source.Prefix ?? string.Empty;
+#pragma warning restore CS0618
+            filter = new LifecycleFilter
+            {
+                LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = prefix },
+            };
+        }
+
+        return new LifecycleRule
+        {
+            AbortIncompleteMultipartUpload = source.AbortIncompleteMultipartUpload,
+            Expiration = source.Expiration,
+            Filter = filter,
+            Id = source.Id,
+            NoncurrentVersionExpiration = source.NoncurrentVersionExpiration,
+            NoncurrentVersionTransitions = source.NoncurrentVersionTransitions,
+            Status = source.Status,
+            Transitions = source.Transitions,
+        };
+    }
+
+    private string ClientRegion() =>
+        _client.Config.AuthenticationRegion ??
+        _client.Config.RegionEndpoint?.SystemName ??
+        throw new InvalidOperationException(
+            "The Amazon S3 client must own an authentication region before the repository can create a bucket.");
+
+    private static string ParseObjectKey(Uri address)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri || !address.Scheme.Equals("urn", StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("The message-data address must be an absolute urn:file URI.", nameof(address));
+
+        const string prefix = "urn:file:";
+        string original = address.OriginalString;
+        if (!original.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("The message-data address must use the urn:file namespace.", nameof(address));
+
+        string objectKey = original[prefix.Length..];
+        if (objectKey.Length == 0 ||
+            objectKey.Any(character => !char.IsAsciiLetterOrDigit(character) && character is not '-' and not '_'))
+        {
+            throw new ArgumentException(
+                "The urn:file object key must contain only ASCII letters, digits, '-' or '_'.",
+                nameof(address));
+        }
+
+        return objectKey;
     }
 }

@@ -16,4 +16,11 @@
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/AmazonS3Requirements.json" />
+    <EmbeddedResource
+      Include="Requirements/AmazonS3Requirements.json"
+      LogicalName="ViciOne.ServiceBus.AmazonS3.Tests.Requirements.AmazonS3Requirements.json" />
+  </ItemGroup>
 </Project>
