@@ -168,6 +168,38 @@ public sealed class EntityFrameworkExecutionStrategyTests
         Assert.Same(cleanupFailure, strategy.SecondObservedFailure?.InnerException);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "consumed-rollback-stop-still-propagates-original-failure")]
+    public async Task FailedOutboxRollback_CannotBeTurnedIntoSuccessByAConsumingStrategy()
+    {
+        await using var dbContext = CreateDbContext();
+        var strategy = new ConsumingFailureExecutionStrategy(dbContext);
+        var operationFailure = new RetryRequestedException();
+        var cleanupFailure = new InvalidOperationException("The outbox rollback failed.");
+        ConsumeContext<RetryMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
+            new RetryMessage(),
+            TestContext.Current.CancellationToken);
+        var outboxContext = new RollbackFailingOutboxContext<RetryMessage>(consumeContext, cleanupFailure);
+        var attempts = 0;
+
+        Exception actual = await Assert.ThrowsAsync<RetryRequestedException>(() =>
+            EntityFrameworkExecutionStrategy.ExecuteAsync(
+                dbContext,
+                strategy,
+                outboxContext,
+                () =>
+                {
+                    attempts++;
+                    return Task.FromException(operationFailure);
+                }));
+
+        Assert.Same(operationFailure, actual);
+        Assert.Equal(1, attempts);
+        Assert.Equal(1, outboxContext.RollbackCount);
+        Assert.Equal(1, strategy.ExecutionCount);
+        Assert.Same(cleanupFailure, strategy.ConsumedFailure?.InnerException);
+    }
+
     private static RetryDbContext CreateDbContext() => new(
         new DbContextOptionsBuilder<RetryDbContext>()
             .UseSqlite("Data Source=:memory:")
@@ -319,6 +351,39 @@ public sealed class EntityFrameworkExecutionStrategyTests
                     SecondObservedFailure = secondFailure;
                     throw new RetryLimitExceededException("The execution strategy exhausted its retry limit.", secondFailure);
                 }
+            }
+        }
+    }
+
+    private sealed class ConsumingFailureExecutionStrategy(DbContext dbContext) : IExecutionStrategy
+    {
+        public Exception? ConsumedFailure { get; private set; }
+
+        public int ExecutionCount { get; private set; }
+
+        public bool RetriesOnFailure => true;
+
+        public TResult Execute<TState, TResult>(
+            TState state,
+            Func<DbContext, TState, TResult> operation,
+            Func<DbContext, TState, ExecutionResult<TResult>>? verifySucceeded) =>
+            throw new NotSupportedException("This test exercises only asynchronous execution.");
+
+        public async Task<TResult> ExecuteAsync<TState, TResult>(
+            TState state,
+            Func<DbContext, TState, CancellationToken, Task<TResult>> operation,
+            Func<DbContext, TState, CancellationToken, Task<ExecutionResult<TResult>>>? verifySucceeded,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                ExecutionCount++;
+                return await operation(dbContext, state, cancellationToken);
+            }
+            catch (Exception failure)
+            {
+                ConsumedFailure = failure;
+                return default!;
             }
         }
     }
