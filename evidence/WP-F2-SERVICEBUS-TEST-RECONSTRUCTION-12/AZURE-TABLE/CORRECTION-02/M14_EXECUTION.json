@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "497a7cd5570969bee13f35abb46bb37a7372dbee",
+  "technicalTree": "8e25a9d98d39bd71e1afc05e73e6b18b462d932d",
+  "precedingEvidenceCommit": "9309c34e2aa3d2dedff750a21f9cc0174fb3a61f",
+  "authorizingArchitectureCommit": "2c8efb961dc28b45906eaedd92853ecb4997c18b",
+  "id": "M14",
+  "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStore.cs",
+  "baselineSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+  "replacement": {
+    "oldText": "            new(TableTransactionActionType.UpdateReplace, lease, lease.ETag),\n",
+    "newText": "",
+    "occurrenceCount": 1
+  },
+  "mutantSha256": "6eecbc00d83356aac654bd6de7b6db9145ec178ffc0be3688ed12356c0fe02b3",
+  "postRestoreSha256": "9954ad2b44af0a701886fe92be3d5450b50da7e1739c2a186f2d51d3b635fa70",
+  "buildCommand": "env DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet build tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj --configuration Release --no-restore --disable-build-servers /m:1 /nr:false /p:UseSharedCompilation=false /p:NuGetAudit=false /p:TreatWarningsAsErrors=true -v:minimal /flp:LogFile=evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/mutations/M14-build.log;Verbosity=minimal",
+  "buildExitCode": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "captureCommand": "/private/tmp/vsb-run-capture.zsh evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/mutations/M14-fixture.log env VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker azurite --evidence-dir evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/mutations/M14-fixture --command -- artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests --filter-method ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal.AzureTableMessageJournalStoreTests.ConcurrentAppends_NeverExceedTheDeclaredCapacity --minimum-expected-tests 1 --parallel none --report-xunit-ctrf --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/mutations --report-xunit-ctrf-filename M14.json",
+  "testExitCode": 2,
+  "testResult": {
+    "tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "expectedFailure": "Assert.Single reports eight persisted entries after the ETag lease action is removed"
+  },
+  "fixture": {
+    "runIdentity": "vicione-ded60e29fe87",
+    "broker": "azurite",
+    "host": "127.0.0.1",
+    "tablePort": 33504,
+    "findings": [],
+    "brokerLogSha256": "ab5c20e7b3efb69090239704257cbe81e1c5e9c4d4d13cf4517c1ee12d9c86c3"
+  },
+  "artifacts": {
+    "buildLog": "mutations/M14-build.log",
+    "fixtureLog": "mutations/M14-fixture.log",
+    "result": "mutations/M14.json",
+    "endpoints": "mutations/M14-endpoints.json",
+    "fixtureFindings": "mutations/M14-fixture-findings.json",
+    "brokerLog": "mutations/M14-azurite-broker.log"
+  }
+}

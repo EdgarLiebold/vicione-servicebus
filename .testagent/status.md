@@ -1017,3 +1017,14 @@ future cohorts as complete.
 - Real Azure was not executed. Cosmos DB for Table behavior, Entra ID and service-limit evidence stay
   visibly External in `TODO.md`. The product branch remains unpushed until both independent read-only
   reviewers accept the exact technical/evidence pair.
+
+## Lead evidence correction: Azure Table M14 fixture lifecycle
+
+- The technical subject remains byte-identical at `497a7cd5570969bee13f35abb46bb37a7372dbee`;
+  no product, test, build or CI file changed after its freeze.
+- The independent technical review found no BLOCKER, MAJOR or MINOR. The test/evidence review found
+  one MINOR only: M14 had a causal CTRF and exact command, but no bound wrapper/fixture lifecycle log.
+- `AZURE-TABLE/CORRECTION-02/` repeats only M14 against a fresh run-scoped Azurite fixture and binds
+  wrapper stdout/stderr, endpoint projection, broker log, empty teardown findings, CTRF, exact command
+  and byte-identical post-restore source. This section supersedes only that missing-evidence statement;
+  all technical conclusions and the explicit External cloud boundary remain unchanged.

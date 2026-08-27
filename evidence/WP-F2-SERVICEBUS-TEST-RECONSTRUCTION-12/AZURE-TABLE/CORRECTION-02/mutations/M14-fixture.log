@@ -1,0 +1,20 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal.AzureTableMessageJournalStoreTests.ConcurrentAppends_NeverExceedTheDeclaredCapacity (520ms)
+  Assert.Single() Failure: The collection contained 8 items
+  Collection: [MessageJournalRecord { Body = [114, 101, 100, 97, 99, ···], ContentSizeInBytes = 215, ContentType = "application/json", DataClassification = "Confidential", EntryId = 01a04343-0f86-748b-8b24-dfc77ffd8031, ··· }, MessageJournalRecord { Body = [114, 101, 100, 97, 99, ···], ContentSizeInBytes = 215, ContentType = "application/json", DataClassification = "Confidential", EntryId = 01a04343-0f86-7ce9-b792-644f997acfd7, ··· }, MessageJournalRecord { Body = [114, 101, 100, 97, 99, ···], ContentSizeInBytes = 215, ContentType = "application/json", DataClassification = "Confidential", EntryId = 01a04343-0f86-7485-81a7-db39efa24288, ··· }, MessageJournalRecord { Body = [114, 101, 100, 97, 99, ···], ContentSizeInBytes = 215, ContentType = "application/json", DataClassification = "Confidential", EntryId = 01a04343-0f86-725a-afda-c4de74fe86cf, ··· }, MessageJournalRecord { Body = [114, 101, 100, 97, 99, ···], ContentSizeInBytes = 215, ContentType = "application/json", DataClassification = "Confidential", EntryId = 01a04343-0f86-769f-95ef-698f9ed797ad, ··· }, ···]
+    um ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal.AzureTableMessageJournalStoreTests.ConcurrentAppends_NeverExceedTheDeclaredCapacity() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs:205
+    um ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal.AzureTableMessageJournalStoreTests.ConcurrentAppends_NeverExceedTheDeclaredCapacity() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs:208
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/CORRECTION-02/mutations/M14.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 005ms
+run identity vicione-ded60e29fe87, output under artifacts/run-output/vicione-ded60e29fe87
+fixture azurite ready on loopback: VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=33504
+endpoints projected to artifacts/run-output/vicione-ded60e29fe87/endpoints.json
+broker log azurite: /private/tmp/vsb-azure-table-native-20260827/artifacts/run-output/vicione-ded60e29fe87/azurite-broker.log (6 lines)
