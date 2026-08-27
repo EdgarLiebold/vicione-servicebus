@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.BuiltInFormatters_RejectAnEmptyCorrelationId (28ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentException)
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.BuiltInFormatters_RejectAnEmptyCorrelationId() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/SagaKeyFormatterTests.cs:54
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/artifacts/azure-table-evidence/mutations/M03.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 491ms

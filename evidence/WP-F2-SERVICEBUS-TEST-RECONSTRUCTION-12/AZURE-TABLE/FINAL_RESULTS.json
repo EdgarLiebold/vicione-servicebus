@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "f0a18299aa849b261d948c92aef2c8dfaa408313",
+  "technicalTree": "545682603c03a16f6913caaab4665bfde463b248",
+  "technicalParent": "1d63a7adca71e9e3bac135240d3ff979f7121de1",
+  "authorizingArchitectureCommit": "2c8efb961dc28b45906eaedd92853ecb4997c18b",
+  "sdk": "10.0.302",
+  "positiveRuns": {
+    "engineeringRestore": {
+      "command": "dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode --disable-build-servers /m:1 /bl:artifacts/azure-table-evidence/final-engineering-restore.binlog",
+      "exitCode": 0,
+      "rawArtifact": "positive/final-engineering-restore.binlog.gz"
+    },
+    "engineeringBuild": {
+      "command": "dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore --disable-build-servers /m:1 /bl:artifacts/azure-table-evidence/final-engineering-build.binlog /clp:ErrorsOnly",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "rawArtifact": "positive/final-engineering-build.binlog.gz"
+    },
+    "unitArchitecture": {
+      "command": "dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/azure-table-evidence/unit-final --minimum-expected-tests 1946 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "exitCode": 0,
+      "tests": 1946,
+      "passed": 1946,
+      "failed": 0,
+      "skipped": 0,
+      "moduleResults": 14,
+      "rawLog": "positive/final-unit-test.log",
+      "resultsDirectory": "positive/unit"
+    },
+    "localIntegration": {
+      "command": "VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --command -- dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-build --no-restore --results-directory artifacts/azure-table-evidence/local-final --minimum-expected-tests 87 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "exitCode": 0,
+      "tests": 87,
+      "passed": 87,
+      "failed": 0,
+      "skipped": 0,
+      "moduleResults": 3,
+      "runIdentity": "vicione-c2b1fc4e5dda",
+      "providers": ["PostgreSQL", "Azurite Table"],
+      "rawLog": "positive/final-local-integration-test.log",
+      "resultsDirectory": "positive/local",
+      "providerEvidence": "positive/provider"
+    },
+    "focusedAzureTableUnit": {
+      "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests --minimum-expected-tests 43 --parallel none --report-xunit-ctrf --results-directory artifacts/azure-table-evidence --report-xunit-ctrf-filename final-azure-unit.json",
+      "exitCode": 0,
+      "tests": 43,
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0,
+      "rawLog": "positive/final-azure-unit-test.log",
+      "result": "positive/final-azure-unit.json"
+    }
+  },
+  "r0Disposition": {
+    "total": 39,
+    "replacedExecuting": 26,
+    "supersededByPoDecision": 10,
+    "externalPending": 3,
+    "externalRequirementIds": [
+      "OBL-R0-PER-0455",
+      "OBL-R0-PER-0456",
+      "OBL-R0-PER-0457"
+    ],
+    "dispositionFile": "R0_TERMINAL_DISPOSITIONS.json"
+  },
+  "nativeAzureTableCounts": {
+    "unitArchitectureRuntimeCases": 43,
+    "localIntegrationRuntimeCases": 25,
+    "unitRequirementVariants": 26,
+    "localRequirementVariants": 23
+  },
+  "mutations": {
+    "count": 12,
+    "built": 12,
+    "killed": 12,
+    "skipped": 0,
+    "manifest": "MUTATION_MANIFEST.json",
+    "rawDirectory": "mutations"
+  },
+  "toolValidation": {
+    "ciSelfTests": { "tests": 253, "passed": 253, "exitCode": 0, "rawLog": "positive/final-ci-selftests.log" },
+    "identitySelfTests": { "tests": 103, "passed": 103, "exitCode": 0, "rawLog": "positive/final-identity-selftests.log" },
+    "verificationModel": { "exitCode": 0, "rawLog": "positive/final-verification-model.log" },
+    "changeList": { "entries": 8021, "exitCode": 0 }
+  },
+  "cloudBoundary": {
+    "realAzureAccountExecuted": false,
+    "localAzuriteExecuted": true,
+    "claim": "Azurite proves the local Azure.Data.Tables entity, partition, ETag, transaction, conflict, Future, saga, job-service and MessageJournal paths. Cosmos DB for Table compatibility/429 behavior, Entra ID authentication/token refresh and real Azure service limits remain explicit External work and are not reported as green."
+  },
+  "legacyProject": {
+    "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests",
+    "deletedFiles": 18,
+    "remainingFiles": 0,
+    "remainingEmptyDirectories": 0
+  }
+}

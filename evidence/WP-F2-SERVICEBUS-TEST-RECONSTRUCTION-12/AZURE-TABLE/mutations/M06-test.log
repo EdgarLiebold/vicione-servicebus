@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Load_PropagatesCallerCancellationWithTheExactTokenAndException (90ms)
+  Assert.Equal() Failure: Values differ
+  Expected: System.Threading.CancellationToken
+  Actual:   System.Threading.CancellationToken
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Load_PropagatesCallerCancellationWithTheExactTokenAndException() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs:35
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/artifacts/azure-table-evidence/mutations/M06.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 698ms

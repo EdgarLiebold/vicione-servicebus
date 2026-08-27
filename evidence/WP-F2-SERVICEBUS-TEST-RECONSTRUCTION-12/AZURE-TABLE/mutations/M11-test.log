@@ -1,0 +1,25 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull (38ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(System.InvalidOperationException)
+  Actual:   typeof(System.ArgumentNullException)
+  ---- System.ArgumentNullException : Value cannot be null. (Parameter 'table')
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs:47
+    --- End of stack trace from previous location ---
+    ----- Inner Stack Trace -----
+    um System.ArgumentNullException.Throw(String paramName)
+    um System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+    um ViciOne.ServiceBus.AzureTable.Saga.AzureTableDatabaseContext`1..ctor(TableClient table, ISagaKeyFormatter`1 keyFormatter) in /private/tmp/vsb-azure-table-native-20260827/src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs:13
+    um ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepositoryContextFactory`1.Execute[T](Func`2 asyncMethod, CancellationToken cancellationToken) in /private/tmp/vsb-azure-table-native-20260827/src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContextFactory.cs:46
+    um ViciOne.ServiceBus.Saga.LoadSagaRepository`1.Load(Guid correlationId) in /private/tmp/vsb-azure-table-native-20260827/src/ViciOne.ServiceBus/Sagas/Saga/LoadSagaRepository.cs:24
+    um ViciOne.ServiceBus.Saga.SagaRepository`1.Load(Guid correlationId) in /private/tmp/vsb-azure-table-native-20260827/src/ViciOne.ServiceBus/Sagas/Saga/SagaRepository.cs:35
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.<>c__DisplayClass1_0.<Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull>b__1() in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs:48
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/artifacts/azure-table-evidence/mutations/M11.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 410ms

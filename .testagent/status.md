@@ -959,3 +959,29 @@ future cohorts as complete.
 - Both independent technical reviews passed the frozen technical commit with no BLOCKER, MAJOR or
   MINOR. The direct Evidence-child and its independent Evidence-only review are the remaining
   acceptance step.
+
+## Azure Table native persistence closure
+
+- The active technical subject is commit `f0a18299aa849b261d948c92aef2c8dfaa408313`, tree
+  `545682603c03a16f6913caaab4665bfde463b248`, authorized by architecture commit
+  `2c8efb961dc28b45906eaedd92853ecb4997c18b`. Its evidence root is `AZURE-TABLE/`.
+- The 39-row R0 set is fully and honestly disposed: 26 native executing replacements, 10
+  PO-superseded suite-audit rows and 3 explicit External-pending cloud obligations. Cosmos DB for
+  Table compatibility/429, Entra ID authentication/token refresh and real Azure service limits are
+  not claimed from Azurite and remain bound in `TODO.md`.
+- The product now has one key-validation authority, exact caller-cancellation and ETag semantics,
+  409-only duplicate classification, fail-closed entity conversion and fail-fast configuration
+  boundaries. Tests do not compensate for the inherited product defects.
+- The complete locked Engineering restore and Release build pass with zero warnings/errors.
+  UnitArchitecture passes 1946/1946 and LocalIntegration passes 87/87 against fresh PostgreSQL and
+  Azurite, all with zero failure and zero skip. Azure Table contributes 43 focused UnitArchitecture
+  cases and 25 LocalIntegration cases.
+- Twelve exact one-cause product mutations M01 through M12 build successfully and each fails its
+  owning native test with exit 2 for its own documented reason. Post-restore source hashes match the
+  technical commit exactly; the final focused Azure Table rerun passes 43/43.
+- The complete obsolete `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests` project is removed
+  after closure; all 18 files are gone and no empty directory remains. The unfiltered gate also
+  exposed and closed an inherited KillSwitch test-driver lost-wakeup race; this was a test-infra
+  correction, not an Azure Table product workaround.
+- Independent frozen product/code and test/evidence reviews remain the final acceptance gate before
+  this branch is merged or the next persistence cohort begins.

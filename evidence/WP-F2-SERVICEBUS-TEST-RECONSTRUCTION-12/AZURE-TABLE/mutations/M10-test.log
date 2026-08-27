@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(propertyName: "Duration", persistedValue: "not-a-duration") (10ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.InvalidOperationException)
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(String propertyName, String persistedValue) in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs:103
+    um InvokeStub_EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/artifacts/azure-table-evidence/mutations/M10.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 458ms

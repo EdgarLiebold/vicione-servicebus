@@ -1,0 +1,28 @@
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(propertyName: "Version", persistedValue: "not-a-version") (99ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.InvalidOperationException)
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(String propertyName, String persistedValue) in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs:103
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(propertyName: "Duration", persistedValue: "not-a-duration") (9ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.InvalidOperationException)
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(String propertyName, String persistedValue) in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs:103
+    um InvokeStub_EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(propertyName: "Location", persistedValue: "http://[invalid") (1ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.InvalidOperationException)
+    um ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(String propertyName, String persistedValue) in /private/tmp/vsb-azure-table-native-20260827/tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs:103
+    um InvokeStub_EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-azure-table-native-20260827/artifacts/azure-table-evidence/mutations/M09.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 605ms

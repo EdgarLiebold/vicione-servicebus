@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "f0a18299aa849b261d948c92aef2c8dfaa408313",
+  "technicalTree": "545682603c03a16f6913caaab4665bfde463b248",
+  "technicalParent": "1d63a7adca71e9e3bac135240d3ff979f7121de1",
+  "authorizingArchitectureCommit": "2c8efb961dc28b45906eaedd92853ecb4997c18b",
+  "buildArguments": [
+    "dotnet",
+    "build",
+    "tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+    "-c",
+    "Release",
+    "--no-restore",
+    "--disable-build-servers",
+    "/m:1",
+    "/nr:false",
+    "/p:UseSharedCompilation=false",
+    "/p:NuGetAudit=false",
+    "/p:TreatWarningsAsErrors=true",
+    "-v:minimal"
+  ],
+  "testExecutable": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests",
+  "commonTestArguments": [
+    "--filter-method",
+    "<testMethod>",
+    "--minimum-expected-tests",
+    "<expectedCount>",
+    "--parallel",
+    "none",
+    "--report-xunit-ctrf",
+    "--results-directory",
+    "artifacts/azure-table-evidence/mutations",
+    "--report-xunit-ctrf-filename",
+    "<mutationId>.json"
+  ],
+  "mutations": [
+    {
+      "id": "M01",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "value.Length > MaximumKeyCharacters", "newText": "value.Length >= MaximumKeyCharacters", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "905e142f118b4e6496466183f259556a6a9fbed9e4d295f69f8a763165af83f0",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal.AzureTableMessageJournalOptionsTests.PartitionKey_UsesTheOfficial1024CharacterBoundary",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "The accepted 1024-character boundary is rejected",
+      "buildLog": "mutations/M01-build.log",
+      "testLog": "mutations/M01-test.log",
+      "result": "mutations/M01.json"
+    },
+    {
+      "id": "M02",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "value is '/' or '\\\\' or '#' or '?'", "newText": "false", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "a15e4bcb20b5e693670c42d05c7b4be710b6d6a96dd0a8b484cf916416036f7c",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal.AzureTableMessageJournalOptionsTests.PartitionKey_RejectsEveryAzureUnsafeCharacter",
+      "expectedCount": 5,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Four forbidden printable key characters are accepted",
+      "buildLog": "mutations/M02-build.log",
+      "testLog": "mutations/M02-test.log",
+      "result": "mutations/M02.json"
+    },
+    {
+      "id": "M03",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs",
+      "baselineSha256": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+      "replacements": [
+        { "oldText": "correlationId == Guid.Empty", "newText": "correlationId == Guid.Empty && parameterName.Length < 0", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "60d7ed2f517bb1a8bb8aa68c59e09358dbc2d8fbfacb19ee9c1e90bcc317808b",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.BuiltInFormatters_RejectAnEmptyCorrelationId",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Guid.Empty is accepted as a persisted saga key",
+      "buildLog": "mutations/M03-build.log",
+      "testLog": "mutations/M03-test.log",
+      "result": "mutations/M03.json"
+    },
+    {
+      "id": "M04",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs",
+      "baselineSha256": "a23af6839670ada8a829f2b26486381b361a501f41219738694e2853e6ba446c",
+      "replacements": [
+        {
+          "oldText": "return (\n                AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey)),\n                AzureTableKeyValidator.Validate(rowKey, nameof(rowKey)));",
+          "newText": "return (partitionKey, rowKey);",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "eedba184f7c46b14b82895fee94e3347e0a069886ce099d290eb7021b348d06c",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.SagaKeyFormatterTests.DatabaseContext_RejectsUnsafeCustomFormatterOutputBeforeNetworkUse",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Unsafe custom formatter output crosses the repository boundary",
+      "buildLog": "mutations/M04-build.log",
+      "testLog": "mutations/M04-test.log",
+      "result": "mutations/M04.json"
+    },
+    {
+      "id": "M05",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+      "replacements": [
+        { "oldText": "catch (RequestFailedException exception) when (exception.Status == 409)", "newText": "catch (RequestFailedException exception)", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "7a8e998c780d334e964c074345d97c53918213905c8159abddeb2c97cee40d02",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_PropagatesANonConflictStorageFailureUnchanged",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "A non-conflict storage failure is intercepted instead of preserving identity",
+      "buildLog": "mutations/M05-build.log",
+      "testLog": "mutations/M05-test.log",
+      "result": "mutations/M05.json"
+    },
+    {
+      "id": "M06",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+      "replacements": [
+        {
+          "oldText": ".GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken).ConfigureAwait(false);",
+          "newText": ".GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken.None).ConfigureAwait(false);",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "b66ef77c2832dddf44f2b5ff8e79430cb19d07e6d053ac23a7daa7b1ba029bcc",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Load_PropagatesCallerCancellationWithTheExactTokenAndException",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "The caller cancellation token is not forwarded to TableClient",
+      "buildLog": "mutations/M06-build.log",
+      "testLog": "mutations/M06-test.log",
+      "result": "mutations/M06.json"
+    },
+    {
+      "id": "M07",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+      "replacements": [
+        {
+          "oldText": "when (context.CancellationToken.IsCancellationRequested\n                    && exception.CancellationToken == context.CancellationToken)",
+          "newText": "when (exception.CancellationToken == context.CancellationToken)",
+          "occurrenceCount": 2
+        }
+      ],
+      "mutantSha256": "1c9fc1e6a14c5ebd23b65bc04b5529e01ee4128729f02c3fabf39917f5949e17",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Write_DoesNotMisclassifyANonRequestedDependencyCancellationAsCallerCancellation",
+      "expectedCount": 2,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Both non-requested dependency cancellations escape as caller cancellation",
+      "buildLog": "mutations/M07-build.log",
+      "testLog": "mutations/M07-test.log",
+      "result": "mutations/M07.json"
+    },
+    {
+      "id": "M08",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs",
+      "baselineSha256": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+      "replacements": [
+        { "oldText": "new TableEntity(dict) { ETag = new ETag(eTag.ETag) }", "newText": "new TableEntity(dict) { ETag = ETag.All }", "occurrenceCount": 1 },
+        { "oldText": "DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)", "newText": "DeleteEntityAsync(partitionKey, rowKey, ETag.All, context.CancellationToken)", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "29d64b78c03d466d5d2cf24f3f91f4e7d56970b0e31382c92d0329ddfb637ec3",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Write_ClassifiesAStaleEtagAsASagaFailureWithTheOriginalStorageError",
+      "expectedCount": 2,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Update and delete send wildcard ETags instead of the exact concurrency token",
+      "buildLog": "mutations/M08-build.log",
+      "testLog": "mutations/M08-test.log",
+      "result": "mutations/M08.json"
+    },
+    {
+      "id": "M09",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyConverter.cs",
+      "baselineSha256": "92bd23a4e08a99be52f261c6e145da14f92d4763fd528f289291c500c9db68ae",
+      "replacements": [
+        {
+          "oldText": "throw new InvalidOperationException(\n                    $\"Azure Table property '{_name}' cannot be converted to '{typeof(TProperty)}'.\");",
+          "newText": "return;",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "fe87b307204f81c62e80bf0552ca918fb624d8669e02f8b27a71cf0cf3a0411c",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues",
+      "expectedCount": 3,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "All three malformed persisted values are silently ignored",
+      "buildLog": "mutations/M09-build.log",
+      "testLog": "mutations/M09-test.log",
+      "result": "mutations/M09.json"
+    },
+    {
+      "id": "M10",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyTypeConverter.cs",
+      "baselineSha256": "5ba91f2c46423f327becd26548383496235c794c049d330899865633929e5a7c",
+      "replacements": [
+        {
+          "oldText": "if (input is string text\n                && !string.IsNullOrWhiteSpace(text)\n                && _timeSpanConverter.TryConvert(text, out var value))\n            {\n                result = value;",
+          "newText": "if (input is string text\n                && !string.IsNullOrWhiteSpace(text))\n            {\n                _timeSpanConverter.TryConvert(text, out var value);\n                result = value;",
+          "occurrenceCount": 2,
+          "occurrenceIndex": 0
+        }
+      ],
+      "mutantSha256": "ae5e12b37fd17423ea637f17d2588c5298454044849bc1815cb547e3e50839cd",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.EntityConverterTests.EntityConverter_RejectsMalformedPersistedValues",
+      "expectedCount": 3,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Malformed TimeSpan text is accepted as the default duration",
+      "buildLog": "mutations/M10-build.log",
+      "testLog": "mutations/M10-test.log",
+      "result": "mutations/M10.json"
+    },
+    {
+      "id": "M11",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs",
+      "baselineSha256": "2054642e94fe26bdab5ed66510395abaae678b39d77aa6062f48cb90e0b26fd4",
+      "replacements": [
+        {
+          "oldText": "return _cloudTable()\n                ?? throw new InvalidOperationException(\"The Azure Table client factory returned null.\");",
+          "newText": "return _cloudTable()!;",
+          "occurrenceCount": 1
+        }
+      ],
+      "mutantSha256": "21d7c7482e8b7813382e39abb093fe667a98d7ca0145d53b3edeb455f1abbe3e",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga.AzureTableSagaRepositoryBoundaryTests.Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "Null client output reaches repository construction instead of the owner exception",
+      "buildLog": "mutations/M11-build.log",
+      "testLog": "mutations/M11-test.log",
+      "result": "mutations/M11.json"
+    },
+    {
+      "id": "M12",
+      "target": "src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryRegistrationProvider.cs",
+      "baselineSha256": "9c94a62bdf9cbf213ba85d9b1f9eaa47ede5c3eb0ffb6626bc4773273878682e",
+      "replacements": [
+        { "oldText": "            ArgumentNullException.ThrowIfNull(configure);\n", "newText": "", "occurrenceCount": 1 }
+      ],
+      "mutantSha256": "0740beaec66c6d49ff45145972edea2531c676ab59319e93dc092b8af60af7d4",
+      "testMethod": "ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Configuration.AzureTableConfigurationContractTests.RegistrationProvider_RejectsANullConfigurationDelegate",
+      "expectedCount": 1,
+      "buildExitCode": 0,
+      "testExitCode": 2,
+      "expectedFailure": "A null registration delegate is retained instead of rejected",
+      "buildLog": "mutations/M12-build.log",
+      "testLog": "mutations/M12-test.log",
+      "result": "mutations/M12.json"
+    }
+  ],
+  "postRestoreSha256": {
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs": "c372b3d275d2e7e68183f902ea6eb250660a37287d8a42bfb26af342ef44ceda",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableDatabaseContext.cs": "a23af6839670ada8a829f2b26486381b361a501f41219738694e2853e6ba446c",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/AzureTableSagaRepositoryContext.cs": "2c0e477d41cd419dea21218fc6305dade344337479b4cac99d0c7eb73f1d92c4",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyConverter.cs": "92bd23a4e08a99be52f261c6e145da14f92d4763fd528f289291c500c9db68ae",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/EntityPropertyTypeConverter.cs": "5ba91f2c46423f327becd26548383496235c794c049d330899865633929e5a7c",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/Saga/DelegateCloudTableProvider.cs": "2054642e94fe26bdab5ed66510395abaae678b39d77aa6062f48cb90e0b26fd4",
+    "src/Persistence/ViciOne.ServiceBus.Azure.Table/Configuration/Configuration/AzureTableSagaRepositoryRegistrationProvider.cs": "9c94a62bdf9cbf213ba85d9b1f9eaa47ede5c3eb0ffb6626bc4773273878682e"
+  }
+}

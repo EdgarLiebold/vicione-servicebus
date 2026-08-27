@@ -1,0 +1,12 @@
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Azure.Table -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table/release/ViciOne.ServiceBus.Azure.Table.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Azure.Table.Tests -> /private/tmp/vsb-azure-table-native-20260827/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.96
