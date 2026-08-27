@@ -1140,3 +1140,40 @@ future cohorts as complete.
 - The local execution and evidence package are stationary and complete. Final acceptance still
   requires two independent static read-only PASS reviews. Real AWS remains a separate External
   release gate; neither condition is represented as locally green.
+
+## AWS native closure — correction candidate after targeted failure-boundary audit
+
+- This section supersedes only the earlier AWS technical subject and its 2,032 Unit count. The
+  correction technical subject is commit `d0043bae8dccfee74d8ae223b5e8031409a2784d`, tree
+  `3380c74e8594c5cca510df15e1c89cea40f068af`, direct child of the remotely bound AWS evidence
+  state `0ff3e84e966d469a1b77048da6f84b52040ed23a`. Its exact technical delta contains 18 paths.
+- DynamoDB now freezes the registered context-factory delegate and fails closed on four persisted
+  corruption forms: JSON null, foreign row key, foreign payload correlation identity and payload /
+  persisted-version mismatch. SQS now loses an expired maximum-renewal lock, disposes both owned
+  clients even when one fails, preserves sole exception identity and deterministic aggregate order,
+  and binds provider `SentTimestamp` to exact Unix-millisecond UTC semantics without a wall-clock
+  test oracle.
+- Frozen positive execution passes UnitArchitecture 2,043/2,043 and LocalIntegration 149/149 against
+  one fresh PostgreSQL/Azurite/LocalStack fixture, everywhere with zero failure or skip. Unit,
+  LocalIntegration and complete Engineering Release builds finish with zero warnings and errors.
+  Focused counts are SQS 51 Unit + 48 LocalStack, DynamoDB 12 Unit + 9 LocalStack and S3 6 Unit +
+  5 LocalStack.
+- Exact one-occurrence mutations M15–M23 all build cleanly. Their nine owning MTP runs execute 26
+  cases: 11 causal failures and 15 control passes, zero skip, with every mutation run exiting 2.
+  All mutated source files restore byte-identically and the disposable mutation worktree is clean at
+  the correction technical commit.
+- The 111-row disposition is unchanged: 100 executing, nine real-AWS External, one invalid duplicate
+  retired and one PO-superseded. Real AWS was not executed. The correction is not accepted until its
+  separate evidence child is committed and remotely backed up, architecture binds both hashes, and
+  two independent static read-only reviews return PASS.
+- The local execution diagnosis is now durable in `.testagent/research.md`: restricted-sandbox
+  NamedPipe/process boundaries and orphaned MSBuild nodes caused silent tooling stalls. The unchanged
+  tests pass outside that boundary after targeted build-server shutdown with an isolated CLI home,
+  disabled node reuse/shared compilation and the explicit MTP profile. No assertion, package or
+  runner rule was weakened.
+- The generated Apache-2.0 `CHANGELIST.md` matches its 8,309-entry candidate exactly, and all 103
+  identity-tool self-tests pass. The separate full historical `identity_gate.py scan` is not claimed
+  green: its persisted whole-fork mapping predates the many intentionally retired/moved legacy paths
+  and currently reports 59,494 stale baseline/API bindings. That existing repository-governance debt
+  is outside this 18-path AWS correction and requires a separately authorized regeneration/review;
+  it is not hidden inside or counted as an AWS test result.
