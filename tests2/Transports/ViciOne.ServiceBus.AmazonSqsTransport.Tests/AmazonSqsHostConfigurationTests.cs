@@ -127,15 +127,17 @@ public sealed class AmazonSqsHostConfigurationTests
     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "host-equality-and-hash-contract")]
     public void HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing()
     {
-        var first = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production" };
-        var same = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production" };
-        var differentScope = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "staging" };
+        var first = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true };
+        var same = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true };
+        var differentScope = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "staging", ScopeTopics = true };
+        var differentScopingMode = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = false };
 
         Assert.True(AmazonSqsHostEqualityComparer.Default.Equals(first, same));
         Assert.Equal(
             AmazonSqsHostEqualityComparer.Default.GetHashCode(first),
             AmazonSqsHostEqualityComparer.Default.GetHashCode(same));
         Assert.False(AmazonSqsHostEqualityComparer.Default.Equals(first, differentScope));
+        Assert.False(AmazonSqsHostEqualityComparer.Default.Equals(first, differentScopingMode));
     }
 
     private static AmazonSqsBusConfiguration CreateBusConfiguration() =>
