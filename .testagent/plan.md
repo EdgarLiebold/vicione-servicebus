@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1881 predeclared unfiltered cases;
+- `UnitArchitecture`: 1882 predeclared unfiltered cases;
 - `LocalIntegration`: 70 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1616,8 +1616,8 @@ fault recovery, request-saga fault/trace/scope/delay semantics, EF-to-Quartz com
 consumer and saga rollback/retry, a real send-pipeline delivery failure and transport-property
 round-trip. The inherited product-only `VSB-Fail-Delivery` test switch is removed; delivery failure
 is injected at the normal send-observer boundary. The accepted working floors for this still-active
-phase are 52 focused EF UnitArchitecture cases, 59 EF LocalIntegration cases, 6 focused Core
-outbox-checkpoint and notification cases, 1,881 repository UnitArchitecture cases and 70 repository LocalIntegration
+phase are 53 focused EF UnitArchitecture cases, 59 EF LocalIntegration cases, 6 focused Core
+outbox-checkpoint and notification cases, 1,882 repository UnitArchitecture cases and 70 repository LocalIntegration
 cases, all without skip. The 90 inherited EF obligation contracts have native semantic owners, but
 their frozen R0 set expands to 156 execution variants: 48 unparameterized identities, 39 deliberately
 provider-neutral identities, 29 real PostgreSQL identities and 40 SQL Server or SQL Server

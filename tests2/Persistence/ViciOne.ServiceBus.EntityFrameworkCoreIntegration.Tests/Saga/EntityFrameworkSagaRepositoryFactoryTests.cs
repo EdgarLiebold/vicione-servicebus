@@ -1,11 +1,13 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga;
 
 using System.Data.Common;
+using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -115,11 +117,55 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         Assert.Equal(4, executionStrategy.ExecutionCount);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "outer-transaction-query-avoids-additional-retry-boundary")]
+    public async Task SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecution()
+    {
+        var executionStrategy = new ExecutionStrategyProbe();
+        await using FactoryDatabase database = await FactoryDatabase.Create(executionStrategy);
+        executionStrategy.Reset();
+        var contextFactory = new EntityFrameworkSagaRepositoryContextFactory<FactorySaga>(
+            new DelegateSagaDbContextFactory<FactorySaga>(database.CreateContext),
+            new SagaConsumeContextFactory<DbContext, FactorySaga>(),
+            new OptimisticSagaRepositoryLockStrategy<FactorySaga>(
+                new OptimisticLoadQueryExecutor<FactorySaga>(),
+                queryCustomization: null,
+                System.Data.IsolationLevel.ReadCommitted,
+                isTransactionEnabled: true));
+        ConsumeContext<FactoryMessage> context = CreateConsumeContext(
+            new FactoryMessage(),
+            new TransactionPayload(Guid.Parse("9c49617d-5341-465f-b624-3807677f7b99")));
+        int delivered = 0;
+
+        await contextFactory.SendQuery(
+            context,
+            new SagaQuery<FactorySaga>(_ => true),
+            Pipe.Execute<SagaRepositoryQueryContext<FactorySaga, FactoryMessage>>(queryContext =>
+            {
+                Assert.Equal(2, queryContext.Count);
+                Interlocked.Increment(ref delivered);
+            }));
+
+        Assert.Equal(1, delivered);
+        Assert.Equal(1, executionStrategy.ExecutionCount);
+    }
+
+    private static ConsumeContext<FactoryMessage> CreateConsumeContext(FactoryMessage message, DbTransactionContext transaction)
+    {
+        ConsumeContext<FactoryMessage> context = DispatchProxy.Create<ConsumeContext<FactoryMessage>, ConsumeContextProxy>();
+        ((ConsumeContextProxy)(object)context).Configure(message, transaction, TestContext.Current.CancellationToken);
+        return context;
+    }
+
     public sealed class FactorySaga : ISaga
     {
         public Guid CorrelationId { get; set; }
         public bool IsVisible { get; set; }
     }
+
+    public sealed record FactoryMessage;
+
+    private sealed record TransactionPayload(Guid TransactionId) : DbTransactionContext;
 
     private sealed class FactoryDbContext(DbContextOptions<FactoryDbContext> options) : DbContext(options)
     {
@@ -264,5 +310,79 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
             probe.Record();
             return operation(context, state, cancellationToken);
         }
+    }
+
+    private class ConsumeContextProxy : DispatchProxy
+    {
+        private CancellationToken _cancellationToken;
+        private FactoryMessage _message = null!;
+        private ReceiveContext _receiveContext = null!;
+        private SerializerContext _serializerContext = null!;
+        private DbTransactionContext _transaction = null!;
+
+        public void Configure(FactoryMessage message, DbTransactionContext transaction, CancellationToken cancellationToken)
+        {
+            _message = message;
+            _transaction = transaction;
+            _cancellationToken = cancellationToken;
+            _receiveContext = DispatchProxy.Create<ReceiveContext, ReceiveContextProxy>();
+            ((ReceiveContextProxy)(object)_receiveContext).CancellationToken = cancellationToken;
+            _serializerContext = DispatchProxy.Create<SerializerContext, SerializerContextProxy>();
+        }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            switch (targetMethod?.Name)
+            {
+                case "get_CancellationToken":
+                    return _cancellationToken;
+                case "get_Message":
+                    return _message;
+                case "get_ReceiveContext":
+                    return _receiveContext;
+                case "get_SerializerContext":
+                    return _serializerContext;
+                case "HasPayloadType":
+                    return ((Type)args![0]!).IsInstanceOfType(_transaction);
+                case "TryGetPayload":
+                    Type payloadType = targetMethod.GetGenericArguments()[0];
+                    bool found = payloadType.IsInstanceOfType(_transaction);
+                    args![0] = found ? _transaction : null;
+                    return found;
+                default:
+                    throw new InvalidOperationException($"Unexpected consume-context member: {targetMethod?.Name ?? "<null>"}.");
+            }
+        }
+    }
+
+    private class ReceiveContextProxy : DispatchProxy
+    {
+        private static readonly IPublishEndpointProvider PublishEndpointProvider = new NoopPublishEndpointProvider();
+
+        public CancellationToken CancellationToken { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            return targetMethod?.Name switch
+            {
+                "get_CancellationToken" => CancellationToken,
+                "get_PublishEndpointProvider" => PublishEndpointProvider,
+                _ => throw new InvalidOperationException($"Unexpected receive-context member: {targetMethod?.Name ?? "<null>"}."),
+            };
+        }
+    }
+
+    private class SerializerContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException($"Unexpected serializer-context member: {targetMethod?.Name ?? "<null>"}.");
+    }
+
+    private sealed class NoopPublishEndpointProvider : IPublishEndpointProvider
+    {
+        public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => throw new NotSupportedException();
     }
 }
