@@ -1,0 +1,18 @@
+diff --git a/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs b/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs
+index d6675851..9b62eb0b 100644
+--- a/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs
++++ b/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs
+@@ -103,3 +103,12 @@ public virtual async Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+             if (_outboxSchedulerContext != null)
+-                await _outboxSchedulerContext.DiscardSince(checkpoint.SchedulerCheckpoint).ConfigureAwait(false);
++            {
++                try
++                {
++                    await _outboxSchedulerContext.DiscardSince(checkpoint.SchedulerCheckpoint).ConfigureAwait(false);
++                }
++                catch (Exception e)
++                {
++                    LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
++                }
++            }
+         }

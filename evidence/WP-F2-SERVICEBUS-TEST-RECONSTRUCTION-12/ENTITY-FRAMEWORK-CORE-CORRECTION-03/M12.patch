@@ -1,0 +1,9 @@
+diff --git a/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs b/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
+index a740300d..b6f387a5 100644
+--- a/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
++++ b/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
+@@ -70,3 +70,3 @@ internal static class EntityFrameworkExecutionStrategy
+             // failure remains authoritative and must cross the strategy boundary unchanged.
+-            retryGuard.ThrowOriginalFailure();
++            GC.KeepAlive(retryGuard);
+             throw;

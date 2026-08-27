@@ -1,0 +1,192 @@
+diff --git a/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs b/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
+index 923939fa..a740300d 100644
+--- a/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
++++ b/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategy.cs
+@@ -46 +46 @@ internal static class EntityFrameworkExecutionStrategy
+-    public static Task ExecuteAsync<TMessage>(
++    public static async Task ExecuteAsync<TMessage>(
+@@ -57,5 +57,21 @@ internal static class EntityFrameworkExecutionStrategy
+-        return ExecuteAsync(
+-            dbContext,
+-            strategy,
+-            () => ExecuteAttemptAsync(consumeContext, operation, retryGuard),
+-            consumeContext.CancellationToken);
++        try
++        {
++            await ExecuteAsync(
++                    dbContext,
++                    strategy,
++                    () => ExecuteAttemptAsync(consumeContext, operation, retryGuard),
++                    consumeContext.CancellationToken)
++                .ConfigureAwait(false);
++        }
++        catch (Exception) when (retryGuard.IsBlocked)
++        {
++            // A provider strategy may wrap its last delegate failure (for example in
++            // RetryLimitExceededException). Once rollback cleanup failed, the first business
++            // failure remains authoritative and must cross the strategy boundary unchanged.
++            retryGuard.ThrowOriginalFailure();
++            throw;
++        }
++
++        // A custom strategy is allowed to consume a delegate exception and return. It must not be
++        // able to turn an attempt with an incomplete outbox rollback into a successful operation.
++        retryGuard.ThrowOriginalFailure();
+@@ -91 +107 @@ internal static class EntityFrameworkExecutionStrategy
+-                    retryGuard.Block(operationException);
++                    retryGuard.Block(operationException, cleanupException);
+@@ -94,0 +111,2 @@ internal static class EntityFrameworkExecutionStrategy
++
++                    throw new OutboxRollbackRetryStoppedException(cleanupException);
+@@ -121 +139,3 @@ private sealed class OutboxRollbackRetryGuard
+-        private ExceptionDispatchInfo? _blockedFailure;
++        private BlockedFailure? _blockedFailure;
++
++        public bool IsBlocked => Volatile.Read(ref _blockedFailure) is not null;
+@@ -123 +143 @@ private sealed class OutboxRollbackRetryGuard
+-        public void Block(Exception operationException)
++        public void Block(Exception operationException, Exception cleanupException)
+@@ -127 +147,3 @@ public void Block(Exception operationException)
+-                ExceptionDispatchInfo.Capture(operationException),
++                new BlockedFailure(
++                    ExceptionDispatchInfo.Capture(operationException),
++                    ExceptionDispatchInfo.Capture(cleanupException)),
+@@ -133 +155,3 @@ public void ThrowIfBlocked()
+-            Volatile.Read(ref _blockedFailure)?.Throw();
++            BlockedFailure? blockedFailure = Volatile.Read(ref _blockedFailure);
++            if (blockedFailure is not null)
++                throw new OutboxRollbackRetryStoppedException(blockedFailure.CleanupFailure.SourceException);
+@@ -134,0 +159,9 @@ public void ThrowIfBlocked()
++
++        public void ThrowOriginalFailure()
++        {
++            Volatile.Read(ref _blockedFailure)?.OperationFailure.Throw();
++        }
++
++        private sealed record BlockedFailure(
++            ExceptionDispatchInfo OperationFailure,
++            ExceptionDispatchInfo CleanupFailure);
+@@ -135,0 +169,3 @@ public void ThrowIfBlocked()
++
++    private sealed class OutboxRollbackRetryStoppedException(Exception cleanupFailure)
++        : Exception("The failed outbox attempt cannot be retried because rollback cleanup did not complete.", cleanupFailure);
+diff --git a/tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs b/tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs
+index b2fd7169..cf8ebb40 100644
+--- a/tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs
++++ b/tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs
+@@ -4,0 +5 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFramewor
++using System.Reflection;
+@@ -5,0 +7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFramewor
++using ViciOne.ServiceBus.Scheduling;
+@@ -92 +94 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
++        var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
+@@ -94,0 +97,3 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
++        var scheduler = DispatchProxy.Create<IMessageScheduler, FailingCancellationSchedulerProxy>();
++        var schedulerProxy = (FailingCancellationSchedulerProxy)(object)scheduler;
++        schedulerProxy.EnqueueCancellationFailure(cleanupFailure);
+@@ -97,2 +102,4 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-            TestContext.Current.CancellationToken);
+-        var outboxContext = new RollbackFailingOutboxContext<RetryMessage>(consumeContext, cleanupFailure);
++            TestContext.Current.CancellationToken,
++            scheduler);
++        var outboxContext = new InMemoryOutboxConsumeContext<RetryMessage>(consumeContext);
++        Assert.True(outboxContext.TryGetPayload(out MessageSchedulerContext schedulerContext));
+@@ -106 +113 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-                () =>
++                async () =>
+@@ -109 +116,6 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-                    return Task.FromException(operationFailure);
++                    await schedulerContext.SchedulePublish(
++                        new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc),
++                        new RetryMessage(),
++                        typeof(RetryMessage),
++                        TestContext.Current.CancellationToken);
++                    throw operationFailure;
+@@ -114 +125,0 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-        Assert.Equal(1, outboxContext.RollbackCount);
+@@ -116 +127,8 @@ public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesT
+-        Assert.Same(cleanupFailure, outboxContext.CleanupFailure);
++        Assert.Same(cleanupFailure, strategy.FirstObservedFailure?.InnerException);
++        Assert.Same(cleanupFailure, strategy.SecondObservedFailure?.InnerException);
++        Assert.Equal(1, schedulerProxy.ScheduledCount);
++        Assert.Equal(1, schedulerProxy.CancellationCount);
++
++        await outboxContext.DiscardPendingActions();
++
++        Assert.Equal(2, schedulerProxy.CancellationCount);
+@@ -124 +142 @@ public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheB
+-        var strategy = new RetryEveryExceptionExecutionStrategy(dbContext);
++        var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
+@@ -148,0 +167,2 @@ public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheB
++        Assert.Same(cleanupFailure, strategy.FirstObservedFailure?.InnerException);
++        Assert.Same(cleanupFailure, strategy.SecondObservedFailure?.InnerException);
+@@ -186,0 +207,43 @@ public override Task DiscardPendingActions(OutboxCheckpoint checkpoint)
++    private class FailingCancellationSchedulerProxy : DispatchProxy
++    {
++        private readonly Queue<Exception> _cancellationFailures = [];
++
++        public int CancellationCount { get; private set; }
++
++        public int ScheduledCount { get; private set; }
++
++        public void EnqueueCancellationFailure(Exception exception)
++        {
++            ArgumentNullException.ThrowIfNull(exception);
++            _cancellationFailures.Enqueue(exception);
++        }
++
++        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
++        {
++            ArgumentNullException.ThrowIfNull(targetMethod);
++            ArgumentNullException.ThrowIfNull(args);
++
++            if (targetMethod.Name == nameof(IMessageScheduler.SchedulePublish)
++                && targetMethod.ReturnType == typeof(Task<ScheduledMessage>))
++            {
++                ScheduledCount++;
++                var scheduledMessage = new ScheduledMessageHandle<object>(
++                    NewId.NextGuid(),
++                    (DateTime)args[0]!,
++                    new Uri("loopback://localhost/scheduled"),
++                    args[1]!);
++                return Task.FromResult<ScheduledMessage>(scheduledMessage);
++            }
++
++            if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledSend))
++            {
++                CancellationCount++;
++                return _cancellationFailures.TryDequeue(out Exception? failure)
++                    ? Task.FromException(failure)
++                    : Task.CompletedTask;
++            }
++
++            throw new NotSupportedException(targetMethod.Name);
++        }
++    }
++
+@@ -218 +281 @@ private sealed class RetryOnceExecutionStrategy(DbContext dbContext) : IExecutio
+-    private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) : IExecutionStrategy
++    private sealed class WrappingRetryEveryExceptionExecutionStrategy(DbContext dbContext) : IExecutionStrategy
+@@ -221,0 +285,4 @@ private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) :
++        public Exception? FirstObservedFailure { get; private set; }
++
++        public Exception? SecondObservedFailure { get; private set; }
++
+@@ -241 +308 @@ private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) :
+-            catch
++            catch (Exception firstFailure)
+@@ -242,0 +310 @@ private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) :
++                FirstObservedFailure = firstFailure;
+@@ -244 +312,10 @@ private sealed class RetryEveryExceptionExecutionStrategy(DbContext dbContext) :
+-                return await operation(dbContext, state, cancellationToken);
++
++                try
++                {
++                    return await operation(dbContext, state, cancellationToken);
++                }
++                catch (Exception secondFailure)
++                {
++                    SecondObservedFailure = secondFailure;
++                    throw new RetryLimitExceededException("The execution strategy exhausted its retry limit.", secondFailure);
++                }
