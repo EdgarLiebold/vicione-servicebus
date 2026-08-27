@@ -2188,3 +2188,96 @@ Community release. It runs only SQS, SNS, DynamoDB and S3, on a Docker-selected 
 in-memory state. This local compatibility substrate does not claim current AWS service behavior;
 real IAM, OIDC, quotas, throttling, long-running visibility/receive behavior and service-managed TTL
 or lifecycle deletion remain explicit External contracts against real AWS.
+
+## ActiveMQ native transport closure research
+
+The accepted AWS evidence commit `9195e5fcde26b5a525d00fe716fcc7c21256f5c1`
+(tree `e3310be174e31fa3a999c8dd4d4bc08e535b0ab7`) is the clean product baseline for this
+cohort. Before the first product or test edit, the complete ActiveMQ product tree (151 C# files),
+the complete inherited ActiveMQ test project (34 C# files), every supporting test-framework path
+used by those tests, the canonical broker runner, its outage protocol, the Compose fixture and all
+113 selected R0 obligations were read. The selected set is `OBL-R0-BLD-0095` plus
+`OBL-R0-BRK-0355..0466`; it expands to 179 inherited execution identities (178 broker variants plus
+the one runner/build obligation). The exact terminal
+projection is frozen in `.testagent/activemq-native-obligation-map.tsv`: 40 UnitArchitecture and 73
+LocalIntegration obligations, all with executing native carriers. Changes of profile are deliberate:
+URI composition is hermetic, while product compression is proven through the real broker rather
+than by retesting third-party compression libraries.
+
+### Provider and fixture boundary
+
+The local provider boundary is complete and does not require a cloud account. ActiveMQ Classic
+6.2.0 is built from the pinned Apache image and a minimal scheduler-enabled configuration. Artemis
+is pinned by immutable multi-architecture digest and supplies the AMQP shared-durable-subscription
+boundary that Classic/OpenWire does not support. Both use generated per-run credentials and
+Docker-selected loopback ports. HAProxy gives an outage run stable OpenWire, AMQP and Jolokia
+addresses while only the broker behind it is interrupted. The canonical runner owns start,
+readiness, endpoint projection, outage commands, raw broker logs and guarded teardown; test code
+never invokes Docker and never falls back to localhost, a fixed port or admin/admin.
+
+The official NMS contracts are the source of truth. NMS.ActiveMQ 2.2.0 and NMS.AMQP 2.4.0 remain
+the current package identities used by the repository. Failover and transport options occupy their
+documented URI levels. `NMSTimeToLive == TimeSpan.Zero` means no expiry; the broker scheduler uses
+the long millisecond `AMQ_SCHEDULED_DELAY` property and therefore requires scheduler support. The
+old suite's Ionic/SharpZip-only tests do not prove any ViciOne behavior and are replaced by an exact
+OpenWire compression roundtrip through the product and broker.
+
+### Product findings that tests must not accommodate
+
+The inherited configuration defaults silently select localhost:61616 and admin/admin. The shipped
+test harness repeats the same fallback. Both are test conveniences in product code, not a valid
+Greenfield contract. Host, protocol, ports and credentials must be explicit and snapshotted; URI
+userinfo secrets are rejected. IPv6 failover hosts, option encoding, duplicate/conflicting options,
+unknown keys and invalid values need one fail-closed parser instead of `Split(':')`, `Split('=')`
+and best-effort ignoring.
+
+Endpoint names currently cross a URI-string interpolation boundary. Short addresses retain escaped
+bytes, direct construction bypasses validation, and topology APIs can interpret caller data such as
+`orders?temporary=true` as configuration. The A+ boundary validates names as data, decodes and
+encodes symmetrically, rejects control injection and removes the later `?`-stripping compensator.
+The existing conservative broker-safe entity alphabet is retained; this slice does not invent a
+broader Unicode contract without a cross-protocol broker guarantee.
+
+The transport currently clamps every non-positive TTL to one second. That is correct only for the
+explicit PO-preserved Response/Fault safeguard, whose consume adapter already supplies a positive
+TTL. It is wrong for normal send and generic forwarding. The shared send boundary must discard an
+already expired normal/forwarded message before invoking any transport; ActiveMQ then writes the
+exact positive TTL or NMS zero/no-expiry. Artemis delayed scheduling must use the send context's
+`TimeProvider`, never `DateTimeOffset.UtcNow`.
+
+`IActiveMqReceiveEndpointConfigurator.ConfigureConnection` is a false public capability: the
+configuration accumulates a connection pipe that is never built or applied. There are no product
+callers. Greenfield compatibility is not required, so the method and dead configurator are removed
+instead of preserving a no-op. Session configuration remains supported and is tested through the
+actual receive-pipe construction.
+
+Connection/session disposal currently lets one failed close suppress later dispose/executor
+cleanup. Temporary-entity deletion leaves a stale registry entry. Both are resource-owner defects:
+every owned cleanup is attempted once, failures retain deterministic identity/aggregation, and a
+successfully deleted temporary entity is no longer addressable from the registry. Cleanup tests use
+controlled fakes and exact call order; broker tests verify no run-owned residue after teardown.
+
+Topic-consumer equality currently omits `ConsumerName` and `IsShared`; the name comparer collapses
+distinct durable/shared subscriptions by topic alone. Those fields are part of broker identity and
+must participate consistently in equality and hash calculation. The existing shared-subscription
+configuration is otherwise meaningful and is preserved for Artemis AMQP. A direct shared-durable
+carrier proves exact once-only distribution and a hermetic comparer carrier prevents topology
+deduplication from merging distinct consumers.
+
+The remaining inherited suite provides behavior inventory, not target mechanics. It contains
+fixed names, static recorders, broad waits, wall-clock delays, flaky markers, assertion-free
+checks and test-framework harness ownership. Native carriers use run-derived entity names, typed
+fixture configuration, bounded causal barriers, exact attempt/delivery/error-envelope oracles and
+fresh state per test. The 112 broker obligations intentionally consolidate into coherent feature
+owners; duplicate assertions are not manufactured to preserve the inherited method count.
+
+### Special-case dispositions
+
+The one-second TTL behavior is **preserved** only at the Response/Fault adapter and **generalized**
+at the shared send boundary so expired ordinary forwarding is never transported. The question-mark
+entity workaround, localhost/admin defaults, product test harness and dead connection configurator
+are **removed** because they compensate for missing validation or expose behavior the product does
+not implement. Time sourcing, host/address parsing, disposal, temporary-entity ownership and topic
+consumer identity are **generalized** to one correct owner each. No old workaround is copied into
+native tests, and no Product API uncertainty remains that requires a PO choice before this bounded
+implementation.

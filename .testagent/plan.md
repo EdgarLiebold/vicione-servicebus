@@ -1792,3 +1792,87 @@ acceptance; the real-AWS External boundary and the 111-row inherited disposition
    complete unfiltered 2043/149 profiles, and the Engineering Release build. Then execute exact
    one-cause mutations in a disposable worktree, freeze separate technical/evidence commits and
    require the same two independent read-only reviews. Do not represent real AWS as locally green.
+
+## ActiveMQ native transport execution plan
+
+Baseline: product commit `9195e5fcde26b5a525d00fe716fcc7c21256f5c1`, tree
+`e3310be174e31fa3a999c8dd4d4bc08e535b0ab7`. The exact 113-row inherited projection is
+`.testagent/activemq-native-obligation-map.tsv`. Research, this plan and that table must be committed,
+hashed and bound by the Lead architecture order before the first product or test edit.
+
+1. Extend the existing typed test configuration with two explicit resources, `ActiveMq` and
+   `Artemis`. ActiveMQ carries host, OpenWire, AMQP and Jolokia ports plus run credentials; Artemis
+   carries host, its multi-protocol port, Jolokia port and run credentials. Add exact fixture
+   environment projections and configuration tests. Missing values fail before discovery. Keep the
+   existing pinned Compose images and stable outage proxy; extend only runner self-tests or endpoint
+   naming where the current contract is incomplete.
+2. Create two source-mirrored xUnit 4/Microsoft Testing Platform v2 owners:
+   `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests` for hermetic UnitArchitecture and
+   `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests` for the real local
+   broker paths. Add the product and test projects to exact Release solution mappings. Shared outage
+   protocol support belongs in `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers`, but
+   ActiveMQ requirements and assertions remain in the ActiveMQ projects.
+3. Normalize host and endpoint construction before provider flows. Remove embedded defaults and URI
+   credentials; freeze settings; parse OpenWire/AMQP failover hosts including IPv6; encode every
+   option exactly; reject unknown, duplicate, conflicting or invalid query values. Route short,
+   full, direct and topology-created addresses through one name-validation/data boundary. Add exact
+   positive, negative, roundtrip and control-injection requirements and one-cause mutations.
+4. Correct expiration and time ownership. The shared send transport discards non-positive normal
+   or generic-forwarding TTL before the transport. Response/Fault remains the sole one-second
+   safeguard. ActiveMQ emits exact positive NMS TTL and zero for no expiry. Delayed Artemis send uses
+   the context `TimeProvider`. Test every branch with frozen time and recording transport/NMS
+   messages, then cross the broker for scheduled delivery without using elapsed silence as an oracle.
+5. Remove the false `ConfigureConnection` surface and shipped ActiveMQ test harness. Preserve and
+   execute `ConfigureSession`. Make connection and session cleanup attempt every resource exactly
+   once and preserve deterministic sole/aggregate failures. Make temporary-entity removal actually
+   retire the registry entry and remain retry-safe after deletion failure. Use controlled fakes for
+   ownership/order and run-scoped broker residue checks for the provider boundary.
+6. Correct topology identity. `ConsumerEntity` equality and hash include topic, queue, selector,
+   consumer name and shared mode consistently; its name identity may not merge distinct topic
+   subscriptions. Caller topic names remain data. Preserve implemented-message topology only where
+   the complete publish-topology traversal actually requires it; do not resurrect the commented
+   duplicate traversal without a failing behavior. Prove Classic/OpenWire topic and virtual-topic
+   flow, and Artemis/AMQP shared durable load balancing.
+7. Implement the 40 UnitArchitecture R0 owners from the frozen table, plus source-derived
+   requirements for: secret-free explicit host configuration; strict host/address grammar; topology
+   name-as-data; exact TTL/no-expiry/expired discard; context time; no false connection API; complete
+   cleanup; temporary registry retirement; complete consumer identity; session-pipe application;
+   exact body access-order semantics; recovery-state causality; and compiled requirement projection.
+   Every Theory row uses fresh subjects and external expected values.
+8. Implement LocalIntegration carriers in coherent broker groups: readiness/admin cleanup/service
+   client; OpenWire compression; send/publish/handler/request-response; redelivery/defer/retry;
+   serialization and raw-message fault envelopes; outbox exact once; job lifecycle and kill switch;
+   exact OTel; topology deployment; cache turnover and outage recovery; temporary replies;
+   broker/Quartz scheduling; shared durable subscription; restart/start-stop; topic and virtual-topic
+   endpoints. Protocol variants are explicit data rows, never hidden loops.
+9. Every asynchronous provider test owns a bounded causal barrier and cleanup in `finally`. There are
+   no `Task.Delay`, sleep, stopwatch success windows, fixed names, global mutable recorders, random
+   scheduling, broker inactivity or absence-until-timeout oracles. Delay/future cases observe the
+   provider's scheduled state plus exact delivery; outage cases require the runner's request/response
+   identity and observed-state acknowledgement.
+10. Add passive JSON requirement projections to both projects and verify them against the compiled
+    xUnit methods. Each selected R0 obligation occurs exactly once in the terminal table; each
+    source-derived requirement variant occurs exactly once in compiled metadata. Run the static
+    assertion, anti-pattern, gap and smell reviews after each group and correct product defects in
+    product code rather than weakening tests.
+11. Execute focused locked Release restore/build and unfiltered project runs after every coherent
+    group, then the complete UnitArchitecture and LocalIntegration profiles and Engineering Release
+    build with zero failures, skips, warnings or errors. Broker-backed runs go only through
+    `run_broker_category.py` with ActiveMQ and Artemis explicitly selected. On this host, retain the
+    established isolated `DOTNET_CLI_HOME`, disabled build servers/shared compilation and approved
+    outside-sandbox execution; a socket denial or sleeping orphaned worker is an environment
+    diagnosis, never permission to edit tests.
+12. For every product correction and high-risk route/cancellation/cleanup/topology boundary, bind an
+    exact one-cause mutation: baseline hash, occurrence/index, replacement or patch, mutant hash,
+    fully expanded command, exit code, causal raw output hash and post-restore hash. Equivalent
+    mutants are named and excluded. Positive evidence binds CTRF, broker wrapper/logs, locked
+    restore/build binlogs and complete profile summaries.
+13. Delete the inherited ActiveMQ test project only after all 113 rows have terminal executing
+    carriers and all complete product paths are green. Delete every resulting empty directory and
+    remove obsolete NUnit/VSTest/Ionic test-only dependencies and verification-model entries. Update
+    solutions, floors, docs, TODO, generated CHANGELIST and the still-disabled workflow command
+    contracts atomically; do not reactivate GitHub Actions in this slice.
+14. Freeze separate technical and direct evidence commits on the product branch and push both. Final
+    acceptance requires two independent strict read-only reviews of the same commit/tree covering
+    every changed product/test line, structure, 113-row closure, source-derived requirements,
+    mutations and Evidence. Team 1 remains review-only and starts only on an explicit frozen scope.
