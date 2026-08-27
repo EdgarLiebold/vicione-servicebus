@@ -112,6 +112,27 @@ public sealed class TransactionalOutboxRequestSagaTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-QUERY", "query-correlation-reuses-the-outbox-transaction")]
+    public async Task QueryCorrelatedSaga_ReusesTheEntityFrameworkOutboxTransaction()
+    {
+        await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
+        Guid sagaId = Guid.NewGuid();
+        string lookupKey = $"request-{sagaId:N}";
+
+        Response<RequestSagaStarted> started = await fixture.Client.GetResponse<RequestSagaStarted>(
+            new StartRequestSaga(sagaId, Fail: false, LookupKey: lookupKey),
+            fixture.CancellationToken);
+        IRequestClient<QueryRequestSaga> queryClient = fixture.Harness.GetRequestClient<QueryRequestSaga>();
+        Response<RequestSagaFound> found = await queryClient.GetResponse<RequestSagaFound>(
+            new QueryRequestSaga(lookupKey),
+            fixture.CancellationToken);
+
+        Assert.Equal(sagaId, started.Message.CorrelationId);
+        Assert.Equal(sagaId, found.Message.CorrelationId);
+        Assert.Equal(lookupKey, found.Message.LookupKey);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-SCHEDULE", "delayed-response-preserves-response-address-and-request-id")]
     public async Task DelayedSagaResponse_PreservesTheRequestIdentityAcrossTheOutboxSchedule()
     {
@@ -151,9 +172,17 @@ public sealed class TransactionalOutboxRequestSagaTests
         Assert.Equal(RequestSagaStateMachine.RunningStateName, state.CurrentState);
     }
 
-    public sealed record StartRequestSaga(Guid CorrelationId, bool Fail, TimeSpan? Delay = null) : CorrelatedBy<Guid>;
+    public sealed record StartRequestSaga(
+        Guid CorrelationId,
+        bool Fail,
+        TimeSpan? Delay = null,
+        string? LookupKey = null) : CorrelatedBy<Guid>;
 
     public sealed record RequestSagaStarted(Guid CorrelationId);
+
+    public sealed record QueryRequestSaga(string LookupKey);
+
+    public sealed record RequestSagaFound(Guid CorrelationId, string LookupKey);
 
     public sealed record ResumeRequestSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
 
@@ -183,6 +212,8 @@ public sealed class TransactionalOutboxRequestSagaTests
         public Uri? ResponseAddress { get; set; }
 
         public Guid? ResumeTokenId { get; set; }
+
+        public string LookupKey { get; set; } = string.Empty;
     }
 
     public sealed class RequestSagaStateMachine : ViciOneServiceBusStateMachine<RequestSagaState>
@@ -193,6 +224,8 @@ public sealed class TransactionalOutboxRequestSagaTests
         {
             InstanceState(state => state.CurrentState);
             Event(() => Started, configuration => configuration.CorrelateById(context => context.Message.CorrelationId));
+            Event(() => Queried, configuration =>
+                configuration.CorrelateBy((instance, context) => instance.LookupKey == context.Message.LookupKey));
             Schedule(
                 () => Resume,
                 state => state.ResumeTokenId,
@@ -206,7 +239,11 @@ public sealed class TransactionalOutboxRequestSagaTests
                         throw new ExpectedSagaFailure();
                     }),
                 When(Started, context => !context.Message.Fail && !context.Message.Delay.HasValue)
-                    .Then(context => attempts.Increment(context.Message.CorrelationId))
+                    .Then(context =>
+                    {
+                        attempts.Increment(context.Message.CorrelationId);
+                        context.Saga.LookupKey = context.Message.LookupKey ?? $"request-{context.Message.CorrelationId:N}";
+                    })
                     .Activity(activity => activity.OfType<ScopeProxyActivity>())
                     .Respond(context => new RequestSagaStarted(context.Saga.CorrelationId))
                     .TransitionTo(Running),
@@ -223,6 +260,10 @@ public sealed class TransactionalOutboxRequestSagaTests
                         context => context.Message.Delay!.Value)
                     .TransitionTo(Delayed));
             During(
+                Running,
+                When(Queried)
+                    .Respond(context => new RequestSagaFound(context.Saga.CorrelationId, context.Saga.LookupKey)));
+            During(
                 Delayed,
                 When(Resume.Received)
                     .Send(
@@ -237,6 +278,8 @@ public sealed class TransactionalOutboxRequestSagaTests
         public State Delayed { get; private set; } = null!;
 
         public Event<StartRequestSaga> Started { get; private set; } = null!;
+
+        public Event<QueryRequestSaga> Queried { get; private set; } = null!;
 
         public Schedule<RequestSagaState, ResumeRequestSaga> Resume { get; private set; } = null!;
     }
@@ -288,6 +331,7 @@ public sealed class TransactionalOutboxRequestSagaTests
             entity.Property(state => state.RequestId);
             entity.Property(state => state.ResponseAddress);
             entity.Property(state => state.ResumeTokenId);
+            entity.Property(state => state.LookupKey).HasMaxLength(128);
         }
     }
 

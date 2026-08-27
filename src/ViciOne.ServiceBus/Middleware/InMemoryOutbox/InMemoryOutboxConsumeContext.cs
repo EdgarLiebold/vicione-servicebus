@@ -48,6 +48,14 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
             return _deferredMethods.Add(method);
         }
 
+        public OutboxCheckpoint CreateCheckpoint()
+        {
+            return new OutboxCheckpoint(
+                this,
+                _deferredMethods.CreateCheckpoint(),
+                _outboxSchedulerContext?.CreateCheckpoint() ?? default);
+        }
+
         public virtual async Task ExecutePendingActions(bool concurrentMessageDelivery)
         {
             _clearToSend.TrySetResult(this);
@@ -82,6 +90,18 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
                     LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
                 }
             }
+        }
+
+        public virtual async Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+        {
+            ArgumentNullException.ThrowIfNull(checkpoint);
+            if (!ReferenceEquals(checkpoint.Owner, this))
+                throw new ArgumentException("The checkpoint belongs to a different outbox context.", nameof(checkpoint));
+
+            await _deferredMethods.DiscardSince(checkpoint.DeferredMethodCount).ConfigureAwait(false);
+
+            if (_outboxSchedulerContext != null)
+                await _outboxSchedulerContext.DiscardSince(checkpoint.SchedulerCheckpoint).ConfigureAwait(false);
         }
     }
 

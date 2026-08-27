@@ -32,6 +32,42 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
 
         public MessageSchedulerFactory SchedulerFactory { get; }
 
+        internal readonly record struct Checkpoint(int ScheduledMessageCount, int CancelMessageCount);
+
+        internal Checkpoint CreateCheckpoint()
+        {
+            lock (_listLock)
+                return new Checkpoint(_scheduledMessages.Count, _cancelMessages.CreateCheckpoint());
+        }
+
+        internal async Task DiscardSince(Checkpoint checkpoint)
+        {
+            ScheduledMessage[] scheduledMessages;
+            lock (_listLock)
+            {
+                if (checkpoint.ScheduledMessageCount < 0 || checkpoint.ScheduledMessageCount > _scheduledMessages.Count)
+                    throw new ArgumentOutOfRangeException(nameof(checkpoint));
+
+                int count = _scheduledMessages.Count - checkpoint.ScheduledMessageCount;
+                scheduledMessages = count == 0
+                    ? []
+                    : _scheduledMessages.GetRange(checkpoint.ScheduledMessageCount, count).ToArray();
+                if (count > 0)
+                    _scheduledMessages.RemoveRange(checkpoint.ScheduledMessageCount, count);
+            }
+
+            await _cancelMessages.DiscardSince(checkpoint.CancelMessageCount).ConfigureAwait(false);
+
+            if (scheduledMessages.Length == 0)
+                return;
+
+            var tasks = new PendingTaskCollection(scheduledMessages.Length);
+            foreach (var scheduledMessage in scheduledMessages)
+                tasks.Add(_scheduler.Value.CancelScheduledSend(scheduledMessage.Destination, scheduledMessage.TokenId));
+
+            await tasks.Completed().ConfigureAwait(false);
+        }
+
         public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, CancellationToken cancellationToken)
             where T : class
         {

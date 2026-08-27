@@ -37,11 +37,15 @@ public sealed class QuartzSagaSchedulingIntegrationTests
                     return Task.CompletedTask;
                 }));
             });
+        var firstSchedule = new ConsumeCompletionObserver<ScheduleMessage>(_ => true);
         var scheduled = new ConsumeCompletionObserver<ScheduleMessage>(_ => true, 2);
+        var firstCancellation = new ConsumeCompletionObserver<CancelScheduledMessage>(_ => true);
         var canceled = new ConsumeCompletionObserver<CancelScheduledMessage>(_ => true, 2);
         var starts = new ConsumeCompletionObserver<StartReschedule>(message => message.CorrelationId == correlationId);
         var refreshes = new ConsumeCompletionObserver<RefreshSchedule>(message => message.CorrelationId == correlationId);
+        using ConnectHandle firstScheduleObserver = fixture.Bus.ConnectConsumeObserver(firstSchedule);
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduled);
+        using ConnectHandle firstCancellationObserver = fixture.Bus.ConnectConsumeObserver(firstCancellation);
         using ConnectHandle canceledObserver = fixture.Bus.ConnectConsumeObserver(canceled);
         using ConnectHandle startObserver = fixture.Bus.ConnectConsumeObserver(starts);
         using ConnectHandle refreshObserver = fixture.Bus.ConnectConsumeObserver(refreshes);
@@ -50,6 +54,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 
         await input.Send(new StartReschedule(correlationId), TestContext.Current.CancellationToken);
         await starts.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+        await firstSchedule.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         Guid firstToken = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
         TriggerKey firstTrigger = new(firstToken.ToString("N"));
         Assert.True(await fixture.Scheduler.CheckExists(firstTrigger, TestContext.Current.CancellationToken));
@@ -57,6 +62,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         await input.Send(new RefreshSchedule(correlationId), TestContext.Current.CancellationToken);
         await refreshes.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+        await firstCancellation.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         Guid replacementToken = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
         TriggerKey replacementTrigger = new(replacementToken.ToString("N"));
 

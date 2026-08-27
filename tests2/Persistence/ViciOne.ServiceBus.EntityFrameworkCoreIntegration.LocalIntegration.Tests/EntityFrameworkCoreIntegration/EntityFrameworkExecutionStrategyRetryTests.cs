@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
@@ -15,6 +16,27 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "retry-discards-rolled-back-tracked-state")]
     public async Task TransientRetry_DiscardsRolledBackTrackedStateBeforeReexecutingTheConsumer()
     {
+        RetryScenarioResult result = await RunRetryScenarioAsync();
+
+        Assert.Equal(result.MessageId, result.InboxMessageId);
+        Assert.Equal(2, result.ConsumerAttempts);
+        Assert.True(result.StaleTrackedStateInjected);
+        Assert.Equal(1, result.ReceiveCount);
+        Assert.NotNull(result.Consumed);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-INBOX-CANCELLATION", "every-inbox-write-receives-the-consume-token")]
+    public async Task InboxPersistence_PropagatesTheConsumeTokenToEverySave()
+    {
+        RetryScenarioResult result = await RunRetryScenarioAsync();
+
+        Assert.NotEmpty(result.InboxSaveTokens);
+        Assert.All(result.InboxSaveTokens, token => Assert.Equal(result.ConsumerCancellationToken, token));
+    }
+
+    private static async Task<RetryScenarioResult> RunRetryScenarioAsync()
+    {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -23,10 +45,13 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
             "execution-strategy-retry",
             cancellationToken);
         var probe = new RetryProbe();
+        var saveTokenProbe = new InboxSaveTokenProbe();
         var services = new ServiceCollection();
         services.AddSingleton(probe);
-        services.AddDbContext<RetryDbContext>(builder => builder
-            .UseNpgsql(database.ConnectionString, options => options.EnableRetryOnFailure()));
+        services.AddSingleton(saveTokenProbe);
+        services.AddDbContext<RetryDbContext>((provider, builder) => builder
+            .UseNpgsql(database.ConnectionString, options => options.EnableRetryOnFailure())
+            .AddInterceptors(provider.GetRequiredService<InboxSaveTokenProbe>()));
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(operationTimeout, operationTimeout);
@@ -61,18 +86,22 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
             await harness.Bus.Publish(new RetryCommand(messageId), context => context.MessageId = messageId, cancellationToken);
             RetryEffect effect = await probe.EffectDelivered.WaitAsync(operationTimeout, cancellationToken);
 
-            Assert.Equal(messageId, effect.SourceMessageId);
-            Assert.Equal(2, probe.ConsumerAttempts);
-            Assert.True(probe.StaleTrackedStateInjected);
-
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             var verification = scope.ServiceProvider.GetRequiredService<RetryDbContext>();
             InboxState inbox = Assert.Single(await verification.Set<InboxState>()
                 .AsNoTracking()
                 .ToListAsync(cancellationToken));
-            Assert.Equal(messageId, inbox.MessageId);
-            Assert.Equal(1, inbox.ReceiveCount);
-            Assert.NotNull(inbox.Consumed);
+
+            Assert.Equal(messageId, effect.SourceMessageId);
+            return new RetryScenarioResult(
+                messageId,
+                inbox.MessageId,
+                inbox.ReceiveCount,
+                inbox.Consumed,
+                probe.ConsumerAttempts,
+                probe.StaleTrackedStateInjected,
+                probe.ConsumerCancellationToken,
+                saveTokenProbe.Snapshot());
         }
         finally
         {
@@ -87,7 +116,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
     {
         public Task Consume(ConsumeContext<RetryCommand> context)
         {
-            if (probe.RecordConsumerAttempt() == 1)
+            if (probe.RecordConsumerAttempt(context.CancellationToken) == 1)
             {
                 InboxState inboxState = dbContext.ChangeTracker.Entries<InboxState>()
                     .Select(entry => entry.Entity)
@@ -139,12 +168,18 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
         private readonly TaskCompletionSource<RetryEffect> _effectDelivered = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private int _consumerAttempts;
         private int _staleTrackedStateInjected;
+        private CancellationToken _consumerCancellationToken;
 
         public int ConsumerAttempts => Volatile.Read(ref _consumerAttempts);
+        public CancellationToken ConsumerCancellationToken => _consumerCancellationToken;
         public Task<RetryEffect> EffectDelivered => _effectDelivered.Task;
         public bool StaleTrackedStateInjected => Volatile.Read(ref _staleTrackedStateInjected) == 1;
 
-        public int RecordConsumerAttempt() => Interlocked.Increment(ref _consumerAttempts);
+        public int RecordConsumerAttempt(CancellationToken cancellationToken)
+        {
+            _consumerCancellationToken = cancellationToken;
+            return Interlocked.Increment(ref _consumerAttempts);
+        }
 
         public void RecordEffect(RetryEffect effect)
         {
@@ -154,4 +189,41 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
 
         public void RecordStaleTrackedStateInjection() => Volatile.Write(ref _staleTrackedStateInjected, 1);
     }
+
+    public sealed class InboxSaveTokenProbe : SaveChangesInterceptor
+    {
+        private readonly Lock _lock = new();
+        private readonly List<CancellationToken> _tokens = [];
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
+            CancellationToken cancellationToken = default)
+        {
+            if (eventData.Context?.ChangeTracker.Entries<InboxState>()
+                    .Any(entry => entry.State is EntityState.Added or EntityState.Modified) == true)
+            {
+                lock (_lock)
+                    _tokens.Add(cancellationToken);
+            }
+
+            return ValueTask.FromResult(result);
+        }
+
+        public CancellationToken[] Snapshot()
+        {
+            lock (_lock)
+                return [.. _tokens];
+        }
+    }
+
+    private sealed record RetryScenarioResult(
+        Guid MessageId,
+        Guid InboxMessageId,
+        int ReceiveCount,
+        DateTime? Consumed,
+        int ConsumerAttempts,
+        bool StaleTrackedStateInjected,
+        CancellationToken ConsumerCancellationToken,
+        IReadOnlyList<CancellationToken> InboxSaveTokens);
 }

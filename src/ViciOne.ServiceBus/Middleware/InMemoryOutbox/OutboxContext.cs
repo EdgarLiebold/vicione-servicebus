@@ -22,6 +22,12 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
         Task Add(Func<Task> method);
 
         /// <summary>
+        /// Captures the current pending-operation boundary so an owning transactional attempt can
+        /// discard only the messages and schedules added by that attempt if it is rolled back.
+        /// </summary>
+        OutboxCheckpoint CreateCheckpoint();
+
+        /// <summary>
         /// Execute all the pending outbox operations (success case)
         /// </summary>
         /// <param name="concurrentMessageDelivery"></param>
@@ -33,5 +39,11 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
         /// </summary>
         /// <returns></returns>
         Task DiscardPendingActions();
+
+        /// <summary>
+        /// Discards operations added after <paramref name="checkpoint" /> while preserving pending
+        /// work owned by an earlier successful stage of the same consume pipeline.
+        /// </summary>
+        Task DiscardPendingActions(OutboxCheckpoint checkpoint);
     }
 }

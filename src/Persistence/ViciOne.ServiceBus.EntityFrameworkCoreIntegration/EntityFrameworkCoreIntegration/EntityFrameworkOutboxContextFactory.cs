@@ -71,8 +71,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                             ReceiveCount = 1
                         };
 
-                        await _dbContext.AddAsync(inboxState).ConfigureAwait(false);
-                        await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+                        await _dbContext.AddAsync(inboxState, context.CancellationToken).ConfigureAwait(false);
+                        await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
 
                         continueProcessing = true;
                     }
@@ -83,7 +83,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                             inboxState.ReceiveCount++;
 
                         _dbContext.Update(inboxState);
-                        await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+                        await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
 
                         var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
                             _timeProvider);
@@ -92,7 +92,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
                         try
                         {
-                            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+                            await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
                         }
                         catch (Exception exception)
                         {
@@ -128,12 +128,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                         //
                     }
 
-                    // An execution strategy may invoke this transaction again. Entity state from
-                    // the rolled-back unit of work must not survive into that retry; otherwise a
-                    // tracked InboxState can overwrite a newer receive count after a concurrent
-                    // delivery committed while this transaction was waiting for the row lock.
-                    _dbContext.ChangeTracker.Clear();
-
                     throw;
                 }
             }
@@ -142,7 +136,12 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             while (continueProcessing)
             {
                 var executionStrategy = _dbContext.Database.CreateExecutionStrategy();
-                continueProcessing = await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false);
+                continueProcessing = await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                        _dbContext,
+                        executionStrategy,
+                        Execute,
+                        context.CancellationToken)
+                    .ConfigureAwait(false);
                 updateDeliveryCount = false;
             }
         }

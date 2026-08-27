@@ -5,6 +5,7 @@ using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -13,6 +14,79 @@ using Xunit;
 
 public sealed class PostgreSqlSagaConcurrencyTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-EXECUTION-STRATEGY", "retry-reloads-state-after-a-rolled-back-attempt")]
+    public async Task TransientRetry_ReloadsTheSagaBeforeApplyingTheOperationAgain()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
+            "saga-execution-strategy-retry",
+            cancellationToken);
+        await using (var setup = CreateContext(database.ConnectionString))
+            await setup.Database.EnsureCreatedAsync(cancellationToken);
+
+        var handler = new HandlerProbe();
+        var transientFailure = new TransientSagaSaveProbe();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(handler)
+            .AddSingleton(transientFailure)
+            .AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddSagaStateMachine<SerializedStateMachine, SerializedState, SerializedStateDefinition>()
+                    .EntityFrameworkRepository(repository =>
+                    {
+                        repository.UsePostgres();
+                        repository.AddDbContext<DbContext, SerializedSagaDbContext>((services, builder) =>
+                            builder.UseNpgsql(database.ConnectionString, options => options.EnableRetryOnFailure())
+                                .AddInterceptors(services.GetRequiredService<TransientSagaSaveProbe>()));
+                    });
+            })
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            Guid sagaId = Guid.NewGuid();
+            ISendEndpoint endpoint = await harness.GetSagaEndpoint<SerializedState>();
+            await endpoint.Send(new BeginSerializedSaga(sagaId), cancellationToken);
+            await harness.Published
+                .SelectAsync<SerializedSagaStarted>(
+                    observation => observation.Context.Message.CorrelationId == sagaId,
+                    cancellationToken)
+                .First();
+            handler.Release();
+            transientFailure.StartObserving();
+
+            await endpoint.Send(new IncrementSerializedSaga(sagaId), cancellationToken);
+            IPublishedMessage<SerializedSagaIncremented> incremented = await harness.Published
+                .SelectAsync<SerializedSagaIncremented>(
+                    observation => observation.Context.Message.CorrelationId == sagaId,
+                    cancellationToken)
+                .First();
+
+            await using var verification = CreateContext(database.ConnectionString);
+            SerializedState persisted = await verification.States.AsNoTracking()
+                .SingleAsync(state => state.CorrelationId == sagaId, cancellationToken);
+            using var completed = new CancellationTokenSource();
+            completed.Cancel();
+
+            Assert.Equal(1, incremented.Context.Message.Counter);
+            Assert.Equal(1, persisted.Counter);
+            Assert.Equal(2, handler.InvocationCount);
+            Assert.Equal(2, transientFailure.SaveAttempts);
+            Assert.Single(harness.Published.Select<SerializedSagaIncremented>(completed.Token));
+        }
+        finally
+        {
+            handler.Release();
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "same-correlation-is-serialized-by-the-database-row-lock")]
     public async Task SameCorrelation_EntersOneHandlerAtATimeAndPersistsBothUpdates()
@@ -221,6 +295,38 @@ public sealed class PostgreSqlSagaConcurrencyTests
                 int attempt = Interlocked.Increment(ref _attemptCount);
                 if (!_attempts.Writer.TryWrite(attempt))
                     throw new InvalidOperationException("The row-lock observation channel rejected an attempt.");
+            }
+
+            return ValueTask.FromResult(result);
+        }
+    }
+
+    public sealed class TransientSagaSaveProbe : SaveChangesInterceptor
+    {
+        private int _isObserving;
+        private int _saveAttempts;
+
+        public int SaveAttempts => Volatile.Read(ref _saveAttempts);
+
+        public void StartObserving() => Volatile.Write(ref _isObserving, 1);
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
+            CancellationToken cancellationToken = default)
+        {
+            if (Volatile.Read(ref _isObserving) == 0
+                || eventData.Context?.ChangeTracker.Entries<SerializedState>()
+                    .Any(entry => entry.State == EntityState.Modified) != true)
+                return ValueTask.FromResult(result);
+
+            if (Interlocked.Increment(ref _saveAttempts) == 1)
+            {
+                throw new PostgresException(
+                    "Test-owned serialization failure after the saga handler mutated tracked state.",
+                    "ERROR",
+                    "ERROR",
+                    PostgresErrorCodes.SerializationFailure);
             }
 
             return ValueTask.FromResult(result);

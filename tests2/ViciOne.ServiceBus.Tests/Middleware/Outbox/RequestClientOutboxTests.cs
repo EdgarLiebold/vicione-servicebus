@@ -150,9 +150,15 @@ public sealed class RequestClientOutboxTests
             return Task.CompletedTask;
         }
 
+        public OutboxCheckpoint CreateCheckpoint() =>
+            throw new NotSupportedException("This endpoint-bypass probe never checkpoints its recording outbox.");
+
         public Task ExecutePendingActions(bool concurrentMessageDelivery) => Task.CompletedTask;
 
         public Task DiscardPendingActions() => Task.CompletedTask;
+
+        public Task DiscardPendingActions(OutboxCheckpoint checkpoint) =>
+            throw new NotSupportedException("This endpoint-bypass probe never rolls back its recording outbox.");
     }
 
     private sealed class OuterConsumer(

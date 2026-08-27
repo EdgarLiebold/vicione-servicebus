@@ -12,5 +12,6 @@
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
+    <Project Path="src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj" />
   </Folder>
 </Solution>

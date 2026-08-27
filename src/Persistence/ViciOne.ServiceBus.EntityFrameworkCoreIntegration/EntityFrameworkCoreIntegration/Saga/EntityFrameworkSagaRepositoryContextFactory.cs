@@ -72,7 +72,11 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 else
                 {
                     var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                    await executionStrategy.ExecuteAsync(() => WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback))
+                    await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                            dbContext,
+                            executionStrategy,
+                            context,
+                            () => WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback))
                         .ConfigureAwait(false);
                 }
             }
@@ -97,6 +101,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                     await next.Send(queryContext).ConfigureAwait(false);
                 }
 
+                var hasOuterTransaction = context.TryGetPayload(out DbTransactionContext _);
+
                 async Task SendQueryAsync()
                 {
                     SagaLockContext<TSaga> lockContext =
@@ -104,7 +110,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 
                     using var repositoryContext = new DbContextSagaRepositoryContext<TSaga, T>(dbContext, context, _consumeContextFactory, _lockStrategy);
 
-                    if (context.TryGetPayload(out DbTransactionContext _))
+                    if (hasOuterTransaction)
                         await SendQueryAsyncCallback(lockContext, repositoryContext).ConfigureAwait(false);
                     else
                     {
@@ -114,8 +120,13 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                     }
                 }
 
-                var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                await executionStrategy.ExecuteAsync(() => SendQueryAsync()).ConfigureAwait(false);
+                if (hasOuterTransaction)
+                    await SendQueryAsync().ConfigureAwait(false);
+                else
+                {
+                    var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+                    await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, executionStrategy, context, SendQueryAsync).ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -140,7 +151,12 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 }
 
                 var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-                return await executionStrategy.ExecuteAsync(() => ExecuteAsync()).ConfigureAwait(false);
+                return await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                        dbContext,
+                        executionStrategy,
+                        ExecuteAsync,
+                        cancellationToken)
+                    .ConfigureAwait(false);
             }
             finally
             {

@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1875 predeclared unfiltered cases;
-- `LocalIntegration`: 67 unfiltered cases.
+- `UnitArchitecture`: 1881 predeclared unfiltered cases;
+- `LocalIntegration`: 70 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1597,10 +1597,12 @@ test structure.
    corrections and high-risk transaction, locking, deduplication, rollback, cancellation and
    lifecycle boundaries. Bind exact mutation bytes, commands, results and restore hashes.
 10. Delete an inherited EF test file only when every behavior it carried has an equal or stronger
-    native owner. Delete resulting empty directories. Final acceptance requires 90/90 terminal
-    dispositions, locked focused Release builds/tests, unfiltered UnitArchitecture, real
-    LocalIntegration, visible External state, Engineering with zero warnings/errors and two
-    independent read-only PASS reviews over separate technical and evidence commits.
+    native owner. Delete resulting empty directories. Final acceptance requires both the 90
+    obligation-level contracts and all 156 inherited execution variants to have an explicit,
+    mechanically closed disposition. `EXTERNAL_PENDING` is visible work, never terminal green.
+    Acceptance also requires locked focused Release builds/tests, unfiltered UnitArchitecture, real
+    LocalIntegration, the applicable real External runs, Engineering with zero warnings/errors and
+    two independent read-only PASS reviews over separate technical and evidence commits.
 
 Current execution state: the retained provider/configuration/model phase, the saga-concurrency
 tranche and the inbox/bus-outbox delivery tranche through the inherited reliable-messaging boundary
@@ -1614,7 +1616,13 @@ fault recovery, request-saga fault/trace/scope/delay semantics, EF-to-Quartz com
 consumer and saga rollback/retry, a real send-pipeline delivery failure and transport-property
 round-trip. The inherited product-only `VSB-Fail-Delivery` test switch is removed; delivery failure
 is injected at the normal send-observer boundary. The accepted working floors for this still-active
-phase are 49 focused EF UnitArchitecture cases, 55 EF LocalIntegration cases, 3 focused Core
-notification cases, 1,875 repository UnitArchitecture cases and 66 repository LocalIntegration
-cases, all without skip. All 90 inherited EF obligations now have a terminal, executing native
-owner; the inherited EF test project and its separate verification-model category are retired.
+phase are 52 focused EF UnitArchitecture cases, 59 EF LocalIntegration cases, 6 focused Core
+outbox-checkpoint and notification cases, 1,881 repository UnitArchitecture cases and 70 repository LocalIntegration
+cases, all without skip. The 90 inherited EF obligation contracts have native semantic owners, but
+their frozen R0 set expands to 156 execution variants: 48 unparameterized identities, 39 deliberately
+provider-neutral identities, 29 real PostgreSQL identities and 40 SQL Server or SQL Server
+resiliency identities. The first 116 are executing or provider-neutrally consolidated. The 40 SQL
+Server identities remain explicitly `EXTERNAL_PENDING` until the SQL Server and Azure SQL external
+cohort runs against real resources; they are not counted green. The inherited EF test project and
+its separate verification-model category are retired because its useful behavior is either owned by
+the native suite or carried visibly by that external work item, never by a hidden legacy runner.

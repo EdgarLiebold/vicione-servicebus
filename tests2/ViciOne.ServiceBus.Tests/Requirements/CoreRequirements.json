@@ -2612,5 +2612,26 @@
       "testMethod" : "ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignal",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
       "variantKey" : "second-waiter-fails-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CheckpointFromAnotherOutbox_IsRejectedWithoutDiscardingItsActions",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "foreign-checkpoint-is-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedAttempt_DiscardsOnlyActionsAddedAfterItsCheckpoint",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "discard-only-failed-attempt-tail"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedAttempt_CancelsOnlySchedulesCreatedAfterItsCheckpoint",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "cancel-only-failed-attempt-schedules"
    }
 ]

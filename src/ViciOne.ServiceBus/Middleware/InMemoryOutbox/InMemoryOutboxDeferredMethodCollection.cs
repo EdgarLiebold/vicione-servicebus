@@ -35,6 +35,12 @@ public class InMemoryOutboxDeferredMethodCollection
         }
     }
 
+    internal int CreateCheckpoint()
+    {
+        lock (_pendingMethods)
+            return _pendingMethods.Count;
+    }
+
     public async Task Execute(bool concurrent)
     {
         InMemoryOutboxDeferredMethod[] pendingActions;
@@ -82,5 +88,27 @@ public class InMemoryOutboxDeferredMethodCollection
 
         foreach (var method in pendingMethods)
             method.Dispose();
+    }
+
+    internal Task DiscardSince(int checkpoint)
+    {
+        InMemoryOutboxDeferredMethod[] pendingMethods;
+        lock (_pendingMethods)
+        {
+            if (checkpoint < 0 || checkpoint > _pendingMethods.Count)
+                throw new ArgumentOutOfRangeException(nameof(checkpoint));
+
+            int count = _pendingMethods.Count - checkpoint;
+            if (count == 0)
+                return Task.CompletedTask;
+
+            pendingMethods = _pendingMethods.GetRange(checkpoint, count).ToArray();
+            _pendingMethods.RemoveRange(checkpoint, count);
+        }
+
+        foreach (var method in pendingMethods)
+            method.Dispose();
+
+        return Task.CompletedTask;
     }
 }

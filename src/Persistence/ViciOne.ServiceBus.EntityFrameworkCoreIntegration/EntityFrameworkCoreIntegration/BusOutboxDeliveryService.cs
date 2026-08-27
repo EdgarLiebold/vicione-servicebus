@@ -173,7 +173,12 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     // Provider-owned execution strategies are the only authoritative source for transient-failure
                     // classification. Always execute through the public strategy contract; inspecting provider error
                     // message text or recognizing only EF's built-in base class would make custom strategies unsafe.
-                    var executeResult = await executionStrategy.ExecuteAsync(() => Execute()).ConfigureAwait(false);
+                    var executeResult = await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                            dbContext,
+                            executionStrategy,
+                            Execute,
+                            cancellationToken)
+                        .ConfigureAwait(false);
 
                     // executeResult < 0: no outbox found (nothing to do)
                     // executeResult == 0: pending outbox locked but no messages delivered (send fault or poison

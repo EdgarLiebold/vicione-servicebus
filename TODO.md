@@ -254,6 +254,30 @@ Acceptance requires unfiltered native xUnit/MTP execution, zero skips, isolated 
 secret-free durable evidence, exact resource cleanup and a documented disposition of every semantic
 difference from the local PostgreSQL/Azurite results.
 
+## Complete Entity Framework SQL Server and Azure SQL external variant validation
+
+The inherited Entity Framework R0 set contains 90 obligation contracts but 156 execution variants.
+Current native coverage executes or provider-neutrally consolidates 116 of those identities: 48
+unparameterized, 39 provider-neutral and 29 against real PostgreSQL. The remaining 40 identities are
+provider-specific: 29 SQL Server cases and 11 SQL Server resiliency cases. They remain
+`EXTERNAL_PENDING`; neither their former execution nor a local PostgreSQL result is evidence that
+SQL Server or Azure SQL behaved correctly.
+
+Build one source-mirrored xUnit 4 / Microsoft Testing Platform 2 External cohort for these 40
+identities. Reuse one behavioral contract where SQL Server and Azure SQL are semantically identical,
+but execute it against both short-lived real SQL Server and Azure SQL resources wherever deployment
+or retry behavior can differ. The profile must fail before discovery when its selected provider is
+not completely configured; it must never skip, inventory, or silently downgrade a missing resource.
+Resource coordinates come from the one typed native-test configuration pipeline. Credentials stay
+in the shared User Secrets store or the provider credential chain and never enter source, logs or
+durable evidence.
+
+Acceptance requires an exact 156-row variant-disposition matrix derived from the frozen R0 set,
+locked Release restore/build, unfiltered External execution with zero failures and skips, run-scoped
+database names, cleanup evidence, one-cause retry/transaction/provider mutations and independent
+product and test/evidence PASS reviews. Only then may the 40 rows move from `EXTERNAL_PENDING` to an
+executing terminal disposition.
+
 ## Finalize solution composition after native-test promotion
 
 `ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited
