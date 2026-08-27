@@ -30,7 +30,7 @@
       "resultsDirectory": "positive/unit"
     },
     "localIntegration": {
-      "command": "VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --command -- dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-build --no-restore --results-directory artifacts/azure-table-evidence/local-final --minimum-expected-tests 87 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "command": "VICIONE_TESTS__Profile=LocalIntegration python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --evidence-dir artifacts/azure-table-evidence/local-fixture --command -- dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-build --no-restore --results-directory artifacts/azure-table-evidence/local-final --minimum-expected-tests 87 --max-parallel-test-modules 1 --report-xunit-ctrf",
       "exitCode": 0,
       "tests": 87,
       "passed": 87,
