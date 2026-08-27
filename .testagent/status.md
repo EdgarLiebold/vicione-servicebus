@@ -858,3 +858,40 @@ future cohorts as complete.
   `VICIONE_TESTS__Profile=LocalIntegration`; the CI process-tree tests must execute outside the
   filesystem sandbox because they deliberately invoke `ps`; and builds sharing one `artifacts/sdk`
   tree run serially to avoid artificial output contention.
+
+## Lead correction: EF retry failure identity and composed scheduler rollback
+
+- This section supersedes the retry-failure and scheduler-rollback conclusions in the immediately
+  preceding EF closure section. The two independent reviews of that subject found that a real EF
+  execution strategy could wrap the authoritative operation failure after the retry guard blocked
+  re-entry, and that the composed outer checkpoint-to-scheduler failure path was not yet protected
+  by one executable owner.
+- The final technical subject is commit `36fd3460421b45e475cd190873667afca5697a29`, tree
+  `50205a748f4ea8a1f971c8c163129b87ff7f45a5`. Its complete raw evidence is bound by direct child
+  commit `119a427938012ef8d5b20de989a0fb9ab2fe72a1`, tree
+  `ec3aef62e61a49e1dc9fb20c828f177e4bad7f60`, under
+  `ENTITY-FRAMEWORK-CORE-CORRECTION-03/`.
+- Once outbox rollback fails, the strategy delegate receives a private non-transient stop signal.
+  Outside the provider strategy, the stored exception-dispatch information rethrows the exact
+  original operation failure even if the provider wraps the stop signal in
+  `RetryLimitExceededException` or consumes it and returns. No second business attempt can run.
+- The integrated owner uses the real `InMemoryOutboxConsumeContext`, outer `OutboxCheckpoint`,
+  scheduler context and failed `CancelScheduledSend` path. It proves one business attempt, blocked
+  provider re-entry, exact top-level exception identity, retained recoverable scheduled work and a
+  successful final cleanup. The requested-cancellation case independently preserves the original
+  `OperationCanceledException` instance and caller token across a wrapping strategy.
+- The locked Engineering restore and complete Engineering Release build pass with zero warnings and
+  zero errors. UnitArchitecture passes 1,886/1,886; focused EF UnitArchitecture passes 55/55;
+  LocalIntegration passes 70/70 against fresh PostgreSQL and Azurite; focused EF LocalIntegration
+  passes 59/59 against fresh PostgreSQL. Every run has zero failure and zero skip.
+- M12 removes only the post-strategy projection of the original failure. M13 swallows only the
+  scheduler-cancellation failure at the outer checkpoint boundary. Both mutants build with zero
+  warning and error, fail the exact integrated owner with exit code 2 for their distinct causal
+  reason, and restore the technical source hashes exactly. The evidence binds exact patches,
+  mutant hashes, commands, CTRF results, binary logs, raw positive logs and restore hashes.
+- Two operator errors were fail-closed and are retained as diagnostics: a direct LocalIntegration
+  invocation without the fixture runner was rejected for missing run-scoped credentials, and a
+  fixture-runner invocation without `VICIONE_TESTS__Profile=LocalIntegration` was rejected by the
+  central profile guard. Neither result is counted as product evidence.
+- Independent product and test/evidence re-reviews of this exact correction remain required before
+  the active product worktree may advance.
