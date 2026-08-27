@@ -20,6 +20,10 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
             ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
             ISagaKeyFormatter<TSaga> keyFormatter)
         {
+            ArgumentNullException.ThrowIfNull(cloudTableProvider);
+            ArgumentNullException.ThrowIfNull(factory);
+            ArgumentNullException.ThrowIfNull(keyFormatter);
+
             _cloudTableProvider = cloudTableProvider;
             _factory = factory;
             _keyFormatter = keyFormatter;
@@ -35,22 +39,28 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
         public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(asyncMethod);
+
             var database = _cloudTableProvider.GetCloudTable();
 
             var databaseContext = new AzureTableDatabaseContext<TSaga>(database, _keyFormatter);
-            var repositoryContext = new CosmosTableSagaRepositoryContext<TSaga>(databaseContext, cancellationToken);
+            var repositoryContext = new AzureTableLoadSagaRepositoryContext<TSaga>(databaseContext, cancellationToken);
 
             return asyncMethod(repositoryContext);
         }
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             context.Add("persistence", "azuretable");
         }
 
         public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
             where T : class
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(next);
+
             var database = _cloudTableProvider.GetCloudTable();
 
             var databaseContext = new AzureTableDatabaseContext<TSaga>(database, _keyFormatter);

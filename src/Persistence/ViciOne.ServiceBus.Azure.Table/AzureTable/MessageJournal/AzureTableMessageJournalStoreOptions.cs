@@ -2,8 +2,6 @@
 namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 
 using System;
-using System.Linq;
-using System.Text;
 using ViciOne.ServiceBus.MessageJournal;
 
 /// <summary>
@@ -19,15 +17,8 @@ public sealed class AzureTableMessageJournalStoreOptions
         string partitionKey,
         MessageJournalStoreLimits limits)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(partitionKey);
         ArgumentNullException.ThrowIfNull(limits);
-        if (Encoding.Unicode.GetByteCount(partitionKey) + sizeof(int) > 1024
-            || partitionKey.Any(IsDisallowedKeyCharacter))
-        {
-            throw new ArgumentException(
-                "The Azure Table partition key must fit the 1-KiB storage boundary and contain no '/', '\\', '#', '?', or control characters.",
-                nameof(partitionKey));
-        }
+        AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey));
 
         if (limits.MaximumEntries > MaximumBatchBoundEntries)
         {
@@ -52,9 +43,4 @@ public sealed class AzureTableMessageJournalStoreOptions
     public MessageJournalStoreLimits Limits { get; }
 
     public string PartitionKey { get; }
-
-    private static bool IsDisallowedKeyCharacter(char value) =>
-        value is '/' or '\\' or '#' or '?'
-        || value is >= '\u0000' and <= '\u001f'
-        || value is >= '\u007f' and <= '\u009f';
 }

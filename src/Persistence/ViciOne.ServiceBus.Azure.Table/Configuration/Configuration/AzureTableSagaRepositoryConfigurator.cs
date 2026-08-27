@@ -25,6 +25,7 @@ namespace ViciOne.ServiceBus.Configuration
         /// <param name="connectionFactory"></param>
         public void ConnectionFactory(Func<TableClient> connectionFactory)
         {
+            ArgumentNullException.ThrowIfNull(connectionFactory);
             _connectionFactory = provider => connectionFactory();
         }
 
@@ -34,6 +35,7 @@ namespace ViciOne.ServiceBus.Configuration
         /// <param name="connectionFactory"></param>
         public void ConnectionFactory(Func<IServiceProvider, TableClient> connectionFactory)
         {
+            ArgumentNullException.ThrowIfNull(connectionFactory);
             _connectionFactory = connectionFactory;
         }
 
@@ -43,6 +45,7 @@ namespace ViciOne.ServiceBus.Configuration
         /// <param name="formatterFactory"></param>
         public void KeyFormatter(Func<ISagaKeyFormatter<TSaga>> formatterFactory)
         {
+            ArgumentNullException.ThrowIfNull(formatterFactory);
             _formatterFactory = provider => formatterFactory();
         }
 
@@ -54,6 +57,8 @@ namespace ViciOne.ServiceBus.Configuration
 
         public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             configurator.TryAddSingleton<ICloudTableProvider<TSaga>>(provider => new ConstCloudTableProvider<TSaga>(_connectionFactory(provider)));
             configurator.TryAddSingleton(_formatterFactory);
             configurator.RegisterLoadSagaRepository<TSaga, AzureTableSagaRepositoryContextFactory<TSaga>>();

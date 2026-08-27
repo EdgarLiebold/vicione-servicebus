@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2340 |
+| Added | 2334 |
 | Modified | 4217 |
 | Deleted | 1431 |
 | Renamed | 2 |
@@ -811,6 +811,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/LEDGER_DRAFT.jsonl` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/READ_MANIFEST.tsv` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-TF/RECONCILIATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AZURE-TABLE/R0_TERMINAL_DISPOSITIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C10-FUTURE-LOCATION/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C11-TASK-EXECUTOR/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C12-TASK-UTIL/MUTATION_AND_ACCEPTANCE_EVIDENCE.md` | Added |  |
@@ -1858,6 +1859,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj.DotSettings` | Modified | `src/Persistence/MassTransit.Azure.Storage/MassTransit.Azure.Storage.csproj.DotSettings` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Storage/packages.lock.json` | Added |  |
+| `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/AzureTableKeyValidator.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/DatabaseContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/ICloudTableProvider.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/ICloudTableProvider.cs` |
 | `src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/IEntityConverter.cs` | Modified | `src/Persistence/MassTransit.Azure.Table/AzureTable/IEntityConverter.cs` |
@@ -6850,24 +6852,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
 | `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTableInMemoryTestFixture.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Configuration.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/FixtureSetUp.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Future_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/JobConsumer_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/Container_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/LocatingAnExistingSaga.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/Messages.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/ReadOnly_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/SimpleSaga.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/DataAccess/SlowConcurrentSaga.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/Events/Begin.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/Events/IncrementCounterSlowly.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/SlowConcurrentSagaStateMachine.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/SlowConcurrentSaga/SlowConcurrentSaga_Specs.cs` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/docker-compose.yml` | Added |  |
-| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Choir_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Container_Specs.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Messages.cs` | Added |  |
@@ -7511,13 +7495,23 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
 | `tests2/Directory.Build.props` | Added |  |
 | `tests2/Directory.Build.targets` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableFuturePersistenceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableJobServiceIntegrationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableRoutingSlipFuturePersistenceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaConcurrencyTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaRepositoryIntegrationTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Infrastructure/AzureTableTestTable.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableMessageJournalLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Configuration/AzureTableConfigurationContractTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/SagaKeyFormatterTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableMessageJournalRequirements.json` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |

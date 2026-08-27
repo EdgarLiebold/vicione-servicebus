@@ -270,6 +270,36 @@ Acceptance requires unfiltered native xUnit/MTP execution, zero skips, isolated 
 secret-free durable evidence, exact resource cleanup and a documented disposition of every semantic
 difference from the local PostgreSQL/Azurite results.
 
+## Complete Azure Table persistence validation against the real cloud service
+
+The native Azure Table cohort executes the full repository path locally against a run-scoped
+Azurite table: entity conversion, validated keys, saga insertion/read-only/update, real ETag
+conflicts and retries, durable futures (including routing slips), all three job-service sagas, and
+the bounded optional MessageJournal provider. This is the required local integration proof, but it
+does not prove Azure account authentication, cloud networking, production throttling, service-side
+limits or every behavioral difference between Azurite and Azure Table Storage.
+
+Before release, add one source-mirrored xUnit 4 / Microsoft Testing Platform 2 `External` project
+that runs the same provider-crossing contract against a short-lived real Azure Table resource. The
+selected Azure group must fail before discovery when configuration is incomplete; it must never
+skip or silently fall back to Azurite. Use the existing typed configuration pipeline and the
+`Azure.Identity` credential chain, create a unique table per test run, avoid logging secrets or
+tokens, and delete only the exact run-owned tables during cleanup.
+
+The External matrix owns three distinct, non-interchangeable service contracts from the frozen R0
+ledger. `OBL-R0-PER-0455` exercises Cosmos DB for Table separately, including its consistency model,
+property differences and causal 429/retry-after response. `OBL-R0-PER-0456` proves Entra ID success,
+insufficient-scope failure and token refresh during an in-flight operation. `OBL-R0-PER-0457`
+verifies the real service response at the 1-MiB entity, 255-property and maximum-property-size
+boundaries. Azure Table Storage success must not be reported as Cosmos compatibility, and neither
+service may fall back to Azurite.
+
+Acceptance requires locked Release restore/build, unfiltered External execution with zero failures
+and skips, resource-cleanup evidence, exact Azure SDK/service error identities for authentication,
+throttling and optimistic-concurrency failures, and an explicit disposition of every observed
+Azurite-versus-Azure difference. Local Azurite results must remain labelled `LocalIntegration` and
+must never be promoted into this cloud verdict.
+
 ## Complete Entity Framework SQL Server and Azure SQL external variant validation
 
 The inherited Entity Framework R0 set contains 90 obligation contracts but 156 execution variants.

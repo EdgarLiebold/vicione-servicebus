@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Data.Tables" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
@@ -18,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Requirements/AzureTableMessageJournalLocalIntegrationRequirements.json" />
+    <None Remove="Requirements/AzureTableLocalIntegrationRequirements.json" />
     <EmbeddedResource
-      Include="Requirements/AzureTableMessageJournalLocalIntegrationRequirements.json"
-      LogicalName="ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Requirements.AzureTableMessageJournalLocalIntegrationRequirements.json" />
+      Include="Requirements/AzureTableLocalIntegrationRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Requirements.AzureTableLocalIntegrationRequirements.json" />
   </ItemGroup>
 
 </Project>

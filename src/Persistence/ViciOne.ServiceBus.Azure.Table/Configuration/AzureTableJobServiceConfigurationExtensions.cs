@@ -14,6 +14,12 @@ namespace ViciOne.ServiceBus
             ISagaKeyFormatter<JobSaga> jobKeyFormatter,
             ISagaKeyFormatter<JobAttemptSaga> jobAttemptKeyFormatter)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(contextFactory);
+            ArgumentNullException.ThrowIfNull(jobTypeKeyFormatter);
+            ArgumentNullException.ThrowIfNull(jobKeyFormatter);
+            ArgumentNullException.ThrowIfNull(jobAttemptKeyFormatter);
+
             configurator.Repository = AzureTableSagaRepository<JobTypeSaga>.Create(contextFactory, jobTypeKeyFormatter);
 
             configurator.JobRepository = AzureTableSagaRepository<JobSaga>.Create(contextFactory, jobKeyFormatter);
@@ -24,6 +30,9 @@ namespace ViciOne.ServiceBus
         public static void UseAzureTableSagaRepository(this IJobServiceConfigurator configurator,
             Func<TableClient> contextFactory)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(contextFactory);
+
             UseAzureTableSagaRepository(configurator, contextFactory,
                 new ConstPartitionSagaKeyFormatter<JobTypeSaga>(nameof(JobTypeSaga)),
                 new ConstPartitionSagaKeyFormatter<JobSaga>(nameof(JobSaga)),

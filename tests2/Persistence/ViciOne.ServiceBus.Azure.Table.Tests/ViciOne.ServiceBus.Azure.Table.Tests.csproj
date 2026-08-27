@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Requirements/AzureTableMessageJournalRequirements.json" />
+    <None Remove="Requirements/AzureTableRequirements.json" />
     <EmbeddedResource
-      Include="Requirements/AzureTableMessageJournalRequirements.json"
-      LogicalName="ViciOne.ServiceBus.Azure.Table.Tests.Requirements.AzureTableMessageJournalRequirements.json" />
+      Include="Requirements/AzureTableRequirements.json"
+      LogicalName="ViciOne.ServiceBus.Azure.Table.Tests.Requirements.AzureTableRequirements.json" />
   </ItemGroup>
 
 </Project>

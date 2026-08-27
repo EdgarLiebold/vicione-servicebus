@@ -34,16 +34,30 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
             if (entityProperties.TryGetValue(_name, out var entityProperty))
             {
                 if (_toEntity.TryConvert(entityProperty, out var propertyValue))
+                {
                     _write.Set(entity, propertyValue);
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    $"Azure Table property '{_name}' cannot be converted to '{typeof(TProperty)}'.");
             }
         }
 
         public void FromEntity(TEntity entity, IDictionary<string, object> entityProperties)
         {
             var propertyValue = _read.Get(entity);
+            if (propertyValue is null)
+                return;
 
             if (_fromEntity.TryConvert(propertyValue, out var entityProperty))
+            {
                 entityProperties.Add(_name, entityProperty);
+                return;
+            }
+
+            throw new InvalidOperationException(
+                $"Property '{_name}' of type '{typeof(TProperty)}' cannot be converted to an Azure Table value.");
         }
     }
 }

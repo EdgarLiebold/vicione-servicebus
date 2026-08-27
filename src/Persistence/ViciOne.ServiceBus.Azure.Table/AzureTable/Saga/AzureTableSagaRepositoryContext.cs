@@ -24,8 +24,11 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public AzureTableSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
             ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
-            : base(consumeContext)
+            : base(RequireConsumeContext(consumeContext))
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(factory);
+
             _context = context;
             _consumeContext = consumeContext;
             _factory = factory;
@@ -38,30 +41,33 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
         {
+            ArgumentNullException.ThrowIfNull(instance);
+
             try
             {
                 (Task<Response> insert, var entity) = TableInsert(instance);
-                var result = await insert.ConfigureAwait(false);
-                if (!result.IsError)
-                {
-                    _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+                await insert.ConfigureAwait(false);
+                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
-                    return await CreateSagaConsumeContext(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
-                }
+                return await CreateSagaConsumeContext(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (RequestFailedException exception) when (exception.Status == 409)
             {
-                _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
+                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+                return default;
             }
-
-            return default;
         }
 
         public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
         {
-            var (partitionKey, rowKey) = _context.Formatter.Format(correlationId);
+            var (partitionKey, rowKey) = _context.Format(correlationId);
 
-            NullableResponse<TableEntity> result = await _context.Table.GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey).ConfigureAwait(false);
+            NullableResponse<TableEntity> result = await _context.Table
+                .GetEntityIfExistsAsync<TableEntity>(
+                    partitionKey,
+                    rowKey,
+                    cancellationToken: CancellationToken)
+                .ConfigureAwait(false);
 
             if (result.HasValue)
                 return await CreateSagaConsumeContext(new TableEntity(result.Value), SagaConsumeContextMode.Load).ConfigureAwait(false);
@@ -84,9 +90,15 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
                 var eTag = context.GetPayload<SagaETag>();
                 IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
                 var entity = new TableEntity(dict) { ETag = new ETag(eTag.ETag) };
-                (entity.PartitionKey, entity.RowKey) = _context.Formatter.Format(instance.CorrelationId);
+                (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
 
                 await _context.Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace, context.CancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception)
+                when (context.CancellationToken.IsCancellationRequested
+                    && exception.CancellationToken == context.CancellationToken)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -97,10 +109,24 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
         public async Task Delete(SagaConsumeContext<TSaga> context)
         {
             var instance = context.Saga;
-
-            var (partitionKey, rowKey) = _context.Formatter.Format(instance.CorrelationId);
-            var eTag = context.GetPayload<SagaETag>();
-            await _context.Table.DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken).ConfigureAwait(false);
+            try
+            {
+                var (partitionKey, rowKey) = _context.Format(instance.CorrelationId);
+                var eTag = context.GetPayload<SagaETag>();
+                await _context.Table
+                    .DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception)
+                when (context.CancellationToken.IsCancellationRequested
+                    && exception.CancellationToken == context.CancellationToken)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                throw new SagaException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
+            }
         }
 
         public Task Discard(SagaConsumeContext<TSaga> context)
@@ -123,9 +149,15 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
         {
             IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
             var entity = new TableEntity(dict);
-            (entity.PartitionKey, entity.RowKey) = _context.Formatter.Format(instance.CorrelationId);
+            (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
 
             return (_context.Table.AddEntityAsync(entity, CancellationToken), entity);
+        }
+
+        static ConsumeContext<TMessage> RequireConsumeContext(ConsumeContext<TMessage> consumeContext)
+        {
+            ArgumentNullException.ThrowIfNull(consumeContext);
+            return consumeContext;
         }
 
         async Task<SagaConsumeContext<TSaga, TMessage>> CreateSagaConsumeContext(TableEntity entity, SagaConsumeContextMode mode)
@@ -144,22 +176,23 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
     }
 
 
-    public class CosmosTableSagaRepositoryContext<TSaga> :
+    sealed class AzureTableLoadSagaRepositoryContext<TSaga> :
         BasePipeContext,
         LoadSagaRepositoryContext<TSaga>
         where TSaga : class, ISaga
     {
         readonly DatabaseContext<TSaga> _context;
 
-        public CosmosTableSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
+        public AzureTableLoadSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
             : base(cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(context);
             _context = context;
         }
 
         public async Task<TSaga> Load(Guid correlationId)
         {
-            var (partitionKey, rowKey) = _context.Formatter.Format(correlationId);
+            var (partitionKey, rowKey) = _context.Format(correlationId);
 
             NullableResponse<TableEntity> result = await _context.Table
                 .GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken).ConfigureAwait(false);

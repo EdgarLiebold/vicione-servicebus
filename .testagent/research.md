@@ -1944,3 +1944,60 @@ repeatable results are 46/46 focused EF UnitArchitecture, 17/17 focused EF Local
 focused Core notification. The unfiltered repository profiles pass at 1867/1867 UnitArchitecture
 and 28/28 LocalIntegration; the complete Engineering Release build has zero warnings and zero
 errors. Every test run reports zero failure and zero skip.
+
+## Azure Table native persistence closure research
+
+The complete remaining Azure Table product tree contains thirty C# files. The complete inherited
+Azure Table test project contains fifteen C# files after the earlier MessageJournal replacement.
+All of those files, all inherited Future test bases used by that project, and the existing native
+Azure Table, EF future, saga and job-service owners were read before this plan was frozen. The
+frozen ledger contributes thirty-one inherited identities `OBL-R0-PER-0400..0430` plus eight
+source-derived gaps `0450..0457`. Five are locally executable; Cosmos-for-Table compatibility,
+Entra ID authentication and real-service limit responses (`0455..0457`) remain explicitly External.
+
+Microsoft's Table service contract admits exactly eight property shapes: binary, Boolean, UTC
+date/time, double, Guid, Int32, Int64 and string. PartitionKey and RowKey together identify an
+entity; both reject slash, backslash, number sign, question mark and control characters. Entity
+group transactions are limited to one partition, at most one hundred operations and four MiB.
+`TableClient.UpdateEntityAsync` uses the supplied ETag as `If-Match`, so stale writers must fail
+rather than overwrite. These are platform contracts, not Azurite-specific assumptions.
+
+Azurite is the required local resource because the cohort needs real `TableClient` serialization,
+point queries, partition scans, ETag failures and atomic transactions. It does not prove Azure
+identity, real network, account policy or service-version differences. Those remain an explicit
+External follow-up and are never represented by a skipped or inventory-only green test.
+
+The old suite is only a behavior inventory. It shared a fixed table name, used global cleanup,
+contained a real three-second delay, left Future data behind and inferred concurrency completion
+from inactivity. None of those mechanics may survive. The nine retired `IMessageAuditStore`
+obligations map to the PO-selected optional, default-off MessageJournal successor: its existing
+native tests already prove client/service-client composition, exact sanitized persistence,
+filter/policy ownership, partition safety, bounded retention and ETag concurrency. The removed
+AuditStore API, ContextType rows and timestamp-derived AuditRecord keys are not recreated.
+
+The product read found four correctness boundaries to close before accepting tests. Built-in and
+custom saga keys are not currently validated before network I/O. Consume-path load omits the caller
+cancellation token, insert hides every exception instead of only resolving a duplicate-key race,
+and update wraps requested caller cancellation as a saga failure. Persisted supported values that
+cannot be converted are silently ignored; malformed TimeSpan text is even accepted as the default
+value. The stale internal load-context name still says Cosmos although the provider is Azure Table.
+The A+ correction is one shared Azure Table key validator, fail-closed conversion, causal caller
+cancellation, duplicate recovery restricted to an actual HTTP 409 followed by the normal load,
+and an accurately named non-public load context. No compatibility shim is required.
+
+The sixteen inherited Future identities do not justify sixteen copies of the same provider setup.
+They consolidate into provider-crossing native carriers for completed-result reuse, persisted fault
+reuse, fan-in success, fan-in fault, nested composition/variables and registration. Each carrier
+reads the resulting `FutureState` through Azure Table after exercising the bus. Saga coverage owns
+insert/load/update/delete, read-only rollback, exact ETag conflict/retry and cancellation. Job
+service owns one complete accepted-to-completed lifecycle with the three saga partitions. Converter,
+key and configuration boundaries remain ordinary UnitArchitecture tests.
+
+The first unfiltered UnitArchitecture run also exposed an inherited lost-wakeup race in
+`KillSwitchTestDriver`. Its wait helpers sampled the transition count and the corresponding signal
+under separate locks. A transition between those samples could satisfy the requested count and
+replace the signal before the waiter subscribed, leaving the test blocked until its outer timeout.
+The helper now samples `(count, signal task)` atomically under the owning transition lock and loops
+on that coherent snapshot. This is a test-infrastructure correction discovered by the full gate,
+not an Azure Table product workaround. The focused KillSwitch class then passed 17/17 and the
+unfiltered UnitArchitecture rerun passed 1946/1946 with zero skip.

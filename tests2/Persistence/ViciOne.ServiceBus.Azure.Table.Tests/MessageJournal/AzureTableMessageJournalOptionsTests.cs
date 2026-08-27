@@ -48,17 +48,20 @@ public sealed class AzureTableMessageJournalOptionsTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-KEY", "one-kib-encoded-boundary")]
-    public void PartitionKey_UsesTheEncodedOneKibBoundaryInsteadOfCharacterCount()
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-KEY", "official-1024-character-boundary")]
+    public void PartitionKey_UsesTheOfficial1024CharacterBoundary()
     {
-        string maximum = new('a', 510);
-        string excessive = new('a', 511);
+        string maximumAscii = new('a', 1024);
+        string maximumUnicode = new('\u00e9', 1024);
+        string excessive = new('a', 1025);
 
-        var accepted = new AzureTableMessageJournalStoreOptions(maximum, Limits());
+        var acceptedAscii = new AzureTableMessageJournalStoreOptions(maximumAscii, Limits());
+        var acceptedUnicode = new AzureTableMessageJournalStoreOptions(maximumUnicode, Limits());
         var failure = Assert.Throws<ArgumentException>(
             () => new AzureTableMessageJournalStoreOptions(excessive, Limits()));
 
-        Assert.Equal(maximum, accepted.PartitionKey);
+        Assert.Equal(maximumAscii, acceptedAscii.PartitionKey);
+        Assert.Equal(maximumUnicode, acceptedUnicode.PartitionKey);
         Assert.Equal("partitionKey", failure.ParamName);
     }
 

@@ -455,13 +455,11 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public bool TryConvert(object input, out TimeSpan result)
         {
-            if (input is string)
+            if (input is string text
+                && !string.IsNullOrWhiteSpace(text)
+                && _timeSpanConverter.TryConvert(text, out var value))
             {
-                result = string.IsNullOrWhiteSpace(input.ToString())
-                    ? default
-                    : _timeSpanConverter.TryConvert(input.ToString(), out var value)
-                        ? value
-                        : default;
+                result = value;
                 return true;
             }
 
@@ -471,13 +469,11 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public bool TryConvert(object input, out TimeSpan? result)
         {
-            if (input is string)
+            if (input is string text
+                && !string.IsNullOrWhiteSpace(text)
+                && _timeSpanConverter.TryConvert(text, out var value))
             {
-                result = string.IsNullOrWhiteSpace(input.ToString())
-                    ? default
-                    : _timeSpanConverter.TryConvert(input.ToString(), out var value)
-                        ? value
-                        : default;
+                result = value;
                 return true;
             }
 

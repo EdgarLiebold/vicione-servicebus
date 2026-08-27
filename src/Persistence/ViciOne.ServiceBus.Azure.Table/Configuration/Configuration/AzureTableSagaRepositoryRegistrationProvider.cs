@@ -10,13 +10,14 @@ namespace ViciOne.ServiceBus.Configuration
 
         public AzureTableSagaRepositoryRegistrationProvider(Action<IAzureTableSagaRepositoryConfigurator> configure)
         {
+            ArgumentNullException.ThrowIfNull(configure);
             _configure = configure;
         }
 
         public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
             where TSaga : class, ISaga
         {
-            configurator.AzureTableRepository(r => _configure?.Invoke(r));
+            configurator.AzureTableRepository(_configure);
         }
     }
 }

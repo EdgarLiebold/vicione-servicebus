@@ -12,12 +12,14 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public DelegateCloudTableProvider(Func<TableClient> cloudTable)
         {
+            ArgumentNullException.ThrowIfNull(cloudTable);
             _cloudTable = cloudTable;
         }
 
         public TableClient GetCloudTable()
         {
-            return _cloudTable();
+            return _cloudTable()
+                ?? throw new InvalidOperationException("The Azure Table client factory returned null.");
         }
     }
 }

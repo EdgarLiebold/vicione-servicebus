@@ -11,12 +11,13 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public ConstRowSagaKeyFormatter(string rowKey)
         {
-            _rowKey = rowKey;
+            _rowKey = AzureTableKeyValidator.Validate(rowKey, nameof(rowKey));
         }
 
         public (string partitionKey, string rowKey) Format(Guid correlationId)
         {
-            return (correlationId.ToString(), _rowKey);
+            AzureTableKeyValidator.ValidateCorrelationId(correlationId, nameof(correlationId));
+            return (correlationId.ToString("D"), _rowKey);
         }
     }
 }

@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.AzureTable
 {
+    using System;
     using Azure.Data.Tables;
 
 
@@ -11,5 +12,7 @@ namespace ViciOne.ServiceBus.AzureTable
         TableClient Table { get; }
 
         IEntityConverter<TSaga> Converter { get; }
+
+        (string partitionKey, string rowKey) Format(Guid correlationId);
     }
 }

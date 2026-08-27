@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 1914 predeclared unfiltered cases;
-- `LocalIntegration`: 70 unfiltered cases.
+- `UnitArchitecture`: 1946 predeclared unfiltered cases;
+- `LocalIntegration`: 87 unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -1626,3 +1626,51 @@ Server identities remain explicitly `EXTERNAL_PENDING` until the SQL Server and 
 cohort runs against real resources; they are not counted green. The inherited EF test project and
 its separate verification-model category are retired because its useful behavior is either owned by
 the native suite or carried visibly by that external work item, never by a hidden legacy runner.
+
+## Azure Table native persistence execution plan
+
+Work from the clean accepted commit `1d63a7adca71e9e3bac135240d3ff979f7121de1` (tree
+`0b024b527475282d378585acd00eea7817a128e7`) under architecture assignment
+`PO-2026-08-27-01`. This cohort owns exactly `OBL-R0-PER-0400..0430` and `0450..0452` plus
+source-derived gaps in the complete Azure Table product path.
+
+1. Centralize the Table key contract and validate both built-in and caller-supplied saga keys before
+   any network call. Reject empty correlation identifiers, empty/oversized keys and every Azure
+   forbidden character with precise argument ownership. Reuse the same validator for MessageJournal
+   options so there is one storage-key truth.
+2. Make entity conversion fail closed. Prove all native Table primitives, nullable omission,
+   DateTime/DateTimeOffset UTC semantics, TimeSpan/Uri/Version string encodings, enum/decimal value
+   fallback and complex FutureState collections. Malformed persisted values must raise a precise
+   conversion error and may never silently become defaults.
+3. Normalize saga repository failure ownership: pass caller cancellation through every Table call,
+   propagate genuinely requested cancellation unchanged, restrict duplicate insert recovery to an
+   actual 409 collision, preserve ETag-based optimistic concurrency and rename/internalize the stale
+   Cosmos load context. Add exact argument guards to public factory/configuration entry points.
+4. Build source-mirrored UnitArchitecture owners in the existing
+   `ViciOne.ServiceBus.Azure.Table.Tests` project for conversion, keys, configuration snapshots and
+   cancellation/error classification that needs no resource. Use xUnit 4/MTP v2 only.
+5. Factor one run-scoped Azurite table fixture inside the existing LocalIntegration project. Build
+   provider-crossing saga owners for insert/load/update/delete, read-only behavior, enum round-trip,
+   stale-ETag conflict, bounded retry and caller cancellation. Barriers are causal; no delay,
+   inactivity, polling window or shared table is an oracle.
+6. Add six stronger Future carriers—completed reuse, fault reuse, fan-in success, fan-in fault,
+   nested composition and registration—and one complete job-service lifecycle carrier. Every test
+   reads persisted Azure Table state and therefore cannot pass on generic Core behavior alone.
+7. Freeze a machine-readable thirty-nine-row R0 disposition. Map `0400..0408` to the accepted
+   MessageJournal successor without reconstructing AuditStore; map the saga/job/future and locally
+   provable converter/key/repository gaps to exact native test methods. Keep `0455..0457` visibly
+   `EXTERNAL_PENDING` for Cosmos-for-Table, Entra ID and real-service limits. Only after all 31
+   inherited test obligations and all locally executable source gaps are closed may the old NUnit
+   project and resulting empty directories be deleted; External work is never counted green.
+8. Update embedded passive requirement projections, solution/CI/documented floors and generated
+   CHANGELIST. GitHub workflows remain disabled operationally; their versioned command contracts
+   stay internally consistent for later reactivation.
+9. Reread every changed product and test line. Apply test-gap, assertion-quality, anti-pattern and
+   smell reviews, then run bounded one-cause mutations for every product correction and high-risk
+   ETag/cancellation/conversion/lifecycle boundary. Restore and hash-check the technical tree after
+   every mutant.
+10. Run locked focused restore, Release build, focused UnitArchitecture and Azurite LocalIntegration,
+    then complete unfiltered UnitArchitecture, LocalIntegration and Engineering Release. Acceptance
+    is zero failures, skips, warnings or errors, separate technical/evidence commits and two
+    independent read-only reviews over the exact frozen bytes. Real Azure remains a visible External
+    follow-up rather than a local or skipped green claim.

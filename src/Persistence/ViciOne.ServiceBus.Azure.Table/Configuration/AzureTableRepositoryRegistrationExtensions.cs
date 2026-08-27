@@ -17,6 +17,8 @@ namespace ViciOne.ServiceBus
             Action<IAzureTableSagaRepositoryConfigurator<T>> configure = null)
             where T : class, ISaga
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+
             var repositoryConfigurator = new AzureTableSagaRepositoryConfigurator<T>();
 
             configure?.Invoke(repositoryConfigurator);
@@ -37,6 +39,9 @@ namespace ViciOne.ServiceBus
         public static IJobSagaRegistrationConfigurator AzureTableRepository(this IJobSagaRegistrationConfigurator configurator,
             Action<IAzureTableSagaRepositoryConfigurator> configure)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
+
             var registrationProvider = new AzureTableSagaRepositoryRegistrationProvider(configure);
 
             configurator.UseRepositoryRegistrationProvider(registrationProvider);
@@ -52,6 +57,9 @@ namespace ViciOne.ServiceBus
         public static void SetAzureTableSagaRepositoryProvider(this IRegistrationConfigurator configurator,
             Action<IAzureTableSagaRepositoryConfigurator> configure)
         {
+            ArgumentNullException.ThrowIfNull(configurator);
+            ArgumentNullException.ThrowIfNull(configure);
+
             configurator.SetSagaRepositoryProvider(new AzureTableSagaRepositoryRegistrationProvider(configure));
         }
     }

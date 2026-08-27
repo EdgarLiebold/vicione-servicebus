@@ -10,6 +10,9 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
     {
         public static ISagaRepository<TSaga> Create(Func<TableClient> tableFactory, ISagaKeyFormatter<TSaga> keyFormatter)
         {
+            ArgumentNullException.ThrowIfNull(tableFactory);
+            ArgumentNullException.ThrowIfNull(keyFormatter);
+
             var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
 
             var cloudTableProvider = new DelegateCloudTableProvider<TSaga>(tableFactory);

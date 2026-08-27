@@ -7,10 +7,10 @@ using Xunit;
 public sealed class RequirementCoverageProjectionTests
 {
     private const string ProjectionResourceName =
-        "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Requirements.AzureTableMessageJournalLocalIntegrationRequirements.json";
+        "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Requirements.AzureTableLocalIntegrationRequirements.json";
 
     [Fact]
-    public void AzureTableMessageJournalLocalIntegrationRequirements_MatchCompiledRequirementMetadata()
+    public void AzureTableLocalIntegrationRequirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;
         using Stream projection = assembly.GetManifestResourceStream(ProjectionResourceName)

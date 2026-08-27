@@ -36,6 +36,7 @@ public static class AzureTableMessageJournalConfigurationExtensions
         IMessageJournalPolicy policy,
         MessageJournalOptions journalOptions)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(tableServiceClient);
         ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
 

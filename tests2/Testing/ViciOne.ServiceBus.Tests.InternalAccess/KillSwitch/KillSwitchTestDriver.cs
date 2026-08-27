@@ -188,26 +188,25 @@ public sealed class KillSwitchTestDriver
         }
 
         public Task WaitForPauseCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-            WaitForCount(() => PauseCount, () => NextPause(), count, timeout, cancellationToken);
+            WaitForCount(PauseState, count, timeout, cancellationToken);
 
         public Task WaitForStartCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-            WaitForCount(() => StartCount, () => NextStart(), count, timeout, cancellationToken);
+            WaitForCount(StartState, count, timeout, cancellationToken);
 
-        private Task NextPause()
+        private (int Count, Task Changed) PauseState()
         {
             lock (_lock)
-                return _pauseChanged.Task;
+                return (_pauseCount, _pauseChanged.Task);
         }
 
-        private Task NextStart()
+        private (int Count, Task Changed) StartState()
         {
             lock (_lock)
-                return _startChanged.Task;
+                return (_startCount, _startChanged.Task);
         }
 
         private static async Task WaitForCount(
-            Func<int> count,
-            Func<Task> changed,
+            Func<(int Count, Task Changed)> snapshot,
             int expected,
             TimeSpan timeout,
             CancellationToken cancellationToken)
@@ -218,8 +217,14 @@ public sealed class KillSwitchTestDriver
             using var timeoutCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCancellation.CancelAfter(timeout);
 
-            while (count() < expected)
-                await changed().WaitAsync(timeoutCancellation.Token).ConfigureAwait(false);
+            while (true)
+            {
+                (int count, Task changed) = snapshot();
+                if (count >= expected)
+                    return;
+
+                await changed.WaitAsync(timeoutCancellation.Token).ConfigureAwait(false);
+            }
         }
     }
 

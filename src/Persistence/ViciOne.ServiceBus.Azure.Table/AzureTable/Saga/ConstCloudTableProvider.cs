@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.AzureTable.Saga
 {
+    using System;
     using Azure.Data.Tables;
 
 
@@ -11,6 +12,7 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
 
         public ConstCloudTableProvider(TableClient cloudTable)
         {
+            ArgumentNullException.ThrowIfNull(cloudTable);
             _cloudTable = cloudTable;
         }
 

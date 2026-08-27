@@ -249,16 +249,14 @@
     },
     {
       "id": "persistence-azure-table",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Persistence/ViciOne.ServiceBus.Azure.Table"
       ],
-      "testProjects": [
-        "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of its OBL-R0-PER-0400 through OBL-R0-PER-0430 behavior inventory. Locally executable Azure Table behavior is verified by native xUnit 4/MTP v2 UnitArchitecture and Azurite LocalIntegration projects; OBL-R0-PER-0455 through OBL-R0-PER-0457 remain explicit External work and are not counted green.",
       "runs": []
     },
     {
