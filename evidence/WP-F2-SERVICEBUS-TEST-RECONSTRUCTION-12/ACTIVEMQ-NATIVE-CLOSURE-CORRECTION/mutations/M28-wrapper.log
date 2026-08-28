@@ -1,0 +1,21 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqSharedSubscriptionTests.ArtemisAmqpSharedDurableSubscription_LoadBalancesExactlyOnce (1s 627ms)
+  Assert.False() Failure
+  Expected: False
+  Actual:   True
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqSharedSubscriptionTests.ArtemisAmqpSharedDurableSubscription_LoadBalancesExactlyOnce() in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs:128
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqSharedSubscriptionTests.ArtemisAmqpSharedDurableSubscription_LoadBalancesExactlyOnce() in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs:140
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION/mutations/M28.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 029ms
+run identity vicione-e833c6ccddae, output under artifacts/run-output/vicione-e833c6ccddae
+fixture artemis ready on loopback: VICIONE_SERVICEBUS_ARTEMIS_HOST=127.0.0.1, VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT=34206, VICIONE_SERVICEBUS_ARTEMIS_PORT=34207
+endpoints projected to artifacts/run-output/vicione-e833c6ccddae/endpoints.json
+broker log artemis: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-e833c6ccddae/artemis-broker.log (54 lines)

@@ -1,0 +1,22 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAHostWithoutAProtocol (32ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  Actual:   typeof(System.InvalidOperationException)
+  ---- System.InvalidOperationException : Nullable object must have a value.
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAHostWithoutAProtocol() in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:85
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    ----- Inner Stack Trace -----
+    um System.Nullable`1.get_Value()
+    um ViciOne.ServiceBus.ActiveMqTransport.Configuration.ActiveMqRegistrationBusFactory.GetHostAddress(ActiveMqTransportOptions options) in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqRegistrationBusFactory.cs:75
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.<>c__DisplayClass3_0.<TransportOptions_RejectAHostWithoutAProtocol>b__0() in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:86
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION/mutations/M19.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 376ms

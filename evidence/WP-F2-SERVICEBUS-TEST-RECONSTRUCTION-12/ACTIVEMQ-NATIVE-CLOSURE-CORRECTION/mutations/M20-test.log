@@ -1,0 +1,28 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAMissingOrZeroPort(port: 0) (36ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAMissingOrZeroPort(Nullable`1 port) in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:104
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAMissingOrZeroPort(port: null) (0ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  Actual:   typeof(System.InvalidOperationException)
+  ---- System.InvalidOperationException : Nullable object must have a value.
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.TransportOptions_RejectAMissingOrZeroPort(Nullable`1 port) in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:104
+    um InvokeStub_ActiveMqConfigurationTests.TransportOptions_RejectAMissingOrZeroPort(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    ----- Inner Stack Trace -----
+    um System.Nullable`1.get_Value()
+    um ViciOne.ServiceBus.ActiveMqTransport.Configuration.ActiveMqRegistrationBusFactory.GetHostAddress(ActiveMqTransportOptions options) in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqRegistrationBusFactory.cs:86
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.<>c__DisplayClass4_0.<TransportOptions_RejectAMissingOrZeroPort>b__0() in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:105
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION/mutations/M20.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 422ms

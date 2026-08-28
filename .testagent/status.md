@@ -1324,3 +1324,36 @@ future cohorts as complete.
 - This is the terminal local implementation/evidence candidate, not self-acceptance. Two independent
   static read-only reviews of the same technical/evidence freeze remain mandatory. GitHub workflows
   remain manually disabled and no cloud/external ActiveMQ follow-up is required.
+
+## ActiveMQ native closure — A+ correction and final evidence candidate
+
+- The immediately preceding ActiveMQ evidence candidate is historical and superseded by this
+  section. Independent review found concrete protocol/options, failure-preservation,
+  provider-scheduling, terminal-drain and wall-clock-test gaps. They were fixed in product/tests,
+  never hidden by weakening an assertion or reclassifying an executing obligation.
+- Frozen technical commit `c2a0cfeda3466029eddd75033fe2220ffbb9a612`, tree
+  `9b9d032a8bd80ee02f9376ab3fdf443cdfbadeeb`, parent
+  `3057025b5c02c1ce034a9633baf87cb24a24ba92`; the complete correction from `72e788b2` contains
+  exactly 40 paths. Architecture order `b325ebd` binds this technical identity and the full scope.
+- ActiveMQ options now require typed OpenWire/AMQP protocol plus an explicit non-zero port whenever
+  options configure a host. Cleanup attempts every connection/session/auto-delete stage and
+  preserves sole failure identity or deterministic aggregate order. AMQP keeps broker-owned
+  auto-delete; OpenWire retains the supported manual deletion path.
+- Provider scheduling is proven through broker state, exact delivery and post-delivery empty state:
+  Artemis uses `NMSDeliveryTime`; ActiveMQ Classic uses `AMQ_SCHEDULED_DELAY` over OpenWire and AMQP.
+  Scheduling, Quartz and shared-subscription carriers stop/drain before exact terminal counts and
+  bind broker enqueue/dequeue/rest statistics. ActiveMQ LocalIntegration contains no wall-clock wait;
+  the Roslyn gate scans real invocation syntax.
+- Positive frozen runs: Engineering restore/build exit 0 with 0 warnings and 0 errors; ActiveMQ Unit
+  122/122; ActiveMQ LocalIntegration 95/95; unfiltered UnitArchitecture 2185/2185 across 18 CTRFs;
+  unfiltered LocalIntegration 244/244 across seven CTRFs and fresh PostgreSQL/Azurite/LocalStack/
+  ActiveMQ/Artemis fixture `vicione-19a2b33ee70b`. Every run has 0 failed and 0 skipped.
+- Twelve byte-exact attacks M18-M29 cover protocol/port, cleanup propagation and identity,
+  auto-delete continuation/provider ownership, Artemis and Classic provider scheduling, terminal
+  duplicate delivery and the no-wall-clock source gate. Every compiled mutant builds 0/0, every
+  behavioral/gate run exits 2 for its own cause, all targets restore to the technical SHA and the
+  isolated mutation worktree ends clean.
+- The terminal R0 closure remains exactly 113 obligations / 179 historical identities with 40 Unit
+  and 73 LocalIntegration owners. No cloud ActiveMQ boundary is deferred. This section is the final
+  evidence candidate, not self-acceptance; independent read-only review remains mandatory before
+  acceptance and remote publication.

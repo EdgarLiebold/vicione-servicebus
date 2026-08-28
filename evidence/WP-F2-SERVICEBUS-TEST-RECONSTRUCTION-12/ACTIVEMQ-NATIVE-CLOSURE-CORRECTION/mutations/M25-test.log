@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqLifecycleTests.ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion(address: "amqp://broker:5672/", expected: False) (2ms)
+  Assert.Equal() Failure: Values differ
+  Expected: False
+  Actual:   True
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqLifecycleTests.ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion(String address, Boolean expected) in /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs:25
+    um InvokeStub_ActiveMqLifecycleTests.ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION/mutations/M25.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-activemq-mutants.NX1T8Z/repo/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 451ms

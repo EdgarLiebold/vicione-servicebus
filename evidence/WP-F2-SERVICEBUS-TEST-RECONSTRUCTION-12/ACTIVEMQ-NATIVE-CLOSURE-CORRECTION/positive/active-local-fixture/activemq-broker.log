@@ -1,0 +1,216 @@
+activemq-1  | 2026-08-28T10:33:09.947260395Z Enabling ActiveMQ Connection Security
+activemq-1  | 2026-08-28T10:33:09.968131648Z Enabling ActiveMQ WebConsole security
+activemq-1  | 2026-08-28T10:33:09.995562947Z INFO: Loading '/opt/apache-activemq/bin/setenv'
+activemq-1  | 2026-08-28T10:33:09.995592994Z INFO: Using java '/opt/java/openjdk/bin/java'
+activemq-1  | 2026-08-28T10:33:09.995692358Z INFO: Starting in foreground, this is just for debugging purposes (stop process by pressing CTRL+C)
+activemq-1  | 2026-08-28T10:33:09.995704656Z INFO: Creating pidfile /opt/apache-activemq/data/activemq.pid
+activemq-1  | 2026-08-28T10:33:11.432094633Z Java Runtime: Eclipse Adoptium 17.0.17 /opt/java/openjdk
+activemq-1  | 2026-08-28T10:33:11.437053397Z   Heap sizes: current=67584k  free=62107k  max=1048576k
+activemq-1  | 2026-08-28T10:33:11.443361751Z     JVM args: -Xms64M -Xmx1G -Djava.util.logging.config.file=logging.properties -Djava.security.auth.login.config=/opt/apache-activemq/conf/login.config -Djetty.host=0.0.0.0 -Dcom.sun.management.jmxremote -Djava.awt.headless=true -Djava.io.tmpdir=/opt/apache-activemq/tmp --add-reads=java.xml=java.logging --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED --add-exports=jdk.xml.dom/org.w3c.dom.html=ALL-UNNAMED --add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED -Dactivemq.classpath=/opt/apache-activemq/conf: -Dactivemq.home=/opt/apache-activemq -Dactivemq.base=/opt/apache-activemq -Dactivemq.conf=/opt/apache-activemq/conf -Dactivemq.data=/opt/apache-activemq/data -Djolokia.conf=file:/opt/apache-activemq/conf/jolokia-access.xml
+activemq-1  | 2026-08-28T10:33:11.450163430Z Extensions classpath:
+activemq-1  | 2026-08-28T10:33:11.450193058Z   [/opt/apache-activemq/lib,/opt/apache-activemq/lib/camel,/opt/apache-activemq/lib/optional,/opt/apache-activemq/lib/web,/opt/apache-activemq/lib/extra]
+activemq-1  | 2026-08-28T10:33:11.450208430Z ACTIVEMQ_HOME: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:33:11.450222545Z ACTIVEMQ_BASE: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:33:11.450236591Z ACTIVEMQ_CONF: /opt/apache-activemq/conf
+activemq-1  | 2026-08-28T10:33:11.450249657Z ACTIVEMQ_DATA: /opt/apache-activemq/data
+activemq-1  | 2026-08-28T10:33:14.588722205Z Loading message broker from: xbean:activemq.xml
+activemq-1  | 2026-08-28T10:33:16.757836598Z  INFO | Using Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:33:16.776181406Z  INFO | Starting Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:33:16.847813595Z  INFO | Starting KahaDBStore
+activemq-1  | 2026-08-28T10:33:16.850101551Z  INFO | Opening MessageDatabase
+activemq-1  | 2026-08-28T10:33:17.314384597Z  INFO | Starting Temp Data Store
+activemq-1  | 2026-08-28T10:33:17.316804271Z  INFO | PListStore:[/opt/apache-activemq/data/localhost/tmp_storage] started
+activemq-1  | 2026-08-28T10:33:17.317074691Z  INFO | Starting Job Scheduler Store
+activemq-1  | 2026-08-28T10:33:17.374953916Z  INFO | JobSchedulerStore: /opt/apache-activemq/data/localhost/scheduler started.
+activemq-1  | 2026-08-28T10:33:17.380633454Z  INFO | Persistence Adapter successfully started
+activemq-1  | 2026-08-28T10:33:17.577084590Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-37155-1787913197405-0:1) is starting
+activemq-1  | 2026-08-28T10:33:17.648711887Z  INFO | Listening for connections at: tcp://d0444865da89:61616?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:33:17.652229665Z  INFO | Connector openwire started
+activemq-1  | 2026-08-28T10:33:17.664470507Z  INFO | Listening for connections at: amqp://d0444865da89:5672?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:33:17.666485667Z  INFO | Connector amqp started
+activemq-1  | 2026-08-28T10:33:17.679533021Z  INFO | Listening for connections at: stomp://d0444865da89:61613?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:33:17.682295018Z  INFO | Connector stomp started
+activemq-1  | 2026-08-28T10:33:17.689534471Z  INFO | Listening for connections at: mqtt://d0444865da89:1883?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:33:17.690735434Z  INFO | Connector mqtt started
+activemq-1  | 2026-08-28T10:33:17.713987508Z  INFO | Starting Jetty server
+activemq-1  | 2026-08-28T10:33:17.855115281Z  INFO | Creating Jetty connector
+activemq-1  | 2026-08-28T10:33:18.202208393Z  INFO | Listening for connections at ws://d0444865da89:61614?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:33:18.202235365Z  INFO | Connector ws started
+activemq-1  | 2026-08-28T10:33:18.203139284Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-37155-1787913197405-0:1) started
+activemq-1  | 2026-08-28T10:33:18.203389441Z  INFO | For help or more information please see: http://activemq.apache.org
+activemq-1  | 2026-08-28T10:33:18.217278453Z  WARN | Store limit is 102400 mb (current store usage is 0 mb). The data directory: /opt/apache-activemq/data/kahadb only has 8790 mb of usable space. - resetting to maximum available disk space: 8790 mb
+activemq-1  | 2026-08-28T10:33:18.219551875Z  WARN | Temporary Store limit is 51200 mb (current store usage is 0 mb). The data directory: /opt/apache-activemq/data/localhost only has 8790 mb of usable space. - resetting to maximum available disk space: 8790 mb
+activemq-1  | 2026-08-28T10:33:19.876014288Z  INFO | ActiveMQ WebConsole available at http://0.0.0.0:8161/
+activemq-1  | 2026-08-28T10:33:19.876466666Z  INFO | ActiveMQ Jolokia REST API available at http://0.0.0.0:8161/api/jolokia/
+activemq-1  | 2026-08-28T10:33:20.906667272Z  WARN | Could not accept connection from tcp://172.21.0.4:47802: Cannot send, channel has already failed: tcp://172.21.0.4:47802 (Cannot send, channel has already failed: tcp://172.21.0.4:47802)
+activemq-1  | 2026-08-28T10:33:41.019996714Z  WARN | Could not accept connection from tcp://172.21.0.4:41658: Cannot send, channel has already failed: tcp://172.21.0.4:41658 (Cannot send, channel has already failed: tcp://172.21.0.4:41658)
+activemq-1  | 2026-08-28T10:33:51.114726153Z  WARN | Could not accept connection from tcp://172.21.0.4:50210: Cannot send, channel has already failed: tcp://172.21.0.4:50210 (Cannot send, channel has already failed: tcp://172.21.0.4:50210)
+activemq-1  | 2026-08-28T10:33:55.593351973Z ActiveMQ Connection Security enabled
+activemq-1  | 2026-08-28T10:33:55.599136953Z Enabling ActiveMQ WebConsole security
+activemq-1  | 2026-08-28T10:33:55.616427260Z INFO: Loading '/opt/apache-activemq/bin/setenv'
+activemq-1  | 2026-08-28T10:33:55.619708716Z INFO: Using java '/opt/java/openjdk/bin/java'
+activemq-1  | 2026-08-28T10:33:55.657914926Z INFO: Starting in foreground, this is just for debugging purposes (stop process by pressing CTRL+C)
+activemq-1  | 2026-08-28T10:33:55.658392739Z INFO: Creating pidfile /opt/apache-activemq/data/activemq.pid
+activemq-1  | 2026-08-28T10:33:56.553922482Z Java Runtime: Eclipse Adoptium 17.0.17 /opt/java/openjdk
+activemq-1  | 2026-08-28T10:33:56.556164670Z   Heap sizes: current=67584k  free=62107k  max=1048576k
+activemq-1  | 2026-08-28T10:33:56.559630110Z     JVM args: -Xms64M -Xmx1G -Djava.util.logging.config.file=logging.properties -Djava.security.auth.login.config=/opt/apache-activemq/conf/login.config -Djetty.host=0.0.0.0 -Dcom.sun.management.jmxremote -Djava.awt.headless=true -Djava.io.tmpdir=/opt/apache-activemq/tmp --add-reads=java.xml=java.logging --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED --add-exports=jdk.xml.dom/org.w3c.dom.html=ALL-UNNAMED --add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED -Dactivemq.classpath=/opt/apache-activemq/conf: -Dactivemq.home=/opt/apache-activemq -Dactivemq.base=/opt/apache-activemq -Dactivemq.conf=/opt/apache-activemq/conf -Dactivemq.data=/opt/apache-activemq/data -Djolokia.conf=file:/opt/apache-activemq/conf/jolokia-access.xml
+activemq-1  | 2026-08-28T10:33:56.562341586Z Extensions classpath:
+activemq-1  | 2026-08-28T10:33:56.562374707Z   [/opt/apache-activemq/lib,/opt/apache-activemq/lib/camel,/opt/apache-activemq/lib/optional,/opt/apache-activemq/lib/web,/opt/apache-activemq/lib/extra]
+activemq-1  | 2026-08-28T10:33:56.563125597Z ACTIVEMQ_HOME: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:33:56.563675243Z ACTIVEMQ_BASE: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:33:56.565162768Z ACTIVEMQ_CONF: /opt/apache-activemq/conf
+activemq-1  | 2026-08-28T10:33:56.565188622Z ACTIVEMQ_DATA: /opt/apache-activemq/data
+activemq-1  | 2026-08-28T10:33:58.069901101Z Loading message broker from: xbean:activemq.xml
+activemq-1  | 2026-08-28T10:34:00.024738939Z  INFO | Using Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:34:00.038828287Z  INFO | Starting Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:34:00.068121787Z  INFO | Starting KahaDBStore
+activemq-1  | 2026-08-28T10:34:00.068297526Z  INFO | Opening MessageDatabase
+activemq-1  | 2026-08-28T10:34:00.126566241Z  INFO | Page File: /opt/apache-activemq/data/kahadb/db.data. Recovering pageFile free list due to prior unclean shutdown..
+activemq-1  | 2026-08-28T10:34:00.137642457Z  INFO | KahaDB is version 7
+activemq-1  | 2026-08-28T10:34:00.150281245Z  INFO | Page File: /opt/apache-activemq/data/kahadb/db.data. Recovered pageFile free list of size: 0
+activemq-1  | 2026-08-28T10:34:00.387283147Z  INFO | Starting Temp Data Store
+activemq-1  | 2026-08-28T10:34:00.387690175Z  INFO | PListStore:[/opt/apache-activemq/data/localhost/tmp_storage] started
+activemq-1  | 2026-08-28T10:34:00.387710230Z  INFO | Starting Job Scheduler Store
+activemq-1  | 2026-08-28T10:34:00.402590856Z  INFO | Page File: /opt/apache-activemq/data/localhost/scheduler/scheduleDB.data. Recovering pageFile free list due to prior unclean shutdown..
+activemq-1  | 2026-08-28T10:34:00.403188856Z  INFO | Page File: /opt/apache-activemq/data/localhost/scheduler/scheduleDB.data. Recovered pageFile free list of size: 0
+activemq-1  | 2026-08-28T10:34:00.405267953Z  INFO | Scheduler Store version 1 loaded
+activemq-1  | 2026-08-28T10:34:00.525868544Z  INFO | Recovering from the scheduled job journal @1:28
+activemq-1  | 2026-08-28T10:34:00.526366272Z  INFO | Recovery replayed 1 operations from the journal in 0.004 seconds.
+activemq-1  | 2026-08-28T10:34:00.527718935Z  INFO | JobSchedulerStore: /opt/apache-activemq/data/localhost/scheduler started.
+activemq-1  | 2026-08-28T10:34:00.540294136Z  INFO | Persistence Adapter successfully started
+activemq-1  | 2026-08-28T10:34:00.813249089Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-40871-1787913240408-1:1) is starting
+activemq-1  | 2026-08-28T10:34:01.066526276Z  INFO | Listening for connections at: tcp://d0444865da89:61616?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:01.066606424Z  INFO | Connector openwire started
+activemq-1  | 2026-08-28T10:34:01.072627237Z  INFO | Listening for connections at: amqp://d0444865da89:5672?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:01.074319848Z  INFO | Connector amqp started
+activemq-1  | 2026-08-28T10:34:01.081987014Z  INFO | Listening for connections at: stomp://d0444865da89:61613?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:01.086174765Z  INFO | Connector stomp started
+activemq-1  | 2026-08-28T10:34:01.088644120Z  INFO | Listening for connections at: mqtt://d0444865da89:1883?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:01.090551111Z  INFO | Connector mqtt started
+activemq-1  | 2026-08-28T10:34:01.097942965Z  INFO | Starting Jetty server
+activemq-1  | 2026-08-28T10:34:01.149362624Z  INFO | Creating Jetty connector
+activemq-1  | 2026-08-28T10:34:01.323253810Z  INFO | Listening for connections at ws://d0444865da89:61614?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:01.323869000Z  INFO | Connector ws started
+activemq-1  | 2026-08-28T10:34:01.324974511Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-40871-1787913240408-1:1) started
+activemq-1  | 2026-08-28T10:34:01.327309424Z  INFO | For help or more information please see: http://activemq.apache.org
+activemq-1  | 2026-08-28T10:34:01.331598565Z  WARN | Store limit is 102400 mb (current store usage is 2 mb). The data directory: /opt/apache-activemq/data/kahadb only has 8765 mb of usable space. - resetting to maximum available disk space: 8765 mb
+activemq-1  | 2026-08-28T10:34:01.333223816Z  WARN | Temporary Store limit is 51200 mb (current store usage is 0 mb). The data directory: /opt/apache-activemq/data/localhost only has 8762 mb of usable space. - resetting to maximum available disk space: 8762 mb
+activemq-1  | 2026-08-28T10:34:02.274423222Z  INFO | ActiveMQ WebConsole available at http://0.0.0.0:8161/
+activemq-1  | 2026-08-28T10:34:02.274979576Z  INFO | ActiveMQ Jolokia REST API available at http://0.0.0.0:8161/api/jolokia/
+activemq-1  | 2026-08-28T10:34:24.803430805Z ActiveMQ Connection Security enabled
+activemq-1  | 2026-08-28T10:34:24.805350165Z Enabling ActiveMQ WebConsole security
+activemq-1  | 2026-08-28T10:34:24.817202915Z INFO: Loading '/opt/apache-activemq/bin/setenv'
+activemq-1  | 2026-08-28T10:34:24.819475499Z INFO: Using java '/opt/java/openjdk/bin/java'
+activemq-1  | 2026-08-28T10:34:24.832799492Z INFO: Starting in foreground, this is just for debugging purposes (stop process by pressing CTRL+C)
+activemq-1  | 2026-08-28T10:34:24.832898507Z INFO: Creating pidfile /opt/apache-activemq/data/activemq.pid
+activemq-1  | 2026-08-28T10:34:25.386748167Z Java Runtime: Eclipse Adoptium 17.0.17 /opt/java/openjdk
+activemq-1  | 2026-08-28T10:34:25.387435400Z   Heap sizes: current=67584k  free=62107k  max=1048576k
+activemq-1  | 2026-08-28T10:34:25.389296692Z     JVM args: -Xms64M -Xmx1G -Djava.util.logging.config.file=logging.properties -Djava.security.auth.login.config=/opt/apache-activemq/conf/login.config -Djetty.host=0.0.0.0 -Dcom.sun.management.jmxremote -Djava.awt.headless=true -Djava.io.tmpdir=/opt/apache-activemq/tmp --add-reads=java.xml=java.logging --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED --add-exports=jdk.xml.dom/org.w3c.dom.html=ALL-UNNAMED --add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED -Dactivemq.classpath=/opt/apache-activemq/conf: -Dactivemq.home=/opt/apache-activemq -Dactivemq.base=/opt/apache-activemq -Dactivemq.conf=/opt/apache-activemq/conf -Dactivemq.data=/opt/apache-activemq/data -Djolokia.conf=file:/opt/apache-activemq/conf/jolokia-access.xml
+activemq-1  | 2026-08-28T10:34:25.389330232Z Extensions classpath:
+activemq-1  | 2026-08-28T10:34:25.389348820Z   [/opt/apache-activemq/lib,/opt/apache-activemq/lib/camel,/opt/apache-activemq/lib/optional,/opt/apache-activemq/lib/web,/opt/apache-activemq/lib/extra]
+activemq-1  | 2026-08-28T10:34:25.389366778Z ACTIVEMQ_HOME: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:34:25.389384177Z ACTIVEMQ_BASE: /opt/apache-activemq
+activemq-1  | 2026-08-28T10:34:25.389425474Z ACTIVEMQ_CONF: /opt/apache-activemq/conf
+activemq-1  | 2026-08-28T10:34:25.389443642Z ACTIVEMQ_DATA: /opt/apache-activemq/data
+activemq-1  | 2026-08-28T10:34:26.323414308Z Loading message broker from: xbean:activemq.xml
+activemq-1  | 2026-08-28T10:34:27.842355468Z  INFO | Using Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:34:27.850759898Z  INFO | Starting Persistence Adapter: KahaDBPersistenceAdapter[/opt/apache-activemq/data/kahadb]
+activemq-1  | 2026-08-28T10:34:27.892466486Z  INFO | Starting KahaDBStore
+activemq-1  | 2026-08-28T10:34:27.894621119Z  INFO | Opening MessageDatabase
+activemq-1  | 2026-08-28T10:34:27.992158930Z  INFO | Page File: /opt/apache-activemq/data/kahadb/db.data. Recovering pageFile free list due to prior unclean shutdown..
+activemq-1  | 2026-08-28T10:34:28.010944168Z  INFO | KahaDB is version 7
+activemq-1  | 2026-08-28T10:34:28.034363386Z  INFO | Page File: /opt/apache-activemq/data/kahadb/db.data. Recovered pageFile free list of size: 0
+activemq-1  | 2026-08-28T10:34:28.443585524Z  INFO | Starting Temp Data Store
+activemq-1  | 2026-08-28T10:34:28.446597398Z  INFO | PListStore:[/opt/apache-activemq/data/localhost/tmp_storage] started
+activemq-1  | 2026-08-28T10:34:28.446658120Z  INFO | Starting Job Scheduler Store
+activemq-1  | 2026-08-28T10:34:28.503426453Z  INFO | Page File: /opt/apache-activemq/data/localhost/scheduler/scheduleDB.data. Recovering pageFile free list due to prior unclean shutdown..
+activemq-1  | 2026-08-28T10:34:28.511692389Z  INFO | Page File: /opt/apache-activemq/data/localhost/scheduler/scheduleDB.data. Recovered pageFile free list of size: 0
+activemq-1  | 2026-08-28T10:34:28.518218546Z  INFO | Scheduler Store version 1 loaded
+activemq-1  | 2026-08-28T10:34:28.674087332Z  INFO | Recovering from the scheduled job journal @1:100
+activemq-1  | 2026-08-28T10:34:28.674995863Z  INFO | Recovery replayed 1 operations from the journal in 0.006 seconds.
+activemq-1  | 2026-08-28T10:34:28.681520972Z  INFO | JobSchedulerStore: /opt/apache-activemq/data/localhost/scheduler started.
+activemq-1  | 2026-08-28T10:34:28.724088435Z  INFO | Persistence Adapter successfully started
+activemq-1  | 2026-08-28T10:34:29.148266385Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-42379-1787913268544-1:1) is starting
+activemq-1  | 2026-08-28T10:34:29.522951932Z  INFO | Listening for connections at: tcp://d0444865da89:61616?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:29.524619038Z  INFO | Connector openwire started
+activemq-1  | 2026-08-28T10:34:29.530433018Z  INFO | Listening for connections at: amqp://d0444865da89:5672?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:29.532887000Z  INFO | Connector amqp started
+activemq-1  | 2026-08-28T10:34:29.538191372Z  INFO | Listening for connections at: stomp://d0444865da89:61613?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:29.539325673Z  INFO | Connector stomp started
+activemq-1  | 2026-08-28T10:34:29.544787685Z  INFO | Listening for connections at: mqtt://d0444865da89:1883?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:29.545987390Z  INFO | Connector mqtt started
+activemq-1  | 2026-08-28T10:34:29.553552397Z  INFO | Starting Jetty server
+activemq-1  | 2026-08-28T10:34:29.717559105Z  INFO | Creating Jetty connector
+activemq-1  | 2026-08-28T10:34:30.150040235Z  INFO | Listening for connections at ws://d0444865da89:61614?maximumConnections=1000&wireFormat.maxFrameSize=104857600
+activemq-1  | 2026-08-28T10:34:30.150299895Z  INFO | Connector ws started
+activemq-1  | 2026-08-28T10:34:30.152785391Z  INFO | Apache ActiveMQ 6.2.0 (localhost, ID:d0444865da89-42379-1787913268544-1:1) started
+activemq-1  | 2026-08-28T10:34:30.154284655Z  INFO | For help or more information please see: http://activemq.apache.org
+activemq-1  | 2026-08-28T10:34:30.175342197Z  WARN | Store limit is 102400 mb (current store usage is 2 mb). The data directory: /opt/apache-activemq/data/kahadb only has 8765 mb of usable space. - resetting to maximum available disk space: 8765 mb
+activemq-1  | 2026-08-28T10:34:30.178758794Z  WARN | Temporary Store limit is 51200 mb (current store usage is 0 mb). The data directory: /opt/apache-activemq/data/localhost only has 8762 mb of usable space. - resetting to maximum available disk space: 8762 mb
+activemq-1  | 2026-08-28T10:34:31.944114250Z  INFO | ActiveMQ WebConsole available at http://0.0.0.0:8161/
+activemq-1  | 2026-08-28T10:34:31.945778981Z  INFO | ActiveMQ Jolokia REST API available at http://0.0.0.0:8161/api/jolokia/
+activemq-1  | 2026-08-28T10:34:32.084813123Z  WARN | Could not accept connection from tcp://172.21.0.4:51260: Cannot send, channel has already failed: tcp://172.21.0.4:51260 (Cannot send, channel has already failed: tcp://172.21.0.4:51260)
+activemq-1  | 2026-08-28T10:34:42.108261406Z  WARN | Could not accept connection from tcp://172.21.0.4:56902: Cannot send, channel has already failed: tcp://172.21.0.4:56902 (Cannot send, channel has already failed: tcp://172.21.0.4:56902)
+activemq-1  | 2026-08-28T10:35:07.604770136Z ERROR | Failed to send scheduled message ID:d0444865da89-42379-1787913268544-5:15:1:3:21
+activemq-1  | 2026-08-28T10:35:07.604808498Z org.apache.activemq.DestinationDoesNotExistException: The destination temp-queue://ID:d0444865da89-42379-1787913268544-5:15:2 does not exist.
+activemq-1  | 2026-08-28T10:35:07.604821775Z 	at org.apache.activemq.broker.region.AbstractRegion.addDestination(AbstractRegion.java:170)
+activemq-1  | 2026-08-28T10:35:07.604839663Z 	at org.apache.activemq.broker.region.RegionBroker.addDestination(RegionBroker.java:357)
+activemq-1  | 2026-08-28T10:35:07.604856713Z 	at org.apache.activemq.broker.BrokerFilter.addDestination(BrokerFilter.java:174)
+activemq-1  | 2026-08-28T10:35:07.604872225Z 	at org.apache.activemq.advisory.AdvisoryBroker.addDestination(AdvisoryBroker.java:243)
+activemq-1  | 2026-08-28T10:35:07.604885362Z 	at org.apache.activemq.broker.region.RegionBroker.send(RegionBroker.java:472)
+activemq-1  | 2026-08-28T10:35:07.604898499Z 	at org.apache.activemq.broker.jmx.ManagedRegionBroker.send(ManagedRegionBroker.java:343)
+activemq-1  | 2026-08-28T10:35:07.604921837Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:07.604936302Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:07.604949858Z 	at org.apache.activemq.broker.scheduler.SchedulerBroker.scheduledJob(SchedulerBroker.java:429)
+activemq-1  | 2026-08-28T10:35:07.604966768Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.fireJob(JobSchedulerImpl.java:823)
+activemq-1  | 2026-08-28T10:35:07.604979136Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.mainLoop(JobSchedulerImpl.java:753)
+activemq-1  | 2026-08-28T10:35:07.604995067Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.run(JobSchedulerImpl.java:699)
+activemq-1  | 2026-08-28T10:35:07.605012467Z 	at java.base/java.lang.Thread.run(Unknown Source)
+activemq-1  | 2026-08-28T10:35:11.102890788Z ERROR | Failed to send scheduled message ID:d0444865da89-42379-1787913268544-5:18:2:3:28
+activemq-1  | 2026-08-28T10:35:11.103008529Z org.apache.activemq.DestinationDoesNotExistException: The destination temp-queue://ID:d0444865da89-42379-1787913268544-5:18:2 does not exist.
+activemq-1  | 2026-08-28T10:35:11.103078685Z 	at org.apache.activemq.broker.region.AbstractRegion.addDestination(AbstractRegion.java:170)
+activemq-1  | 2026-08-28T10:35:11.103098600Z 	at org.apache.activemq.broker.region.RegionBroker.addDestination(RegionBroker.java:357)
+activemq-1  | 2026-08-28T10:35:11.103149260Z 	at org.apache.activemq.broker.BrokerFilter.addDestination(BrokerFilter.java:174)
+activemq-1  | 2026-08-28T10:35:11.103166659Z 	at org.apache.activemq.advisory.AdvisoryBroker.addDestination(AdvisoryBroker.java:243)
+activemq-1  | 2026-08-28T10:35:11.103182521Z 	at org.apache.activemq.broker.region.RegionBroker.send(RegionBroker.java:472)
+activemq-1  | 2026-08-28T10:35:11.103198173Z 	at org.apache.activemq.broker.jmx.ManagedRegionBroker.send(ManagedRegionBroker.java:343)
+activemq-1  | 2026-08-28T10:35:11.103213756Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:11.103300751Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:11.103325767Z 	at org.apache.activemq.broker.scheduler.SchedulerBroker.scheduledJob(SchedulerBroker.java:429)
+activemq-1  | 2026-08-28T10:35:11.103346590Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.fireJob(JobSchedulerImpl.java:823)
+activemq-1  | 2026-08-28T10:35:11.103365876Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.mainLoop(JobSchedulerImpl.java:753)
+activemq-1  | 2026-08-28T10:35:11.103378873Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.run(JobSchedulerImpl.java:699)
+activemq-1  | 2026-08-28T10:35:11.103395154Z 	at java.base/java.lang.Thread.run(Unknown Source)
+activemq-1  | 2026-08-28T10:35:13.101558476Z ERROR | Failed to send scheduled message ID:d0444865da89-42379-1787913268544-5:19:1:4:37
+activemq-1  | 2026-08-28T10:35:13.101594812Z org.apache.activemq.DestinationDoesNotExistException: The destination temp-queue://ID:d0444865da89-42379-1787913268544-5:19:2 does not exist.
+activemq-1  | 2026-08-28T10:35:13.101607460Z 	at org.apache.activemq.broker.region.AbstractRegion.addDestination(AbstractRegion.java:170)
+activemq-1  | 2026-08-28T10:35:13.101619199Z 	at org.apache.activemq.broker.region.RegionBroker.addDestination(RegionBroker.java:357)
+activemq-1  | 2026-08-28T10:35:13.101638275Z 	at org.apache.activemq.broker.BrokerFilter.addDestination(BrokerFilter.java:174)
+activemq-1  | 2026-08-28T10:35:13.101650084Z 	at org.apache.activemq.advisory.AdvisoryBroker.addDestination(AdvisoryBroker.java:243)
+activemq-1  | 2026-08-28T10:35:13.101664548Z 	at org.apache.activemq.broker.region.RegionBroker.send(RegionBroker.java:472)
+activemq-1  | 2026-08-28T10:35:13.103203921Z 	at org.apache.activemq.broker.jmx.ManagedRegionBroker.send(ManagedRegionBroker.java:343)
+activemq-1  | 2026-08-28T10:35:13.103217966Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:13.103230334Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:13.103245008Z 	at org.apache.activemq.broker.scheduler.SchedulerBroker.scheduledJob(SchedulerBroker.java:429)
+activemq-1  | 2026-08-28T10:35:13.103332004Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.fireJob(JobSchedulerImpl.java:823)
+activemq-1  | 2026-08-28T10:35:13.103347097Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.mainLoop(JobSchedulerImpl.java:753)
+activemq-1  | 2026-08-28T10:35:13.103357858Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.run(JobSchedulerImpl.java:699)
+activemq-1  | 2026-08-28T10:35:13.103372183Z 	at java.base/java.lang.Thread.run(Unknown Source)
+activemq-1  | 2026-08-28T10:35:13.103386088Z ERROR | Failed to send scheduled message ID:d0444865da89-42379-1787913268544-5:19:1:4:38
+activemq-1  | 2026-08-28T10:35:13.103430040Z org.apache.activemq.DestinationDoesNotExistException: The destination temp-queue://ID:d0444865da89-42379-1787913268544-5:19:2 does not exist.
+activemq-1  | 2026-08-28T10:35:13.103445204Z 	at org.apache.activemq.broker.region.AbstractRegion.addDestination(AbstractRegion.java:170)
+activemq-1  | 2026-08-28T10:35:13.103458829Z 	at org.apache.activemq.broker.region.RegionBroker.addDestination(RegionBroker.java:357)
+activemq-1  | 2026-08-28T10:35:13.103479233Z 	at org.apache.activemq.broker.BrokerFilter.addDestination(BrokerFilter.java:174)
+activemq-1  | 2026-08-28T10:35:13.103497261Z 	at org.apache.activemq.advisory.AdvisoryBroker.addDestination(AdvisoryBroker.java:243)
+activemq-1  | 2026-08-28T10:35:13.103511586Z 	at org.apache.activemq.broker.region.RegionBroker.send(RegionBroker.java:472)
+activemq-1  | 2026-08-28T10:35:13.103529754Z 	at org.apache.activemq.broker.jmx.ManagedRegionBroker.send(ManagedRegionBroker.java:343)
+activemq-1  | 2026-08-28T10:35:13.103542401Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:13.103556726Z 	at org.apache.activemq.broker.BrokerFilter.send(BrokerFilter.java:154)
+activemq-1  | 2026-08-28T10:35:13.103573007Z 	at org.apache.activemq.broker.scheduler.SchedulerBroker.scheduledJob(SchedulerBroker.java:429)
+activemq-1  | 2026-08-28T10:35:13.103586913Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.fireJob(JobSchedulerImpl.java:823)
+activemq-1  | 2026-08-28T10:35:13.103601097Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.mainLoop(JobSchedulerImpl.java:753)
+activemq-1  | 2026-08-28T10:35:13.103615003Z 	at org.apache.activemq.store.kahadb.scheduler.JobSchedulerImpl.run(JobSchedulerImpl.java:699)
+activemq-1  | 2026-08-28T10:35:13.103628000Z 	at java.base/java.lang.Thread.run(Unknown Source)
+activemq-1  | 2026-08-28T10:35:17.719596581Z  WARN | Could not accept connection from tcp://172.21.0.4:36330: Cannot send, channel has already failed: tcp://172.21.0.4:36330 (Cannot send, channel has already failed: tcp://172.21.0.4:36330)
+activemq-1  | 2026-08-28T10:35:22.775318917Z  WARN | Could not accept connection from tcp://172.21.0.4:52638: Cannot send, channel has already failed: tcp://172.21.0.4:52638 (Cannot send, channel has already failed: tcp://172.21.0.4:52638)
+activemq-1  | 2026-08-28T10:35:27.949093759Z  WARN | Could not accept connection from tcp://172.21.0.4:52698: Cannot send, channel has already failed: tcp://172.21.0.4:52698 (Cannot send, channel has already failed: tcp://172.21.0.4:52698)
