@@ -21,6 +21,16 @@ public sealed class ActiveMqOptionSetTests
         { ["--port=5672", "--host=broker.internal", "--protocol=amqp"] },
     };
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BENCHMARK-ACTIVEMQ", "option-set-remains-internal-and-sealed")]
+    public void OptionSet_RemainsAnInternalSealedImplementationDetail()
+    {
+        Type optionSetType = typeof(ActiveMqOptionSet);
+
+        Assert.True(optionSetType.IsNotPublic);
+        Assert.True(optionSetType.IsSealed);
+    }
+
     [Theory]
     [InlineData("openwire", ActiveMqTransportProtocol.OpenWire, "activemq", 61616, "activemq:tcp://")]
     [InlineData("amqp", ActiveMqTransportProtocol.Amqp, "amqp", 5672, "amqp://")]
