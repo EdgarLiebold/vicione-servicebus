@@ -1,0 +1,22 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.ExpiredTimeToLive_CannotReachTransportSerialization(milliseconds: -1) (69ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentOutOfRangeException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.ExpiredTimeToLive_CannotReachTransportSerialization(Int32 milliseconds) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:66
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.ExpiredTimeToLive_CannotReachTransportSerialization(milliseconds: 0) (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentOutOfRangeException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.ExpiredTimeToLive_CannotReachTransportSerialization(Int32 milliseconds) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:66
+    um InvokeStub_ActiveMqSendTimingTests.ExpiredTimeToLive_CannotReachTransportSerialization(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M06.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 399ms

@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqLifecycleTests.SessionDispose_AttemptsDisposeAfterCloseFails (194ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqLifecycleTests.SessionDispose_AttemptsDisposeAfterCloseFails() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs:160
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqLifecycleTests.SessionDispose_AttemptsDisposeAfterCloseFails() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs:160
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M09.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 712ms

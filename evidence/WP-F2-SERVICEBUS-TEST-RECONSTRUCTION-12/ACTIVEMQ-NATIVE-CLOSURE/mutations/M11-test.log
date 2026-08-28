@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Topology.ConsumerEntityTests.EntityComparer_IncludesTopicQueueSelectorConsumerAndSharedIdentity(leftName: "orders-a", leftShared: False, rightName: "orders-b", rightShared: False, expected: False) (3ms)
+  Assert.Equal() Failure: Values differ
+  Expected: False
+  Actual:   True
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Topology.ConsumerEntityTests.EntityComparer_IncludesTopicQueueSelectorConsumerAndSharedIdentity(String leftName, Boolean leftShared, String rightName, Boolean rightShared, Boolean expected) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ConsumerEntityTests.cs:25
+    um InvokeStub_ConsumerEntityTests.EntityComparer_IncludesTopicQueueSelectorConsumerAndSharedIdentity(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M11.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 4
+  fehlerhaft: 1
+  erfolgreich: 3
+  übersprungen: 0
+  Dauer: 411ms

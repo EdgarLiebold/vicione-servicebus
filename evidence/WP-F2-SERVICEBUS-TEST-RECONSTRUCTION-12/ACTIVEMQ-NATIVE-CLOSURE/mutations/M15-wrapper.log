@@ -1,0 +1,29 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(flavor: "amqp") (1s 325ms)
+  Assert.Equal() Failure: Values differ
+  Expected: c68559c6-992e-41e4-9335-82c1d9158e9e
+  Actual:   null
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(String flavor) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs:165
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(String flavor) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs:179
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(flavor: "activemq") (423ms)
+  Assert.Equal() Failure: Values differ
+  Expected: f4d4774e-17bc-4107-b30d-6ad3dc42b55a
+  Actual:   null
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(String flavor) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs:165
+    um ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.ActiveMqErrorTransportTests.UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(String flavor) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs:179
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M15.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 100ms
+run identity vicione-54ae7aee789b, output under artifacts/run-output/vicione-54ae7aee789b
+fixture activemq and artemis ready on loopback: VICIONE_SERVICEBUS_AMQ_AMQP_PORT=34028, VICIONE_SERVICEBUS_AMQ_HOST=127.0.0.1, VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT=34029, VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT=34030, VICIONE_SERVICEBUS_ARTEMIS_HOST=127.0.0.1, VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT=34031, VICIONE_SERVICEBUS_ARTEMIS_PORT=34032
+endpoints projected to artifacts/run-output/vicione-54ae7aee789b/endpoints.json
+broker log activemq: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-54ae7aee789b/activemq-broker.log (44 lines)
+broker log artemis: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-54ae7aee789b/artemis-broker.log (57 lines)

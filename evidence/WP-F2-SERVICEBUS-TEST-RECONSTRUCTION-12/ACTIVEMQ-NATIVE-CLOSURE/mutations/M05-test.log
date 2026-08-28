@@ -1,0 +1,20 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqMessageBodyTests.AllAccessOrders_UseFreshMessagesAndExternalByteOracles (38ms)
+  Assert.Equal() Failure: Strings differ
+             ↓ (pos 0)
+  Expected: "aäあb"
+  Actual:   "\0\0\0\0\0\0\0"
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqMessageBodyTests.AssertExactBody(ActiveMqMessageBody body) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqMessageBodyTests.cs:73
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqMessageBodyTests.AllAccessOrders_UseFreshMessagesAndExternalByteOracles() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqMessageBodyTests.cs:34
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M05.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 362ms

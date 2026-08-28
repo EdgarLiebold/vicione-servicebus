@@ -1,0 +1,28 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(name: "orders name") (20ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(String name) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs:99
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(name: "orders/path") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(String name) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs:99
+    um InvokeStub_ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(name: "orders?temporary=true") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(String name) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs:99
+    um InvokeStub_ActiveMqEndpointAddressTests.DirectConstruction_RejectsNamesThatCouldBecomeUriControl(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M03.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 383ms

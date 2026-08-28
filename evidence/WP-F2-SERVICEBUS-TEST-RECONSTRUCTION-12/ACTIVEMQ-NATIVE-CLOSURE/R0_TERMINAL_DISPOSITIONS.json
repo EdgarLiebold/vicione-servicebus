@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "fa938ae508bbc422bd281d82ae5d14ba995517d8",
+  "authoritativeRows": ".testagent/activemq-native-obligation-map.tsv",
+  "authoritativeRowsSha256": "05e3a90bd09a8303eb5ca0ec68c06b1251655a348bc230af1bcbe5317dddc66a",
+  "obligationSet": {
+    "singleton": "OBL-R0-BLD-0095",
+    "contiguousFirst": "OBL-R0-BRK-0355",
+    "contiguousLast": "OBL-R0-BRK-0466",
+    "count": 113,
+    "duplicates": 0,
+    "missing": 0
+  },
+  "historicalExecutionIdentities": 179,
+  "dispositions": {
+    "REPLACED_EXECUTING": 113,
+    "other": 0
+  },
+  "profiles": {
+    "UnitArchitecture": 40,
+    "LocalIntegration": 73
+  },
+  "targetIntegrity": {
+    "missingAssemblies": 0,
+    "missingTypes": 0,
+    "missingMethods": 0,
+    "duplicateTargetsForOneObligation": 0
+  }
+}

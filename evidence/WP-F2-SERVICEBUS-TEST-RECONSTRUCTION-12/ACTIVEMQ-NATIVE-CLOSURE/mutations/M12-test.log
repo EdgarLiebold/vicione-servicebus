@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Topology.ArtemisTopologyTests.ArtemisCompatibility_UsesANamedSharedTopicSubscriptionWithoutAnAnycastQueue (41ms)
+  Assert.Single() Failure: The collection contained 2 items
+  Collection: [name: order-service, name: Consumer.order-service.VirtualTopic.orders]
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Topology.ArtemisTopologyTests.ArtemisCompatibility_UsesANamedSharedTopicSubscriptionWithoutAnAnycastQueue() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ArtemisTopologyTests.cs:26
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE/mutations/M12.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 447ms

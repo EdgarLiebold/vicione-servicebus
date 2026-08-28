@@ -1296,3 +1296,31 @@ future cohorts as complete.
 - This remains an intermediate technical checkpoint. The remaining ActiveMQ obligations beginning at
   `0426`, final 113-obligation disposition, inherited-project retirement and complete mutation /
   acceptance evidence remain open; no terminal closure is claimed here.
+
+## ActiveMQ native closure — terminal local implementation and evidence candidate
+
+- The intermediate ActiveMQ sections above are historical checkpoints and are superseded by this
+  section. Technical commit `fa938ae508bbc422bd281d82ae5d14ba995517d8` with tree
+  `4f0e47743584c33e62035fe3bdc6f801aac28867` is the frozen local implementation subject.
+- All 113 selected R0 obligations are terminally `REPLACED_EXECUTING`, accounting for all 179
+  historical execution identities. The committed map has 40 UnitArchitecture and 73
+  LocalIntegration owners and SHA-256
+  `05e3a90bd09a8303eb5ca0ec68c06b1251655a348bc230af1bcbe5317dddc66a`.
+- The inherited ActiveMQ project is atomically retired: 34 C# files plus four tracked project/config
+  files, its expected-list and its legacy CI/model selection are absent. No empty inherited folder
+  remains; Git retains the exact parent blobs.
+- The frozen positive runs pass Engineering Release with 0 warnings and 0 errors,
+  UnitArchitecture 2158/2158 and LocalIntegration 244/244, each with zero failure and zero skip.
+  LocalIntegration used one fresh run-scoped PostgreSQL/Azurite/LocalStack/ActiveMQ/Artemis fixture
+  with the ActiveMQ outage-control channel enabled.
+- Sixteen byte-exact product mutations and one workflow-gate sabotage are each killed by their own
+  focused carrier. Every compiled mutant builds cleanly, every targeted run exits 2 for the expected
+  reason, M15 is broker-backed on both Classic and Artemis, and every product/workflow target is
+  restored to its baseline SHA before this evidence child is assembled.
+- Repository checks pass on the complete staged evidence set: 257/257 CI-tool tests, 103/103
+  identity-tool tests, the verification model and the generated 8427-entry CHANGELIST. The known
+  sandbox restriction was handled by repeating the process-group tests outside the sandbox; no test
+  or product rule was weakened.
+- This is the terminal local implementation/evidence candidate, not self-acceptance. Two independent
+  static read-only reviews of the same technical/evidence freeze remain mandatory. GitHub workflows
+  remain manually disabled and no cloud/external ActiveMQ follow-up is required.
