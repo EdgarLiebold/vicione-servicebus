@@ -1206,3 +1206,27 @@ future cohorts as complete.
   no broker-backed result is claimed by this checkpoint.
 - Broker-backed replacement carriers, complete R0 disposition, inherited-project retirement,
   one-cause mutation evidence, full solution gates and independent read-only acceptance remain open.
+
+## ActiveMQ native closure — hermetic configuration, body and recovery carriers
+
+- Twenty-one previously frozen obligations now have three source-derived, executing xUnit 4 / MTP
+  carriers: endpoint prefetch/concurrency precedence, provider message-body access-order semantics and
+  the endpoint-bound recovery sequence. Every carrier uses external exact values or direct state
+  snapshots; none waits for the absence of an event.
+- The message-body work exposed a product defect instead of accommodating it: an ActiveMQ bytes
+  message could return the correct body once and then re-read the provider cursor as zero bytes from
+  another accessor. `ActiveMqMessageBody` now takes one thread-safe body snapshot and derives length,
+  bytes, text and read-only streams from that single truth. Unsupported provider message kinds fail
+  consistently from every accessor.
+- The focused project build passes with zero warnings and errors and its full cohort passes 91/91,
+  zero failure and zero skip. The complete UnitArchitecture Release build also passes with zero
+  warnings and errors; the unfiltered serial solution run passes 2,153/2,153 with zero failure and
+  zero skip.
+- That first focused run also reproduced a pre-existing file-protocol race: both sides trusted a
+  lossy `FileSystemWatcher` notification after only one filesystem check. The control client now
+  derives completion from the atomically renamed result file under its injected `TimeProvider`, and
+  its test controller observes the already-published request through a deterministic internal
+  boundary. Ten consecutive focused runs of all 15 outage-protocol cases pass after the correction.
+- This is a technical checkpoint, not final ActiveMQ acceptance. Broker-backed carriers, the full
+  113-obligation closure, inherited-project retirement, mutation evidence and independent reviews
+  remain open.

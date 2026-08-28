@@ -31,7 +31,7 @@ public sealed class BrokerOutageControlClientTests
     public async Task RestoreFailure_IsReported()
     {
         using var control = new ControlDirectory();
-        var client = new BrokerOutageControlClient(control.Path);
+        BrokerOutageControlClient client = control.CreateClient();
 
         Task operation = client.RequestAsync(
             "restore",
@@ -52,7 +52,7 @@ public sealed class BrokerOutageControlClientTests
     {
         using var control = new ControlDirectory();
         var time = new FakeTimeProvider();
-        var client = new BrokerOutageControlClient(control.Path, time);
+        BrokerOutageControlClient client = control.CreateClient(time);
 
         Task operation = client.RequestAsync(
             "interrupt",
@@ -70,7 +70,7 @@ public sealed class BrokerOutageControlClientTests
     public async Task RejectedInterrupt_IsReported()
     {
         using var control = new ControlDirectory();
-        var client = new BrokerOutageControlClient(control.Path);
+        BrokerOutageControlClient client = control.CreateClient();
 
         Task operation = client.RequestAsync(
             "interrupt",
@@ -149,7 +149,7 @@ public sealed class BrokerOutageControlClientTests
     public async Task Interrupt_ReturnsOnlyAfterTheObservedEffect()
     {
         using var control = new ControlDirectory();
-        var client = new BrokerOutageControlClient(control.Path);
+        BrokerOutageControlClient client = control.CreateClient();
 
         Task operation = client.RequestAsync(
             "interrupt",
@@ -183,7 +183,6 @@ public sealed class BrokerOutageControlClientTests
 
     private sealed class ControlDirectory : IDisposable
     {
-        private readonly FileSystemWatcher _watcher;
         private readonly TaskCompletionSource<string> _requestPublished =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -193,19 +192,17 @@ public sealed class BrokerOutageControlClientTests
                 System.IO.Path.GetTempPath(),
                 $"vicione-activemq-control-{Guid.NewGuid():N}");
             Directory.CreateDirectory(Path);
-
-            _watcher = new FileSystemWatcher(Path, "*.request")
-            {
-                NotifyFilter = NotifyFilters.FileName,
-                EnableRaisingEvents = true,
-            };
-            _watcher.Created += (_, args) => _requestPublished.TrySetResult(args.FullPath);
-            _watcher.Renamed += (_, args) => _requestPublished.TrySetResult(args.FullPath);
         }
 
         public string Path { get; }
 
         public Task<string> RequestPublished => _requestPublished.Task;
+
+        public BrokerOutageControlClient CreateClient(TimeProvider? timeProvider = null) =>
+            new(
+                Path,
+                timeProvider ?? TimeProvider.System,
+                requestPath => _requestPublished.TrySetResult(requestPath));
 
         public void RespondTo(
             string requestPath,
@@ -227,7 +224,6 @@ public sealed class BrokerOutageControlClientTests
 
         public void Dispose()
         {
-            _watcher.Dispose();
             try
             {
                 Directory.Delete(Path, recursive: true);

@@ -11,8 +11,10 @@ public sealed class BrokerOutageControlClient
     public const int SchemaVersion = 1;
 
     private static readonly TimeSpan DefaultBudget = TimeSpan.FromMinutes(3);
+    private static readonly TimeSpan ResultProbeInterval = TimeSpan.FromMilliseconds(25);
 
     private readonly string _controlDirectory;
+    private readonly Action<string>? _onRequestPublished;
     private readonly TimeProvider _timeProvider;
 
     public BrokerOutageControlClient(string controlDirectory)
@@ -20,7 +22,10 @@ public sealed class BrokerOutageControlClient
     {
     }
 
-    internal BrokerOutageControlClient(string controlDirectory, TimeProvider timeProvider)
+    internal BrokerOutageControlClient(
+        string controlDirectory,
+        TimeProvider timeProvider,
+        Action<string>? onRequestPublished = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(controlDirectory);
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -30,6 +35,7 @@ public sealed class BrokerOutageControlClient
 
         _controlDirectory = Path.GetFullPath(controlDirectory);
         _timeProvider = timeProvider;
+        _onRequestPublished = onRequestPublished;
     }
 
     public static BrokerOutageControlClient FromEnvironment()
@@ -66,25 +72,6 @@ public sealed class BrokerOutageControlClient
         string requestPath = Path.Combine(_controlDirectory, $"{requestId}.request");
         string resultPath = Path.Combine(_controlDirectory, $"{requestId}.result");
 
-        var responsePublished = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var watcher = new FileSystemWatcher(_controlDirectory, Path.GetFileName(resultPath))
-        {
-            NotifyFilter = NotifyFilters.FileName,
-        };
-        FileSystemEventHandler published = (_, args) =>
-        {
-            if (string.Equals(Path.GetFullPath(args.FullPath), resultPath, StringComparison.Ordinal))
-                responsePublished.TrySetResult();
-        };
-        RenamedEventHandler renamed = (_, args) =>
-        {
-            if (string.Equals(Path.GetFullPath(args.FullPath), resultPath, StringComparison.Ordinal))
-                responsePublished.TrySetResult();
-        };
-        watcher.Created += published;
-        watcher.Renamed += renamed;
-        watcher.EnableRaisingEvents = true;
-
         Task timeout = Task.Delay(budget, _timeProvider, cancellationToken);
 
         string partialPath = requestPath + ".partial";
@@ -93,17 +80,24 @@ public sealed class BrokerOutageControlClient
             JsonSerializer.Serialize(new { schemaVersion = SchemaVersion, requestId, action }),
             cancellationToken).ConfigureAwait(false);
         File.Move(partialPath, requestPath);
+        _onRequestPublished?.Invoke(requestPath);
 
-        if (File.Exists(resultPath))
-            responsePublished.TrySetResult();
-
-        Task completed = await Task.WhenAny(responsePublished.Task, timeout).ConfigureAwait(false);
-        if (completed != responsePublished.Task)
+        // FileSystemWatcher notifications are lossy: operating systems may coalesce or drop them.
+        // The protocol therefore derives completion from the atomically renamed result file itself
+        // and bounds its probes through the injected TimeProvider.
+        while (!File.Exists(resultPath))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            throw new TimeoutException(
-                $"The fixture runner did not answer the request to {action} the broker within " +
-                $"{budget.TotalSeconds:0.###} seconds.");
+            Task probe = Task.Delay(ResultProbeInterval, _timeProvider, cancellationToken);
+            Task completed = await Task.WhenAny(probe, timeout).ConfigureAwait(false);
+            if (completed == timeout)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                throw new TimeoutException(
+                    $"The fixture runner did not answer the request to {action} the broker within " +
+                    $"{budget.TotalSeconds:0.###} seconds.");
+            }
+
+            await probe.ConfigureAwait(false);
         }
 
         string json = await File.ReadAllTextAsync(resultPath, cancellationToken).ConfigureAwait(false);

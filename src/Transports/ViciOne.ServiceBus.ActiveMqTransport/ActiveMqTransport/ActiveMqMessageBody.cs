@@ -1,7 +1,9 @@
+#nullable enable
 namespace ViciOne.ServiceBus.ActiveMqTransport
 {
     using System.IO;
     using System.Text;
+    using System.Threading;
     using Apache.NMS;
 
 
@@ -9,7 +11,10 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         MessageBody
     {
         readonly IMessage _message;
-        byte[] _bytes;
+        readonly object _gate = new();
+        byte[]? _bytes;
+        bool _initialized;
+        string? _string;
 
         public ActiveMqMessageBody(IMessage message)
         {
@@ -27,31 +32,63 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         /// it delegates: whatever the body is, and whatever refuses it, both members agree.
         /// </para>
         /// </summary>
-        public long? Length => GetBytes().LongLength;
+        public long? Length
+        {
+            get
+            {
+                EnsureInitialized();
+                return _bytes!.LongLength;
+            }
+        }
 
         public Stream GetStream()
         {
-            return new MemoryStream(GetBytes(), false);
+            EnsureInitialized();
+            return new MemoryStream(_bytes!, false);
         }
 
         public byte[] GetBytes()
         {
-            return _bytes ??= _message switch
-            {
-                ITextMessage text => Encoding.UTF8.GetBytes(text.Text),
-                IBytesMessage bytes => bytes.Content,
-                _ => throw new ActiveMqTransportException($"The message type is not supported: {TypeCache.GetShortName(_message.GetType())}")
-            };
+            EnsureInitialized();
+            return _bytes!;
         }
 
         public string GetString()
         {
-            return _message switch
+            EnsureInitialized();
+            return _string!;
+        }
+
+        void EnsureInitialized()
+        {
+            if (Volatile.Read(ref _initialized))
+                return;
+
+            lock (_gate)
             {
-                ITextMessage text => text.Text,
-                IBytesMessage bytes => MessageDefaults.Encoding.GetString(bytes.Content),
-                _ => throw new ActiveMqTransportException($"The message type is not supported: {TypeCache.GetShortName(_message.GetType())}")
-            };
+                if (_initialized)
+                    return;
+
+                switch (_message)
+                {
+                    case ITextMessage text:
+                        _string = text.Text ?? string.Empty;
+                        _bytes = Encoding.UTF8.GetBytes(_string);
+                        break;
+
+                    case IBytesMessage bytes:
+                        byte[]? content = bytes.Content;
+                        _bytes = content is null ? [] : (byte[])content.Clone();
+                        _string = MessageDefaults.Encoding.GetString(_bytes);
+                        break;
+
+                    default:
+                        throw new ActiveMqTransportException(
+                            $"The message type is not supported: {TypeCache.GetShortName(_message.GetType())}");
+                }
+
+                Volatile.Write(ref _initialized, true);
+            }
         }
     }
 }
