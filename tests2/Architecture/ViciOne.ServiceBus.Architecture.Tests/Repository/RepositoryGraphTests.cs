@@ -1,5 +1,6 @@
 using System.Xml.Linq;
 using ViciOne.ServiceBus.Architecture.Tests.Build;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
@@ -171,7 +172,9 @@ public sealed class RepositoryGraphTests
                 "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj",
                 "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
                 "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+                "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
                 "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+                "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
                 "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
                 "src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj",
                 "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
@@ -204,6 +207,26 @@ public sealed class RepositoryGraphTests
                 "tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
             ],
             actual);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-TEST-203", "unit-profile-contains-complete-project-reference-closure")]
+    public void UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure()
+    {
+        var solution = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Tests.Unit.slnx");
+        var members = SolutionProjects(solution)
+            .Select(Path.GetFullPath)
+            .ToHashSet(RepositoryLayout.PathComparer);
+
+        var missing = members
+            .SelectMany(project => ProjectReferences(project)
+                .Where(reference => !members.Contains(Path.GetFullPath(reference)))
+                .Select(reference =>
+                    $"{RepositoryLayout.RelativeToRoot(project)} -> {RepositoryLayout.RelativeToRoot(reference)}"))
+            .OrderBy(edge => edge, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(missing);
     }
 
     [Fact]

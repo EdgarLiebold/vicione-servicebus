@@ -55,6 +55,35 @@ public sealed class ActiveMqHostAddressTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "unknown-typed-protocol-fails-fast")]
+    public void ExplicitConstruction_RejectsAnUnknownTypedProtocol()
+    {
+        var protocol = (ActiveMqTransportProtocol)999;
+
+        var exception = Assert.Throws<ActiveMqTransportConfigurationException>(
+            () => new ActiveMqHostAddress(protocol, "broker", 61616, "/"));
+
+        Assert.Contains("not supported", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("999", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "uri-invalid-explicit-host-fails-at-construction")]
+    public void ExplicitConstruction_RejectsUriInvalidHostsAtConstruction()
+    {
+        string[] invalidHosts = ["broker/path", "broker?query", "broker#fragment"];
+
+        Assert.All(invalidHosts, host =>
+        {
+            var exception = Assert.Throws<ActiveMqTransportConfigurationException>(
+                () => new ActiveMqHostAddress(ActiveMqTransportProtocol.OpenWire, host, 61616, "/"));
+
+            Assert.Contains("host is invalid", exception.Message, StringComparison.Ordinal);
+            Assert.Contains(host, exception.Message, StringComparison.Ordinal);
+        });
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "protocol-less-constructor-is-not-public-api")]
     public void PublicApi_ExposesNoProtocolLessHostConstructor()
     {
@@ -66,7 +95,8 @@ public sealed class ActiveMqHostAddressTests
         Assert.Equal(2, constructorShapes.Length);
         Assert.Contains(constructorShapes, parameters => parameters.SequenceEqual([typeof(Uri)]));
         Assert.Contains(constructorShapes, parameters => parameters.SequenceEqual(
-            [typeof(ActiveMqTransportProtocol), typeof(string), typeof(int?), typeof(string)]));
+            [typeof(ActiveMqTransportProtocol), typeof(string), typeof(int), typeof(string)]));
+        Assert.Equal(typeof(int), typeof(ActiveMqHostAddress).GetField(nameof(ActiveMqHostAddress.Port))?.FieldType);
     }
 
     [Theory]
@@ -98,12 +128,11 @@ public sealed class ActiveMqHostAddressTests
     }
 
     [Theory]
-    [InlineData(null)]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(65536)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "invalid-explicit-port")]
-    public void ExplicitConstruction_RejectsInvalidPorts(int? port)
+    public void ExplicitConstruction_RejectsInvalidPorts(int port)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new ActiveMqHostAddress("activemq", "broker", port, "/"));
     }

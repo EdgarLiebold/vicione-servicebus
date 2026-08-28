@@ -1,4 +1,8 @@
-using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
+using System.Xml.Linq;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
+using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Smoke;
@@ -7,10 +11,11 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Smoke;
 /// Structural smoke checks over the real compiled product assemblies.
 /// </summary>
 /// <remarks>
-/// Every subject here is one of the two compiled foundation assemblies this build actually produced and
-/// loaded, reached through a compile-verified type anchor. The repository-wide graph is owned by
-/// <see cref="Repository.RepositoryGraphTests"/>; this class deliberately makes no completeness
-/// claim beyond the foundation anchors.
+/// Contract and dependency checks use the two compiled foundation assemblies reached through
+/// compile-verified type anchors. The configuration check deliberately expands to every product
+/// project in the UnitArchitecture solution and reads the configuration from each produced PE file.
+/// Repository-wide membership and reference-closure completeness are independently owned by
+/// <see cref="Repository.RepositoryGraphTests"/>.
 /// </remarks>
 public sealed class ProductAssemblySmokeTests
 {
@@ -90,11 +95,81 @@ public sealed class ProductAssemblySmokeTests
 
         Assert.False(string.IsNullOrEmpty(testConfiguration));
 
-        foreach (var assembly in ProductAssemblyFacts.ArchitectureAnchors)
+        var unitSolution = Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Tests.Unit.slnx");
+        var productProjects = XDocument.Load(unitSolution)
+            .Descendants("Project")
+            .Select(project => project.Attribute("Path")?.Value)
+            .Where(path => path?.StartsWith("src/", StringComparison.Ordinal) == true)
+            .Select(path => Path.GetFullPath(path!, RepositoryLayout.Root))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.NotEmpty(productProjects);
+
+        foreach (var project in productProjects)
         {
-            Assert.Equal(testConfiguration, ProductAssemblyFacts.ConfigurationOf(assembly));
+            var evaluatedConfiguration = MsBuildEvaluation.PropertyOf(project, "Configuration", testConfiguration);
+            var targetPath = MsBuildEvaluation.PropertyOf(project, "TargetPath", testConfiguration);
+
+            Assert.Equal(testConfiguration, evaluatedConfiguration);
+            Assert.True(
+                File.Exists(targetPath),
+                $"{RepositoryLayout.RelativeToRoot(project)} did not produce its expected {testConfiguration} artifact: {targetPath}");
+
+            var actualConfiguration = ReadAssemblyConfiguration(targetPath);
+
+            Assert.True(
+                string.Equals(testConfiguration, actualConfiguration, StringComparison.Ordinal),
+                $"{RepositoryLayout.RelativeToRoot(project)} produced configuration '{actualConfiguration}' instead of '{testConfiguration}'.");
         }
     }
+
+    private static string? ReadAssemblyConfiguration(string assemblyPath)
+    {
+        using var stream = File.OpenRead(assemblyPath);
+        using var peReader = new PEReader(stream);
+        var metadata = peReader.GetMetadataReader();
+
+        foreach (var handle in metadata.GetAssemblyDefinition().GetCustomAttributes())
+        {
+            var attribute = metadata.GetCustomAttribute(handle);
+            var attributeType = AttributeTypeName(metadata, attribute.Constructor);
+
+            if (attributeType != "System.Reflection.AssemblyConfigurationAttribute")
+            {
+                continue;
+            }
+
+            var value = metadata.GetBlobReader(attribute.Value);
+            Assert.Equal((ushort)1, value.ReadUInt16());
+            return value.ReadSerializedString();
+        }
+
+        return null;
+    }
+
+    private static string? AttributeTypeName(MetadataReader metadata, EntityHandle constructor)
+    {
+        EntityHandle declaringType = constructor.Kind switch
+        {
+            HandleKind.MemberReference => metadata.GetMemberReference((MemberReferenceHandle)constructor).Parent,
+            HandleKind.MethodDefinition => metadata.GetMethodDefinition((MethodDefinitionHandle)constructor).GetDeclaringType(),
+            _ => default
+        };
+
+        return declaringType.Kind switch
+        {
+            HandleKind.TypeReference => TypeName(metadata, metadata.GetTypeReference((TypeReferenceHandle)declaringType)),
+            HandleKind.TypeDefinition => TypeName(metadata, metadata.GetTypeDefinition((TypeDefinitionHandle)declaringType)),
+            _ => null
+        };
+    }
+
+    private static string TypeName(MetadataReader metadata, TypeReference type) =>
+        $"{metadata.GetString(type.Namespace)}.{metadata.GetString(type.Name)}";
+
+    private static string TypeName(MetadataReader metadata, TypeDefinition type) =>
+        $"{metadata.GetString(type.Namespace)}.{metadata.GetString(type.Name)}";
 
     [Fact]
     public void TestAssembly_RunsOnTheProductFramework()

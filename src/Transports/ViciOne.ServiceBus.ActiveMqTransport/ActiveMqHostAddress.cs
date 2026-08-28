@@ -13,7 +13,7 @@ namespace ViciOne.ServiceBus
 
         public readonly string Scheme;
         public readonly string Host;
-        public readonly int? Port;
+        public readonly int Port;
         public readonly string VirtualHost;
 
         public ActiveMqHostAddress(Uri address)
@@ -39,27 +39,29 @@ namespace ViciOne.ServiceBus
             }
         }
 
-        public ActiveMqHostAddress(ActiveMqTransportProtocol protocol, string host, int? port, string virtualHost)
+        public ActiveMqHostAddress(ActiveMqTransportProtocol protocol, string host, int port, string virtualHost)
             : this(SchemeFor(protocol), host, port, virtualHost)
         {
         }
 
         internal ActiveMqHostAddress(string scheme, string host, int? port, string virtualHost)
         {
-            Scheme = NormalizeScheme(scheme);
-            Host = string.IsNullOrWhiteSpace(host)
-                ? throw new ArgumentException("The ActiveMQ host must not be null, empty, or whitespace.", nameof(host))
-                : host;
-            Port = port switch
+            var normalizedScheme = NormalizeScheme(scheme);
+            var normalizedPort = port switch
             {
                 null or 0 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be configured explicitly and must be between 1 and 65535."),
                 < 0 or > 65535 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be between 1 and 65535."),
-                _ => port
+                _ => port.Value
             };
-            VirtualHost = string.IsNullOrWhiteSpace(virtualHost) ? "/" : virtualHost;
+            var normalizedVirtualHost = string.IsNullOrWhiteSpace(virtualHost) ? "/" : virtualHost;
+
+            Scheme = normalizedScheme;
+            Port = normalizedPort;
+            VirtualHost = normalizedVirtualHost;
+            Host = NormalizeHost(normalizedScheme, host, normalizedPort, normalizedVirtualHost);
         }
 
-        static void ParseLeft(Uri address, out string scheme, out string host, out int? port, out string virtualHost)
+        static void ParseLeft(Uri address, out string scheme, out string host, out int port, out string virtualHost)
         {
             scheme = address.Scheme;
             host = address.Host;
@@ -80,6 +82,32 @@ namespace ViciOne.ServiceBus
                 ActiveMqScheme or AmqpScheme => normalized,
                 _ => throw new ActiveMqTransportConfigurationException($"The address scheme is not supported: {scheme}")
             };
+        }
+
+        static string NormalizeHost(string scheme, string host, int port, string virtualHost)
+        {
+            if (string.IsNullOrWhiteSpace(host))
+                throw new ArgumentException("The ActiveMQ host must not be null, empty, or whitespace.", nameof(host));
+
+            if (Uri.CheckHostName(host) == UriHostNameType.Unknown)
+                throw new ActiveMqTransportConfigurationException($"The ActiveMQ host is invalid: {host}");
+
+            try
+            {
+                return new UriBuilder
+                {
+                    Scheme = scheme,
+                    Host = host,
+                    Port = port,
+                    Path = virtualHost == "/"
+                        ? "/"
+                        : $"/{Uri.EscapeDataString(virtualHost)}"
+                }.Uri.Host;
+            }
+            catch (UriFormatException exception)
+            {
+                throw new ActiveMqTransportConfigurationException($"The ActiveMQ host is invalid: {host}", exception);
+            }
         }
 
         static string SchemeFor(ActiveMqTransportProtocol protocol) => protocol switch
@@ -110,7 +138,7 @@ namespace ViciOne.ServiceBus
             {
                 Scheme = address.Scheme,
                 Host = address.Host,
-                Port = address.Port ?? throw new ActiveMqTransportConfigurationException("The ActiveMQ port is unavailable."),
+                Port = address.Port,
                 Path = address.VirtualHost == "/"
                     ? "/"
                     : $"/{Uri.EscapeDataString(address.VirtualHost)}"

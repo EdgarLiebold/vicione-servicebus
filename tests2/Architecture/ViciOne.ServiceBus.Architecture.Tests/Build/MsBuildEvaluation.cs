@@ -15,35 +15,37 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 /// the project file itself.
 /// <para>
 /// Only <c>-getProperty</c> and <c>-getItem</c> are used, so evaluation runs but no target executes
-/// and nothing is written into the checkout. Results are cached per project because evaluation
-/// costs seconds, several rules revisit the same projects, and source-layout validation traverses
-/// the complete native test-project set.
+/// and nothing is written into the checkout. Results are cached per project and explicit
+/// configuration because evaluation costs seconds, several rules revisit the same projects, and
+/// source-layout validation traverses the complete native test-project set.
 /// </para>
 /// </remarks>
 internal static class MsBuildEvaluation
 {
-    private static readonly Dictionary<string, JsonDocument> Cache = [];
+    private static readonly Dictionary<EvaluationKey, JsonDocument> Cache = [];
     private static readonly Lock Gate = new();
     private static readonly TimeSpan Budget = TimeSpan.FromMinutes(3);
 
     private const string Properties =
-        "TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;LangVersion;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;UserSecretsId";
+        "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;LangVersion;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;UserSecretsId";
 
     private const string Items =
         "Compile;PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
 
     /// <summary>Evaluates a project once and returns the parsed MSBuild output.</summary>
-    internal static JsonElement Evaluate(string projectPath)
+    internal static JsonElement Evaluate(string projectPath, string? configuration = null)
     {
+        var key = new EvaluationKey(projectPath, configuration);
+
         lock (Gate)
         {
-            if (Cache.TryGetValue(projectPath, out var cached))
+            if (Cache.TryGetValue(key, out var cached))
             {
                 return cached.RootElement;
             }
 
-            var document = JsonDocument.Parse(Run(projectPath));
-            Cache[projectPath] = document;
+            var document = JsonDocument.Parse(Run(projectPath, configuration));
+            Cache[key] = document;
             return document.RootElement;
         }
     }
@@ -51,6 +53,10 @@ internal static class MsBuildEvaluation
     /// <summary>Reads one evaluated property value.</summary>
     internal static string PropertyOf(string projectPath, string name) =>
         Evaluate(projectPath).GetProperty("Properties").GetProperty(name).GetString() ?? string.Empty;
+
+    /// <summary>Reads one evaluated property value for an explicit build configuration.</summary>
+    internal static string PropertyOf(string projectPath, string name, string configuration) =>
+        Evaluate(projectPath, configuration).GetProperty("Properties").GetProperty(name).GetString() ?? string.Empty;
 
     /// <summary>Reads the <c>Identity</c> of every item of one type.</summary>
     internal static IReadOnlyList<string> ItemIdentities(string projectPath, string itemType) =>
@@ -72,7 +78,7 @@ internal static class MsBuildEvaluation
             .ToArray();
     }
 
-    private static string Run(string projectPath)
+    private static string Run(string projectPath, string? configuration)
     {
         var start = new ProcessStartInfo(DotNetHost.Path)
         {
@@ -85,6 +91,12 @@ internal static class MsBuildEvaluation
         start.ArgumentList.Add("msbuild");
         start.ArgumentList.Add(projectPath);
         start.ArgumentList.Add("-nologo");
+
+        if (!string.IsNullOrWhiteSpace(configuration))
+        {
+            start.ArgumentList.Add($"-property:Configuration={configuration}");
+        }
+
         start.ArgumentList.Add($"-getProperty:{Properties}");
         start.ArgumentList.Add($"-getItem:{Items}");
 
@@ -122,6 +134,8 @@ internal static class MsBuildEvaluation
 
         return output;
     }
+
+    private readonly record struct EvaluationKey(string ProjectPath, string? Configuration);
 
     private static string Drain(Task<string> stream)
     {

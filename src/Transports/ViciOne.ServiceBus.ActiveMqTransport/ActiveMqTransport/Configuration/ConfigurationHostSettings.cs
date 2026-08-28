@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             var hostAddress = new ActiveMqHostAddress(address);
 
             Host = hostAddress.Host;
-            Port = hostAddress.Port ?? throw new ActiveMqTransportConfigurationException("The ActiveMQ port is unavailable.");
+            Port = hostAddress.Port;
             VirtualHost = hostAddress.VirtualHost;
 
             Username = "";

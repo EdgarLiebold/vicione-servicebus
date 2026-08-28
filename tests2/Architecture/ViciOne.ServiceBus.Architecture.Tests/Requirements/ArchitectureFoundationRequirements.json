@@ -57,6 +57,13 @@
   },
   {
     "requirementId": "REQ-TEST-203",
+    "variantKey": "unit-profile-contains-complete-project-reference-closure",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests",
+    "testMethod": "UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
     "variantKey": "public-local-integration-commands-use-predeclared-floor",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
