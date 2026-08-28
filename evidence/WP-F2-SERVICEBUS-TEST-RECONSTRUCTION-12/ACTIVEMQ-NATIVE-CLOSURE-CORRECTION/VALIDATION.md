@@ -59,7 +59,12 @@ private receipt mechanism, VSTest separator or NUnit runner participates.
 ## One-cause attacks
 
 `MUTATION_MANIFEST.json` binds baseline bytes, the one exact replacement, mutant bytes and restored
-bytes for M18-M29. `MUTATION_EXECUTION.tsv` binds every build/test command, exit code and raw result.
+bytes for M18-M29. `MUTATION_EXECUTION.tsv` binds every build/test working directory, shell-escaped
+command argument sequence, exit code and raw result. Canonical evidence destinations are absolute in
+the command columns because M18-M25 and M29 executed from the detached mutation worktree; M26-M28
+bind the canonical repository as their wrapper working directory and include the originally supplied
+`--evidence-dir` fixture argument. This distinction prevents a relative evidence path from being
+misread as a path inside the disposable mutation checkout.
 All compiled mutants built with 0 warnings and 0 errors; all twelve behavioral/gate runs exited 2 for
 the expected reason, with zero skips.
 

@@ -1357,3 +1357,17 @@ future cohorts as complete.
   and 73 LocalIntegration owners. No cloud ActiveMQ boundary is deferred. This section is the final
   evidence candidate, not self-acceptance; independent read-only review remains mandatory before
   acceptance and remote publication.
+
+## ActiveMQ native closure — command-binding precision correction
+
+- The technical subject and every raw result remain unchanged. A post-freeze evidence audit found
+  that the mutation execution table omitted its build/test working directories, represented several
+  canonical evidence destinations as relative paths from the detached mutation checkout, and did
+  not reproduce the supplied `--evidence-dir` argument for M26-M28.
+- `MUTATION_EXECUTION.tsv` now binds both working directories and shell-escaped argument sequences.
+  It distinguishes the detached technical checkout from the canonical fixture-runner checkout and
+  names the canonical raw-result destinations unambiguously. No test, build, broker or mutation was
+  rerun, and no result or technical claim changed.
+- This additive evidence correction supersedes only the earlier command-string rendering. The
+  independent acceptance review must bind the final correction child, not the preceding evidence
+  candidate.

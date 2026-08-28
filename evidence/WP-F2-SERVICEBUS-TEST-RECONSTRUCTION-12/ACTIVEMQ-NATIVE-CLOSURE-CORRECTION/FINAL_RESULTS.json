@@ -105,6 +105,7 @@
     "sha256Entries": 104
   },
   "commands": {
+    "representation": "normalized user-facing tool invocations; exact mutation working directories and shell-escaped argument sequences are bound in MUTATION_EXECUTION.tsv",
     "engineeringRestore": "dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode",
     "engineeringBuild": "dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore",
     "unit": "dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION/positive/unit --minimum-expected-tests 2185 --max-parallel-test-modules 1 --report-xunit-ctrf --parallel none --progress off --no-ansi --output Normal",
