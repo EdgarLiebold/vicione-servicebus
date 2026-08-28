@@ -133,7 +133,11 @@ internal sealed class ActiveMqBroker : IDisposable
         return $"{Prefix}-{suffix}";
     }
 
-    public void ConfigureHost(IActiveMqBusFactoryConfigurator configurator)
+    public void ConfigureHost(IActiveMqBusFactoryConfigurator configurator) => ConfigureHost(configurator, null);
+
+    public void ConfigureHost(
+        IActiveMqBusFactoryConfigurator configurator,
+        Action<IActiveMqHostConfigurator>? configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
@@ -141,6 +145,7 @@ internal sealed class ActiveMqBroker : IDisposable
         {
             host.Username(_userName);
             host.Password(_password);
+            configure?.Invoke(host);
         });
 
         if (Flavor == ArtemisFlavor)
@@ -262,6 +267,63 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("EnqueueCount").GetInt64(),
             value.GetProperty("DequeueCount").GetInt64(),
             value.GetProperty("QueueSize").GetInt64());
+    }
+
+    public async Task<bool> ClassicQueueExists(string queueName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        HttpClient client = _managementClient
+            ?? throw new InvalidOperationException("Classic ActiveMQ management is unavailable for the Artemis fixture.");
+        string mbean =
+            $"org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName={queueName}";
+        string payload = JsonSerializer.Serialize(new { type = "read", mbean });
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/jolokia/")
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json"),
+        };
+        using HttpResponseMessage response = await client.SendAsync(request, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        string content = await response.Content.ReadAsStringAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        using JsonDocument document = JsonDocument.Parse(content);
+        int status = document.RootElement.GetProperty("status").GetInt32();
+        return status switch
+        {
+            200 => true,
+            404 => false,
+            _ => throw new InvalidDataException(
+                $"Jolokia returned status {status} while probing queue '{queueName}': {content}"),
+        };
+    }
+
+    public async Task DeleteClassicQueue(string queueName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        HttpClient client = _managementClient
+            ?? throw new InvalidOperationException("Classic ActiveMQ management is unavailable for the Artemis fixture.");
+        string payload = JsonSerializer.Serialize(new
+        {
+            type = "exec",
+            mbean = "org.apache.activemq:type=Broker,brokerName=localhost",
+            operation = "removeQueue(java.lang.String)",
+            arguments = new[] { queueName },
+        });
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/jolokia/")
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json"),
+        };
+        using HttpResponseMessage response = await client.SendAsync(request, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        string content = await response.Content.ReadAsStringAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        using JsonDocument document = JsonDocument.Parse(content);
+        int status = document.RootElement.GetProperty("status").GetInt32();
+        if (status != 200)
+            throw new InvalidDataException($"Jolokia returned status {status} while deleting queue '{queueName}': {content}");
     }
 
     public void Dispose() => _managementClient?.Dispose();

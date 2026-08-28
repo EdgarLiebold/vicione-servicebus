@@ -12,12 +12,12 @@ public sealed class RemoveAutoDeleteAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
-    readonly SessionContext _context;
+    readonly ConnectionContext _connectionContext;
 
-    public RemoveAutoDeleteAgent(SessionContext context, BrokerTopology brokerTopology)
+    public RemoveAutoDeleteAgent(ConnectionContext connectionContext, BrokerTopology brokerTopology)
     {
         _brokerTopology = brokerTopology;
-        _context = context;
+        _connectionContext = connectionContext;
 
         SetReady();
     }
@@ -26,7 +26,14 @@ public sealed class RemoveAutoDeleteAgent :
     {
         try
         {
-            await DeleteAutoDelete(_context).ConfigureAwait(false);
+            // Topology setup runs through a scoped session which is released as soon as that
+            // operation completes. The session supervisor is already stopping when its send agents
+            // are stopped, so it cannot create a replacement at this point. The connection is the
+            // longer-lived owner: acquire one stop-scoped session, complete every deletion through
+            // its serial executor, and close that session before the agent reports completion.
+            var session = await _connectionContext.CreateSession(context.CancellationToken).ConfigureAwait(false);
+            await using var sessionContext = new ActiveMqSessionContext(_connectionContext, session, context.CancellationToken);
+            await DeleteAutoDelete(sessionContext).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

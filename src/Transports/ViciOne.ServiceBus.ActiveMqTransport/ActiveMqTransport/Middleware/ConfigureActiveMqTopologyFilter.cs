@@ -34,7 +34,7 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
             await next.Send(context).ConfigureAwait(false);
 
             if (_settings is ReceiveSettings)
-                _context.AddSendAgent(new RemoveAutoDeleteAgent(context, _brokerTopology));
+                _context.AddSendAgent(new RemoveAutoDeleteAgent(context.ConnectionContext, _brokerTopology));
         }
         catch (Exception)
         {

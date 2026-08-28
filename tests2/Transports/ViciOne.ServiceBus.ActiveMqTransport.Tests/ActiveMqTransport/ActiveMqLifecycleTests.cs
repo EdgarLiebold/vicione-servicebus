@@ -2,6 +2,8 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using Apache.NMS;
 using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+using ViciOne.ServiceBus.ActiveMqTransport.Middleware;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
 using ViciOne.ServiceBus.ActiveMqTransport.Tests.TestDoubles;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -10,6 +12,59 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport;
 
 public sealed class ActiveMqLifecycleTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-acquires-live-session-at-stop")]
+    public async Task AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStops()
+    {
+        const string queueName = "temporary-orders";
+        bool sessionCreated = false;
+        bool sessionClosed = false;
+        bool sessionDisposed = false;
+        string? deletedQueue = null;
+        IQueue queueDestination = InterfaceProxy<IQueue>.Create((method, _) => method.Name switch
+        {
+            "get_QueueName" => queueName,
+            _ => Default(method.ReturnType),
+        });
+        ISession stopSession = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.GetQueue) => queueDestination,
+            nameof(ISession.DeleteDestination) => Record(() =>
+            {
+                Assert.Same(queueDestination, args![0]);
+                deletedQueue = queueName;
+            }),
+            nameof(ISession.CloseAsync) => Record(() => sessionClosed = true, Task.CompletedTask),
+            nameof(IDisposable.Dispose) => Record(() => sessionDisposed = true),
+            _ => Default(method.ReturnType),
+        });
+        ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
+        {
+            nameof(ConnectionContext.CreateSession) => Record(
+                () => sessionCreated = true,
+                Task.FromResult(stopSession)),
+            nameof(ConnectionContext.TryRemoveTemporaryEntity) => false,
+            _ => Default(method.ReturnType),
+        });
+        ViciOne.ServiceBus.ActiveMqTransport.Topology.Queue queue =
+            InterfaceProxy<ViciOne.ServiceBus.ActiveMqTransport.Topology.Queue>.Create((method, _) => method.Name switch
+            {
+                "get_EntityName" => queueName,
+                "get_AutoDelete" => true,
+                "get_Durable" => false,
+                _ => Default(method.ReturnType),
+            });
+        var topology = new ActiveMqBrokerTopology([], [queue], []);
+        var agent = new RemoveAutoDeleteAgent(connection, topology);
+
+        await agent.Stop("endpoint stopping", TestContext.Current.CancellationToken);
+
+        Assert.True(sessionCreated);
+        Assert.Equal(queueName, deletedQueue);
+        Assert.True(sessionClosed);
+        Assert.True(sessionDisposed);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "connection-disposed-after-close-failure")]
     public async Task ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFails()
