@@ -1177,3 +1177,32 @@ future cohorts as complete.
   and currently reports 59,494 stale baseline/API bindings. That existing repository-governance debt
   is outside this 18-path AWS correction and requires a separately authorized regeneration/review;
   it is not hidden inside or counted as an AWS test result.
+
+## ActiveMQ native closure — product-boundary checkpoint
+
+- The hash-bound research checkpoint is `2afee3f3d734c405479d0d7bd00d9711573b1c2e`; the native
+  test/configuration foundation is `b9728b00c54b06bd4958de777ee9eefd633a4642`. The selected R0
+  closure contains 113 unique obligations and 179 historical execution identities. This checkpoint
+  is not a terminal disposition or final evidence claim.
+- ActiveMQ configuration now has no implicit broker or credentials, bus construction owns an
+  immutable settings snapshot, failover endpoints are typed URIs, and address parsing rejects
+  secrets, ambiguous options, protocol/host/port/virtual-host redirection and entity-name injection.
+  Consumer topology identity includes the complete shared-subscription contract.
+- Generic forwarding expiry and ActiveMQ scheduling use the owning context's `TimeProvider`; an
+  already expired generic send is marked before transport serialization. Connection, session and
+  temporary-entity cleanup preserve later cleanup attempts and retry ownership after an earlier
+  failure. The obsolete product-shipped ActiveMQ test harness and dead connection hook are removed.
+- The focused Release build has zero warnings and zero errors. The native xUnit 4 / Microsoft
+  Testing Platform project passes 88/88 with zero failure and zero skip. The supported .NET 10 MTP
+  command form passes runner options directly after the project options; inserting the legacy
+  VSTest `--` separator causes a reproducible zero-discovery exit 5 and must not be treated as a
+  product or sandbox failure. Restricted sandbox process/network failures remain diagnosed
+  separately as documented above.
+- After adding the ActiveMQ product and test projects to their exact profile graphs, the complete
+  Release UnitArchitecture build passes with zero warnings and zero errors. The subsequent
+  unfiltered, serial Microsoft Testing Platform run passes 2,150/2,150 with zero failure and zero
+  skip using the repository's canonical command and minimum-test floor. The locked
+  LocalIntegration restore and complete Release build also pass with zero warnings and zero errors;
+  no broker-backed result is claimed by this checkpoint.
+- Broker-backed replacement carriers, complete R0 disposition, inherited-project retirement,
+  one-cause mutation evidence, full solution gates and independent read-only acceptance remain open.

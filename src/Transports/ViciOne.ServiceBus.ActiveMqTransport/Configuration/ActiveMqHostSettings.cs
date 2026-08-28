@@ -20,6 +20,11 @@ namespace ViciOne.ServiceBus
         int Port { get; }
 
         /// <summary>
+        /// The logical host scope used when formatting endpoint addresses.
+        /// </summary>
+        string VirtualHost { get; }
+
+        /// <summary>
         /// The Username for connecting to the host
         /// </summary>
         string Username { get; }

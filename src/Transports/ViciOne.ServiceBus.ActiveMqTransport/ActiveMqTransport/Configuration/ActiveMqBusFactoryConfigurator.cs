@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 
         public void Host(ActiveMqHostSettings settings)
         {
-            _busConfiguration.HostConfiguration.Settings = settings;
+            _busConfiguration.HostConfiguration.Settings = new ActiveMqHostSettingsSnapshot(settings);
         }
 
         void IActiveMqBusFactoryConfigurator.Send<T>(Action<IActiveMqMessageSendTopologyConfigurator<T>> configureTopology)

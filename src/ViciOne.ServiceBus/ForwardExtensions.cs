@@ -79,11 +79,14 @@ namespace ViciOne.ServiceBus
         {
             void AddForwarderAddress(ConsumeContext consumeContext, SendContext sendContext)
             {
+                TimeProvider timeProvider = consumeContext.GetTimeProvider();
+                sendContext.SetTimeProvider(timeProvider);
+
                 var forwarderAddress = consumeContext.ReceiveContext.InputAddress ?? consumeContext.DestinationAddress;
                 if (forwarderAddress != null && forwarderAddress != context.DestinationAddress)
                     sendContext.Headers.Set(MessageHeaders.ForwarderAddress, forwarderAddress.ToString());
 
-                ForwardingExpiration.MarkIfExpired(sendContext, consumeContext.ExpirationTime);
+                ForwardingExpiration.MarkIfExpired(sendContext, consumeContext.ExpirationTime, timeProvider);
             }
 
             return endpoint.Send(message, new CopyContextPipe(context, AddForwarderAddress), context.CancellationToken);

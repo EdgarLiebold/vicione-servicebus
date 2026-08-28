@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using Apache.NMS;
 
@@ -35,35 +34,22 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
                 "priorityURIs"
             };
 
-        readonly Lazy<Uri> _brokerAddress;
-        readonly Lazy<Uri> _hostAddress;
-
         protected ConfigurationHostSettings(Uri address)
         {
             var hostAddress = new ActiveMqHostAddress(address);
 
             Host = hostAddress.Host;
             Port = hostAddress.Port ?? 61616;
+            VirtualHost = hostAddress.VirtualHost;
 
             Username = "";
             Password = "";
 
-            if (!string.IsNullOrEmpty(address.UserInfo))
-            {
-                var parts = address.UserInfo.Split(':');
-                Username = parts[0];
-
-                if (parts.Length >= 2)
-                    Password = parts[1];
-            }
-
             TransportOptions = new Dictionary<string, string>();
-
-            _hostAddress = new Lazy<Uri>(FormatHostAddress);
-            _brokerAddress = new Lazy<Uri>(FormatBrokerAddress);
+            FailoverHosts = Array.Empty<Uri>();
         }
 
-        public string[] FailoverHosts { get; set; }
+        public IReadOnlyList<Uri> FailoverHosts { get; set; }
         public Dictionary<string, string> TransportOptions { get; }
 
         public abstract string HostScheme { get; }
@@ -78,12 +64,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 
         public string Host { get; }
         public int Port { get; set; }
+        public string VirtualHost { get; }
         public string Username { get; set; }
         public string Password { get; set; }
         public bool UseSsl { get; set; }
 
-        public Uri HostAddress => _hostAddress.Value;
-        public Uri BrokerAddress => _brokerAddress.Value;
+        public Uri HostAddress => FormatHostAddress();
+        public Uri BrokerAddress => FormatBrokerAddress();
 
         public IConnection CreateConnection()
         {
@@ -95,25 +82,18 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 
         Uri FormatHostAddress()
         {
-            return new ActiveMqHostAddress(NmsScheme, Host, Port, "/");
+            return new ActiveMqHostAddress(NmsScheme, Host, Port, VirtualHost);
         }
 
         Uri FormatBrokerAddress()
         {
             // create broker URI: http://activemq.apache.org/nms/activemq-uri-configuration.html
-            if (FailoverHosts?.Length > 0)
+            if (FailoverHosts.Count > 0)
             {
                 //filter only parameters which are not failover parameters
                 var failoverServerPart = GetQueryString(kv => !IsFailoverArgument(kv.Key));
                 var failoverPart = string.Join(",", FailoverHosts
-                    .Select(failoverHost => new UriBuilder
-                        {
-                            Scheme = HostScheme,
-                            Host = GetHostName(failoverHost),
-                            Port = GetPort(failoverHost, Port),
-                            Query = failoverServerPart
-                        }.Uri.ToString()
-                    ));
+                    .Select(failoverHost => FormatFailoverHost(failoverHost, failoverServerPart)));
                 //filter failover parameters only. Apache.NMS.ActiveMQ requires prefix "transport." for failover parameters
                 var failoverQueryPart = GetQueryString(kv => IsFailoverArgument(kv.Key), FailoverConnectionSettingPrefix);
                 return new Uri($"{FailoverScheme}:({failoverPart}){failoverQueryPart}");
@@ -129,13 +109,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             if (TransportOptions.Count == 0)
                 return "";
 
-            var queryString = string.Join("&", TransportOptions.Where(predicate).Select(pair =>
+            var queryString = string.Join("&", TransportOptions.Where(predicate)
+                .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                .Select(pair =>
             {
-                if (pair.Key.StartsWith(prefix, StringComparison.InvariantCulture))
-                {
-                    return $"{pair.Key}={pair.Value}";
-                }
-                return $"{prefix}{pair.Key}={pair.Value}";
+                var key = pair.Key.StartsWith(prefix, StringComparison.Ordinal) ? pair.Key : $"{prefix}{pair.Key}";
+                return $"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(pair.Value)}";
             }));
 
             return $"?{queryString}";
@@ -156,30 +135,28 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             return key.StartsWith("nested.", StringComparison.OrdinalIgnoreCase) || _failoverArguments.Any(f => key.EndsWith(f, StringComparison.InvariantCulture));
         }
 
-        int GetPort(string host, int defaultPort)
+        string FormatFailoverHost(Uri address, string query)
         {
-            //Parse the port from the host if it is specified, otherwise return the default port
-            if (string.IsNullOrEmpty(host))
-            {
-                return defaultPort;
-            }
-            var hostPort = host.Split(':');
-            if (hostPort.Length > 1 && int.TryParse(hostPort[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int port))
-            {
-                return port;
-            }
-            return defaultPort;
-        }
+            ArgumentNullException.ThrowIfNull(address);
 
-        string GetHostName(string failoverHost)
-        {
-            if (string.IsNullOrEmpty(failoverHost))
+            if (!address.IsAbsoluteUri || !string.Equals(address.Scheme, HostScheme, StringComparison.OrdinalIgnoreCase))
+                throw new ActiveMqTransportConfigurationException($"The failover endpoint must use the '{HostScheme}' scheme.");
+            if (string.IsNullOrWhiteSpace(address.Host))
+                throw new ActiveMqTransportConfigurationException("The failover endpoint host must not be empty.");
+            if (!string.IsNullOrEmpty(address.UserInfo) || !string.IsNullOrEmpty(address.Query) || !string.IsNullOrEmpty(address.Fragment)
+                || address.AbsolutePath != "/")
             {
-                throw new ArgumentNullException(nameof(failoverHost));
+                throw new ActiveMqTransportConfigurationException(
+                    "Failover endpoints contain only scheme, host, and optional port; credentials and options use the typed configurator.");
             }
 
-            var hostPort = failoverHost.Split(':');
-            return hostPort[0];
+            return new UriBuilder
+            {
+                Scheme = HostScheme,
+                Host = address.Host,
+                Port = address.IsDefaultPort || address.Port <= 0 ? Port : address.Port,
+                Query = query.TrimStart('?')
+            }.Uri.ToString();
         }
     }
 }

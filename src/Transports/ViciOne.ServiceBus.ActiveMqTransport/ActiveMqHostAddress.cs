@@ -18,6 +18,9 @@ namespace ViciOne.ServiceBus
 
         public ActiveMqHostAddress(Uri address)
         {
+            ArgumentNullException.ThrowIfNull(address);
+            RejectCredentialsAndUnsupportedComponents(address);
+
             Scheme = default;
             Host = default;
             Port = default;
@@ -32,7 +35,7 @@ namespace ViciOne.ServiceBus
                     break;
 
                 default:
-                    throw new ArgumentException($"The address scheme is not supported: {address.Scheme}", nameof(address));
+                    throw new ActiveMqTransportConfigurationException($"The address scheme is not supported: {address.Scheme}");
             }
         }
 
@@ -43,13 +46,17 @@ namespace ViciOne.ServiceBus
 
         public ActiveMqHostAddress(string scheme, string host, int? port, string virtualHost)
         {
-            Scheme = scheme;
-            Host = host;
-            Port = port;
-            VirtualHost = virtualHost;
-
-            if (port <= 0)
-                Port = 61616;
+            Scheme = NormalizeScheme(scheme);
+            Host = string.IsNullOrWhiteSpace(host)
+                ? throw new ArgumentException("The ActiveMQ host must not be null, empty, or whitespace.", nameof(host))
+                : host;
+            Port = port switch
+            {
+                null or 0 => 61616,
+                < 0 or > 65535 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be between 1 and 65535, or zero for the default."),
+                _ => port
+            };
+            VirtualHost = string.IsNullOrWhiteSpace(virtualHost) ? "/" : virtualHost;
         }
 
         static void ParseLeft(Uri address, out string scheme, out string host, out int? port, out string virtualHost)
@@ -62,6 +69,31 @@ namespace ViciOne.ServiceBus
                 : address.Port;
 
             virtualHost = address.ParseHostPath();
+        }
+
+        static string NormalizeScheme(string scheme)
+        {
+            var normalized = scheme?.ToLowerInvariant();
+            return normalized switch
+            {
+                ActiveMqScheme or AmqpScheme => normalized,
+                _ => throw new ActiveMqTransportConfigurationException($"The address scheme is not supported: {scheme}")
+            };
+        }
+
+        static void RejectCredentialsAndUnsupportedComponents(Uri address)
+        {
+            if (!string.IsNullOrEmpty(address.UserInfo))
+            {
+                throw new ActiveMqTransportConfigurationException(
+                    "Credentials must be configured through the ActiveMQ host configurator, never embedded in a URI.");
+            }
+
+            if (!string.IsNullOrEmpty(address.Query) || !string.IsNullOrEmpty(address.Fragment))
+            {
+                throw new ActiveMqTransportConfigurationException(
+                    "ActiveMQ host transport options must be configured through the typed host configurator.");
+            }
         }
 
         public static implicit operator Uri(in ActiveMqHostAddress address)

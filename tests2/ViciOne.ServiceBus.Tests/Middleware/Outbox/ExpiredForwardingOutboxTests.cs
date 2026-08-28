@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -29,6 +30,8 @@ public sealed class ExpiredForwardingOutboxTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
+                DateTime expiration = Assert.IsType<DateTime>(context.ExpirationTime).ToUniversalTime();
+                context.SetTimeProvider(new FakeTimeProvider(new DateTimeOffset(expiration).AddMinutes(1)));
                 ISendEndpoint endpoint = await context.GetSendEndpoint(forwardAddress).ConfigureAwait(false);
                 var outboxEndpoint = new PersistentOutboxSendEndpoint(outbox, endpoint);
 
@@ -41,7 +44,7 @@ public sealed class ExpiredForwardingOutboxTests
             await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             await harness.InputQueueSendEndpoint.Send(
                     new ForwardMessage { Value = "expired-outbox" },
-                    context => context.TimeToLive = TimeSpan.FromSeconds(-30),
+                    context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
             await sourceCompleted.Task.WaitAsync(operationTimeout, cancellationToken);

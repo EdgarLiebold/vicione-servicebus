@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus
 {
+    using System;
     using System.Collections.Generic;
 
 
@@ -29,8 +30,8 @@ namespace ViciOne.ServiceBus
         /// <summary>
         /// Sets a list of hosts to enable the failover transport
         /// </summary>
-        /// <param name="hosts"></param>
-        void FailoverHosts(string[] hosts);
+        /// <param name="hosts">Absolute broker endpoints matching the configured protocol and TLS mode.</param>
+        void FailoverHosts(params Uri[] hosts);
 
         /// <summary>
         /// Sets options on the underlying NMS transport

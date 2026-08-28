@@ -84,6 +84,7 @@ namespace ViciOne.ServiceBus.Transports
             {
                 SendContext<T> sendContext = await _sendTransportContext.CreateSendContext(context, _message, _pipe, _cancellationToken).ConfigureAwait(false);
 
+                ForwardingExpiration.MarkIfExpired(sendContext, null, sendContext.GetTimeProvider());
                 if (ForwardingExpiration.TryDiscard(sendContext))
                     return;
 

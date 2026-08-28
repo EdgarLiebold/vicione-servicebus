@@ -81,10 +81,20 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public bool TryRemoveTemporaryEntity(ISession session, string name)
         {
-            if (_temporaryEntities.TryGetValue(name, out var destination))
+            if (_temporaryEntities.TryRemove(name, out var destination))
             {
-                session.DeleteDestination(destination);
-                return true;
+                try
+                {
+                    session.DeleteDestination(destination);
+                    return true;
+                }
+                catch
+                {
+                    // A failed broker delete must remain discoverable for a later retry. Do not
+                    // overwrite a newer mapping if another operation recreated the same name.
+                    _temporaryEntities.TryAdd(name, destination);
+                    throw;
+                }
             }
 
             return false;
@@ -97,17 +107,31 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             try
             {
                 await _connection.CloseAsync().ConfigureAwait(false);
-
-                TransportLogMessages.DisconnectedHost(Description);
-
-                _connection.Dispose();
-
-                await _executor.DisposeAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 LogContext.Warning?.Log(exception, "Close Connection Faulted: {Host}", Description);
             }
+
+            try
+            {
+                _connection.Dispose();
+            }
+            catch (Exception exception)
+            {
+                LogContext.Warning?.Log(exception, "Dispose Connection Faulted: {Host}", Description);
+            }
+
+            try
+            {
+                await _executor.DisposeAsync().ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                LogContext.Warning?.Log(exception, "Dispose Connection Executor Faulted: {Host}", Description);
+            }
+
+            TransportLogMessages.DisconnectedHost(Description);
         }
     }
 }

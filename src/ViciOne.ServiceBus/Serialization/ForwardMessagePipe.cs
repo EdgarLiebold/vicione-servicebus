@@ -36,8 +36,11 @@ namespace ViciOne.ServiceBus.Serialization
             context.ResponseAddress = _context.ResponseAddress;
             context.FaultAddress = _context.FaultAddress;
 
+            TimeProvider timeProvider = _context.GetTimeProvider();
+            context.SetTimeProvider(timeProvider);
+
             if (_context.ExpirationTime.HasValue)
-                context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - DateTime.UtcNow;
+                context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - timeProvider.GetUtcNow().UtcDateTime;
 
             foreach (KeyValuePair<string, object> header in _context.Headers.GetAll())
                 context.Headers.Set(header.Key, header.Value);
@@ -45,7 +48,7 @@ namespace ViciOne.ServiceBus.Serialization
             if (_pipe.IsNotEmpty())
                 await _pipe.Send(context).ConfigureAwait(false);
 
-            if (ForwardingExpiration.MarkIfExpired(context, _context.ExpirationTime))
+            if (ForwardingExpiration.MarkIfExpired(context, _context.ExpirationTime, timeProvider))
                 return;
 
             var forwarderAddress = _context.ReceiveContext.InputAddress ?? _context.DestinationAddress;

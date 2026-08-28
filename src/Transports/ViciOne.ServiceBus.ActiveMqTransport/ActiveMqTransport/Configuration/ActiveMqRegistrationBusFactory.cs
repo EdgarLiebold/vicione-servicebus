@@ -34,16 +34,19 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 
             var options = context.GetRequiredService<IOptionsMonitor<ActiveMqTransportOptions>>().Get(busName);
 
-            configurator.Host(options.Host, options.Port, h =>
+            if (!string.IsNullOrWhiteSpace(options.Host))
             {
-                if (!string.IsNullOrWhiteSpace(options.User))
-                    h.Username(options.User);
-                if (!string.IsNullOrWhiteSpace(options.Pass))
-                    h.Password(options.Pass);
+                configurator.Host(options.Host, options.Port, h =>
+                {
+                    if (!string.IsNullOrWhiteSpace(options.User))
+                        h.Username(options.User);
+                    if (!string.IsNullOrWhiteSpace(options.Pass))
+                        h.Password(options.Pass);
 
-                if (options.UseSsl)
-                    h.UseSsl();
-            });
+                    if (options.UseSsl)
+                        h.UseSsl();
+                });
+            }
 
             return CreateBus(configurator, context, _configure, specifications);
         }

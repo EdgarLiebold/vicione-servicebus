@@ -8,6 +8,7 @@
     <Project Path="tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />
+    <Project Path="tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj" />
     <Project Path="tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj" />
   </Folder>
   <Folder Name="/src/">
@@ -18,6 +19,7 @@
     <Project Path="src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
     <Project Path="src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
   </Folder>
 </Solution>

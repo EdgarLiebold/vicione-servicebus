@@ -36,23 +36,41 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public async ValueTask DisposeAsync()
         {
-            if (_session != null)
+            try
             {
-                try
-                {
-                    await _messageProducerCache.Stop(CancellationToken.None).ConfigureAwait(false);
-
-                    await _session.CloseAsync().ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    LogContext.Warning?.Log(ex, "Close session faulted: {Host}", ConnectionContext.Description);
-                }
-
-                _session.Dispose();
+                await _messageProducerCache.Stop(CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogContext.Warning?.Log(ex, "Stop message producers faulted: {Host}", ConnectionContext.Description);
             }
 
-            await _executor.DisposeAsync().ConfigureAwait(false);
+            try
+            {
+                await _session.CloseAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogContext.Warning?.Log(ex, "Close session faulted: {Host}", ConnectionContext.Description);
+            }
+
+            try
+            {
+                _session.Dispose();
+            }
+            catch (Exception ex)
+            {
+                LogContext.Warning?.Log(ex, "Dispose session faulted: {Host}", ConnectionContext.Description);
+            }
+
+            try
+            {
+                await _executor.DisposeAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogContext.Warning?.Log(ex, "Dispose session executor faulted: {Host}", ConnectionContext.Description);
+            }
         }
 
         public override CancellationToken CancellationToken { get; }

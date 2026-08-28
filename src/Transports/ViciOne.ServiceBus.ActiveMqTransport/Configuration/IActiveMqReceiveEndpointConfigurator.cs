@@ -26,6 +26,5 @@ namespace ViciOne.ServiceBus
         void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator> callback = null);
 
         void ConfigureSession(Action<IPipeConfigurator<SessionContext>> configure);
-        void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure);
     }
 }

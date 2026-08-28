@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -84,12 +85,15 @@ public sealed class MessagePackTransportIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardExpirationMessage>(async context =>
             {
+                DateTime expiration = Assert.IsType<DateTime>(context.ExpirationTime).ToUniversalTime();
+                var timeProvider = new FakeTimeProvider(new DateTimeOffset(expiration).AddMinutes(1));
+                context.SetTimeProvider(timeProvider);
                 await context.Forward(
                         forwardAddress,
                         Pipe.Execute<SendContext<ForwardExpirationMessage>>(sendContext =>
                             projection.TrySetResult(new ForwardExpirationProjection(
                                 sendContext.TimeToLive,
-                                DateTime.UtcNow))))
+                                timeProvider.GetUtcNow().UtcDateTime))))
                     .ConfigureAwait(false);
                 sourceCompleted.TrySetResult(context);
             });
@@ -111,7 +115,7 @@ public sealed class MessagePackTransportIntegrationTests
             using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(observer);
             await harness.InputQueueSendEndpoint.Send(
                     new ForwardExpirationMessage { Value = "expired" },
-                    context => context.TimeToLive = TimeSpan.FromSeconds(-30),
+                    context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
 

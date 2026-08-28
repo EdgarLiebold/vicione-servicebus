@@ -41,7 +41,10 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
 
         public Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator> configure = null)
         {
-            var address = new ActiveMqEndpointAddress(_hostConfiguration.HostAddress, new Uri($"topic:{topicName}"));
+            var address = new ActiveMqEndpointAddress(
+                _hostConfiguration.HostAddress,
+                topicName,
+                type: ActiveMqEndpointAddress.AddressType.Topic);
 
             var sendSettings = new ActiveMqTopicSendSettings(address);
 

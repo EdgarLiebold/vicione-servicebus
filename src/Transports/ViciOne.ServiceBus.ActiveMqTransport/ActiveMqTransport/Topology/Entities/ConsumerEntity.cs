@@ -67,20 +67,25 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
                 if (x.GetType() != y.GetType())
                     return false;
 
-                return x._topic.Equals(y._topic)
-                    && ((x._queue != null && x._queue.Equals(y._queue)) || (x._queue == null && y._queue == null))
-                    && string.Equals(x.Selector, y.Selector);
+                return TopicEntity.EntityComparer.Equals(x._topic, y._topic)
+                    && ((x._queue != null && QueueEntity.QueueComparer.Equals(x._queue, y._queue)) || (x._queue == null && y._queue == null))
+                    && string.Equals(x.Selector, y.Selector)
+                    && string.Equals(x.ConsumerName, y.ConsumerName)
+                    && x.IsShared == y.IsShared;
             }
 
             public int GetHashCode(ConsumerEntity obj)
             {
                 unchecked
                 {
-                    var hashCode = obj._topic.GetHashCode();
+                    var hashCode = TopicEntity.EntityComparer.GetHashCode(obj._topic);
                     if (obj._queue != null)
-                        hashCode = (hashCode * 397) ^ obj._queue.GetHashCode();
+                        hashCode = (hashCode * 397) ^ QueueEntity.QueueComparer.GetHashCode(obj._queue);
                     if (obj.Selector != null)
                         hashCode = (hashCode * 397) ^ obj.Selector.GetHashCode();
+                    if (obj.ConsumerName != null)
+                        hashCode = (hashCode * 397) ^ obj.ConsumerName.GetHashCode();
+                    hashCode = (hashCode * 397) ^ obj.IsShared.GetHashCode();
 
                     return hashCode;
                 }
@@ -106,14 +111,23 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
 
                 return x._queue == null && y._queue == null
                     ? string.Equals(x._topic.EntityName, y._topic.EntityName)
+                        && string.Equals(x.ConsumerName, y.ConsumerName)
                     : string.Equals(x._queue?.EntityName, y._queue?.EntityName);
             }
 
             public int GetHashCode(ConsumerEntity obj)
             {
                 return obj._queue == null
-                    ? obj._topic.EntityName.GetHashCode()
+                    ? CombineHashCodes(obj._topic.EntityName, obj.ConsumerName)
                     : obj._queue.EntityName.GetHashCode();
+            }
+
+            static int CombineHashCodes(string topicName, string consumerName)
+            {
+                unchecked
+                {
+                    return (topicName.GetHashCode() * 397) ^ (consumerName?.GetHashCode() ?? 0);
+                }
             }
         }
     }

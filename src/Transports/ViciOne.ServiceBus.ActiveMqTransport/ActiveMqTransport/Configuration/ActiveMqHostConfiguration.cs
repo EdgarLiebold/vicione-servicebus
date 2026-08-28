@@ -1,6 +1,8 @@
+#nullable enable
 namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Channels;
     using Apache.NMS;
     using ViciOne.ServiceBus.Configuration;
@@ -16,14 +18,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         readonly IActiveMqBusConfiguration _busConfiguration;
         readonly Recycle<IConnectionContextSupervisor> _connectionContext;
         readonly IActiveMqBusTopology _topology;
-        ActiveMqHostSettings _hostSettings;
+        ActiveMqHostSettings? _hostSettings;
 
         public ActiveMqHostConfiguration(IActiveMqBusConfiguration busConfiguration, IActiveMqTopologyConfiguration topologyConfiguration)
             : base(busConfiguration)
         {
             _busConfiguration = busConfiguration;
 
-            _hostSettings = new OpenWireHostSettings(new Uri("activemq://localhost"));
             _topology = new ActiveMqBusTopology(this, topologyConfiguration);
 
             ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
@@ -38,13 +39,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             _connectionContext = new Recycle<IConnectionContextSupervisor>(() => new ConnectionContextSupervisor(this, topologyConfiguration));
         }
 
-        public override Uri HostAddress => _hostSettings.HostAddress;
+        public override Uri HostAddress => Settings.HostAddress;
 
         public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
         public ActiveMqHostSettings Settings
         {
-            get => _hostSettings;
+            get => _hostSettings ?? throw new ConfigurationException("The ActiveMQ host was not configured.");
             set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
         }
 
@@ -66,7 +67,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         }
 
         public IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<IActiveMqReceiveEndpointConfigurator> configure)
+            Action<IActiveMqReceiveEndpointConfigurator>? configure)
         {
             var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
 
@@ -75,7 +76,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         }
 
         public IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ActiveMqQueueReceiveSettings settings,
-            IActiveMqEndpointConfiguration endpointConfiguration, Action<IActiveMqReceiveEndpointConfigurator> configure)
+            IActiveMqEndpointConfiguration endpointConfiguration, Action<IActiveMqReceiveEndpointConfigurator>? configure)
         {
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
@@ -90,8 +91,17 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
 
         public override IBusTopology Topology => _topology;
 
-        public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IActiveMqReceiveEndpointConfigurator> configureEndpoint = null)
+        public override IEnumerable<ValidationResult> Validate()
+        {
+            if (_hostSettings == null)
+                yield return this.Failure("Host", "ActiveMQ host must be configured explicitly");
+
+            foreach (var result in base.Validate())
+                yield return result;
+        }
+
+        public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+            Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint = null)
         {
             var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -102,13 +112,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             });
         }
 
-        public override void ReceiveEndpoint(string queueName, Action<IActiveMqReceiveEndpointConfigurator> configureEndpoint)
+        public override void ReceiveEndpoint(string queueName, Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint)
         {
             CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
         }
 
         public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<IReceiveEndpointConfigurator> configure = null)
+            Action<IReceiveEndpointConfigurator>? configure = null)
         {
             return CreateReceiveEndpointConfiguration(queueName, configure);
         }

@@ -96,12 +96,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
             transportMessage.NMSDeliveryMode = context.Durable ? MsgDeliveryMode.Persistent : MsgDeliveryMode.NonPersistent;
 
-            if (context.TimeToLive.HasValue)
-                transportMessage.NMSTimeToLive = context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1);
-            //If protocol is AMQP TTL cannot be TimeSpan.Zero = NMSConstants.defaultTimeToLive. A message sent with TTL 0 will be discarded when broker receive it.
-            //Otherwise OpenWire protocol does not set TTL=0 to a message when is 0.
-            else if (sessionContext.Session is Session)
-                transportMessage.NMSTimeToLive = NMSConstants.defaultTimeToLive;
+            ApplyTimeToLive(transportMessage, context, sessionContext.Session is Session);
 
             transportMessage.NMSPriority = context.Priority ?? NMSConstants.defaultPriority;
 
@@ -115,12 +110,33 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             if (delay > 0)
             {
                 if (_hostConfiguration.IsArtemis)
-                    transportMessage.Properties["_AMQ_SCHED_DELIVERY"] = (DateTimeOffset.UtcNow + context.Delay.Value).ToUnixTimeMilliseconds();
+                    transportMessage.Properties["_AMQ_SCHED_DELIVERY"] = GetArtemisScheduledDelivery(context);
                 else
                     transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = (long)delay.Value;
             }
 
             await sessionContext.SendAsync(destination, transportMessage, context.CancellationToken).ConfigureAwait(false);
+        }
+
+        internal static void ApplyTimeToLive(IMessage transportMessage, SendContext context, bool useOpenWireDefault)
+        {
+            if (context.TimeToLive.HasValue)
+            {
+                if (context.TimeToLive.Value <= TimeSpan.Zero)
+                    throw new ArgumentOutOfRangeException(nameof(context), "Expired messages must be discarded before transport serialization.");
+
+                transportMessage.NMSTimeToLive = context.TimeToLive.Value;
+            }
+            else if (useOpenWireDefault)
+                transportMessage.NMSTimeToLive = NMSConstants.defaultTimeToLive;
+        }
+
+        internal static long GetArtemisScheduledDelivery(SendContext context)
+        {
+            if (!context.Delay.HasValue || context.Delay.Value <= TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(context), "A positive delivery delay is required.");
+
+            return (context.GetTimeProvider().GetUtcNow() + context.Delay.Value).ToUnixTimeMilliseconds();
         }
 
         static async Task SetResponseTo(IMessage transportMessage, SendContext context, SessionContext sessionContext)

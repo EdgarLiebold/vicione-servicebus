@@ -15,7 +15,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         IActiveMqReceiveEndpointConfiguration,
         IActiveMqReceiveEndpointConfigurator
     {
-        readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
         readonly IActiveMqEndpointConfiguration _endpointConfiguration;
         readonly IActiveMqHostConfiguration _hostConfiguration;
         readonly Lazy<Uri> _inputAddress;
@@ -31,7 +30,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             _hostConfiguration = hostConfiguration;
             _endpointConfiguration = endpointConfiguration;
 
-            _connectionConfigurator = new PipeConfigurator<ConnectionContext>();
             _sessionConfigurator = new PipeConfigurator<SessionContext>();
 
             _inputAddress = new Lazy<Uri>(FormatInputAddress);
@@ -132,11 +130,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         public void ConfigureSession(Action<IPipeConfigurator<SessionContext>> configure)
         {
             configure?.Invoke(_sessionConfigurator);
-        }
-
-        public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure)
-        {
-            configure?.Invoke(_connectionConfigurator);
         }
 
         ActiveMqReceiveEndpointContext CreateActiveMqReceiveEndpointContext()

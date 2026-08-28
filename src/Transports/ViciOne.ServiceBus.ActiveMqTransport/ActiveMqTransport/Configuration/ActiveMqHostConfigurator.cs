@@ -52,15 +52,25 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
                 _settings.Port = 61617;
         }
 
-        public void FailoverHosts(string[] hosts)
+        public void FailoverHosts(params Uri[] hosts)
         {
-            _settings.FailoverHosts = hosts;
+            ArgumentNullException.ThrowIfNull(hosts);
+            _settings.FailoverHosts = Array.AsReadOnly((Uri[])hosts.Clone());
         }
 
         public void TransportOptions(IEnumerable<KeyValuePair<string, string>> options)
         {
+            ArgumentNullException.ThrowIfNull(options);
+
             foreach (KeyValuePair<string, string> option in options)
-                _settings.TransportOptions[option.Key] = option.Value;
+            {
+                if (string.IsNullOrWhiteSpace(option.Key))
+                    throw new ArgumentException("An ActiveMQ transport option key must not be empty or whitespace.", nameof(options));
+                if (option.Value == null)
+                    throw new ArgumentException($"The ActiveMQ transport option '{option.Key}' must have a value.", nameof(options));
+                if (!_settings.TransportOptions.TryAdd(option.Key, option.Value))
+                    throw new ArgumentException($"The ActiveMQ transport option '{option.Key}' was specified more than once.", nameof(options));
+            }
         }
 
         public void EnableAsyncSend()
