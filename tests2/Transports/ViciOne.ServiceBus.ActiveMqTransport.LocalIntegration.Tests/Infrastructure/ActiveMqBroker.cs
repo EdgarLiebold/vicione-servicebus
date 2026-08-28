@@ -1,8 +1,10 @@
 namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
 
+using Apache.NMS;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 
 internal sealed class ActiveMqBroker : IDisposable
@@ -148,6 +150,16 @@ internal sealed class ActiveMqBroker : IDisposable
         }
     }
 
+    public IConnection CreateConnection()
+    {
+        ConfigurationHostSettings settings = Address.Scheme == ActiveMqHostAddress.AmqpScheme
+            ? new AmqpHostSettings(Address)
+            : new OpenWireHostSettings(Address);
+        settings.Username = _userName;
+        settings.Password = _password;
+        return settings.CreateConnection();
+    }
+
     public async Task<ClassicTopicStatistics> GetClassicTopicStatistics(
         string topicName,
         CancellationToken cancellationToken)
@@ -185,7 +197,46 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("ConsumerCount").GetInt32());
     }
 
+    public async Task<ClassicQueueStatistics> GetClassicQueueStatistics(
+        string queueName,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        HttpClient client = _managementClient
+            ?? throw new InvalidOperationException("Classic ActiveMQ management is unavailable for the Artemis fixture.");
+        string mbean =
+            $"org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName={queueName}";
+        string payload = JsonSerializer.Serialize(new
+        {
+            type = "read",
+            mbean,
+            attribute = new[] { "EnqueueCount", "DequeueCount", "QueueSize" },
+        });
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/jolokia/")
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json"),
+        };
+        using HttpResponseMessage response = await client.SendAsync(request, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        string content = await response.Content.ReadAsStringAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        using JsonDocument document = JsonDocument.Parse(content);
+        JsonElement root = document.RootElement;
+        int status = root.GetProperty("status").GetInt32();
+        if (status != 200)
+            throw new InvalidDataException($"Jolokia returned status {status} for queue '{queueName}': {content}");
+
+        JsonElement value = root.GetProperty("value");
+        return new ClassicQueueStatistics(
+            value.GetProperty("EnqueueCount").GetInt64(),
+            value.GetProperty("DequeueCount").GetInt64(),
+            value.GetProperty("QueueSize").GetInt64());
+    }
+
     public void Dispose() => _managementClient?.Dispose();
 
     internal readonly record struct ClassicTopicStatistics(long EnqueueCount, int ConsumerCount);
+    internal readonly record struct ClassicQueueStatistics(long EnqueueCount, long DequeueCount, long QueueSize);
 }

@@ -1262,3 +1262,37 @@ future cohorts as complete.
 - This remains a technical checkpoint. The remaining ActiveMQ obligations, complete terminal
   disposition, inherited-project retirement, mutation evidence and final independent acceptance are
   still open.
+
+## ActiveMQ native closure — redelivery, endpoint configuration, error transport and outbox checkpoint
+
+- The thirty inherited obligations `OBL-R0-BRK-0396` through `OBL-R0-BRK-0425` are mapped exactly
+  once to executing native carriers. The genuinely overlapping two-message delayed-redelivery cases
+  `0396` and `0401` share one stronger carrier across OpenWire, AMQP and Artemis; all other distinct
+  behaviors retain a dedicated carrier. The mapping has 30 rows, 30 unique identifiers and no gap.
+- Redelivery tests bind both the configured action count and the causal mechanism: exact redelivery
+  sequences, exact retry delays observed through the retry contract, two broker scheduling signals,
+  two explicit `Defer` callbacks and third-delivery completion. They use bounded operation waits and
+  broker/handler state rather than wall-clock thresholds, sleeps or static mutable fixtures.
+- Endpoint precedence is now checked both at the immutable settings boundary and through the public
+  built-bus probe without opening a broker connection. Inherited bus values, direct overrides and
+  endpoint-definition prefetch/concurrency combinations all have exact independent values.
+- The inherited valid-envelope/nested-type-mismatch path and the raw no-envelope NMS path remain
+  separate. A further unreadable-envelope case exposed a product defect: provider-owned
+  `NMSMessageId` is replaced by ActiveMQ, so a body too damaged to expose envelope metadata lost the
+  caller's service-bus identity. The send transport now also writes the logical
+  `MessageHeaders.MessageId`; both Classic protocols preserve it in the resulting `ReceiveFault`.
+  Receive-fault publication is exactly once, and the serialization-error route is verified against
+  the real durable run-scoped broker queue after its acknowledgement barrier: enqueue 1, dequeue 1,
+  queue size 0, with the complete original metadata retained.
+- Message-scoped publish, message-scoped send and endpoint-scoped in-memory outbox configuration are
+  exercised over OpenWire and AMQP. Failed retry/redelivery attempts release no output; the successful
+  attempt releases exactly one output. Exact retry/redelivery coordinates and post-stop transport
+  counts prevent a superficially green first-delivery assertion.
+- The final focused ActiveMQ runs pass 94/94 UnitArchitecture and 46/46 LocalIntegration, with zero
+  failure and zero skip. The complete Engineering Release build finishes with zero warnings and zero
+  errors. The final unfiltered serial solution runs pass UnitArchitecture 2,156/2,156 and
+  LocalIntegration 195/195 against one fresh run-scoped PostgreSQL/Azurite/LocalStack/ActiveMQ/Artemis
+  fixture (`vicione-7c0775b2d141`), again with zero failure and zero skip.
+- This remains an intermediate technical checkpoint. The remaining ActiveMQ obligations beginning at
+  `0426`, final 113-obligation disposition, inherited-project retirement and complete mutation /
+  acceptance evidence remain open; no terminal closure is claimed here.

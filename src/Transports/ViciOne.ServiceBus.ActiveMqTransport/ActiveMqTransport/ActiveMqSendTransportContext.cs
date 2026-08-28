@@ -89,7 +89,14 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             transportMessage.Properties[MessageHeaders.ContentType] = context.ContentType.ToString();
 
             if (context.MessageId.HasValue)
+            {
+                // NMSMessageId is broker-owned and both Classic ActiveMQ transports replace a
+                // caller-assigned value with their provider identity. Preserve the service-bus
+                // message identity independently so receive-fault generation can still correlate
+                // a body that is too damaged to yield its envelope metadata.
+                transportMessage.Properties[MessageHeaders.MessageId] = context.MessageId.Value.ToString("D");
                 transportMessage.NMSMessageId = context.MessageId.ToString();
+            }
 
             if (context.CorrelationId.HasValue)
                 transportMessage.NMSCorrelationID = context.CorrelationId.ToString();

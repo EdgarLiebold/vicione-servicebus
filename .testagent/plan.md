@@ -10,7 +10,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 ## Current profile floors
 
 - `UnitArchitecture`: 2156 predeclared unfiltered cases;
-- `LocalIntegration`: 164 predeclared unfiltered cases.
+- `LocalIntegration`: 195 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
