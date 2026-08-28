@@ -19,6 +19,10 @@ namespace ViciOne.ServiceBus
         public ActiveMqHostAddress(Uri address)
         {
             ArgumentNullException.ThrowIfNull(address);
+
+            if (!address.IsAbsoluteUri)
+                throw new ActiveMqTransportConfigurationException("The ActiveMQ host address must be an absolute URI.");
+
             RejectCredentialsAndUnsupportedComponents(address);
 
             Scheme = default;

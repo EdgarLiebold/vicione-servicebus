@@ -219,7 +219,7 @@ public sealed class RepositoryGraphTests
             .ToHashSet(RepositoryLayout.PathComparer);
 
         var missing = members
-            .SelectMany(project => ProjectReferences(project)
+            .SelectMany(project => ProjectReferences(project, "Release")
                 .Where(reference => !members.Contains(Path.GetFullPath(reference)))
                 .Select(reference =>
                     $"{RepositoryLayout.RelativeToRoot(project)} -> {RepositoryLayout.RelativeToRoot(reference)}"))
@@ -283,9 +283,13 @@ public sealed class RepositoryGraphTests
         Assert.Empty(missing);
     }
 
-    private static IReadOnlyList<string> ProjectReferences(string project)
+    private static IReadOnlyList<string> ProjectReferences(string project, string? configuration = null)
     {
-        var fullPaths = MsBuildEvaluation.ItemMetadata(project, "ProjectReference", "FullPath");
+        var fullPaths = MsBuildEvaluation.ItemMetadata(
+            project,
+            "ProjectReference",
+            "FullPath",
+            configuration);
 
         if (fullPaths.Count > 0)
         {
@@ -295,7 +299,11 @@ public sealed class RepositoryGraphTests
         var directory = Path.GetDirectoryName(project)
             ?? throw new InvalidOperationException($"No directory for {project}.");
 
-        return MsBuildEvaluation.ItemIdentities(project, "ProjectReference")
+        var identities = configuration is null
+            ? MsBuildEvaluation.ItemIdentities(project, "ProjectReference")
+            : MsBuildEvaluation.ItemIdentities(project, "ProjectReference", configuration);
+
+        return identities
             .Select(reference => Path.GetFullPath(reference, directory))
             .ToArray();
     }

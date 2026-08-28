@@ -128,6 +128,18 @@ public sealed class ActiveMqHostAddressTests
         Assert.Throws<ActiveMqTransportConfigurationException>(() => new ActiveMqHostAddress(new Uri(source)));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "relative-uri-fails-at-domain-boundary")]
+    public void RelativeUri_IsRejectedByTheConfigurationBoundary()
+    {
+        var address = new Uri("broker", UriKind.Relative);
+
+        var exception = Assert.Throws<ActiveMqTransportConfigurationException>(
+            () => new ActiveMqHostAddress(address));
+
+        Assert.Contains("absolute URI", exception.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -135,7 +147,8 @@ public sealed class ActiveMqHostAddressTests
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "invalid-explicit-host")]
     public void ExplicitConstruction_RejectsInvalidHosts(string? host)
     {
-        Assert.Throws<ArgumentException>(() => new ActiveMqHostAddress("activemq", host!, 61616, "/"));
+        Assert.Throws<ArgumentException>(
+            () => new ActiveMqHostAddress(ActiveMqTransportProtocol.OpenWire, host!, 61616, "/"));
     }
 
     [Theory]
@@ -145,6 +158,7 @@ public sealed class ActiveMqHostAddressTests
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "invalid-explicit-port")]
     public void ExplicitConstruction_RejectsInvalidPorts(int port)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new ActiveMqHostAddress("activemq", "broker", port, "/"));
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => new ActiveMqHostAddress(ActiveMqTransportProtocol.OpenWire, "broker", port, "/"));
     }
 }

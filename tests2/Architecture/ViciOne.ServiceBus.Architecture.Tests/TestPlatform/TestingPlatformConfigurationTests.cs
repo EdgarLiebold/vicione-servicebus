@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -20,7 +21,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2223;
+    private const int ExpectedUnitTestFloor = 2226;
     private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
@@ -165,17 +166,25 @@ public sealed class TestingPlatformConfigurationTests
     [RequirementCoverage("REQ-TEST-203", "active-mq-local-integration-uses-causal-barriers")]
     public void ActiveMqLocalIntegrationSources_UseNoWallClockWaits()
     {
-        var sourceRoot = Path.Combine(
+        string projectPath = Path.Combine(
             RepositoryLayout.Root,
             "tests2",
             "Transports",
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests");
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
+        CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
 
-        var violations = Directory
-            .EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(path => !path.Split(Path.DirectorySeparatorChar).Any(
-                segment => segment is "bin" or "obj"))
-            .SelectMany(FindWallClockWaits)
+        SyntaxTree[] syntaxTrees = MsBuildEvaluation
+            .ItemMetadata(projectPath, "Compile", "FullPath", "Release")
+            .Select(path => CSharpSyntaxTree.ParseText(
+                File.ReadAllText(path),
+                parseOptions,
+                path))
+            .ToArray();
+        CSharpCompilation compilation = CreateWallClockCompilation(syntaxTrees);
+
+        var violations = syntaxTrees
+            .SelectMany(syntaxTree => FindWallClockWaits(syntaxTree, compilation))
             .OrderBy(value => value, StringComparer.Ordinal)
             .ToArray();
 
@@ -183,21 +192,44 @@ public sealed class TestingPlatformConfigurationTests
     }
 
     [Theory]
-    [InlineData("class C { async void M() { await System.Threading.Tasks.Task.Delay(1); } }")]
-    [InlineData("using ClockTask = System.Threading.Tasks.Task; class C { async void M() { await ClockTask.Delay(1); } }")]
-    [InlineData("using static System.Threading.Tasks.Task; class C { async void M() { await Delay(1); } }")]
-    [InlineData("using ClockThread = System.Threading.Thread; class C { void M() { ClockThread.Sleep(1); } }")]
-    [InlineData("class C { async System.Threading.Tasks.Task M() { System.Func<int, System.Threading.Tasks.Task> wait = System.Threading.Tasks.Task.Delay; await wait(1); } }")]
+    [InlineData(null, "class C { async void M() { await System.Threading.Tasks.Task.Delay(1); } }")]
+    [InlineData(null, "using ClockTask = System.Threading.Tasks.Task; class C { async void M() { await ClockTask.Delay(1); } }")]
+    [InlineData(null, "using static System.Threading.Tasks.Task; class C { async void M() { await Delay(1); } }")]
+    [InlineData(null, "using ClockThread = System.Threading.Thread; class C { void M() { ClockThread.Sleep(1); } }")]
+    [InlineData(null, "class C { async System.Threading.Tasks.Task M() { System.Func<int, System.Threading.Tasks.Task> wait = System.Threading.Tasks.Task.Delay; await wait(1); } }")]
+    [InlineData("global using ClockTask = System.Threading.Tasks.Task;", "class C { async void M() { await ClockTask.Delay(1); } }")]
+    [InlineData(null, "#if NET10_0\nclass C { async void M() { await System.Threading.Tasks.Task.Delay(1); } }\n#endif")]
     [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-direct-alias-static-import-and-method-group-forms")]
-    public void ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(string source)
+    public void ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(string? globalUsing, string source)
     {
-        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(
+        string projectPath = Path.Combine(
+            RepositoryLayout.Root,
+            "tests2",
+            "Transports",
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
+        CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
+        var syntaxTrees = new List<SyntaxTree>();
+        if (globalUsing is not null)
+        {
+            syntaxTrees.Add(CSharpSyntaxTree.ParseText(
+                globalUsing,
+                parseOptions,
+                path: "GlobalUsings.cs",
+                cancellationToken: TestContext.Current.CancellationToken));
+        }
+
+        syntaxTrees.Add(CSharpSyntaxTree.ParseText(
             source,
-            cancellationToken: TestContext.Current.CancellationToken);
-        SemanticModel semanticModel = CreateWallClockSemanticModel(syntaxTree);
+            parseOptions,
+            path: "Subject.cs",
+            cancellationToken: TestContext.Current.CancellationToken));
+        SyntaxTree subjectTree = syntaxTrees[^1];
+        CSharpCompilation compilation = CreateWallClockCompilation(syntaxTrees);
+        SemanticModel semanticModel = compilation.GetSemanticModel(subjectTree, ignoreAccessibility: true);
 
         SimpleNameSyntax name = Assert.Single(
-            syntaxTree
+            subjectTree
                 .GetRoot(TestContext.Current.CancellationToken)
                 .DescendantNodes()
                 .OfType<SimpleNameSyntax>(),
@@ -206,10 +238,11 @@ public sealed class TestingPlatformConfigurationTests
         Assert.True(IsWallClockWait(name, semanticModel));
     }
 
-    private static IEnumerable<string> FindWallClockWaits(string path)
+    private static IEnumerable<string> FindWallClockWaits(
+        SyntaxTree syntaxTree,
+        CSharpCompilation compilation)
     {
-        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
-        SemanticModel semanticModel = CreateWallClockSemanticModel(syntaxTree);
+        SemanticModel semanticModel = compilation.GetSemanticModel(syntaxTree, ignoreAccessibility: true);
 
         return syntaxTree
             .GetRoot()
@@ -217,23 +250,39 @@ public sealed class TestingPlatformConfigurationTests
             .OfType<SimpleNameSyntax>()
             .Where(name => IsWallClockWait(name, semanticModel))
             .Select(name =>
-                $"{RepositoryLayout.RelativeToRoot(path)}:{name.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                $"{RepositoryLayout.RelativeToRoot(syntaxTree.FilePath)}:{name.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
     }
 
-    private static SemanticModel CreateWallClockSemanticModel(SyntaxTree syntaxTree)
+    private static CSharpCompilation CreateWallClockCompilation(IEnumerable<SyntaxTree> syntaxTrees)
     {
         MetadataReference[] references =
         [
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(Task).Assembly.Location),
         ];
-        CSharpCompilation compilation = CSharpCompilation.Create(
+        return CSharpCompilation.Create(
             "ViciOne.ServiceBus.ActiveMqWallClockAnalysis",
-            [syntaxTree],
+            syntaxTrees,
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+    }
 
-        return compilation.GetSemanticModel(syntaxTree, ignoreAccessibility: true);
+    private static CSharpParseOptions ActiveMqReleaseParseOptions(string projectPath)
+    {
+        string declaredLanguageVersion = MsBuildEvaluation.PropertyOf(projectPath, "LangVersion", "Release");
+        if (!LanguageVersionFacts.TryParse(declaredLanguageVersion, out LanguageVersion languageVersion))
+        {
+            throw new InvalidOperationException(
+                $"The ActiveMQ LocalIntegration project declares unsupported LangVersion '{declaredLanguageVersion}'.");
+        }
+
+        string[] preprocessorSymbols = MsBuildEvaluation
+            .ImplicitDefineConstantsOf(projectPath, "Release")
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        return CSharpParseOptions.Default
+            .WithLanguageVersion(languageVersion)
+            .WithPreprocessorSymbols(preprocessorSymbols);
     }
 
     private static bool IsWallClockWait(SimpleNameSyntax name, SemanticModel semanticModel)

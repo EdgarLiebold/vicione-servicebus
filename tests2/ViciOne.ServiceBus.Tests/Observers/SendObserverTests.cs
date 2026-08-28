@@ -129,17 +129,32 @@ public sealed class SendObserverTests
             await observer.Faulted.WaitAsync(timeout, cancellationToken);
 
             SendObservation[] events = observer.Events;
-            Assert.Equal(["Pre", "Post", "Pre", "Fault"], events.Select(observation => observation.Stage));
-            Assert.Equal([typeof(ResponseRequest), typeof(ResponseRequest), typeof(ResponseMessage), typeof(ResponseMessage)],
-                events.Select(observation => observation.MessageType));
-            Assert.Equal(request, events[0].Message);
-            Assert.Equal(request, events[1].Message);
-            Assert.Equal(new ResponseMessage(request.CorrelationId), events[2].Message);
-            Assert.Equal(new ResponseMessage(request.CorrelationId), events[3].Message);
-            Assert.Same(failure, events[3].Exception);
+            Assert.Equal(4, events.Length);
+
+            // The in-memory receive pipeline may begin the response send before the original
+            // transport publishes PostSend. Observer ordering is strict within one SendContext,
+            // but independent sends are intentionally concurrent and have no global order.
+            SendObservation[] requestEvents = events
+                .Where(observation => observation.MessageType == typeof(ResponseRequest))
+                .ToArray();
+            SendObservation[] responseEvents = events
+                .Where(observation => observation.MessageType == typeof(ResponseMessage))
+                .ToArray();
+
+            Assert.Equal(["Pre", "Post"], requestEvents.Select(observation => observation.Stage));
+            Assert.Equal(["Pre", "Fault"], responseEvents.Select(observation => observation.Stage));
+            Assert.All(requestEvents, observation => Assert.Equal(request, observation.Message));
+            Assert.All(responseEvents, observation =>
+                Assert.Equal(new ResponseMessage(request.CorrelationId), observation.Message));
+            Assert.Same(requestEvents[0].Context, requestEvents[1].Context);
+            Assert.Same(responseEvents[0].Context, responseEvents[1].Context);
+            Assert.Null(requestEvents[0].Exception);
+            Assert.Null(requestEvents[1].Exception);
+            Assert.Null(responseEvents[0].Exception);
+            Assert.Same(failure, responseEvents[1].Exception);
             Assert.IsType<SerializationException>(failure);
-            Assert.Equal(harness.InputQueueAddress, events[0].Context.DestinationAddress);
-            Assert.Equal(harness.BusAddress, events[2].Context.DestinationAddress);
+            Assert.Equal(harness.InputQueueAddress, requestEvents[0].Context.DestinationAddress);
+            Assert.Equal(harness.BusAddress, responseEvents[0].Context.DestinationAddress);
         }
         finally
         {
