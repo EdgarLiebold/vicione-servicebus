@@ -307,6 +307,10 @@ public sealed class DeferredBusRegistrationTests
             BusInstanceBuilder.Instance.GetBusInstanceType<ISecondaryBus, object>(callback));
 
         Assert.Same(expected, actual);
+        Assert.Contains(
+            $"{nameof(ThrowingBusInstanceCallback)}.{nameof(ThrowingBusInstanceCallback.GetResult)}",
+            actual.StackTrace,
+            StringComparison.Ordinal);
     }
 
     [Fact]
