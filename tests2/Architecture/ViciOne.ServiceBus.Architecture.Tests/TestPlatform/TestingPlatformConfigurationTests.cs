@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2185;
+    private const int ExpectedUnitTestFloor = 2215;
     private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
@@ -188,25 +188,41 @@ public sealed class TestingPlatformConfigurationTests
         Assert.Empty(violations);
     }
 
+    [Theory]
+    [InlineData("await System.Threading.Tasks.Task.Delay(1);")]
+    [InlineData("await ClockTask.Delay(1);")]
+    [InlineData("await Delay(1);")]
+    [InlineData("ClockThread.Sleep(1);")]
+    [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-direct-alias-and-static-import-forms")]
+    public void ActiveMqWallClockGuard_RejectsEveryInvocationShape(string statement)
+    {
+        InvocationExpressionSyntax invocation = Assert.Single(
+            CSharpSyntaxTree.ParseText(
+                    $"class C {{ async void M() {{ {statement} }} }}",
+                    cancellationToken: TestContext.Current.CancellationToken)
+                .GetRoot(TestContext.Current.CancellationToken)
+                .DescendantNodes()
+                .OfType<InvocationExpressionSyntax>());
+
+        Assert.True(IsWallClockWait(invocation));
+    }
+
     private static bool IsWallClockWait(InvocationExpressionSyntax invocation)
     {
-        if (invocation.Expression is not MemberAccessExpressionSyntax method)
-            return false;
-
-        return method.Name.Identifier.ValueText switch
+        string? terminalName = invocation.Expression switch
         {
-            "Delay" => IsTypeName(method.Expression, "Task"),
-            "Sleep" => IsTypeName(method.Expression, "Thread"),
+            MemberAccessExpressionSyntax method => method.Name.Identifier.ValueText,
+            MemberBindingExpressionSyntax method => method.Name.Identifier.ValueText,
+            IdentifierNameSyntax method => method.Identifier.ValueText,
+            _ => null,
+        };
+
+        return terminalName switch
+        {
+            "Delay" or "Sleep" => true,
             _ => false,
         };
     }
-
-    private static bool IsTypeName(ExpressionSyntax expression, string expected) => expression switch
-    {
-        IdentifierNameSyntax identifier => identifier.Identifier.ValueText == expected,
-        MemberAccessExpressionSyntax qualified => qualified.Name.Identifier.ValueText == expected,
-        _ => false,
-    };
 
     private static int ReadUnitProfileFloor(string path)
     {

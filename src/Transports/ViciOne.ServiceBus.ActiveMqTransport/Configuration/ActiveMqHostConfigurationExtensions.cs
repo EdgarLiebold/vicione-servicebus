@@ -25,16 +25,18 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Configure a ActiveMQ host with a host name and virtual host
+        /// Configure an ActiveMQ host with an explicit protocol, host name and port.
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="hostName">The host name of the broker</param>
+        /// <param name="protocol">The wire protocol used by the broker endpoint.</param>
         /// <param name="port">The port to connect to the broker</param>
         /// <param name="configure">The configuration callback</param>
-        public static void Host(this IActiveMqBusFactoryConfigurator configurator, string hostName, int port,
+        public static void Host(this IActiveMqBusFactoryConfigurator configurator, string hostName,
+            ActiveMqTransportProtocol protocol, int port,
             Action<IActiveMqHostConfigurator> configure)
         {
-            configurator.Host(new ActiveMqHostAddress(hostName, port, "/"), configure);
+            configurator.Host(new ActiveMqHostAddress(protocol, hostName, port, "/"), configure);
         }
 
         /// <summary>

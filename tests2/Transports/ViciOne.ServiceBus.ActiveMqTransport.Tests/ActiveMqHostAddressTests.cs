@@ -27,13 +27,46 @@ public sealed class ActiveMqHostAddressTests
     }
 
     [Theory]
-    [InlineData("activemq://user:secret@broker/")]
-    [InlineData("activemq://broker/?password=secret")]
-    [InlineData("activemq://broker/#fragment")]
+    [InlineData("activemq://user:secret@broker:61616/", "Credentials")]
+    [InlineData("activemq://broker:61616/?password=secret", "typed host configurator")]
+    [InlineData("activemq://broker:61616/#fragment", "typed host configurator")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "secrets-and-options-never-live-in-uri")]
-    public void CredentialsAndTransportOptions_AreRejectedInHostUris(string source)
+    public void CredentialsAndTransportOptions_AreRejectedInHostUris(string source, string expectedReason)
     {
-        Assert.Throws<ActiveMqTransportConfigurationException>(() => new ActiveMqHostAddress(new Uri(source)));
+        ActiveMqTransportConfigurationException exception = Assert.Throws<ActiveMqTransportConfigurationException>(
+            () => new ActiveMqHostAddress(new Uri(source)));
+
+        Assert.Contains(expectedReason, exception.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(ActiveMqTransportProtocol.OpenWire, "activemq", 61616)]
+    [InlineData(ActiveMqTransportProtocol.Amqp, "amqp", 5672)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "typed-protocol-construction")]
+    public void ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(
+        ActiveMqTransportProtocol protocol,
+        string expectedScheme,
+        int port)
+    {
+        var address = new ActiveMqHostAddress(protocol, "broker", port, "/");
+
+        Assert.Equal(expectedScheme, address.Scheme);
+        Assert.Equal(new Uri($"{expectedScheme}://broker:{port}/"), (Uri)address);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "protocol-less-constructor-is-not-public-api")]
+    public void PublicApi_ExposesNoProtocolLessHostConstructor()
+    {
+        Type[][] constructorShapes = typeof(ActiveMqHostAddress)
+            .GetConstructors()
+            .Select(constructor => constructor.GetParameters().Select(parameter => parameter.ParameterType).ToArray())
+            .ToArray();
+
+        Assert.Equal(2, constructorShapes.Length);
+        Assert.Contains(constructorShapes, parameters => parameters.SequenceEqual([typeof(Uri)]));
+        Assert.Contains(constructorShapes, parameters => parameters.SequenceEqual(
+            [typeof(ActiveMqTransportProtocol), typeof(string), typeof(int?), typeof(string)]));
     }
 
     [Theory]

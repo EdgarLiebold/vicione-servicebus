@@ -154,17 +154,37 @@ public sealed class ActiveMqConfigurationTests
         Assert.Contains("explicitly", failure.Message, StringComparison.Ordinal);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(ActiveMqTransportProtocol.OpenWire, 61616)]
+    [InlineData(ActiveMqTransportProtocol.Amqp, 5672)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-CONFIGURATION", "explicit-host-satisfies-validation")]
-    public void BusConfiguration_AcceptsAnExplicitHost()
+    public void BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(
+        ActiveMqTransportProtocol protocol,
+        int port)
     {
         ActiveMqBusFactoryConfigurator configurator = CreateConfigurator();
-        configurator.Host("broker.internal", 61616, _ => { });
+        configurator.Host("broker.internal", protocol, port, _ => { });
 
         Assert.DoesNotContain(
             configurator.Validate(),
             result => result.Disposition == ValidationResultDisposition.Failure
                 && result.Key.Contains("Host", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-CONFIGURATION", "protocol-less-host-overload-is-not-public-api")]
+    public void HostApi_ExposesNoProtocolLessHostAndPortOverload()
+    {
+        var protocolLess = typeof(ActiveMqHostConfigurationExtensions)
+            .GetMethods()
+            .Where(method => method.Name == nameof(ActiveMqHostConfigurationExtensions.Host))
+            .Where(method => method.GetParameters() is var parameters
+                && parameters.Length == 4
+                && parameters[1].ParameterType == typeof(string)
+                && parameters[2].ParameterType == typeof(int))
+            .ToArray();
+
+        Assert.Empty(protocolLess);
     }
 
     [Fact]

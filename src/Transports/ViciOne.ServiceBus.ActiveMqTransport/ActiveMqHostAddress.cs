@@ -39,12 +39,12 @@ namespace ViciOne.ServiceBus
             }
         }
 
-        public ActiveMqHostAddress(string host, int? port, string virtualHost)
-            : this(ActiveMqScheme, host, port, virtualHost)
+        public ActiveMqHostAddress(ActiveMqTransportProtocol protocol, string host, int? port, string virtualHost)
+            : this(SchemeFor(protocol), host, port, virtualHost)
         {
         }
 
-        public ActiveMqHostAddress(string scheme, string host, int? port, string virtualHost)
+        internal ActiveMqHostAddress(string scheme, string host, int? port, string virtualHost)
         {
             Scheme = NormalizeScheme(scheme);
             Host = string.IsNullOrWhiteSpace(host)
@@ -81,6 +81,13 @@ namespace ViciOne.ServiceBus
                 _ => throw new ActiveMqTransportConfigurationException($"The address scheme is not supported: {scheme}")
             };
         }
+
+        static string SchemeFor(ActiveMqTransportProtocol protocol) => protocol switch
+        {
+            ActiveMqTransportProtocol.OpenWire => ActiveMqScheme,
+            ActiveMqTransportProtocol.Amqp => AmqpScheme,
+            _ => throw new ActiveMqTransportConfigurationException($"The ActiveMQ protocol is not supported: {protocol}")
+        };
 
         static void RejectCredentialsAndUnsupportedComponents(Uri address)
         {

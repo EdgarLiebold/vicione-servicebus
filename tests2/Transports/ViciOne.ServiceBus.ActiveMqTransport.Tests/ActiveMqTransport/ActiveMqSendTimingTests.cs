@@ -39,21 +39,27 @@ public sealed class ActiveMqSendTimingTests
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData(0)]
-    [InlineData(-1)]
+    [InlineData(null, false)]
+    [InlineData(0, false)]
+    [InlineData(-1, false)]
+    [InlineData(null, true)]
+    [InlineData(0, true)]
+    [InlineData(-1, true)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-TIME", "nonpositive-delay-does-not-write-provider-state")]
-    public void AbsentOrNonPositiveDelay_DoesNotWriteProviderState(int? milliseconds)
+    public void AbsentOrNonPositiveDelay_DoesNotWriteProviderState(int? milliseconds, bool isArtemis)
     {
         DateTime sentinel = new(2040, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        const long classicSentinel = 73;
         TransportActiveMqSendContext<Message> context = CreateContext();
         context.Delay = milliseconds.HasValue ? TimeSpan.FromMilliseconds(milliseconds.Value) : null;
         IMessage message = DispatchProxy.Create<IMessage, MessageProxy>();
         message.NMSDeliveryTime = sentinel;
+        message.Properties["AMQ_SCHEDULED_DELAY"] = classicSentinel;
 
-        ActiveMqSendTransportContext.ApplyDeliveryDelay(message, context, isArtemis: true);
+        ActiveMqSendTransportContext.ApplyDeliveryDelay(message, context, isArtemis);
 
         Assert.Equal(sentinel, message.NMSDeliveryTime);
+        Assert.Equal(classicSentinel, message.Properties["AMQ_SCHEDULED_DELAY"]);
     }
 
     [Fact]

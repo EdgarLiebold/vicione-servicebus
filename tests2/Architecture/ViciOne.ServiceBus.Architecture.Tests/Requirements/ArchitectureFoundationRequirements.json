@@ -68,5 +68,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
     "testMethod": "ActiveMqLocalIntegrationSources_UseNoWallClockWaits"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "wall-clock-guard-rejects-direct-alias-and-static-import-forms",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "ActiveMqWallClockGuard_RejectsEveryInvocationShape"
   }
 ]
