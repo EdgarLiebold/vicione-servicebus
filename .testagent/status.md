@@ -1515,3 +1515,44 @@ future cohorts as complete.
 - This is the immutable local evidence candidate. Its evidence commit, generated CHANGELIST, final
   architecture binding, remote fast-forward and two separate read-only acceptance reviews remain
   mandatory; this section still does not self-accept the slice.
+
+## Transactional bus capability split — review correction and final evidence candidate
+
+- The two preceding transactional-bus sections are immutable historical checkpoints and are
+  superseded by this section. Independent review found three concrete A+ gaps: recursive same-instance
+  flush deadlocked, generic MultiBus conflict registration was not proven in both orders, and the
+  implementation-type visibility oracle covered only three of nine concrete transaction adapters.
+- Frozen technical correction commit `3c1bfbafeb326047a86a2ec6573f6f516e2bd230`, tree
+  `6a0eb15d26288f269feb73ee35dc5ff44d654970`, parent
+  `477c600e84104f25936761dbb67f85fa42421c41`; architecture correction scope
+  `17a0791b563a99e81c3f589a5d63214e59330d99`, tree
+  `151861503f841e55e2dfd1f4a93dc3c95e879161`, authorizes the additional reflected
+  generic-registration product boundary.
+- Recursive `FlushAsync` from an action drained by the same `BufferedBus` now fails before waiting on
+  its own semaphore. A mutable operation-local frame prevents inherited child execution contexts from
+  remaining poisoned after the action ends; external concurrent flushes retain their serialized FIFO
+  behavior and the unattempted tail remains usable.
+- Generic Ambient+Buffered registrations on the same typed bus fail in either order. The reflected
+  generic registration boundary preserves and rethrows the original `ConfigurationException` instead
+  of exposing `TargetInvocationException`. The public-surface carrier closes the exact nine-type
+  internal implementation set and each type's sealed/abstract shape.
+- Three new requirement variants expand to four xUnit cases because the typed-bus order carrier is a
+  two-row Theory. The fail-closed UnitArchitecture floor is consistently 2271 in workflow,
+  architecture gate, README, build guide and active plan; LocalIntegration remains 244.
+- Positive execution at the exact technical bytes: locked Engineering restore/build Exit 0 with
+  0 warnings and 0 errors; UnitArchitecture 2271/2271 across 19 CTRFs; focused transaction namespace
+  39/39; LocalIntegration 244/244 across seven CTRFs. Every profile has zero failed and zero skipped.
+  LocalIntegration used fresh PostgreSQL/Azurite/LocalStack/ActiveMQ/Artemis resources under
+  `vicione-ff320fbbc2ff`, including two controlled ActiveMQ outage/restore cycles.
+- Six new byte-exact attacks M18-M23 are independently bound. They cover recursive deadlock, stale
+  inherited reentrancy state, both typed-bus registration directions, concrete-adapter publicization
+  and reflection-wrapper leakage. Every Release mutant builds 0/0, each designated MTP owner exits 2
+  for its own causal assertion with zero skips, and every target restores exactly. Together with the
+  immutable parent evidence, cumulative mutation closure is 23/23.
+- Raw commands, unified patches, baseline/mutant/restore hashes, build logs/binlogs, CTRFs, positive
+  fixture outputs and an executable verifier are staged under
+  `TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-01`. The sandbox diagnosis remains environmental:
+  byte-identical .NET/MTP commands pass outside the sandbox; no product/test adaptation was made.
+- This is the final local evidence candidate, not self-acceptance. Two independent read-only reviews
+  of the exact technical/evidence freeze, remote fast-forward and final architecture acceptance remain
+  mandatory.
