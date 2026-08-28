@@ -55,16 +55,17 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2153 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2156 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py \
-  --broker postgres --broker azurite --broker localstack --command -- \
+  --broker postgres --broker azurite --broker localstack \
+  --broker activemq --broker artemis --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/local-integration \
-    --minimum-expected-tests 149 --max-parallel-test-modules 1
+    --minimum-expected-tests 164 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -132,7 +133,8 @@ and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
 application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
 one unambiguous current-host capture path and all eight host fields after real envelope transport.
 The LocalIntegration floor is independent and includes only host-resource tests in that profile.
-Its 149 cases cover run-scoped PostgreSQL, Azurite and LocalStack resources, including
+Its 164 cases cover run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic and Artemis
+resources, including
 `MessageJournal`, EF Core saga/outbox/job/future persistence, TransactionalBus commit/rollback/
 explicit-release behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3
 message-data/lifecycle-policy composition. Store retention is applied transactionally on every

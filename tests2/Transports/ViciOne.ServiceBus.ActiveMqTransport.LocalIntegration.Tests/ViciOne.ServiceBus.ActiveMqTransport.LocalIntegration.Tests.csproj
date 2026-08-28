@@ -20,4 +20,11 @@
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Requirements/ActiveMqLocalIntegrationRequirements.json" />
+    <EmbeddedResource
+      Include="Requirements/ActiveMqLocalIntegrationRequirements.json"
+      LogicalName="ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Requirements.ActiveMqLocalIntegrationRequirements.json" />
+  </ItemGroup>
 </Project>

@@ -1,11 +1,12 @@
 namespace ViciOne.ServiceBus.ActiveMqTransport
 {
     public class ArtemisConsumerEndpointQueueNameFormatter :
-        IActiveMqConsumerEndpointQueueNameFormatter
+        IActiveMqConsumerEndpointQueueNameFormatter,
+        IActiveMqTopicSubscriptionNameFormatter
     {
         public string Format(string topic, string endpointName)
         {
-            return $"{topic}::Consumer.{endpointName}.{topic}";
+            return $"Consumer.{endpointName}.{topic}";
         }
     }
 }

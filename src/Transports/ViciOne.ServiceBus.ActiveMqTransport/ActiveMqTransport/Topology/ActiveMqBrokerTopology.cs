@@ -47,8 +47,10 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
                 consumerScope.Set(new
                 {
                     Source = binding.Source.EntityName,
-                    Destination = binding.Destination.EntityName,
-                    RoutingKey = binding.Selector
+                    Destination = binding.Destination?.EntityName,
+                    RoutingKey = binding.Selector,
+                    binding.ConsumerName,
+                    binding.IsShared
                 });
             }
         }

@@ -1230,3 +1230,35 @@ future cohorts as complete.
 - This is a technical checkpoint, not final ActiveMQ acceptance. Broker-backed carriers, the full
   113-obligation closure, inherited-project retirement, mutation evidence and independent reviews
   remain open.
+
+## ActiveMQ native closure — Classic/Artemis broker cohort
+
+- Sixteen inherited broker obligations now have executing source-mirrored LocalIntegration carriers
+  for connection/protocol selection, send/receive, handler invocation, request/response and publish.
+  Both ActiveMQ Classic and Artemis use pinned, run-scoped fixtures with loopback-only endpoints and
+  generated credentials; no external broker or fixed developer port is assumed.
+- The provider run exposed three product defects, and the tests were not weakened around them.
+  Artemis shared subscriptions now use a queue-less named shared topic consumer instead of creating
+  an ANYCAST queue for MULTICAST traffic; topology probing handles that legitimate queue-less
+  binding; and AMQP topic lookup reuses Artemis' broker-generated temporary topic while OpenWire
+  preserves the canonical VirtualTopic address. The protocol distinction is explicit and covered by
+  hermetic counterexamples.
+- The complete Release UnitArchitecture run passes 2,156/2,156 and the complete Release
+  LocalIntegration run passes 164/164 against fresh PostgreSQL, Azurite, LocalStack, ActiveMQ Classic
+  and Artemis fixtures. Both have zero failure and zero skip; locked restores and Release builds
+  finish with zero warnings and zero errors. The focused ActiveMQ unit cohort passes 94/94 and the
+  new broker project passes 15/15.
+- The complete Engineering build initially exposed one real stale contract in the ActiveMQ benchmark:
+  `ActiveMqOptionSet` did not project the required `VirtualHost` setting. The benchmark now delegates
+  that value to its concrete immutable host settings, and the repeated Engineering Release build
+  passes with zero warnings and zero errors. The failed diagnostic command used a nonexistent
+  `ViciOne.ServiceBus.Tests.Engineering.slnx`; the only canonical Engineering solution is
+  `ViciOne.ServiceBus.Engineering.slnx`.
+- Local .NET process rule: a sandboxed build can hang silently and ignore Ctrl-C at the restricted
+  process boundary. After a bounded no-output interval, inspect and terminate only the exact process,
+  then rerun the identical command outside the sandbox with the repository SDK and isolated CLI
+  environment. Never start a duplicate concurrent build and never reinterpret this environment
+  failure as a product or test failure.
+- This remains a technical checkpoint. The remaining ActiveMQ obligations, complete terminal
+  disposition, inherited-project retirement, mutation evidence and final independent acceptance are
+  still open.

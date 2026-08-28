@@ -36,8 +36,8 @@ BROKER_PORTS = {
         5672: "VICIONE_SERVICEBUS_AMQ_AMQP_PORT",
         8161: "VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT",
     },
-    # Artemis is a separate broker behind the 'artemis' flavor of a few ActiveMQ specs. It is not a
-    # required gate; it is listed here so the branch has a run-scoped endpoint instead of a fixed port.
+    # Artemis is a separate broker behind the required 'artemis' ActiveMQ LocalIntegration variants.
+    # It is listed here so those cases receive a run-scoped endpoint instead of a fixed port.
     "artemis": {
         # Artemis exposes one multi-protocol acceptor here. Calling it OpenWire hid the AMQP owner
         # and encouraged callers to infer a second endpoint that does not exist.

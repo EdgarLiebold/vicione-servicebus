@@ -128,27 +128,49 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public Task<IDestination> GetDestination(string destinationName, DestinationType destinationType)
         {
-            if ((destinationType == DestinationType.Queue || destinationType == DestinationType.TemporaryQueue)
-                && ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination))
+            if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
+                && DestinationTypeMatches(destination, destinationType))
                 return Task.FromResult(destination);
 
             return _executor.Run(() => SessionUtil.GetDestination(_session, destinationName, destinationType), CancellationToken);
         }
 
+        bool DestinationTypeMatches(IDestination destination, DestinationType destinationType)
+        {
+            return destinationType switch
+            {
+                DestinationType.Queue or DestinationType.TemporaryQueue => destination.IsQueue,
+                DestinationType.TemporaryTopic => destination.IsTopic,
+                // OpenWire virtual topics route by their canonical VirtualTopic.* name. The AMQP
+                // provider instead replaces a TemporaryTopic name with a broker-generated address;
+                // publishing must reuse that address or the consumer and producer address different
+                // topics. An explicitly requested TemporaryTopic always denotes the registration.
+                DestinationType.Topic => destination.IsTopic
+                    && ConnectionContext.HostAddress.Scheme == ActiveMqHostAddress.AmqpScheme,
+                _ => false
+            };
+        }
+
         public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
-            bool shared = false)
+            bool shared = false, bool durable = true)
         {
             return _executor.Run(() =>
             {
-                if (destination.IsTopic && !string.IsNullOrEmpty(consumerName) && shared)
+                if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
                 {
-                    if (_session is not NmsSession)
-                        throw new NotSupportedException("Shared durable consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
-                    return _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector);
-                }
+                    if (shared)
+                    {
+                        if (_session is not NmsSession)
+                            throw new NotSupportedException("Shared consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
 
-                if (destination.IsTopic && !string.IsNullOrEmpty(consumerName) && !shared)
-                    return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
+                        return durable
+                            ? _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector)
+                            : _session.CreateSharedConsumerAsync((ITopic)destination, consumerName, selector);
+                    }
+
+                    if (durable)
+                        return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
+                }
 
                 return _session.CreateConsumerAsync(destination, selector, noLocal);
             }, CancellationToken);

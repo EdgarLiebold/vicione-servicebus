@@ -105,11 +105,113 @@ public sealed class ActiveMqLifecycleTests
         Assert.Same(destination, restored);
     }
 
-    private static ActiveMqConnectionContext CreateConnectionContext(IConnection connection)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "temporary-topic-registration-reused-by-publisher")]
+    public async Task AmqpTemporaryTopicRegistration_IsReusedOnlyForTopicDestinations()
+    {
+        await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
+            InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+            {
+                nameof(IConnection.CloseAsync) => Task.CompletedTask,
+                _ => Default(method.ReturnType),
+            }),
+            ActiveMqHostAddress.AmqpScheme);
+        ITopic registeredTopic = InterfaceProxy<ITopic>.Create((method, _) => method.Name switch
+        {
+            "get_IsTopic" => true,
+            "get_IsQueue" => false,
+            "get_TopicName" => "provider-topic-id",
+            _ => Default(method.ReturnType),
+        });
+        IQueue requestedQueue = InterfaceProxy<IQueue>.Create((method, _) => method.Name switch
+        {
+            "get_IsTopic" => false,
+            "get_IsQueue" => true,
+            "get_QueueName" => "logical-name",
+            _ => Default(method.ReturnType),
+        });
+        int queueLookups = 0;
+        ISession session = InterfaceProxy<ISession>.Create((method, _) => method.Name switch
+        {
+            nameof(ISession.GetQueue) => Record(() => queueLookups++, requestedQueue),
+            nameof(ISession.GetQueueAsync) => Task.FromResult(requestedQueue),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            _ => Default(method.ReturnType),
+        });
+        TemporaryEntities(connectionContext)["logical-name"] = registeredTopic;
+        await using var sessionContext = new ActiveMqSessionContext(
+            connectionContext,
+            session,
+            TestContext.Current.CancellationToken);
+
+        IDestination topic = await sessionContext.GetDestination("logical-name", DestinationType.Topic);
+        IDestination temporaryTopic = await sessionContext.GetDestination("logical-name", DestinationType.TemporaryTopic);
+        IDestination queue = await sessionContext.GetDestination("logical-name", DestinationType.Queue);
+
+        Assert.Same(registeredTopic, topic);
+        Assert.Same(registeredTopic, temporaryTopic);
+        Assert.Same(requestedQueue, queue);
+        Assert.Equal(1, queueLookups);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "openwire-virtual-topic-keeps-canonical-publish-name")]
+    public async Task OpenWireVirtualTopicPublication_DoesNotUseATemporaryTopicRegistration()
+    {
+        await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
+            InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+            {
+                nameof(IConnection.CloseAsync) => Task.CompletedTask,
+                _ => Default(method.ReturnType),
+            }));
+        ITopic registeredTopic = InterfaceProxy<ITopic>.Create((method, _) => method.Name switch
+        {
+            "get_IsTopic" => true,
+            "get_IsQueue" => false,
+            "get_TopicName" => "provider-topic-id",
+            _ => Default(method.ReturnType),
+        });
+        ITopic canonicalTopic = InterfaceProxy<ITopic>.Create((method, _) => method.Name switch
+        {
+            "get_IsTopic" => true,
+            "get_IsQueue" => false,
+            "get_TopicName" => "VirtualTopic.logical-name",
+            _ => Default(method.ReturnType),
+        });
+        int topicLookups = 0;
+        ISession session = InterfaceProxy<ISession>.Create((method, _) => method.Name switch
+        {
+            nameof(ISession.GetTopic) => Record(() => topicLookups++, canonicalTopic),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            _ => Default(method.ReturnType),
+        });
+        TemporaryEntities(connectionContext)["VirtualTopic.logical-name"] = registeredTopic;
+        await using var sessionContext = new ActiveMqSessionContext(
+            connectionContext,
+            session,
+            TestContext.Current.CancellationToken);
+
+        IDestination publishTopic = await sessionContext.GetDestination(
+            "VirtualTopic.logical-name",
+            DestinationType.Topic);
+        IDestination explicitTemporaryTopic = await sessionContext.GetDestination(
+            "VirtualTopic.logical-name",
+            DestinationType.TemporaryTopic);
+
+        Assert.Same(canonicalTopic, publishTopic);
+        Assert.Same(registeredTopic, explicitTemporaryTopic);
+        Assert.Equal(1, topicLookups);
+    }
+
+    private static ActiveMqConnectionContext CreateConnectionContext(
+        IConnection connection,
+        string scheme = ActiveMqHostAddress.ActiveMqScheme)
     {
         var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
         var busConfiguration = new ActiveMqBusConfiguration(topology);
-        busConfiguration.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker.internal:61616"));
+        busConfiguration.HostConfiguration.Settings = scheme == ActiveMqHostAddress.AmqpScheme
+            ? new AmqpHostSettings(new Uri("amqp://broker.internal:5672"))
+            : new OpenWireHostSettings(new Uri("activemq://broker.internal:61616"));
         return new ActiveMqConnectionContext(connection, busConfiguration.HostConfiguration, CancellationToken.None);
     }
 
@@ -123,6 +225,12 @@ public sealed class ActiveMqLifecycleTests
     {
         action();
         return null;
+    }
+
+    private static object Record(Action action, object result)
+    {
+        action();
+        return result;
     }
 
     private static object? Default(Type returnType)

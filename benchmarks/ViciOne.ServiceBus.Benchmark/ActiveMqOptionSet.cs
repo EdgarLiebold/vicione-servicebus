@@ -35,6 +35,8 @@ namespace ViciOneServiceBusBenchmark
 
         public int Port => _hostSettings.Port;
 
+        public string VirtualHost => _hostSettings.VirtualHost;
+
         public string Username => _hostSettings.Username;
 
         public string Password => _hostSettings.Password;

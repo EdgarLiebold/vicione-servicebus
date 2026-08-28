@@ -41,7 +41,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
 
             consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination == null).Select(x =>
                 CreateConsumer(context, new TopicEntity(0, GetReceiveEntityName(receiveSettings, x.Source.EntityName), x.Source.Durable,
-                    x.Source.AutoDelete), x.Selector, x.ConsumerName, x.IsShared, executor)));
+                    x.Source.AutoDelete), x.Selector, x.ConsumerName, x.IsShared, receiveSettings.Durable, executor)));
 
             consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination != null).Select(x =>
                 CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings, x.Destination.EntityName), x.Destination.Durable,
@@ -119,11 +119,11 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         }
 
         async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Topic entity, string selector,
-            string consumerName, bool shared, ChannelExecutor executor)
+            string consumerName, bool shared, bool durable, ChannelExecutor executor)
         {
             var topic = await context.GetTopic(entity).ConfigureAwait(false);
 
-            var messageConsumer = await context.CreateMessageConsumer(topic, selector, false, consumerName, shared).ConfigureAwait(false);
+            var messageConsumer = await context.CreateMessageConsumer(topic, selector, false, consumerName, shared, durable).ConfigureAwait(false);
 
             LogContext.Debug?.Log("Created consumer for {InputAddress}: {Topic}", _context.InputAddress, entity.EntityName);
 

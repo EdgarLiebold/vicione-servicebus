@@ -46,9 +46,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         }
 
         public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
-            bool shared = false)
+            bool shared = false, bool durable = true)
         {
-            return _context.CreateMessageConsumer(destination, selector, noLocal, consumerName, shared);
+            return _context.CreateMessageConsumer(destination, selector, noLocal, consumerName, shared, durable);
         }
 
         public Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)

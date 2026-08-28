@@ -42,12 +42,22 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
                 ? _consumerEndpointQueueNameFormatter.Format(topicName, destinationQueue.EntityName)
                 : $"Consumer.{destinationQueue.EntityName}.{EntityName}";
 
-
             var topic = builder.CreateTopic(EntityName, Durable, AutoDelete);
+
+            // Artemis FQQNs select an existing queue for receiving; they do not declare its routing
+            // type. Creating that FQQN through the queue API therefore produces an ANYCAST queue,
+            // while a publisher sends this virtual topic as MULTICAST and can never reach it. A
+            // named shared topic subscription lets the AMQP provider declare the matching multicast
+            // subscription queue and preserves one logical endpoint across bus instances.
+            if (_consumerEndpointQueueNameFormatter is IActiveMqTopicSubscriptionNameFormatter)
+            {
+                _ = builder.BindConsumer(topic, null, Selector, consumerEndpointQueueName, shared: true);
+                return;
+            }
 
             var queue = builder.CreateQueue(consumerEndpointQueueName, destinationQueue.Durable, destinationQueue.AutoDelete);
 
-            var consumer = builder.BindConsumer(topic, queue, Selector);
+            _ = builder.BindConsumer(topic, queue, Selector);
         }
     }
 }

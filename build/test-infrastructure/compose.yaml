@@ -40,11 +40,9 @@ services:
       retries: 24
       start_period: 10s
 
-  # Artemis is a second, separate broker. A subset of the ActiveMQ specs is parameterized over an
-  # 'artemis' flavor and used to address a fixed port 61618 with a well known admin account. That
-  # made the branch unclassifiable: it was neither a pinned fixture nor visibly excluded. It is
-  # defined here so it obeys the same rules as every other fixture, and it remains outside the
-  # required path; the extended profile inventory states where it stands.
+  # Artemis is a second, separate broker. The required ActiveMQ LocalIntegration provider variants
+  # use this pinned, run-scoped fixture instead of a fixed port or shared credentials. It therefore
+  # obeys the same isolation, readiness and teardown rules as every other required fixture.
   artemis:
     image: quay.io/artemiscloud/activemq-artemis-broker@sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a
     environment:
