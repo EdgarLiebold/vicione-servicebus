@@ -22,7 +22,7 @@ checkpoints.
   unavoidable default-struct state before URI projection.
 - Benchmark ActiveMQ options require host, named protocol and port on every parse, clear credentials,
   TLS and effective settings before reparsing, select the exact provider, and remain an internal
-  sealed implementation detail exposed only to the narrow signed test friend.
+  sealed implementation detail exposed only to the narrowly named test friend.
 - The Unit solution contains the complete Release-evaluated product ProjectReference closure,
   including Azure Service Bus Core and PostgreSQL transport dependencies reached by Benchmark.
 - The ActiveMQ no-wall-clock gate evaluates the real Release `Compile` items in one Roslyn
