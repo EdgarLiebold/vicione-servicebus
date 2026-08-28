@@ -20,10 +20,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
                     _settings = new OpenWireHostSettings(address);
                     break;
             }
-
-
-            if (_settings.Port == 61617 || _settings.Host.EndsWith("amazonaws.com", StringComparison.OrdinalIgnoreCase))
-                UseSsl();
         }
 
         public ActiveMqHostSettings Settings => _settings;
@@ -41,15 +37,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         public void UseSsl(bool enabled = true)
         {
             _settings.UseSsl = enabled;
-            if (enabled && _settings.Port == 61616)
-                _settings.Port = 61617;
-        }
-
-        public void UseSsl(bool enabled, bool updatePort)
-        {
-            _settings.UseSsl = enabled;
-            if (enabled && updatePort && _settings.Port == 61616)
-                _settings.Port = 61617;
         }
 
         public void FailoverHosts(params Uri[] hosts)

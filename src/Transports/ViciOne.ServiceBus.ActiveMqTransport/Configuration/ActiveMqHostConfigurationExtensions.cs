@@ -29,20 +29,6 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="hostName">The host name of the broker</param>
-        /// <param name="configure">The configuration callback</param>
-        public static void Host(this IActiveMqBusFactoryConfigurator configurator, string hostName, Action<IActiveMqHostConfigurator> configure)
-        {
-            if (Uri.IsWellFormedUriString(hostName, UriKind.Absolute))
-                configurator.Host(new Uri(hostName), configure);
-            else
-                configurator.Host(new ActiveMqHostAddress(hostName, default, "/"), configure);
-        }
-
-        /// <summary>
-        /// Configure a ActiveMQ host with a host name and virtual host
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="hostName">The host name of the broker</param>
         /// <param name="port">The port to connect to the broker</param>
         /// <param name="configure">The configuration callback</param>
         public static void Host(this IActiveMqBusFactoryConfigurator configurator, string hostName, int port,

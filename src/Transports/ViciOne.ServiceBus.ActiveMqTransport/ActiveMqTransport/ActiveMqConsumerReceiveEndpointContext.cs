@@ -28,6 +28,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public BrokerTopology BrokerTopology { get; }
 
+        public IConnectionContextSupervisor ConnectionContextSupervisor => _hostConfiguration.ConnectionContextSupervisor;
+
         public ISessionContextSupervisor SessionContextSupervisor => _sessionContext.Supervisor;
 
         public override void AddSendAgent(IAgent agent)

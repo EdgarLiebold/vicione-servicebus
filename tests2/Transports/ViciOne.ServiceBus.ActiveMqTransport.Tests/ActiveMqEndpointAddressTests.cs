@@ -6,12 +6,12 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests;
 
 public sealed class ActiveMqEndpointAddressTests
 {
-    private static readonly Uri HostAddress = new("activemq://broker/production%2Fclient");
+    private static readonly Uri HostAddress = new("activemq://broker:61616/production%2Fclient");
 
     [Theory]
-    [InlineData("activemq://remote", "activemq://remote/orders", "/", "orders", "activemq://remote/orders")]
-    [InlineData("activemq://remote/production%2Fclient", "activemq://remote/production/client/orders", "production/client", "orders", "activemq://remote/production%2Fclient/orders")]
-    [InlineData("amqp://remote/production%2Fclient", "amqp://remote/production%2Fclient/orders", "production/client", "orders", "amqp://remote/production%2Fclient/orders")]
+    [InlineData("activemq://remote:61616", "activemq://remote:61616/orders", "/", "orders", "activemq://remote:61616/orders")]
+    [InlineData("activemq://remote:61616/production%2Fclient", "activemq://remote:61616/production/client/orders", "production/client", "orders", "activemq://remote:61616/production%2Fclient/orders")]
+    [InlineData("amqp://remote:5672/production%2Fclient", "amqp://remote:5672/production%2Fclient/orders", "production/client", "orders", "amqp://remote:5672/production%2Fclient/orders")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "full-address-canonical-roundtrip")]
     public void FullAddresses_ParseAndRenderCanonically(
         string host,
@@ -28,8 +28,8 @@ public sealed class ActiveMqEndpointAddressTests
     }
 
     [Theory]
-    [InlineData("queue:orders%3Apriority", "orders:priority", ActiveMqEndpointAddress.AddressType.Queue, "activemq://broker/production%2Fclient/orders%3Apriority")]
-    [InlineData("topic:events.test", "events.test", ActiveMqEndpointAddress.AddressType.Topic, "activemq://broker/production%2Fclient/events.test?type=topic")]
+    [InlineData("queue:orders%3Apriority", "orders:priority", ActiveMqEndpointAddress.AddressType.Queue, "activemq://broker:61616/production%2Fclient/orders%3Apriority")]
+    [InlineData("topic:events.test", "events.test", ActiveMqEndpointAddress.AddressType.Topic, "activemq://broker:61616/production%2Fclient/events.test?type=topic")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "short-address-symmetric-resolution")]
     public void ShortAddresses_DecodeNamesAndResolveAgainstTheHost(
         string source,
@@ -45,12 +45,12 @@ public sealed class ActiveMqEndpointAddressTests
     }
 
     [Theory]
-    [InlineData("activemq://broker", "activemq://remote/orders")]
-    [InlineData("activemq://broker", "amqp://broker/orders")]
-    [InlineData("activemq://broker", "activemq://broker:61617/orders")]
-    [InlineData("activemq://broker/alpha", "activemq://broker/beta/orders")]
-    [InlineData("activemq://broker", "activemq://user:secret@broker/orders")]
-    [InlineData("activemq://broker", "activemq://broker/orders#fragment")]
+    [InlineData("activemq://broker:61616", "activemq://remote:61616/orders")]
+    [InlineData("activemq://broker:61616", "amqp://broker:61616/orders")]
+    [InlineData("activemq://broker:61616", "activemq://broker:61617/orders")]
+    [InlineData("activemq://broker:61616/alpha", "activemq://broker:61616/beta/orders")]
+    [InlineData("activemq://broker:61616", "activemq://user:secret@broker:61616/orders")]
+    [InlineData("activemq://broker:61616", "activemq://broker:61616/orders#fragment")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "full-address-host-must-match-configuration")]
     public void FullAddresses_CannotRedirectTheConfiguredConnection(string host, string source)
     {
@@ -64,7 +64,7 @@ public sealed class ActiveMqEndpointAddressTests
     {
         var first = new ActiveMqEndpointAddress(
             HostAddress,
-            new Uri("activemq://broker/production%2Fclient/orders?durable=false&autodelete=true&type=topic"));
+            new Uri("activemq://broker:61616/production%2Fclient/orders?durable=false&autodelete=true&type=topic"));
         var second = new ActiveMqEndpointAddress(HostAddress, (Uri)first);
 
         Assert.False(second.Durable);
@@ -106,7 +106,7 @@ public sealed class ActiveMqEndpointAddressTests
     {
         var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
         var bus = new ActiveMqBusConfiguration(topology);
-        bus.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker"));
+        bus.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker:61616"));
 
         Assert.Throws<ActiveMqTransportConfigurationException>(
             () => bus.HostConfiguration.Topology.GetDestinationAddress("orders?temporary=true"));

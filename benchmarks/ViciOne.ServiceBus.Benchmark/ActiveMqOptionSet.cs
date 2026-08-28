@@ -15,11 +15,11 @@ namespace ViciOneServiceBusBenchmark
 
         public ActiveMqOptionSet()
         {
-            _hostSettings = new OpenWireHostSettings(new Uri("activemq://localhost"));
+            _hostSettings = new OpenWireHostSettings(new Uri("activemq://localhost:61616"));
 
             Add<string>("h|host:", "The host name of the broker", x =>
             {
-                _hostSettings = new OpenWireHostSettings(new Uri($"activemq://{x}"))
+                _hostSettings = new OpenWireHostSettings(new Uri($"activemq://{x}:{_hostSettings.Port}"))
                 {
                     Port = _hostSettings.Port,
                     Username = _hostSettings.Username,
@@ -57,7 +57,8 @@ namespace ViciOneServiceBusBenchmark
             return new UriBuilder
             {
                 Scheme = UseSsl ? "ssl" : "tcp",
-                Host = Host
+                Host = Host,
+                Port = Port
             }.Uri.ToString();
         }
 

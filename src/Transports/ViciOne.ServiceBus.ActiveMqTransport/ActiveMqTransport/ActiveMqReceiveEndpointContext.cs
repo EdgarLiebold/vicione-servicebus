@@ -9,6 +9,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
     {
         BrokerTopology BrokerTopology { get; }
 
+        IConnectionContextSupervisor ConnectionContextSupervisor { get; }
+
         ISessionContextSupervisor SessionContextSupervisor { get; }
     }
 }

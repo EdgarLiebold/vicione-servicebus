@@ -2,6 +2,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Runtime.ExceptionServices;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
@@ -103,35 +105,98 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         public async ValueTask DisposeAsync()
         {
             TransportLogMessages.DisconnectHost(Description);
+            var failures = new ActiveMqCleanupFailures();
 
-            try
-            {
-                await _connection.CloseAsync().ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                LogContext.Warning?.Log(exception, "Close Connection Faulted: {Host}", Description);
-            }
-
-            try
-            {
-                _connection.Dispose();
-            }
-            catch (Exception exception)
-            {
-                LogContext.Warning?.Log(exception, "Dispose Connection Faulted: {Host}", Description);
-            }
-
-            try
-            {
-                await _executor.DisposeAsync().ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                LogContext.Warning?.Log(exception, "Dispose Connection Executor Faulted: {Host}", Description);
-            }
+            await failures.Capture(
+                    () => _connection.CloseAsync(),
+                    exception => LogWarning(exception, "Close Connection Faulted: {Host}", Description))
+                .ConfigureAwait(false);
+            failures.Capture(
+                () => _connection.Dispose(),
+                exception => LogWarning(exception, "Dispose Connection Faulted: {Host}", Description));
+            await failures.Capture(
+                    () => _executor.DisposeAsync(),
+                    exception => LogWarning(exception, "Dispose Connection Executor Faulted: {Host}", Description))
+                .ConfigureAwait(false);
 
             TransportLogMessages.DisconnectedHost(Description);
+            failures.ThrowIfAny("One or more ActiveMQ connection cleanup stages failed.");
+        }
+
+        static void LogWarning(Exception exception, string message, string description)
+        {
+            try
+            {
+                LogContext.Warning?.Log(exception, message, description);
+            }
+            catch
+            {
+                // Cleanup failures remain the product result even if a diagnostic listener fails.
+            }
+        }
+    }
+
+
+    internal sealed class ActiveMqCleanupFailures
+    {
+        readonly List<Exception> _failures = new List<Exception>();
+
+        public async ValueTask Capture(Func<Task> stage, Action<Exception> onFailure)
+        {
+            try
+            {
+                await stage().ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                Add(exception);
+                onFailure(exception);
+            }
+        }
+
+        public async ValueTask Capture(Func<ValueTask> stage, Action<Exception> onFailure)
+        {
+            try
+            {
+                await stage().ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                Add(exception);
+                onFailure(exception);
+            }
+        }
+
+        public void Capture(Action stage, Action<Exception> onFailure)
+        {
+            try
+            {
+                stage();
+            }
+            catch (Exception exception)
+            {
+                Add(exception);
+                onFailure(exception);
+            }
+        }
+
+        public void ThrowIfAny(string message)
+        {
+            if (_failures.Count == 0)
+                return;
+
+            if (_failures.Count == 1)
+                ExceptionDispatchInfo.Capture(_failures[0]).Throw();
+
+            throw new AggregateException(message, _failures);
+        }
+
+        void Add(Exception exception)
+        {
+            // One failed cleanup stage must preserve the exact exception object thrown by that
+            // stage, including an AggregateException. Multiple stage failures are aggregated by
+            // this owner in their stable execution order without rewriting their identities.
+            _failures.Add(exception);
         }
     }
 }

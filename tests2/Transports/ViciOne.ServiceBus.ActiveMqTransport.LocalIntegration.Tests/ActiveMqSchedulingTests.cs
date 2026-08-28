@@ -8,7 +8,7 @@ using Xunit;
 public sealed class ActiveMqSchedulingTests
 {
     private static readonly TimeSpan BrokerDelay = TimeSpan.FromMilliseconds(250);
-    private static readonly TimeSpan FutureDelay = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan FutureDelay = TimeSpan.FromSeconds(5);
 
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
@@ -40,6 +40,7 @@ public sealed class ActiveMqSchedulingTests
         var delivered = NewObservation<Guid[]>();
         var identities = new ConcurrentQueue<Guid>();
         var observer = new ScheduleObserver();
+        var receives = new ReceiveCompletionObserver(2);
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
@@ -55,6 +56,7 @@ public sealed class ActiveMqSchedulingTests
             }));
         });
         using ConnectHandle observerHandle = bus.ConnectSendObserver(observer);
+        using ConnectHandle receiveHandle = bus.ConnectReceiveObserver(receives);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
 
@@ -79,10 +81,18 @@ public sealed class ActiveMqSchedulingTests
             await input.Send(new ScheduledDelivery(secondId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Guid[] actual = await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            started = false;
 
             Assert.Equal([firstId, secondId], actual);
             AssertSinglePositiveDelay(BrokerDelay, observer.DelaysFor<ScheduledDelivery>());
             Assert.Equal(2, observer.SendCountFor<ScheduledDelivery>());
+            Assert.Equal(2, receives.CompletedCount);
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(2, 2, 0, 0, 0),
+                await fixture.GetQueueStatistics(queueName, cancellationToken));
         }
         finally
         {
@@ -104,6 +114,7 @@ public sealed class ActiveMqSchedulingTests
         var delivered = NewObservation<Guid>();
         var deliveryCount = 0;
         var observer = new ScheduleObserver();
+        var receives = new ReceiveCompletionObserver(1);
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
@@ -116,6 +127,7 @@ public sealed class ActiveMqSchedulingTests
             }));
         });
         using ConnectHandle observerHandle = bus.ConnectSendObserver(observer);
+        using ConnectHandle receiveHandle = bus.ConnectReceiveObserver(receives);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
 
@@ -135,9 +147,19 @@ public sealed class ActiveMqSchedulingTests
             Assert.Equal(scheduledTime, schedule.ScheduledTime);
             await observer.Scheduled.WaitAsync(fixture.OperationTimeout, cancellationToken);
             AssertSinglePositiveDelay(FutureDelay, observer.DelaysFor<ScheduledDelivery>());
-            Assert.False(delivered.Task.IsCompleted, delivered.Task.Exception?.ToString());
+            Assert.Equal(1, await fixture.GetScheduledMessageCount(queueName, cancellationToken));
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            started = false;
+
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
+            Assert.Equal(1, receives.CompletedCount);
+            Assert.Equal(0, await fixture.GetScheduledMessageCount(queueName, cancellationToken));
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
+                await fixture.GetQueueStatistics(queueName, cancellationToken));
         }
         finally
         {
@@ -150,15 +172,20 @@ public sealed class ActiveMqSchedulingTests
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, publish ? "schedule-publish" : "schedule-send");
         string queueName = fixture.Name("input");
+        string entityName = fixture.Name("scheduled");
+        string brokerQueueName = publish
+            ? $"Consumer.{queueName}.VirtualTopic.{entityName}"
+            : queueName;
         Guid flowId = Guid.NewGuid();
         var delivered = NewObservation<Guid>();
         var deliveryCount = 0;
         var observer = new ScheduleObserver();
+        var receives = new ReceiveCompletionObserver(1);
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
             configurator.UseDelayedMessageScheduler();
-            configurator.MessageTopology.GetMessageTopology<ScheduledDelivery>().SetEntityName(fixture.Name("scheduled"));
+            configurator.MessageTopology.GetMessageTopology<ScheduledDelivery>().SetEntityName(entityName);
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ScheduledDelivery>(context =>
             {
                 Interlocked.Increment(ref deliveryCount);
@@ -167,6 +194,7 @@ public sealed class ActiveMqSchedulingTests
             }));
         });
         using ConnectHandle observerHandle = bus.ConnectSendObserver(observer);
+        using ConnectHandle receiveHandle = bus.ConnectReceiveObserver(receives);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
 
@@ -194,7 +222,16 @@ public sealed class ActiveMqSchedulingTests
             await observer.Scheduled.WaitAsync(fixture.OperationTimeout, cancellationToken);
             AssertSinglePositiveDelay(BrokerDelay, observer.DelaysFor<ScheduledDelivery>());
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            started = false;
+
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
+            Assert.Equal(1, receives.CompletedCount);
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
+                await fixture.GetQueueStatistics(brokerQueueName, cancellationToken));
         }
         finally
         {

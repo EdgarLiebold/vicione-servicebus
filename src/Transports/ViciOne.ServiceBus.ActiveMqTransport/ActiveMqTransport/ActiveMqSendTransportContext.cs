@@ -113,14 +113,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             if (context.GroupSequence.HasValue)
                 transportMessage.SetGroupSequence(context.GroupSequence.Value);
 
-            var delay = context.Delay?.TotalMilliseconds;
-            if (delay > 0)
-            {
-                if (_hostConfiguration.IsArtemis)
-                    transportMessage.Properties["_AMQ_SCHED_DELIVERY"] = GetArtemisScheduledDelivery(context);
-                else
-                    transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = (long)delay.Value;
-            }
+            ApplyDeliveryDelay(transportMessage, context, _hostConfiguration.IsArtemis);
 
             await sessionContext.SendAsync(destination, transportMessage, context.CancellationToken).ConfigureAwait(false);
         }
@@ -138,12 +131,23 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
                 transportMessage.NMSTimeToLive = NMSConstants.defaultTimeToLive;
         }
 
-        internal static long GetArtemisScheduledDelivery(SendContext context)
+        internal static void ApplyDeliveryDelay(IMessage transportMessage, SendContext context, bool isArtemis)
         {
-            if (!context.Delay.HasValue || context.Delay.Value <= TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(context), "A positive delivery delay is required.");
+            ArgumentNullException.ThrowIfNull(transportMessage);
+            ArgumentNullException.ThrowIfNull(context);
 
-            return (context.GetTimeProvider().GetUtcNow() + context.Delay.Value).ToUnixTimeMilliseconds();
+            if (!context.Delay.HasValue || context.Delay.Value <= TimeSpan.Zero)
+                return;
+
+            if (isArtemis)
+            {
+                // Apache.NMS.AMQP maps NMSDeliveryTime to the AMQP x-opt-delivery-time
+                // annotation understood by Artemis. A regular application property named
+                // _AMQ_SCHED_DELIVERY is only the Core/JMS contract and is ignored on AMQP.
+                transportMessage.NMSDeliveryTime = (context.GetTimeProvider().GetUtcNow() + context.Delay.Value).UtcDateTime;
+            }
+            else
+                transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = checked((long)context.Delay.Value.TotalMilliseconds);
         }
 
         static async Task SetResponseTo(IMessage transportMessage, SendContext context, SessionContext sessionContext)

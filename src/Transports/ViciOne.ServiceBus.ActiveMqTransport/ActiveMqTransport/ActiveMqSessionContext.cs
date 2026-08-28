@@ -36,40 +36,36 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public async ValueTask DisposeAsync()
         {
-            try
-            {
-                await _messageProducerCache.Stop(CancellationToken.None).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                LogContext.Warning?.Log(ex, "Stop message producers faulted: {Host}", ConnectionContext.Description);
-            }
+            var failures = new ActiveMqCleanupFailures();
 
-            try
-            {
-                await _session.CloseAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                LogContext.Warning?.Log(ex, "Close session faulted: {Host}", ConnectionContext.Description);
-            }
+            await failures.Capture(
+                    () => _messageProducerCache.Stop(CancellationToken.None),
+                    exception => LogWarning(exception, "Stop message producers faulted: {Host}"))
+                .ConfigureAwait(false);
+            await failures.Capture(
+                    () => _session.CloseAsync(),
+                    exception => LogWarning(exception, "Close session faulted: {Host}"))
+                .ConfigureAwait(false);
+            failures.Capture(
+                () => _session.Dispose(),
+                exception => LogWarning(exception, "Dispose session faulted: {Host}"));
+            await failures.Capture(
+                    () => _executor.DisposeAsync(),
+                    exception => LogWarning(exception, "Dispose session executor faulted: {Host}"))
+                .ConfigureAwait(false);
 
-            try
-            {
-                _session.Dispose();
-            }
-            catch (Exception ex)
-            {
-                LogContext.Warning?.Log(ex, "Dispose session faulted: {Host}", ConnectionContext.Description);
-            }
+            failures.ThrowIfAny("One or more ActiveMQ session cleanup stages failed.");
+        }
 
+        void LogWarning(Exception exception, string message)
+        {
             try
             {
-                await _executor.DisposeAsync().ConfigureAwait(false);
+                LogContext.Warning?.Log(exception, message, ConnectionContext.Description);
             }
-            catch (Exception ex)
+            catch
             {
-                LogContext.Warning?.Log(ex, "Dispose session executor faulted: {Host}", ConnectionContext.Description);
+                // Cleanup failures remain the product result even if a diagnostic listener fails.
             }
         }
 

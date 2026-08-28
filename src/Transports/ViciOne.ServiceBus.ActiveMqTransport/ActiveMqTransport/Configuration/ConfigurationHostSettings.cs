@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             var hostAddress = new ActiveMqHostAddress(address);
 
             Host = hostAddress.Host;
-            Port = hostAddress.Port ?? 61616;
+            Port = hostAddress.Port ?? throw new ActiveMqTransportConfigurationException("The ActiveMQ port is unavailable.");
             VirtualHost = hostAddress.VirtualHost;
 
             Username = "";
@@ -144,17 +144,19 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
             if (string.IsNullOrWhiteSpace(address.Host))
                 throw new ActiveMqTransportConfigurationException("The failover endpoint host must not be empty.");
             if (!string.IsNullOrEmpty(address.UserInfo) || !string.IsNullOrEmpty(address.Query) || !string.IsNullOrEmpty(address.Fragment)
-                || address.AbsolutePath != "/")
+                || address.AbsolutePath != "/"
+                || address.IsDefaultPort
+                || address.Port <= 0)
             {
                 throw new ActiveMqTransportConfigurationException(
-                    "Failover endpoints contain only scheme, host, and optional port; credentials and options use the typed configurator.");
+                    "Failover endpoints contain only scheme, host, and an explicit port; credentials and options use the typed configurator.");
             }
 
             return new UriBuilder
             {
                 Scheme = HostScheme,
                 Host = address.Host,
-                Port = address.IsDefaultPort || address.Port <= 0 ? Port : address.Port,
+                Port = address.Port,
                 Query = query.TrimStart('?')
             }.Uri.ToString();
         }

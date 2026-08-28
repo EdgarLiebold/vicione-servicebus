@@ -91,8 +91,11 @@ public sealed class ActiveMqSharedSubscriptionTests
         var deliveries = new System.Collections.Concurrent.ConcurrentDictionary<Guid, string>();
         var duplicate = NewObservation<Guid>();
         var allDelivered = NewObservation<bool>();
+        var receives = new ReceiveCompletionObserver(MessageCount);
         IBusControl firstBus = CreateBus(fixture.Name("consumer-a"), "a");
         IBusControl secondBus = CreateBus(fixture.Name("consumer-b"), "b");
+        using ConnectHandle firstReceiveHandle = firstBus.ConnectReceiveObserver(receives);
+        using ConnectHandle secondReceiveHandle = secondBus.ConnectReceiveObserver(receives);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool firstStarted = false;
         bool secondStarted = false;
@@ -113,10 +116,21 @@ public sealed class ActiveMqSharedSubscriptionTests
             if (ReferenceEquals(finished, duplicate.Task))
                 throw new InvalidDataException($"Message '{await duplicate.Task}' was delivered more than once.");
             await allDelivered.Task;
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            await secondBus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            secondStarted = false;
+            await firstBus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            firstStarted = false;
 
             Assert.Equal(expected.Order(), deliveries.Keys.Order());
             Assert.Equal(MessageCount, deliveries.Count);
+            Assert.False(duplicate.Task.IsCompleted, duplicate.Task.Exception?.ToString());
+            Assert.Equal(MessageCount, receives.CompletedCount);
             Assert.Equal(["a", "b"], deliveries.Values.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal));
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(MessageCount, MessageCount, 0, 0, 0),
+                await fixture.GetQueueStatistics(consumerName, cancellationToken));
         }
         finally
         {

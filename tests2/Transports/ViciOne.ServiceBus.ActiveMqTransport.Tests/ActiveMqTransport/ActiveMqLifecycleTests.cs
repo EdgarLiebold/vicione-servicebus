@@ -14,15 +14,34 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport;
 
 public sealed class ActiveMqLifecycleTests
 {
+    [Theory]
+    [InlineData("activemq://broker:61616/", true)]
+    [InlineData("amqp://broker:5672/", false)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "manual-auto-delete-is-provider-capability")]
+    public void ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion(string address, bool expected)
+    {
+        bool actual = ConfigureActiveMqTopologyFilter<ReceiveSettings>.RequiresManualAutoDelete(new Uri(address));
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "retained-send-session-retires-with-connection")]
     public async Task SharedSendSession_RetiresWhenItsConnectionFaults()
     {
         ExceptionListener? exceptionListener = null;
+        var recoveredListener = new TaskCompletionSource<ExceptionListener>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var listenerGeneration = 0;
         var listenerRemoved = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         IConnection connection = InterfaceProxy<IConnection>.Create((method, args) => method.Name switch
         {
-            "add_ExceptionListener" => Record(() => exceptionListener += Assert.IsType<ExceptionListener>(args![0])),
+            "add_ExceptionListener" => Record(() =>
+            {
+                ExceptionListener listener = Assert.IsType<ExceptionListener>(args![0]);
+                exceptionListener += listener;
+                if (Interlocked.Increment(ref listenerGeneration) == 2)
+                    recoveredListener.TrySetResult(listener);
+            }),
             "remove_ExceptionListener" => Record(() =>
             {
                 exceptionListener -= Assert.IsType<ExceptionListener>(args![0]);
@@ -56,7 +75,9 @@ public sealed class ActiveMqLifecycleTests
 
             SessionContext recoveredUse = await CaptureSession(sendSupervisor);
             Assert.NotSame(firstCachedSession, UnwrapSharedSession(recoveredUse));
-            Assert.NotNull(exceptionListener);
+            Assert.Same(
+                await recoveredListener.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken),
+                exceptionListener);
         }
         finally
         {
@@ -108,7 +129,7 @@ public sealed class ActiveMqLifecycleTests
                 _ => Default(method.ReturnType),
             });
         var topology = new ActiveMqBrokerTopology([], [queue], []);
-        var agent = new RemoveAutoDeleteAgent(connection, topology);
+        var agent = new RemoveAutoDeleteAgent(FixedConnectionSupervisor(connection), topology);
 
         await agent.Stop("endpoint stopping", TestContext.Current.CancellationToken);
 
@@ -122,28 +143,73 @@ public sealed class ActiveMqLifecycleTests
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "connection-disposed-after-close-failure")]
     public async Task ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFails()
     {
+        var closeFailure = new NMSException("close failed");
         bool disposed = false;
         IConnection connection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
         {
-            nameof(IConnection.CloseAsync) => Task.FromException(new NMSException("close failed")),
+            nameof(IConnection.CloseAsync) => Task.FromException(closeFailure),
             nameof(IDisposable.Dispose) => Record(() => disposed = true),
             _ => Default(method.ReturnType),
         });
         ActiveMqConnectionContext context = CreateConnectionContext(connection);
 
-        await context.DisposeAsync();
+        NMSException actual = await Assert.ThrowsAsync<NMSException>(async () => await context.DisposeAsync());
 
+        Assert.Same(closeFailure, actual);
         Assert.True(disposed);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "connection-cleanup-aggregates-in-stage-order")]
+    public async Task ConnectionDispose_AggregatesMultipleFailuresInStageOrder()
+    {
+        var closeFailure = new NMSException("close failed");
+        var disposeFailure = new InvalidOperationException("dispose failed");
+        IConnection connection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+        {
+            nameof(IConnection.CloseAsync) => Task.FromException(closeFailure),
+            nameof(IDisposable.Dispose) => throw disposeFailure,
+            _ => Default(method.ReturnType),
+        });
+        ActiveMqConnectionContext context = CreateConnectionContext(connection);
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(async () => await context.DisposeAsync());
+
+        Assert.Collection(
+            actual.InnerExceptions,
+            exception => Assert.Same(closeFailure, exception),
+            exception => Assert.Same(disposeFailure, exception));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "single-aggregate-cleanup-failure-preserves-identity")]
+    public async Task ConnectionDispose_PreservesASoleAggregateFailureAsTheOriginalStageException()
+    {
+        var closeFailure = new AggregateException(
+            "provider close failed",
+            new NMSException("socket failed"),
+            new InvalidOperationException("listener failed"));
+        IConnection connection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+        {
+            nameof(IConnection.CloseAsync) => Task.FromException(closeFailure),
+            _ => Default(method.ReturnType),
+        });
+        ActiveMqConnectionContext context = CreateConnectionContext(connection);
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(async () => await context.DisposeAsync());
+
+        Assert.Same(closeFailure, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "session-disposed-after-close-failure")]
     public async Task SessionDispose_AttemptsDisposeAfterCloseFails()
     {
+        var closeFailure = new NMSException("close failed");
         bool disposed = false;
         ISession session = InterfaceProxy<ISession>.Create((method, _) => method.Name switch
         {
-            nameof(ISession.CloseAsync) => Task.FromException(new NMSException("close failed")),
+            nameof(ISession.CloseAsync) => Task.FromException(closeFailure),
             nameof(IDisposable.Dispose) => Record(() => disposed = true),
             _ => Default(method.ReturnType),
         });
@@ -155,9 +221,90 @@ public sealed class ActiveMqLifecycleTests
             }));
         var context = new ActiveMqSessionContext(connectionContext, session, TestContext.Current.CancellationToken);
 
-        await context.DisposeAsync();
+        NMSException actual = await Assert.ThrowsAsync<NMSException>(async () => await context.DisposeAsync());
 
+        Assert.Same(closeFailure, actual);
         Assert.True(disposed);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "session-cleanup-aggregates-in-stage-order")]
+    public async Task SessionDispose_AggregatesMultipleFailuresInStageOrder()
+    {
+        var closeFailure = new NMSException("close failed");
+        var disposeFailure = new InvalidOperationException("dispose failed");
+        ISession session = InterfaceProxy<ISession>.Create((method, _) => method.Name switch
+        {
+            nameof(ISession.CloseAsync) => Task.FromException(closeFailure),
+            nameof(IDisposable.Dispose) => throw disposeFailure,
+            _ => Default(method.ReturnType),
+        });
+        await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
+            InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+            {
+                nameof(IConnection.CloseAsync) => Task.CompletedTask,
+                _ => Default(method.ReturnType),
+            }));
+        var context = new ActiveMqSessionContext(connectionContext, session, TestContext.Current.CancellationToken);
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(async () => await context.DisposeAsync());
+
+        Assert.Collection(
+            actual.InnerExceptions,
+            exception => Assert.Same(closeFailure, exception),
+            exception => Assert.Same(disposeFailure, exception));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-attempts-every-entity-after-failure")]
+    public async Task AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntity()
+    {
+        var firstFailure = new NMSException("first queue failed");
+        var secondFailure = new InvalidOperationException("topic failed");
+        var attempted = new List<string>();
+        bool sessionClosed = false;
+        bool sessionDisposed = false;
+        ISession stopSession = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.GetQueue) => QueueDestination(Assert.IsType<string>(args![0])),
+            nameof(ISession.GetTopic) => TopicDestination(Assert.IsType<string>(args![0])),
+            nameof(ISession.DeleteDestination) => DeleteDestination(
+                Assert.IsAssignableFrom<IDestination>(args![0]),
+                firstFailure,
+                secondFailure,
+                attempted),
+            nameof(ISession.CloseAsync) => Record(() => sessionClosed = true, Task.CompletedTask),
+            nameof(IDisposable.Dispose) => Record(() => sessionDisposed = true),
+            _ => Default(method.ReturnType),
+        });
+        ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
+        {
+            nameof(ConnectionContext.CreateSession) => Task.FromResult(stopSession),
+            nameof(ConnectionContext.TryRemoveTemporaryEntity) => false,
+            _ => Default(method.ReturnType),
+        });
+        var consumerQueue = QueueTopology("consumer-temp");
+        var topic = TopicTopology("topic-temp");
+        var queue = QueueTopology("queue-temp");
+        ViciOne.ServiceBus.ActiveMqTransport.Topology.Consumer consumer =
+            InterfaceProxy<ViciOne.ServiceBus.ActiveMqTransport.Topology.Consumer>.Create((method, _) => method.Name switch
+        {
+            "get_Destination" => consumerQueue,
+            _ => Default(method.ReturnType),
+        });
+        var topology = new ActiveMqBrokerTopology([topic], [consumerQueue, queue], [consumer]);
+        var agent = new RemoveAutoDeleteAgent(FixedConnectionSupervisor(connection), topology);
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(
+            () => agent.Stop("endpoint stopping", TestContext.Current.CancellationToken));
+
+        Assert.Collection(
+            actual.InnerExceptions,
+            exception => Assert.Same(firstFailure, exception),
+            exception => Assert.Same(secondFailure, exception));
+        Assert.Equal(["queue:consumer-temp", "topic:topic-temp", "queue:queue-temp"], attempted);
+        Assert.True(sessionClosed);
+        Assert.True(sessionDisposed);
     }
 
     [Fact]
@@ -354,8 +501,73 @@ public sealed class ActiveMqLifecycleTests
         return result;
     }
 
+    private static object? DeleteDestination(
+        IDestination destination,
+        Exception firstFailure,
+        Exception secondFailure,
+        ICollection<string> attempted)
+    {
+        if (destination is IQueue queue)
+        {
+            attempted.Add($"queue:{queue.QueueName}");
+            if (queue.QueueName == "consumer-temp")
+                throw firstFailure;
+            return null;
+        }
+
+        var topic = Assert.IsAssignableFrom<ITopic>(destination);
+        attempted.Add($"topic:{topic.TopicName}");
+        throw secondFailure;
+    }
+
+    private static IQueue QueueDestination(string name) =>
+        InterfaceProxy<IQueue>.Create((method, _) => method.Name switch
+        {
+            "get_IsQueue" => true,
+            "get_IsTopic" => false,
+            "get_QueueName" => name,
+            _ => Default(method.ReturnType),
+        });
+
+    private static ITopic TopicDestination(string name) =>
+        InterfaceProxy<ITopic>.Create((method, _) => method.Name switch
+        {
+            "get_IsQueue" => false,
+            "get_IsTopic" => true,
+            "get_TopicName" => name,
+            _ => Default(method.ReturnType),
+        });
+
+    private static ViciOne.ServiceBus.ActiveMqTransport.Topology.Queue QueueTopology(string name) =>
+        InterfaceProxy<ViciOne.ServiceBus.ActiveMqTransport.Topology.Queue>.Create((method, _) => method.Name switch
+        {
+            "get_EntityName" => name,
+            "get_AutoDelete" => true,
+            "get_Durable" => false,
+            _ => Default(method.ReturnType),
+        });
+
+    private static Topic TopicTopology(string name) =>
+        InterfaceProxy<Topic>.Create((method, _) => method.Name switch
+        {
+            "get_EntityName" => name,
+            "get_AutoDelete" => true,
+            "get_Durable" => false,
+            _ => Default(method.ReturnType),
+        });
+
+    private static IConnectionContextSupervisor FixedConnectionSupervisor(ConnectionContext connection) =>
+        InterfaceProxy<IConnectionContextSupervisor>.Create((method, args) => method.Name switch
+        {
+            "Send" => Assert.IsAssignableFrom<IPipe<ConnectionContext>>(args![0]).Send(connection),
+            _ => Default(method.ReturnType),
+        });
+
     private static object? Default(Type returnType)
     {
+        if (returnType == typeof(void))
+            return null;
+
         if (returnType == typeof(Task))
             return Task.CompletedTask;
 

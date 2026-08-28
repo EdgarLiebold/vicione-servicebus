@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Tests;
 public sealed class ActiveMqHostAddressTests
 {
     [Theory]
-    [InlineData("activemq://broker/", "activemq", 61616, "/", "activemq://broker/")]
-    [InlineData("amqp://broker/production%2Fclient", "amqp", 61616, "production/client", "amqp://broker/production%2Fclient")]
+    [InlineData("activemq://broker:61616/", "activemq", 61616, "/", "activemq://broker:61616/")]
+    [InlineData("amqp://broker:5672/production%2Fclient", "amqp", 5672, "production/client", "amqp://broker:5672/production%2Fclient")]
     [InlineData("activemq://broker:26161/production", "activemq", 26161, "production", "activemq://broker:26161/production")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "supported-schemes-ports-and-scope")]
     public void SupportedAddresses_RoundTripCanonically(
@@ -46,6 +46,15 @@ public sealed class ActiveMqHostAddressTests
     }
 
     [Theory]
+    [InlineData("activemq://broker/")]
+    [InlineData("amqp://broker/")]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "port-must-be-explicit")]
+    public void HostUris_RequireAnExplicitPort(string source)
+    {
+        Assert.Throws<ActiveMqTransportConfigurationException>(() => new ActiveMqHostAddress(new Uri(source)));
+    }
+
+    [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
@@ -56,10 +65,12 @@ public sealed class ActiveMqHostAddressTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData(0)]
     [InlineData(-1)]
     [InlineData(65536)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "invalid-explicit-port")]
-    public void ExplicitConstruction_RejectsInvalidPorts(int port)
+    public void ExplicitConstruction_RejectsInvalidPorts(int? port)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new ActiveMqHostAddress("activemq", "broker", port, "/"));
     }

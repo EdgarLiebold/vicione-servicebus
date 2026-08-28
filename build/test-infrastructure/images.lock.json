@@ -23,7 +23,7 @@
       "tag": "",
       "digest": "sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a",
       "reference": "quay.io/artemiscloud/activemq-artemis-broker@sha256:f22d0bf16d7dbb7b928a048f27e4e4f537ac9af00a5fd31cf4b73a889cc0bd2a",
-      "rationale": "Artemis is a second, separate broker used by the parameterized 'artemis' flavor of a subset of the ActiveMQ specs. It is not the ViciOne fixture and is not a required gate. It is pinned here so the branch has a reproducible endpoint instead of the hardcoded port 61618 with admin/admin it carried from the imported baseline."
+      "rationale": "Artemis is the required second ActiveMQ LocalIntegration broker for the parameterized 'artemis' provider variants. It is pinned and run-scoped so the required gate has a reproducible endpoint instead of the fixed port and shared credentials carried by the imported baseline."
     },
     "azurite": {
       "repository": "mcr.microsoft.com/azure-storage/azurite",

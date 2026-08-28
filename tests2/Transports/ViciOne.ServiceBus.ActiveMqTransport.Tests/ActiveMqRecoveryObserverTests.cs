@@ -43,14 +43,14 @@ public sealed class ActiveMqRecoveryObserverTests
 
     private sealed class EndpointReady(string endpoint) : ReceiveEndpointReady
     {
-        public Uri InputAddress { get; } = new($"activemq://broker/{Uri.EscapeDataString(endpoint)}");
+        public Uri InputAddress { get; } = new($"activemq://broker:61616/{Uri.EscapeDataString(endpoint)}");
         public IReceiveEndpoint ReceiveEndpoint => null!;
         public bool IsStarted => true;
     }
 
     private sealed class EndpointFaulted(string endpoint) : ReceiveEndpointFaulted
     {
-        public Uri InputAddress { get; } = new($"activemq://broker/{Uri.EscapeDataString(endpoint)}");
+        public Uri InputAddress { get; } = new($"activemq://broker:61616/{Uri.EscapeDataString(endpoint)}");
         public IReceiveEndpoint ReceiveEndpoint => null!;
         public Exception Exception { get; } = new InvalidOperationException("The endpoint faulted.");
     }

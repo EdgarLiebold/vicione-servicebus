@@ -16,15 +16,21 @@ public sealed class ActiveMqQuartzSchedulingTests
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "quartz-publish");
         string inputQueue = fixture.Name("input");
         string schedulerQueue = fixture.Name("scheduler");
+        string deliveryEntityName = fixture.Name("delivery");
+        string deliveryQueue = $"Consumer.{inputQueue}.VirtualTopic.{deliveryEntityName}";
         Guid flowId = Guid.NewGuid();
         var scheduled = NewObservation<ScheduledMessage<QuartzDelivery>>();
         var delivered = NewObservation<Guid>();
         var deliveryCount = 0;
+        // Trigger consumption, scheduler-command consumption, and final delivery must all complete
+        // before the terminal broker-state assertion is meaningful.
+        var receives = new ReceiveCompletionObserver(3);
         ISchedulerFactory? schedulerFactory = null;
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
             configurator.UseInMemoryScheduler(out schedulerFactory, schedulerQueue);
+            configurator.MessageTopology.GetMessageTopology<QuartzDelivery>().SetEntityName(deliveryEntityName);
             configurator.ReceiveEndpoint(inputQueue, endpoint =>
             {
                 endpoint.Handler<QuartzTrigger>(async context =>
@@ -52,6 +58,7 @@ public sealed class ActiveMqQuartzSchedulingTests
                 });
             });
         });
+        using ConnectHandle receiveHandle = bus.ConnectReceiveObserver(receives);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
 
@@ -77,7 +84,22 @@ public sealed class ActiveMqQuartzSchedulingTests
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Null(completedTrigger?.GetNextFireTimeUtc());
+
+            await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            started = false;
+
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
+            Assert.Equal(3, receives.CompletedCount);
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
+                await fixture.GetQueueStatistics(inputQueue, cancellationToken));
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
+                await fixture.GetQueueStatistics(schedulerQueue, cancellationToken));
+            Assert.Equal(
+                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
+                await fixture.GetQueueStatistics(deliveryQueue, cancellationToken));
         }
         finally
         {

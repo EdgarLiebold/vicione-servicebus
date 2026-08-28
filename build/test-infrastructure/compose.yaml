@@ -48,6 +48,12 @@ services:
     environment:
       AMQ_USER: ${VICIONE_SERVICEBUS_ARTEMIS_USER:?run credentials are missing, source new-run-credentials.sh}
       AMQ_PASSWORD: ${VICIONE_SERVICEBUS_ARTEMIS_PASS:?run credentials are missing, source new-run-credentials.sh}
+      # Artemis' create-time disk autotuning can derive an invalid negative page-sync timeout on
+      # throttled Docker Desktop storage. A fixed NIO journal profile makes fixture startup
+      # reproducible while retaining real persistent broker semantics.
+      # Jolokia remains authenticated and loopback-only at the host boundary. Relax only its
+      # browser-origin allowlist so the run-scoped test client can use the management API.
+      AMQ_EXTRA_ARGS: --no-autotune --nio --relax-jolokia
     ports:
       - "127.0.0.1::61616"
       - "127.0.0.1::8161"

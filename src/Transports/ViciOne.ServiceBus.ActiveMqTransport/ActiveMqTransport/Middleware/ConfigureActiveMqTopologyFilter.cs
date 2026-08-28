@@ -33,8 +33,12 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         {
             await next.Send(context).ConfigureAwait(false);
 
-            if (_settings is ReceiveSettings)
-                _context.AddSendAgent(new RemoveAutoDeleteAgent(context.ConnectionContext, _brokerTopology));
+            // Apache.NMS.ActiveMQ exposes explicit destination deletion, whereas Apache.NMS.AMQP
+            // deliberately does not. AMQP brokers own auto-delete lifetime and reject a client-side
+            // DeleteDestination call. Install the manual cleanup owner only for the provider that
+            // can fulfill that contract; unexpected OpenWire cleanup failures remain observable.
+            if (_settings is ReceiveSettings && RequiresManualAutoDelete(context.ConnectionContext.HostAddress))
+                _context.AddSendAgent(new RemoveAutoDeleteAgent(_context.ConnectionContextSupervisor, _brokerTopology));
         }
         catch (Exception)
         {
@@ -42,6 +46,13 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
 
             throw;
         }
+    }
+
+    internal static bool RequiresManualAutoDelete(Uri hostAddress)
+    {
+        ArgumentNullException.ThrowIfNull(hostAddress);
+
+        return string.Equals(hostAddress.Scheme, ActiveMqHostAddress.ActiveMqScheme, StringComparison.OrdinalIgnoreCase);
     }
 
     public void Probe(ProbeContext context)

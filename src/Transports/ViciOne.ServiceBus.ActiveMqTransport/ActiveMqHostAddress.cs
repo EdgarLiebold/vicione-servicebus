@@ -52,8 +52,8 @@ namespace ViciOne.ServiceBus
                 : host;
             Port = port switch
             {
-                null or 0 => 61616,
-                < 0 or > 65535 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be between 1 and 65535, or zero for the default."),
+                null or 0 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be configured explicitly and must be between 1 and 65535."),
+                < 0 or > 65535 => throw new ArgumentOutOfRangeException(nameof(port), port, "The ActiveMQ port must be between 1 and 65535."),
                 _ => port
             };
             VirtualHost = string.IsNullOrWhiteSpace(virtualHost) ? "/" : virtualHost;
@@ -64,9 +64,10 @@ namespace ViciOne.ServiceBus
             scheme = address.Scheme;
             host = address.Host;
 
-            port = address.IsDefaultPort || address.Port <= 0
-                ? 61616
-                : address.Port;
+            if (address.IsDefaultPort || address.Port <= 0)
+                throw new ActiveMqTransportConfigurationException("The ActiveMQ port must be present explicitly in the host address.");
+
+            port = address.Port;
 
             virtualHost = address.ParseHostPath();
         }
@@ -102,11 +103,7 @@ namespace ViciOne.ServiceBus
             {
                 Scheme = address.Scheme,
                 Host = address.Host,
-                Port = address.Port.HasValue
-                    ? address.Port.Value == 61616
-                        ? -1
-                        : address.Port.Value
-                    : -1,
+                Port = address.Port ?? throw new ActiveMqTransportConfigurationException("The ActiveMQ port is unavailable."),
                 Path = address.VirtualHost == "/"
                     ? "/"
                     : $"/{Uri.EscapeDataString(address.VirtualHost)}"

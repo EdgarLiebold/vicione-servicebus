@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Apache.NMS;
@@ -12,56 +13,78 @@ public sealed class RemoveAutoDeleteAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
-    readonly ConnectionContext _connectionContext;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
 
-    public RemoveAutoDeleteAgent(ConnectionContext connectionContext, BrokerTopology brokerTopology)
+    public RemoveAutoDeleteAgent(IConnectionContextSupervisor connectionContextSupervisor, BrokerTopology brokerTopology)
     {
         _brokerTopology = brokerTopology;
-        _connectionContext = connectionContext;
+        _connectionContextSupervisor = connectionContextSupervisor;
 
         SetReady();
     }
 
     protected override async Task StopAgent(StopContext context)
     {
-        try
-        {
-            // Topology setup runs through a scoped session which is released as soon as that
-            // operation completes. The session supervisor is already stopping when its send agents
-            // are stopped, so it cannot create a replacement at this point. The connection is the
-            // longer-lived owner: acquire one stop-scoped session, complete every deletion through
-            // its serial executor, and close that session before the agent reports completion.
-            var session = await _connectionContext.CreateSession(context.CancellationToken).ConfigureAwait(false);
-            await using var sessionContext = new ActiveMqSessionContext(_connectionContext, session, context.CancellationToken);
-            await DeleteAutoDelete(sessionContext).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            LogContext.Warning?.Log(ex, "Failed to remove one or more subscriptions from the endpoint.");
-        }
+        var failures = new ActiveMqCleanupFailures();
+        await failures.Capture(
+            () => _connectionContextSupervisor.Send(
+                Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
+                {
+                    // Topology setup runs through a scoped session which is released as soon as that
+                    // operation completes. Resolve the current connection at stop time: after broker
+                    // recovery, the setup connection may already have been retired and must never be
+                    // reused for cleanup.
+                    var session = await connectionContext.CreateSession(context.CancellationToken).ConfigureAwait(false);
+                    await using var sessionContext = new ActiveMqSessionContext(connectionContext, session, context.CancellationToken);
+                    await DeleteAutoDelete(sessionContext, failures).ConfigureAwait(false);
+                }),
+                context.CancellationToken),
+            LogCleanupFailure)
+            .ConfigureAwait(false);
 
-        await base.StopAgent(context);
+        await failures.Capture(() => base.StopAgent(context), LogCleanupFailure).ConfigureAwait(false);
+        failures.ThrowIfAny("One or more ActiveMQ auto-delete cleanup stages failed.");
     }
 
-    async Task DeleteAutoDelete(SessionContext context)
+    async Task DeleteAutoDelete(SessionContext context, ActiveMqCleanupFailures failures)
+    {
+        foreach (Func<SessionContext, Task> delete in GetUniqueAutoDeleteOperations())
+            await failures.Capture(() => delete(context), LogCleanupFailure).ConfigureAwait(false);
+    }
+
+    IEnumerable<Func<SessionContext, Task>> GetUniqueAutoDeleteOperations()
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var consumer in _brokerTopology.Consumers.Where(x => x.Destination is not null && x.Destination.AutoDelete))
+        {
+            var queue = consumer.Destination;
+            if (seen.Add($"queue\0{queue.EntityName}"))
+                yield return context => Delete(context, queue);
+        }
+
+        foreach (var topic in _brokerTopology.Topics.Where(x => x.AutoDelete))
+        {
+            if (seen.Add($"topic\0{topic.EntityName}"))
+                yield return context => Delete(context, topic);
+        }
+
+        foreach (var queue in _brokerTopology.Queues.Where(x => x.AutoDelete))
+        {
+            if (seen.Add($"queue\0{queue.EntityName}"))
+                yield return context => Delete(context, queue);
+        }
+    }
+
+    static void LogCleanupFailure(Exception exception)
     {
         try
         {
-            await Task.WhenAll(_brokerTopology.Consumers.Where(x => x.Destination is not null && x.Destination.AutoDelete)
-                    .Select(consumer => Delete(context, consumer.Destination)))
-                .ConfigureAwait(false);
-
-            await Task.WhenAll(_brokerTopology.Topics.Where(x => x.AutoDelete).Select(topic => Delete(context, topic))).ConfigureAwait(false);
-
-            await Task.WhenAll(_brokerTopology.Queues.Where(x => x.AutoDelete).Select(queue => Delete(context, queue))).ConfigureAwait(false);
+            LogContext.Warning?.Log(exception, "Failed to remove one or more subscriptions from the endpoint.");
         }
-        catch (NMSException exception)
+        catch
         {
-            LogContext.Debug?.Log(exception, "Connection was closed, auto-delete queues/topics/consumers could not be deleted");
-        }
-        catch (Exception exception)
-        {
-            LogContext.Error?.Log(exception, "Failure removing auto-delete queues/topics");
+            // Cleanup failures remain the product result even if a diagnostic listener fails.
         }
     }
 

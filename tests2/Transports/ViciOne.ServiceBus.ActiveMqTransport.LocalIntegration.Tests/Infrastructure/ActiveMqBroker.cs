@@ -87,7 +87,7 @@ internal sealed class ActiveMqBroker : IDisposable
                 ArtemisLocalOptions artemis = options.LocalInfrastructure!.Artemis!;
                 host = artemis.Host!;
                 port = artemis.Port!.Value;
-                managementPort = null;
+                managementPort = artemis.JolokiaPort!.Value;
                 userName = artemis.UserName!;
                 password = artemis.Password!;
                 scheme = ActiveMqHostAddress.AmqpScheme;
@@ -269,30 +269,146 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("QueueSize").GetInt64());
     }
 
-    public async Task<ClassicQueueStatistics> WaitForClassicQueueStatistics(
+    public async Task<BrokerQueueStatistics> GetQueueStatistics(
         string queueName,
-        ClassicQueueStatistics expected,
         CancellationToken cancellationToken)
     {
-        TimeProvider timeProvider = TimeProvider.System;
-        long startedAt = timeProvider.GetTimestamp();
-        ClassicQueueStatistics actual;
-
-        do
+        if (Flavor != ArtemisFlavor)
         {
-            actual = await GetClassicQueueStatistics(queueName, cancellationToken);
-            if (actual == expected)
-                return actual;
-
-            if (timeProvider.GetElapsedTime(startedAt) >= OperationTimeout)
-                break;
-
-            await Task.Delay(TimeSpan.FromMilliseconds(50), timeProvider, cancellationToken);
+            ClassicQueueStatistics classic = await GetClassicQueueStatistics(queueName, cancellationToken);
+            return new BrokerQueueStatistics(
+                classic.EnqueueCount,
+                classic.DequeueCount,
+                classic.QueueSize,
+                ScheduledCount: 0,
+                DeliveringCount: 0);
         }
-        while (true);
 
-        throw new TimeoutException(
-            $"Queue '{queueName}' did not converge to {expected} within {OperationTimeout}; last statistics were {actual}.");
+        string mbean = await GetArtemisQueueMBean(queueName, cancellationToken);
+        _ = await InvokeJolokia(
+            new
+            {
+                type = "exec",
+                mbean,
+                operation = "flushExecutor()",
+                arguments = Array.Empty<object>(),
+            },
+            cancellationToken);
+        JsonElement value = await InvokeJolokia(
+            new
+            {
+                type = "read",
+                mbean,
+                attribute = new[]
+                {
+                    "MessagesAdded",
+                    "MessagesAcknowledged",
+                    "MessageCount",
+                    "ScheduledCount",
+                    "DeliveringCount",
+                },
+            },
+            cancellationToken);
+
+        return new BrokerQueueStatistics(
+            value.GetProperty("MessagesAdded").GetInt64(),
+            value.GetProperty("MessagesAcknowledged").GetInt64(),
+            value.GetProperty("MessageCount").GetInt64(),
+            value.GetProperty("ScheduledCount").GetInt64(),
+            value.GetProperty("DeliveringCount").GetInt64());
+    }
+
+    public async Task<int> GetScheduledMessageCount(string queueName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+
+        if (Flavor == ArtemisFlavor)
+            return checked((int)(await GetQueueStatistics(queueName, cancellationToken)).ScheduledCount);
+
+        JsonElement jobs = await InvokeJolokia(
+            new
+            {
+                type = "exec",
+                mbean = "org.apache.activemq:type=Broker,brokerName=localhost,service=JobScheduler,name=JMS",
+                operation = "getAllJobs(boolean)",
+                arguments = new object[] { true },
+            },
+            cancellationToken);
+        return CountScheduledDestinations(jobs, queueName);
+    }
+
+    async Task<string> GetArtemisQueueMBean(string queueName, CancellationToken cancellationToken)
+    {
+        JsonElement value = await InvokeJolokia(
+            new
+            {
+                type = "search",
+                mbean = "org.apache.activemq.artemis:broker=*,component=addresses,address=*,subcomponent=queues,routing-type=*,queue=*",
+            },
+            cancellationToken);
+        string escapedQueueName = queueName.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
+        string[] queueProperties = [$",queue=\"{escapedQueueName}\"", $",queue=\"{escapedQueueName}:global\""];
+        string[] available =
+        [
+            .. value.EnumerateArray()
+                .Select(item => item.GetString())
+                .Where(item => item is not null)!
+        ];
+        string[] matches =
+        [
+            .. available.Where(item => queueProperties.Any(property => item.Contains(property, StringComparison.Ordinal)))
+        ];
+
+        return matches.Length == 1
+            ? matches[0]
+            : throw new InvalidDataException(
+                $"Expected exactly one Artemis queue MBean for '{queueName}', but found {matches.Length}. "
+                + $"Available queue MBeans: {string.Join(", ", available)}");
+    }
+
+    async Task<JsonElement> InvokeJolokia(object command, CancellationToken cancellationToken)
+    {
+        HttpClient client = _managementClient
+            ?? throw new InvalidOperationException("Broker management is unavailable for this fixture.");
+        string payload = JsonSerializer.Serialize(command);
+        string relativePath = Flavor == ArtemisFlavor ? "console/jolokia/" : "api/jolokia/";
+        using var request = new HttpRequestMessage(HttpMethod.Post, relativePath)
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json"),
+        };
+        using HttpResponseMessage response = await client.SendAsync(request, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        string content = await response.Content.ReadAsStringAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        using JsonDocument document = JsonDocument.Parse(content);
+        JsonElement root = document.RootElement;
+        int status = root.GetProperty("status").GetInt32();
+        if (status != 200)
+            throw new InvalidDataException($"Jolokia returned status {status}: {content}");
+
+        return root.GetProperty("value").Clone();
+    }
+
+    static int CountScheduledDestinations(JsonElement element, string queueName)
+    {
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            if (element.TryGetProperty("destinationName", out JsonElement destination)
+                && destination.ValueKind == JsonValueKind.String)
+            {
+                string? value = destination.GetString();
+                return value == queueName || value == $"queue://{queueName}" || value == $"queue:{queueName}" ? 1 : 0;
+            }
+
+            return element.EnumerateObject().Sum(property => CountScheduledDestinations(property.Value, queueName));
+        }
+
+        if (element.ValueKind == JsonValueKind.Array)
+            return element.EnumerateArray().Sum(item => CountScheduledDestinations(item, queueName));
+
+        return 0;
     }
 
     public async Task<bool> ClassicQueueExists(string queueName, CancellationToken cancellationToken)
@@ -356,4 +472,10 @@ internal sealed class ActiveMqBroker : IDisposable
 
     internal readonly record struct ClassicTopicStatistics(long EnqueueCount, int ConsumerCount);
     internal readonly record struct ClassicQueueStatistics(long EnqueueCount, long DequeueCount, long QueueSize);
+    internal readonly record struct BrokerQueueStatistics(
+        long EnqueueCount,
+        long DequeueCount,
+        long QueueSize,
+        long ScheduledCount,
+        long DeliveringCount);
 }

@@ -174,7 +174,10 @@ namespace ViciOne.ServiceBus
                     "Credentials and URI fragments are not valid ActiveMQ destination address components.");
             }
 
-            var addressPort = address.IsDefaultPort || address.Port <= 0 ? 61616 : address.Port;
+            if (address.IsDefaultPort || address.Port <= 0)
+                throw new ActiveMqTransportConfigurationException("A full ActiveMQ destination address must include the configured port explicitly.");
+
+            var addressPort = address.Port;
             if (!string.Equals(address.Scheme, configuredScheme, StringComparison.OrdinalIgnoreCase)
                 || !string.Equals(address.Host, configuredHost, StringComparison.OrdinalIgnoreCase)
                 || addressPort != configuredPort
@@ -217,11 +220,7 @@ namespace ViciOne.ServiceBus
             {
                 Scheme = address.Scheme,
                 Host = address.Host,
-                Port = address.Port.HasValue
-                    ? address.Port.Value == 61616
-                        ? -1
-                        : address.Port.Value
-                    : -1,
+                Port = address.Port ?? throw new ActiveMqTransportConfigurationException("The ActiveMQ port is unavailable."),
                 Path = address.VirtualHost == "/"
                     ? $"/{Uri.EscapeDataString(address.Name)}"
                     : $"/{Uri.EscapeDataString(address.VirtualHost)}/{Uri.EscapeDataString(address.Name)}"

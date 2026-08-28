@@ -18,10 +18,42 @@ public sealed class ActiveMqSendTimingTests
         TransportActiveMqSendContext<Message> context = CreateContext();
         context.SetTimeProvider(timeProvider);
         context.Delay = TimeSpan.FromMinutes(3);
+        IMessage message = DispatchProxy.Create<IMessage, MessageProxy>();
 
-        long delivery = ActiveMqSendTransportContext.GetArtemisScheduledDelivery(context);
+        ActiveMqSendTransportContext.ApplyDeliveryDelay(message, context, isArtemis: true);
 
-        Assert.Equal(now.AddMinutes(3).ToUnixTimeMilliseconds(), delivery);
+        Assert.Equal(now.AddMinutes(3).UtcDateTime, message.NMSDeliveryTime);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-TIME", "classic-delay-uses-provider-property")]
+    public void ClassicScheduledDelivery_UsesTheExactProviderDelayProperty()
+    {
+        TransportActiveMqSendContext<Message> context = CreateContext();
+        context.Delay = TimeSpan.FromMilliseconds(2750);
+        IMessage message = DispatchProxy.Create<IMessage, MessageProxy>();
+
+        ActiveMqSendTransportContext.ApplyDeliveryDelay(message, context, isArtemis: false);
+
+        Assert.Equal(2750L, message.Properties["AMQ_SCHEDULED_DELAY"]);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-TIME", "nonpositive-delay-does-not-write-provider-state")]
+    public void AbsentOrNonPositiveDelay_DoesNotWriteProviderState(int? milliseconds)
+    {
+        DateTime sentinel = new(2040, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        TransportActiveMqSendContext<Message> context = CreateContext();
+        context.Delay = milliseconds.HasValue ? TimeSpan.FromMilliseconds(milliseconds.Value) : null;
+        IMessage message = DispatchProxy.Create<IMessage, MessageProxy>();
+        message.NMSDeliveryTime = sentinel;
+
+        ActiveMqSendTransportContext.ApplyDeliveryDelay(message, context, isArtemis: true);
+
+        Assert.Equal(sentinel, message.NMSDeliveryTime);
     }
 
     [Fact]
@@ -115,6 +147,7 @@ public sealed class ActiveMqSendTimingTests
     private class MessageProxy : DispatchProxy
     {
         private readonly Dictionary<string, object?> _properties = new(StringComparer.Ordinal);
+        private readonly IPrimitiveMap _primitiveMap = DispatchProxy.Create<IPrimitiveMap, PrimitiveMapProxy>();
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -129,6 +162,8 @@ public sealed class ActiveMqSendTimingTests
             if (targetMethod.Name.StartsWith("get_", StringComparison.Ordinal))
             {
                 string propertyName = targetMethod.Name[4..];
+                if (propertyName == nameof(IMessage.Properties))
+                    return _primitiveMap;
                 if (_properties.TryGetValue(propertyName, out object? value))
                     return value;
 
@@ -136,6 +171,27 @@ public sealed class ActiveMqSendTimingTests
                     ? Activator.CreateInstance(targetMethod.ReturnType)
                     : null;
             }
+
+            throw new NotSupportedException(targetMethod.Name);
+        }
+    }
+
+    private class PrimitiveMapProxy : DispatchProxy
+    {
+        private readonly Dictionary<string, object?> _values = new(StringComparer.Ordinal);
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            if (targetMethod.Name == "set_Item")
+            {
+                _values[Assert.IsType<string>(args![0])] = args[1];
+                return null;
+            }
+
+            if (targetMethod.Name == "get_Item")
+                return _values[Assert.IsType<string>(args![0])];
 
             throw new NotSupportedException(targetMethod.Name);
         }
