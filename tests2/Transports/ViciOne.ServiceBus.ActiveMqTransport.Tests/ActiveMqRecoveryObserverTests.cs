@@ -1,5 +1,5 @@
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using ViciOne.ServiceBus.ActiveMqTransport.Testing;
+using ViciOne.ServiceBus.Tests.InternalAccess.Brokers;
 using Xunit;
 
 namespace ViciOne.ServiceBus.ActiveMqTransport.Tests;

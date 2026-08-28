@@ -2,9 +2,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
-using ViciOne.ServiceBus.ActiveMqTransport.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Brokers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Brokers;
 using Xunit;
 
 [Collection(ActiveMqBrokerOutageCollection.Name)]

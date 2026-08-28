@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Testing;
+namespace ViciOne.ServiceBus.Tests.InternalAccess.Brokers;
 
 /// <summary>
 /// Observes one named receive endpoint and exposes the ordered fault-then-ready recovery sequence.

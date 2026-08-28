@@ -22,13 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The local broker recovery case and its hermetic state-machine test compile the exact same helper. -->
-    <Compile
-      Include="../ViciOne.ServiceBus.ActiveMqTransport.Tests/Infrastructure/ReceiveEndpointRecoveryObserver.cs"
-      Link="Infrastructure/ReceiveEndpointRecoveryObserver.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Requirements/ActiveMqLocalIntegrationRequirements.json" />
     <EmbeddedResource
       Include="Requirements/ActiveMqLocalIntegrationRequirements.json"

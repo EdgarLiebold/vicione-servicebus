@@ -22,7 +22,6 @@
     "fixture": {
       "members": [
         "rabbitmq",
-        "activemq",
         "sql-transport"
       ],
       "note": "everything that runs against the pinned Compose fixture"
@@ -47,11 +46,6 @@
         "rabbitmq"
       ]
     },
-    "activemq": {
-      "members": [
-        "activemq"
-      ]
-    },
     "sql-transport": {
       "members": [
         "sql-transport"
@@ -68,7 +62,6 @@
   "jobs": {
     "core-unit": "core",
     "rabbitmq": "rabbitmq",
-    "activemq": "activemq",
     "sql-transport": "sql-transport",
     "benchmarks": "engineering"
   },
@@ -397,35 +390,15 @@
     },
     {
       "id": "transport-activemq",
-      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.ActiveMqTransport"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "activemq",
-          "category": "activemq",
-          "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
-          "minimumExecutedCases": 178,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 2400,
-          "brokers": [
-            "activemq",
-            "artemis"
-          ],
-          "allowBrokerOutage": "activemq",
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/activemq.txt"
-        }
-      ]
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of all 113 ActiveMQ obligations and all 179 historical execution identities. Forty obligations are owned by the native UnitArchitecture project and seventy-three by the native LocalIntegration project, which executes against run-scoped ActiveMQ Classic and Artemis fixtures through the canonical broker runner. The terminal projection is .testagent/activemq-native-obligation-map.tsv; the native xUnit 4/MTP v2 estate is the sole executable behavior contract.",
+      "runs": []
     },
     {
       "id": "transport-amazon-sqs",

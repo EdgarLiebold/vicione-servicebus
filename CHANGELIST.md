@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2659 |
-| Modified | 4213 |
-| Deleted | 1435 |
+| Added | 2671 |
+| Modified | 4212 |
+| Deleted | 1436 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -26,6 +26,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.github/workflows/native-tests.yml` | Added |  |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
+| `.testagent/activemq-native-obligation-map.tsv` | Added |  |
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
@@ -156,7 +157,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
-| `build/verification/expected/activemq.txt` | Added |  |
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/diagnostics.txt` | Added |  |
@@ -2329,6 +2329,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/packages.lock.json` | Added |  |
 | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
 | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
+| `src/Transports/MassTransit.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
@@ -2501,6 +2502,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqEndpointConfiguration.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqEndpointConfiguration.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqHostConfiguration.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqHostConfiguration.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqHostConfigurator.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqHostConfigurator.cs` |
+| `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqHostSettingsSnapshot.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueBindingConfigurator.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueBindingConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueConfigurator.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueConfigurator.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueReceiveSettings.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/Configuration/ActiveMqQueueReceiveSettings.cs` |
@@ -2530,6 +2532,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ErrorSettings.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/ErrorSettings.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/IActiveMqConsumerEndpointQueueNameFormatter.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/IActiveMqConsumerEndpointQueueNameFormatter.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/IActiveMqHost.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/IActiveMqHost.cs` |
+| `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/IActiveMqTopicSubscriptionNameFormatter.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/IConnectionContextSupervisor.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/IConnectionContextSupervisor.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ISessionContextSupervisor.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/ISessionContextSupervisor.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/MessageProducerCache.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/ActiveMqTransport/MessageProducerCache.cs` |
@@ -2611,7 +2614,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqConnectionException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectionException.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportConfigurationException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqTransportConfigurationException.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Exceptions/ActiveMqTransportException.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqTransportException.cs` |
-| `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Testing/ActiveMqTestHarness.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqBusTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqBusTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqConsumeTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqConsumeTopology.cs` |
 | `src/Transports/ViciOne.ServiceBus.ActiveMqTransport/Topology/IActiveMqMessageConsumeTopology.cs` | Modified | `src/Transports/MassTransit.ActiveMqTransport/Topology/IActiveMqMessageConsumeTopology.cs` |
@@ -7143,44 +7145,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqBusFactoryConfiguratorExtensions.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTestFixture.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ArtemisBroker.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerOutageClient.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerOutageClient_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/BrokerRecovery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/CleanSemantics_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Compression_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Conductor_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configure_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ConsumerEntity_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/DelayRetry_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/DeserializationError_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/DestinationExtensions.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/EndpointConfiguration_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ErrorQueue_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/InMemoryOutboxRedelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/InvalidMessage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/JobConsumer_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/KillSwitch_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/MessageBodyLength_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/OpenTelemetry_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/PublishMessage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/PublishTopology_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Reconnecting_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/RecoverySequenceObserver.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/RecoverySequenceObserver_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/RequestReply_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/RunScopedBroker.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ScheduleMessage_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ShareDurableTopicEndpoint_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/StartStop_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/TopicEndpoint_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/VirtualTopicEndpoint_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/docker-compose.yml` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/jolokia-access.xml` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Address_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusEndpointUriCreator.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusTestFixture.cs` | Added |  |
@@ -7892,6 +7856,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageVerifierRequirements.json` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs` | Added |  |
@@ -7899,6 +7864,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Caching/GreenCacheTestFactory.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
@@ -7907,9 +7873,55 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqCompressionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqConnectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqDeployTopologyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqFixtureRecoveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqHandlerFlowTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJobServiceTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJolokiaTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqKillSwitchTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqLifecycleTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqMessageFlowTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqOutboxRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqPublishTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqQuartzSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRequestResponseTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqServiceClientTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTelemetryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTemporaryReplyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/DeployTopologyContracts/ActiveMqDeployTopologyContracts.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ActiveMqBroker.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/PublishContracts/ActiveMqPublishContracts.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/ActiveMqLocalIntegrationRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqMessageBodyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqRecoveryObserverTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Brokers/BrokerOutageControlClientTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/ActiveMqRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ArtemisTopologyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ConsumerEntityTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsConnectionTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDeployTopologyTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDynamicEndpointTests.cs` | Added |  |

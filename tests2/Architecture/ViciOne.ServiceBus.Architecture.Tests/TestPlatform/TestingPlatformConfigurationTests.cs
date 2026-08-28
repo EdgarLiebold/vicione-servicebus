@@ -17,8 +17,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2156;
-    private const int ExpectedLocalIntegrationTestFloor = 195;
+    private const int ExpectedUnitTestFloor = 2158;
+    private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -123,7 +123,16 @@ public sealed class TestingPlatformConfigurationTests
         ];
 
         Assert.All(commandOwners, path =>
-            Assert.Equal(ExpectedLocalIntegrationTestFloor, ReadLocalIntegrationProfileFloor(path)));
+        {
+            Assert.Equal(ExpectedLocalIntegrationTestFloor, ReadLocalIntegrationProfileFloor(path));
+
+            MatchCollection outageControls = Regex.Matches(
+                File.ReadAllText(path),
+                @"--allow-broker-outage\s+activemq\b",
+                RegexOptions.CultureInvariant);
+
+            Assert.Single(outageControls);
+        });
     }
 
     [Fact]

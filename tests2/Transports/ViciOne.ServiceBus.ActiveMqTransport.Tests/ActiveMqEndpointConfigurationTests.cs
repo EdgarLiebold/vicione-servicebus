@@ -97,11 +97,10 @@ public sealed class ActiveMqEndpointConfigurationTests
                 $"The receiveEndpoint probe node has unsupported type '{endpointValue.GetType()}'."),
         };
         IDictionary<string, object> transport = Assert.Single(
-            endpoints
-                .Select(endpoint => GetScope(endpoint, "receiveTransport"))
-                .Where(candidate => entityName.Equals(
-                    Assert.IsType<string>(Assert.Contains("entityName", candidate)),
-                    StringComparison.Ordinal)));
+            endpoints.Select(endpoint => GetScope(endpoint, "receiveTransport")),
+            candidate => entityName.Equals(
+                Assert.IsType<string>(Assert.Contains("entityName", candidate)),
+                StringComparison.Ordinal));
 
         Assert.Equal(expectedPrefetch, Assert.IsType<int>(Assert.Contains("prefetchCount", transport)));
         Assert.Equal(expectedConcurrency, Assert.IsType<int>(Assert.Contains("concurrentMessageLimit", transport)));

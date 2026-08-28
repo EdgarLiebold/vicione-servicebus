@@ -2,7 +2,7 @@
 """The one command that verifies this repository.
 
     python3 tools/ci/verify.py --selection all
-    python3 tools/ci/verify.py --selection activemq
+    python3 tools/ci/verify.py --selection rabbitmq
 
 One entry point, one responsibility, and no orchestration duplicated into YAML. What a selection
 contains, which categories need the pinned fixture, how long each of them may take and which cases it
