@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
@@ -19,7 +20,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2215;
+    private const int ExpectedUnitTestFloor = 2220;
     private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
@@ -174,14 +175,7 @@ public sealed class TestingPlatformConfigurationTests
             .EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
             .Where(path => !path.Split(Path.DirectorySeparatorChar).Any(
                 segment => segment is "bin" or "obj"))
-            .SelectMany(path => CSharpSyntaxTree
-                .ParseText(File.ReadAllText(path), path: path)
-                .GetRoot()
-                .DescendantNodes()
-                .OfType<InvocationExpressionSyntax>()
-                .Where(IsWallClockWait)
-                .Select(invocation =>
-                    $"{RepositoryLayout.RelativeToRoot(path)}:{invocation.GetLocation().GetLineSpan().StartLinePosition.Line + 1}"))
+            .SelectMany(FindWallClockWaits)
             .OrderBy(value => value, StringComparer.Ordinal)
             .ToArray();
 
@@ -189,37 +183,77 @@ public sealed class TestingPlatformConfigurationTests
     }
 
     [Theory]
-    [InlineData("await System.Threading.Tasks.Task.Delay(1);")]
-    [InlineData("await ClockTask.Delay(1);")]
-    [InlineData("await Delay(1);")]
-    [InlineData("ClockThread.Sleep(1);")]
-    [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-direct-alias-and-static-import-forms")]
-    public void ActiveMqWallClockGuard_RejectsEveryInvocationShape(string statement)
+    [InlineData("class C { async void M() { await System.Threading.Tasks.Task.Delay(1); } }")]
+    [InlineData("using ClockTask = System.Threading.Tasks.Task; class C { async void M() { await ClockTask.Delay(1); } }")]
+    [InlineData("using static System.Threading.Tasks.Task; class C { async void M() { await Delay(1); } }")]
+    [InlineData("using ClockThread = System.Threading.Thread; class C { void M() { ClockThread.Sleep(1); } }")]
+    [InlineData("class C { async System.Threading.Tasks.Task M() { System.Func<int, System.Threading.Tasks.Task> wait = System.Threading.Tasks.Task.Delay; await wait(1); } }")]
+    [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-direct-alias-static-import-and-method-group-forms")]
+    public void ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(string source)
     {
-        InvocationExpressionSyntax invocation = Assert.Single(
-            CSharpSyntaxTree.ParseText(
-                    $"class C {{ async void M() {{ {statement} }} }}",
-                    cancellationToken: TestContext.Current.CancellationToken)
+        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(
+            source,
+            cancellationToken: TestContext.Current.CancellationToken);
+        SemanticModel semanticModel = CreateWallClockSemanticModel(syntaxTree);
+
+        SimpleNameSyntax name = Assert.Single(
+            syntaxTree
                 .GetRoot(TestContext.Current.CancellationToken)
                 .DescendantNodes()
-                .OfType<InvocationExpressionSyntax>());
+                .OfType<SimpleNameSyntax>(),
+            candidate => IsWallClockWait(candidate, semanticModel));
 
-        Assert.True(IsWallClockWait(invocation));
+        Assert.True(IsWallClockWait(name, semanticModel));
     }
 
-    private static bool IsWallClockWait(InvocationExpressionSyntax invocation)
+    private static IEnumerable<string> FindWallClockWaits(string path)
     {
-        string? terminalName = invocation.Expression switch
-        {
-            MemberAccessExpressionSyntax method => method.Name.Identifier.ValueText,
-            MemberBindingExpressionSyntax method => method.Name.Identifier.ValueText,
-            IdentifierNameSyntax method => method.Identifier.ValueText,
-            _ => null,
-        };
+        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
+        SemanticModel semanticModel = CreateWallClockSemanticModel(syntaxTree);
 
-        return terminalName switch
+        return syntaxTree
+            .GetRoot()
+            .DescendantNodes()
+            .OfType<SimpleNameSyntax>()
+            .Where(name => IsWallClockWait(name, semanticModel))
+            .Select(name =>
+                $"{RepositoryLayout.RelativeToRoot(path)}:{name.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+    }
+
+    private static SemanticModel CreateWallClockSemanticModel(SyntaxTree syntaxTree)
+    {
+        MetadataReference[] references =
+        [
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(Task).Assembly.Location),
+        ];
+        CSharpCompilation compilation = CSharpCompilation.Create(
+            "ViciOne.ServiceBus.ActiveMqWallClockAnalysis",
+            [syntaxTree],
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+        return compilation.GetSemanticModel(syntaxTree, ignoreAccessibility: true);
+    }
+
+    private static bool IsWallClockWait(SimpleNameSyntax name, SemanticModel semanticModel)
+    {
+        SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(name);
+
+        return IsWallClockWait(symbolInfo.Symbol)
+            || symbolInfo.CandidateSymbols.Any(IsWallClockWait);
+    }
+
+    private static bool IsWallClockWait(ISymbol? symbol)
+    {
+        if (symbol is not IMethodSymbol method)
+            return false;
+
+        string containingNamespace = method.ContainingType.ContainingNamespace.ToDisplayString();
+        return (method.Name, method.ContainingType.Name, containingNamespace) switch
         {
-            "Delay" or "Sleep" => true,
+            ("Delay", "Task", "System.Threading.Tasks") => true,
+            ("Sleep", "Thread", "System.Threading") => true,
             _ => false,
         };
     }

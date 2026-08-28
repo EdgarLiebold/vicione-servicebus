@@ -74,16 +74,59 @@ public sealed class ActiveMqOptionSetTests
         Assert.Contains("openwire or amqp", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    [Fact]
+    [Theory]
+    [MemberData(nameof(MissingCoordinates))]
     [RequirementCoverage("REQ-VSB-BENCHMARK-ACTIVEMQ", "reparse-does-not-retain-connection-coordinates")]
-    public void Reparse_DoesNotRetainConnectionCoordinates()
+    public void Reparse_MakesEachConnectionCoordinateRequiredAgain(string[] arguments, string expectedOption)
     {
         var options = new ActiveMqOptionSet();
         options.Parse(["--host=broker.internal", "--protocol=openwire", "--port=61616"]);
 
-        OptionException exception = Assert.Throws<OptionException>(() => options.Parse([]));
+        OptionException exception = Assert.Throws<OptionException>(() => options.Parse(arguments));
 
-        Assert.Equal("host", exception.OptionName);
+        Assert.Equal(expectedOption, exception.OptionName);
+        Assert.Contains("required", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BENCHMARK-ACTIVEMQ", "reparse-does-not-retain-credentials-or-tls")]
+    public void Reparse_DoesNotRetainCredentialsOrTls()
+    {
+        var options = new ActiveMqOptionSet();
+        options.Parse(
+        [
+            "--host=broker.internal",
+            "--protocol=openwire",
+            "--port=61616",
+            "--username=client",
+            "--password=secret",
+            "--ssl=true",
+        ]);
+
+        IReadOnlyList<string> remaining = options.Parse(
+            ["--host=broker2.internal", "--protocol=amqp", "--port=5672"]);
+
+        Assert.Empty(remaining);
+        Assert.Equal("broker2.internal", options.Host);
+        Assert.Equal(ActiveMqTransportProtocol.Amqp, options.Protocol);
+        Assert.Equal(5672, options.Port);
+        Assert.Equal("", options.Username);
+        Assert.Equal("", options.Password);
+        Assert.False(options.UseSsl);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BENCHMARK-ACTIVEMQ", "failed-reparse-invalidates-effective-settings")]
+    public void FailedReparse_DoesNotExposePreviouslyEffectiveSettings()
+    {
+        var options = new ActiveMqOptionSet();
+        options.Parse(["--host=broker.internal", "--protocol=openwire", "--port=61616"]);
+
+        Assert.Throws<OptionException>(() => options.Parse([]));
+
+        OptionException exception = Assert.Throws<OptionException>(() => _ = options.Host);
+        Assert.Equal("active-mq", exception.OptionName);
+        Assert.Contains("must be parsed", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Theory]
