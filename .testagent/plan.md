@@ -1876,3 +1876,57 @@ hashed and bound by the Lead architecture order before the first product or test
     acceptance requires two independent strict read-only reviews of the same commit/tree covering
     every changed product/test line, structure, 113-row closure, source-derived requirements,
     mutations and Evidence. Team 1 remains review-only and starts only on an explicit frozen scope.
+
+## Transactional bus capability split execution plan
+
+Work from accepted commit `b198d26bc311dd8946006534ebddd8d5282e8006`, tree
+`c25e20f35cf493e906cd7688f6320d91f09004d3`. Before the first product or test edit, commit this plan,
+the research section above and `.testagent/transactional-bus-obligation-map.tsv`, push the checkpoint
+and bind their hashes plus the exact scope in the Lead architecture order.
+
+1. Replace `ITransactionalBus` with two truthful Greenfield capabilities:
+   `IAmbientTransactionBus : IBus` and `IBufferedBus : IBus` with
+   `Task FlushAsync(CancellationToken)`. Remove the intentionally throwing ambient `Release` surface;
+   backward API compatibility is not required.
+2. Rename/internalize the implementations around their behavior. The ambient adapter follows
+   `Transaction.Current`; the explicit adapter is an internal sealed FIFO buffer. Keep shared
+   send/publish forwarding only where both capabilities have identical semantics. Reject null
+   collaborators at construction/registration.
+3. Make explicit buffering deterministic: FIFO snapshot, one serialized drainer, empty/repeated
+   flush no-op, exact dispatch failure/cancellation identity, no replay of an already attempted
+   action, and retention of only not-yet-attempted work. Caller cancellation belongs to enqueue only
+   until enqueue completes; flush cancellation belongs to dispatch. Prove additions during an active
+   drain are held for the next flush.
+4. Make ambient ownership explicit: immediate dispatch without `Transaction.Current`; FIFO prepare
+   once within a transaction; exact commit, rollback and in-doubt cleanup; independent concurrent
+   transaction state; and transaction abort with the original transport failure retained as cause.
+   Document that this volatile prepare bridge is best-effort, not a durable atomic outbox.
+5. Replace the two ambiguous registration families with `AddAmbientTransactionBus` and
+   `AddBufferedBus`, including generic multi-bus forms. Use required-service resolution and distinct
+   scoped context providers. Prove the public interfaces, implementation non-publicity, lifetimes,
+   generic bus binding and absence of the retired public names/method-only-throw surface.
+6. Add source-mirrored xUnit 4/MTP v2 owners under
+   `tests2/ViciOne.ServiceBus.Tests/Transactions`. Reuse bounded internal-access recording drivers;
+   do not reference the inherited TestFramework. Cover the eleven inherited obligations plus API,
+   FIFO, empty/repeated flush, concurrency, cancellation, failure state and transaction isolation.
+7. Add unique passive Core requirement variants and compile them against exact xUnit methods. Freeze
+   the eleven inherited rows as `REPLACED_EXECUTING` in the committed map; consolidation is allowed
+   only where one stronger method independently proves both pre-release absence and post-release
+   exact execution.
+8. Reread every changed product/test line and the complete transaction, DI, scoped-context and
+   EF-integration call paths. Run mandatory .NET assertion-quality, anti-pattern, gap and smell
+   reviews. Product defects are fixed in product code; no native test encodes an inherited defect or
+   timeout-based absence.
+9. Execute focused locked Release restore/build and transaction tests, then complete unfiltered
+   UnitArchitecture, LocalIntegration and Engineering Release with zero failure, skip, warning or
+   error. Raise every active floor from the materialized test count and keep GitHub workflows
+   operationally manual/disabled.
+10. Bind byte-exact one-cause mutations for API split, wrong DI contract, null fallback, FIFO,
+    pre-flush execution, duplicate execution, swallowed failure/cancellation, rollback delivery and
+    transaction-state leakage. Record argv/cwd, raw output, exit code, mutant and post-restore hash.
+11. Delete exactly the three inherited transaction test files after terminal closure; delete the
+    directory only if empty. Do not claim or retire the rest of `tests/ViciOne.ServiceBus.Tests`.
+    Update requirements, solutions/floors/docs/TODO and generated CHANGELIST atomically.
+12. Freeze separate technical and evidence commits, require two independent strict read-only PASS
+    reviews over the same bytes, then fast-forward both product and architecture branches to their
+    remotes. The later full Core closure and atomic `tests2` promotion remain separate slices.

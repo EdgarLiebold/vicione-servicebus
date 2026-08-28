@@ -2281,3 +2281,72 @@ not implement. Time sourcing, host/address parsing, disposal, temporary-entity o
 consumer identity are **generalized** to one correct owner each. No old workaround is copied into
 native tests, and no Product API uncertainty remains that requires a PO choice before this bounded
 implementation.
+
+## Transactional bus capability split research
+
+Baseline is the accepted and remotely secured ActiveMQ evidence-correction commit
+`b198d26bc311dd8946006534ebddd8d5282e8006`, tree
+`c25e20f35cf493e906cd7688f6320d91f09004d3`. This research is read-only with respect to product and
+test code. It covers the complete seven-file `Transactions` product folder, both transaction DI
+entry points and scoped-context projection, all three inherited transaction test files, the existing
+native EF transaction integration owner, and R0 obligations `OBL-R0-CORE-C-0430..0440`.
+
+### What the inherited design actually is
+
+`TransactionalBus` is an in-memory manual buffer. Its `Release` drains a `ConcurrentBag`, so order is
+not a contract, concurrent release can interleave, and a failed action is removed before its failure
+is returned. `TransactionalEnlistmentBus` is a different mechanism: it groups actions under
+`Transaction.Current`, executes them synchronously during volatile-enlistment Prepare, and discards
+them on rollback or in-doubt. Both implement `ITransactionalBus`, although only the manual buffer can
+release. The ambient implementation therefore exposes `Release` solely to throw
+`NotImplementedException`. The non-generic DI registrations also resolve the underlying bus with
+`GetService`, allowing a delayed null failure instead of rejecting invalid composition at the owner.
+
+The upstream MassTransit history contains no design evolution after import: the ViciOne files are
+identity-renamed copies of the v8.5.10 baseline. In the upstream discussion
+`https://github.com/MassTransit/MassTransit/discussions/3878`, the original author described the old
+transactional-bus feature as deprecated/not recommended, recommended the durable transactional
+outbox for reliable persistence, and stated that he had not used this bus himself. The same legacy
+classes still exist upstream, but their continued presence is not evidence of an A+ public contract.
+
+### A+ boundary chosen for this slice
+
+The durable EF outbox remains the recommended reliability feature. This bounded Core slice preserves
+the two explicitly requested lightweight capabilities without pretending either is a durable outbox:
+
+- `IAmbientTransactionBus : IBus` follows `Transaction.Current` and has no manual-flush member.
+- `IBufferedBus : IBus` exposes the one capability it owns as `FlushAsync(CancellationToken)`.
+- Concrete adapters are internal and sealed. Public construction is through the matching
+  `AddAmbientTransactionBus` and `AddBufferedBus` registration methods; the old ambiguous
+  `ITransactionalBus`, protocol-less concrete names and registration names are removed because API
+  compatibility is not required.
+- Both DI paths use required-service resolution and separate scoped-context providers so one
+  capability cannot be silently injected as the other.
+
+The explicit buffer is FIFO and single-drain. Enqueue rejects already-requested caller cancellation;
+the completed enqueue no longer captures a token that may be cancelled much later. `FlushAsync`
+owns dispatch cancellation. Empty and repeated flush are successful no-ops. A failed or cancelled
+dispatch is attempted at most once, preserves the exact failure, and leaves only actions not yet
+attempted for a later caller decision; it never silently retries a possibly delivered action.
+Concurrent flushes serialize and concurrent additions after a drain snapshot belong to the next
+flush.
+
+The ambient adapter dispatches immediately when no transaction exists. Within an ambient
+transaction it preserves FIFO registration order, prepares each action exactly once, discards on
+rollback/in-doubt, and converts a dispatch failure into transaction rollback with the original cause
+preserved by `System.Transactions`. Its documentation states that broker sends during Prepare are
+best-effort and not atomic with the resource transaction; users needing crash recovery use the
+durable MessageJournal/EF outbox boundary.
+
+### Test and migration implications
+
+The eleven inherited tests are inventory, not target mechanics. They contain four three-second
+absence-until-timeout oracles and one artificial `Task.Delay(100)`. Native source-mirrored tests use a
+recording transport endpoint, exact invocation counts, transaction completion callbacks and bounded
+positive barriers. They add missing API-shape, invalid-collaborator, FIFO, empty/repeated flush,
+concurrent flush, cancellation, partial-failure and transaction-isolation owners. No sleep or
+wall-clock silence is an oracle.
+
+The three inherited files are removed only after the eleven-row terminal projection is compiled and
+green. This slice does not claim the remaining Core project complete and does not promote `tests2`;
+it removes exactly this closed transaction family and any directory that becomes empty.
