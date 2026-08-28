@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "TRANSACTIONAL_BUS_STACK_PROVENANCE_CORRECTION_FINAL_RESULTS",
+  "technical": {
+    "commit": "f1f64a385a8e1f0f3bf5d647be6cbeff8bdd532e",
+    "tree": "a49611eb84e1e680b04c63f0641f6d42574e7563",
+    "parent": "8b02142d50a7e085c60aac40a1d53bcef4ad70cb",
+    "precedingTechnical": "3c1bfbafeb326047a86a2ec6573f6f516e2bd230",
+    "architectureScopeCommit": "17a0791b563a99e81c3f589a5d63214e59330d99",
+    "architectureScopeTree": "151861503f841e55e2dfd1f4a93dc3c95e879161"
+  },
+  "positive": {
+    "engineeringRestore": {
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode --disable-parallel --disable-build-servers /bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-restore.binlog /flp:LogFile=evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-restore.log;Verbosity=normal",
+      "exitCode": 0,
+      "binlog": "positive/engineering-restore.binlog",
+      "log": "positive/engineering-restore.log.gz"
+    },
+    "engineeringBuild": {
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet build ViciOne.ServiceBus.Engineering.slnx --configuration Release --no-restore --disable-build-servers --no-incremental --maxcpucount:1 -p:BuildInParallel=false -p:UseSharedCompilation=false /bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-build.binlog /flp:LogFile=evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-build.log;Verbosity=normal",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "binlog": "positive/engineering-build.binlog",
+      "log": "positive/engineering-build.log.gz"
+    },
+    "unitArchitecture": {
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/unit-results --minimum-expected-tests 2271 --max-parallel-test-modules 1 --report-xunit-ctrf --parallel none --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "assemblies": 19,
+      "total": 2271,
+      "passed": 2271,
+      "failed": 0,
+      "skipped": 0,
+      "wrapperLog": "positive/unit-wrapper.log.gz",
+      "resultsDirectory": "positive/unit-results"
+    },
+    "transactionalFocused": {
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "command": "env VICIONE_TESTS__Profile=UnitArchitecture artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-namespace ViciOne.ServiceBus.Tests.Transactions --minimum-expected-tests 39 --fail-skips on --parallel none --report-xunit-ctrf --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/transaction-results --report-xunit-ctrf-filename transactional.json --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "skipped": 0,
+      "wrapperLog": "positive/transaction-wrapper.log.gz",
+      "result": "positive/transaction-results/transactional.json"
+    },
+    "localIntegration": {
+      "workingDirectory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "command": "env VICIONE_TESTS__Profile=LocalIntegration DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --broker localstack --broker activemq --broker artemis --allow-broker-outage activemq --evidence-dir evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/local-fixture --command -- /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/local-results --minimum-expected-tests 244 --max-parallel-test-modules 1 --report-xunit-ctrf --parallel none --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "runIdentity": "vicione-0fda85f6124b",
+      "assemblies": 7,
+      "total": 244,
+      "passed": 244,
+      "failed": 0,
+      "skipped": 0,
+      "brokers": ["postgres", "azurite", "localstack", "activemq", "artemis"],
+      "fixtureFindings": 0,
+      "wrapperLog": "positive/local-wrapper.log.gz",
+      "resultsDirectory": "positive/local-results",
+      "fixtureDirectory": "positive/local-fixture",
+      "ownershipTokenIncluded": false
+    }
+  },
+  "correction": {
+    "fact": "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests.TypedBusReflectionBoundary_PreservesTheOriginalConfigurationFailure",
+    "requirement": "REQ-VSB-DEFERRED-BUS-DI/typed-bus-reflection-preserves-failure-identity",
+    "stackOwner": "ThrowingBusInstanceCallback.GetResult",
+    "testFileSha256": "d74a07e5ce3fdc998b4dbb66bdec66c5afde710ce1025326a8219e82cdcb580b",
+    "unitFloor": 2271,
+    "localIntegrationFloor": 244
+  },
+  "mutations": {
+    "inheritedCount": 23,
+    "correctionCount": 1,
+    "cumulativeCount": 24,
+    "correctionBuildsPassed": 1,
+    "correctionTestsKilled": 1,
+    "skipped": 0,
+    "manifest": "MUTATION_MANIFEST.json",
+    "executionTable": "MUTATION_EXECUTION.tsv"
+  },
+  "sandboxDiagnosis": {
+    "symptom": "The MTP solution orchestration fails inside the filesystem sandbox before discovery because the sandbox denies its local named-pipe bind.",
+    "control": "The byte-identical argv completes outside the sandbox with the isolated CLI environment.",
+    "productOrTestAdaptation": false,
+    "stableRecipe": "Run solution-level build and MTP orchestration outside the filesystem sandbox with isolated DOTNET_CLI_HOME and disabled MSBuild node reuse."
+  }
+}

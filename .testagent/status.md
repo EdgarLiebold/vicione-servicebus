@@ -1556,3 +1556,32 @@ future cohorts as complete.
 - This is the final local evidence candidate, not self-acceptance. Two independent read-only reviews
   of the exact technical/evidence freeze, remote fast-forward and final architecture acceptance remain
   mandatory.
+
+## Transactional bus capability split — stack-provenance correction candidate
+
+- The preceding correction remains immutable. Its product/API review passed without BLOCKER, MAJOR or
+  MINOR. The separate test/evidence review found one MINOR: the reflection carrier proved original
+  exception type and object identity, but a direct `throw exception.InnerException` could still erase
+  the callback stack while remaining green.
+- The additive technical correction is frozen at `f1f64a385a8e1f0f3bf5d647be6cbeff8bdd532e`, tree
+  `a49611eb84e1e680b04c63f0641f6d42574e7563`, parent and preceding evidence
+  `8b02142d50a7e085c60aac40a1d53bcef4ad70cb`. Its exact delta is four assertion lines in the existing
+  `TypedBusReflectionBoundary_PreservesTheOriginalConfigurationFailure` Fact; product/API bytes,
+  requirements and floors are unchanged.
+- The carrier now proves the original `ThrowingBusInstanceCallback.GetResult` frame in addition to
+  exact `ConfigurationException` identity. M24 changes only the EDI rethrow to a direct inner-exception
+  throw: the Release build remains 0 warnings/0 errors, while the one-test MTP run exits 2 precisely
+  because that callback frame is absent. The product target restores to its exact technical SHA-256.
+- Full positive execution was repeated at the new technical bytes: locked Engineering restore and
+  Engineering Release build exit 0 with 0 warnings/0 errors; UnitArchitecture 2271/2271 across 19 CTRFs;
+  focused transaction namespace 39/39; LocalIntegration 244/244 across seven CTRFs; zero failures and
+  zero skips throughout.
+- LocalIntegration used fresh run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic and Artemis
+  resources under `vicione-0fda85f6124b`, with dynamic loopback endpoints, five broker logs, two
+  controlled ActiveMQ outage/restore cycles and empty fixture findings. The ownership token and
+  generated credentials are excluded.
+- Exact commands, working directories, positive results, M24 patch/baseline/mutant/restore hashes,
+  binlogs, raw logs, CTRF and an executable verifier are collected under
+  `TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02`. Cumulative mutation closure is 24/24.
+- This remains a local candidate rather than self-acceptance. A fresh independent targeted re-review,
+  the Evidence commit, remote fast-forward and final architecture acceptance remain mandatory.
