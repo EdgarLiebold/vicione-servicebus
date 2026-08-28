@@ -1,0 +1,24 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.RelativeUri_IsRejectedByTheConfigurationBoundary (30ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  Actual:   typeof(System.InvalidOperationException)
+  ---- System.InvalidOperationException : This operation is not supported for a relative URI.
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.RelativeUri_IsRejectedByTheConfigurationBoundary() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:137
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    ----- Inner Stack Trace -----
+    um System.Uri.get_UserInfo()
+    um ViciOne.ServiceBus.ActiveMqHostAddress.RejectCredentialsAndUnsupportedComponents(Uri address) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqHostAddress.cs:123
+    um ViciOne.ServiceBus.ActiveMqHostAddress..ctor(Uri address) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqHostAddress.cs:23
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.<>c__DisplayClass9_0.<RelativeUri_IsRejectedByTheConfigurationBoundary>b__0() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:138
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M49-results/M49.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 366ms
+EXIT_CODE=2

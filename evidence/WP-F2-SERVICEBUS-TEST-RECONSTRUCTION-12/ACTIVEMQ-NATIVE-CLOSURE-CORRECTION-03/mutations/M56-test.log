@@ -1,0 +1,25 @@
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (1s 504ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (38ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (74ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (32ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (21ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (17ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (22ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: []
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (24ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M56-results/M56.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 24s 379ms
+EXIT_CODE=2

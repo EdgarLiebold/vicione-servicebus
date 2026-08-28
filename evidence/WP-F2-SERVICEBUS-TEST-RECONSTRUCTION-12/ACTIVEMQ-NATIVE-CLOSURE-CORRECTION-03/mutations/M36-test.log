@@ -1,0 +1,21 @@
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "amqp", expectedProtocol: Amqp, expectedScheme: "amqp", port: 5672, expectedBrokerPrefix: "amqp://") (57ms)
+  Assert.Equal() Failure: Strings differ
+              ↓ (pos 1)
+  Expected: "amqp"
+  Actual:   "activemq"
+              ↑ (pos 1)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(String protocolOption, ActiveMqTransportProtocol expectedProtocol, String expectedScheme, Int32 port, String expectedBrokerPrefix) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:54
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "openwire", expectedProtocol: OpenWire, expectedScheme: "activemq", port: 61616, expectedBrokerPrefix: "activemq:tcp://") (7ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M36-results/M36.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 396ms
+EXIT_CODE=2

@@ -1,0 +1,25 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsUriInvalidHostsAtConstruction (28ms)
+  Assert.All() Failure: 3 out of 3 items in the collection did not pass.
+  [0]: Item:  "broker/path"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  [1]: Item:  "broker?query"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  [2]: Item:  "broker#fragment"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsUriInvalidHostsAtConstruction() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:76
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M62-results/M62.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 364ms
+EXIT_CODE=2

@@ -1,0 +1,19 @@
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--port=61616"], expectedOption: "protocol") (44ms)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--protocol=openwire", "--port=61616"], expectedOption: "host") (0ms)
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--protocol=openwire"], expectedOption: "port") (2ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(String[] arguments, String expectedOption) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:95
+    um InvokeStub_ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M42-results/M42.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 418ms
+EXIT_CODE=2

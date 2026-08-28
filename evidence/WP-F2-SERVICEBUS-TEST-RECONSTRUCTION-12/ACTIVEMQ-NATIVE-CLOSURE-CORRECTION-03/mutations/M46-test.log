@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.FailedReparse_DoesNotExposePreviouslyEffectiveSettings (49ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.FailedReparse_DoesNotExposePreviouslyEffectiveSettings() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:137
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M46-results/M46.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 414ms
+EXIT_CODE=2

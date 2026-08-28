@@ -1,0 +1,476 @@
+{
+  "inheritedClosure": {
+    "disposition": "REPLACED_EXECUTING",
+    "historicalExecutionIdentities": 179,
+    "localIntegrationOwners": 73,
+    "obligations": 113,
+    "unitArchitectureOwners": 40
+  },
+  "modules": {
+    "localIntegration": [
+      {
+        "assembly": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_10_54.972454.ctrf",
+        "other": 0,
+        "passed": 9,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 9
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_01.288772.ctrf",
+        "other": 0,
+        "passed": 25,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 25
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_05.659194.ctrf",
+        "other": 0,
+        "passed": 5,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 5
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_08.063629.ctrf",
+        "other": 0,
+        "passed": 95,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 95
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_12_36.294568.ctrf",
+        "other": 0,
+        "passed": 59,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 59
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_02.496720.ctrf",
+        "other": 0,
+        "passed": 3,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 3
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_03.587154.ctrf",
+        "other": 0,
+        "passed": 48,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 48
+      }
+    ],
+    "unit": [
+      {
+        "assembly": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_06_53.070959.ctrf",
+        "other": 0,
+        "passed": 4,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 4
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.MessagePack.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_06_55.939269.ctrf",
+        "other": 0,
+        "passed": 54,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 54
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Azure.Table.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_06_57.875771.ctrf",
+        "other": 0,
+        "passed": 50,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 50
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.SignalR.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_06_59.312734.ctrf",
+        "other": 0,
+        "passed": 32,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 32
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_03.117709.ctrf",
+        "other": 0,
+        "passed": 12,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 12
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_04.518260.ctrf",
+        "other": 0,
+        "passed": 8,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 8
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Benchmark.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_05.859916.ctrf",
+        "other": 0,
+        "passed": 21,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 21
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_07.076326.ctrf",
+        "other": 0,
+        "passed": 993,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 993
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.AmazonS3.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_12.272099.ctrf",
+        "other": 0,
+        "passed": 6,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 6
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Architecture.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_07_13.533473.ctrf",
+        "other": 0,
+        "passed": 129,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 129
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.QuartzIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_27.439931.ctrf",
+        "other": 0,
+        "passed": 87,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 87
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_46.513898.ctrf",
+        "other": 0,
+        "passed": 56,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 56
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_48.714935.ctrf",
+        "other": 0,
+        "passed": 96,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 96
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.ActiveMqTransport.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_49.886200.ctrf",
+        "other": 0,
+        "passed": 133,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 133
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_51.123088.ctrf",
+        "other": 0,
+        "passed": 51,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 51
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.RabbitMqTransport.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_52.325623.ctrf",
+        "other": 0,
+        "passed": 108,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 108
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_08_53.453220.ctrf",
+        "other": 0,
+        "passed": 29,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 29
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_09_00.698304.ctrf",
+        "other": 0,
+        "passed": 245,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 245
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Analyzers.Tests.dll",
+        "failed": 0,
+        "file": "positive/unit-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_09_01.951005.ctrf",
+        "other": 0,
+        "passed": 114,
+        "pending": 0,
+        "skipped": 0,
+        "tests": 114
+      }
+    ]
+  },
+  "mutationClosure": {
+    "allBuildExit": 0,
+    "allSkipped": 0,
+    "allTestExit": 2,
+    "count": 33,
+    "first": "M30",
+    "last": "M62",
+    "worktreeCleanAfterRestore": true
+  },
+  "positive": {
+    "ciToolTests": {
+      "exit": 0,
+      "passed": 257,
+      "tests": 257
+    },
+    "engineeringBuild": {
+      "argv": [
+        "env",
+        "DOTNET_CLI_HOME=/private/tmp/dotnet-home",
+        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1",
+        "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+        "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1",
+        "DOTNET_MULTILEVEL_LOOKUP=0",
+        "NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages",
+        "MSBUILDDISABLENODEREUSE=1",
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "ViciOne.ServiceBus.Engineering.slnx",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "/m:1",
+        "/nr:false",
+        "/p:UseSharedCompilation=false",
+        "/p:BuildInParallel=false",
+        "/p:RunAnalyzers=true",
+        "/bl:/private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/engineering-build.binlog",
+        "--verbosity",
+        "minimal",
+        "/clp:Summary"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "errors": 0,
+      "exit": 0,
+      "warnings": 0
+    },
+    "engineeringRestore": {
+      "argv": [
+        "env",
+        "DOTNET_CLI_HOME=/private/tmp/dotnet-home",
+        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1",
+        "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+        "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1",
+        "DOTNET_MULTILEVEL_LOOKUP=0",
+        "NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages",
+        "MSBUILDDISABLENODEREUSE=1",
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "ViciOne.ServiceBus.Engineering.slnx",
+        "--locked-mode",
+        "--disable-build-servers",
+        "/m:1",
+        "/nr:false",
+        "/p:RestoreDisableParallel=true",
+        "/bl:/private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/engineering-restore.binlog",
+        "--verbosity",
+        "minimal"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "exit": 0
+    },
+    "identityToolTests": {
+      "exit": 0,
+      "passed": 103,
+      "tests": 103
+    },
+    "localIntegration": {
+      "argv": [
+        "env",
+        "VICIONE_TESTS__Profile=LocalIntegration",
+        "DOTNET_ROOT=/usr/local/share/dotnet",
+        "DOTNET_CLI_HOME=/private/tmp/dotnet-home",
+        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1",
+        "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+        "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1",
+        "DOTNET_MULTILEVEL_LOOKUP=0",
+        "NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "python3",
+        "-B",
+        "tools/ci/run_broker_category.py",
+        "--broker",
+        "postgres",
+        "--broker",
+        "azurite",
+        "--broker",
+        "localstack",
+        "--broker",
+        "activemq",
+        "--broker",
+        "artemis",
+        "--evidence-dir",
+        "/private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-fixture-requested",
+        "--allow-broker-outage",
+        "activemq",
+        "--command",
+        "--",
+        "/usr/local/share/dotnet/dotnet",
+        "test",
+        "--solution",
+        "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--results-directory",
+        "/private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results",
+        "--minimum-expected-tests",
+        "244",
+        "--max-parallel-test-modules",
+        "1",
+        "--report-xunit-ctrf",
+        "--progress",
+        "off",
+        "--no-ansi",
+        "--output",
+        "Normal"
+      ],
+      "brokers": [
+        "postgres",
+        "azurite",
+        "localstack",
+        "activemq",
+        "artemis"
+      ],
+      "ctrfs": 7,
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "exit": 0,
+      "failed": 0,
+      "findings": 0,
+      "passed": 244,
+      "runIdentity": "vicione-751339deadb8",
+      "skipped": 0,
+      "tests": 244
+    },
+    "unitArchitecture": {
+      "argv": [
+        "env",
+        "DOTNET_CLI_HOME=/private/tmp/dotnet-home",
+        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1",
+        "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+        "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1",
+        "DOTNET_MULTILEVEL_LOOKUP=0",
+        "NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages",
+        "/usr/local/share/dotnet/dotnet",
+        "test",
+        "--solution",
+        "ViciOne.ServiceBus.Tests.Unit.slnx",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--results-directory",
+        "/private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/unit-results",
+        "--minimum-expected-tests",
+        "2228",
+        "--max-parallel-test-modules",
+        "1",
+        "--report-xunit-ctrf",
+        "--progress",
+        "off",
+        "--no-ansi",
+        "--output",
+        "Normal"
+      ],
+      "ctrfs": 19,
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree",
+      "exit": 0,
+      "failed": 0,
+      "passed": 2228,
+      "skipped": 0,
+      "tests": 2228
+    },
+    "verificationModel": {
+      "exit": 0
+    }
+  },
+  "schemaVersion": 1,
+  "technical": {
+    "authorizedBaseline": "7c140863d042c0b7c8ce04057c6e98c0022222fe",
+    "commit": "d3afdfa386909317f20894e47a6137601b215f68",
+    "parent": "f5dd3c5e584c1a25a190f70c3b73605fd4aabc42",
+    "technicalBaseline": "3d191610111d30df4bf3e724a614306e16eb3049",
+    "technicalDelta": {
+      "deletions": 99,
+      "insertions": 576,
+      "paths": 19
+    },
+    "tree": "4249d72bfb541c27d8d5b14dda55b0a898383ab3"
+  }
+}

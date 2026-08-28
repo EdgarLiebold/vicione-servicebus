@@ -1,0 +1,1265 @@
+BEGIN M30 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=9b3c4d3503249d1d140ddc96318e62add9a4c11dd4cbddb9986f50e4863b5283 mutant=9dc0f5e8d33d72504ca5fb99a78d416770640577ef88f20a32521a04b9c06dfa
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:24.78
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://broker:61616/#fragment", expectedReason: "typed host configurator") (25ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://user:secret@broker:61616/", expectedReason: "Credentials") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um InvokeStub_ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://broker:61616/?password=secret", expectedReason: "typed host configurator") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um InvokeStub_ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M30-results/M30.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 409ms
+EXIT_CODE=2
+PASS M30 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M31 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=5057fd856f13b9ec1a87182fd9a2651595a655f04b5ebbfd891d50e7f2533d91 patch=94cd728cce0e20c1d1ad2401c1c56a5ebb57b787bd7f4d8c61ae99413216238f mutant=c5122840570a0a7fa8f6cc4acbe4198e367b12a7fb30689f15e139e8b159372d
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:26.72
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: null, isArtemis: True) (103ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: null, isArtemis: False) (2ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : Nullable object must have a value.
+    um System.Nullable`1.get_Value()
+    um ViciOne.ServiceBus.ActiveMqTransport.ActiveMqSendTransportContext.ApplyDeliveryDelay(IMessage transportMessage, SendContext context, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ActiveMqSendTransportContext.cs:150
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:59
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: 0, isArtemis: True) (0ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: 0, isArtemis: False) (1ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 73
+  Actual:   0
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:62
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: -1, isArtemis: True) (0ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: -1, isArtemis: False) (0ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 73
+  Actual:   -1
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:62
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M31-results/M31.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 6
+  fehlerhaft: 3
+  erfolgreich: 3
+  übersprungen: 0
+  Dauer: 551ms
+EXIT_CODE=2
+PASS M31 restored=5057fd856f13b9ec1a87182fd9a2651595a655f04b5ebbfd891d50e7f2533d91
+BEGIN M32 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc patch=f8a892e146d630fe3a4e53153d870cef38af3925d85845d7f4a722e382c13abe mutant=a1f26f40d64054c86f999626f3ab668982a22afe29a1b0978d82a0b6df61da7d
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:25.62
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (2s 384ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (41ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (79ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (33ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (28ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: [ClockThread, System, Threading, Thread, ClockThread, ···]
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (19ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (41ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (34ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M32-results/M32.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 26s 928ms
+EXIT_CODE=2
+PASS M32 restored=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc
+BEGIN M33 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=2bf8c565bd27295c6e574920513241216d57af2a266f979b5d3fd71e01974df7 mutant=ccfb6ee5e0f61dfbb409b7db75a81e87afdc5485df816feb4e0693a9b70cf8f9
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:25.37
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.PublicApi_ExposesNoProtocolLessHostConstructor (42ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.PublicApi_ExposesNoProtocolLessHostConstructor() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:95
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M33-results/M33.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 740ms
+EXIT_CODE=2
+PASS M33 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M34 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=f3eb0586098d5645b6d59af7c1e304cac7241dc2ab985a092bc4f64a6553beba patch=ca49d97248cf95cee9cceeaac536ab4b4200a3bca2f44eddb1808b12853d5298 mutant=e9e8bc21211c83c35da8ba1c2e4dee8a11089178b89c000ef426b875899f3864
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:24.75
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.HostApi_ExposesNoProtocolLessHostAndPortOverload (32ms)
+  Assert.Empty() Failure: Collection was not empty
+  Collection: [Void Host(ViciOne.ServiceBus.IActiveMqBusFactoryConfigurator, System.String, Int32, System.Action`1[ViciOne.ServiceBus.IActiveMqHostConfigurator])]
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.HostApi_ExposesNoProtocolLessHostAndPortOverload() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:184
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M34-results/M34.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 433ms
+EXIT_CODE=2
+PASS M34 restored=f3eb0586098d5645b6d59af7c1e304cac7241dc2ab985a092bc4f64a6553beba
+BEGIN M35 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=f3eb0586098d5645b6d59af7c1e304cac7241dc2ab985a092bc4f64a6553beba patch=11ad2bf22b7a4a6d73fc248ee75d16e121036018a063a80c1c49882088657097 mutant=289f2b523ccbca0c126c3cb3af1632fab7bc7538fa437e09205e6f78df0c3746
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:24.84
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(protocol: OpenWire, port: 61616, expectedScheme: "activemq") (163ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(protocol: Amqp, port: 5672, expectedScheme: "amqp") (3ms)
+  Assert.Equal() Failure: Strings differ
+              ↓ (pos 1)
+  Expected: "amqp"
+  Actual:   "activemq"
+              ↑ (pos 1)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.Configuration.ActiveMqConfigurationTests.BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(ActiveMqTransportProtocol protocol, Int32 port, String expectedScheme) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs:175
+    um InvokeStub_ActiveMqConfigurationTests.BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M35-results/M35.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 538ms
+EXIT_CODE=2
+PASS M35 restored=f3eb0586098d5645b6d59af7c1e304cac7241dc2ab985a092bc4f64a6553beba
+BEGIN M36 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=5bfb3d1a1844a5ce13b4d71b5e25836546ed6aa940ef07014dcd53b942e9b451 mutant=4e0b79dec62dff63efa622b6b42d08e2035fc466e2b7bc77c165918a06e6f7ab
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:38.12
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "amqp", expectedProtocol: Amqp, expectedScheme: "amqp", port: 5672, expectedBrokerPrefix: "amqp://") (57ms)
+  Assert.Equal() Failure: Strings differ
+              ↓ (pos 1)
+  Expected: "amqp"
+  Actual:   "activemq"
+              ↑ (pos 1)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(String protocolOption, ActiveMqTransportProtocol expectedProtocol, String expectedScheme, Int32 port, String expectedBrokerPrefix) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:54
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "openwire", expectedProtocol: OpenWire, expectedScheme: "activemq", port: 61616, expectedBrokerPrefix: "activemq:tcp://") (7ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M36-results/M36.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 396ms
+EXIT_CODE=2
+PASS M36 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M37 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=00a6806a961260ba8e0eb97c33d03edf8cc70a86aba144510b073fc46d8cda97 mutant=ee811ab161368efbd4b5deafa371811044d521621f7f198c818ee24783ad001e
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:38.11
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--port=61616"], expectedOption: "protocol") (49ms)
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--protocol=openwire", "--port=61616"], expectedOption: "host") (3ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(String[] arguments, String expectedOption) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:95
+    um InvokeStub_ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--protocol=openwire"], expectedOption: "port") (0ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M37-results/M37.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 435ms
+EXIT_CODE=2
+PASS M37 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M38 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=6714e37d266a93349b066226a02e28f127392fbd9ee4deb74c28a8bf238e1f0b mutant=acca3d59850773c7b4c77f7cca03c202d0dce789960d9a9d8f5482cd549a39c5
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:36.04
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(protocol: "0") (46ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(String protocol) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:80
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(protocol: "stomp") (1ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M38-results/M38.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 378ms
+EXIT_CODE=2
+PASS M38 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M39 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=60a4195ac7517198fce2f5322428291e54a64f43ddebbd2312ab9553e5eb2ca7 mutant=c1b3725d507b69ff0c4a16fe23c7f7489a7124a4e6c27b40c738c2aaff3ee245
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:35.02
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "amqp", expectedProtocol: Amqp, expectedScheme: "amqp", port: 5672, expectedBrokerPrefix: "amqp://") (67ms)
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(protocolOption: "openwire", expectedProtocol: OpenWire, expectedScheme: "activemq", port: 61616, expectedBrokerPrefix: "activemq:tcp://") (9ms)
+  Assert.Equal() Failure: Strings differ
+                      ↓ (pos 9)
+  Expected: "activemq://broker.internal:61616/"
+  Actual:   "activemq:tcp://broker.internal:61616?wireFormat.ti"···
+                      ↑ (pos 9)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(String protocolOption, ActiveMqTransportProtocol expectedProtocol, String expectedScheme, Int32 port, String expectedBrokerPrefix) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:55
+    um InvokeStub_ActiveMqOptionSetTests.ExplicitCoordinates_SelectTheExactProvider(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M39-results/M39.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 405ms
+EXIT_CODE=2
+PASS M39 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M40 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=74485b5fe90b84d97d6d4ef784ed55a9a1042147f9bc3203ae9476c059b7e632 mutant=357b3585690ffbaa1670aa957362f46eaf3ca97a2ba6642bb701e2ab9ba87639
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.58
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(protocol: Amqp, expectedScheme: "amqp", port: 5672) (31ms)
+  Assert.Equal() Failure: Strings differ
+              ↓ (pos 1)
+  Expected: "amqp"
+  Actual:   "activemq"
+              ↑ (pos 1)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(ActiveMqTransportProtocol protocol, String expectedScheme, Int32 port) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:53
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(protocol: OpenWire, expectedScheme: "activemq", port: 61616) (4ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M40-results/M40.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 439ms
+EXIT_CODE=2
+PASS M40 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M41 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=0f1fc089d17dccbd00bfd7a472d1a75156383105361edaa858e6245939453f94 mutant=bcef42c5a0886b5bf7f96e3633f40d449add7d5573cf2b2e0e6b6dbe441e8f2d
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:42.27
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--port=61616"], expectedOption: "protocol") (42ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(String[] arguments, String expectedOption) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:95
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--protocol=openwire", "--port=61616"], expectedOption: "host") (2ms)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--protocol=openwire"], expectedOption: "port") (0ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M41-results/M41.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 400ms
+EXIT_CODE=2
+PASS M41 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M42 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=a69c4065bab015e8e4cb81926cbc9cb47736cc2afb11165445e5621d8e5772cd mutant=d6fa86581cb587ae7daaca0d5ca82a7205e19475eaec86a9b5d819a0a9399a12
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:52.34
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--port=61616"], expectedOption: "protocol") (44ms)
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--protocol=openwire", "--port=61616"], expectedOption: "host") (0ms)
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(arguments: ["--host=broker.internal", "--protocol=openwire"], expectedOption: "port") (2ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(String[] arguments, String expectedOption) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:95
+    um InvokeStub_ActiveMqOptionSetTests.Reparse_MakesEachConnectionCoordinateRequiredAgain(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M42-results/M42.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 418ms
+EXIT_CODE=2
+PASS M42 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M43 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=b46429004c8bdd1b5ac097c186e5518d5535e5d93ee0621ee6fb3acce2f2d8aa mutant=09580ec02cfce63a62b7df9396169742766cf08746b172fbca5234d407d1e2ad
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:38.30
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls (59ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: ""
+  Actual:   "client"
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:123
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M43-results/M43.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 404ms
+EXIT_CODE=2
+PASS M43 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M44 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=3c91e7bf3afb3c36e957e19430dd330e80b16f268779eb9b58cbe0023491b1b8 mutant=830b530d9c282747ff7e0e5e7340a872cb28ee90c3aae2fe092c39646867dbe1
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:37.31
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls (57ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: ""
+  Actual:   "secret"
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:124
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M44-results/M44.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 416ms
+EXIT_CODE=2
+PASS M44 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M45 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=45d1a1f951c3fd24c22d7bdc9a8c13ecefb442e93e5b527efb590a643b5bb0d5 mutant=548a16ecf17810912cc754641d95742606b48473044065e733b7bad0e79025aa
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:38.42
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls (54ms)
+  Assert.False() Failure
+  Expected: False
+  Actual:   True
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.Reparse_DoesNotRetainCredentialsOrTls() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:125
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M45-results/M45.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 381ms
+EXIT_CODE=2
+PASS M45 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M46 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=b3cbf72a48f68caae0fadb8d8af6b54b6d1050428b281a1cafdbe2964ad10989 mutant=498584c3ac5401fa544e67331cdf226bc184517d08b8181cdd387762fb436895
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:37.70
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.FailedReparse_DoesNotExposePreviouslyEffectiveSettings (49ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.FailedReparse_DoesNotExposePreviouslyEffectiveSettings() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:137
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M46-results/M46.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 414ms
+EXIT_CODE=2
+PASS M46 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M47 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc patch=c98c2174a3a20daee9737aa20dd492e0c97e2d07aa19c7831809a3e3d99aa83c mutant=f2626f688f679300b48327334b1c726bcad7af61fcdf58c1f99e7a830f2a9b75
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:24.18
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (2s 177ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (41ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (48ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: [System, Threading, Tasks, Task, System, ···]
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (29ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (29ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (21ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (33ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (20ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M47-results/M47.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 23s 910ms
+EXIT_CODE=2
+PASS M47 restored=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc
+BEGIN M48 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=0cd8e026be73c7f8bf33724078cf1190115d7d075aea1bd37043828f9bc2c0aa mutant=3aa5b7caa75e5c60cf28a0ea09e8f12b852b3084e409148d415481fa2e1d9d71
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:21.75
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsAnUnknownTypedProtocol (24ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsAnUnknownTypedProtocol() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:63
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M48-results/M48.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 358ms
+EXIT_CODE=2
+PASS M48 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M49 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=36bc88045aa93d419d32a386166cb170fc47ac40412284c50a61815921d878e8 mutant=4e34d8356fdb1d7c83380f66aba3cfe90549f77dbaea30b5c5c378193afecd65
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:21.82
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.RelativeUri_IsRejectedByTheConfigurationBoundary (30ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  Actual:   typeof(System.InvalidOperationException)
+  ---- System.InvalidOperationException : This operation is not supported for a relative URI.
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.RelativeUri_IsRejectedByTheConfigurationBoundary() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:137
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    ----- Inner Stack Trace -----
+    um System.Uri.get_UserInfo()
+    um ViciOne.ServiceBus.ActiveMqHostAddress.RejectCredentialsAndUnsupportedComponents(Uri address) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqHostAddress.cs:123
+    um ViciOne.ServiceBus.ActiveMqHostAddress..ctor(Uri address) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqHostAddress.cs:23
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.<>c__DisplayClass9_0.<RelativeUri_IsRejectedByTheConfigurationBoundary>b__0() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:138
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M49-results/M49.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 366ms
+EXIT_CODE=2
+PASS M49 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M50 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=633e8526d9fd83f6f1c4b62dce03e5d178acbdf9d9622964a5ae67599a029557 mutant=707ff5e714a0942880d81b42d73f089e6c3a9506c1899e4fb9fadb2ac3fa6d88
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:21.63
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.DefaultValue_CannotEscapeAsAnInvalidUri (30ms)
+  Assert.Throws() Failure: Exception type was not an exact match
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  Actual:   typeof(System.ArgumentNullException)
+  ---- System.ArgumentNullException : Value cannot be null. (Parameter 'stringToEscape')
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.DefaultValue_CannotEscapeAsAnInvalidUri() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:108
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    ----- Inner Stack Trace -----
+    um System.ArgumentNullException.Throw(String paramName)
+    um System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+    um System.UriHelper.EscapeString(String stringToEscape, Boolean checkExistingEscaped, SearchValues`1 noEscape)
+    um ViciOne.ServiceBus.ActiveMqHostAddress.op_Implicit(ActiveMqHostAddress& address) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqHostAddress.cs:141
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.<>c__DisplayClass6_0.<DefaultValue_CannotEscapeAsAnInvalidUri>b__0() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:108
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M50-results/M50.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 361ms
+EXIT_CODE=2
+PASS M50 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M51 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=4d136cc89329a7f7f33de4acb07367ad7bc59d966ead248f98e95c0e2d0b123c mutant=c7f6144829087a6a2c182ce6083a086f4f81f7b9215f13c57ad659c17f021f3b
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:21.93
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(host: null) (31ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(String host) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:150
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(host: "") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(String host) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:150
+    um InvokeStub_ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(host: " ") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(String host) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:150
+    um InvokeStub_ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidHosts(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M51-results/M51.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 370ms
+EXIT_CODE=2
+PASS M51 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M52 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=b55e972f97e973085400639b4b32bfbafd07421ae66cd36e94e33ffe72fefb52 mutant=5773351787f15d684976c8a719e4681791079dc7138d269542bd8ff1535e9ba5
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:21.52
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(port: 0) (33ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentOutOfRangeException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(Int32 port) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:161
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(port: -1) (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentOutOfRangeException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(Int32 port) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:161
+    um InvokeStub_ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(port: 65536) (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentOutOfRangeException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(Int32 port) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:161
+    um InvokeStub_ActiveMqHostAddressTests.ExplicitConstruction_RejectsInvalidPorts(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M52-results/M52.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 371ms
+EXIT_CODE=2
+PASS M52 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+BEGIN M53 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=a76555c5d3d6ef549dab6ee34ae6ebcb1c622bcc9cabfdedcd55249349c5a212 patch=96ee3b86e09336995b4e70ff066eccfd8c4103c789361b8a98ee8ebd5c29bb9c mutant=0924bf42cbfec33de97da94c5118a0ade15daabfd568c323e545fd898df4acd3
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.53
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure (27s 971ms)
+  Assert.Empty() Failure: Collection was not empty
+  Collection: ["benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.Se"···]
+    um ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs:221
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M53-results/M53.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 48s 806ms
+EXIT_CODE=2
+PASS M53 restored=a76555c5d3d6ef549dab6ee34ae6ebcb1c622bcc9cabfdedcd55249349c5a212
+BEGIN M54 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=15d34c0f472756524a0699a05653de80928c5481804ae46ca48d9dd3fe3cfe6c patch=ac1bfc916a2db138aff7a7f85a56bc016382977c8b931ec26fc9378ed0234c62 mutant=31f7ebf981f224a8d48babff7b145afbbec8e722c79e3fd34b97daaa482f9270
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:31.54
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure (32s 007ms)
+  Assert.Empty() Failure: Collection was not empty
+  Collection: ["tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tes"···]
+    um ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs:221
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M54-results/M54.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 59s 900ms
+EXIT_CODE=2
+PASS M54 restored=15d34c0f472756524a0699a05653de80928c5481804ae46ca48d9dd3fe3cfe6c
+BEGIN M55 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7 patch=5f7466ac29bd33f879f592df3826628f12b9ea96aea6e4e95e2f6d424c2e5e48 mutant=571f708ec8e7778d77a60023898ac428d49e1a2e157849ff5f0fa1efb9646e94
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:24.32
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (2s 462ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (50ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (74ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (25ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (32ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (24ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: [Task, Delay]
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (31ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (22ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M55-results/M55.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 25s 474ms
+EXIT_CODE=2
+PASS M55 restored=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7
+BEGIN M56 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7 patch=490cde94f3c300124124fb61401ffe0b43eca24017c61a22ac10a3f7f866fffb mutant=268cb226f1a18e51e7cce972d26dcded3c335c30018b919a79907c9cbb8a7bd0
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:23.98
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (1s 504ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (38ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (74ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (32ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (21ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (17ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (22ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: []
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (24ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M56-results/M56.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 24s 379ms
+EXIT_CODE=2
+PASS M56 restored=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7
+BEGIN M57 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc patch=9d5a0f4425b830c38ca85e1984a8a9e4888878c5b365e032f04e0a99236cd560 mutant=b7006584c63db1f5a86c0fe176ae40556dc548a5489896bbef3aa14780880325
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:23.63
+EXIT_CODE=0
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await System.Threading."···) (2s 224ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: "global using ClockTask = System.Threading.Tasks.Ta"···, source: "class C { async void M() { await ClockTask.Delay(1"···) (34ms)
+  Assert.Single() Failure: The collection did not contain any matching items
+  Expected:   (predicate expression)
+  Collection: [ClockTask, Delay]
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(String globalUsing, String source) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:241
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async System.Threading.Tasks.Task M() { "···) (73ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockTask = System.Threading.Tasks.Task; cla"···) (38ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using ClockThread = System.Threading.Thread; class"···) (27ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "class C { async void M() { await Task.Delay(1); } "···) (17ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "#if NET10_0\nclass C { async void M() { await Syste"···) (38ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(globalUsing: null, source: "using static System.Threading.Tasks.Task; class C "···) (32ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M57-results/M57.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 1
+  erfolgreich: 7
+  übersprungen: 0
+  Dauer: 24s 849ms
+EXIT_CODE=2
+PASS M57 restored=cbe698b2afc0b335a7136aab4d210183f75a53e9b3f1efeae6c9dc21606d23bc
+BEGIN M58 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=539003dbd47f7eee15b3e2d020375c6ecc48b1f1393da6c738129d3fc7227a19 mutant=3521c1b3c7cdd55319c004ef6f3c1b708d9f15ad3d921fb601e13a8d5f6dd276
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:33.18
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.OptionSet_RemainsAnInternalSealedImplementationDetail (19ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.OptionSet_RemainsAnInternalSealedImplementationDetail() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:28
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M58-results/M58.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 343ms
+EXIT_CODE=2
+PASS M58 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M59 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb patch=37cbabc67d8df28371d2281d2c5a309252c94d1c609e6b56c3b2ea08cf0dfd70 mutant=9136c414d8cf9a737e099a0d3aebf7db0bd6fb4fc42b9c852197c594c1a292b5
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.EntityFrameworkCoreIntegration -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.AmazonSqsTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll
+  ViciOne.ServiceBus.Azure.ServiceBus.Core -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll
+  ViciOne.ServiceBus.RabbitMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Benchmark.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:33.49
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.OptionSet_RemainsAnInternalSealedImplementationDetail (22ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.OptionSet_RemainsAnInternalSealedImplementationDetail() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:31
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M59-results/M59.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 370ms
+EXIT_CODE=2
+PASS M59 restored=21a1ee8dfaa00ec27cead798d69eec15f40969cdd0a46dc928d3a1b7d7647dcb
+BEGIN M60 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=a76555c5d3d6ef549dab6ee34ae6ebcb1c622bcc9cabfdedcd55249349c5a212 patch=0ba196cd2421ded495a02b93ff6b68b740adc62ca3f2f9715a024432aea07e72 mutant=df8d8c44faa47e915b40d5cb29778288ef42e4fc05964329f2c11dea76a835cf
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.14
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure (28s 663ms)
+  Assert.Empty() Failure: Collection was not empty
+  Collection: ["benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.Se"···]
+    um ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests.UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs:221
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M60-results/M60.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 50s 243ms
+EXIT_CODE=2
+PASS M60 restored=a76555c5d3d6ef549dab6ee34ae6ebcb1c622bcc9cabfdedcd55249349c5a212
+BEGIN M61 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7 patch=bf7326585302c6239e8465da801bf70eb22ef714c1d28a5bda9cd84bbd071a4c mutant=7698b4ee2047649901652f10f12fdcda64e2307c18a81cd9d535b29ff3a35e1d
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Roslyn.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Analyzers.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Architecture.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.43
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqLocalIntegrationSources_UseNoWallClockWaits (1s 618ms)
+  Assert.NotEmpty() Failure: Collection was empty
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqLocalIntegrationSources_UseNoWallClockWaits() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:177
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M61-results/M61.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 22s 646ms
+EXIT_CODE=2
+PASS M61 restored=cec46bd8f9eb578f55d11e0bd12a672f825dc277f6ab8da67f3cc50af2a262d7
+BEGIN M62 commit=d3afdfa386909317f20894e47a6137601b215f68 tree=4249d72bfb541c27d8d5b14dda55b0a898383ab3 baseline=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56 patch=dcedca77576fe17477d5c488bded96bf7bb120ac49099569d94a06b7953d13ac mutant=a85bb61e2c82bd7660c496b6883a8a2083278b393b24be10f4d9d5ed054b9bc1
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.ActiveMqTransport -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll
+  ViciOne.ServiceBus.Tests.Infrastructure -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll
+  ViciOne.ServiceBus.Tests.InternalAccess -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll
+  ViciOne.ServiceBus.ActiveMqTransport.Tests -> /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:22.63
+EXIT_CODE=0
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsUriInvalidHostsAtConstruction (28ms)
+  Assert.All() Failure: 3 out of 3 items in the collection did not pass.
+  [0]: Item:  "broker/path"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  [1]: Item:  "broker?query"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+  [2]: Item:  "broker#fragment"
+       Error: Assert.Throws() Failure: No exception was thrown
+              Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RejectsUriInvalidHostsAtConstruction() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:76
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M62-results/M62.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 364ms
+EXIT_CODE=2
+PASS M62 restored=c10ac50172f2c9529c21839cc1a0982c211df8455d70cd36a826529396e72e56
+PASS M30-M62 mutation worktree clean
+EXIT_CODE=0

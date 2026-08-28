@@ -1,0 +1,18 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.PublicApi_ExposesNoProtocolLessHostConstructor (42ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.PublicApi_ExposesNoProtocolLessHostConstructor() in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:95
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M33-results/M33.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 740ms
+EXIT_CODE=2

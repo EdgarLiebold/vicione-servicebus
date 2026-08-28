@@ -1405,3 +1405,37 @@ future cohorts as complete.
   GitHub workflows remain globally manual/disabled as authorized. This is the final local evidence
   candidate, not self-acceptance; two independent read-only reviews of this exact technical and
   evidence freeze remain mandatory.
+
+## ActiveMQ native closure — final compiler-input and API-boundary closure
+
+- The preceding ActiveMQ technical/evidence candidates are immutable historical checkpoints and
+  are superseded by this section. The final technical subject is commit
+  `d3afdfa386909317f20894e47a6137601b215f68`, tree
+  `4249d72bfb541c27d8d5b14dda55b0a898383ab3`, parent
+  `f5dd3c5e584c1a25a190f70c3b73605fd4aabc42`.
+- The public host boundary now rejects unknown typed protocols, relative URIs, invalid typed hosts
+  and ports, URI-invalid host characters and the unavoidable default-struct state at construction
+  or projection. The Benchmark option parser requires all connection coordinates on every parse,
+  clears credentials/TLS/effective settings before reparsing, and remains an internal sealed
+  implementation detail.
+- The Unit solution contains the complete Release-evaluated Benchmark product closure. The ActiveMQ
+  no-wall-clock guard evaluates the real Release `Compile` set in one Roslyn compilation with SDK
+  global usings, aliases/static imports, target-framework defines and language version; it also
+  fails closed if that real source set is empty before the synthetic using tree is added.
+- Final positive execution at the exact technical commit is Engineering locked restore/build Exit 0
+  with 0 warnings and 0 errors; UnitArchitecture 2228/2228 across 19 CTRFs; LocalIntegration 244/244
+  across seven CTRFs and fresh five-provider fixture `vicione-751339deadb8`; all runs have 0 failed
+  and 0 skipped. Included modules are ActiveMQ Unit 133/133, Benchmark 21/21, Architecture 129/129
+  and ActiveMQ LocalIntegration 95/95. CI tools pass 257/257, Identity tools 103/103, and the
+  verification model exits 0.
+- Thirty-three byte-exact attacks M30-M62 were reconstructed and executed against this final tree.
+  Every mutant builds with Exit 0, every designated focused MTP run exits 2 for its own assertion
+  with zero skips, every target restores to its exact frozen SHA and the detached mutation worktree
+  ends clean. M61 specifically empties only the evaluated `Compile` projection and is killed by the
+  new non-empty-source assertion.
+- Raw commands, patches, metadata, logs, binlogs, CTRFs, broker state, controlled outage/recovery
+  results and hashes are staged under
+  `ACTIVEMQ-NATIVE-CLOSURE-CORRECTION-03`. The inherited closure remains 113 R0 obligations / 179
+  historical execution identities with 40 UnitArchitecture and 73 LocalIntegration owners, all
+  `REPLACED_EXECUTING`. This is a final local evidence candidate, not self-acceptance; two independent
+  read-only reviews of the exact technical/evidence freeze remain mandatory before remote push.

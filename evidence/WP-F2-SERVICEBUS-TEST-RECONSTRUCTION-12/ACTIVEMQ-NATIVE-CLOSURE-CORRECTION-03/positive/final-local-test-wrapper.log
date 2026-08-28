@@ -1,0 +1,49 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (5s 473ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (3s 417ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 561ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1m 27s 509ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (25s 497ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (410ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (12s 418ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_10_54.972454.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_01.288772.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_05.659194.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_08.063629.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_12_36.294568.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_02.496720.ctrf
+    - /private/tmp/activemq-correction03-d3afdfa3.Lk5QYb/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_03.587154.ctrf
+
+Testlaufzusammenfassung: Bestanden!
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1m 27s 509ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (3s 417ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (5s 473ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (12s 418ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (25s 497ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (1s 561ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (410ms)
+
+  gesamt: 244
+  fehlgeschlagen: 0
+  erfolgreich: 244
+  übersprungen: 0
+  Dauer: 2m 21s 815ms
+run identity vicione-751339deadb8, output under artifacts/run-output/vicione-751339deadb8
+activemq is reached through activemq-proxy, so its address survives a restart
+fixture postgres and azurite and localstack and activemq and artemis ready on loopback: VICIONE_SERVICEBUS_AMQ_AMQP_PORT=34315, VICIONE_SERVICEBUS_AMQ_HOST=127.0.0.1, VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT=34316, VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT=34317, VICIONE_SERVICEBUS_ARTEMIS_HOST=127.0.0.1, VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT=34312, VICIONE_SERVICEBUS_ARTEMIS_PORT=34313, VICIONE_SERVICEBUS_AZURITE_HOST=127.0.0.1, VICIONE_SERVICEBUS_AZURITE_TABLE_PORT=34314, VICIONE_SERVICEBUS_LOCALSTACK_HOST=127.0.0.1, VICIONE_SERVICEBUS_LOCALSTACK_PORT=34307, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=34311
+outage control ready for activemq at /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/fixture-control
+endpoints projected to artifacts/run-output/vicione-751339deadb8/endpoints.json
+broker log postgres: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/postgres-broker.log (232 lines)
+broker log azurite: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/azurite-broker.log (6 lines)
+broker log localstack: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/localstack-broker.log (1759 lines)
+broker log activemq: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/activemq-broker.log (202 lines)
+broker log artemis: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus-activemq-native-worktree/artifacts/run-output/vicione-751339deadb8/artemis-broker.log (55 lines)
+EXIT_CODE=0

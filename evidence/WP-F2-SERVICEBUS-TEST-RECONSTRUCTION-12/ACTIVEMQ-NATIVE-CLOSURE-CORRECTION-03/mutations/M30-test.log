@@ -1,0 +1,29 @@
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://broker:61616/#fragment", expectedReason: "typed host configurator") (25ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://user:secret@broker:61616/", expectedReason: "Credentials") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um InvokeStub_ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(source: "activemq://broker:61616/?password=secret", expectedReason: "typed host configurator") (0ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.ActiveMqTransportConfigurationException)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(String source, String expectedReason) in /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:36
+    um InvokeStub_ActiveMqHostAddressTests.CredentialsAndTransportOptions_AreRejectedInHostUris(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction03-f5dd3c5e.dwaxzj/mutations/M30-results/M30.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations-final-f5dd3c5e/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 3
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 409ms
+EXIT_CODE=2
