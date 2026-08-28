@@ -369,6 +369,54 @@ public sealed class BufferedBusTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "same-instance-reentrant-flush-fails-fast")]
+    public async Task ReentrantFlush_FailsFastAndLeavesTheLockAndUnattemptedTailUsable()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var driver = new BufferedBusTestDriver();
+        var releaseCapturedFlush = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var order = new List<string>();
+        Task capturedFlush = Task.CompletedTask;
+
+        await driver.Enqueue(async _ =>
+        {
+            order.Add("reentrant");
+            capturedFlush = Task.Run(async () =>
+            {
+                await releaseCapturedFlush.Task.WaitAsync(timeout, cancellationToken);
+                await driver.Bus.FlushAsync(cancellationToken);
+            }, cancellationToken);
+            await driver.Bus.FlushAsync(CancellationToken.None);
+        }, cancellationToken);
+        await driver.Enqueue(_ =>
+        {
+            order.Add("tail");
+            return Task.CompletedTask;
+        }, cancellationToken);
+
+        InvalidOperationException actual;
+        try
+        {
+            actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+        }
+        finally
+        {
+            releaseCapturedFlush.TrySetResult();
+        }
+
+        Assert.Equal(
+            "FlushAsync cannot be called recursively from an action being flushed by the same buffered bus.",
+            actual.Message);
+        Assert.Equal(["reentrant"], order);
+
+        await capturedFlush.WaitAsync(timeout, cancellationToken);
+
+        Assert.Equal(["reentrant", "tail"], order);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "failure-preserves-unattempted-tail")]
     public async Task DispatchFailure_PreservesItsIdentityAndOnlyTheUnattemptedTail()
     {

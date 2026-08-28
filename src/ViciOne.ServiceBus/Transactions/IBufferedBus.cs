@@ -14,8 +14,11 @@ namespace ViciOne.ServiceBus.Transactions
         /// <summary>
         /// Dispatches the actions that were buffered before this call in FIFO order. An action that was already attempted is never
         /// retried automatically; after a failure or cancellation, every unattempted action remains buffered ahead of actions added
-        /// during the flush.
+        /// during the flush. Calling this method recursively from an action currently being flushed by the same buffered bus is rejected.
         /// </summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// The call was made recursively from an action currently being flushed by this buffered bus.
+        /// </exception>
         Task FlushAsync(CancellationToken cancellationToken = default);
     }
 }

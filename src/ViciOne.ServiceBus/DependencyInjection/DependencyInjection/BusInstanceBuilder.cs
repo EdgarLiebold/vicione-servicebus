@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
+    using System.Runtime.ExceptionServices;
     using Internals;
     using NewIdFormatters;
 
@@ -40,10 +41,19 @@ namespace ViciOne.ServiceBus.DependencyInjection
 
             var busInstanceType = _proxyTypes.GetOrAdd(interfaceType, x => new Lazy<Type>(() => CreateImplementation(x))).Value;
 
-            var result = (TResult)typeof(IBusInstanceBuilderCallback<TBus, TResult>)
-                .GetMethod("GetResult")
-                .MakeGenericMethod(busInstanceType)
-                .Invoke(callback, []);
+            TResult result;
+            try
+            {
+                result = (TResult)typeof(IBusInstanceBuilderCallback<TBus, TResult>)
+                    .GetMethod("GetResult")
+                    .MakeGenericMethod(busInstanceType)
+                    .Invoke(callback, []);
+            }
+            catch (TargetInvocationException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+                throw;
+            }
 
             return result;
         }

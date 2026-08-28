@@ -49,22 +49,39 @@ public sealed class DeferredBusRegistrationTests
     public void PublicSurface_SeparatesAmbientAndBufferedCapabilitiesAndRetiresTheAmbiguousApi()
     {
         Assembly assembly = typeof(IAmbientTransactionBus).Assembly;
-        Type ambient = Assert.IsAssignableFrom<Type>(assembly.GetType("ViciOne.ServiceBus.Transactions.AmbientTransactionBus"));
-        Type buffered = Assert.IsAssignableFrom<Type>(assembly.GetType("ViciOne.ServiceBus.Transactions.BufferedBus"));
-        Type deferred = Assert.IsAssignableFrom<Type>(assembly.GetType("ViciOne.ServiceBus.Transactions.DeferredBus"));
         MethodInfo flush = Assert.IsAssignableFrom<MethodInfo>(typeof(IBufferedBus).GetMethod(nameof(IBufferedBus.FlushAsync)));
+        Dictionary<string, bool> expectedImplementationShapes = new(StringComparer.Ordinal)
+        {
+            ["ViciOne.ServiceBus.DependencyInjection.AmbientTransactionScopedBusContextProvider`1"] = true,
+            ["ViciOne.ServiceBus.DependencyInjection.BufferedBusScopedBusContextProvider`1"] = true,
+            ["ViciOne.ServiceBus.DependencyInjection.DeferredBusScopedContextProvider`1"] = false,
+            ["ViciOne.ServiceBus.Transactions.AmbientTransactionBus"] = true,
+            ["ViciOne.ServiceBus.Transactions.AmbientTransactionNotification"] = true,
+            ["ViciOne.ServiceBus.Transactions.BufferedBus"] = true,
+            ["ViciOne.ServiceBus.Transactions.DeferredBus"] = false,
+            ["ViciOne.ServiceBus.Transactions.DeferredBusPublishEndpointProvider"] = true,
+            ["ViciOne.ServiceBus.Transactions.DeferredBusSendEndpoint"] = true,
+        };
+        Type[] implementationTypes = assembly.GetTypes()
+            .Where(type => !type.IsNested
+                && ((type.Namespace == "ViciOne.ServiceBus.Transactions" && !type.IsInterface)
+                    || expectedImplementationShapes.ContainsKey(type.FullName!)))
+            .OrderBy(type => type.FullName, StringComparer.Ordinal)
+            .ToArray();
 
         Assert.True(typeof(IAmbientTransactionBus).IsPublic);
         Assert.True(typeof(IBufferedBus).IsPublic);
         Assert.Null(typeof(IAmbientTransactionBus).GetMethod(nameof(IBufferedBus.FlushAsync)));
         Assert.Equal(typeof(Task), flush.ReturnType);
         Assert.Equal(typeof(CancellationToken), Assert.Single(flush.GetParameters()).ParameterType);
-        Assert.True(ambient.IsNotPublic);
-        Assert.True(ambient.IsSealed);
-        Assert.True(buffered.IsNotPublic);
-        Assert.True(buffered.IsSealed);
-        Assert.True(deferred.IsNotPublic);
-        Assert.True(deferred.IsAbstract);
+        Assert.Equal(expectedImplementationShapes.Keys.Order(StringComparer.Ordinal),
+            implementationTypes.Select(type => type.FullName));
+        Assert.All(implementationTypes, type =>
+        {
+            Assert.True(type.IsNotPublic);
+            Assert.Equal(expectedImplementationShapes[type.FullName!], type.IsSealed);
+            Assert.Equal(!expectedImplementationShapes[type.FullName!], type.IsAbstract);
+        });
         Assert.Null(assembly.GetType("ViciOne.ServiceBus.Transactions.ITransactionalBus"));
         Assert.Null(assembly.GetType("ViciOne.ServiceBus.Transactions.TransactionalBus"));
         Assert.Null(assembly.GetType("ViciOne.ServiceBus.Transactions.TransactionalEnlistmentBus"));
@@ -246,6 +263,52 @@ public sealed class DeferredBusRegistrationTests
         Assert.Contains(nameof(IBufferedBus), bufferedFirst.Message, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "typed-bus-mixed-capabilities-fail-fast")]
+    public void SameTypedBus_RejectsMixedAmbientAndBufferedOwnershipInEitherOrder(bool ambientFirst)
+    {
+        ConfigurationException actual = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus<ISecondaryBus>(configuration =>
+            {
+                if (ambientFirst)
+                {
+                    configuration.AddAmbientTransactionBus();
+                    configuration.AddBufferedBus();
+                }
+                else
+                {
+                    configuration.AddBufferedBus();
+                    configuration.AddAmbientTransactionBus();
+                }
+            }));
+
+        Assert.Contains(
+            ambientFirst
+                ? nameof(DependencyInjectionTransactionExtensions.AddBufferedBus)
+                : nameof(DependencyInjectionTransactionExtensions.AddAmbientTransactionBus),
+            actual.Message,
+            StringComparison.Ordinal);
+        Assert.Contains(ambientFirst ? nameof(IAmbientTransactionBus) : nameof(IBufferedBus),
+            actual.Message,
+            StringComparison.Ordinal);
+        Assert.Contains(nameof(ISecondaryBus), actual.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "typed-bus-reflection-preserves-failure-identity")]
+    public void TypedBusReflectionBoundary_PreservesTheOriginalConfigurationFailure()
+    {
+        var expected = new ConfigurationException("expected typed-bus configuration failure");
+        var callback = new ThrowingBusInstanceCallback(expected);
+
+        ConfigurationException actual = Assert.Throws<ConfigurationException>(() =>
+            BusInstanceBuilder.Instance.GetBusInstanceType<ISecondaryBus, object>(callback));
+
+        Assert.Same(expected, actual);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "resolved-lifetimes-share-owner-bound-instance")]
     public async Task ResolvedCapabilities_MatchTheirOwnerBindingAndConfiguredLifetime()
@@ -345,6 +408,16 @@ public sealed class DeferredBusRegistrationTests
     }
 
     private sealed record PublishObservation(string Stage, object Message);
+
+    private sealed class ThrowingBusInstanceCallback(ConfigurationException exception) :
+        IBusInstanceBuilderCallback<ISecondaryBus, object>
+    {
+        public object GetResult<TBusInstance>()
+            where TBusInstance : BusInstance<ISecondaryBus>, ISecondaryBus
+        {
+            throw exception;
+        }
+    }
 
     private static void AssertScopedProvider(
         IEnumerable<ServiceDescriptor> services,

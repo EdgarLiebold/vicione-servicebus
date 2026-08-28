@@ -30,7 +30,10 @@ entry below records what the current work changed for anyone reading the source.
   while `IBufferedBus` exposes an explicit FIFO `FlushAsync` boundary. Both implementations are
   internal, retain every publish/send overload, preserve exact cancellation and failure identity,
   and reject composition with the durable Entity Framework bus outbox because all three own the
-  same scoped publish/send boundary. The former transactional-bus API has no compatibility shim.
+  same scoped publish/send boundary. A recursive flush from an action in the same logical drain is
+  rejected immediately instead of self-deadlocking; unrelated concurrent callers remain serialized.
+  Typed multi-bus registration preserves the original configuration failure across its reflection
+  boundary. The former transactional-bus API has no compatibility shim.
 - Quartz scheduled-message execution now propagates a causally requested job cancellation instead
   of converting it into up to five immediate refires. A dependency-thrown cancellation remains a
   retryable job failure when the Quartz execution token was not requested.

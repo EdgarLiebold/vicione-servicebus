@@ -2694,6 +2694,13 @@
    {
       "requirementId" : "REQ-VSB-BUFFERED-BUS",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ReentrantFlush_FailsFastAndLeavesTheLockAndUnattemptedTailUsable",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "same-instance-reentrant-flush-fails-fast"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "DispatchFailure_PreservesItsIdentityAndOnlyTheUnattemptedTail",
       "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
       "variantKey" : "failure-preserves-unattempted-tail"
@@ -2830,6 +2837,20 @@
       "testMethod" : "SameBus_RejectsMixedAmbientAndBufferedOwnershipInEitherOrder",
       "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
       "variantKey" : "mixed-capabilities-fail-fast"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SameTypedBus_RejectsMixedAmbientAndBufferedOwnershipInEitherOrder",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "typed-bus-mixed-capabilities-fail-fast"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "TypedBusReflectionBoundary_PreservesTheOriginalConfigurationFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "typed-bus-reflection-preserves-failure-identity"
    },
    {
       "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",

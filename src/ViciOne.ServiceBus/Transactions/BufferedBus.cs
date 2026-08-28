@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus.Transactions
         IBufferedBus
     {
         readonly SemaphoreSlim _flushLock;
+        readonly AsyncLocal<FlushFrame> _flushFrame;
         readonly object _lock;
         readonly Queue<Func<CancellationToken, Task>> _pendingActions;
 
@@ -18,12 +19,19 @@ namespace ViciOne.ServiceBus.Transactions
             : base(bus)
         {
             _flushLock = new SemaphoreSlim(1, 1);
+            _flushFrame = new AsyncLocal<FlushFrame>();
             _lock = new object();
             _pendingActions = new Queue<Func<CancellationToken, Task>>();
         }
 
         public async Task FlushAsync(CancellationToken cancellationToken = default)
         {
+            if (_flushFrame.Value?.IsActive == true)
+            {
+                throw new InvalidOperationException(
+                    "FlushAsync cannot be called recursively from an action being flushed by the same buffered bus.");
+            }
+
             await _flushLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
@@ -44,7 +52,18 @@ namespace ViciOne.ServiceBus.Transactions
 
                     try
                     {
-                        await actions[index](cancellationToken).ConfigureAwait(false);
+                        FlushFrame inheritedFrame = _flushFrame.Value;
+                        var frame = new FlushFrame();
+                        _flushFrame.Value = frame;
+                        try
+                        {
+                            await actions[index](cancellationToken).ConfigureAwait(false);
+                        }
+                        finally
+                        {
+                            frame.Complete();
+                            _flushFrame.Value = inheritedFrame;
+                        }
                     }
                     catch
                     {
@@ -87,6 +106,18 @@ namespace ViciOne.ServiceBus.Transactions
 
                 foreach (Func<CancellationToken, Task> action in addedDuringFlush)
                     _pendingActions.Enqueue(action);
+            }
+        }
+
+        sealed class FlushFrame
+        {
+            int _active = 1;
+
+            public bool IsActive => Volatile.Read(ref _active) != 0;
+
+            public void Complete()
+            {
+                Volatile.Write(ref _active, 0);
             }
         }
     }
