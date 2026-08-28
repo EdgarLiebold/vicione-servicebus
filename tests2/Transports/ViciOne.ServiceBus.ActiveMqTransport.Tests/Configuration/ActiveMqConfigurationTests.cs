@@ -155,20 +155,26 @@ public sealed class ActiveMqConfigurationTests
     }
 
     [Theory]
-    [InlineData(ActiveMqTransportProtocol.OpenWire, 61616)]
-    [InlineData(ActiveMqTransportProtocol.Amqp, 5672)]
+    [InlineData(ActiveMqTransportProtocol.OpenWire, 61616, "activemq")]
+    [InlineData(ActiveMqTransportProtocol.Amqp, 5672, "amqp")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-CONFIGURATION", "explicit-host-satisfies-validation")]
     public void BusConfiguration_AcceptsAnExplicitProtocolHostAndPort(
         ActiveMqTransportProtocol protocol,
-        int port)
+        int port,
+        string expectedScheme)
     {
-        ActiveMqBusFactoryConfigurator configurator = CreateConfigurator();
+        var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new ActiveMqBusConfiguration(topology);
+        var configurator = new ActiveMqBusFactoryConfigurator(busConfiguration);
         configurator.Host("broker.internal", protocol, port, _ => { });
 
         Assert.DoesNotContain(
             configurator.Validate(),
             result => result.Disposition == ValidationResultDisposition.Failure
                 && result.Key.Contains("Host", StringComparison.Ordinal));
+        Assert.Equal(expectedScheme, busConfiguration.HostConfiguration.Settings.HostAddress.Scheme);
+        Assert.Equal("broker.internal", busConfiguration.HostConfiguration.Settings.HostAddress.Host);
+        Assert.Equal(port, busConfiguration.HostConfiguration.Settings.HostAddress.Port);
     }
 
     [Fact]
