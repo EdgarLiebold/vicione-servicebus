@@ -2669,5 +2669,250 @@
       "testMethod" : "BatchCheckpoint_DiscardsEveryParentAndChildActionCreatedByTheAttempt",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
       "variantKey" : "batch-checkpoint-composes-parent-and-child-outboxes"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BufferedPublish_FlushesExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "publish-flush-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BufferedSend_FlushesExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "send-flush-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConcurrentFlushes_AreSerializedAndActionsAddedDuringDrainUseTheNextSnapshot",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "fifo-single-drain-and-next-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DispatchFailure_PreservesItsIdentityAndOnlyTheUnattemptedTail",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "failure-preserves-unattempted-tail"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RequestedEnqueueCancellation_IsPreservedWithoutAddingTheAction",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "enqueue-cancellation-does-not-create-work"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RequestedFlushCancellation_RetainsWorkAndPreservesTheFlushToken",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "flush-cancellation-retains-unattempted-work"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Flush_UsesItsOwnTokenAfterTheEnqueueTokenLifetimeEnds",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "flush-token-owns-dispatch"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NoAmbientTransaction_SendPropagatesTransportFailureImmediately",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "no-transaction-send-failure-is-immediate"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CommittedTransaction_SendFailureAbortsWithOriginalCause",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "commit-send-failure-aborts-with-cause"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Registration_RoutesScopedPublishEndpointThroughAmbientContract",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "registered-scoped-publish-uses-ambient-capability"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CommittedTransaction_PublishesExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "commit-publish-fifo-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CommittedTransaction_SendsExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "commit-send-fifo-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RolledBackTransaction_DiscardsPublish",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "rollback-discards-publish"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RolledBackTransaction_DiscardsSend",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "rollback-discards-send"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "IndependentTransactions_CommitAndRollbackOnlyTheirOwnFifoActions",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "independent-transaction-state"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RequestedCallerCancellation_IsPreservedWithoutEnlistingTheAction",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "requested-enqueue-cancellation-is-not-enlisted"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RequestedCallerCancellationWithoutATransaction_DoesNotDispatch",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "requested-immediate-cancellation-does-not-dispatch"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Commit_UsesTheTransactionLifetimeAfterTheEnqueueTokenEnds",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "transaction-lifetime-owns-prepared-dispatch"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-API",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublicSurface_SeparatesAmbientAndBufferedCapabilitiesAndRetiresTheAmbiguousApi",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "truthful-capabilities-and-internal-implementations"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DefaultRegistrations_UseTruthfulLifetimesAndRemainIdempotent",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "default-lifetimes-and-idempotent-owner-bindings"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MultiBusRegistration_BindsEachCapabilityOnlyToItsOwningBus",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "multibus-capabilities-are-owner-bound"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SecondaryBufferedBus_RetainsItsBoundaryInsideADefaultBusConsumerScope",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "cross-bus-consumer-scope-retains-capability"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SameBus_RejectsMixedAmbientAndBufferedOwnershipInEitherOrder",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "mixed-capabilities-fail-fast"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ResolvedCapabilities_MatchTheirOwnerBindingAndConfiguredLifetime",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "resolved-lifetimes-share-owner-bound-instance"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CancellationDuringDispatch_DoesNotRetryTheAttemptedActionAndPreservesTheTail",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "mid-dispatch-cancellation-preserves-tail"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConcurrentEnqueuesInOneTransaction_ExecuteEveryActionExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "concurrent-enqueue-enlists-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InDoubt_DiscardsPendingActionsAndClosesTheEnlistment",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "in-doubt-discards-and-closes"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-API",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InternalAdapters_RejectNullBusCollaboratorsAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "null-bus-collaborators-are-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-DEFERRED-BUS-DI",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RegistrationExtensions_RejectNullConfiguratorsForDefaultAndTypedBuses",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.DeferredBusRegistrationTests",
+      "variantKey" : "null-registration-configurator-is-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Registration_RoutesScopedPublishEndpointThroughBufferedContract",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "registered-scoped-publish-uses-buffered-capability"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishSendEndpoint_UsesTheSameSingleFlushBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "publish-send-endpoint-flushes-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerScope_RoutesScopedPublishEndpointThroughBufferedContract",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "consumer-scope-retains-buffered-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerScope_RoutesScopedPublishEndpointThroughAmbientContract",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
+      "variantKey" : "consumer-scope-retains-ambient-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EveryPublishOverload_UsesTheSameBufferedBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "every-publish-overload-shares-one-buffer"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUFFERED-BUS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EverySendOverload_UsesTheSameBufferedBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
+      "variantKey" : "every-send-overload-shares-one-buffer"
    }
 ]

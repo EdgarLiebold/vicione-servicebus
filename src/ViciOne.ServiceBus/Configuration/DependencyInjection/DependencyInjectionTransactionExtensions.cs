@@ -1,5 +1,7 @@
 namespace ViciOne.ServiceBus
 {
+    using System;
+    using System.Linq;
     using DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -9,53 +11,117 @@ namespace ViciOne.ServiceBus
     public static class DependencyInjectionTransactionExtensions
     {
         /// <summary>
-        /// Adds <see cref="ITransactionalBus" /> to the container with singleton lifetime, which can be used instead of <see cref="IBus" /> to enlist
-        /// published/sent messages in the current transaction. It isn't truly transactional, but delays the messages until
-        /// the transaction being to commit. This has a very limited purpose and is not meant for general use.
+        /// Adds a singleton <see cref="IAmbientTransactionBus" /> for the default bus. Sends and publishes are dispatched immediately when no
+        /// ambient transaction exists and are deferred to the prepare phase while <see cref="System.Transactions.Transaction.Current" /> is active.
+        /// This capability is best-effort and is not a durable atomic outbox.
         /// </summary>
-        public static void AddTransactionalEnlistmentBus(this IBusRegistrationConfigurator busConfigurator)
+        public static void AddAmbientTransactionBus(this IBusRegistrationConfigurator busConfigurator)
         {
-            busConfigurator.TryAddSingleton<ITransactionalBus>(provider => new TransactionalEnlistmentBus(provider.GetService<IBus>()));
+            if (busConfigurator == null)
+                throw new ArgumentNullException(nameof(busConfigurator));
 
-            busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, TransactionalScopedBusContextProvider<IBus>>();
+            EnsureCompatible<IBus, IBufferedBus>(busConfigurator, nameof(AddAmbientTransactionBus));
+            EnsureScopedContextOwner<IBus, AmbientTransactionScopedBusContextProvider<IBus>>(
+                busConfigurator,
+                nameof(AddAmbientTransactionBus));
+
+            busConfigurator.TryAddSingleton<IAmbientTransactionBus>(provider =>
+                new AmbientTransactionBus(provider.GetRequiredService<IBus>()));
+            busConfigurator.TryAddSingleton(provider =>
+                Bind<IBus>.Create(provider.GetRequiredService<IAmbientTransactionBus>()));
+
+            busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, AmbientTransactionScopedBusContextProvider<IBus>>();
         }
 
         /// <summary>
-        /// Adds <see cref="ITransactionalBus" /> to the container with singleton lifetime, which can be used instead of <see cref="IBus" /> to enlist
-        /// published/sent messages in the current transaction. It isn't truly transactional, but delays the messages until
-        /// the transaction being to commit. This has a very limited purpose and is not meant for general use.
+        /// Adds a singleton ambient-transaction capability bound to the specified bus instance.
         /// </summary>
-        public static void AddTransactionalEnlistmentBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
+        public static void AddAmbientTransactionBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
             where TBus : class, IBus
         {
-            busConfigurator.TryAddSingleton<ITransactionalBus>(provider => new TransactionalEnlistmentBus(provider.GetRequiredService<TBus>()));
+            if (busConfigurator == null)
+                throw new ArgumentNullException(nameof(busConfigurator));
 
-            busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, TransactionalScopedBusContextProvider<TBus>>();
+            EnsureCompatible<TBus, IBufferedBus>(busConfigurator, nameof(AddAmbientTransactionBus));
+            EnsureScopedContextOwner<TBus, AmbientTransactionScopedBusContextProvider<TBus>>(
+                busConfigurator,
+                nameof(AddAmbientTransactionBus));
+
+            busConfigurator.TryAddSingleton(provider =>
+                Bind<TBus>.Create<IAmbientTransactionBus>(new AmbientTransactionBus(provider.GetRequiredService<TBus>())));
+
+            busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, AmbientTransactionScopedBusContextProvider<TBus>>();
         }
 
         /// <summary>
-        /// Adds <see cref="ITransactionalBus" /> to the container with scoped lifetime, which can be used to release the messages to the bus
-        /// immediately after a transaction commit. This has a very limited purpose and is not meant for general use.
-        /// It is recommended this is scoped within a unit of work (e.g. Http Request)
+        /// Adds a scoped <see cref="IBufferedBus" /> for the default bus. Each scope owns an in-memory FIFO buffer that is dispatched only by
+        /// <see cref="IBufferedBus.FlushAsync" />. This capability is not durable and is not an atomic outbox.
         /// </summary>
-        public static void AddTransactionalBus(this IBusRegistrationConfigurator busConfigurator)
+        public static void AddBufferedBus(this IBusRegistrationConfigurator busConfigurator)
         {
-            busConfigurator.TryAddScoped<ITransactionalBus>(provider => new TransactionalBus(provider.GetService<IBus>()));
+            if (busConfigurator == null)
+                throw new ArgumentNullException(nameof(busConfigurator));
 
-            busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, TransactionalScopedBusContextProvider<IBus>>();
+            EnsureCompatible<IBus, IAmbientTransactionBus>(busConfigurator, nameof(AddBufferedBus));
+            EnsureScopedContextOwner<IBus, BufferedBusScopedBusContextProvider<IBus>>(
+                busConfigurator,
+                nameof(AddBufferedBus));
+
+            busConfigurator.TryAddScoped<IBufferedBus>(provider => new BufferedBus(provider.GetRequiredService<IBus>()));
+            busConfigurator.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IBufferedBus>()));
+
+            busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, BufferedBusScopedBusContextProvider<IBus>>();
         }
 
         /// <summary>
-        /// Adds <see cref="ITransactionalBus" /> to the container with scoped lifetime, which can be used to release the messages to the bus
-        /// immediately after a transaction commit. This has a very limited purpose and is not meant for general use.
-        /// It is recommended this is scoped within a unit of work (e.g. Http Request)
+        /// Adds a scoped explicitly buffered capability bound to the specified bus instance.
         /// </summary>
-        public static void AddTransactionalBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
+        public static void AddBufferedBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
             where TBus : class, IBus
         {
-            busConfigurator.TryAddScoped<ITransactionalBus>(provider => new TransactionalBus(provider.GetRequiredService<TBus>()));
+            if (busConfigurator == null)
+                throw new ArgumentNullException(nameof(busConfigurator));
 
-            busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, TransactionalScopedBusContextProvider<TBus>>();
+            EnsureCompatible<TBus, IAmbientTransactionBus>(busConfigurator, nameof(AddBufferedBus));
+            EnsureScopedContextOwner<TBus, BufferedBusScopedBusContextProvider<TBus>>(
+                busConfigurator,
+                nameof(AddBufferedBus));
+
+            busConfigurator.TryAddScoped(provider =>
+                Bind<TBus>.Create<IBufferedBus>(new BufferedBus(provider.GetRequiredService<TBus>())));
+
+            busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, BufferedBusScopedBusContextProvider<TBus>>();
+        }
+
+        static void EnsureCompatible<TBus, TConflictingCapability>(IServiceCollection services, string registration)
+            where TBus : class, IBus
+            where TConflictingCapability : class, IBus
+        {
+            if (services.Any(descriptor => descriptor.ServiceType == typeof(Bind<TBus, TConflictingCapability>)))
+            {
+                throw new ConfigurationException(
+                    $"{registration} cannot be combined with {TypeCache<TConflictingCapability>.ShortName} for {TypeCache<TBus>.ShortName}.");
+            }
+        }
+
+        static void EnsureScopedContextOwner<TBus, TCapabilityProvider>(IServiceCollection services, string registration)
+            where TBus : class, IBus
+            where TCapabilityProvider : class, IScopedBusContextProvider<TBus>
+        {
+            Type serviceType = typeof(IScopedBusContextProvider<TBus>);
+            Type defaultProvider = typeof(ScopedBusContextProvider<TBus>);
+            Type capabilityProvider = typeof(TCapabilityProvider);
+
+            ServiceDescriptor conflicting = services.FirstOrDefault(descriptor =>
+                descriptor.ServiceType == serviceType
+                && descriptor.ImplementationType != defaultProvider
+                && descriptor.ImplementationType != capabilityProvider);
+            if (conflicting == null)
+                return;
+
+            string owner = conflicting.ImplementationType?.Name ?? conflicting.ServiceType.Name;
+            throw new ConfigurationException(
+                $"{registration} cannot replace the scoped bus context owner {owner} for {TypeCache<TBus>.ShortName}.");
         }
     }
 }

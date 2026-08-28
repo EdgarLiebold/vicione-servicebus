@@ -6,19 +6,19 @@ namespace ViciOne.ServiceBus.Transactions
     using Transports;
 
 
-    public abstract class BaseTransactionalBus :
+    internal abstract class DeferredBus :
         IBus
     {
         readonly IBus _bus;
         readonly IPublishEndpoint _publishEndpoint;
-        readonly TransactionalBusPublishEndpointProvider _publishEndpointProvider;
+        readonly DeferredBusPublishEndpointProvider _publishEndpointProvider;
 
-        protected BaseTransactionalBus(IBus bus)
+        protected DeferredBus(IBus bus)
         {
-            _bus = bus;
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
 
-            _publishEndpointProvider = new TransactionalBusPublishEndpointProvider(this, bus);
-            _publishEndpoint = new PublishEndpoint(_publishEndpointProvider);
+            _publishEndpointProvider = new DeferredBusPublishEndpointProvider(this, bus);
+            _publishEndpoint = new PublishEndpoint(bus);
         }
 
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
@@ -35,57 +35,57 @@ namespace ViciOne.ServiceBus.Transactions
         public Task Publish<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish(message, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, token), cancellationToken);
         }
 
         public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish(message, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
         }
 
         public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish(message, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
         }
 
         public Task Publish(object message, CancellationToken cancellationToken = default)
         {
-            return Add(() => _publishEndpoint.Publish(message, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, token), cancellationToken);
         }
 
         public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         {
-            return Add(() => _publishEndpoint.Publish(message, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
         }
 
         public Task Publish(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            return Add(() => _publishEndpoint.Publish(message, messageType, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, messageType, token), cancellationToken);
         }
 
         public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         {
-            return Add(() => _publishEndpoint.Publish(message, messageType, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(message, messageType, publishPipe, token), cancellationToken);
         }
 
         public Task Publish<T>(object values, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish<T>(values, cancellationToken));
+            return Add(token => _publishEndpoint.Publish<T>(values, token), cancellationToken);
         }
 
         public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish(values, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish(values, publishPipe, token), cancellationToken);
         }
 
         public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return Add(() => _publishEndpoint.Publish<T>(values, publishPipe, cancellationToken));
+            return Add(token => _publishEndpoint.Publish<T>(values, publishPipe, token), cancellationToken);
         }
 
         public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -95,7 +95,8 @@ namespace ViciOne.ServiceBus.Transactions
 
         public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
         {
-            return new TransactionalBusSendEndpoint(this, await _bus.GetSendEndpoint(address));
+            ISendEndpoint endpoint = await _bus.GetSendEndpoint(address).ConfigureAwait(false);
+            return new DeferredBusSendEndpoint(this, endpoint);
         }
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -161,6 +162,6 @@ namespace ViciOne.ServiceBus.Transactions
         public Uri Address => _bus.Address;
         public IBusTopology Topology => _bus.Topology;
 
-        public abstract Task Add(Func<Task> action);
+        internal abstract Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken);
     }
 }

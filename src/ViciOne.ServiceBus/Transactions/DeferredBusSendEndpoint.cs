@@ -6,15 +6,15 @@ namespace ViciOne.ServiceBus.Transactions
     using Transports;
 
 
-    public class TransactionalBusSendEndpoint :
+    internal sealed class DeferredBusSendEndpoint :
         ITransportSendEndpoint
     {
+        readonly DeferredBus _deferredBus;
         readonly ITransportSendEndpoint _endpoint;
-        readonly BaseTransactionalBus _outboxBus;
 
-        public TransactionalBusSendEndpoint(BaseTransactionalBus outboxBus, ISendEndpoint endpoint)
+        public DeferredBusSendEndpoint(DeferredBus deferredBus, ISendEndpoint endpoint)
         {
-            _outboxBus = outboxBus;
+            _deferredBus = deferredBus ?? throw new ArgumentNullException(nameof(deferredBus));
             _endpoint = endpoint as ITransportSendEndpoint ?? throw new ArgumentException("Must be a transport endpoint", nameof(endpoint));
         }
 
@@ -32,57 +32,57 @@ namespace ViciOne.ServiceBus.Transactions
         public Task Send<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, token), cancellationToken);
         }
 
         public Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
         }
 
         public Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
         }
 
         public Task Send(object message, CancellationToken cancellationToken = default)
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, token), cancellationToken);
         }
 
         public Task Send(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, messageType, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, messageType, token), cancellationToken);
         }
 
         public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
         }
 
         public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         {
-            return _outboxBus.Add(() => _endpoint.Send(message, messageType, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(message, messageType, pipe, token), cancellationToken);
         }
 
         public Task Send<T>(object values, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send<T>(values, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send<T>(values, token), cancellationToken);
         }
 
         public Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send(values, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send(values, pipe, token), cancellationToken);
         }
 
         public Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            return _outboxBus.Add(() => _endpoint.Send<T>(values, pipe, cancellationToken));
+            return _deferredBus.Add(token => _endpoint.Send<T>(values, pipe, token), cancellationToken);
         }
     }
 }

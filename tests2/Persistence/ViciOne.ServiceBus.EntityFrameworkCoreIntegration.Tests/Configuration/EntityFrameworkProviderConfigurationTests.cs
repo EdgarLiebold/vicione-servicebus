@@ -10,6 +10,7 @@ using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transactions;
 using Xunit;
 
 public sealed class EntityFrameworkProviderConfigurationTests
@@ -188,6 +189,54 @@ public sealed class EntityFrameworkProviderConfigurationTests
 
         Assert.Contains("provider", exception.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("explicitly", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "lightweight-bus-capabilities-are-mutually-exclusive")]
+    public void BusOutboxAndLightweightBusCapabilities_RejectMixedScopedOwnership(
+        bool ambientCapability,
+        bool busOutboxFirst)
+    {
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+            {
+                if (busOutboxFirst)
+                    AddBusOutbox(configuration);
+
+                if (ambientCapability)
+                    configuration.AddAmbientTransactionBus();
+                else
+                    configuration.AddBufferedBus();
+
+                if (!busOutboxFirst)
+                    AddBusOutbox(configuration);
+            }));
+
+        Assert.Contains("cannot", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(busOutboxFirst ? "EntityFramework" : "Entity Framework", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(
+            busOutboxFirst
+                ? ambientCapability
+                    ? nameof(DependencyInjectionTransactionExtensions.AddAmbientTransactionBus)
+                    : nameof(DependencyInjectionTransactionExtensions.AddBufferedBus)
+                : ambientCapability
+                    ? nameof(IAmbientTransactionBus)
+                    : nameof(IBufferedBus),
+            exception.Message,
+            StringComparison.Ordinal);
+
+        static void AddBusOutbox(IBusRegistrationConfigurator configuration)
+        {
+            configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>(outbox =>
+            {
+                outbox.UseSqlite();
+                outbox.UseBusOutbox(busOutbox => busOutbox.DisableDeliveryService());
+            });
+        }
     }
 
     [Fact]

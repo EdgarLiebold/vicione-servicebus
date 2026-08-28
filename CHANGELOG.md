@@ -25,6 +25,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- The ambiguous inherited `ITransactionalBus` surface is replaced by two explicit Greenfield
+  capabilities. `IAmbientTransactionBus` follows `Transaction.Current` and has no manual flush,
+  while `IBufferedBus` exposes an explicit FIFO `FlushAsync` boundary. Both implementations are
+  internal, retain every publish/send overload, preserve exact cancellation and failure identity,
+  and reject composition with the durable Entity Framework bus outbox because all three own the
+  same scoped publish/send boundary. The former transactional-bus API has no compatibility shim.
 - Quartz scheduled-message execution now propagates a causally requested job cancellation instead
   of converting it into up to five immediate refires. A dependency-thrown cancellation remains a
   retryable job failure when the Quartz execution token was not requested.

@@ -2,11 +2,13 @@
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
+    using System.Linq;
     using DependencyInjection;
     using EntityFrameworkCoreIntegration;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Middleware.Outbox;
+    using Transactions;
 
 
     public class EntityFrameworkBusOutboxConfigurator<TDbContext> :
@@ -54,6 +56,17 @@ namespace ViciOne.ServiceBus.Configuration
             TimeSpan queryTimeout = _outboxConfigurator.QueryTimeout;
             int messageDeliveryLimit = MessageDeliveryLimit;
             TimeSpan messageDeliveryTimeout = MessageDeliveryTimeout;
+
+            Type? conflictingCapability = _configurator
+                .Where(descriptor => descriptor.ServiceType == typeof(Bind<IBus, IAmbientTransactionBus>)
+                    || descriptor.ServiceType == typeof(Bind<IBus, IBufferedBus>))
+                .Select(descriptor => descriptor.ServiceType.GenericTypeArguments[1])
+                .FirstOrDefault();
+            if (conflictingCapability != null)
+            {
+                throw new ConfigurationException(
+                    $"The Entity Framework bus outbox cannot be combined with {TypeCache.GetShortName(conflictingCapability)} for IBus.");
+            }
 
             _configurator.ReplaceScoped<IScopedBusContextProvider<IBus>, EntityFrameworkScopedBusContextProvider<IBus, TDbContext>>();
             _configurator.AddSingleton<IBusOutboxNotification, BusOutboxNotification>();

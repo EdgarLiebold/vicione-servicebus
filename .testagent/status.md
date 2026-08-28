@@ -1439,3 +1439,45 @@ future cohorts as complete.
   historical execution identities with 40 UnitArchitecture and 73 LocalIntegration owners, all
   `REPLACED_EXECUTING`. This is a final local evidence candidate, not self-acceptance; two independent
   read-only reviews of the exact technical/evidence freeze remain mandatory before remote push.
+
+## Transactional bus capability split — technical candidate
+
+- The inherited `ITransactionalBus` shape is replaced by the truthful public capabilities
+  `IAmbientTransactionBus` and `IBufferedBus`. The ambient bus follows `Transaction.Current` and
+  owns no manual flush member; the buffered bus exposes explicit FIFO `FlushAsync`. All concrete
+  adapters are internal, and the retired public interface, concrete names, registration methods and
+  intentionally throwing ambient release surface are absent without a compatibility shim.
+- Explicit buffering preserves every publish/send overload behind one serialized snapshot drain.
+  It proves FIFO, empty/repeated flush, concurrent flush, work added during a drain, exact failure
+  and cancellation identity, no replay of an attempted action and retention of only an unattempted
+  tail. Ambient dispatch proves immediate no-transaction behavior, transaction-owned lifetime after
+  enlistment, exact commit/rollback/in-doubt cleanup, isolated concurrent transactions and original
+  transport failure causality. The volatile prepare bridge is documented as best-effort, never as a
+  durable or crash-atomic outbox.
+- Core scoped consumers retain both publish and send boundaries for default and generic multi-bus
+  registrations, including a secondary buffered bus resolved inside a default-bus consumer scope.
+  The durable Entity Framework bus outbox and both lightweight capabilities fail fast in either
+  registration order because each owns the same scoped publish/send provider. Idempotent same-owner
+  registration and independent multi-bus owners remain valid.
+- The eleven inherited R0 obligations `OBL-R0-CORE-C-0430` through `0440` are uniquely mapped to
+  stronger native carriers and the three inherited NUnit files are removed. The source-owned native
+  cohort contains 35 Transaction facts; three additional PostgreSQL-backed EF facts cover rollback,
+  commit and explicit flush, and one four-case EF Theory covers both conflicting capability pairs in
+  both registration orders. The Unit floor is therefore exactly 2267; LocalIntegration remains 244.
+- Final local execution on the technical candidate: UnitArchitecture 2267/2267 and LocalIntegration
+  244/244, both with zero failure and zero skip. The latter used fresh run-scoped PostgreSQL,
+  Azurite, LocalStack, ActiveMQ Classic and Artemis resources under `vicione-53b27152e147`.
+  LocalIntegration and complete Engineering Release builds both finish with zero warnings and zero
+  errors; the Engineering restore succeeds in locked mode.
+- Compilation diagnosis is reproducible and belongs to the execution environment, not the source:
+  inside the managed sandbox the same Release builds stall silently, while three identical focused
+  builds outside it complete in roughly 24 seconds and the final complete builds succeed. The
+  sandbox also rejects the .NET 10 MTP solution orchestrator's local named-pipe bind with
+  `SocketException (13): Permission denied` before discovery. The exact same `dotnet test` argv
+  outside the sandbox passes 2267/2267. The stable recipe is the isolated CLI environment rooted at
+  `/private/tmp/vicione-dotnet-transactional`, build/test server reuse disabled, compilation and MTP
+  orchestration outside the sandbox, and no change to tests, floors or product behavior.
+- The completed transactional-bus debt is removed from `TODO.md` and the breaking Greenfield API is
+  recorded in `CHANGELOG.md`. GitHub workflows remain manually disabled as authorized. Byte-exact
+  one-cause mutations, technical/evidence freezes, independent read-only reviews, final architecture
+  binding and remote fast-forward remain open; this section is not self-acceptance.

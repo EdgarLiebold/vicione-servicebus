@@ -6,16 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 using ViciOne.ServiceBus.Transactions;
 using Xunit;
 
-public sealed class EntityFrameworkTransactionalBusIntegrationTests
+public sealed class EntityFrameworkDeferredBusIntegrationTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-BUS", "ambient-rollback-discards-database-and-publish")]
+    [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "ambient-rollback-discards-database-and-publish")]
     public async Task AmbientRollback_DiscardsTheDatabaseWriteAndBufferedPublish()
     {
-        await using TransactionalBusFixture fixture = await TransactionalBusFixture.StartAsync("transactional-bus-rollback");
+        await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-rollback");
         var message = new TransactionalMessage(NewId.NextGuid(), "rollback");
 
         using (fixture.CreateTransactionScope())
@@ -33,10 +34,10 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-BUS", "ambient-commit-persists-before-publish-completes")]
+    [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "ambient-commit-persists-and-publishes-exactly-once")]
     public async Task AmbientCommit_PersistsTheDatabaseWriteAndPublishesExactlyOnce()
     {
-        await using TransactionalBusFixture fixture = await TransactionalBusFixture.StartAsync("transactional-bus-commit");
+        await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-commit");
         var message = new TransactionalMessage(NewId.NextGuid(), "commit");
 
         using (TransactionScope transaction = fixture.CreateTransactionScope())
@@ -60,12 +61,12 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-BUS", "explicit-release-publishes-buffer-once")]
-    public async Task ExplicitRelease_PublishesTheBufferedMessageExactlyOnce()
+    [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "explicit-flush-publishes-buffer-once")]
+    public async Task ExplicitFlush_PublishesTheBufferedMessageExactlyOnce()
     {
-        await using TransactionalBusFixture fixture = await TransactionalBusFixture.StartAsync("transactional-bus-release");
+        await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-flush");
         var message = new TransactionalMessage(NewId.NextGuid(), "release");
-        var bufferedBus = new TransactionalBus(fixture.Harness.Bus);
+        IBufferedBus bufferedBus = new BufferedBusTestDriver(fixture.Harness.Bus).Bus;
 
         await fixture.Insert(message, TestContext.Current.CancellationToken);
         await bufferedBus.Publish(message, TestContext.Current.CancellationToken);
@@ -73,11 +74,13 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
         Assert.Empty(fixture.PublishObserver.Events);
         Assert.False(fixture.Received.IsCompleted);
 
-        await bufferedBus.Release().WaitAsync(fixture.OperationTimeout, TestContext.Current.CancellationToken);
+        await bufferedBus.FlushAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(fixture.OperationTimeout, TestContext.Current.CancellationToken);
         TransactionalMessage received = await fixture.Received.WaitAsync(
             fixture.OperationTimeout,
             TestContext.Current.CancellationToken);
-        await bufferedBus.Release().WaitAsync(fixture.OperationTimeout, TestContext.Current.CancellationToken);
+        await bufferedBus.FlushAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(fixture.OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(message, received);
         Assert.Equal(["Pre", "Post"], fixture.PublishObserver.Events.Select(item => item.Stage));
@@ -108,14 +111,14 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
         }
     }
 
-    private sealed class TransactionalBusFixture : IAsyncDisposable
+    private sealed class DeferredBusFixture : IAsyncDisposable
     {
         private readonly PostgreSqlTestDatabase _database;
         private readonly DbContextOptions<TransactionalDbContext> _dbContextOptions;
         private readonly TaskCompletionSource<TransactionalMessage> _received;
         private readonly ConnectHandle _publishObserverHandle;
 
-        private TransactionalBusFixture(
+        private DeferredBusFixture(
             PostgreSqlTestDatabase database,
             DbContextOptions<TransactionalDbContext> dbContextOptions,
             InMemoryTestHarness harness,
@@ -129,16 +132,16 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
             PublishObserver = publishObserver;
             _publishObserverHandle = publishObserverHandle;
             _received = received;
-            EnlistedBus = new TransactionalEnlistmentBus(harness.Bus);
+            EnlistedBus = new AmbientTransactionBusTestDriver(harness.Bus).Bus;
         }
 
-        public TransactionalEnlistmentBus EnlistedBus { get; }
+        public IAmbientTransactionBus EnlistedBus { get; }
         public InMemoryTestHarness Harness { get; }
         public TimeSpan OperationTimeout => _database.OperationTimeout;
         public RecordingPublishObserver PublishObserver { get; }
         public Task<TransactionalMessage> Received => _received.Task;
 
-        public static async Task<TransactionalBusFixture> StartAsync(string purpose)
+        public static async Task<DeferredBusFixture> StartAsync(string purpose)
         {
             CancellationToken cancellationToken = TestContext.Current.CancellationToken;
             PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(purpose, cancellationToken);
@@ -165,7 +168,7 @@ public sealed class EntityFrameworkTransactionalBusIntegrationTests
                 await harness.Start(cancellationToken);
                 var observer = new RecordingPublishObserver();
                 ConnectHandle handle = harness.Bus.ConnectPublishObserver(observer);
-                return new TransactionalBusFixture(database, options, harness, observer, handle, received);
+                return new DeferredBusFixture(database, options, harness, observer, handle, received);
             }
             catch
             {

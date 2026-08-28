@@ -55,7 +55,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2228 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2267 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -136,8 +136,8 @@ one unambiguous current-host capture path and all eight host fields after real e
 The LocalIntegration floor is independent and includes only host-resource tests in that profile.
 Its 244 cases cover run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic and Artemis
 resources, including
-`MessageJournal`, EF Core saga/outbox/job/future persistence, TransactionalBus commit/rollback/
-explicit-release behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3
+`MessageJournal`, EF Core saga/outbox/job/future persistence, ambient-transaction and explicit-buffer
+commit/rollback/flush behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3
 message-data/lifecycle-policy composition. ActiveMQ recovery cases use the runner-owned outage
 control channel, so the broker can restart without changing the projected loopback endpoints. Store
 retention is applied transactionally on every

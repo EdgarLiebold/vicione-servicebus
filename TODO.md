@@ -239,24 +239,6 @@ without overflow. Acceptance requires exact lower/upper/out-of-range parsing tes
 explicit-year performance checks, next-fire behavior at both bounds, public API documentation and
 one-cause boundary mutations.
 
-## Separate ambient and explicitly buffered transactional bus contracts
-
-`src/ViciOne.ServiceBus/Transactions/TransactionalEnlistmentBus.cs` and
-`src/ViciOne.ServiceBus/Transactions/TransactionalBus.cs` currently implement the same
-`ITransactionalBus` contract even though only the explicit buffer has a meaningful `Release`
-operation. The ambient enlistment implementation therefore exposes a member that intentionally
-throws. This is a public-API design debt, not an Entity Framework persistence defect, and must not
-be hidden in a test adapter or compatibility shim.
-
-Read the complete send/publish forwarding, ambient enlistment, commit, rollback and buffer-release
-paths and replace the shared shape with capability-specific Greenfield contracts: an ambient bus
-whose messages follow the active transaction and an explicit buffered bus whose asynchronous
-release operation is part of its own contract. API compatibility is not required, but every useful
-delivery feature must remain available and no public member may exist only to throw. Acceptance
-requires exact no-transaction, commit, rollback, duplicate-release, empty-release, cancellation and
-failure tests; public API and package comparisons; one-cause mutations for every lifecycle edge;
-and all affected unfiltered native profiles.
-
 ## Complete MessageJournal external provider validation
 
 The current provider contract is covered hermetically and against ephemeral PostgreSQL and Azurite
