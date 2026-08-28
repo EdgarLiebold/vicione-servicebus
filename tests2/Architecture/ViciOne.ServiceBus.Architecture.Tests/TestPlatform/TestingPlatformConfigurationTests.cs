@@ -181,6 +181,7 @@ public sealed class TestingPlatformConfigurationTests
                 parseOptions,
                 path))
             .ToArray();
+        Assert.NotEmpty(projectSyntaxTrees);
         SyntaxTree[] syntaxTrees =
         [
             ActiveMqImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
