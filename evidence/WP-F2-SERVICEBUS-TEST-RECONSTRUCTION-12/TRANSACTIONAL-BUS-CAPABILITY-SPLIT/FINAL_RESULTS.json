@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "kind": "TRANSACTIONAL_BUS_CAPABILITY_SPLIT_FINAL_RESULTS",
+  "technical": {
+    "commit": "1e8d0b4c6ad2e4b10cf90f8cfef9c3d16fc70407",
+    "tree": "66344039fd960905a1e1e69f7cd7dd883c503289",
+    "parent": "afb8edd119e83834c6838ed151eec3a345ef7d74"
+  },
+  "positive": {
+    "engineeringRestore": {
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode --disable-parallel --disable-build-servers /bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-restore.binlog /flp:LogFile=evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-restore.log;Verbosity=normal",
+      "exitCode": 0,
+      "binlog": "positive/engineering-restore.binlog",
+      "log": "positive/engineering-restore.log.gz"
+    },
+    "engineeringBuild": {
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet build ViciOne.ServiceBus.Engineering.slnx --configuration Release --no-restore --disable-build-servers --no-incremental --maxcpucount:1 -p:BuildInParallel=false -p:UseSharedCompilation=false /bl:evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-build.binlog /flp:LogFile=evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-build.log;Verbosity=normal",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "binlog": "positive/engineering-build.binlog",
+      "log": "positive/engineering-build.log.gz"
+    },
+    "unitArchitecture": {
+      "command": "env DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results --minimum-expected-tests 2267 --max-parallel-test-modules 1 --report-xunit-ctrf --parallel none --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "assemblies": 19,
+      "total": 2267,
+      "passed": 2267,
+      "failed": 0,
+      "skipped": 0,
+      "wrapperLog": "positive/unit-wrapper.log.gz",
+      "resultsDirectory": "positive/unit-results"
+    },
+    "transactionalFocused": {
+      "command": "env VICIONE_TESTS__Profile=UnitArchitecture artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-namespace ViciOne.ServiceBus.Tests.Transactions --minimum-expected-tests 35 --parallel none --report-xunit-ctrf --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/transaction-results --report-xunit-ctrf-filename transactional.json --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "total": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "wrapperLog": "positive/transaction-wrapper.log.gz",
+      "result": "positive/transaction-results/transactional.json"
+    },
+    "entityFrameworkOwnershipFocused": {
+      "command": "env VICIONE_TESTS__Profile=UnitArchitecture artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests --filter-method ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Configuration.EntityFrameworkProviderConfigurationTests.BusOutboxAndLightweightBusCapabilities_RejectMixedScopedOwnership --minimum-expected-tests 4 --parallel none --report-xunit-ctrf --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/ef-conflict-results --report-xunit-ctrf-filename ef-conflict.json --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "wrapperLog": "positive/ef-conflict-wrapper.log.gz",
+      "result": "positive/ef-conflict-results/ef-conflict.json"
+    },
+    "localIntegration": {
+      "command": "env VICIONE_TESTS__Profile=LocalIntegration DOTNET_CLI_HOME=/private/tmp/vicione-dotnet-transactional DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 MSBUILDDISABLENODEREUSE=1 python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --broker localstack --broker activemq --broker artemis --allow-broker-outage activemq --evidence-dir evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture --command -- /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx --configuration Release --no-build --no-restore --results-directory evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results --minimum-expected-tests 244 --max-parallel-test-modules 1 --report-xunit-ctrf --parallel none --progress off --no-ansi --output Normal",
+      "exitCode": 0,
+      "runIdentity": "vicione-68ff634d8cda",
+      "assemblies": 7,
+      "total": 244,
+      "passed": 244,
+      "failed": 0,
+      "skipped": 0,
+      "brokers": ["postgres", "azurite", "localstack", "activemq", "artemis"],
+      "fixtureFindings": 0,
+      "wrapperLog": "positive/local-wrapper.log.gz",
+      "resultsDirectory": "positive/local-results",
+      "fixtureDirectory": "positive/local-fixture"
+    }
+  },
+  "requirements": {
+    "r0ObligationMap": {
+      "path": ".testagent/transactional-bus-obligation-map.tsv",
+      "sha256": "16fe61b8ed0c01b959b2342d5a37e70007a85d356cfab18208a83a0abc0f0e3f",
+      "obligations": 11,
+      "disposition": "REPLACED_EXECUTING"
+    },
+    "coreRequirementProjection": {
+      "path": "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "73698fb1b6fe4199683b55af8f3bc5f5af783b4f54dc9759853cfccf7115b272",
+      "transactionVariants": 35
+    },
+    "entityFrameworkUnitRequirementProjection": {
+      "path": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkRequirements.json",
+      "sha256": "3d305243154611622b3bc6a339aa800b732baadc546a583075cb267d6a6a42fc",
+      "mixedOwnershipCases": 4
+    },
+    "entityFrameworkLocalRequirementProjection": {
+      "path": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json",
+      "sha256": "0479ea028d8749eee8a71c811e036c31c6fac55b67448bd6ef5eab703478bdd1",
+      "deferredBusVariants": 3
+    }
+  },
+  "mutations": {
+    "count": 17,
+    "buildsPassed": 17,
+    "testsKilled": 17,
+    "skipped": 0,
+    "manifest": "MUTATION_MANIFEST.json",
+    "executionTable": "MUTATION_EXECUTION.tsv"
+  },
+  "sandboxDiagnosis": {
+    "symptom": "The MTP solution orchestration failed inside the filesystem sandbox before discovery with SocketException (13) Permission denied while creating its named pipe.",
+    "control": "The byte-identical argv completed outside the sandbox with the isolated CLI environment.",
+    "productOrTestAdaptation": false,
+    "stableRecipe": "Run solution-level build and MTP orchestration outside the filesystem sandbox with isolated DOTNET_CLI_HOME and disabled MSBuild node reuse."
+  }
+}

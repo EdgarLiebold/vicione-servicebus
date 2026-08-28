@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3256 |
-| Modified | 4212 |
-| Deleted | 1436 |
+| Added | 3380 |
+| Modified | 4201 |
+| Deleted | 1447 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
 | `.testagent/status.md` | Added |  |
+| `.testagent/transactional-bus-obligation-map.tsv` | Added |  |
 | `AGENTS.md` | Modified | `AGENTS.md` |
 | `CHANGELIST.md` | Added |  |
 | `CHANGELOG.md` | Added |  |
@@ -2144,6 +2145,115 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M18-topology-formatted-name-injection.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M19-topology-message-lifetime.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/MUTATION_EXECUTION.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/TECHNICAL_DIFF.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M01-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M01-results/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M02-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M02-results/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M03-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M03-results/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M04-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M04-results/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M05-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M05-results/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M06-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M06-results/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M07-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M07-results/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M08-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M08-results/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M09-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M09-results/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M10-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M10-results/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M11-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M11-results/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M12-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M12-results/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M13-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M13-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M13-results/M13.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M14-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M14-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M14-results/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M15-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M15-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M15-results/M15.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M16-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M16-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M16-results/M16.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M17-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M17-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/mutations/M17-results/M17.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/ef-conflict-results/ef-conflict.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/ef-conflict-wrapper.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/engineering-restore.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/activemq-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/artemis-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/azurite-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/interrupt-32b6454466614a288abcc527ab15baf7.request` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/interrupt-32b6454466614a288abcc527ab15baf7.result` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/interrupt-b099670738ab4e6c83ddff95a65f28fa.request` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/interrupt-b099670738ab4e6c83ddff95a65f28fa.result` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/restore-1ef18687dc344b54ae498e0e5bb022a7.request` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/restore-1ef18687dc344b54ae498e0e5bb022a7.result` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/restore-3566c9e5128448af943499ed8d02be22.request` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-control/restore-3566c9e5128448af943499ed8d02be22.result` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/localstack-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-fixture/postgres-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_04_21.785980.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_04_57.741251.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_07_24.557881.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_07_30.827143.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_07_38.751300.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_07_40.827561.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_07_42.296507.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/local-wrapper.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/transaction-results/transactional.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/transaction-wrapper.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_01.684983.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_05.353097.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_07.402388.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_13.460522.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_15.057350.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_16.558091.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_18.100358.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_31.771682.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_20_59_52.338452.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_32.745298.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_39.295141.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_40.887060.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_42.627697.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_45.330468.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_48.433602.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_01_51.899930.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_02_05.401800.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_02_07.568906.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-28_21_02_34.804808.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/positive/unit-wrapper.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/verify_evidence.py` | Added |  |
 | `evidence/native-tests/abstractions/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/native-tests/abstractions/MUTATION_VALIDATION.md` | Added |  |
 | `evidence/native-tests/agent-lifecycle-and-context-cache/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
@@ -2421,6 +2531,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistration.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/ExecuteActivityRegistrationConfigurator.cs` |
 | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/Registration/Activites/JobServiceRegistration.cs` |
+| `src/MassTransit/DependencyInjection/DependencyInjection/TransactionalScopedBusContextProvider.cs` | Deleted | `src/MassTransit/DependencyInjection/DependencyInjection/TransactionalScopedBusContextProvider.cs` |
 | `src/MassTransit/Exceptions/InvalidLicenseException.cs` | Deleted | `src/MassTransit/Exceptions/InvalidLicenseException.cs` |
 | `src/MassTransit/Exceptions/InvalidLicenseFormatException.cs` | Deleted | `src/MassTransit/Exceptions/InvalidLicenseFormatException.cs` |
 | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` | Deleted | `src/MassTransit/Internals/Extensions/AsyncEnumerableExtensions.cs` |
@@ -2474,6 +2585,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` | Deleted | `src/MassTransit/Testing/ExtensionMethodsForBuses.cs` |
 | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/BusActivityMonitor.cs` |
 | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` | Deleted | `src/MassTransit/Testing/Implementations/IBusActivityMonitor.cs` |
+| `src/MassTransit/Transactions/BaseTransactionalBus.cs` | Deleted | `src/MassTransit/Transactions/BaseTransactionalBus.cs` |
+| `src/MassTransit/Transactions/ITransactionalBus.cs` | Deleted | `src/MassTransit/Transactions/ITransactionalBus.cs` |
+| `src/MassTransit/Transactions/TransactionalBus.cs` | Deleted | `src/MassTransit/Transactions/TransactionalBus.cs` |
+| `src/MassTransit/Transactions/TransactionalBusPublishEndpointProvider.cs` | Deleted | `src/MassTransit/Transactions/TransactionalBusPublishEndpointProvider.cs` |
+| `src/MassTransit/Transactions/TransactionalBusSendEndpoint.cs` | Deleted | `src/MassTransit/Transactions/TransactionalBusSendEndpoint.cs` |
+| `src/MassTransit/Transactions/TransactionalEnlistmentBus.cs` | Deleted | `src/MassTransit/Transactions/TransactionalEnlistmentBus.cs` |
+| `src/MassTransit/Transactions/TransactionalEnlistmentNotification.cs` | Deleted | `src/MassTransit/Transactions/TransactionalEnlistmentNotification.cs` |
 | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitch.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitch.cs` |
 | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitchState.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/IKillSwitchState.cs` |
 | `src/MassTransit/Transports/Components/KillSwitch/KillSwitchOptions.cs` | Deleted | `src/MassTransit/Transports/Components/KillSwitch/KillSwitchOptions.cs` |
@@ -5467,6 +5585,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedConsumerConsumeScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteActivityScopeContext.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/CreatedExecuteScopeContext.cs` |
+| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DeferredBusScopedContextProviders.cs` | Added |  |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionLoadSagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionQuerySagaRepository.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/DependencyInjectionSagaRepository.cs` |
@@ -5553,7 +5672,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Testing/ContainerTestHarnessBusObserver.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Testing/ContainerTestHarnessBusObserver.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Testing/SagaContainerTestHarnessRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Testing/SagaContainerTestHarnessRegistration.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/Testing/SagaTestHarnessRegistration.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/Testing/SagaTestHarnessRegistration.cs` |
-| `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/TransactionalScopedBusContextProvider.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/TransactionalScopedBusContextProvider.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/TypedScopedConsumeContextProvider.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/TypedScopedConsumeContextProvider.cs` |
 | `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs` | Modified | `src/MassTransit/DependencyInjection/DependencyInjection/ValidateMassTransitHostOptions.cs` |
 | `src/ViciOne.ServiceBus/EndpointAddressProvider.cs` | Modified | `src/MassTransit/EndpointAddressProvider.cs` |
@@ -6731,13 +6849,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Topology/Topology/SetCorrelationIdMessageSendTopology.cs` | Modified | `src/MassTransit/Topology/Topology/SetCorrelationIdMessageSendTopology.cs` |
 | `src/ViciOne.ServiceBus/Topology/Topology/SetSerializerMessageSendTopology.cs` | Modified | `src/MassTransit/Topology/Topology/SetSerializerMessageSendTopology.cs` |
 | `src/ViciOne.ServiceBus/TransactionContextExtensions.cs` | Modified | `src/MassTransit/TransactionContextExtensions.cs` |
-| `src/ViciOne.ServiceBus/Transactions/BaseTransactionalBus.cs` | Modified | `src/MassTransit/Transactions/BaseTransactionalBus.cs` |
-| `src/ViciOne.ServiceBus/Transactions/ITransactionalBus.cs` | Modified | `src/MassTransit/Transactions/ITransactionalBus.cs` |
-| `src/ViciOne.ServiceBus/Transactions/TransactionalBus.cs` | Modified | `src/MassTransit/Transactions/TransactionalBus.cs` |
-| `src/ViciOne.ServiceBus/Transactions/TransactionalBusPublishEndpointProvider.cs` | Modified | `src/MassTransit/Transactions/TransactionalBusPublishEndpointProvider.cs` |
-| `src/ViciOne.ServiceBus/Transactions/TransactionalBusSendEndpoint.cs` | Modified | `src/MassTransit/Transactions/TransactionalBusSendEndpoint.cs` |
-| `src/ViciOne.ServiceBus/Transactions/TransactionalEnlistmentBus.cs` | Modified | `src/MassTransit/Transactions/TransactionalEnlistmentBus.cs` |
-| `src/ViciOne.ServiceBus/Transactions/TransactionalEnlistmentNotification.cs` | Modified | `src/MassTransit/Transactions/TransactionalEnlistmentNotification.cs` |
+| `src/ViciOne.ServiceBus/Transactions/AmbientTransactionBus.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/AmbientTransactionNotification.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/BufferedBus.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/DeferredBus.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/DeferredBusPublishEndpointProvider.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/DeferredBusSendEndpoint.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/IAmbientTransactionBus.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Transactions/IBufferedBus.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Transformation/ConsumeTransformContext.cs` | Modified | `src/MassTransit/Transformation/ConsumeTransformContext.cs` |
 | `src/ViciOne.ServiceBus/Transformation/DelegatePropertyProvider.cs` | Modified | `src/MassTransit/Transformation/DelegatePropertyProvider.cs` |
 | `src/ViciOne.ServiceBus/Transformation/MessageTransformConvention.cs` | Modified | `src/MassTransit/Transformation/MessageTransformConvention.cs` |
@@ -7718,6 +7837,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` |
 | `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
 | `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
+| `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` |
+| `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` |
+| `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
 | `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
@@ -8258,9 +8380,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/CreateTopology_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Topology/MessageSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/MessageSerializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Transactions/TransactionalBus_Specs.cs` | Modified | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` | Modified | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transforms/SendTransform_Specs.cs` | Modified | `tests/MassTransit.Tests/Transforms/SendTransform_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transforms/SetProperty_Specs.cs` | Modified | `tests/MassTransit.Tests/Transforms/SetProperty_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Transforms/TransformClass_Specs.cs` | Modified | `tests/MassTransit.Tests/Transforms/TransformClass_Specs.cs` |
@@ -8340,11 +8459,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/BusOutboxDeliveryServiceTests.cs` | Added |  |
+| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkDeferredBusIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkTransactionalBusIntegrationTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs` | Added |  |
 | `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs` | Added |  |
@@ -8458,6 +8577,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs` | Added |  |
+| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/DeferredBusTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
@@ -8482,6 +8602,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTelemetryTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTemporaryReplyTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/DeployTopologyContracts/ActiveMqDeployTopologyContracts.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ActiveMqBroker.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ReceiveCompletionObserver.cs` | Added |  |
@@ -8855,6 +8976,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs` | Added |  |

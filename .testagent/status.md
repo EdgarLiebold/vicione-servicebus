@@ -1481,3 +1481,37 @@ future cohorts as complete.
   recorded in `CHANGELOG.md`. GitHub workflows remain manually disabled as authorized. Byte-exact
   one-cause mutations, technical/evidence freezes, independent read-only reviews, final architecture
   binding and remote fast-forward remain open; this section is not self-acceptance.
+
+## Transactional bus capability split — frozen technical and evidence candidate
+
+- The technical subject is frozen at commit `1e8d0b4c6ad2e4b10cf90f8cfef9c3d16fc70407`, tree
+  `66344039fd960905a1e1e69f7cd7dd883c503289`, parent
+  `afb8edd119e83834c6838ed151eec3a345ef7d74`. Its complete parent delta contains 38 paths and is
+  bound as `TRANSACTIONAL-BUS-CAPABILITY-SPLIT/TECHNICAL_DIFF.patch.gz`.
+- Positive execution was repeated at those exact bytes and is now raw/hash-bindable: locked
+  Engineering restore Exit 0; Engineering Release build Exit 0 with 0 warnings and 0 errors;
+  UnitArchitecture 2267/2267 across 19 CTRFs; the source-owned transaction namespace 35/35; the
+  four EF ownership-order cases 4/4; and LocalIntegration 244/244 across seven CTRFs. Every test
+  profile reports zero failure and zero skip.
+- The LocalIntegration proof uses fresh run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic
+  and Artemis resources under `vicione-68ff634d8cda`. Endpoint projection, five broker logs, two
+  ActiveMQ outage/restore cycles and an empty fixture-findings receipt are copied into the evidence
+  package; the run-root ownership token and all generated credentials are deliberately excluded.
+- Seventeen buildable one-cause mutations M01-M17 cover public API separation, truthful DI lifetime,
+  consume-scope routing, publish double-buffering, publish/send overload parity, FIFO, pre-flush
+  isolation, exact failure identity, tail retention, cancellation ownership, rollback disposal,
+  transaction-state cleanup, EF outbox ownership, null guards and exact-once dispatch. All 17 Release
+  builds pass, every focused MTP owner exits red with zero skips, and every target restores to its
+  exact technical SHA-256. M15 intentionally leaves two independent outbox-first controls green while
+  killing the two capability-first cases whose guard was removed.
+- `MUTATION_MANIFEST.json` contains byte-exact old/new recipes, occurrence counts and indices,
+  baseline/mutant/restore hashes, project/owner/command construction and raw result paths. The
+  package's `verify_evidence.py` independently rebuilds every mutant from `git show`, verifies all
+  positive/negative CTRFs, broker-log digests and the exact checksum inventory.
+- The earlier sandbox diagnosis is confirmed rather than worked around: MTP solution orchestration
+  fails before discovery when the sandbox denies its named-pipe bind, while byte-identical commands
+  in the isolated CLI environment pass. No product path, assertion or floor was changed for the
+  execution environment.
+- This is the immutable local evidence candidate. Its evidence commit, generated CHANGELIST, final
+  architecture binding, remote fast-forward and two separate read-only acceptance reviews remain
+  mandatory; this section still does not self-accept the slice.
