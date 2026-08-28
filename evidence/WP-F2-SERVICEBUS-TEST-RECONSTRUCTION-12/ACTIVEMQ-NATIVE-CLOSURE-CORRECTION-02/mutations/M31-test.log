@@ -1,0 +1,34 @@
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: -1, isArtemis: True) (95ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: 0, isArtemis: False) (2ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 73
+  Actual:   0
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:62
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: null, isArtemis: False) (0ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : Nullable object must have a value.
+    um System.Nullable`1.get_Value()
+    um ViciOne.ServiceBus.ActiveMqTransport.ActiveMqSendTransportContext.ApplyDeliveryDelay(IMessage transportMessage, SendContext context, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations/src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ActiveMqSendTransportContext.cs:150
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:59
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: -1, isArtemis: False) (0ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 73
+  Actual:   -1
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Nullable`1 milliseconds, Boolean isArtemis) in /private/tmp/vicione-activemq-mutations/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs:62
+    um InvokeStub_ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: null, isArtemis: True) (0ms)
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport.ActiveMqSendTimingTests.AbsentOrNonPositiveDelay_DoesNotWriteProviderState(milliseconds: 0, isArtemis: True) (0ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction02-evidence/mutations/M31-results/M31.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 6
+  fehlerhaft: 3
+  erfolgreich: 3
+  übersprungen: 0
+  Dauer: 558ms

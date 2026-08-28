@@ -1,0 +1,8 @@
+PASS technical commit 3d191610111d30df4bf3e724a614306e16eb3049
+PASS technical tree e80eefbed5698f29d9c652fff931549ffdc26634
+PASS technical parent c9b0cd2cd0cdec1018ec3985f2a6b2d423e575a9
+PASS technical paths 21
+PASS unit files/tests/passed/failed/skipped "19	2215	2215	0	0"
+PASS local files/tests/passed/failed/skipped "7	244	244	0	0"
+PASS mutations 11
+PASS fixture findings 0

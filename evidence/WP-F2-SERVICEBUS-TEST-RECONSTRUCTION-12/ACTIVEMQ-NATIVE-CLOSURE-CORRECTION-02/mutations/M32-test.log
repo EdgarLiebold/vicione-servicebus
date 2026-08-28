@@ -1,0 +1,20 @@
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(statement: "await ClockTask.Delay(1);") (137ms)
+fehlerhaft ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(statement: "await Delay(1);") (1ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(String statement) in /private/tmp/vicione-activemq-mutations/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs:199
+    um InvokeStub_TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(statement: "await System.Threading.Tasks.Task.Delay(1);") (0ms)
+erfolgreich ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests.ActiveMqWallClockGuard_RejectsEveryInvocationShape(statement: "ClockThread.Sleep(1);") (1ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction02-evidence/mutations/M32-results/M32.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+  gesamt: 4
+  fehlerhaft: 1
+  erfolgreich: 3
+  übersprungen: 0
+  Dauer: 24s 234ms

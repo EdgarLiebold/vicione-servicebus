@@ -1,0 +1,20 @@
+erfolgreich ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(protocol: OpenWire, expectedScheme: "activemq", port: 61616) (31ms)
+fehlerhaft ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(protocol: Amqp, expectedScheme: "amqp", port: 5672) (4ms)
+  Assert.Equal() Failure: Strings differ
+              ↓ (pos 1)
+  Expected: "amqp"
+  Actual:   "activemq"
+              ↑ (pos 1)
+    um ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(ActiveMqTransportProtocol protocol, String expectedScheme, Int32 port) in /private/tmp/vicione-activemq-mutations/tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs:53
+    um InvokeStub_ActiveMqHostAddressTests.ExplicitConstruction_RequiresAndProjectsTheTypedProtocol(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction02-evidence/mutations/M40-results/M40.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 516ms

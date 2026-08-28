@@ -1,0 +1,17 @@
+erfolgreich ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(protocol: "stomp") (30ms)
+fehlerhaft ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(protocol: "0") (14ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(NDesk.Options.OptionException)
+    um ViciOne.ServiceBus.Benchmark.Tests.ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(String protocol) in /private/tmp/vicione-activemq-mutations/tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs:70
+    um InvokeStub_ActiveMqOptionSetTests.UnknownProtocol_FailsAtItsOwnOption(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/activemq-correction02-evidence/mutations/M38-results/M38.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-activemq-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 414ms

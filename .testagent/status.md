@@ -1371,3 +1371,37 @@ future cohorts as complete.
 - This additive evidence correction supersedes only the earlier command-string rendering. The
   independent acceptance review must bind the final correction child, not the preceding evidence
   candidate.
+
+## ActiveMQ native closure — explicit public protocol and benchmark finalization
+
+- The preceding ActiveMQ technical/evidence candidates remain immutable historical checkpoints and
+  are superseded by this section for public host API, benchmark configuration, hostile URI inputs,
+  non-positive provider timing and the wall-clock source gate.
+- Frozen technical commit `3d191610111d30df4bf3e724a614306e16eb3049`, tree
+  `e80eefbed5698f29d9c652fff931549ffdc26634`, parent
+  `c9b0cd2cd0cdec1018ec3985f2a6b2d423e575a9`; the complete authorized correction from
+  `7c140863d042c0b7c8ce04057c6e98c0022222fe` contains exactly 21 paths.
+- Every public host entry point requires typed OpenWire/AMQP protocol and an explicit port. Tests
+  prove both API shape and the actual configured scheme/host/port for both protocols. The raw
+  string-scheme constructor is internal and no protocol-less Host overload remains.
+- The benchmark no longer defaults to localhost/OpenWire/61616. Host, named protocol and port are
+  mandatory, provider selection is exact, numeric enum text is rejected, repeated parsing cannot
+  retain coordinates, and credentials/TLS/canonical logical addressing are proven.
+- Hostile credential/query/fragment URIs carry valid explicit ports, so their own rejection remains
+  causal. Classic and Artemis both remove absent/non-positive scheduling state. The syntax gate
+  rejects direct, aliased, fully qualified and using-static Delay/Sleep calls in the ActiveMQ test
+  tree.
+- Final positive runs at this exact technical commit: locked Engineering restore/build exit 0 with
+  0 warnings and 0 errors; UnitArchitecture 2215/2215 across 19 CTRFs; LocalIntegration 244/244
+  across seven CTRFs and fresh five-provider fixture `vicione-62668da77f43`; every profile has zero
+  failure and zero skip. The modules include ActiveMQ Unit 130/130, Benchmark 16/16, Architecture
+  124/124 and ActiveMQ LocalIntegration 95/95.
+- Eleven byte-exact attacks M30-M40 (ten product/API mutations and one test-gate sabotage) build
+  cleanly and each fail only at the designated carrier with Exit 2 and zero skips. Exact unified
+  patches, baseline/mutant/restore hashes, argv, cwd, logs, binlogs and CTRFs are bound under
+  `ACTIVEMQ-NATIVE-CLOSURE-CORRECTION-02`.
+- The 113-obligation / 179-historical-identity closure remains exactly 40 UnitArchitecture plus 73
+  LocalIntegration owners, all `REPLACED_EXECUTING`; the retired legacy test project remains absent.
+  GitHub workflows remain globally manual/disabled as authorized. This is the final local evidence
+  candidate, not self-acceptance; two independent read-only reviews of this exact technical and
+  evidence freeze remain mandatory.
