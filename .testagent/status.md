@@ -1585,3 +1585,17 @@ future cohorts as complete.
   `TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02`. Cumulative mutation closure is 24/24.
 - This remains a local candidate rather than self-acceptance. A fresh independent targeted re-review,
   the Evidence commit, remote fast-forward and final architecture acceptance remain mandatory.
+
+## Transactional bus capability split — frozen stack-provenance evidence status
+
+- The preceding candidate sentence is a pre-commit checkpoint and is superseded by this append-only
+  status correction. The stack-provenance evidence child is frozen locally at commit
+  `f644adc021ec4a308401b8eb18b312cea6387ca8`, tree
+  `67139e9e19e7db3e3c404eaf02e34be55463447c`, with direct parent technical commit
+  `f1f64a385a8e1f0f3bf5d647be6cbeff8bdd532e`.
+- Product/API review of this exact correction is PASS without BLOCKER, MAJOR or MINOR. The separate
+  test/evidence review confirms the technical change, M24, all positive executions, 60/60 checksums,
+  fixture scope and secret scope as PASS; its only finding was the now-superseded pre-commit status
+  wording.
+- Remaining acceptance is limited to a targeted read-only verification of this status-only child,
+  remote fast-forward and final architecture acceptance. This section does not self-accept the slice.
