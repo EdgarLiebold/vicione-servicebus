@@ -269,6 +269,32 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("QueueSize").GetInt64());
     }
 
+    public async Task<ClassicQueueStatistics> WaitForClassicQueueStatistics(
+        string queueName,
+        ClassicQueueStatistics expected,
+        CancellationToken cancellationToken)
+    {
+        TimeProvider timeProvider = TimeProvider.System;
+        long startedAt = timeProvider.GetTimestamp();
+        ClassicQueueStatistics actual;
+
+        do
+        {
+            actual = await GetClassicQueueStatistics(queueName, cancellationToken);
+            if (actual == expected)
+                return actual;
+
+            if (timeProvider.GetElapsedTime(startedAt) >= OperationTimeout)
+                break;
+
+            await Task.Delay(TimeSpan.FromMilliseconds(50), timeProvider, cancellationToken);
+        }
+        while (true);
+
+        throw new TimeoutException(
+            $"Queue '{queueName}' did not converge to {expected} within {OperationTimeout}; last statistics were {actual}.");
+    }
+
     public async Task<bool> ClassicQueueExists(string queueName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);

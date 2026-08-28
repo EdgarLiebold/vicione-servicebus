@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Brokers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
+[Collection(ActiveMqBrokerOutageCollection.Name)]
 public sealed class ActiveMqFixtureRecoveryTests
 {
     [Theory]
@@ -25,6 +26,7 @@ public sealed class ActiveMqFixtureRecoveryTests
         var afterObserved = NewObservation<bool>();
         var barrierEntered = NewObservation<bool>();
         var releaseBarrier = NewObservation<bool>();
+        var allReceivesCompleted = NewObservation<bool>();
         var observer = new ReceiveEndpointRecoveryObserver(queueName);
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
@@ -52,6 +54,8 @@ public sealed class ActiveMqFixtureRecoveryTests
             });
         });
         using ConnectHandle observerHandle = bus.ConnectReceiveEndpointObserver(observer);
+        using ConnectHandle receiveObserverHandle = bus.ConnectReceiveObserver(
+            new ReceiveCompletionObserver(3, allReceivesCompleted));
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
         bool interrupted = false;
@@ -65,6 +69,12 @@ public sealed class ActiveMqFixtureRecoveryTests
             await input.Send(new RecoveryMessage(before), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.True(await beforeObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            Assert.Equal(
+                new ActiveMqBroker.ClassicQueueStatistics(1, 1, 0),
+                await fixture.WaitForClassicQueueStatistics(
+                    queueName,
+                    new ActiveMqBroker.ClassicQueueStatistics(1, 1, 0),
+                    cancellationToken));
 
             observer.Watch();
             BrokerOutageControlClient outage = BrokerOutageControlClient.FromEnvironment();
@@ -86,8 +96,17 @@ public sealed class ActiveMqFixtureRecoveryTests
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.True(await afterObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.True(await barrierEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-            ActiveMqBroker.ClassicQueueStatistics queue = await fixture.GetClassicQueueStatistics(queueName, cancellationToken);
-            Assert.Equal(0, queue.QueueSize);
+            releaseBarrier.TrySetResult(true);
+            Assert.True(await allReceivesCompleted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            // The outage control replaces the broker process, so its JMX lifetime counters restart
+            // at zero. Application-level exact-once counts below span both broker lifetimes; these
+            // management counts deliberately describe only the recovered broker.
+            ActiveMqBroker.ClassicQueueStatistics expectedQueue = new(2, 2, 0);
+            ActiveMqBroker.ClassicQueueStatistics queue = await fixture.WaitForClassicQueueStatistics(
+                queueName,
+                expectedQueue,
+                cancellationToken);
+            Assert.Equal(expectedQueue, queue);
             Assert.Equal(1, received[before]);
             Assert.Equal(1, received[after]);
             Assert.Equal(1, received[barrier]);
@@ -106,4 +125,35 @@ public sealed class ActiveMqFixtureRecoveryTests
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private sealed record RecoveryMessage(Guid FlowId);
+
+    private sealed class ReceiveCompletionObserver(
+        int expectedCount,
+        TaskCompletionSource<bool> completed) : IReceiveObserver
+    {
+        private int _completedCount;
+
+        public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+
+        public Task PostReceive(ReceiveContext context)
+        {
+            if (Interlocked.Increment(ref _completedCount) == expectedCount)
+                completed.TrySetResult(true);
+
+            return Task.CompletedTask;
+        }
+
+        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+            where T : class => Task.CompletedTask;
+
+        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+            where T : class => Task.CompletedTask;
+
+        public Task ReceiveFault(ReceiveContext context, Exception exception) => Task.CompletedTask;
+    }
+}
+
+[CollectionDefinition(Name, DisableParallelization = true)]
+public sealed class ActiveMqBrokerOutageCollection
+{
+    public const string Name = "ActiveMQ broker outage";
 }

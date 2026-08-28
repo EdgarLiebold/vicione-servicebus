@@ -5,13 +5,66 @@ using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
 using ViciOne.ServiceBus.ActiveMqTransport.Middleware;
 using ViciOne.ServiceBus.ActiveMqTransport.Topology;
 using ViciOne.ServiceBus.ActiveMqTransport.Tests.TestDoubles;
+using ViciOne.ServiceBus.Agents;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.ActiveMqTransport.Tests.ActiveMqTransport;
 
 public sealed class ActiveMqLifecycleTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "retained-send-session-retires-with-connection")]
+    public async Task SharedSendSession_RetiresWhenItsConnectionFaults()
+    {
+        ExceptionListener? exceptionListener = null;
+        var listenerRemoved = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        IConnection connection = InterfaceProxy<IConnection>.Create((method, args) => method.Name switch
+        {
+            "add_ExceptionListener" => Record(() => exceptionListener += Assert.IsType<ExceptionListener>(args![0])),
+            "remove_ExceptionListener" => Record(() =>
+            {
+                exceptionListener -= Assert.IsType<ExceptionListener>(args![0]);
+                listenerRemoved.TrySetResult(true);
+            }),
+            _ => Default(method.ReturnType),
+        });
+        ConnectionContext connectionContext = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
+        {
+            "get_Connection" => connection,
+            _ => Default(method.ReturnType),
+        });
+        SessionContext sessionContext = InterfaceProxy<SessionContext>.Create((method, _) => method.Name switch
+        {
+            "get_ConnectionContext" => connectionContext,
+            _ => Default(method.ReturnType),
+        });
+        var parent = new FixedSessionContextSupervisor(sessionContext);
+        var sendSupervisor = new SessionContextSupervisor(parent);
+
+        try
+        {
+            SessionContext firstUse = await CaptureSession(sendSupervisor);
+            SessionContext secondUse = await CaptureSession(sendSupervisor);
+            SessionContext firstCachedSession = UnwrapSharedSession(firstUse);
+            Assert.Same(firstCachedSession, UnwrapSharedSession(secondUse));
+            ExceptionListener activeListener = Assert.IsType<ExceptionListener>(exceptionListener);
+
+            activeListener(new NMSException("connection lost"));
+            Assert.True(await listenerRemoved.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+
+            SessionContext recoveredUse = await CaptureSession(sendSupervisor);
+            Assert.NotSame(firstCachedSession, UnwrapSharedSession(recoveredUse));
+            Assert.NotNull(exceptionListener);
+        }
+        finally
+        {
+            await sendSupervisor.Stop("test complete", CancellationToken.None);
+            await parent.Stop("test complete", CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-acquires-live-session-at-stop")]
     public async Task AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStops()
@@ -276,6 +329,19 @@ public sealed class ActiveMqLifecycleTests
                 .GetField("_temporaryEntities", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(context));
 
+    private static async Task<SessionContext> CaptureSession(ISessionContextSupervisor supervisor)
+    {
+        var pipe = new CaptureSessionPipe();
+        await supervisor.Send(pipe, TestContext.Current.CancellationToken);
+        return Assert.IsAssignableFrom<SessionContext>(pipe.Context);
+    }
+
+    private static SessionContext UnwrapSharedSession(SessionContext context) =>
+        Assert.IsAssignableFrom<SessionContext>(
+            typeof(SharedSessionContext)
+                .GetField("_context", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .GetValue(Assert.IsType<SharedSessionContext>(context)));
+
     private static object? Record(Action action)
     {
         action();
@@ -294,5 +360,42 @@ public sealed class ActiveMqLifecycleTests
             return Task.CompletedTask;
 
         return returnType.IsValueType ? Activator.CreateInstance(returnType) : null;
+    }
+
+    private sealed class CaptureSessionPipe : IPipe<SessionContext>
+    {
+        public SessionContext? Context { get; private set; }
+
+        public Task Send(SessionContext context)
+        {
+            Context = context;
+            return Task.CompletedTask;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class FixedSessionContextSupervisor :
+        TransportPipeContextSupervisor<SessionContext>,
+        ISessionContextSupervisor
+    {
+        public FixedSessionContextSupervisor(SessionContext context)
+            : base(new FixedSessionContextFactory(context))
+        {
+        }
+    }
+
+    private sealed class FixedSessionContextFactory(SessionContext context) : IPipeContextFactory<SessionContext>
+    {
+        public IPipeContextAgent<SessionContext> CreateContext(ISupervisor supervisor) =>
+            supervisor.AddContext(context);
+
+        public IActivePipeContextAgent<SessionContext> CreateActiveContext(
+            ISupervisor supervisor,
+            PipeContextHandle<SessionContext> contextHandle,
+            CancellationToken cancellationToken = default) =>
+            supervisor.AddActiveContext(contextHandle, contextHandle.Context);
     }
 }
