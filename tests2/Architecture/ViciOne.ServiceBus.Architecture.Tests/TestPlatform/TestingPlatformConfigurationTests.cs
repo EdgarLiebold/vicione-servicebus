@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -17,7 +19,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2184;
+    private const int ExpectedUnitTestFloor = 2185;
     private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
@@ -157,6 +159,54 @@ public sealed class TestingPlatformConfigurationTests
             Assert.All(buildCommands.Cast<Match>(), match => Assert.DoesNotContain("--no-incremental", match.Value));
         });
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-TEST-203", "active-mq-local-integration-uses-causal-barriers")]
+    public void ActiveMqLocalIntegrationSources_UseNoWallClockWaits()
+    {
+        var sourceRoot = Path.Combine(
+            RepositoryLayout.Root,
+            "tests2",
+            "Transports",
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests");
+
+        var violations = Directory
+            .EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Split(Path.DirectorySeparatorChar).Any(
+                segment => segment is "bin" or "obj"))
+            .SelectMany(path => CSharpSyntaxTree
+                .ParseText(File.ReadAllText(path), path: path)
+                .GetRoot()
+                .DescendantNodes()
+                .OfType<InvocationExpressionSyntax>()
+                .Where(IsWallClockWait)
+                .Select(invocation =>
+                    $"{RepositoryLayout.RelativeToRoot(path)}:{invocation.GetLocation().GetLineSpan().StartLinePosition.Line + 1}"))
+            .OrderBy(value => value, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    private static bool IsWallClockWait(InvocationExpressionSyntax invocation)
+    {
+        if (invocation.Expression is not MemberAccessExpressionSyntax method)
+            return false;
+
+        return method.Name.Identifier.ValueText switch
+        {
+            "Delay" => IsTypeName(method.Expression, "Task"),
+            "Sleep" => IsTypeName(method.Expression, "Thread"),
+            _ => false,
+        };
+    }
+
+    private static bool IsTypeName(ExpressionSyntax expression, string expected) => expression switch
+    {
+        IdentifierNameSyntax identifier => identifier.Identifier.ValueText == expected,
+        MemberAccessExpressionSyntax qualified => qualified.Name.Identifier.ValueText == expected,
+        _ => false,
+    };
 
     private static int ReadUnitProfileFloor(string path)
     {

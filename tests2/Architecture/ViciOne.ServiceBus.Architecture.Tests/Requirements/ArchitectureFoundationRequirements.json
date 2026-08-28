@@ -61,5 +61,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
     "testMethod": "PublicLocalIntegrationProfileCommands_UseThePredeclaredFloor"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "active-mq-local-integration-uses-causal-barriers",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "ActiveMqLocalIntegrationSources_UseNoWallClockWaits"
   }
 ]
