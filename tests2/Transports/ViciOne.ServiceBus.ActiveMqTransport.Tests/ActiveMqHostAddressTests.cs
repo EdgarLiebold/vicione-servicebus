@@ -99,6 +99,17 @@ public sealed class ActiveMqHostAddressTests
         Assert.Equal(typeof(int), typeof(ActiveMqHostAddress).GetField(nameof(ActiveMqHostAddress.Port))?.FieldType);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "default-value-fails-through-configuration-boundary")]
+    public void DefaultValue_CannotEscapeAsAnInvalidUri()
+    {
+        var address = default(ActiveMqHostAddress);
+
+        var exception = Assert.Throws<ActiveMqTransportConfigurationException>(() => (Uri)address);
+
+        Assert.Contains("not initialized", exception.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("http://broker/")]
     [InlineData("tcp://broker/")]

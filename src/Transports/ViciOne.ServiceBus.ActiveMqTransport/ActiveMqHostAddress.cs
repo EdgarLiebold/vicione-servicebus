@@ -134,6 +134,8 @@ namespace ViciOne.ServiceBus
 
         public static implicit operator Uri(in ActiveMqHostAddress address)
         {
+            ThrowIfInvalid(address);
+
             var builder = new UriBuilder
             {
                 Scheme = address.Scheme,
@@ -145,6 +147,19 @@ namespace ViciOne.ServiceBus
             };
 
             return builder.Uri;
+        }
+
+        static void ThrowIfInvalid(in ActiveMqHostAddress address)
+        {
+            if (address.Scheme is not (ActiveMqScheme or AmqpScheme)
+                || string.IsNullOrWhiteSpace(address.Host)
+                || Uri.CheckHostName(address.Host) == UriHostNameType.Unknown
+                || address.Port is <= 0 or > 65535
+                || string.IsNullOrWhiteSpace(address.VirtualHost))
+            {
+                throw new ActiveMqTransportConfigurationException(
+                    "The ActiveMQ host address is not initialized or contains an invalid component.");
+            }
         }
 
         Uri DebuggerDisplay => this;
