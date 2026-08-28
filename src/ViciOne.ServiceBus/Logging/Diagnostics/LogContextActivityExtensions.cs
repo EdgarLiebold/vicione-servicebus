@@ -85,7 +85,7 @@ namespace ViciOne.ServiceBus.Logging
             activity.SetTag(DiagnosticHeaders.Messaging.Operation, "receive");
             activity.SetTag(
                 DiagnosticHeaders.Messaging.System,
-                LogContextInstrumentationExtensions.NormalizeSystem(context.InputAddress?.Scheme));
+                LogContextInstrumentationExtensions.SystemName(context));
             activity.SetTag(DiagnosticHeaders.Messaging.DestinationName, endpointName);
 
             if (activity.IsAllDataRequested)
@@ -280,7 +280,7 @@ namespace ViciOne.ServiceBus.Logging
             activity.SetTag(DiagnosticHeaders.Messaging.Operation, "process");
             activity.SetTag(
                 DiagnosticHeaders.Messaging.System,
-                LogContextInstrumentationExtensions.NormalizeSystem(context.ReceiveContext.InputAddress?.Scheme));
+                LogContextInstrumentationExtensions.SystemName(context.ReceiveContext));
 
             if (activity.IsAllDataRequested)
             {

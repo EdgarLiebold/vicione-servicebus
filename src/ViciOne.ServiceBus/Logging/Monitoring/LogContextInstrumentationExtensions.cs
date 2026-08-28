@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
@@ -35,7 +36,7 @@ public static class LogContextInstrumentationExtensions
 
             var timeProvider = context.GetTimeProvider();
             long started = timeProvider.GetTimestamp();
-            TagList tags = ClientTags(SystemName(context.InputAddress), "receive", "receive");
+            TagList tags = ClientTags(SystemName(context), "receive", "receive");
 
             Observe(() => state.ActiveOperations.Add(1, tags));
 
@@ -211,7 +212,7 @@ public static class LogContextInstrumentationExtensions
             var timeProvider = context.GetTimeProvider();
             long started = timeProvider.GetTimestamp();
             string system = context is ConsumeContext consume
-                ? SystemName(consume.ReceiveContext.InputAddress)
+                ? SystemName(consume.ReceiveContext)
                 : "unknown";
             TagList tags = ProcessTags(system, operationName, processorKind);
 
@@ -352,6 +353,12 @@ public static class LogContextInstrumentationExtensions
 
     private static string SystemName(Uri? address) =>
         NormalizeSystem(address?.Scheme);
+
+    internal static string SystemName(ReceiveContext context) =>
+        context.TryGetPayload<TransportReceiveContext>(out TransportReceiveContext? transport)
+        && transport.ActivitySystem.Length > 0
+            ? NormalizeSystem(transport.ActivitySystem)
+            : SystemName(context.InputAddress);
 
     internal static string NormalizeSystem(string? system) => system?.ToLowerInvariant() switch
     {

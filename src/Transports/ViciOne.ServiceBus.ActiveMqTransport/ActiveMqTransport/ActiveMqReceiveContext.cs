@@ -29,6 +29,8 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public IPrimitiveMap Properties => TransportMessage.Properties;
 
+        public string ActivitySystem => "activemq";
+
         public string GroupId => TransportMessage.GetGroupId();
 
         public int GroupSequence => TransportMessage.GetGroupSequence();

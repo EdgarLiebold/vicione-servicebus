@@ -197,6 +197,35 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("ConsumerCount").GetInt32());
     }
 
+    public async Task<bool> ClassicTopicExists(string topicName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(topicName);
+        HttpClient client = _managementClient
+            ?? throw new InvalidOperationException("Classic ActiveMQ management is unavailable for the Artemis fixture.");
+        string mbean =
+            $"org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Topic,destinationName={topicName}";
+        string payload = JsonSerializer.Serialize(new { type = "read", mbean });
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/jolokia/")
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json"),
+        };
+        using HttpResponseMessage response = await client.SendAsync(request, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        string content = await response.Content.ReadAsStringAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        using JsonDocument document = JsonDocument.Parse(content);
+        int status = document.RootElement.GetProperty("status").GetInt32();
+        return status switch
+        {
+            200 => true,
+            404 => false,
+            _ => throw new InvalidDataException(
+                $"Jolokia returned status {status} while probing topic '{topicName}': {content}"),
+        };
+    }
+
     public async Task<ClassicQueueStatistics> GetClassicQueueStatistics(
         string queueName,
         CancellationToken cancellationToken)
