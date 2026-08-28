@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2226;
+    private const int ExpectedUnitTestFloor = 2227;
     private const int ExpectedLocalIntegrationTestFloor = 244;
 
     [Fact]
@@ -174,13 +174,18 @@ public sealed class TestingPlatformConfigurationTests
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
         CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
 
-        SyntaxTree[] syntaxTrees = MsBuildEvaluation
+        SyntaxTree[] projectSyntaxTrees = MsBuildEvaluation
             .ItemMetadata(projectPath, "Compile", "FullPath", "Release")
             .Select(path => CSharpSyntaxTree.ParseText(
                 File.ReadAllText(path),
                 parseOptions,
                 path))
             .ToArray();
+        SyntaxTree[] syntaxTrees =
+        [
+            ActiveMqImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
+            .. projectSyntaxTrees,
+        ];
         CSharpCompilation compilation = CreateWallClockCompilation(syntaxTrees);
 
         var violations = syntaxTrees
@@ -199,7 +204,8 @@ public sealed class TestingPlatformConfigurationTests
     [InlineData(null, "class C { async System.Threading.Tasks.Task M() { System.Func<int, System.Threading.Tasks.Task> wait = System.Threading.Tasks.Task.Delay; await wait(1); } }")]
     [InlineData("global using ClockTask = System.Threading.Tasks.Task;", "class C { async void M() { await ClockTask.Delay(1); } }")]
     [InlineData(null, "#if NET10_0\nclass C { async void M() { await System.Threading.Tasks.Task.Delay(1); } }\n#endif")]
-    [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-direct-alias-static-import-and-method-group-forms")]
+    [InlineData(null, "class C { async void M() { await Task.Delay(1); } }")]
+    [RequirementCoverage("REQ-TEST-203", "wall-clock-guard-rejects-release-compiled-reference-forms")]
     public void ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape(string? globalUsing, string source)
     {
         string projectPath = Path.Combine(
@@ -209,7 +215,10 @@ public sealed class TestingPlatformConfigurationTests
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
         CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
-        var syntaxTrees = new List<SyntaxTree>();
+        var syntaxTrees = new List<SyntaxTree>
+        {
+            ActiveMqImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
+        };
         if (globalUsing is not null)
         {
             syntaxTrees.Add(CSharpSyntaxTree.ParseText(
@@ -283,6 +292,45 @@ public sealed class TestingPlatformConfigurationTests
         return CSharpParseOptions.Default
             .WithLanguageVersion(languageVersion)
             .WithPreprocessorSymbols(preprocessorSymbols);
+    }
+
+    private static SyntaxTree ActiveMqImplicitGlobalUsingsSyntaxTree(
+        string projectPath,
+        CSharpParseOptions parseOptions)
+    {
+        JsonElement evaluatedItems = MsBuildEvaluation
+            .Evaluate(projectPath, "Release")
+            .GetProperty("Items");
+        string source = evaluatedItems.TryGetProperty("Using", out JsonElement usingItems)
+            ? string.Join(Environment.NewLine, usingItems.EnumerateArray().Select(FormatGlobalUsing))
+            : string.Empty;
+        string generatedPath = Path.Combine(
+            Path.GetDirectoryName(projectPath)
+                ?? throw new InvalidOperationException($"No directory for {projectPath}."),
+            "obj",
+            "ActiveMqWallClockImplicitGlobalUsings.g.cs");
+
+        return CSharpSyntaxTree.ParseText(source, parseOptions, generatedPath);
+    }
+
+    private static string FormatGlobalUsing(JsonElement item)
+    {
+        string identity = item.GetProperty("Identity").GetString()
+            ?? throw new InvalidOperationException("An evaluated Using item has no identity.");
+        string alias = item.TryGetProperty("Alias", out JsonElement aliasValue)
+            ? aliasValue.GetString() ?? string.Empty
+            : string.Empty;
+        bool isStatic = item.TryGetProperty("Static", out JsonElement staticValue)
+            && bool.TryParse(staticValue.GetString(), out bool parsedStatic)
+            && parsedStatic;
+
+        if (alias.Length > 0 && isStatic)
+            throw new InvalidOperationException($"Using '{identity}' cannot be both aliased and static.");
+        if (alias.Length > 0)
+            return $"global using {alias} = {identity};";
+        return isStatic
+            ? $"global using static {identity};"
+            : $"global using {identity};";
     }
 
     private static bool IsWallClockWait(SimpleNameSyntax name, SemanticModel semanticModel)

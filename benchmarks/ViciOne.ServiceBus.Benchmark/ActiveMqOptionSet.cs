@@ -9,7 +9,7 @@ namespace ViciOneServiceBusBenchmark
     using NDesk.Options;
 
 
-    public class ActiveMqOptionSet :
+    internal sealed class ActiveMqOptionSet :
         OptionSet,
         ActiveMqHostSettings
     {

@@ -78,7 +78,7 @@
   },
   {
     "requirementId": "REQ-TEST-203",
-    "variantKey": "wall-clock-guard-rejects-direct-alias-static-import-and-method-group-forms",
+    "variantKey": "wall-clock-guard-rejects-release-compiled-reference-forms",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
     "testMethod": "ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape"

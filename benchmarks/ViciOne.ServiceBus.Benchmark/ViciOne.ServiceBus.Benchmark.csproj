@@ -22,4 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Benchmark.Tests" />
+  </ItemGroup>
 </Project>
