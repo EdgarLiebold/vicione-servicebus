@@ -161,6 +161,23 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
     def test_rejects_former_identity_in_existing_evidence_record(self) -> None:
         self.assert_git_candidate_rejected("evidence/WP-F2-SERVICEBUS-IDENTITY/existing.json", tracked=True)
 
+    def test_scan_uses_the_symlink_blob_without_dereferencing_an_ignored_target(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/Outside.cs"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text(f"namespace {OLD}.Hidden;\n", encoding="utf-8")
+            source = root / "src/Linked.cs"
+            source.parent.mkdir(parents=True)
+            source.symlink_to(ignored)
+            subprocess.run(["git", "add", ".gitignore", "src/Linked.cs"], cwd=root, check=True)
+
+            findings = scan_tree(root)
+
+        self.assertFalse(any(item.path == "src/Linked.cs" for item in findings))
+
     def assert_extra_legal_identity_rejected(self, path: str) -> None:
         authorized = "\n".join(legal_identity_contexts()[path])
         findings = scan_entry(path, f"{authorized}\nextra={OLD}\n".encode("utf-8"))
@@ -654,7 +671,7 @@ public enum State
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subprocess.run(["git", "init", "-q"], cwd=root, check=True)
-            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            (root / ".gitignore").write_text("ignored/\nartifacts/\n", encoding="utf-8")
             ignored = root / "ignored/Outside.cs"
             ignored.parent.mkdir(parents=True)
             ignored.write_text("public sealed class NotCommitted { }\n", encoding="utf-8")
@@ -679,6 +696,9 @@ public enum State
             real = root / "src/Real/Real.csproj"
             real.parent.mkdir(parents=True)
             real.write_text("<Project Sdk=\"Microsoft.NET.Sdk\" />\n", encoding="utf-8")
+            artifact = root / "artifacts/sdk/bin/Real/debug/Real.dll"
+            artifact.parent.mkdir(parents=True)
+            artifact.write_bytes(b"ignored build output")
             subprocess.run(["git", "add", ".gitignore", "src/Real/Real.csproj"], cwd=root, check=True)
 
             records = derive_package_inventory(root)
