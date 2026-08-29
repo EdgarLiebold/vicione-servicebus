@@ -25,7 +25,7 @@ public sealed class PostgreSqlBusOutboxTests
         var services = new ServiceCollection();
         services.AddSingleton(delivery);
         services.AddDbContext<OutboxDbContext>(options => options.UseNpgsql(database.ConnectionString));
-        services.AddViciOneServiceBusTestHarness(configuration =>
+        services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(database.OperationTimeout, database.OperationTimeout);
             configuration.AddEntityFrameworkOutbox<OutboxDbContext>(outbox =>
