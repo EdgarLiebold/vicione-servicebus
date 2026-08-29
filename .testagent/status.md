@@ -1988,3 +1988,14 @@ future cohorts as complete.
   and post-restore hashes. Identity self-tests are 147/147.
 - Only the two independent read-only delta reviews and architecture acceptance remain before asking
   for fresh remote-push authorization. Nothing in FINAL5 has been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL6 conditional-accessor closure
+
+- FINAL5 through `dd5122977173e307f3a7f1c27e122a9da97022d9` is superseded for acceptance:
+  final review found that conditional context was bound to declarations but not to each accessor.
+- Technical `39a4acaff1a06f0462d829f332b9fc25b3941a6f`, tree
+  `061b4236b36646ff2331a271c6b82a6ae0cdd3fb`, binds complete branch provenance to property and event
+  accessors. The API projection remains 44,081 records / 24,987 current / 1,702 `CURRENT_ADDED` with
+  zero findings; 148/148 identity tests and M11-M33 are bound.
+- The direct Evidence child, committed replay and two final read-only delta reviews remain. FINAL6 is
+  local and has not been pushed.

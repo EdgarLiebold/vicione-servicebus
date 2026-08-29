@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 6,
+  "subject": "F-REP-02 final conditional-accessor provenance closure",
+  "supersedes": {
+    "technicalCommit": "e044f1acba55b917e23fa9a2698c31bfb28120f3",
+    "evidenceCommit": "13a27ec786c27275db438f9e4fcb23e3fe72c5e1",
+    "auditHead": "dd5122977173e307f3a7f1c27e122a9da97022d9",
+    "reason": "property and event accessors did not bind their own conditional branch provenance"
+  },
+  "technicalRangeBase": "dd5122977173e307f3a7f1c27e122a9da97022d9",
+  "technicalCommit": "39a4acaff1a06f0462d829f332b9fc25b3941a6f",
+  "technicalTree": "061b4236b36646ff2331a271c6b82a6ae0cdd3fb",
+  "technicalParent": "dd5122977173e307f3a7f1c27e122a9da97022d9",
+  "technicalScope": [
+    "tools/identity/identity_gate.py",
+    "tools/identity/test_identity_gate.py"
+  ],
+  "closure": {
+    "propertyAccessorConditionalContextBound": true,
+    "eventAccessorConditionalContextBound": true,
+    "completeIfElifElseHistorySource": "csharp_preprocessor_contexts",
+    "publicDeclarationRecords": 44081,
+    "currentProductDeclarations": 24987,
+    "currentAdded": 1702,
+    "findings": 0
+  },
+  "tests": {
+    "identityExecuted": 148,
+    "identityPassed": 148,
+    "identityFailed": 0,
+    "identityRawLog": "FREP02_FINAL6_IDENTITY_SELFTESTS.log"
+  },
+  "counterMutations": {
+    "manifest": "FREP02_FINAL6_COUNTER_MUTATIONS.json",
+    "combinedRawLog": "FREP02_FINAL6_MUTATIONS.log",
+    "mutationIds": "M11-M33",
+    "mutations": 23,
+    "allOccurrenceCounts": 1,
+    "allExitCodes": 1,
+    "baselineAndPostRestoreSha256": "02127f45753ef608bfd17980cde253b6c68da0f76c36b8b96de79199ad8341d2"
+  },
+  "technicalPatch": {
+    "path": "FREP02_FINAL6_TECHNICAL.diff.gz",
+    "compression": "gzip -n",
+    "range": "dd5122977173e307f3a7f1c27e122a9da97022d9..39a4acaff1a06f0462d829f332b9fc25b3941a6f"
+  },
+  "inheritedUnchanged": {
+    "candidateScanFindings": 0,
+    "baselinePaths": 5654,
+    "liveBaselineTargetsWithGitIdentity": 4206,
+    "packageProjects": 64,
+    "packageArtifacts": 0,
+    "verificationModel": "PASS",
+    "ciToolSelftests": "257_OF_257"
+  },
+  "executionBoundary": {
+    "dotnetOrMsbuildStarted": false,
+    "containerStarted": false,
+    "networkUsed": false,
+    "pythonBytecodeCache": "/private/tmp/frep02-pycache"
+  }
+}
