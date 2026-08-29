@@ -56,6 +56,8 @@
     <Project Path="tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj" />
     <Project Path="tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj" />
     <Project Path="tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj" />
+    <Project Path="tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj" />
+    <Project Path="tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj" />
     <Project Path="tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj" />

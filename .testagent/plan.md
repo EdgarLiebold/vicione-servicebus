@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2377 predeclared unfiltered cases;
-- `LocalIntegration`: 244 predeclared unfiltered cases.
+- `UnitArchitecture`: 2394 predeclared unfiltered cases;
+- `LocalIntegration`: 375 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -2078,8 +2078,9 @@ Acceptance checklist to concrete test owners:
    genuinely blocked, restore a coherent non-retired phase and continue another planned task rather
    than leaving an ambiguous half-deletion.
 
-Hermetic checkpoint: 43 behavior Facts plus one requirement-projection Fact are present and execute
-44/44 green. The complete
-UnitArchitecture profile executes 2,381/2,381 green; its fail-closed lower bound is therefore 2,377,
-preserving the pre-existing four-case discovery margin. Provider LocalIntegration remains open, so
-the inherited SQL project is deliberately still present and no terminal 135/135 claim is made.
+SQL closure checkpoint: 43 hermetic R0 Facts plus one requirement-projection Fact execute 44/44;
+PostgreSQL executes 71/71 and SQL Server executes 60/60. The exact 135-row terminal map binds 134
+executing obligations and explicitly retires only OBL-R0-SQL-0054, the obsolete cross-provider
+runtime dialect resolver. The complete inherited 40-file SQL project and its empty directory are
+removed. UnitArchitecture executes 2,398/2,398; the independent accepted floor is 2,394. The
+LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carries floor 375.

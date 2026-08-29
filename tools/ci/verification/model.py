@@ -92,7 +92,6 @@ REQUIRED_SUPPORT_JOB_CONTRACTS = {
         "      - legacy-tooling",
         "      - build",
         "      - core-unit",
-        "      - sql-transport",
         "      - benchmarks",
         "      - rabbitmq",
         "    steps:",

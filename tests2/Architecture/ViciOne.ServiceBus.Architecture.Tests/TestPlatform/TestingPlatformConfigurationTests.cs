@@ -21,8 +21,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2377;
-    private const int ExpectedLocalIntegrationTestFloor = 244;
+    private const int ExpectedUnitTestFloor = 2394;
+    private const int ExpectedLocalIntegrationTestFloor = 375;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()

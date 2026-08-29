@@ -20,8 +20,7 @@
     },
     "fixture": {
       "members": [
-        "rabbitmq",
-        "sql-transport"
+        "rabbitmq"
       ],
       "note": "everything that runs against the pinned Compose fixture"
     },
@@ -40,11 +39,6 @@
         "rabbitmq"
       ]
     },
-    "sql-transport": {
-      "members": [
-        "sql-transport"
-      ]
-    },
     "engineering": {
       "members": [
         "benchmarks"
@@ -55,7 +49,6 @@
   "jobs": {
     "core-unit": "core",
     "rabbitmq": "rabbitmq",
-    "sql-transport": "sql-transport",
     "benchmarks": "engineering"
   },
   "verificationClasses": {
@@ -444,36 +437,16 @@
     },
     {
       "id": "transport-sql",
-      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql",
         "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "sql-transport",
-          "category": "sql-transport",
-          "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
-          "minimumExecutedCases": 110,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 2400,
-          "brokers": [
-            "mssql",
-            "postgres"
-          ],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/sql-transport.txt"
-        }
-      ]
+      "rationale": "The 135 frozen SQL obligations are terminal in the native xUnit/MTP estate: 134 execute across the hermetic, PostgreSQL and SQL Server owners, and the obsolete cross-provider runtime dialect resolver is explicitly retired.",
+      "runs": []
     }
   ],
   "notes": {

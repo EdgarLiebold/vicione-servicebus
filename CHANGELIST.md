@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3789 |
+| Added | 3807 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
+| `.testagent/sql-native-obligation-map.tsv` | Added |  |
 | `.testagent/status.md` | Added |  |
 | `.testagent/transactional-bus-obligation-map.tsv` | Added |  |
 | `AGENTS.md` | Modified | `AGENTS.md` |
@@ -162,7 +163,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
 | `build/verification/expected/rabbitmq.txt` | Added |  |
-| `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
 | `docs/observability.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
@@ -8426,46 +8426,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/docker-compose.yml` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Address_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/BusOutbox_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/DelayedDelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/DeliberateConsumerFault.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Expiration_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ExtensionData_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Fault_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/IDatabaseTestConfiguration.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/JobConsumer_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/JobServiceSagaDbContextFactory.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/MigrationHostedService.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PartitionKey_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/ChannelName_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/Migration_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/MultiHost_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/PortAddress_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSqlBus_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PostgresDatabaseTestConfiguration.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Provision_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Publish_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Purge_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Redelivery_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RenewLock_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Request_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RoutingSlip_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RunScopedTransportEndpoint.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/RunnerContract_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Scheduler_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/InstanceName_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/PortAddress_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/Provision_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/ReceiveEndpoint_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServerDatabaseTestConfiguration.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SubscriptionType_Specs.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/TestConfigurationExtensions.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/TransportInspection.cs` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/docker-compose.yml` | Added |  |
-| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/DatabaseEndpoint.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestDatabase.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContract.cs` | Added |  |
@@ -9093,6 +9053,64 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTransportInspection.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlAutoDeleteTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBasicTransportTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBuiltInRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBusOutboxTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlConcurrencyAndPriorityTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryLimitTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryStateTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlIsolationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlJobServiceTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlLockRenewalTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlMaintenanceTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlNotificationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlProvisioningTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlPublishAndPurgeTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlReceiveConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingAndFailureTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingSlipTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlScheduleCancellationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSerializationAndRequestTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlUnlockTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/PostgreSqlTransportRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTestDatabase.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTransportInspection.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/SqlServerTransportRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlProvisioningCredentialTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConcurrencyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConfigurationAndRetryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDeliveryLimitTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerJobServiceTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerLockRenewalTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerProvisioningTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerPublishAndPurgeTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerRedeliveryTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerScheduleCancellationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSchedulingTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSerializationAndRequestTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Address/SqlAddressTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Infrastructure/RunnerContractTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PostgreSql/PostgresConnectionConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/SqlServerConnectionConfigurationTests.cs` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
+| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/AbstractionsLocalIntegrationRequirements.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |

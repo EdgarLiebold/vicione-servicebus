@@ -124,26 +124,6 @@ jobs:
           path: |
             artifacts/verification
             artifacts/run-output
-  sql-transport:
-    name: "Required: SQL Transport"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 45
-    env:
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Verify
-        run: python3 tools/ci/verify.py --selection sql-transport
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-sql-transport
-          path: |
-            artifacts/verification
-            artifacts/run-output
   pack:
     name: "Required: Pack"
     runs-on: ubuntu-24.04
@@ -154,7 +134,6 @@ jobs:
       - legacy-tooling
       - build
       - core-unit
-      - sql-transport
       - benchmarks
       - rabbitmq
     steps:
