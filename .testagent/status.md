@@ -1865,3 +1865,26 @@ future cohorts as complete.
 - The audit-child CHANGELIST contains 9,334 entries. Final SHA closure, the audit commit/tree and two
   independent read-only reviews remain mandatory. F-REP-02 remains open and local until those gates
   pass; no F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 Git-candidate and structured C# API correction
+
+- Independent final review rejected the preceding `f6ba0c7f...` / `a05cf3a7...` / `3fb511aa...`
+  chain: an ignored filesystem file could be treated as live Git identity, and the one-line public
+  regex omitted implicit interface/enum members and multiline modifiers. That chain is explicitly
+  superseded for acceptance, while its immutable bytes remain historical evidence.
+- Correction Technical commit `f0afbc916d654e28b19ed852d1af2f2c8334315d`, tree
+  `7c52237921980ac772e78f0930e8effc7255ad4c`, has direct parent
+  `3fb511aaf5f954f0de591a9178aeeeb317eec465` and changes only the Identity gate and its Python tests.
+- Baseline live/retired classification, change notices, refactor checks and API target lookup now use
+  one tracked-plus-non-ignored-untracked Git-candidate snapshot. An existing ignored retired target
+  remains retired and cannot acquire a synthetic Git blob identity.
+- The current API projection tokenizes C# while excluding comments and literal contents, normalizes
+  declaration whitespace, and binds explicit multiline/reordered public declarations plus the
+  language-defined implicit public members of public interfaces and enums.
+- Candidate Evidence is `PASS` with zero findings: 5,654 baseline paths, 4,206 live Git identities,
+  1,448 retirements, 40,475 API records, 23,972 current product declarations and 985 explicit
+  `CURRENT_ADDED` records. Identity self-tests are 130/130 and CI tool self-tests are 257/257 green.
+- M01-M10 are byte-bound to baseline SHA-256 `3aef6742...`; ignored-candidate, implicit-interface,
+  multiline-modifier and implicit-enum regressions are independently and causally red. A direct
+  Evidence child, post-commit reconstruction and two fresh read-only reviews remain mandatory.
+  No F-REP-02 commit has been pushed.

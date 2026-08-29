@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_scan_uses_the_explicit_external_evidence_root (test_identity_gate.IdentityGateGeneratedEvidenceManifestTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/identity/test_identity_gate.py", line 728, in test_scan_uses_the_explicit_external_evidence_root
+    self.assertEqual(evidence, validate.call_args.args[0])
+AssertionError: Posix[40 chars]02_v7c0000gn/T/tmp5n5c1x6x/candidate-evidence') != Posix[40 chars]02_v7c0000gn/T/tmp5n5c1x6x/evidence/WP-F2-SERVICEBUS-IDENTITY')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+FAILED (failures=1)

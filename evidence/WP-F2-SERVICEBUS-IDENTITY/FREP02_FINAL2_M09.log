@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_csharp_projection_covers_multiline_modifiers_and_implicit_public_members (test_identity_gate.IdentityGatePublicProjectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/identity/test_identity_gate.py", line 575, in test_csharp_projection_covers_multiline_modifiers_and_implicit_public_members
+    self.assertIn("explicit public sealed class Added < T , U >", declarations)
+AssertionError: 'explicit public sealed class Added < T , U >' not found in {'implicit-interface void Added ( )', 'explicit sealed public class Reordered', 'implicit-enum None', 'implicit-interface string Name', 'explicit public enum State', 'implicit-enum Ready = 2', 'explicit public interface IFoo'}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

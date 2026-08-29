@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_new_implicit_interface_member_is_a_current_added_terminal_record (test_identity_gate.IdentityGatePublicProjectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/identity/test_identity_gate.py", line 597, in test_new_implicit_interface_member_is_a_current_added_terminal_record
+    self.assertEqual(2, len(records))
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.264s
+
+FAILED (failures=1)

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_csharp_projection_covers_multiline_modifiers_and_implicit_public_members (test_identity_gate.IdentityGatePublicProjectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/identity/test_identity_gate.py", line 579, in test_csharp_projection_covers_multiline_modifiers_and_implicit_public_members
+    self.assertIn("implicit-enum None", declarations)
+AssertionError: 'implicit-enum None' not found in {'explicit public interface IFoo', 'explicit public enum State', 'explicit sealed public class Reordered', 'implicit-interface void Added ( )', 'explicit public sealed class Added < T , U >', 'implicit-interface string Name'}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
