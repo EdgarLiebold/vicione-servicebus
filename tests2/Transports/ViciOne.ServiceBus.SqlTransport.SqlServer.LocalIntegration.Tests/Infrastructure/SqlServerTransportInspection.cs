@@ -78,6 +78,42 @@ internal static class SqlServerTransportInspection
             ("queue", queue),
             ("type", type)) > 0;
 
+    public static Task<long> DeliveryCount(
+        this SqlConnection connection,
+        string schema,
+        string queue,
+        int queueType,
+        CancellationToken cancellationToken) =>
+        connection.Scalar(
+            $"SELECT COUNT(*) FROM [{schema}].[MessageDelivery] d "
+            + $"JOIN [{schema}].[Queue] q ON q.Id = d.QueueId "
+            + "WHERE q.Name = @queue AND q.Type = @type",
+            cancellationToken,
+            ("queue", queue),
+            ("type", queueType));
+
+    public static Task<long> MessageCount(
+        this SqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken) =>
+        connection.Scalar(
+            $"SELECT COUNT(*) FROM [{schema}].[Message] WHERE MessageId = @messageId",
+            cancellationToken,
+            ("messageId", messageId));
+
+    public static Task<long> DeliveryCountForMessage(
+        this SqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken) =>
+        connection.Scalar(
+            $"SELECT COUNT(*) FROM [{schema}].[MessageDelivery] d "
+            + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
+            + "WHERE m.MessageId = @messageId",
+            cancellationToken,
+            ("messageId", messageId));
+
     private static async Task<long> ScalarCore(
         SqlConnection connection,
         string text,
