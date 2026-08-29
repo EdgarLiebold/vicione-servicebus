@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_retirement_tree_resolves_from_the_deletion_commit_not_current_head (test_identity_gate.IdentityGateTerminalDispositionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/identity/test_identity_gate.py", line 334, in test_retirement_tree_resolves_from_the_deletion_commit_not_current_head
+    resolve.assert_called_once_with(Path("/repository"), "rev-parse", f"{deletion_commit}^{{tree}}")
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 919, in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 907, in assert_called_with
+    raise AssertionError(_error_message()) from cause
+AssertionError: expected call not found.
+Expected: git(PosixPath('/repository'), 'rev-parse', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa^{tree}')
+Actual: git(PosixPath('/repository'), 'rev-parse', 'HEAD^{tree}')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

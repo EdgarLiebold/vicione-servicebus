@@ -1781,3 +1781,20 @@ future cohorts as complete.
 - The default in-repository scan now also reports `PASS` with zero findings. This is not final
   acceptance: Evidence commit/tree binding and two independent read-only reviews remain mandatory.
   No F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 retirement-tree correction
+
+- Post-commit reconstruction found that the first candidate Evidence child made all 1,448 retired
+  mappings stale because `retirementTree` had been derived from the moving branch `HEAD`. Evidence
+  commit `46d5747f25a1ccb3a6cd0cc8777333597cf7ec21` and its validation are therefore explicitly
+  superseded and are not an acceptance result.
+- Correction Technical commit `65f0d9b9741fab60cab39cef4fa7357e7ef1c2cc`, tree
+  `b5bfe36a69525a2991f1284954a89d567139aaa0`, resolves each retirement tree from its immutable
+  full deletion commit instead. The 1,448 retired paths bind 69 deletion commits and 69 trees.
+- The independent constructor test rejects symbolic `HEAD`, malformed and uppercase commit IDs and
+  verifies the exact `<deletion-commit>^{tree}` Git query. The M04 counter-mutation restoring
+  `HEAD^{tree}` is causally red and the source file was restored byte-for-byte.
+- Candidate correction Evidence again reports `PASS`, zero findings, 5,654 terminal baseline paths
+  and 35,055 public declarations. Focused Identity tests are 57/57 and the complete Identity suite is
+  122/122 green; CHANGELIST is exact at 9,312 entries. A direct correction Evidence child, then a
+  post-commit reconstruction and independent reviews remain mandatory. Nothing is pushed.

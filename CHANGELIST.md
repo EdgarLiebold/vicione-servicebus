@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3654 |
+| Added | 3662 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -662,6 +662,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/ENDPOINT_IDENTITY_RERUN_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/EOL_CANONICALIZATION_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CHANGE_LIST_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_CHANGE_LIST_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_DEFAULT_SCAN.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_IDENTITY_SELFTESTS.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_M04.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_STATUS_POLICY_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_TECHNICAL.diff.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_VALIDATION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_COUNTER_MUTATIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_DEFAULT_SCAN.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_IDENTITY_SELFTESTS.log` | Added |  |
