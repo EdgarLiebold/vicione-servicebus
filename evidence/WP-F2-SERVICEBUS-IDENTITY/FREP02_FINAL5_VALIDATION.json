@@ -15,6 +15,9 @@
     "tools/identity/identity_gate.py",
     "tools/identity/test_identity_gate.py"
   ],
+  "evidenceCommit": "13a27ec786c27275db438f9e4fcb23e3fe72c5e1",
+  "evidenceTree": "45ad6abfae5b5a76e1873e84b42038848db023ee",
+  "evidenceDirectParent": "e044f1acba55b917e23fa9a2698c31bfb28120f3",
   "declarationProjection": {
     "contract": "conservative all-branch CSharp declaration-source identity; it does not claim compiler semantic evaluation",
     "accessorAttributesBound": true,
@@ -68,6 +71,18 @@
     "path": "FREP02_FINAL5_TECHNICAL.diff.gz",
     "compression": "gzip -n",
     "range": "8cfa46231e126fe615263c171f99a7b24197f36f..e044f1acba55b917e23fa9a2698c31bfb28120f3"
+  },
+  "postEvidenceCommitReplay": {
+    "apiRecords": 44081,
+    "apiFindings": 0,
+    "apiExact": true,
+    "packageRecords": 64,
+    "packageExact": true,
+    "packageArtifacts": 0,
+    "generatedManifestFindings": 0,
+    "technicalPatchExact": true,
+    "mutationsExact": true,
+    "rawLog": "FREP02_FINAL5_POSTCOMMIT_RECONSTRUCTION.log"
   },
   "executionBoundary": {
     "dotnetOrMsbuildStarted": false,

@@ -1977,3 +1977,14 @@ future cohorts as complete.
   zero projection findings. Product, policy, legal and package bytes are unchanged.
 - Identity self-tests and M11-M32 are being frozen in the direct Evidence child. Independent delta
   reviews, architecture acceptance and an explicitly authorized non-force remote push remain open.
+
+## 2026-08-29 — F-REP-02 FINAL5 post-Evidence audit
+
+- Evidence `13a27ec786c27275db438f9e4fcb23e3fe72c5e1`, tree
+  `45ad6abfae5b5a76e1873e84b42038848db023ee`, is the direct child of Technical
+  `e044f1acba55b917e23fa9a2698c31bfb28120f3`.
+- Committed-tree reconstruction is exact: 44,081 API records with zero findings, 64 package records
+  with zero artifacts, the exact Technical patch, and M11-M32 at one occurrence with matching mutant
+  and post-restore hashes. Identity self-tests are 147/147.
+- Only the two independent read-only delta reviews and architecture acceptance remain before asking
+  for fresh remote-push authorization. Nothing in FINAL5 has been pushed.
