@@ -1814,3 +1814,41 @@ future cohorts as complete.
   reviews. F-REP-02 is still local only and has not been pushed.
 - The audit-child CHANGELIST is now exact at 9,316 entries. Its four post-commit logs are present;
   only final manifest binding, commit/tree freeze and the two independent reviews remain.
+
+## 2026-08-29 — F-REP-02 final mutation-closure correction
+
+- Independent Test/Evidence review found one Evidence-only MAJOR: M01-M03 were still byte-bound to
+  superseded Technical `1090e11ecc250441e2ecf0357a8e114b84b94001`, while final Technical
+  `65f0d9b9741fab60cab39cef4fa7357e7ef1c2cc` changed the same target file for stable retirement
+  provenance. The old red runs remain historical but are not the final mutation closure.
+- M01-M03 were repeated against the final `identity_gate.py` baseline SHA-256
+  `f2f1614155110bb642eeb10c763189522bf7ed942387b0c1d3aa3644c7646338`. Each replacement occurs
+  exactly once; their final mutant hashes are respectively `69ca5e80...`, `61135d02...` and
+  `cded946d...`; each focused test is causally red and the target restores byte-identically.
+- `FREP02_FINAL_COUNTER_MUTATIONS.json` now binds M01-M04 together to the final Technical commit,
+  final baseline, final mutant bytes, raw failures and post-restore hash. The active correction
+  validation and SHA manifest supersede the older counter-mutation manifest only for final closure.
+- This additive correction changes no product, API, C# test, Solution, Workflow, Floor, package or
+  provider byte. A clean Evidence-correction commit, CHANGELIST regeneration and two final read-only
+  reviews remain mandatory. No F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 Git-identity and current-API correction
+
+- The immediately preceding 65f0 mutation-correction paragraph was an uncommitted work-in-progress
+  checkpoint and is superseded by this section. Both earlier committed chains are also terminally
+  superseded: Technical/Evidence `1090e11e...` / `46d5747f...`, and Technical/Evidence/Audit
+  `65f0d9b9...` / `3ed6a617...` / `f3b08ef5...`. Neither chain is an acceptance result.
+- Final Technical commit `f6ba0c7f45cbabc16746018348d7aca6ffad563a`, tree
+  `466c40d8aaa893739d12ae6dabbc33909d72618e`, has direct parent
+  `f3b08ef5515e8154fc34d7bb96cbbd6e2dd1bd1c` and changes only the Identity gate and its Python tests.
+- All 4,206 live baseline targets now bind content SHA-256, Git mode and Git blob oid. All 20,126
+  current public declarations in `src/**` possess an exact reverse binding; 958 declarations without
+  a baseline owner are explicit `CURRENT_ADDED` records. The complete projection has 36,013 records.
+- Candidate Evidence is `PASS` with zero findings, 5,654 terminal baseline paths, 1,448 retired paths
+  across 69 deletion commits/trees, 53 exact historical-policy paths, 5,772 text contexts and seven
+  binary blobs. The full Identity suite is 127/127 green.
+- M01-M06 are byte-bound to the final `identity_gate.py` SHA-256 `bf455efc...`; every replacement
+  occurs once, every focused test is causally red and the post-restore hash is byte-identical.
+- A direct final Evidence child, post-commit reconstruction and two independent read-only reviews
+  remain mandatory. Product, API, C# tests, Solutions, Workflows, Floors and packages remain unchanged.
+  No F-REP-02 commit has been pushed.

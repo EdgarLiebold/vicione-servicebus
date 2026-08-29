@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "subject": "F-REP-02 final-technical mutation closure",
+  "technicalCommit": "f6ba0c7f45cbabc16746018348d7aca6ffad563a",
+  "technicalTree": "466c40d8aaa893739d12ae6dabbc33909d72618e",
+  "technicalParent": "f3b08ef5515e8154fc34d7bb96cbbd6e2dd1bd1c",
+  "targetPath": "tools/identity/identity_gate.py",
+  "baselineSha256": "bf455efc1b7cdc6641b14277116732c86fc22f17c32e7b8c703bffb32db023f6",
+  "supersedesForFinalClosure": [
+    "FREP02_COUNTER_MUTATIONS.json",
+    "FREP02_CORRECTION_VALIDATION.json#counterMutation",
+    "the uncommitted 65f0 mutation-correction candidate"
+  ],
+  "mutations": [
+    {
+      "id": "M01",
+      "purpose": "historical text inventory cannot be bypassed",
+      "oldText": "    if (\n        sum(actual_inventory.values()) != authorized_line_count\n",
+      "newText": "    if False and (\n        sum(actual_inventory.values()) != authorized_line_count\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "343b916691cbfbabd2d6d4fb6354028ab7a009e947fb63cc5394d6cfb431e88b",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateHistoricalContextTests.test_new_identity_line_is_not_covered_by_an_existing_exact_context",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M01.log",
+      "rawLogSha256": "92bef91c61020093671b4b98147c3d4befba078f13f2ff4a9f3b44c08a0bbf93",
+      "causalFailure": "authorized text inventory accepted an additional identity line"
+    },
+    {
+      "id": "M02",
+      "purpose": "historical binary blob digest cannot be bypassed",
+      "oldText": "            if record.get(\"blobSha256\") != sha256(data):\n",
+      "newText": "            if False and record.get(\"blobSha256\") != sha256(data):\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "ce462a70fd9e8e7c72f4eb29b27542d6d240520c808955773525be160b371b86",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateHistoricalContextTests.test_binary_digest_and_path_authorization_are_independent_fail_closed_axes",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M02.log",
+      "rawLogSha256": "01a8b31eee329c3b7a1e486ae0fdf357b2c070f39bf55361a273bc6b2a23d4bf",
+      "causalFailure": "stale binary policy produced no finding"
+    },
+    {
+      "id": "M03",
+      "purpose": "explicit candidate Evidence root cannot be ignored",
+      "oldText": "        evidence or root / \"evidence\" / \"WP-F2-SERVICEBUS-IDENTITY\",\n",
+      "newText": "        root / \"evidence\" / \"WP-F2-SERVICEBUS-IDENTITY\",\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "468d91c227d2433a8d3165ceb080b4d337d83f81b74c509c97c8365b92654123",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateGeneratedEvidenceManifestTests.test_scan_uses_the_explicit_external_evidence_root",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M03.log",
+      "rawLogSha256": "35ca4874dcd454b0c37bf941639dfcd3f18996768f466f864d90c56bdcd2ac83",
+      "causalFailure": "scan used the repository Evidence root instead of the explicit candidate root"
+    },
+    {
+      "id": "M04",
+      "purpose": "retirement tree cannot depend on moving HEAD",
+      "oldText": "    tree = git(root, \"rev-parse\", f\"{commit}^{{tree}}\").decode(\"ascii\").strip()\n",
+      "newText": "    tree = git(root, \"rev-parse\", \"HEAD^{tree}\").decode(\"ascii\").strip()\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "8a9e6cc08649c8f1dc607dedde75d2eaf457774adf105e49d72b3edb4a3422dd",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateTerminalDispositionTests.test_retirement_tree_resolves_from_the_deletion_commit_not_current_head",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M04.log",
+      "rawLogSha256": "457488ef7404864c8dccb6c221333d8858ae7e67d0e36e9f07a4e41189f199e7",
+      "causalFailure": "Git query used HEAD^{tree} instead of the exact deletion commit"
+    },
+    {
+      "id": "M05",
+      "purpose": "live target Git mode cannot be omitted or drift",
+      "oldText": "                if record.get(\"targetGitMode\") != actual_mode:\n",
+      "newText": "                if False and record.get(\"targetGitMode\") != actual_mode:\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "ca949d99d8333f5f58905d5f49bfb51857d4b277f69445bb4b32d0b2bae534ec",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateTerminalDispositionTests.test_rejects_missing_stale_or_invented_live_git_identity",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M05.log",
+      "rawLogSha256": "648e88544fcb9bb19d3f522801b8c08d60b7006c1389e8bace037596c9059c3d",
+      "causalFailure": "missing and stale executable-mode bindings produced no mode finding"
+    },
+    {
+      "id": "M06",
+      "purpose": "current product declarations require reverse closure",
+      "oldText": "        if key in target_keys:\n            continue\n",
+      "newText": "        if True or key in target_keys:\n            continue\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "d8adea95d2156575e6c675b55e957a3a5b9fc19c7ca7325acea80957d2525c1e",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGatePublicProjectionTests.test_current_product_declaration_without_baseline_is_explicitly_terminal",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_FINAL_M06.log",
+      "rawLogSha256": "1b570317d5ccd0074b3c80387942bfebbe837c9c42bfc2be96f110fb3a1074b6",
+      "causalFailure": "missing CURRENT_ADDED record caused the exact reverse-closure finding"
+    }
+  ],
+  "postRestoreSha256": "bf455efc1b7cdc6641b14277116732c86fc22f17c32e7b8c703bffb32db023f6"
+}

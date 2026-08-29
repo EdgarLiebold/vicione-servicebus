@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3666 |
+| Added | 3680 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -672,6 +672,20 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CORRECTION_VALIDATION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_COUNTER_MUTATIONS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_DEFAULT_SCAN.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_CHANGE_LIST_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_COUNTER_MUTATIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_DEFAULT_SCAN.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_IDENTITY_SELFTESTS.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M01.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M02.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M03.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M04.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M05.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M06.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_STATUS_POLICY_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_TECHNICAL.diff.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_VALIDATION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_IDENTITY_SELFTESTS.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_M01.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_M02.log` | Added |  |

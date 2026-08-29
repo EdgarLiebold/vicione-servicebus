@@ -3,8 +3,11 @@
   "counts": {
     "baselinePaths": 5654,
     "changedBaselineFiles": 5650,
+    "currentAddedPublicDeclarations": 958,
+    "currentProductPublicDeclarations": 20126,
     "findings": 0,
-    "publicDeclarationRecords": 35055
+    "liveBaselineTargetsWithGitIdentity": 4206,
+    "publicDeclarationRecords": 36013
   },
   "findings": [],
   "licenseByteIdentical": true,

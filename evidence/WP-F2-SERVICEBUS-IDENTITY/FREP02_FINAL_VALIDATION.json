@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "subject": "F-REP-02 final Git-identity and current-public-API closure",
+  "supersededChains": [
+    {
+      "technicalCommit": "1090e11ecc250441e2ecf0357a8e114b84b94001",
+      "evidenceCommit": "46d5747f25a1ccb3a6cd0cc8777333597cf7ec21",
+      "reason": "retirementTree depended on moving HEAD after the Evidence commit"
+    },
+    {
+      "technicalCommit": "65f0d9b9741fab60cab39cef4fa7357e7ef1c2cc",
+      "evidenceCommit": "3ed6a617ffbcfe9a04b9029e383a58be0b37c1ec",
+      "auditCommit": "f3b08ef5515e8154fc34d7bb96cbbd6e2dd1bd1c",
+      "reason": "live target Git modes/blob oids, reverse current-public-API closure and final-byte M01-M03 evidence were incomplete"
+    }
+  ],
+  "technicalCommit": "f6ba0c7f45cbabc16746018348d7aca6ffad563a",
+  "technicalTree": "466c40d8aaa893739d12ae6dabbc33909d72618e",
+  "technicalParent": "f3b08ef5515e8154fc34d7bb96cbbd6e2dd1bd1c",
+  "technicalScope": [
+    "tools/identity/identity_gate.py",
+    "tools/identity/test_identity_gate.py"
+  ],
+  "evidenceParentRequirement": "direct child of technicalCommit",
+  "candidateScan": {
+    "status": "PASS",
+    "findings": 0,
+    "baselinePaths": 5654,
+    "changedOrRetiredBaselinePaths": 5650,
+    "liveBaselineTargetsWithGitIdentity": 4206,
+    "publicDeclarationRecords": 36013,
+    "currentProductPublicDeclarations": 20126,
+    "currentAddedPublicDeclarations": 958,
+    "sourceResult": "SOURCE_IDENTITY_GATE.json",
+    "sourceResultSha256": "2e1cdcd1abbaf210a5ddf10628e64a64470fd78161ab7ecccad735a36d56fea3",
+    "rawLog": "FREP02_FINAL_DEFAULT_SCAN.log",
+    "rawLogSha256": "2e1cdcd1abbaf210a5ddf10628e64a64470fd78161ab7ecccad735a36d56fea3"
+  },
+  "baselinePartition": {
+    "mappedExisting": 20,
+    "movedExact": 4186,
+    "retiredDeleted": 1448,
+    "liveGitModeAndBlobOidBound": 4206,
+    "retirementDeletionCommits": 69,
+    "retirementDeletionTrees": 69
+  },
+  "publicApiProjection": {
+    "mappedPresent": 23301,
+    "modifiedOrRemoved": 710,
+    "retiredPath": 11044,
+    "currentAdded": 958,
+    "currentProductReverseClosure": 20126
+  },
+  "historicalIdentityPolicy": {
+    "path": "tools/identity/historical_identity_policy.json",
+    "sha256": "d8827e8865b962ffeb1d9651aca4b8235fceaa378c41eccaddbf3f0cc7da318d",
+    "records": 53,
+    "authorizedTextContexts": 5772,
+    "binaryBlobBindings": 7,
+    "broadPathDirectoryOrExtensionExceptions": 0
+  },
+  "tests": {
+    "executed": 127,
+    "passed": 127,
+    "failed": 0,
+    "rawLog": "FREP02_FINAL_IDENTITY_SELFTESTS.log",
+    "rawLogSha256": "e60b866837c3f4e5b256dc37d692e4a58fad867a85d4ecd97edb5c23fa9923a8"
+  },
+  "counterMutations": {
+    "manifest": "FREP02_FINAL_COUNTER_MUTATIONS.json",
+    "manifestSha256": "8c800082a633accf117b1f3ca86268bd58e45766e3c85a65615c271accba2c3d",
+    "mutationIds": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M06"
+    ],
+    "requiredOccurrenceCountPerMutation": 1,
+    "requiredExitCodePerMutation": 1,
+    "baselineAndPostRestoreSha256": "bf455efc1b7cdc6641b14277116732c86fc22f17c32e7b8c703bffb32db023f6"
+  },
+  "generatedContractManifest": {
+    "path": "GENERATED_SHA256SUMS",
+    "sha256": "af1d5960948286c29b78a8c76cd12df0787616c3c400f331aa0f1d8fe4f9d156",
+    "entries": 5
+  },
+  "technicalPatch": {
+    "path": "FREP02_FINAL_TECHNICAL.diff.gz",
+    "compression": "gzip -n",
+    "sha256": "d9c58d19f4bdaf30111a8e658bfbc00ed3fc384a524981de4ec7dadb5eba0917"
+  },
+  "repositoryEvidence": {
+    "changeListEntries": 9330,
+    "changeListCheckLog": "FREP02_FINAL_CHANGE_LIST_CHECK.log",
+    "changeListCheckLogSha256": "92938a2d7d57c934396c4ae40ff7cc97f67947b4e6f195a23f0ccb85b37ba0d4",
+    "statusPolicyCheckLog": "FREP02_FINAL_STATUS_POLICY_CHECK.log",
+    "statusPolicyCheckLogSha256": "1095916f1492ec656bacebba47814cb479e4a49a8bbc540d0412f76f7e93f48b"
+  },
+  "executionBoundary": {
+    "dotnetOrMsbuildStarted": false,
+    "containerStarted": false,
+    "networkUsed": false,
+    "pythonBytecodeCache": "/private/tmp/frep02-pycache"
+  }
+}
