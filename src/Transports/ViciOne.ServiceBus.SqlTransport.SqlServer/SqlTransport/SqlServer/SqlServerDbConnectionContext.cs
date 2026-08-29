@@ -111,9 +111,14 @@ public class SqlServerDbConnectionContext :
         return connection;
     }
 
-    bool IsTransient(SqlException exception)
+    static bool IsTransient(SqlException exception)
     {
-        return exception.Number switch
+        return IsTransientErrorNumber(exception.Number);
+    }
+
+    internal static bool IsTransientErrorNumber(int errorNumber)
+    {
+        return errorNumber switch
         {
             -2 => true,
             20 => true,

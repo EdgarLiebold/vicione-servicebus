@@ -100,6 +100,9 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration
             if (_settings.MaintenanceBatchSize <= 0)
                 yield return this.Failure(_settings.QueueName, nameof(_settings.MaintenanceBatchSize), "Must be >= 1");
 
+            if (_settings.LockDuration < TimeSpan.FromSeconds(1))
+                yield return this.Failure(_settings.QueueName, nameof(_settings.LockDuration), "Must be >= 1 second");
+
             if (_settings.UnlockDelay.HasValue && _settings.UnlockDelay < TimeSpan.Zero)
                 yield return this.Failure(_settings.QueueName, nameof(_settings.UnlockDelay), "Must be > TimeSpan.Zero");
 
