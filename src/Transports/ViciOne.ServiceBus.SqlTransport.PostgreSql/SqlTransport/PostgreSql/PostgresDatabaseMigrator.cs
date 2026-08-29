@@ -757,7 +757,7 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                 END IF;
 
                 UPDATE "{0}".message_delivery md
-                    SET enqueue_time = v_enqueue_time, consumer_id = NULL, transport_headers = headers
+                    SET enqueue_time = v_enqueue_time, lock_id = NULL, consumer_id = NULL, transport_headers = headers
                     WHERE md.message_delivery_id = unlock_message.message_delivery_id AND md.lock_id = unlock_message.lock_id
                     RETURNING md.message_delivery_id, md.queue_id INTO v_message_delivery_id, v_queue_id;
 
