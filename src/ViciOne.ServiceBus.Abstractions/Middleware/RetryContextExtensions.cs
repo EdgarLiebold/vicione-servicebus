@@ -30,7 +30,9 @@ namespace ViciOne.ServiceBus
         /// <returns>The retry attempt number, 0 = first time, >= 1 = retry</returns>
         public static int GetRedeliveryCount(this ConsumeContext context)
         {
-            return context.Headers.Get(MessageHeaders.RedeliveryCount, default(int?)) ?? 0;
+            return context.Headers.Get(MessageHeaders.RedeliveryCount, default(int?))
+                ?? context.ReceiveContext.TransportHeaders.Get(MessageHeaders.RedeliveryCount, default(int?))
+                ?? 0;
         }
     }
 }

@@ -65,6 +65,23 @@ namespace ViciOne.ServiceBus.SqlTransport
                 case nameof(_message.DeliveryCount):
                     value = _message.DeliveryCount;
                     return true;
+                case MessageHeaders.RedeliveryCount:
+                    int? redeliveryCount = _message.GetTransportHeaders()
+                        .Get(MessageHeaders.RedeliveryCount, default(int?));
+                    if (redeliveryCount.HasValue)
+                    {
+                        value = redeliveryCount.Value;
+                        return true;
+                    }
+
+                    if (_message.DeliveryCount > 1)
+                    {
+                        value = _message.DeliveryCount - 1;
+                        return true;
+                    }
+
+                    value = default;
+                    return false;
                 case nameof(_message.RoutingKey):
                     value = _message.RoutingKey;
                     return value != null;

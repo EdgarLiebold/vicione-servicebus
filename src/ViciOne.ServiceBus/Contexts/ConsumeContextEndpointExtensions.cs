@@ -195,8 +195,8 @@ namespace ViciOne.ServiceBus
                 else if (_context.TryGetPayload(out RetryContext retryContext) && retryContext.RetryCount > 0)
                     context.Headers.Set(MessageHeaders.FaultRetryCount, retryContext.RetryCount);
 
-                var redeliveryCount = _context.Headers.Get<int>(MessageHeaders.RedeliveryCount);
-                if (redeliveryCount.HasValue)
+                var redeliveryCount = _context.GetRedeliveryCount();
+                if (redeliveryCount > 0)
                     context.Headers.Set(MessageHeaders.FaultRedeliveryCount, redeliveryCount);
 
                 return Task.CompletedTask;
