@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "fba681ade996b48877497d71165426e1e92d4b0f",
+  "technicalTree": "f5a7f4d2851595b605c9a6649b2945ae986d3267",
+  "mutations": [
+    {
+      "id": "M32",
+      "purpose": "Failed or cancelled message settlement always marks the receive lock lost; the replacement literal uniquely owns Complete's finally block",
+      "targetPath": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+      "baselineSha256": "4bc200caba2c293ccbdf6a0ba8a90e5a9091737100bab45d31a3d92525cbeab7",
+      "oldText": [
+        "    public async Task Complete()",
+        "    {",
+        "        try",
+        "        {",
+        "            await StopRenewal().ConfigureAwait(false);",
+        "            await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);",
+        "        }",
+        "        finally",
+        "        {",
+        "            Interlocked.Exchange(ref _locked, 0);",
+        "            DisposeRenewalTokens();",
+        "        }",
+        "    }"
+      ],
+      "newText": [
+        "    public async Task Complete()",
+        "    {",
+        "        try",
+        "        {",
+        "            await StopRenewal().ConfigureAwait(false);",
+        "            await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);",
+        "        }",
+        "        finally",
+        "        {",
+        "            GC.KeepAlive(_locked);",
+        "            DisposeRenewalTokens();",
+        "        }",
+        "    }"
+      ],
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "000bd87000d6580e239e4470d4909d5915fc2854519490c3b4e92c4975659d13",
+      "postRestoreSha256": "4bc200caba2c293ccbdf6a0ba8a90e5a9091737100bab45d31a3d92525cbeab7",
+      "buildEvidence": "mutations/M32-build.binlog",
+      "buildExitCode": 0,
+      "buildWarnings": 0,
+      "buildErrors": 0,
+      "testMethod": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsReceiveLifecycleTests.FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLost",
+      "minimumExpectedTests": 2,
+      "testExitCode": 2,
+      "testSummary": { "tests": 2, "passed": 0, "failed": 2, "skipped": 0 },
+      "testEvidence": "mutations/M32.json"
+    },
+    {
+      "id": "M35",
+      "purpose": "An absolute Amazon SQS URI must contain a host",
+      "targetPath": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs",
+      "baselineSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "oldText": [
+        "        if (string.IsNullOrWhiteSpace(address.Host))",
+        "            throw new AmazonSqsTransportConfigurationException(\"The Amazon SQS host must be specified.\");",
+        "        if (!string.IsNullOrEmpty(address.UserInfo))",
+        "            throw new AmazonSqsTransportConfigurationException(\"Credentials must not be embedded in an Amazon SQS host URI.\");"
+      ],
+      "newText": [
+        "        if (!string.IsNullOrEmpty(address.UserInfo))",
+        "            throw new AmazonSqsTransportConfigurationException(\"Credentials must not be embedded in an Amazon SQS host URI.\");"
+      ],
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "1f883e817dfa54d494ecc41bca53e9ec0a0fa28346ad570eb2cc5dd2b3b8ae09",
+      "postRestoreSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "buildEvidence": "mutations/M35-build.binlog",
+      "buildExitCode": 0,
+      "buildWarnings": 0,
+      "buildErrors": 0,
+      "testMethod": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests.HostUris_RequireAnAbsoluteAddressWithAHost",
+      "minimumExpectedTests": 2,
+      "testExitCode": 2,
+      "testSummary": { "tests": 2, "passed": 1, "failed": 1, "skipped": 0 },
+      "testEvidence": "mutations/M35.json"
+    },
+    {
+      "id": "M36",
+      "purpose": "A relative Amazon SQS URI fails through the stable transport configuration boundary",
+      "targetPath": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs",
+      "baselineSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "oldText": [
+        "        if (!address.IsAbsoluteUri)",
+        "            throw new AmazonSqsTransportConfigurationException(\"The Amazon SQS host URI must be absolute.\");",
+        "        if (string.IsNullOrWhiteSpace(address.Host))",
+        "            throw new AmazonSqsTransportConfigurationException(\"The Amazon SQS host must be specified.\");"
+      ],
+      "newText": [
+        "        if (string.IsNullOrWhiteSpace(address.Host))",
+        "            throw new AmazonSqsTransportConfigurationException(\"The Amazon SQS host must be specified.\");"
+      ],
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "017b4dc002092a3128ac246454c37e9632f0b1a99c23833773c4f516aaa040d0",
+      "postRestoreSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "buildEvidence": "mutations/M36-build.binlog",
+      "buildExitCode": 0,
+      "buildWarnings": 0,
+      "buildErrors": 0,
+      "testMethod": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests.HostUris_RequireAnAbsoluteAddressWithAHost",
+      "minimumExpectedTests": 2,
+      "testExitCode": 2,
+      "testSummary": { "tests": 2, "passed": 1, "failed": 1, "skipped": 0 },
+      "testEvidence": "mutations/M36.json"
+    },
+    {
+      "id": "M37",
+      "purpose": "The public string host constructor rejects null, empty and whitespace hosts",
+      "targetPath": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs",
+      "baselineSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "oldText": [
+        "        if (string.IsNullOrWhiteSpace(host))",
+        "            throw new AmazonSqsTransportConfigurationException(\"The Amazon SQS host must be specified.\");",
+        "",
+        "        Scheme = AmazonSqsScheme;"
+      ],
+      "newText": ["        Scheme = AmazonSqsScheme;"],
+      "occurrenceCount": 1,
+      "occurrenceIndex": 0,
+      "mutantSha256": "a850da27da91fe47a02f8350964d2111be4643361d3548b91aa346d65d06c8e7",
+      "postRestoreSha256": "fd51ce6a99814b6ed7d911e52f87958b75042f9feeca8db429c2d568d9feccbf",
+      "buildEvidence": "mutations/M37-build.binlog",
+      "buildExitCode": 0,
+      "buildWarnings": 0,
+      "buildErrors": 0,
+      "testMethod": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests.StringHostConstruction_RejectsMissingHost",
+      "minimumExpectedTests": 3,
+      "testExitCode": 2,
+      "testSummary": { "tests": 3, "passed": 0, "failed": 3, "skipped": 0 },
+      "testEvidence": "mutations/M37.json"
+    }
+  ],
+  "commandTemplates": {
+    "build": "env VICIONE_TESTS__Profile=UnitArchitecture DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet build tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers /p:UseSharedCompilation=false /bl:<buildEvidence>",
+    "test": "env VICIONE_TESTS__Profile=UnitArchitecture DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages MSBUILDDISABLENODEREUSE=1 artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.Tests --filter-method <testMethod> --minimum-expected-tests <minimumExpectedTests> --parallel none --report-xunit-ctrf --results-directory /private/tmp/vsb-aws-host-correction-evidence/mutations --report-xunit-ctrf-filename <id>.json"
+  }
+}

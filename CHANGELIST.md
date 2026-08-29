@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2727 |
+| Added | 2774 |
 | Modified | 4212 |
 | Deleted | 1436 |
 | Renamed | 2 |
@@ -934,6 +934,53 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-02/positive/unit-modules/ViciOne.ServiceBus.Tests.Infrastructure.Tests.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-02/positive/unit-modules/ViciOne.ServiceBus.Tests.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-02/positive/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/TECHNICAL_DIFF.patch` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M32-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M32.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M35-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M35.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M36-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M36.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M37-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/mutations/M37.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/local-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/local-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/unit-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/unit-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-fixture/azurite-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-fixture/endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-fixture/fixture-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-fixture/localstack-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-fixture/postgres-broker.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_10_51.271418.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_10_53.131346.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_10_54.376652.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_11_09.586653.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_11_13.942327.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/local-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_11_26.599100.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_07_16.600425.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_07_17.831431.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_07_57.671431.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_05.951722.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_08.878587.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_10.188742.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_11.525861.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_12.924493.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_32.573963.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_35.350648.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_36.774984.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_38.103724.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_39.521156.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_57.128175.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_08_58.341493.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_09_02.056479.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/unit-modules/edgar.liebold_Edgars-iMac-2_2026-08-29_03_09_04.004547.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/SHA256SUMS` | Added |  |

@@ -1,0 +1,172 @@
+diff --git a/.github/workflows/native-tests.yml b/.github/workflows/native-tests.yml
+index 0f35f996..ef844538 100644
+--- a/.github/workflows/native-tests.yml
++++ b/.github/workflows/native-tests.yml
+@@ -37,7 +37,7 @@ jobs:
+       - name: Build release test binaries
+         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+       - name: Run the complete profile without filters
+-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 --max-parallel-test-modules 1
++        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2060 --max-parallel-test-modules 1
+ 
+   local-integration:
+     name: "Required: Native Local Integration"
+diff --git a/.testagent/plan.md b/.testagent/plan.md
+index 55603783..e7abd64b 100644
+--- a/.testagent/plan.md
++++ b/.testagent/plan.md
+@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
+ 
+ ## Current profile floors
+ 
+-- `UnitArchitecture`: 2055 predeclared unfiltered cases;
++- `UnitArchitecture`: 2060 predeclared unfiltered cases;
+ - `LocalIntegration`: 149 predeclared unfiltered cases.
+ 
+ The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
+@@ -1913,3 +1913,14 @@ plan. It changes neither the 111-row R0 disposition nor the real-AWS External bo
+ 9. Freeze separate technical and direct evidence commits, push the correction branch, and require
+    both independent reviewers to return PASS against the exact hashes before architecture acceptance.
+    GitHub Actions remain disabled and real AWS remains untouched.
++
++## AWS native closure — final host-input correction
++
++The second independent Evidence review found one remaining public input gap: an absolute
++`amazonsqs:/scope` URI has no host but passed the central address boundary. Close that gap together
++with explicit carriers for the already intended relative-URI and string-host guards. The two new
++theories materialize five hermetic cases, raising the UnitArchitecture floor from 2055 to 2060 while
++LocalIntegration remains 149. Bind three separate one-cause mutations for hostless URI, relative URI
++and null/empty/whitespace string host. Regenerate the Evidence child and make M32's replacement
++literal encompass its unique `Complete` finally block rather than claiming the repeated exchange
++line is unique.
+diff --git a/.testagent/status.md b/.testagent/status.md
+index 163ef09a..f868cc57 100644
+--- a/.testagent/status.md
++++ b/.testagent/status.md
+@@ -1234,3 +1234,20 @@ future cohorts as complete.
+ - The Evidence Child is not frozen or accepted yet. Generated CHANGELIST/SHA closure, two independent
+   read-only PASS reviews, remote backup and final architecture acceptance remain mandatory. Real AWS,
+   credentials and GitHub Actions remain untouched.
++
++## AWS native closure — final host-input correction candidate
++
++- The first product review of Technical `1d6016f7` and Evidence `7aa0ec82` returned PASS. The second
++  review confirmed the DynamoDB owner closure but found one remaining product-input gap: the central
++  address accepted an absolute hostless `amazonsqs:/scope` URI. It also found that M32 used the
++  correct occurrence index and mutant bytes but incorrectly described a repeated exchange line as a
++  one-occurrence literal.
++- The central address now rejects a missing URI host. Two direct public theories bind hostless and
++  relative URI inputs through both `AmazonSqsHostAddress` and `AmazonSqsHostConfigurator`, plus
++  null/empty/whitespace string-host inputs through the public string constructor. All five focused
++  cases pass after a zero-warning, zero-error Release build; the UnitArchitecture floor is 2,060 and
++  the focused SQS count is 66.
++- This remains a correction candidate. A new Technical freeze, full positive verification, three
++  separate host-input mutants, corrected unique M32 recipe, regenerated Evidence child, two new
++  independent read-only PASS reviews, remote backup and architecture acceptance remain mandatory.
++  Real AWS, credentials and GitHub Actions remain untouched.
+diff --git a/README.md b/README.md
+index c9f7bbe0..db42f679 100644
+--- a/README.md
++++ b/README.md
+@@ -59,7 +59,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
+ dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+ dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
+-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 \
++  --results-directory artifacts/test-results/unit --minimum-expected-tests 2060 \
+   --max-parallel-test-modules 1
+ ```
+ 
+diff --git a/docs/build.md b/docs/build.md
+index 9a1cbd81..15b32ec3 100644
+--- a/docs/build.md
++++ b/docs/build.md
+@@ -55,7 +55,7 @@ the native MTP command form and no VSTest argument separator:
+ ```bash
+ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
+   -c Release --no-build --no-restore \
+-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 \
++  --results-directory artifacts/test-results/unit --minimum-expected-tests 2060 \
+   --max-parallel-test-modules 1
+ 
+ VICIONE_TESTS__Profile=LocalIntegration \
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
+index b63946e8..c8df7c28 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
+@@ -20,6 +20,8 @@ public AmazonSqsHostAddress(Uri address)
+ 
+         if (!address.IsAbsoluteUri)
+             throw new AmazonSqsTransportConfigurationException("The Amazon SQS host URI must be absolute.");
++        if (string.IsNullOrWhiteSpace(address.Host))
++            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host must be specified.");
+         if (!string.IsNullOrEmpty(address.UserInfo))
+             throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI.");
+         if (!string.IsNullOrEmpty(address.Query))
+diff --git a/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs b/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
+index c40c3bb1..b8f5339a 100644
+--- a/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
++++ b/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
+@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
+ /// </remarks>
+ public sealed class TestingPlatformConfigurationTests
+ {
+-    private const int ExpectedUnitTestFloor = 2055;
++    private const int ExpectedUnitTestFloor = 2060;
+     private const int ExpectedLocalIntegrationTestFloor = 149;
+ 
+     [Fact]
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
+index bed87863..6b7a88e0 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
+@@ -81,6 +81,36 @@ public void HostUris_RejectCredentialsAndControlComponents(string address, strin
+         Assert.Equal(addressException.Message, configuratorException.Message);
+     }
+ 
++    [Theory]
++    [InlineData("amazonsqs:/production", UriKind.Absolute, "must be specified")]
++    [InlineData("production", UriKind.Relative, "must be absolute")]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "host-uri-requires-absolute-address-and-host")]
++    public void HostUris_RequireAnAbsoluteAddressWithAHost(string address, UriKind uriKind, string expectedReason)
++    {
++        var uri = new Uri(address, uriKind);
++
++        AmazonSqsTransportConfigurationException addressException = Assert.Throws<AmazonSqsTransportConfigurationException>(
++            () => new AmazonSqsHostAddress(uri));
++        AmazonSqsTransportConfigurationException configuratorException = Assert.Throws<AmazonSqsTransportConfigurationException>(
++            () => new AmazonSqsHostConfigurator(uri));
++
++        Assert.Contains(expectedReason, addressException.Message, StringComparison.Ordinal);
++        Assert.Equal(addressException.Message, configuratorException.Message);
++    }
++
++    [Theory]
++    [InlineData(null)]
++    [InlineData("")]
++    [InlineData(" ")]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "string-host-rejects-null-empty-or-whitespace")]
++    public void StringHostConstruction_RejectsMissingHost(string? host)
++    {
++        AmazonSqsTransportConfigurationException exception = Assert.Throws<AmazonSqsTransportConfigurationException>(
++            () => new AmazonSqsHostAddress(host!, "/"));
++
++        Assert.Contains("must be specified", exception.Message, StringComparison.Ordinal);
++    }
++
+     [Fact]
+     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "immutable-host-snapshot-and-client-factories")]
+     public void HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources()
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
+index 9e8b4f7d..b7e91caa 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
+@@ -9,6 +9,8 @@
+   { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "secret-free-public-api", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "PublicConfiguration_ContainsNoRawCredentialOrProductTestHarnessSurface" },
+   { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "sdk-chain-or-explicit-credential-object", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostComposition_UsesTheSdkChainOrAnExplicitCredentialObject" },
+   { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "uri-credentials-and-control-components-rejected", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostUris_RejectCredentialsAndControlComponents" },
++  { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "host-uri-requires-absolute-address-and-host", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostUris_RequireAnAbsoluteAddressWithAHost" },
++  { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "string-host-rejects-null-empty-or-whitespace", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "StringHostConstruction_RejectsMissingHost" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "immutable-host-snapshot-and-client-factories", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "low-level-host-accepts-only-sealed-immutable-snapshots", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "LowLevelHost_AcceptsOnlyTheSealedSnapshotProducedByTheTypedBuilder" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "fresh-owned-client-pair-per-reconnect", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "ClientFactories_CreateAFreshOwnedPairForEveryConnection" },
