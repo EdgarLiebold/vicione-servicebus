@@ -4,6 +4,8 @@ using Microsoft.Data.SqlClient;
 
 internal static class SqlServerTransportInspection
 {
+    internal sealed record ScheduledDelivery(DateTime EnqueueTimeUtc, DateTime DatabaseNowUtc);
+
     public static async Task OpenWithin(
         this SqlConnection connection,
         TimeSpan timeout,
@@ -113,6 +115,28 @@ internal static class SqlServerTransportInspection
             + "WHERE m.MessageId = @messageId",
             cancellationToken,
             ("messageId", messageId));
+
+    public static async Task<ScheduledDelivery> ScheduledDeliveryForMessage(
+        this SqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        string text = $"SELECT d.EnqueueTime, SYSUTCDATETIME() "
+            + $"FROM [{schema}].[MessageDelivery] d "
+            + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
+            + "WHERE m.MessageId = @messageId";
+        await using SqlCommand command = connection.Command(text, ("messageId", messageId));
+        await using SqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken))
+            throw new InvalidOperationException("The delayed delivery was not persisted by SQL Server.");
+        var result = new ScheduledDelivery(
+            DateTime.SpecifyKind(reader.GetDateTime(0), DateTimeKind.Utc),
+            DateTime.SpecifyKind(reader.GetDateTime(1), DateTimeKind.Utc));
+        if (await reader.ReadAsync(cancellationToken))
+            throw new InvalidOperationException("The message has more than one scheduled delivery.");
+        return result;
+    }
 
     private static async Task<long> ScalarCore(
         SqlConnection connection,
