@@ -39,6 +39,9 @@
     "tools/identity/identity_gate.py",
     "tools/identity/test_identity_gate.py"
   ],
+  "evidenceCommit": "abc1a368728b59d608d0dcc057b3f675e2ede410",
+  "evidenceTree": "c45e286f7c1077326aa3b92034153414a8a23c38",
+  "evidenceDirectParent": "e0a7f66142bf9b5a7b6cb2872af0ff6447929abd",
   "candidateSnapshot": {
     "definition": "tracked plus non-ignored untracked Git blobs",
     "semanticAuthority": [
@@ -118,6 +121,18 @@
     "path": "GENERATED_SHA256SUMS",
     "sha256": "89cb38a3a5fccb324d7aa5ee837ed3e27f2c4a34ace8b306940c8c2995fd312f",
     "entries": 5
+  },
+  "postEvidenceCommitReplay": {
+    "apiRecords": 43520,
+    "apiFindings": 0,
+    "apiExact": true,
+    "packageRecords": 64,
+    "packageExact": true,
+    "packageArtifacts": 0,
+    "generatedManifestFindings": 0,
+    "mutationsExact": true,
+    "rawLog": "FREP02_FINAL4_POSTCOMMIT_RECONSTRUCTION.log",
+    "rawLogSha256": "7a1617d48da7b11f0cfb8ec0b136b01a867f95dec2e9f8dd52b520ab92a764e2"
   },
   "executionBoundary": {
     "dotnetOrMsbuildStarted": false,

@@ -1952,3 +1952,14 @@ future cohorts as complete.
   records, 24,756 current product declarations, 1,711 `CURRENT_ADDED` records and zero findings.
 - A direct Evidence child, committed-tree replay and two independent read-only reviews remain
   mandatory. This closure is local and has not been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL4 post-Evidence audit
+
+- Evidence commit `abc1a368728b59d608d0dcc057b3f675e2ede410`, tree
+  `c45e286f7c1077326aa3b92034153414a8a23c38`, is the direct child of final Technical
+  `e0a7f66142bf9b5a7b6cb2872af0ff6447929abd`.
+- Committed-tree reconstruction is exact: 43,520 declaration records with zero findings, 64 package
+  source records with zero ignored artifacts, five generated contracts without manifest drift and
+  all M11-M27 replacements at one occurrence with the declared mutant hashes.
+- Final audit hashing, CHANGELIST closure and two independent read-only reviews remain. F-REP-02 is
+  still local and open; no commit in this FINAL4 chain has been pushed.
