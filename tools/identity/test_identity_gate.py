@@ -735,7 +735,7 @@ public enum State
         self.assertTrue(any("owner namespace N1 :: type" in item[0] for item in namespace_one))
 
     def test_identity_mapping_happens_before_owner_tokenization(self) -> None:
-        baseline = "namespace MassTransit { public class Contract { public void Execute() { } } }"
+        baseline = f"namespace {OLD} {{ public class Contract {{ public void Execute() {{ }} }} }}"
         target = "namespace ViciOne.ServiceBus { public class Contract { public void Execute() { } } }"
 
         self.assertEqual(
