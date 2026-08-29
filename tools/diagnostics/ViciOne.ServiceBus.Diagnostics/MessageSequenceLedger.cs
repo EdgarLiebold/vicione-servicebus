@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Diagnostics;
 
 using System;
@@ -60,10 +61,17 @@ sealed class MessageSequenceLedger
     /// one.
     /// </para>
     /// </summary>
-    public async Task<bool> WaitForAllExpected(TimeSpan budget, CancellationToken cancellationToken)
+    public Task<bool> WaitForAllExpected(TimeSpan budget, CancellationToken cancellationToken)
     {
+        return WaitForAllExpected(budget, cancellationToken, TimeProvider.System);
+    }
+
+    internal async Task<bool> WaitForAllExpected(TimeSpan budget, CancellationToken cancellationToken,
+        TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        Task delay = Task.Delay(budget, linked.Token);
+        Task delay = Task.Delay(budget, timeProvider, linked.Token);
 
         Task finished = await Task.WhenAny(_allSeen.Task, delay).ConfigureAwait(false);
 

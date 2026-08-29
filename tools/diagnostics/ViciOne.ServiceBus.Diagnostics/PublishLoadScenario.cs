@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.Diagnostics;
 
 using System;
@@ -156,11 +157,12 @@ static class PublishLoadScenario
     /// </summary>
     internal static async Task<(bool Quiesced, MessageSequenceLedger.Snapshot Snapshot)> ObserveThenQuiesceThenRead(
         MessageSequenceLedger ledger, Func<CancellationToken, Task> stop, TimeSpan window, TimeSpan budget,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, TimeProvider? timeProvider = null)
     {
-        await Task.Delay(window, cancellationToken).ConfigureAwait(false);
+        timeProvider ??= TimeProvider.System;
+        await Task.Delay(window, timeProvider, cancellationToken).ConfigureAwait(false);
 
-        var quiesced = await Quiesce(stop, budget).ConfigureAwait(false);
+        var quiesced = await Quiesce(stop, budget, timeProvider).ConfigureAwait(false);
 
         return (quiesced, ledger.Read());
     }
@@ -182,9 +184,11 @@ static class PublishLoadScenario
     /// so it is reported as not quiesced instead of being counted as one.
     /// </para>
     /// </summary>
-    internal static async Task<bool> Quiesce(Func<CancellationToken, Task> stop, TimeSpan budget)
+    internal static async Task<bool> Quiesce(Func<CancellationToken, Task> stop, TimeSpan budget,
+        TimeProvider? timeProvider = null)
     {
-        using var bounded = new CancellationTokenSource(budget);
+        timeProvider ??= TimeProvider.System;
+        using var bounded = new CancellationTokenSource(budget, timeProvider);
 
         try
         {

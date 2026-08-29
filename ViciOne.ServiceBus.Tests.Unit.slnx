@@ -2,6 +2,7 @@
   <!-- Profile UnitArchitecture: everything that runs without external infrastructure. -->
   <Folder Name="/tests2/">
     <Project Path="tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj" />
+    <Project Path="tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj" />
     <Project Path="tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj" />
     <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
@@ -27,6 +28,9 @@
   </Folder>
   <Folder Name="/benchmarks/">
     <Project Path="benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj" />
   </Folder>
   <!-- The product projects the tests inspect are members, not merely referenced.
 

@@ -2429,3 +2429,28 @@ different diagnosis and use the already established unchanged-command outside-sa
   elevated permissions.
 - The technical scope is Python tooling/schema/tests only. Product, C# tests, solutions, workflows,
   floors, packages and the remaining legacy-test tree are immutable in this slice.
+
+## Diagnostics native closure research
+
+The next productive A-0071 cohort is the complete Diagnostics owner
+`tools/diagnostics/ViciOne.ServiceBus.Diagnostics`. It has six C# product files and exactly one
+inherited NUnit/VSTest project with three source files, 39 methods and 44 materialized identities.
+The frozen R0 inventory maps those identities one-to-one to `OBL-R0-SML-0222..0265`: eleven command
+line cases, ten ledger cases, eleven observation-boundary cases (including five verdict variants),
+and twelve result-delivery/cancellation cases. All are hermetic. The RabbitMQ-backed diagnostic
+scenarios themselves remain human-operated measurements and are not converted into unit tests.
+
+The inherited assertions are behaviorally useful, but three success paths depend on wall time:
+ledger timeout, bounded quiescence and the observation window. The product currently constructs
+`Task.Delay` and `CancellationTokenSource(TimeSpan)` directly. The native owner will add an optional
+internal `TimeProvider` seam with `TimeProvider.System` as the production default. Tests use
+`FakeTimeProvider`, explicit cancellation and positive task/state barriers; no sleep, stopwatch or
+absence-until-timeout result remains.
+
+The product already grants internals access to assembly `ViciOne.ServiceBus.Diagnostics.Tests`.
+Keeping that assembly name avoids public API expansion. The native project uses xUnit 4 on Microsoft
+Testing Platform v2, embeds a passive requirement projection and joins UnitArchitecture plus
+Engineering. The product tool also joins UnitArchitecture so Release configuration applies to the
+tested binary. Forty-four replacement cases plus one projection Fact raise the active Unit floor
+from 2,288 to 2,333. Only after all 44 R0 rows execute green is the complete inherited Diagnostics
+project (three C# files, csproj and lock file) deleted and removed from Engineering.

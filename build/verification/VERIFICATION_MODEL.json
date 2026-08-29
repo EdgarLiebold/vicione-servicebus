@@ -179,9 +179,7 @@
       "id": "diagnostics",
       "class": "DEVELOPER_TOOL_COMPILE_PROOF",
       "sourceProjects": [],
-      "testProjects": [
-        "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [
         "tools/diagnostics/ViciOne.ServiceBus.Diagnostics"
@@ -191,10 +189,10 @@
         {
           "job": "benchmarks",
           "category": "diagnostics",
-          "project": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
-          "minimumExecutedCases": 44,
+          "project": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
+          "minimumExecutedCases": 45,
           "notExecuted": [],
-          "testProjectDirectory": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
+          "testProjectDirectory": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
           "explicitAttributeCount": 0,
           "budgetSeconds": 300,
           "brokers": [],

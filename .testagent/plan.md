@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2288 predeclared unfiltered cases;
+- `UnitArchitecture`: 2333 predeclared unfiltered cases;
 - `LocalIntegration`: 244 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -2016,3 +2016,33 @@ Acceptance checklist to concrete test owners:
   `IdentityGatePublicProjectionTests` and existing `validate_evidence_records` owners.
 - Canonical 5,654-key partition and full scan zero findings → final read-only integration carriers,
   not fixture-only assertions.
+
+## Diagnostics native closure execution plan
+
+1. Bind `OBL-R0-SML-0222..0265` in `.testagent/diagnostics-native-obligation-map.tsv` to 44 unique
+   source-mirrored xUnit carriers: 11 command-line, 10 ledger, 11 observation-boundary and 12
+   result-delivery/cancellation cases. The five inherited verdict Theory rows remain five separately
+   attributable executable cases.
+2. Add an optional internal `TimeProvider` to `MessageSequenceLedger.WaitForAllExpected`,
+   `PublishLoadScenario.Quiesce` and `ObserveThenQuiesceThenRead`, defaulting to
+   `TimeProvider.System`. Preserve production behavior while making timeout, cancellation and window
+   completion causally advanceable.
+3. Create `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests` as an xUnit 4/MTP v2 executable test
+   project with the existing friend-assembly identity, `FakeTimeProvider` and the common requirement
+   verifier. Each test owns fresh state and external expected values; temporary files are unique and
+   removed in `finally`/`Dispose`.
+4. Embed an exact passive JSON projection for all 44 product requirements plus its projection Fact.
+   Add the test and product projects to UnitArchitecture, replace the inherited project in
+   Engineering, and raise every active Unit floor from 2,288 to 2,333. GitHub workflows remain
+   operationally disabled; only their manual command contract is updated.
+5. Run focused locked Release restore/build and unfiltered native Diagnostics tests, then complete
+   UnitArchitecture, LocalIntegration and Engineering Release verification. Use the established
+   isolated CLI home/build-server settings; a restricted-sandbox pipe/socket failure is rerun
+   unchanged outside the sandbox and never fixed by weakening tests.
+6. Perform the mandatory assertion-quality, anti-pattern, test-gap and smell reviews. Bind targeted
+   one-cause mutations for the injected clock, quiescence-result boundary, snapshot ordering,
+   exactness and result-delivery fallbacks.
+7. Once all 44 inherited rows are terminal `REPLACED_EXECUTING`, delete the three inherited C# files,
+   old NUnit/VSTest csproj and lock file, including the now-empty directory. Regenerate CHANGELIST,
+   freeze technical and direct evidence commits, require independent read-only review, then request
+   remote push approval for the new commits.

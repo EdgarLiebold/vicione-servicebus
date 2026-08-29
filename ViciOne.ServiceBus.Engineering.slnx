@@ -6,7 +6,7 @@
   </Folder>
   <Folder Name="/diagnostics/">
     <Project Path="tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj" />
-    <Project Path="tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj" />
+    <Project Path="tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj" />
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/OrderWorkflow/ViciOne.ServiceBus.Samples.OrderWorkflow.csproj" />
