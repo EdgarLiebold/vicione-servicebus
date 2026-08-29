@@ -783,6 +783,8 @@ def csharp_tokens(text: str) -> list[CSharpToken]:
             while quote_index + quote_count < length and text[quote_index + quote_count] == '"':
                 quote_count += 1
         cursor = quote_index + quote_count
+        if quote == '"' and quote_count == 2:
+            return cursor
         if quote == '"' and quote_count >= 3:
             marker = '"' * quote_count
             closing = text.find(marker, cursor)
@@ -875,6 +877,53 @@ def canonical_csharp_declaration(prefix: str, tokens: Iterable[CSharpToken]) -> 
     return prefix + " " + " ".join(token.text for token in tokens).strip()
 
 
+def csharp_declaration_prefix_start(tokens: list[CSharpToken], index: int) -> int:
+    """Return the first token of contiguous modifiers, attributes, and attribute directives."""
+    start = index
+    included_attribute = False
+    while start > 0:
+        previous = start
+        while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
+            start -= 1
+        if start > 0 and tokens[start - 1].text == "]":
+            depth = 1
+            cursor = start - 2
+            while cursor >= 0:
+                if tokens[cursor].text == "]":
+                    depth += 1
+                elif tokens[cursor].text == "[":
+                    depth -= 1
+                    if depth == 0:
+                        start = cursor
+                        included_attribute = True
+                        break
+                cursor -= 1
+        if start > 0:
+            directive_line = tokens[start - 1].line
+            line_start = start - 1
+            while line_start > 0 and tokens[line_start - 1].line == directive_line:
+                line_start -= 1
+            if tokens[line_start].text == "#":
+                attribute_before_directives = included_attribute
+                lookbehind = line_start
+                while not attribute_before_directives and lookbehind > 0:
+                    if tokens[lookbehind - 1].text == "]":
+                        attribute_before_directives = True
+                        break
+                    preceding_line = tokens[lookbehind - 1].line
+                    preceding_start = lookbehind - 1
+                    while preceding_start > 0 and tokens[preceding_start - 1].line == preceding_line:
+                        preceding_start -= 1
+                    if tokens[preceding_start].text != "#":
+                        break
+                    lookbehind = preceding_start
+                if attribute_before_directives:
+                    start = line_start
+        if start == previous:
+            break
+    return start
+
+
 def csharp_preprocessor_contexts(
     text: str,
     tokens: Iterable[CSharpToken] | None = None,
@@ -933,19 +982,24 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
 
     brace_stack: list[int] = []
     brace_pairs: dict[int, int] = {}
+    has_conditional_directive = any(
+        token.text == "#"
+        and index + 1 < len(tokens)
+        and tokens[index + 1].text in {"if", "elif", "else", "endif"}
+        for index, token in enumerate(tokens)
+    )
+    branch_structure_unbalanced = False
     for index, token in enumerate(tokens):
         if token.text == "{":
             brace_stack.append(index)
-        elif token.text == "}" and brace_stack:
+        elif token.text == "}":
+            if not brace_stack:
+                if has_conditional_directive:
+                    branch_structure_unbalanced = True
+                continue
             brace_pairs[brace_stack.pop()] = index
-
-    bracket_stack: list[int] = []
-    bracket_open_by_close: dict[int, int] = {}
-    for index, token in enumerate(tokens):
-        if token.text == "[":
-            bracket_stack.append(index)
-        elif token.text == "]" and bracket_stack:
-            bracket_open_by_close[index] = bracket_stack.pop()
+    if brace_stack and has_conditional_directive:
+        branch_structure_unbalanced = True
 
     owner_regions: list[tuple[int, int, str]] = []
     for keyword_index, token in enumerate(tokens):
@@ -1001,6 +1055,11 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
     def accessor_shape(body_start: int) -> str:
         body_end = brace_pairs.get(body_start, body_start)
         accessors: list[str] = []
+
+        def accessor_identity(segment: list[CSharpToken], accessor: int) -> str:
+            start = csharp_declaration_prefix_start(segment, accessor)
+            return " ".join(item.text for item in segment[start:accessor + 1])
+
         segment_start = body_start + 1
         cursor = segment_start
         while cursor < body_end:
@@ -1012,10 +1071,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     None,
                 )
                 if accessor is not None:
-                    start = accessor
-                    while start > 0 and segment[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
-                        start -= 1
-                    accessors.append(" ".join(item.text for item in segment[start:accessor + 1]))
+                    accessors.append(accessor_identity(segment, accessor))
                 cursor = brace_pairs[cursor] + 1
                 segment_start = cursor
                 continue
@@ -1026,10 +1082,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     None,
                 )
                 if accessor is not None:
-                    start = accessor
-                    while start > 0 and segment[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
-                        start -= 1
-                    accessors.append(" ".join(item.text for item in segment[start:accessor + 1]))
+                    accessors.append(accessor_identity(segment, accessor))
                 segment_start = cursor + 1
             cursor += 1
         return " ; ".join(accessors)
@@ -1040,15 +1093,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
     for visibility_index, token in enumerate(tokens):
         if token.text not in {"public", "protected"}:
             continue
-        start = visibility_index
-        while True:
-            previous = start
-            while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
-                start -= 1
-            if start > 0 and start - 1 in bracket_open_by_close:
-                start = bracket_open_by_close[start - 1]
-            if start == previous:
-                break
+        start = csharp_declaration_prefix_start(tokens, visibility_index)
         modifier_end = visibility_index + 1
         while modifier_end < len(tokens) and tokens[modifier_end].text in CSHARP_DECLARATION_MODIFIERS:
             modifier_end += 1
@@ -1223,7 +1268,13 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
         elif region["kind"] == "enum":
             implicit_enum_members(region)
 
-    return sorted(declarations, key=lambda item: (item[1], item[0]))
+    if branch_structure_unbalanced:
+        token_stream = " ".join(token.text for token in tokens)
+        declarations.append(("all-branch-structure-sha256 " + sha256(token_stream.encode("utf-8")), 1))
+
+    # Preserve traversal order for declarations sharing a line. Sorting by declaration text here makes a
+    # baseline rename capable of changing the zip pairing used by derive_public_api_mapping.
+    return sorted(declarations, key=lambda item: item[1])
 
 
 def current_product_public_declarations(

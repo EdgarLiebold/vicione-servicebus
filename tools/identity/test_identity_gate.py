@@ -703,6 +703,17 @@ public enum State
             {declaration for declaration, _ in with_secondary_base},
         )
 
+    def test_empty_string_literal_does_not_consume_following_declarations(self) -> None:
+        declarations = {
+            declaration
+            for declaration, _ in csharp_public_declarations(
+                'public string Empty => ""; public class After { }'
+            )
+        }
+
+        self.assertIn("explicit public string Empty", declarations)
+        self.assertIn("explicit public class After", declarations)
+
     def test_conditional_compilation_context_is_part_of_the_declaration_identity(self) -> None:
         unconditional = csharp_public_declarations("public void Added() { }\n")
         conditional = csharp_public_declarations("#if false\npublic void Added() { }\n#endif\n")
@@ -733,6 +744,33 @@ public enum State
         self.assertTrue(any("explicit [ Obsolete ] public class Contract" in item[0] for item in namespace_one))
         self.assertTrue(any("owner namespace N1 :: type" in item[0] for item in namespace_one))
 
+    def test_accessor_attributes_are_part_of_identity(self) -> None:
+        attributed = csharp_public_declarations(
+            "public class Contract { public int Value { [Obsolete] get; set; } }"
+        )
+        plain = csharp_public_declarations(
+            "public class Contract { public int Value { get; set; } }"
+        )
+
+        self.assertNotEqual(attributed, plain)
+        self.assertTrue(any("{ [ Obsolete ] get ; set }" in item[0] for item in attributed))
+
+    def test_conditional_declaration_attributes_are_part_of_identity(self) -> None:
+        feature_a = csharp_public_declarations(
+            "#if FEATURE_A\n[Obsolete]\n#endif\npublic class Contract { }\n"
+        )
+        feature_b = csharp_public_declarations(
+            "#if FEATURE_B\n[Obsolete]\n#endif\npublic class Contract { }\n"
+        )
+        plain = csharp_public_declarations("public class Contract { }\n")
+
+        self.assertNotEqual(feature_a, feature_b)
+        self.assertNotEqual(feature_a, plain)
+        self.assertIn(
+            "explicit # if FEATURE_A [ Obsolete ] # endif public class Contract",
+            {declaration for declaration, _ in feature_a},
+        )
+
     def test_identity_mapping_happens_before_owner_tokenization(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -760,6 +798,25 @@ public enum State
             [record["apiDisposition"] for record in records],
         )
 
+    def test_same_line_identity_mapping_preserves_lexical_declaration_pairing(self) -> None:
+        old_name = OLD + "A"
+        new_name = "ViciOneServiceBusA"
+        baseline = csharp_public_declarations(
+            f"public class {old_name} {{ }} public class T {{ }}"
+        )
+        mapped = csharp_public_declarations(
+            f"public class {new_name} {{ }} public class T {{ }}"
+        )
+
+        self.assertEqual(
+            [f"explicit public class {old_name}", "explicit public class T"],
+            [declaration for declaration, _ in baseline],
+        )
+        self.assertEqual(
+            [f"explicit public class {new_name}", "explicit public class T"],
+            [declaration for declaration, _ in mapped],
+        )
+
     def test_else_elif_nested_and_commented_directive_provenance_is_unambiguous(self) -> None:
         else_a = csharp_public_declarations(
             "#if A\ninternal class Hidden { }\n#else\npublic class Contract { }\n#endif\n"
@@ -783,6 +840,20 @@ public enum State
         self.assertNotEqual(elif_a, elif_b)
         self.assertIn("conditional if(OUTER) && if(INNER)", nested[0][0])
         self.assertEqual(commented_a, commented_b)
+
+    def test_branch_specific_structural_braces_bind_the_complete_token_stream(self) -> None:
+        feature_a = (
+            "#if FEATURE_A\npublic class First {\n"
+            "#else\npublic class Second {\n#endif\n"
+            "public void Execute() { }\n}\n"
+        )
+        feature_b = feature_a.replace("FEATURE_A", "FEATURE_B")
+
+        first = csharp_public_declarations(feature_a)
+        second = csharp_public_declarations(feature_b)
+
+        self.assertNotEqual(first, second)
+        self.assertTrue(any(item[0].startswith("all-branch-structure-sha256 ") for item in first))
 
     def test_new_implicit_interface_member_is_a_current_added_terminal_record(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
