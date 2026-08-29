@@ -296,8 +296,8 @@ def load_historical_identity_policy(root: Path) -> tuple[list[dict[str, object]]
 
 def scan_tree(root: Path) -> list[Finding]:
     candidate_bytes = {
-        candidate.relative_to(root).as_posix(): candidate.read_bytes()
-        for candidate in commit_candidate_files(root)
+        path: entry[2]
+        for path, entry in candidate_git_entries(root).items()
     }
     raw_by_path = {
         path: scan_entry(path, data)
@@ -743,9 +743,11 @@ def derive_refactor_conformance(root: Path) -> list[Finding]:
 CSHARP_DECLARATION_MODIFIERS = frozenset({
     "abstract", "async", "extern", "file", "new", "override", "partial", "readonly",
     "required", "sealed", "static", "unsafe", "virtual", "volatile",
+    "public", "private", "protected", "internal",
 })
 CSHARP_RESTRICTED_INTERFACE_MODIFIERS = frozenset({"private", "protected", "internal"})
 CSHARP_TYPE_KEYWORDS = frozenset({"class", "enum", "interface", "record", "struct"})
+CSHARP_ACCESSOR_KEYWORDS = frozenset({"get", "set", "init", "add", "remove"})
 
 
 def csharp_tokens(text: str) -> list[CSharpToken]:
@@ -858,24 +860,119 @@ def canonical_csharp_declaration(prefix: str, tokens: Iterable[CSharpToken]) -> 
     return prefix + " " + " ".join(token.text for token in tokens).strip()
 
 
+def csharp_preprocessor_contexts(text: str) -> dict[int, tuple[str, ...]]:
+    """Bind every declaration to its lexical conditional-compilation context.
+
+    The identity gate deliberately projects every branch instead of pretending to reproduce MSBuild and
+    compiler evaluation. This is a conservative source contract: dormant declarations remain bound, and
+    changing a directive, branch, or file-local define changes the declaration identity.
+    """
+    contexts: dict[int, tuple[str, ...]] = {}
+    branches: list[str] = []
+    defines: set[str] = set()
+    directive = re.compile(r"^\s*#\s*(if|elif|else|endif|define|undef)\b(.*)$")
+    for line_number, line in enumerate(text.splitlines(), 1):
+        match = directive.match(line)
+        if match:
+            kind = match.group(1)
+            argument = " ".join(match.group(2).split())
+            if kind == "if":
+                branches.append(f"if({argument})")
+            elif kind == "elif" and branches:
+                branches[-1] = f"elif({argument})"
+            elif kind == "else" and branches:
+                branches[-1] = "else"
+            elif kind == "endif" and branches:
+                branches.pop()
+            elif kind == "define" and argument:
+                defines.add(argument)
+            elif kind == "undef" and argument:
+                defines.discard(argument)
+        contexts[line_number] = tuple(
+            [*(f"define({name})" for name in sorted(defines)), *branches]
+        )
+    return contexts
+
+
 def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
     """Project explicit and language-defined implicit public C# declarations deterministically."""
     tokens = csharp_tokens(text)
+    preprocessor_contexts = csharp_preprocessor_contexts(text)
     declarations: list[tuple[str, int]] = []
 
-    # Explicit public declarations are token based, so modifier whitespace and line breaks are irrelevant.
-    for public_index, token in enumerate(tokens):
-        if token.text != "public":
+    def bind_context(declaration: str, line: int) -> str:
+        context = preprocessor_contexts.get(line, ())
+        return declaration if not context else "conditional " + " && ".join(context) + " " + declaration
+
+    brace_stack: list[int] = []
+    brace_pairs: dict[int, int] = {}
+    for index, token in enumerate(tokens):
+        if token.text == "{":
+            brace_stack.append(index)
+        elif token.text == "}" and brace_stack:
+            brace_pairs[brace_stack.pop()] = index
+
+    def accessor_shape(body_start: int) -> str:
+        body_end = brace_pairs.get(body_start, body_start)
+        accessors: list[str] = []
+        segment_start = body_start + 1
+        cursor = segment_start
+        while cursor < body_end:
+            value = tokens[cursor].text
+            if value == "{" and cursor in brace_pairs:
+                segment = tokens[segment_start:cursor]
+                accessor = next(
+                    (index for index, item in enumerate(segment) if item.text in CSHARP_ACCESSOR_KEYWORDS),
+                    None,
+                )
+                if accessor is not None:
+                    start = accessor
+                    while start > 0 and segment[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
+                        start -= 1
+                    accessors.append(" ".join(item.text for item in segment[start:accessor + 1]))
+                cursor = brace_pairs[cursor] + 1
+                segment_start = cursor
+                continue
+            if value in {";", "=>"}:
+                segment = tokens[segment_start:cursor]
+                accessor = next(
+                    (index for index, item in enumerate(segment) if item.text in CSHARP_ACCESSOR_KEYWORDS),
+                    None,
+                )
+                if accessor is not None:
+                    start = accessor
+                    while start > 0 and segment[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
+                        start -= 1
+                    accessors.append(" ".join(item.text for item in segment[start:accessor + 1]))
+                segment_start = cursor + 1
+            cursor += 1
+        return " ; ".join(accessors)
+
+    # Explicit externally visible declarations are token based, so modifier whitespace and line breaks
+    # are irrelevant. Property/indexer/event accessor shape is part of the public contract, while method
+    # and type bodies are deliberately excluded.
+    for visibility_index, token in enumerate(tokens):
+        if token.text not in {"public", "protected"}:
             continue
-        start = public_index
+        start = visibility_index
         while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
             start -= 1
+        modifier_end = visibility_index + 1
+        while modifier_end < len(tokens) and tokens[modifier_end].text in CSHARP_DECLARATION_MODIFIERS:
+            modifier_end += 1
+        modifiers = {item.text for item in tokens[start:modifier_end]}
+        if "private" in modifiers or (
+            modifier_end < len(tokens) and tokens[modifier_end].text in CSHARP_ACCESSOR_KEYWORDS
+        ):
+            continue
         parentheses = 0
         brackets = 0
         angles = 0
         saw_parentheses = False
         end = len(tokens)
-        for cursor in range(public_index + 1, len(tokens)):
+        property_body: int | None = None
+        cursor = visibility_index + 1
+        while cursor < len(tokens):
             value = tokens[cursor].text
             if value == "(":
                 parentheses += 1
@@ -895,22 +992,25 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                 angles = max(0, angles - 1)
             elif value == ">>":
                 angles = max(0, angles - 2)
-            elif parentheses == 0 and brackets == 0 and (
-                value in {"{", ";", "=>"} or value == "," and angles == 0
-            ):
+            elif parentheses == 0 and brackets == 0 and value == "{" and cursor in brace_pairs:
+                signature_values = {item.text for item in tokens[start:cursor]}
+                if "=" in signature_values:
+                    cursor = brace_pairs[cursor]
+                else:
+                    end = cursor
+                    if not saw_parentheses and not signature_values.intersection(CSHARP_TYPE_KEYWORDS):
+                        property_body = cursor
+                    break
+            elif parentheses == 0 and brackets == 0 and value in {";", "=>"}:
                 end = cursor
                 break
+            cursor += 1
         signature = tokens[start:end]
         if signature:
-            declarations.append((canonical_csharp_declaration("explicit", signature), token.line))
-
-    brace_stack: list[int] = []
-    brace_pairs: dict[int, int] = {}
-    for index, token in enumerate(tokens):
-        if token.text == "{":
-            brace_stack.append(index)
-        elif token.text == "}" and brace_stack:
-            brace_pairs[brace_stack.pop()] = index
+            declaration = canonical_csharp_declaration("explicit", signature)
+            if property_body is not None:
+                declaration += " { " + accessor_shape(property_body) + " }"
+            declarations.append((bind_context(declaration, token.line), token.line))
 
     raw_regions: list[dict[str, object]] = []
     for keyword_index, token in enumerate(tokens):
@@ -953,7 +1053,11 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
             and parent["public"] is True
             and not header_values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
         )
-        region["public"] = "public" in header_values or implicit_public
+        region["public"] = (
+            "public" in header_values
+            or ("protected" in header_values and "private" not in header_values)
+            or implicit_public
+        )
 
     def implicit_interface_members(region: Mapping[str, object]) -> None:
         cursor = int(region["bodyStart"]) + 1
@@ -969,7 +1073,11 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     and "public" not in values
                     and not values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
                 ):
-                    declarations.append((canonical_csharp_declaration("implicit-interface", segment), segment[0].line))
+                    declaration = canonical_csharp_declaration("implicit-interface", segment)
+                    accessors = accessor_shape(cursor)
+                    if accessors:
+                        declaration += " { " + accessors + " }"
+                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
                 cursor = brace_pairs[cursor] + 1
                 segment_start = cursor
                 continue
@@ -981,7 +1089,8 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     and "public" not in values
                     and not values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
                 ):
-                    declarations.append((canonical_csharp_declaration("implicit-interface", segment), segment[0].line))
+                    declaration = canonical_csharp_declaration("implicit-interface", segment)
+                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
                 segment_start = cursor + 1
             cursor += 1
 
@@ -1009,7 +1118,8 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
             elif value == "," and parentheses == 0 and brackets == 0 and braces == 0:
                 segment = tokens[segment_start:cursor]
                 if segment:
-                    declarations.append((canonical_csharp_declaration("implicit-enum", segment), segment[0].line))
+                    declaration = canonical_csharp_declaration("implicit-enum", segment)
+                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
                 segment_start = cursor + 1
             cursor += 1
 
@@ -1029,12 +1139,14 @@ def current_product_public_declarations(
 ) -> tuple[list[dict[str, object]], list[Finding]]:
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
-    for candidate in commit_candidate_files(root):
-        target = candidate.relative_to(root).as_posix()
-        if not target.startswith("src/") or candidate.suffix != ".cs":
+    for target, (mode, _, data) in candidate_git_entries(root).items():
+        if not target.startswith("src/") or not target.endswith(".cs"):
+            continue
+        if mode == "120000":
+            findings.append(Finding("public-api-current", target, "C# source cannot be a symbolic link"))
             continue
         try:
-            text = candidate.read_text(encoding="utf-8")
+            text = data.decode("utf-8")
         except UnicodeDecodeError:
             findings.append(Finding("public-api-current", target, "current C# source is not UTF-8"))
             continue
@@ -1210,34 +1322,22 @@ def xml_property(root: ET.Element, name: str) -> str | None:
 
 def derive_package_inventory(root: Path) -> list[dict[str, object]]:
     records: list[dict[str, object]] = []
-    for project in sorted(root.rglob("*.csproj")):
-        if any(part in BUILD_OUTPUT_PARTS for part in project.relative_to(root).parts):
+    candidates = candidate_git_entries(root)
+    for project_path, (mode, _, data) in sorted(candidates.items()):
+        if not project_path.endswith(".csproj") or any(
+            part in BUILD_OUTPUT_PARTS for part in Path(project_path).parts
+        ):
             continue
-        tree = ET.fromstring(project.read_text(encoding="utf-8"))
+        if mode == "120000":
+            continue
+        project = root / project_path
+        tree = ET.fromstring(data.decode("utf-8"))
         project_name = project.stem
         assembly = xml_property(tree, "AssemblyName") or project_name
         package_id = xml_property(tree, "PackageId") or assembly
         root_namespace = xml_property(tree, "RootNamespace") or assembly
         is_test = project.relative_to(root).as_posix().startswith("tests/")
         is_packable = (xml_property(tree, "IsPackable") or ("false" if is_test else "true")).casefold() == "true"
-        # The SDK writes every build result under artifacts/, so there is no bin beside a project to
-        # read any more. A gate that kept looking there would report zero artifacts for every project
-        # and call that a pass.
-        artifacts: list[dict[str, str]] = []
-        artifact_roots = [
-            root / "artifacts/sdk/bin" / project_name,
-            root / "artifacts/packages",
-        ]
-        for artifact in sorted(item for artifact_root in artifact_roots for item in artifact_root.glob("**/*")):
-            if not artifact.is_file() or artifact.suffix.casefold() not in {".dll", ".pdb", ".nupkg"}:
-                continue
-            if artifact.suffix.casefold() == ".nupkg" or artifact.stem == assembly:
-                artifacts.append(
-                    {
-                        "path": artifact.relative_to(root).as_posix(),
-                        "sha256": sha256(artifact.read_bytes()),
-                    }
-                )
         records.append(
             {
                 "project": project.relative_to(root).as_posix(),
@@ -1246,7 +1346,9 @@ def derive_package_inventory(root: Path) -> list[dict[str, object]]:
                 "rootNamespace": root_namespace,
                 "isPackable": is_packable,
                 "targetArtifactPattern": f"{assembly}.dll",
-                "artifacts": artifacts,
+                # Ignored build outputs are covered by ARTIFACT_GATE.json and its build-bound evidence.
+                # This source inventory is intentionally reproducible from Git-candidate bytes alone.
+                "artifacts": [],
             }
         )
     return records
@@ -1293,6 +1395,7 @@ def validate_format_exceptions(
     exceptions: Iterable[str] = COMMENTLESS_OR_BINARY_EXCEPTIONS,
 ) -> list[Finding]:
     findings: list[Finding] = []
+    candidates = candidate_git_entries(root)
     exception_targets = set(exceptions)
     target_sources = {map_path(source): source for source in baseline_paths(root)}
     target_sources.update(COMMENTLESS_OR_BINARY_BASELINE_SOURCES)
@@ -1309,11 +1412,11 @@ def validate_format_exceptions(
         ))
     for target in sorted(exception_targets):
         source = target_sources.get(target)
-        target_path = root / target
-        if source is None or not target_path.is_file():
+        target_entry = candidates.get(target)
+        if source is None or target_entry is None or target_entry[0] == "120000":
             findings.append(Finding("legal-format-exception", target, "exception has no baseline-to-target file binding"))
             continue
-        changed = source != target or baseline_bytes(root, source) != target_path.read_bytes()
+        changed = source != target or baseline_bytes(root, source) != target_entry[2]
         if not changed:
             findings.append(Finding("legal-format-exception", target, "exception file is byte-identical and path-identical"))
         if supports_modification_notice(target):

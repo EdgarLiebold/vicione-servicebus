@@ -22,6 +22,7 @@ from identity_gate import (
     commit_tree,
     csharp_public_declarations,
     derive_baseline_mapping,
+    derive_package_inventory,
     derive_public_api_mapping,
     legal_identity_contexts,
     modification_format_exception_bindings,
@@ -191,6 +192,19 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
         findings = validate_format_exceptions(root, {"README.md"})
         self.assertTrue(findings)
         self.assertTrue(all(item.gate == "legal-format-exception" for item in findings))
+
+    def test_ignored_legal_exception_file_cannot_supply_a_git_binding(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            target = "ViciOne.ServiceBus.snk"
+            (root / ".gitignore").write_text(target + "\n", encoding="utf-8")
+            (root / target).write_bytes(b"ignored ghost")
+            subprocess.run(["git", "add", ".gitignore"], cwd=root, check=True)
+            with patch("identity_gate.baseline_paths", return_value=[]):
+                findings = validate_format_exceptions(root, {target})
+
+        self.assertTrue(any("no baseline-to-target file binding" in item.reason for item in findings))
 
     def test_active_legal_documents_and_format_exceptions_are_consistent(self) -> None:
         root = Path(__file__).resolve().parents[2]
@@ -556,12 +570,16 @@ class IdentityGatePublicProjectionTests(unittest.TestCase):
 const string NotApi = "public class Hidden";
 // public class AlsoHidden { }
 public
-sealed class Added<T, U> { }
+sealed class Added<T, U> : BaseType, IFirst, ISecond { }
 sealed public class Reordered { }
+public int First, Second;
+public int Property { get; private set; }
+protected internal virtual void Hook() { }
+private protected void HiddenProtected() { }
 public interface IFoo
 {
     void Added();
-    string Name { get; }
+    string Name { get; set; }
     private void Hidden();
 }
 public enum State
@@ -572,15 +590,50 @@ public enum State
 '''
         declarations = {declaration for declaration, _ in csharp_public_declarations(source)}
 
-        self.assertIn("explicit public sealed class Added < T , U >", declarations)
+        self.assertIn(
+            "explicit public sealed class Added < T , U > : BaseType , IFirst , ISecond",
+            declarations,
+        )
         self.assertIn("explicit sealed public class Reordered", declarations)
+        self.assertIn("explicit public int First , Second", declarations)
+        self.assertIn("explicit public int Property { get ; private set }", declarations)
+        self.assertIn("explicit protected internal virtual void Hook ( )", declarations)
         self.assertIn("implicit-interface void Added ( )", declarations)
-        self.assertIn("implicit-interface string Name", declarations)
+        self.assertIn("implicit-interface string Name { get ; set }", declarations)
         self.assertIn("implicit-enum None", declarations)
         self.assertIn("implicit-enum Ready = 2", declarations)
         self.assertFalse(any("AlsoHidden" in declaration for declaration in declarations))
         self.assertFalse(any("NotApi" in declaration for declaration in declarations))
         self.assertFalse(any("private void Hidden" in declaration for declaration in declarations))
+        self.assertFalse(any("HiddenProtected" in declaration for declaration in declarations))
+
+    def test_accessor_and_secondary_base_type_changes_have_distinct_public_identities(self) -> None:
+        with_secondary_base = csharp_public_declarations(
+            "public class Added : BaseType, ISecond { public int Value { get; private set; } }"
+        )
+        without_secondary_base = csharp_public_declarations(
+            "public class Added : BaseType { public int Value { get; set; } }"
+        )
+
+        self.assertNotEqual(with_secondary_base, without_secondary_base)
+        self.assertIn(
+            "explicit public class Added : BaseType , ISecond",
+            {declaration for declaration, _ in with_secondary_base},
+        )
+        self.assertIn(
+            "explicit public int Value { get ; private set }",
+            {declaration for declaration, _ in with_secondary_base},
+        )
+
+    def test_conditional_compilation_context_is_part_of_the_declaration_identity(self) -> None:
+        unconditional = csharp_public_declarations("public void Added() { }\n")
+        conditional = csharp_public_declarations("#if false\npublic void Added() { }\n#endif\n")
+
+        self.assertNotEqual(unconditional, conditional)
+        self.assertEqual(
+            "conditional if(false) explicit public void Added ( )",
+            conditional[0][0],
+        )
 
     def test_new_implicit_interface_member_is_a_current_added_terminal_record(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -596,6 +649,42 @@ public enum State
         self.assertEqual([], findings)
         self.assertEqual(2, len(records))
         self.assertTrue(all(record["apiDisposition"] == "CURRENT_ADDED" for record in records))
+
+    def test_symbolic_link_source_is_rejected_without_reading_its_target_as_api(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/Outside.cs"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text("public sealed class NotCommitted { }\n", encoding="utf-8")
+            source = root / "src/New/Linked.cs"
+            source.parent.mkdir(parents=True)
+            source.symlink_to(ignored)
+            subprocess.run(["git", "add", ".gitignore", "src/New/Linked.cs"], cwd=root, check=True)
+            with patch("identity_gate.baseline_paths", return_value=[]):
+                records, findings = derive_public_api_mapping(root)
+
+        self.assertEqual([], records)
+        self.assertTrue(any("symbolic link" in finding.reason for finding in findings))
+
+    def test_ignored_project_is_not_part_of_the_git_candidate_package_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/Phantom.csproj"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text("<Project Sdk=\"Microsoft.NET.Sdk\" />\n", encoding="utf-8")
+            real = root / "src/Real/Real.csproj"
+            real.parent.mkdir(parents=True)
+            real.write_text("<Project Sdk=\"Microsoft.NET.Sdk\" />\n", encoding="utf-8")
+            subprocess.run(["git", "add", ".gitignore", "src/Real/Real.csproj"], cwd=root, check=True)
+
+            records = derive_package_inventory(root)
+
+        self.assertEqual(["src/Real/Real.csproj"], [record["project"] for record in records])
+        self.assertEqual([], records[0]["artifacts"])
 
     def test_current_product_declaration_without_baseline_is_explicitly_terminal(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
