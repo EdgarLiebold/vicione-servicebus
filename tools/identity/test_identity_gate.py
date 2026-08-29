@@ -25,6 +25,7 @@ from identity_gate import (
     derive_package_inventory,
     derive_public_api_mapping,
     legal_identity_contexts,
+    map_text,
     modification_format_exception_bindings,
     notice_format_exception_targets,
     omitted_baseline_findings,
@@ -732,6 +733,15 @@ public enum State
         self.assertNotEqual(no_attribute, moved_member)
         self.assertTrue(any("explicit [ Obsolete ] public class Contract" in item[0] for item in namespace_one))
         self.assertTrue(any("owner namespace N1 :: type" in item[0] for item in namespace_one))
+
+    def test_identity_mapping_happens_before_owner_tokenization(self) -> None:
+        baseline = "namespace MassTransit { public class Contract { public void Execute() { } } }"
+        target = "namespace ViciOne.ServiceBus { public class Contract { public void Execute() { } } }"
+
+        self.assertEqual(
+            csharp_public_declarations(target),
+            csharp_public_declarations(map_text(baseline)),
+        )
 
     def test_else_elif_nested_and_commented_directive_provenance_is_unambiguous(self) -> None:
         else_a = csharp_public_declarations(

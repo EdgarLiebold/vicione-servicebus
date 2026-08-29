@@ -1330,10 +1330,28 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
             target_declarations.setdefault(target_declaration, []).append(
                 target_line
             )
+        baseline_declarations = csharp_public_declarations(text)
+        mapped_declarations = csharp_public_declarations(map_text(text))
+        if len(baseline_declarations) != len(mapped_declarations):
+            findings.append(Finding(
+                "public-api-mapping",
+                source,
+                "identity mapping changed the number of projected declarations",
+            ))
+            continue
         declaration_occurrences: Counter[str] = Counter()
         binding = baseline_binding(root, source)
-        for declaration, line in csharp_public_declarations(text):
-            mapped = map_text(declaration)
+        for (declaration, line), (mapped, mapped_line) in zip(
+            baseline_declarations,
+            mapped_declarations,
+        ):
+            if mapped_line != line:
+                findings.append(Finding(
+                    "public-api-mapping",
+                    source,
+                    "identity mapping changed a declaration source line",
+                ))
+                continue
             occurrence = declaration_occurrences[mapped]
             declaration_occurrences[mapped] += 1
             target_lines = target_declarations.get(mapped, [])
