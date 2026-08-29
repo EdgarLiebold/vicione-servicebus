@@ -1924,3 +1924,14 @@ future cohorts as complete.
   exact Technical SHA-256.
 - A direct Evidence child, committed-tree replay and two new independent read-only reviews remain
   mandatory. This correction is local; no F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL3 Evidence replay
+
+- Evidence commit `5711faceb40c6a4512bb606e5768e6032a449141`, tree
+  `bf63917f0698e83531b58bbc62bfdb2e960642a2`, is the direct child of final Technical
+  `0451de02425d6faab3bf8ef50ee1cc271264596e`.
+- Committed-tree reconstruction is exact: 43,173 declaration records with zero findings, 64 package
+  source records with zero ignored artifacts, five generated contracts without manifest drift, and
+  all M11-M19 replacements with one occurrence and the declared mutant hash.
+- The remaining gates are the final audit hash/CHANGELIST child and two independent read-only PASS
+  reviews. F-REP-02 remains local and open; no commit in this correction chain has been pushed.
