@@ -2025,3 +2025,8 @@ future cohorts as complete.
   carrier red in under one second; every mutated file is restored byte-identically.
 - This is explicitly the pre-Evidence-commit checkpoint. The Evidence child, independent read-only
   acceptance, architecture binding and remote push remain pending and are not self-approved here.
+
+## Diagnostics native closure — post-Evidence CHANGELIST correction (2026-08-29)
+
+- Evidence `b47aa04b367f853e3b6e4e302664f8218b233dce` is the direct child of Technical `ae2ae679e3b1d157d10e0b40cdc733eca9bd53f0`.
+- The 17 hash-bound raw logs are now tracked explicitly; the generated CHANGELIST therefore closes at 9,439 entries. Product, test, mutation and result bytes are unchanged.

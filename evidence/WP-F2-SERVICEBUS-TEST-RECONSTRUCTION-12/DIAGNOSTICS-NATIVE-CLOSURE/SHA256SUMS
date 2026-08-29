@@ -17,7 +17,7 @@ ddeb70944c97553b4e38fc6441e87fdfa5d81f4465303d0a6af89e91c17e3510  ./mutations/M0
 131e630910d4cd92f3cae4bbdee8c0388877b9a73ccf62d3e0682adbaafb022e  ./mutations/M05-build.log
 e07eb602e36ce96db7af587d7383702e5006e8b4c269720826fed625f70bcf9d  ./mutations/M05-results/M05.json
 bf723e2950e19389a580f8fe45aab325faa4e594c763d1b314c49128b85fc5fe  ./mutations/M05-test.log
-4d2e5f01853aa64d6f22c370df9656941bdbc10267c6942d76b0fe4208fc561e  ./positive/change-list-check.log
+8e996b5b8a765e7c71c5b0b8456cffa9e816621d06c0771d48622b95acd06da0  ./positive/change-list-check.log
 3bd41504ea4752ec7b097a9ae191be2c68e7500428cbee13dcdf165708acc6d3  ./positive/ci-selftests.log
 459cff82d696232502b55470415a872aa1031ce9e9e08f419ca65745b812a7d6  ./positive/engineering-build.log
 e5eddc8f44b17581918af54fd7b7cd437bf918f6e497eec434b48f1e6b777092  ./positive/focused-build.log
