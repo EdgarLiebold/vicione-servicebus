@@ -30,8 +30,16 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             """;
 
         const string CreateUserSql = """
-            CREATE USER "{1}" WITH PASSWORD '{2}';
-            GRANT "{0}" TO "{1}";
+            CREATE OR REPLACE FUNCTION pg_temp.vicione_create_transport_user(role_name text, user_name text, user_password text)
+            RETURNS void
+            LANGUAGE plpgsql
+            AS $$
+            BEGIN
+                EXECUTE format('CREATE USER %I WITH PASSWORD %L', user_name, user_password);
+                EXECUTE format('GRANT %I TO %I', role_name, user_name);
+            END;
+            $$;
+            SELECT pg_temp.vicione_create_transport_user(@RoleName, @Username, @Password);
             """;
 
         const string CreateInfrastructureSql = """
@@ -1566,7 +1574,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(RoleExistsSql, options.Username)).ConfigureAwait(false);
             if (result != 1)
             {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateUserSql, options.Role, options.Username, options.Password))
+                await connection.Connection.ExecuteScalarAsync<int>(CreateUserSql,
+                        new { RoleName = options.Role, options.Username, options.Password })
                     .ConfigureAwait(false);
 
                 _logger.LogDebug("User role {Username} created", options.Username);

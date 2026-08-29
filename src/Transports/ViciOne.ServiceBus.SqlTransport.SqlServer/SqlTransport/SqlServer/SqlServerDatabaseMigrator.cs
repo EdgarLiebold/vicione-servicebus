@@ -53,8 +53,11 @@ BEGIN
 END
 ";
 
-        const string LoginExistsSql = @"SELECT 1 FROM sys.sql_logins WHERE [name] = '{0}'";
-        const string CreateLoginSql = @"CREATE LOGIN {0} WITH PASSWORD = '{1}';";
+        const string LoginExistsSql = @"SELECT 1 FROM sys.sql_logins WHERE [name] = @Username";
+        const string CreateLoginSql = @"
+DECLARE @statement nvarchar(max) = N'CREATE LOGIN ' + QUOTENAME(@Username)
+    + N' WITH PASSWORD = ' + QUOTENAME(@Password, '''') + N';';
+EXEC sys.sp_executesql @statement;";
 
         const string CreateUserSql = @"
 IF ORIGINAL_LOGIN() != '{1}' OR CURRENT_USER = '{1}'
@@ -1967,10 +1970,10 @@ END
                     _logger.LogInformation("Database {Database} created", options.Database);
                 }
 
-                result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(LoginExistsSql, options.Username)).ConfigureAwait(false);
+                result = await connection.Connection.ExecuteScalarAsync<int?>(LoginExistsSql, new { options.Username }).ConfigureAwait(false);
                 if (!result.HasValue)
                 {
-                    await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateLoginSql, options.Username, options.Password))
+                    await connection.Connection.ExecuteScalarAsync<int>(CreateLoginSql, new { options.Username, options.Password })
                         .ConfigureAwait(false);
 
                     _logger.LogDebug("Login {Username} created", options.Username);
