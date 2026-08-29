@@ -1798,3 +1798,19 @@ future cohorts as complete.
   and 35,055 public declarations. Focused Identity tests are 57/57 and the complete Identity suite is
   122/122 green; CHANGELIST is exact at 9,312 entries. A direct correction Evidence child, then a
   post-commit reconstruction and independent reviews remain mandatory. Nothing is pushed.
+
+## 2026-08-29 — F-REP-02 post-Evidence audit
+
+- Correction Evidence commit `3ed6a617ffbcfe9a04b9029e383a58be0b37c1ec`, tree
+  `985f466056650ae00d1b2ad2a62841a48a5c00e3`, is the direct child of Technical
+  `65f0d9b9741fab60cab39cef4fa7357e7ef1c2cc`.
+- A full scan executed after that commit is `PASS` with zero findings, 5,654 baseline paths, 5,650
+  changed-or-retired paths and 35,055 public declaration records. Its raw bytes are identical to
+  `SOURCE_IDENTITY_GATE.json` at SHA-256
+  `29f82fe838ec9c43936786c55e2f03eed6de507b0a105a1e13a15d1b8c71044f`.
+- Independent post-commit mapping reconstruction reports zero generated findings and zero persisted
+  drift, retaining 1,448 retired records across 69 deletion commits and 69 deletion trees.
+- The remaining gates are the audit-child hash/CHANGELIST closure and two independent read-only
+  reviews. F-REP-02 is still local only and has not been pushed.
+- The audit-child CHANGELIST is now exact at 9,316 entries. Its four post-commit logs are present;
+  only final manifest binding, commit/tree freeze and the two independent reviews remain.

@@ -73,5 +73,22 @@
     "containerStarted": false,
     "networkUsed": false
   },
-  "postEvidenceCommitReconstruction": "PENDING"
+  "postEvidenceCommitReconstruction": {
+    "status": "PASS",
+    "evidenceCommit": "3ed6a617ffbcfe9a04b9029e383a58be0b37c1ec",
+    "evidenceTree": "985f466056650ae00d1b2ad2a62841a48a5c00e3",
+    "directParent": "65f0d9b9741fab60cab39cef4fa7357e7ef1c2cc",
+    "fullScanFindings": 0,
+    "fullScanLog": "FREP02_POSTCOMMIT_FULL_SCAN.log",
+    "fullScanLogSha256": "29f82fe838ec9c43936786c55e2f03eed6de507b0a105a1e13a15d1b8c71044f",
+    "mappingFindings": 0,
+    "persistedMappingDrift": 0,
+    "mappingLog": "FREP02_POSTCOMMIT_MAPPING_RECONSTRUCTION.log",
+    "mappingLogSha256": "482610a214c217756b06a06d56f5f2924c6866262b689105256ef8bcbb8f9c26",
+    "statusPolicyLog": "FREP02_POSTCOMMIT_STATUS_POLICY_CHECK.log",
+    "statusPolicyLogSha256": "1095916f1492ec656bacebba47814cb479e4a49a8bbc540d0412f76f7e93f48b",
+    "changeListEntriesAfterAudit": 9316,
+    "changeListLog": "FREP02_POSTCOMMIT_CHANGE_LIST_CHECK.log",
+    "changeListLogSha256": "bb573f31d74b1179c90a881d58c9af6d9a266cb5191b0b23c21bdd1fcae721fb"
+  }
 }
