@@ -359,6 +359,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                 RETURNS bigint
             AS
             $$
+            DECLARE
+                v_transport_message_ids uuid[];
             BEGIN
                 IF queue_name IS NULL OR LENGTH(queue_name) < 1 THEN
                     RAISE EXCEPTION 'Queue name must not be null';
@@ -372,10 +374,11 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                                WHERE q.name = queue_name) mds
                         WHERE md.message_delivery_id = mds.message_delivery_id
                         RETURNING md.transport_message_id)
-                    DELETE FROM "{0}".message m
-                        USING msgs
-                        WHERE m.transport_message_id = msgs.transport_message_id
-                            AND NOT EXISTS(SELECT FROM "{0}".message_delivery md WHERE md.transport_message_id = m.transport_message_id);
+                    SELECT array_agg(msgs.transport_message_id) INTO v_transport_message_ids FROM msgs;
+
+                DELETE FROM "{0}".message m
+                    WHERE m.transport_message_id = ANY(v_transport_message_ids)
+                        AND NOT EXISTS(SELECT FROM "{0}".message_delivery md WHERE md.transport_message_id = m.transport_message_id);
 
                 RETURN 0;
             END;
