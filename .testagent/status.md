@@ -1963,3 +1963,17 @@ future cohorts as complete.
   all M11-M27 replacements at one occurrence with the declared mutant hashes.
 - Final audit hashing, CHANGELIST closure and two independent read-only reviews remain. F-REP-02 is
   still local and open; no commit in this FINAL4 chain has been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL5 declaration-edge closure
+
+- FINAL4 through audit `8cfa46231e126fe615263c171f99a7b24197f36f` is superseded for acceptance:
+  final review found accessor and conditional-attribute identity gaps plus unstable same-line pairing.
+- Technical `e044f1acba55b917e23fa9a2698c31bfb28120f3`, tree
+  `6f42c023d8417a6e328713becd885e1a6abe6229`, changes only the two identity-tool paths.
+  Accessor attributes, conditional declaration attributes and same-line traversal order are bound;
+  conditionally unbalanced structural branches receive a conservative full-token identity.
+- Correct empty-string tokenization exposes the previously swallowed declaration tail: the exact
+  projection is now 44,081 records, 24,987 current product declarations, 1,702 `CURRENT_ADDED` and
+  zero projection findings. Product, policy, legal and package bytes are unchanged.
+- Identity self-tests and M11-M32 are being frozen in the direct Evidence child. Independent delta
+  reviews, architecture acceptance and an explicitly authorized non-force remote push remain open.
