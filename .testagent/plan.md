@@ -2082,5 +2082,5 @@ SQL closure checkpoint: 43 hermetic R0 Facts plus one requirement-projection Fac
 PostgreSQL executes 71/71 and SQL Server executes 60/60. The exact 135-row terminal map binds 134
 executing obligations and explicitly retires only OBL-R0-SQL-0054, the obsolete cross-provider
 runtime dialect resolver. The complete inherited 40-file SQL project and its empty directory are
-removed. UnitArchitecture executes 2,398/2,398; the independent accepted floor is 2,394. The
+removed. UnitArchitecture executes 2,399/2,399; the independent accepted floor is 2,394. The
 LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carries floor 375.

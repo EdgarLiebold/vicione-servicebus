@@ -1,5 +1,6 @@
 using System.Reflection;
 using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests.Infrastructure.Databases;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -86,6 +87,38 @@ public sealed class RunnerContractTests
         var exception = Assert.IsType<TestRunnerContractException>(wrapper.InnerException);
 
         Assert.Contains(TestRunnerContract.PostgresPortVariable, exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-RUN-SCOPED-DATABASE-IDENTITY", "runner-root-is-part-of-name")]
+    public void DatabaseName_IsStableWithinOneRunAndDifferentBetweenRuns()
+    {
+        const string runRootVariable = "VICIONE_SERVICEBUS_RUN_ROOT";
+        string first;
+        string repeated;
+        using (EnvironmentSnapshot.WithValues(new Dictionary<string, string?>
+               {
+                   [runRootVariable] = "/private/tmp/vicione-run-a",
+               }))
+        {
+            first = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
+            repeated = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
+        }
+
+        string second;
+        using (EnvironmentSnapshot.WithValues(new Dictionary<string, string?>
+               {
+                   [runRootVariable] = "/private/tmp/vicione-run-b",
+               }))
+        {
+            second = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
+        }
+
+        Assert.Equal(first, repeated);
+        Assert.NotEqual(first, second);
+        Assert.StartsWith("vsbpg_", first, StringComparison.Ordinal);
+        Assert.Equal(38, first.Length);
+        Assert.Equal(38, second.Length);
     }
 
     private static string[] PostgresVariables() =>
