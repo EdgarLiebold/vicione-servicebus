@@ -1888,3 +1888,16 @@ future cohorts as complete.
   multiline-modifier and implicit-enum regressions are independently and causally red. A direct
   Evidence child, post-commit reconstruction and two fresh read-only reviews remain mandatory.
   No F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 structured-identity post-Evidence audit
+
+- Evidence commit `e4ddc742b3e4c66b6e7f0a2ece92d6a554e39231`, tree
+  `90074a6acf5532591d0d3256d77b48b9c65cf822`, is the direct child of Technical
+  `f0afbc916d654e28b19ed852d1af2f2c8334315d`.
+- The committed-tree full scan is `PASS` with zero findings and reproduces 5,654 baseline records,
+  4,206 live Git identities, 1,448 retirements, 40,475 API records, 23,972 current product
+  declarations and 985 explicit `CURRENT_ADDED` records.
+- Independent candidate/API reconstruction reports zero live Git-identity drift, zero retired
+  candidate resurrection, zero C# projection findings and zero current public-API set drift.
+- Final audit hashing, CHANGELIST closure and two fresh independent read-only reviews remain. This
+  chain is local and F-REP-02 remains open; no F-REP-02 commit has been pushed.

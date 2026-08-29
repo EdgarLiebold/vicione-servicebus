@@ -28,6 +28,9 @@
     "tools/identity/test_identity_gate.py"
   ],
   "evidenceParentRequirement": "direct child of technicalCommit",
+  "evidenceCommit": "e4ddc742b3e4c66b6e7f0a2ece92d6a554e39231",
+  "evidenceTree": "90074a6acf5532591d0d3256d77b48b9c65cf822",
+  "evidenceDirectParent": "f0afbc916d654e28b19ed852d1af2f2c8334315d",
   "candidateScan": {
     "status": "PASS",
     "findings": 0,
@@ -109,6 +112,23 @@
     "changeListCheckLogSha256": "af2910fe833dee6082c4a405bdc29a6878845c96526697471e8ad8f112ec61ff",
     "statusPolicyCheckLog": "FREP02_FINAL2_STATUS_POLICY_CHECK.log",
     "statusPolicyCheckLogSha256": "1095916f1492ec656bacebba47814cb479e4a49a8bbc540d0412f76f7e93f48b"
+  },
+  "postEvidenceCommitReplay": {
+    "status": "PASS",
+    "fullScanFindings": 0,
+    "fullScanLog": "FREP02_FINAL2_POSTCOMMIT_SCAN.log",
+    "fullScanLogSha256": "cbea1cd5885ff3532b6106358a6f3b7fb01d1901b94430c9306ea89ee0ee5847",
+    "gitIdentityDrift": 0,
+    "retiredCandidateDrift": 0,
+    "currentProjectionFindings": 0,
+    "persistedPublicApiSetDrift": 0,
+    "reconstructionLog": "FREP02_FINAL2_POSTCOMMIT_RECONSTRUCTION.log",
+    "reconstructionLogSha256": "0b93ef5980e4d675bb5346169a083703f93dc039d83023c05490c40dceb77ecb",
+    "changeListEntriesAfterAudit": 9358,
+    "changeListLog": "FREP02_FINAL2_POSTCOMMIT_CHANGE_LIST_CHECK.log",
+    "changeListLogSha256": "1c7e19e79387d1d8a9ff6645fe858d6feeb2c5da11fdf2b0162a02fb00adc480",
+    "statusPolicyLog": "FREP02_FINAL2_POSTCOMMIT_STATUS_POLICY_CHECK.log",
+    "statusPolicyLogSha256": "1095916f1492ec656bacebba47814cb479e4a49a8bbc540d0412f76f7e93f48b"
   },
   "executionBoundary": {
     "dotnetOrMsbuildStarted": false,
