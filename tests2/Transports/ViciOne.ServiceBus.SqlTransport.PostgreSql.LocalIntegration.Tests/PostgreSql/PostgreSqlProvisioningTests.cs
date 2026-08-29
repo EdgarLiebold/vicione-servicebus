@@ -1,6 +1,8 @@
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql;
 
+using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
+using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -54,5 +56,43 @@ public sealed class PostgreSqlProvisioningTests
         await server.OpenAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         Assert.False(await server.DatabaseExists(database, cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0131", "postgresql-native-owner")]
+    public async Task InfrastructureProvisioning_ASecondRunPreservesTheCompleteObjectSet()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
+            "idempotent-infrastructure",
+            cancellationToken);
+        await using NpgsqlConnection before = fixture.CreateConnection();
+        await before.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        IReadOnlyList<string> tables = await before.SchemaTables(fixture.Schema, cancellationToken);
+        IReadOnlyList<string> indices = await before.SchemaIndices(fixture.Schema, cancellationToken);
+        long routines = await RoutineCount(before, fixture.Schema, cancellationToken);
+        var migrator = new PostgresDatabaseMigrator(NullLogger<PostgresDatabaseMigrator>.Instance);
+
+        await migrator.CreateInfrastructure(fixture.Options, cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+        await using NpgsqlConnection after = fixture.CreateConnection();
+        await after.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(tables, await after.SchemaTables(fixture.Schema, cancellationToken));
+        Assert.Equal(indices, await after.SchemaIndices(fixture.Schema, cancellationToken));
+        Assert.Equal(routines, await RoutineCount(after, fixture.Schema, cancellationToken));
+        Assert.True(routines > 0);
+    }
+
+    private static async Task<long> RoutineCount(
+        NpgsqlConnection connection,
+        string schema,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new NpgsqlCommand(
+            "SELECT COUNT(*) FROM information_schema.routines WHERE routine_schema = @schema",
+            connection);
+        command.Parameters.AddWithValue("schema", schema);
+        return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 }
