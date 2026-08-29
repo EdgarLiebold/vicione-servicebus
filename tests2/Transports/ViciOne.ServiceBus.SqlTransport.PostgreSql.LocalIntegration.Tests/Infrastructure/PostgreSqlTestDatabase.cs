@@ -101,7 +101,8 @@ internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
 
     public NpgsqlDataSource CreateDataSource() => NpgsqlDataSource.Create(ConnectionString);
 
-    public void ConfigureHost(ISqlBusFactoryConfigurator configurator) => configurator.UsePostgres(ConnectionString);
+    public void ConfigureHost(ISqlBusFactoryConfigurator configurator) =>
+        configurator.UsePostgres(ConnectionString, host => host.Schema = Schema);
 
     public async ValueTask DisposeAsync()
     {
