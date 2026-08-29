@@ -1999,3 +1999,13 @@ future cohorts as complete.
   zero findings; 148/148 identity tests and M11-M33 are bound.
 - The direct Evidence child, committed replay and two final read-only delta reviews remain. FINAL6 is
   local and has not been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL6 post-Evidence audit
+
+- Evidence `06acb2f1275a05608cf379f0f27dfc15dc97ba72`, tree
+  `51c408bee8c1fad85b7128b105e3e930c4d8e7b1`, is the direct child of Technical
+  `39a4acaff1a06f0462d829f332b9fc25b3941a6f`.
+- Committed replay is exact: 44,081 API records, zero findings, unchanged 64/0 package inventory,
+  byte-identical Technical patch and M11-M33 with exact occurrence, mutant and restore hashes.
+- Only two final independent delta reviews and architecture acceptance remain. No FINAL6 commit has
+  been pushed.

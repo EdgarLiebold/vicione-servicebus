@@ -15,6 +15,9 @@
     "tools/identity/identity_gate.py",
     "tools/identity/test_identity_gate.py"
   ],
+  "evidenceCommit": "06acb2f1275a05608cf379f0f27dfc15dc97ba72",
+  "evidenceTree": "51c408bee8c1fad85b7128b105e3e930c4d8e7b1",
+  "evidenceDirectParent": "39a4acaff1a06f0462d829f332b9fc25b3941a6f",
   "closure": {
     "propertyAccessorConditionalContextBound": true,
     "eventAccessorConditionalContextBound": true,
@@ -43,6 +46,18 @@
     "path": "FREP02_FINAL6_TECHNICAL.diff.gz",
     "compression": "gzip -n",
     "range": "dd5122977173e307f3a7f1c27e122a9da97022d9..39a4acaff1a06f0462d829f332b9fc25b3941a6f"
+  },
+  "postEvidenceCommitReplay": {
+    "apiRecords": 44081,
+    "apiFindings": 0,
+    "apiExact": true,
+    "packageRecords": 64,
+    "packageExact": true,
+    "packageArtifacts": 0,
+    "generatedManifestFindings": 0,
+    "technicalPatchExact": true,
+    "mutationsExact": true,
+    "rawLog": "FREP02_FINAL6_POSTCOMMIT_RECONSTRUCTION.log"
   },
   "inheritedUnchanged": {
     "candidateScanFindings": 0,
