@@ -88,13 +88,18 @@ public class SqlServerDbConnectionContext :
 
     public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, CancellationToken cancellationToken)
     {
-        async Task WaitAsync()
-        {
-            var delayTask = Task.Delay(timeout, cancellationToken);
-            await Task.WhenAny(delayTask).ConfigureAwait(false);
-        }
+        return DelayUntilMessageReady(queueId, timeout, TimeProvider.System, cancellationToken);
+    }
 
-        return WaitAsync();
+    internal static Task DelayUntilMessageReady(
+        long queueId,
+        TimeSpan timeout,
+        TimeProvider timeProvider,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _ = queueId;
+        return Task.Delay(timeout, timeProvider, cancellationToken);
     }
 
     public async ValueTask DisposeAsync()

@@ -1,11 +1,14 @@
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 public sealed class SqlServerConfigurationAndRetryTests
 {
+    private static readonly DateTimeOffset StartTime = new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
+
     public static TheoryData<int, bool> ErrorNumbers => new()
     {
         { -2, true },
@@ -31,6 +34,43 @@ public sealed class SqlServerConfigurationAndRetryTests
     public void TransientErrorNumberSetIsClosed(int errorNumber, bool expected)
     {
         Assert.Equal(expected, SqlServerDbConnectionContext.IsTransientErrorNumber(errorNumber));
+    }
+
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0105", "sqlserver-native-owner")]
+    public async Task ProviderPollingDelayIgnoresQueueIdAndCompletesAtTheConfiguredBoundaryOrCancellation()
+    {
+        var timeProvider = new FakeTimeProvider(StartTime);
+        TimeSpan pollingInterval = TimeSpan.FromMinutes(2);
+        Task firstQueue = SqlServerDbConnectionContext.DelayUntilMessageReady(
+            17,
+            pollingInterval,
+            timeProvider,
+            CancellationToken.None);
+        Task secondQueue = SqlServerDbConnectionContext.DelayUntilMessageReady(
+            9_999,
+            pollingInterval,
+            timeProvider,
+            CancellationToken.None);
+        using var cancellation = new CancellationTokenSource();
+        Task canceled = SqlServerDbConnectionContext.DelayUntilMessageReady(
+            17,
+            pollingInterval,
+            timeProvider,
+            cancellation.Token);
+
+        cancellation.Cancel();
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+
+        timeProvider.Advance(pollingInterval - TimeSpan.FromTicks(1));
+        Assert.False(firstQueue.IsCompleted);
+        Assert.False(secondQueue.IsCompleted);
+
+        timeProvider.Advance(TimeSpan.FromTicks(1));
+        await Task.WhenAll(firstQueue, secondQueue);
+        Assert.True(firstQueue.IsCompletedSuccessfully);
+        Assert.True(secondQueue.IsCompletedSuccessfully);
     }
 
     [Fact]
