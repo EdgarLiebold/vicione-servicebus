@@ -3,12 +3,20 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
+import json
 import unittest
 import subprocess
 import tempfile
+import hashlib
 from pathlib import Path
+from unittest.mock import patch
 
 from identity_gate import (
+    GENERATED_EVIDENCE_CONTRACTS,
+    GENERATED_EVIDENCE_MANIFEST,
+    generated_evidence_manifest,
     legal_identity_contexts,
     modification_format_exception_bindings,
     notice_format_exception_targets,
@@ -16,8 +24,13 @@ from identity_gate import (
     scan_entry,
     scan_tree,
     test_sabotage_findings,
+    public_declaration_disposition,
+    run_gate,
+    validate_historical_identity_policy,
+    validate_terminal_baseline_records,
     validate_evidence_records,
     validate_format_exceptions,
+    validate_generated_evidence_manifest,
     validate_legal_documents,
     validate_test_run,
 )
@@ -237,6 +250,270 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
 
     def test_accepts_accounted_green_test_run(self) -> None:
         self.assertFalse(validate_test_run(discovered=10, executed=9, failed=0, skipped=1))
+
+
+class IdentityGateTerminalDispositionTests(unittest.TestCase):
+    EXISTING = {
+        "key-a": {
+            "baselineKey": "key-a",
+            "targetPath": "src/A.cs",
+            "baselineDisposition": "MAPPED_EXISTING",
+            "pathDisposition": "UNCHANGED",
+            "targetExists": True,
+        },
+        "key-b": {
+            "baselineKey": "key-b",
+            "targetPath": "src/B.cs",
+            "baselineDisposition": "MOVED_EXACT",
+            "pathDisposition": "RENAMED",
+            "targetExists": True,
+        },
+        "key-c": {
+            "baselineKey": "key-c",
+            "targetPath": "removed/C.cs",
+            "baselineDisposition": "RETIRED_DELETED",
+            "targetExists": False,
+            "retirementCommit": "c" * 40,
+            "retirementEvidence": "ROOT_CHANGE_LIST",
+            "retirementTree": "d" * 40,
+        },
+    }
+
+    def findings(self, records: list[dict[str, object]], paths: set[str] | None = None):
+        return validate_terminal_baseline_records(
+            records,
+            expected_keys={"key-a", "key-b", "key-c"},
+            actual_paths=paths if paths is not None else {"src/A.cs", "src/B.cs"},
+        )
+
+    def test_accepts_one_exact_terminal_state_per_baseline_key(self) -> None:
+        self.assertEqual([], self.findings(list(self.EXISTING.values())))
+
+    def test_rejects_missing_duplicate_and_invented_baseline_keys(self) -> None:
+        variants = (
+            list(self.EXISTING.values())[:-1],
+            list(self.EXISTING.values()) + [dict(self.EXISTING["key-a"])],
+            list(self.EXISTING.values()) + [{
+                "baselineKey": "invented",
+                "targetPath": "invented.cs",
+                "baselineDisposition": "MAPPED_EXISTING",
+                "targetExists": True,
+            }],
+        )
+        for records in variants:
+            with self.subTest(records=len(records)):
+                self.assertTrue(self.findings(records))
+
+    def test_rejects_resurrected_retired_and_missing_live_targets(self) -> None:
+        self.assertTrue(self.findings(list(self.EXISTING.values()), {"src/A.cs", "src/B.cs", "removed/C.cs"}))
+        self.assertTrue(self.findings(list(self.EXISTING.values()), {"src/A.cs"}))
+
+    def test_rejects_retirement_without_git_and_change_list_provenance(self) -> None:
+        for field in ("retirementCommit", "retirementEvidence", "retirementTree"):
+            records = [dict(item) for item in self.EXISTING.values()]
+            records[-1].pop(field)
+            with self.subTest(field=field):
+                findings = self.findings(records)
+                self.assertTrue(any("retirement provenance" in item.reason for item in findings))
+
+    def test_rejects_coordinated_live_disposition_drift_and_invented_retirement_metadata(self) -> None:
+        wrong_path_state = [dict(item) for item in self.EXISTING.values()]
+        wrong_path_state[0]["baselineDisposition"] = "MOVED_EXACT"
+        self.assertTrue(any("path disposition" in item.reason for item in self.findings(wrong_path_state)))
+
+        invented_retirement = [dict(item) for item in self.EXISTING.values()]
+        invented_retirement[0]["retirementCommit"] = "e" * 40
+        self.assertTrue(any("carries retirement" in item.reason for item in self.findings(invented_retirement)))
+
+
+class IdentityGateHistoricalContextTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.files = {
+            "evidence/history.json": f'{{"former":"{OLD}"}}\n'.encode("utf-8"),
+            "tests2/NegativeTests.cs": f'const string Former = "{OLD}";\n'.encode("utf-8"),
+            "evidence/history.bin": b"\xff" + OLD.encode("ascii"),
+        }
+        self.records = [
+            {
+                "path": path,
+                "category": category,
+                "authorizedLineCount": 1,
+                "authorizedLinesSha256": hashlib.sha256(
+                    json.dumps(
+                        [(hashlib.sha256(self.files[path]).hexdigest(), 1)],
+                        separators=(",", ":"),
+                    ).encode("ascii")
+                ).hexdigest(),
+                "allowedGates": ["binary-scan", "text-scan"],
+            }
+            for path, category in (
+                ("evidence/history.json", "HISTORICAL_EVIDENCE"),
+                ("tests2/NegativeTests.cs", "NEGATIVE_TEST_ORACLE"),
+            )
+        ]
+        self.records.append(
+            {
+                "path": "evidence/history.bin",
+                "category": "HISTORICAL_EVIDENCE",
+                "blobSha256": hashlib.sha256(self.files["evidence/history.bin"]).hexdigest(),
+                "allowedGates": ["binary-scan"],
+            }
+        )
+
+    def test_accepts_only_exact_path_category_context_and_gate_bindings(self) -> None:
+        self.assertEqual([], validate_historical_identity_policy(self.records, self.files))
+
+    def test_unrelated_text_changes_do_not_expand_or_stale_an_authorized_context(self) -> None:
+        files = dict(self.files)
+        files["evidence/history.json"] += b'{"current":"ViciOne.ServiceBus"}\n'
+        self.assertEqual([], validate_historical_identity_policy(self.records, files))
+
+    def test_new_identity_line_is_not_covered_by_an_existing_exact_context(self) -> None:
+        files = dict(self.files)
+        files["evidence/history.json"] += f'{{"invented":"{OLD}"}}\n'.encode("utf-8")
+        findings = validate_historical_identity_policy(self.records, files)
+        self.assertTrue(any("inventory is stale" in item.reason for item in findings))
+
+    def test_binary_digest_and_path_authorization_are_independent_fail_closed_axes(self) -> None:
+        stale_binary = [dict(record) for record in self.records]
+        stale_binary[-1] = dict(stale_binary[-1], blobSha256="0" * 64)
+        self.assertTrue(validate_historical_identity_policy(stale_binary, self.files))
+
+        path = f"evidence/{OLD}/history.txt"
+        files = {path: b"current identity only\n"}
+        record = {
+            "path": path,
+            "category": "HISTORICAL_EVIDENCE",
+            "allowedGates": ["path-scan"],
+            "authorizePath": True,
+        }
+        self.assertEqual([], validate_historical_identity_policy([record], files, {path}))
+        self.assertTrue(validate_historical_identity_policy([{key: value for key, value in record.items() if key != "authorizePath"}], files, {path}))
+
+    def test_rejects_duplicate_or_unsorted_gate_authority(self) -> None:
+        for allowed_gates in (["text-scan", "binary-scan"], ["binary-scan", "binary-scan", "text-scan"]):
+            records = [dict(record) for record in self.records]
+            records[0] = dict(records[0], allowedGates=allowed_gates)
+            with self.subTest(allowed_gates=allowed_gates):
+                self.assertTrue(validate_historical_identity_policy(records, self.files))
+
+    def test_rejects_duplicate_missing_stale_unknown_and_wrong_binding_policy_entries(self) -> None:
+        stale = [dict(record) for record in self.records]
+        stale[0] = dict(stale[0], authorizedLinesSha256="0" * 64)
+        text_blob = [dict(record) for record in self.records]
+        text_blob[0] = dict(text_blob[0], blobSha256=hashlib.sha256(self.files["evidence/history.json"]).hexdigest())
+        variants = (
+            self.records + [dict(self.records[0])],
+            self.records[:-1],
+            stale,
+            [dict(self.records[0], category="ANY_DIRECTORY"), *self.records[1:]],
+            text_blob,
+        )
+        expected_paths = set(self.files)
+        for records in variants:
+            with self.subTest(records=records):
+                self.assertTrue(validate_historical_identity_policy(records, self.files, expected_paths))
+
+    def test_rejects_policy_that_would_suppress_an_active_product_copy(self) -> None:
+        product = b"namespace " + OLD.encode("ascii") + b".Leaked;"
+        record = {
+            "path": "src/Leaked.cs",
+            "category": "HISTORICAL_EVIDENCE",
+            "authorizedLineCount": 1,
+            "authorizedLinesSha256": hashlib.sha256(
+                json.dumps(
+                    [(hashlib.sha256(product).hexdigest(), 1)],
+                    separators=(",", ":"),
+                ).encode("ascii")
+            ).hexdigest(),
+            "allowedGates": ["binary-scan", "text-scan"],
+        }
+        findings = validate_historical_identity_policy([record], {"src/Leaked.cs": product})
+        self.assertTrue(any("category is not allowed for active product" in item.reason for item in findings))
+
+
+class IdentityGatePublicProjectionTests(unittest.TestCase):
+    def test_classifies_present_modified_and_retired_declarations_independently(self) -> None:
+        self.assertEqual("MAPPED_PRESENT", public_declaration_disposition(True, True))
+        self.assertEqual("MODIFIED_OR_REMOVED", public_declaration_disposition(True, False))
+        self.assertEqual("RETIRED_PATH", public_declaration_disposition(False, False))
+
+    def test_rejects_impossible_present_declaration_on_retired_path(self) -> None:
+        with self.assertRaisesRegex(ValueError, "retired path"):
+            public_declaration_disposition(False, True)
+
+
+class IdentityGateGeneratedEvidenceManifestTests(unittest.TestCase):
+    def create_contracts(self, root: Path) -> str:
+        lines: list[str] = []
+        for name in (
+            "BASELINE_TO_TARGET_PATHS.json",
+            "CHANGE_NOTICES.json",
+            "IDENTITY_DISPOSITION.json",
+            "PACKAGE_INVENTORY.json",
+            "PUBLIC_API_MAPPING.json",
+        ):
+            data = (name + "\n").encode("ascii")
+            (root / name).write_bytes(data)
+            lines.append(f"{hashlib.sha256(data).hexdigest()}  {name}\n")
+        return "".join(lines)
+
+    def test_manifest_binds_the_exact_independently_named_contract_set(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            expected = self.create_contracts(root)
+            self.assertEqual(
+                (
+                    "BASELINE_TO_TARGET_PATHS.json",
+                    "CHANGE_NOTICES.json",
+                    "IDENTITY_DISPOSITION.json",
+                    "PACKAGE_INVENTORY.json",
+                    "PUBLIC_API_MAPPING.json",
+                ),
+                GENERATED_EVIDENCE_CONTRACTS,
+            )
+            self.assertEqual(expected, generated_evidence_manifest(root))
+            (root / GENERATED_EVIDENCE_MANIFEST).write_text(expected, encoding="ascii")
+            self.assertEqual([], validate_generated_evidence_manifest(root))
+
+    def test_manifest_fails_closed_for_changed_missing_and_extra_bindings(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            expected = self.create_contracts(root)
+            manifest = root / GENERATED_EVIDENCE_MANIFEST
+            wrong_hash = ("0" if expected[0] != "0" else "1") + expected[1:]
+            for mutation in (wrong_hash, expected + "0" * 64 + "  EXTRA.json\n"):
+                with self.subTest(mutation=mutation[-80:]):
+                    manifest.write_text(mutation, encoding="ascii")
+                    self.assertTrue(validate_generated_evidence_manifest(root))
+            (root / GENERATED_EVIDENCE_CONTRACTS[0]).unlink()
+            manifest.write_text(expected, encoding="ascii")
+            self.assertTrue(validate_generated_evidence_manifest(root))
+
+    def test_scan_uses_the_explicit_external_evidence_root(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "LICENSE.txt").write_bytes(b"license")
+            evidence = root / "candidate-evidence"
+            with contextlib.ExitStack() as stack:
+                for target, value in (
+                    ("identity_gate.derive_baseline_mapping", ([], [])),
+                    ("identity_gate.derive_change_notices", ([], [])),
+                    ("identity_gate.derive_public_api_mapping", ([], [])),
+                    ("identity_gate.identity_disposition", {}),
+                    ("identity_gate.derive_package_inventory", []),
+                    ("identity_gate.scan_tree", []),
+                    ("identity_gate.derive_refactor_conformance", []),
+                    ("identity_gate.baseline_bytes", b"license"),
+                    ("identity_gate.validate_legal_documents", []),
+                ):
+                    stack.enter_context(patch(target, return_value=value))
+                validate = stack.enter_context(
+                    patch("identity_gate.validate_persisted_evidence", return_value=[])
+                )
+                stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+                self.assertEqual(0, run_gate(root, None, evidence))
+            self.assertEqual(evidence, validate.call_args.args[0])
 
 
 if __name__ == "__main__":

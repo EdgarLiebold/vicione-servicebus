@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 from identity_rules import (
     BASELINE_COMMIT,
@@ -41,8 +41,30 @@ PUBLIC_DECLARATION = re.compile(r"^\s*public\s+.+", re.MULTILINE)
 TEST_SABOTAGE_FORMS = ("[Ignore", "[Explicit", "Assert.Pass(", ".Skip =", "Skip =")
 NOTICE_EXCEPTION_HEADING = "covered by exact path-bound entries in MODIFICATIONS.md:"
 MODIFICATIONS_EXCEPTION_HEADING = "## Changed files without an in-file modification comment"
+HISTORICAL_IDENTITY_POLICY_PATH = "tools/identity/historical_identity_policy.json"
+HISTORICAL_IDENTITY_POLICY_SCHEMA_VERSION = 1
+HISTORICAL_IDENTITY_CATEGORIES = frozenset({
+    "LEGAL_PROVENANCE",
+    "HISTORICAL_EVIDENCE",
+    "NEGATIVE_TEST_ORACLE",
+    "IDENTITY_TOOL_SELF_REFERENCE",
+})
+GENERATED_EVIDENCE_CONTRACTS = (
+    "BASELINE_TO_TARGET_PATHS.json",
+    "CHANGE_NOTICES.json",
+    "IDENTITY_DISPOSITION.json",
+    "PACKAGE_INVENTORY.json",
+    "PUBLIC_API_MAPPING.json",
+)
+GENERATED_EVIDENCE_MANIFEST = "GENERATED_SHA256SUMS"
+TERMINAL_BASELINE_DISPOSITIONS = frozenset({
+    "MAPPED_EXISTING",
+    "MOVED_EXACT",
+    "RETIRED_DELETED",
+})
 _BASELINE_ARCHIVES: dict[Path, dict[str, bytes]] = {}
 _BASELINE_TREE_ENTRIES: dict[Path, dict[str, tuple[str, str]]] = {}
+_DELETED_PATH_COMMITS: dict[Path, dict[str, str]] = {}
 
 
 @dataclass(frozen=True)
@@ -159,7 +181,8 @@ def mask_legal_identity_contexts(path: str, text: str) -> tuple[str, list[Findin
                 Finding("legal-context", path, f"authorized provenance context count is {occurrences}, expected 1")
             )
             continue
-        masked = masked.replace(context, " " * len(context), 1)
+        replacement = "".join(character if character in "\r\n" else " " for character in context)
+        masked = masked.replace(context, replacement, 1)
     return masked, findings
 
 
@@ -190,11 +213,118 @@ def scan_entry(path: str, data: bytes) -> list[Finding]:
     return findings
 
 
-def scan_tree(root: Path) -> list[Finding]:
+def line_sha256(line: bytes) -> str:
+    return hashlib.sha256(line).hexdigest()
+
+
+def historical_text_line_inventory(path: str, data: bytes) -> tuple[list[bool], Counter[str]]:
+    decoded = data.decode("utf-8")
+    legally_masked, _ = mask_legal_identity_contexts(path, decoded)
+    original_lines = data.splitlines(keepends=True)
+    candidate_lines = legally_masked.encode("utf-8").splitlines(keepends=True)
+    if len(original_lines) != len(candidate_lines):
+        raise ValueError(f"legal masking changed the line structure for {path}")
+    suppressible_gates = {"text-scan", "binary-scan", "compatibility-scan"}
+    selected = [
+        any(finding.gate in suppressible_gates for finding in scan_entry("", candidate))
+        for candidate in candidate_lines
+    ]
+    return selected, Counter(
+        line_sha256(line)
+        for line, is_selected in zip(original_lines, selected)
+        if is_selected
+    )
+
+
+def historical_text_line_inventory_sha256(inventory: Mapping[str, int]) -> str:
+    payload = json.dumps(sorted(inventory.items()), separators=(",", ":")).encode("ascii")
+    return sha256(payload)
+
+
+def mask_authorized_text_lines(
+    path: str,
+    data: bytes,
+    authorized_line_count: object,
+    authorized_lines_sha256: object,
+) -> tuple[bytes, list[Finding]]:
+    """Mask only the exact, counted UTF-8 line inventory authorized by the policy."""
     findings: list[Finding] = []
-    for candidate in commit_candidate_files(root):
-        path = candidate.relative_to(root).as_posix()
-        findings.extend(scan_entry(path, candidate.read_bytes()))
+    if not isinstance(authorized_line_count, int) or isinstance(authorized_line_count, bool) or authorized_line_count <= 0:
+        findings.append(Finding("historical-identity-policy", path, "authorized text line count is invalid"))
+    if not isinstance(authorized_lines_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", authorized_lines_sha256):
+        findings.append(Finding("historical-identity-policy", path, "authorized text line inventory digest is invalid"))
+
+    selected, actual_inventory = historical_text_line_inventory(path, data)
+    if (
+        sum(actual_inventory.values()) != authorized_line_count
+        or historical_text_line_inventory_sha256(actual_inventory) != authorized_lines_sha256
+    ):
+        findings.append(Finding("historical-identity-policy", path, "authorized text line inventory is stale"))
+
+    masked_lines: list[bytes] = []
+    for line, is_selected in zip(data.splitlines(keepends=True), selected):
+        if not is_selected:
+            masked_lines.append(line)
+            continue
+        ending_length = len(line) - len(line.rstrip(b"\r\n"))
+        content_length = len(line) - ending_length
+        masked_lines.append(b" " * content_length + line[content_length:])
+    return b"".join(masked_lines), findings
+
+
+def load_historical_identity_policy(root: Path) -> tuple[list[dict[str, object]], list[Finding]]:
+    path = root / HISTORICAL_IDENTITY_POLICY_PATH
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        return [], [Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, f"cannot load policy: {error}")]
+    if not isinstance(document, dict) or document.get("schemaVersion") != HISTORICAL_IDENTITY_POLICY_SCHEMA_VERSION:
+        return [], [Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, "unsupported schema")]
+    records = document.get("entries")
+    if not isinstance(records, list) or any(not isinstance(record, dict) for record in records):
+        return [], [Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, "entries must be records")]
+    return [dict(record) for record in records], []
+
+
+def scan_tree(root: Path) -> list[Finding]:
+    candidate_bytes = {
+        candidate.relative_to(root).as_posix(): candidate.read_bytes()
+        for candidate in commit_candidate_files(root)
+    }
+    raw_by_path = {
+        path: scan_entry(path, data)
+        for path, data in candidate_bytes.items()
+    }
+    suppressible_gates = {"text-scan", "binary-scan", "compatibility-scan", "path-scan"}
+    expected_policy_paths = {
+        path
+        for path, path_findings in raw_by_path.items()
+        if any(finding.gate in suppressible_gates for finding in path_findings)
+    }
+    records, load_findings = load_historical_identity_policy(root)
+    policy_findings = validate_historical_identity_policy(records, candidate_bytes, expected_policy_paths)
+    records_by_path = {str(record.get("path") or ""): record for record in records}
+    invalid_policy_paths = {
+        finding.path
+        for finding in policy_findings
+        if finding.path != HISTORICAL_IDENTITY_POLICY_PATH
+    }
+    findings: list[Finding] = load_findings + policy_findings
+    for path, path_findings in raw_by_path.items():
+        suppressible = [finding for finding in path_findings if finding.gate in suppressible_gates]
+        retained = [finding for finding in path_findings if finding.gate not in suppressible_gates]
+        record = records_by_path.get(path)
+        allowed_gates = set(record.get("allowedGates", [])) if record else set()
+        actual_gates = {finding.gate for finding in suppressible}
+        if (
+            suppressible
+            and record is not None
+            and path not in invalid_policy_paths
+            and allowed_gates == actual_gates
+        ):
+            findings.extend(retained)
+        else:
+            findings.extend(path_findings)
     return findings
 
 
@@ -234,6 +364,188 @@ def baseline_binding(root: Path, path: str) -> dict[str, str]:
     }
 
 
+def deleted_path_commits(root: Path) -> dict[str, str]:
+    cached = _DELETED_PATH_COMMITS.get(root)
+    if cached is not None:
+        return cached
+    output = git(
+        root,
+        "log",
+        "--format=@@%H",
+        "--name-status",
+        "--diff-filter=D",
+        "--no-renames",
+        f"{BASELINE_COMMIT}..HEAD",
+    ).decode("utf-8", errors="surrogateescape")
+    current_commit = ""
+    records: dict[str, str] = {}
+    for line in output.splitlines():
+        if line.startswith("@@"):
+            current_commit = line[2:]
+        elif line.startswith("D\t") and current_commit:
+            records.setdefault(line.split("\t", 1)[1], current_commit)
+    _DELETED_PATH_COMMITS[root] = records
+    return records
+
+
+def change_list_deleted_baseline_paths(root: Path) -> set[str]:
+    document = (root / "CHANGELIST.md").read_text(encoding="utf-8")
+    return {
+        match.group("source")
+        for match in re.finditer(
+            r"^\| `(?P<path>[^`]+)` \| Deleted \| `(?P<source>[^`]+)` \|$",
+            document,
+            flags=re.MULTILINE,
+        )
+        if match.group("path") == match.group("source")
+    }
+
+
+def validate_terminal_baseline_records(
+    records: Iterable[Mapping[str, object]],
+    expected_keys: set[str],
+    actual_paths: set[str],
+) -> list[Finding]:
+    materialized = [dict(record) for record in records]
+    keys = [str(record.get("baselineKey") or "") for record in materialized]
+    findings: list[Finding] = []
+    if len(keys) != len(set(keys)):
+        findings.append(Finding("baseline-terminal", "BASELINE_TO_TARGET_PATHS.json", "duplicate baselineKey"))
+    if set(keys) != expected_keys:
+        findings.append(Finding("baseline-terminal", "BASELINE_TO_TARGET_PATHS.json", "missing or invented baselineKey"))
+    for record in materialized:
+        key = str(record.get("baselineKey") or "")
+        target = str(record.get("targetPath") or "")
+        disposition = str(record.get("baselineDisposition") or "")
+        if disposition not in TERMINAL_BASELINE_DISPOSITIONS:
+            findings.append(Finding("baseline-terminal", target or key, "unknown terminal disposition"))
+            continue
+        exists = target in actual_paths
+        if disposition == "RETIRED_DELETED":
+            if exists or record.get("targetExists") is not False:
+                findings.append(Finding("baseline-terminal", target, "retired target is present"))
+            retirement_commit = record.get("retirementCommit")
+            if (
+                not isinstance(retirement_commit, str)
+                or not re.fullmatch(r"[0-9a-f]{40}", retirement_commit)
+                or record.get("retirementEvidence") != "ROOT_CHANGE_LIST"
+                or not isinstance(record.get("retirementTree"), str)
+                or not re.fullmatch(r"[0-9a-f]{40}", str(record.get("retirementTree")))
+            ):
+                findings.append(Finding("baseline-terminal", target, "retirement provenance is incomplete"))
+        else:
+            expected_path_disposition = "UNCHANGED" if disposition == "MAPPED_EXISTING" else "RENAMED"
+            if record.get("pathDisposition") != expected_path_disposition:
+                findings.append(Finding("baseline-terminal", target, "live path disposition is inconsistent"))
+            if any(field in record for field in ("retirementCommit", "retirementEvidence", "retirementTree")):
+                findings.append(Finding("baseline-terminal", target, "live target carries retirement provenance"))
+            if not exists or record.get("targetExists") is not True:
+                findings.append(Finding("baseline-terminal", target, "live target is absent"))
+    return findings
+
+
+def public_declaration_disposition(target_exists: bool, declaration_present: bool) -> str:
+    if not target_exists:
+        if declaration_present:
+            raise ValueError("a declaration cannot be present on a retired path")
+        return "RETIRED_PATH"
+    return "MAPPED_PRESENT" if declaration_present else "MODIFIED_OR_REMOVED"
+
+
+def validate_historical_identity_policy(
+    records: Iterable[Mapping[str, object]],
+    candidate_bytes: Mapping[str, bytes],
+    expected_paths: set[str] | None = None,
+) -> list[Finding]:
+    materialized = [dict(record) for record in records]
+    paths = [str(record.get("path") or "") for record in materialized]
+    findings: list[Finding] = []
+    if len(paths) != len(set(paths)):
+        findings.append(Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, "duplicate path"))
+    if expected_paths is not None and set(paths) != expected_paths:
+        findings.append(Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, "missing or invented path"))
+    for record in materialized:
+        path = str(record.get("path") or "")
+        category = str(record.get("category") or "")
+        if category not in HISTORICAL_IDENTITY_CATEGORIES:
+            findings.append(Finding("historical-identity-policy", path, "unknown category"))
+        if path.startswith("src/") and category not in {"LEGAL_PROVENANCE", "HISTORICAL_EVIDENCE"}:
+            findings.append(Finding("historical-identity-policy", path, "category is not allowed for active product"))
+        if path.startswith("src/") and not path.endswith("AnalyzerReleases.Shipped.md"):
+            findings.append(Finding("historical-identity-policy", path, "category is not allowed for active product"))
+        data = candidate_bytes.get(path)
+        if data is None:
+            findings.append(Finding("historical-identity-policy", path, "policy path is absent"))
+        allowed_gates = record.get("allowedGates")
+        if not isinstance(allowed_gates, list) or not allowed_gates or any(
+            gate not in {"text-scan", "binary-scan", "compatibility-scan", "path-scan"}
+            for gate in allowed_gates
+        ) or allowed_gates != sorted(set(allowed_gates)):
+            findings.append(Finding("historical-identity-policy", path, "allowed gates are invalid"))
+            continue
+        if data is None:
+            continue
+
+        raw_findings = scan_entry(path, data)
+        raw_gates = {
+            finding.gate
+            for finding in raw_findings
+            if finding.gate in {"text-scan", "binary-scan", "compatibility-scan", "path-scan"}
+        }
+        if raw_gates != set(allowed_gates):
+            findings.append(Finding("historical-identity-policy", path, "allowed gates do not match the current file"))
+
+        try:
+            data.decode("utf-8")
+            is_text = True
+        except UnicodeDecodeError:
+            is_text = False
+
+        if is_text:
+            if "blobSha256" in record:
+                findings.append(Finding("historical-identity-policy", path, "text policy must bind exact lines, not a blob"))
+            if raw_gates - {"path-scan"}:
+                masked, line_findings = mask_authorized_text_lines(
+                    path,
+                    data,
+                    record.get("authorizedLineCount"),
+                    record.get("authorizedLinesSha256"),
+                )
+                findings.extend(line_findings)
+            else:
+                if "authorizedLineCount" in record or "authorizedLinesSha256" in record:
+                    findings.append(Finding("historical-identity-policy", path, "path-only policy cannot bind text lines"))
+                masked = data
+        else:
+            if "authorizedLineCount" in record or "authorizedLinesSha256" in record:
+                findings.append(Finding("historical-identity-policy", path, "binary policy cannot bind text lines"))
+            if record.get("blobSha256") != sha256(data):
+                findings.append(Finding("historical-identity-policy", path, "policy blob digest is stale"))
+            masked = b""
+
+        path_authorized = record.get("authorizePath") is True
+        if path_authorized != ("path-scan" in allowed_gates):
+            findings.append(Finding("historical-identity-policy", path, "path authorization does not match the current path"))
+        residual = scan_entry(path, masked)
+        if path_authorized:
+            residual = [finding for finding in residual if finding.gate != "path-scan"]
+        residual_gates = {
+            finding.gate
+            for finding in residual
+            if finding.gate in {"text-scan", "binary-scan", "compatibility-scan", "path-scan"}
+        }
+        if residual_gates:
+            findings.append(
+                Finding(
+                    "historical-identity-policy",
+                    path,
+                    "unauthorized historical identity remains after exact context masking: "
+                    + ", ".join(sorted(residual_gates)),
+                )
+            )
+    return findings
+
+
 def omitted_baseline_findings(expected_targets: Iterable[str], actual_paths: set[str]) -> list[Finding]:
     return [
         Finding("baseline-census", target, "mapped baseline target is absent")
@@ -246,6 +558,13 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
     seen_targets: dict[str, str] = {}
+    deleted_sources = change_list_deleted_baseline_paths(root)
+    deletion_commits = deleted_path_commits(root)
+    retirement_tree = git(root, "rev-parse", "HEAD^{tree}").decode("ascii").strip()
+    actual_paths = {
+        candidate.relative_to(root).as_posix()
+        for candidate in commit_candidate_files(root)
+    }
     for source in baseline_paths(root):
         target = map_path(source)
         if target in seen_targets:
@@ -255,19 +574,39 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
         seen_targets[target] = source
         target_path = root / target
         exists = target_path.exists() or target_path.is_symlink()
-        if not exists:
-            findings.append(Finding("baseline-census", target, f"missing target for baseline path {source}"))
         source_data = baseline_bytes(root, source)
+        disposition = (
+            "RETIRED_DELETED"
+            if not exists
+            else "MOVED_EXACT" if source != target else "MAPPED_EXISTING"
+        )
         record: dict[str, object] = {
             **baseline_binding(root, source),
             "targetPath": target,
             "pathDisposition": "RENAMED" if source != target else "UNCHANGED",
+            "baselineDisposition": disposition,
             "baselineSha256": sha256(source_data),
             "targetExists": exists,
         }
         if exists and target_path.is_file():
             record["targetSha256"] = sha256(target_path.read_bytes())
+        elif not exists:
+            deletion_commit = deletion_commits.get(target) or deletion_commits.get(source)
+            if source not in deleted_sources:
+                findings.append(Finding("baseline-retirement", target, f"CHANGELIST has no deletion for {source}"))
+            if not deletion_commit:
+                findings.append(Finding("baseline-retirement", target, f"Git history has no deletion for {source}"))
+            record.update({
+                "retirementCommit": deletion_commit,
+                "retirementEvidence": "ROOT_CHANGE_LIST",
+                "retirementTree": retirement_tree,
+            })
         records.append(record)
+    findings.extend(validate_terminal_baseline_records(
+        records,
+        expected_keys={str(baseline_binding(root, source)["baselineKey"]) for source in baseline_paths(root)},
+        actual_paths=actual_paths,
+    ))
     return records, findings
 
 
@@ -278,6 +617,17 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
         target = map_path(source)
         target_path = root / target
         if not target_path.exists() or not target_path.is_file():
+            records.append(
+                {
+                    **baseline_binding(root, source),
+                    "targetPath": target,
+                    "contentChanged": False,
+                    "pathChanged": source != target,
+                    "changeKind": "RETIRED_DELETED",
+                    "mechanism": "ROOT_CHANGE_LIST",
+                    "effective": True,
+                }
+            )
             continue
         before = baseline_bytes(root, source)
         after = target_path.read_bytes()
@@ -293,6 +643,7 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
                 "targetPath": target,
                 "contentChanged": before != after,
                 "pathChanged": source != target,
+                "changeKind": "MODIFIED_OR_MOVED",
                 "mechanism": "ROOT_CHANGE_LIST",
                 "effective": True,
             }
@@ -301,7 +652,7 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
 
 
 def derive_refactor_conformance(root: Path) -> list[Finding]:
-    """Prove every ordinary baseline text is only identity-mapped plus noticed."""
+    """Retain only anti-sabotage checks after the identity-only refactor phase ended."""
     findings: list[Finding] = []
     for source in baseline_paths(root):
         target = map_path(source)
@@ -313,12 +664,7 @@ def derive_refactor_conformance(root: Path) -> list[Finding]:
             before_text = before.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        expected = map_text(before_text)
-        # Path.read_text performs universal-newline translation. Compare the
-        # decoded bytes so CRLF baselines remain byte-for-byte auditable.
         actual = target_path.read_bytes().decode("utf-8")
-        if actual != expected:
-            findings.append(Finding("deterministic-refactor", target, "content differs from closed mapping"))
         if source.startswith("tests/"):
             findings.extend(test_sabotage_findings(map_text(before_text), actual, target))
     return findings
@@ -337,7 +683,8 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
         except UnicodeDecodeError:
             continue
         target = map_path(source)
-        target_text = (root / target).read_text(encoding="utf-8") if (root / target).exists() else ""
+        target_exists = (root / target).exists()
+        target_text = (root / target).read_text(encoding="utf-8") if target_exists else ""
         target_declarations: dict[str, list[int]] = {}
         for target_match in PUBLIC_DECLARATION.finditer(target_text):
             target_declaration = target_match.group(0).strip()
@@ -355,18 +702,18 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
             target_lines = target_declarations.get(mapped, [])
             present = occurrence < len(target_lines)
             target_line = target_lines[occurrence] if present else None
-            if not present:
-                findings.append(Finding("public-api", target, f"mapped declaration missing for {source}:{line}"))
+            disposition = public_declaration_disposition(target_exists, present)
             declaration_sha = sha256(declaration.encode("utf-8"))
             target_declaration_sha = sha256(mapped.encode("utf-8"))
             api_key = sha256(
                 "\0".join((str(binding["baselineKey"]), str(line), declaration_sha)).encode("ascii")
             )
-            key = (target, target_declaration_sha, occurrence)
-            if key in target_keys:
-                findings.append(Finding("public-api-bijection", target, "duplicate target API binding"))
-            else:
-                target_keys.add(key)
+            if present:
+                key = (target, target_declaration_sha, occurrence)
+                if key in target_keys:
+                    findings.append(Finding("public-api-bijection", target, "duplicate target API binding"))
+                else:
+                    target_keys.add(key)
             records.append(
                 {
                     "baselineKey": binding["baselineKey"],
@@ -378,6 +725,7 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
                     "targetDeclarationSha256": target_declaration_sha,
                     "targetDeclarationOccurrence": occurrence,
                     "targetPresent": present,
+                    "apiDisposition": disposition,
                 }
             )
     return records, findings
@@ -440,6 +788,9 @@ def derive_package_inventory(root: Path) -> list[dict[str, object]]:
 
 
 def identity_disposition(root: Path) -> dict[str, object]:
+    policy_bytes = (root / HISTORICAL_IDENTITY_POLICY_PATH).read_bytes()
+    policy = json.loads(policy_bytes.decode("utf-8"))
+    policy_entries = policy["entries"]
     return {
         "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
         "formerIdentityFamilyRegistry": [
@@ -462,6 +813,13 @@ def identity_disposition(root: Path) -> dict[str, object]:
             for path, contexts in sorted(legal_identity_contexts().items())
         ],
         "directoryIdentityExceptions": [],
+        "historicalIdentityPolicy": {
+            "schemaVersion": policy["schemaVersion"],
+            "path": HISTORICAL_IDENTITY_POLICY_PATH,
+            "sha256": sha256(policy_bytes),
+            "entryCount": len(policy_entries),
+            "categories": dict(sorted(Counter(str(entry["category"]) for entry in policy_entries).items())),
+        },
     }
 
 
@@ -573,11 +931,37 @@ def validate_evidence_records(
     return findings
 
 
+def generated_evidence_manifest(evidence: Path) -> str:
+    return "".join(
+        f"{sha256((evidence / name).read_bytes())}  {name}\n"
+        for name in GENERATED_EVIDENCE_CONTRACTS
+    )
+
+
+def validate_generated_evidence_manifest(evidence: Path) -> list[Finding]:
+    try:
+        expected = generated_evidence_manifest(evidence)
+        actual = (evidence / GENERATED_EVIDENCE_MANIFEST).read_text(encoding="ascii")
+    except (OSError, UnicodeDecodeError) as error:
+        return [Finding("persisted-evidence", GENERATED_EVIDENCE_MANIFEST, f"cannot load manifest input: {error}")]
+    if actual != expected:
+        return [
+            Finding(
+                "persisted-evidence",
+                GENERATED_EVIDENCE_MANIFEST,
+                "manifest does not exactly bind every generated contract",
+            )
+        ]
+    return []
+
+
 def validate_persisted_evidence(
     evidence: Path,
     mapping: list[dict[str, object]],
     notices: list[dict[str, object]],
     api: list[dict[str, object]],
+    disposition: dict[str, object],
+    packages: list[dict[str, object]],
 ) -> list[Finding]:
     findings: list[Finding] = []
     contracts = (
@@ -593,22 +977,39 @@ def validate_persisted_evidence(
             findings.append(Finding("persisted-evidence", name, f"cannot load evidence: {error}"))
             continue
         findings.extend(validate_evidence_records(name, actual, expected, key_name))
+    for name, expected in (
+        ("IDENTITY_DISPOSITION.json", disposition),
+        ("PACKAGE_INVENTORY.json", packages),
+    ):
+        path = evidence / name
+        try:
+            actual = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            findings.append(Finding("persisted-evidence", name, f"cannot load evidence: {error}"))
+            continue
+        if actual != expected:
+            findings.append(Finding("persisted-evidence", name, "document differs from current tree"))
+    findings.extend(validate_generated_evidence_manifest(evidence))
     return findings
 
 
-def run_gate(root: Path, output: Path | None) -> int:
+def run_gate(root: Path, output: Path | None, evidence: Path | None = None) -> int:
     mapping, mapping_findings = derive_baseline_mapping(root)
     notices, notice_findings = derive_change_notices(root)
     api, api_findings = derive_public_api_mapping(root)
+    disposition = identity_disposition(root)
+    packages = derive_package_inventory(root)
     scan_findings = scan_tree(root)
     conformance_findings = derive_refactor_conformance(root)
     license_equal = baseline_bytes(root, "LICENSE") == (root / "LICENSE.txt").read_bytes()
     legal_findings = validate_legal_documents(root)
     persisted_findings = validate_persisted_evidence(
-        root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY",
+        evidence or root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY",
         mapping,
         notices,
         api,
+        disposition,
+        packages,
     )
     findings = (
         mapping_findings
@@ -646,6 +1047,10 @@ def generate_evidence(root: Path, evidence: Path) -> int:
     write_json(evidence / "PUBLIC_API_MAPPING.json", api)
     write_json(evidence / "IDENTITY_DISPOSITION.json", identity_disposition(root))
     write_json(evidence / "PACKAGE_INVENTORY.json", derive_package_inventory(root))
+    (evidence / GENERATED_EVIDENCE_MANIFEST).write_text(
+        generated_evidence_manifest(evidence),
+        encoding="ascii",
+    )
     result = {
         "status": "PASS" if not (mapping_findings + notice_findings + api_findings) else "FAIL",
         "findings": [
@@ -653,7 +1058,7 @@ def generate_evidence(root: Path, evidence: Path) -> int:
         ],
     }
     write_json(evidence / "generation-result.json", result)
-    scan_exit = run_gate(root, evidence / "SOURCE_IDENTITY_GATE.json")
+    scan_exit = run_gate(root, evidence / "SOURCE_IDENTITY_GATE.json", evidence)
     return 0 if result["status"] == "PASS" and scan_exit == 0 else 1
 
 
@@ -662,10 +1067,12 @@ def main() -> int:
     parser.add_argument("command", choices=("scan", "evidence"))
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--evidence-root", type=Path)
     args = parser.parse_args()
     root = args.root.resolve(strict=True)
     if args.command == "scan":
-        return run_gate(root, args.output)
+        evidence_root = args.evidence_root.resolve(strict=True) if args.evidence_root else None
+        return run_gate(root, args.output, evidence_root)
     evidence = args.output or root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY"
     return generate_evidence(root, evidence)
 

@@ -1,0 +1,527 @@
+{
+  "entries": [
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "1052cb4bb3e7afdaccc3194ea6d6bb18101e7f5dd6d623693c1e89090f9de2fa",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": ".testagent/plan.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 9,
+      "authorizedLinesSha256": "06bdcf8911f30655f9428d7912167bc87095d1155ffc2b1558282b9539c18373",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": ".testagent/research.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "1eead4443f5925171d8a98f1f6d6d4d23afc8ad0a0facea9bf47a06cf6bca713",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": ".testagent/status.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "3b653c4cd1d2fa3158dd965cb26075e9348b5cafefe91eec5ce640d553643345",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "AGENTS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 5632,
+      "authorizedLinesSha256": "94ef12a7de2f7441ea3786fb39c916a76094028121af65fa58ff7b96e543a669",
+      "category": "LEGAL_PROVENANCE",
+      "path": "CHANGELIST.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "9cab3ea3c05981016bb4dd1ff63f88e583e6f32d6d8fb54e0e11b15a750b4f2b",
+      "category": "LEGAL_PROVENANCE",
+      "path": "MODIFICATIONS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "2a034af12f6152f62ba54df67317ad912145a2d1ff7e6d496ac5b493655f086b",
+      "category": "LEGAL_PROVENANCE",
+      "path": "README.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "a3cd933779582a34483da26e2131a1013702cda137c2e2262b6bc68d8fa52ac1",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "docs/build.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "a5685d39f4caecf766965544230fef0636da686f9c288e90700cd5cf5f115d43",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/quartz-baseline/CAUSAL_ANALYSIS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "a6de77557da655ef87b153c46ff845fc469e951c9e0a866fc161f00e5e1b37c3",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/interim/rec0077-public-api-diff/ROOT_AND_STRUCTURE.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "a4e027ec6d0ca09c85baf42fcccd0d3e440b6b595e59eba557c0b2be31ab14f0",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0002/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0003/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0004/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0005/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0006/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "f3343770efd2804ea1d82b7b2cafe163709cb6fa1274ae842c83d78a687a39cd",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/recovery/revisions/0007/RECOVERY_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "e3be5d4c535d61cd9748d5b5aa8ff5de9b906d6f3a716f9d50420bdcdd4f73b7",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/reslice-0005/CASE_DIAGNOSIS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "421b3f4791cdb933a28d8ffca2e882b95b282be10159f59ac85a2d9c74fcd490",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-CI-BASELINE-03/interim/reslice-0005/REQ-CI-002_RESLICE_0005_STATUS.json"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-02/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-03/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-04/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-05/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CONVERGENCE-06/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "37f6f1b8b21e2dbc8f247505d1c5de0c695d48eee5028a45a0e6fab7b5b4bfa9",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0-CORRECTION-01/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "compatibility-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "66404c80b6105afaad97241678b18a1cbba4618c8ae991f52d16e1d0fddf5299",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/COMBINED_SEMANTIC_LEDGER.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "3f74305ba2cb56f3d50f20105cbbb3a6f4943fe01bad70fa831806082889e926",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/INTEGRATOR_DECISIONS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "7a6ecdaf11f67c54c1143400fd9ab4c9a0e25aa4fce409be0959b2c3129be291",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/SECURITY_DISPOSITION_CLIENT_P12.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "027785c3ec93808b038cdff6f1f72260165342ae12b589ba4e8f9e0365355e5f",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-BRK/FINDINGS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 5,
+      "authorizedLinesSha256": "c6ca125e603398b73ec40e876b92d1d8800712bd7002e7a3238bcce855dc1216",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/FINDINGS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "a185d99e5a796de2cc20c229e87cf89c5e79ef409fff977bbe176329fc64b326",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-CORE-C/LEDGER_DRAFT.jsonl"
+    },
+    {
+      "allowedGates": [
+        "compatibility-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "043541e827ab6ea5e0fa7581d39491098a2b76c7379c331b1b7f16901c48fcfb",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/cohorts/R0-PY/LEDGER_DRAFT.jsonl"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "9a42fcf237934a30b8a91c3f6e58cfead4e48a1f0a4184c8d39e4c96a124f2e7",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ACTIVEMQ-NATIVE-CLOSURE-CORRECTION-03/mutations/M61-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "8e87e7fd62028beb102dee37a81cc5f4fb37a337f80f70968a2098dab290bbbc",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-01/positive/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 24,
+      "authorizedLinesSha256": "857b713822692053aeb870f2b8460b19b1c6383b0e338cdbf038d079bcdc96ec",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-02/TECHNICAL_DIFF.patch"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "befb0602c04ae7c56847e6497a438f0d0f6e32cb2aabde21004c91dc6f01178b",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-02/positive/binlogs/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "db73b78080934ba12168020a6ef015e9c8fe1b704e662d319d6fb85cbd94cad7",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/unit-restore.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "4573d0fbcd3435618c3e14bdb7644ec64548cde84dd727453465a948725af110",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C29-TIMEOUT-AND-CANCELLATION/PRODUCT_PATH_ANALYSIS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "2545ffb626b7508c1c0043a08ae8c72c2e3d46bd0e276e1530c06579114105b4",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C30-INMEMORY-DELAY/PRODUCT_PATH_ANALYSIS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "9a4f50222862350c828f4c717a788aefb5e03d1b672107f1c0c8d6810efc049b",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C32-KILL-SWITCH/PRODUCT_PATH_ANALYSIS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "e16d69a20891a099e6a889804ee01a4ca5153274afe454731a9d8ecf607034b7",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C7-IMPLEMENTED-MESSAGE-TOPOLOGY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "142cbe53df306d41a72f233f1f444a19a5f6d63381719b03328eb5c73fb81eeb",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-05/positive/engineering-release.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "3acb17e4bda6e62e65796dd306590cf7f3b583c58144ed884799e075a8f89304",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION/mutations/M04-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "280a00dd468369b41cc40af0db1eee804d489f10fbe38506b4c252222cfdc435",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "dada3f36458d20bd6e503fd396728be02ecaed54f3daebf3f7fb86555fe0456e",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/request-clients-response-mediator-multibus/EXECUTION_AND_QUALITY_VALIDATION.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "91b3ecdae5fc352ee0f28b9a1aab163e60c359b1142aab3ed702171e1e3f857a",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/request-clients-response-mediator-multibus/PRODUCT_PATH_ANALYSIS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "d404eb9b96d81c7db98fe67825176d23cb338ef2ebcfad6ece5d3d24e3f1c89a",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/native-tests/type-relationships-and-properties/PRODUCT_PATH_ANALYSIS.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "9bead7103338d2eb39b18846a2aa5e4fbf005f1cdb5df76e13a9467f3e807588",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "53ec91c31a66faa4e738e40f1fbd09e2b567de09faff8cc568f0f4f81082344d",
+      "category": "NEGATIVE_TEST_ORACLE",
+      "path": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "cda97a52348b5090eed895302cf80965bf600ca4801aecbc675a6a068015f48e",
+      "category": "IDENTITY_TOOL_SELF_REFERENCE",
+      "path": "tools/identity/change_list.py"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 5,
+      "authorizedLinesSha256": "5eaf80a3b082530d263019308a265e2ca468ac56e6973442deda0adcca390ba6",
+      "category": "IDENTITY_TOOL_SELF_REFERENCE",
+      "path": "tools/identity/identity_rules.py"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 6,
+      "authorizedLinesSha256": "0472b2f286da42ed57b0626bba1de79011621e8f6ac06c4d04776982309b74da",
+      "category": "IDENTITY_TOOL_SELF_REFERENCE",
+      "path": "tools/identity/test_identity_gate.py"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "e28b933f03bd9ce3df559bbbb6f066ad79eac3b610b959e6ffe17f4b40b6e705",
+      "category": "IDENTITY_TOOL_SELF_REFERENCE",
+      "path": "tools/identity/test_identity_rules.py"
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -2393,3 +2393,39 @@ failure. The complete repository-local verification order must restore both Unit
 LocalIntegration locked graphs before running the architecture module, because that module
 deliberately evaluates all `tests2` projects. Restricted-sandbox NamedPipe/process failures remain a
 different diagnosis and use the already established unchanged-command outside-sandbox rerun.
+## F-REP-02 — integrated identity/provenance reconciliation research
+
+- Baseline is canonical remote-equal integration commit `1c52dd2d4d5942f087a725a6256d6b6f41b0ba4c`,
+  tree `e833ff1b86b0f1aae8a5f2c6cfc3b85017d2c112`; identity baseline remains
+  `1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc`.
+- The complete read-only scan is SHA-256
+  `d9a0ce2a5d327f3b3a198f056ca45277c57389e3ab5dd6153942dcd2e053acba` and
+  reports 59,631 findings on 3,288 paths: baseline-census 1,448,
+  deterministic-refactor 1,786, public-api 11,754, persisted-evidence 44,538,
+  text 45, binary 52 and compatibility 8.
+- Root cause is schema age, not a newly discovered product defect. The gate treats every absent
+  baseline target and every intentionally changed/removed public declaration as a failed identity-only
+  refactor, although CHANGELIST and the accepted retirement cohorts now intentionally describe those
+  states. Its three persisted high-volume mappings still describe an older target tree.
+- `identity_gate.py` owns baseline archive/binding, path mapping, source scans, public-declaration
+  extraction, persisted-evidence equality and evidence generation. `identity_rules.py` owns the
+  closed former-identity registry and four legal format exceptions. `change_list.py` independently
+  classifies every baseline path as added/modified/deleted/renamed.
+- Existing tests use Python `unittest`, independent literal oracles, temporary Git repositories and
+  isolated fixture damage. Canonical checkout mutation is explicitly forbidden. The relevant paired
+  owners are `test_identity_gate.py`, `test_identity_rules.py` and `test_change_list.py`.
+- The mandatory static pairing analyzer was invoked once against `tools/identity` but could not run
+  because its optional `tree-sitter-language-pack` dependency is absent. No dependency was installed;
+  the explicit import/symbol pairing above is the documented fallback. Static pairing would not be
+  coverage evidence in any case.
+- Historical old-identity occurrences fall into four bounded categories: legal/provenance documents,
+  immutable historical Evidence (including binlogs), negative test oracles and identity-tool
+  self-reference. A broad path exception would be unsafe. The selected contract binds 53 exact paths,
+  5,772 counted UTF-8 line contexts and seven complete binary blobs; unrelated text additions remain
+  possible while every changed or newly introduced old-identity context fails closed.
+- The Python syntax probe initially failed because macOS tried to write bytecode below
+  `~/Library/Caches`, outside the workspace sandbox. The unchanged command succeeds with
+  `PYTHONPYCACHEPREFIX=/private/tmp/frep02-pycache`; this is the recorded sandbox remedy and needs no
+  elevated permissions.
+- The technical scope is Python tooling/schema/tests only. Product, C# tests, solutions, workflows,
+  floors, packages and the remaining legacy-test tree are immutable in this slice.

@@ -1977,3 +1977,42 @@ LocalIntegration remains 149. Bind three separate one-cause mutations for hostle
 and null/empty/whitespace string host. Regenerate the Evidence child and make M32's replacement
 literal encompass its unique `Complete` finally block rather than claiming the repeated exchange
 line is unique.
+## F-REP-02 — identity/provenance reconciliation implementation
+
+1. Replace the binary existing/missing baseline contract with an exact 5,654-key terminal partition:
+   `MAPPED_EXISTING`, `MOVED_EXACT` or `RETIRED_DELETED`. Bind retirement to baseline blob/mode,
+   generated CHANGELIST deletion and the Git deletion commit; reject missing, duplicate, invented,
+   resurrected and falsely retired records.
+2. Treat ordinary content changes as recorded modernization rather than a failed identity-only
+   refactor. Preserve the independent anti-sabotage check for mapped legacy tests. Public declaration
+   records receive explicit present/modified-or-removed/retired-path dispositions instead of
+   inventing Phantom targets.
+3. Add a schema-versioned historical-identity policy whose entries bind one exact current path and
+   category, with exact counted line digests for UTF-8 content and a complete blob SHA-256 for binary
+   content. No directory/extension wildcard is supported. Missing/stale policy entries and any
+   additional former identity remain findings; unrelated text additions do not stale an authority.
+4. Extend persisted-evidence validation to the terminal mapping and historical policy contract; add
+   a deterministic manifest for generated data contracts. Regenerate the Identity Evidence only in
+   the later direct Evidence child.
+5. Add independent hostile tests for terminal partition completeness, resurrection, missing deletion
+   provenance, false retirement, wrong move/target binding, stale/extra historical policy, product
+   leakage, public-declaration dispositions and persisted Missing/Extra/Duplicate/drift.
+6. Run all Identity self-tests, then the complete full-tree scan. Completion requires Exit 0, zero
+   findings and exactly 5,654 unique terminal baseline keys; a green focused suite alone is not a
+   verdict.
+7. Verify product/test/solution/workflow/floor bytes against `1c52dd2d`, freeze a tooling-only Technical
+   commit, generate a direct Evidence/status/CHANGELIST child, and require two independent read-only
+   PASS reviews before closing F-REP-02.
+
+Acceptance checklist to concrete test owners:
+
+- Missing/duplicate/invented terminal keys → `IdentityGateTerminalDispositionTests`.
+- Deleted target without CHANGELIST/Git provenance and resurrected retired target →
+  `IdentityGateTerminalDispositionTests`.
+- Wrong moved source/target/blob → existing exact format-binding owner plus new terminal-binding cases.
+- Historical-policy stale context/blob digest, missing entry, extra entry and active-product copy →
+  `IdentityGateHistoricalContextTests`.
+- Retired/modified public declarations and persisted record drift →
+  `IdentityGatePublicProjectionTests` and existing `validate_evidence_records` owners.
+- Canonical 5,654-key partition and full scan zero findings → final read-only integration carriers,
+  not fixture-only assertions.
