@@ -1714,3 +1714,35 @@ future cohorts as complete.
 - This additive status-only child records the completed ServiceBus backup. After its own fast-forward,
   only the final architecture acceptance and architecture-branch backup remain.
 - No real AWS resource, credential, cost-bearing operation or GitHub Actions run was introduced.
+
+## ServiceBus native closures — canonical branch integration freeze
+
+- PO assignment `PO-2026-08-29-01`, bound by architecture commit `ac424ac`, authorizes the
+  reintegration of the independently accepted Transactional/ActiveMQ and AWS lines in the persistent
+  checkout `repositories/vicione-servicebus`. The integration merge is frozen at
+  `8dcd3bcecc07222f89f70b3b04268d01bc5642b7`, tree
+  `29c8aa84fbfb268943702c07e7f2c59f04ecb178`, with exact parents
+  `a5f39ef947a548472958c09a1a67a2a155a2d213` and
+  `bd5164b9d583fce58c566b302af45c27803f364c` and common base
+  `2afee3f3d734c405479d0d7bd00d9711573b1c2e`.
+- The eight overlapping files were resolved as an additive union. The fail-closed floors are 2,288
+  UnitArchitecture and 244 LocalIntegration; all four GitHub workflow files remain manually
+  disabled. No real cloud resource, credential or cost-bearing operation was used.
+- Local static gates at the exact merge tree pass: verification model Exit 0, identity self-tests
+  103/103, CI tooling self-tests 257/257 and generated CHANGELIST 9,291 entries. Locked Unit,
+  LocalIntegration and Engineering restores pass; the Engineering Release build completes with
+  zero warnings and zero errors. UnitArchitecture passes 2,288/2,288 with zero failures and skips.
+- The first complete fresh-fixture LocalIntegration run produced 243/244: only the AMQP row of
+  `ActiveMqRequestResponseTests.ConcurrentRequests_ReturnExactResponsesAcrossConfigurationPaths`
+  reached its unchanged operation timeout. The test and its complete ActiveMQ product path are
+  byte-identical to the accepted first parent, and the fixture reported no finding. No timeout,
+  assertion or product rule was changed.
+- A diagnostic repeat of the complete ActiveMQ module against fresh Classic/Artemis fixtures passed
+  95/95. A subsequent unchanged full fresh-fixture run `vicione-621ce4125503` passed 244/244 across
+  PostgreSQL, Azurite, LocalStack, ActiveMQ Classic and Artemis, with zero failures and skips. The
+  original isolated timeout is therefore retained as a transparent non-reproduced fixture/runtime
+  event rather than hidden or converted into a product change.
+- This integration is locally complete, not self-accepted architecture. The remaining authorized
+  work is the status/CHANGELIST child freeze, remote backup of the canonical integration branch and
+  final architecture acceptance. The legacy parallel branch names remain only as immutable history;
+  the persistent checkout is the canonical working location.
