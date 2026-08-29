@@ -7,7 +7,9 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import re
+import stat
 import subprocess
 import sys
 import tarfile
@@ -65,6 +67,7 @@ TERMINAL_BASELINE_DISPOSITIONS = frozenset({
 _BASELINE_ARCHIVES: dict[Path, dict[str, bytes]] = {}
 _BASELINE_TREE_ENTRIES: dict[Path, dict[str, tuple[str, str]]] = {}
 _DELETED_PATH_COMMITS: dict[Path, dict[str, str]] = {}
+_GIT_OBJECT_FORMATS: dict[Path, str] = {}
 
 
 @dataclass(frozen=True)
@@ -364,6 +367,34 @@ def baseline_binding(root: Path, path: str) -> dict[str, str]:
     }
 
 
+def git_object_format(root: Path) -> str:
+    cached = _GIT_OBJECT_FORMATS.get(root)
+    if cached is not None:
+        return cached
+    object_format = git(root, "rev-parse", "--show-object-format").decode("ascii").strip()
+    if object_format not in {"sha1", "sha256"}:
+        raise ValueError(f"unsupported Git object format: {object_format}")
+    _GIT_OBJECT_FORMATS[root] = object_format
+    return object_format
+
+
+def git_blob_oid(root: Path, data: bytes) -> str:
+    payload = f"blob {len(data)}\0".encode("ascii") + data
+    return hashlib.new(git_object_format(root), payload).hexdigest()
+
+
+def candidate_git_entry(root: Path, path: Path) -> tuple[str, str, bytes]:
+    if path.is_symlink():
+        data = os.readlink(path).encode("utf-8", errors="surrogateescape")
+        mode = "120000"
+    elif path.is_file():
+        data = path.read_bytes()
+        mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
+    else:
+        raise ValueError(f"candidate is not a Git blob: {path.relative_to(root).as_posix()}")
+    return mode, git_blob_oid(root, data), data
+
+
 def deleted_path_commits(root: Path) -> dict[str, str]:
     cached = _DELETED_PATH_COMMITS.get(root)
     if cached is not None:
@@ -413,7 +444,7 @@ def commit_tree(root: Path, commit: str) -> str:
 def validate_terminal_baseline_records(
     records: Iterable[Mapping[str, object]],
     expected_keys: set[str],
-    actual_paths: set[str],
+    actual_tree_entries: Mapping[str, tuple[str, str]],
 ) -> list[Finding]:
     materialized = [dict(record) for record in records]
     keys = [str(record.get("baselineKey") or "") for record in materialized]
@@ -429,7 +460,8 @@ def validate_terminal_baseline_records(
         if disposition not in TERMINAL_BASELINE_DISPOSITIONS:
             findings.append(Finding("baseline-terminal", target or key, "unknown terminal disposition"))
             continue
-        exists = target in actual_paths
+        actual_entry = actual_tree_entries.get(target)
+        exists = actual_entry is not None
         if disposition == "RETIRED_DELETED":
             if exists or record.get("targetExists") is not False:
                 findings.append(Finding("baseline-terminal", target, "retired target is present"))
@@ -442,6 +474,8 @@ def validate_terminal_baseline_records(
                 or not re.fullmatch(r"[0-9a-f]{40}", str(record.get("retirementTree")))
             ):
                 findings.append(Finding("baseline-terminal", target, "retirement provenance is incomplete"))
+            if any(field in record for field in ("targetSha256", "targetGitMode", "targetGitBlobOid")):
+                findings.append(Finding("baseline-terminal", target, "retired target carries live blob identity"))
         else:
             expected_path_disposition = "UNCHANGED" if disposition == "MAPPED_EXISTING" else "RENAMED"
             if record.get("pathDisposition") != expected_path_disposition:
@@ -450,6 +484,12 @@ def validate_terminal_baseline_records(
                 findings.append(Finding("baseline-terminal", target, "live target carries retirement provenance"))
             if not exists or record.get("targetExists") is not True:
                 findings.append(Finding("baseline-terminal", target, "live target is absent"))
+            if actual_entry is not None:
+                actual_mode, actual_blob_oid = actual_entry
+                if record.get("targetGitMode") != actual_mode:
+                    findings.append(Finding("baseline-terminal", target, "live target Git mode is stale"))
+                if record.get("targetGitBlobOid") != actual_blob_oid:
+                    findings.append(Finding("baseline-terminal", target, "live target Git blob oid is stale"))
     return findings
 
 
@@ -570,10 +610,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     deleted_sources = change_list_deleted_baseline_paths(root)
     deletion_commits = deleted_path_commits(root)
     retirement_trees: dict[str, str] = {}
-    actual_paths = {
-        candidate.relative_to(root).as_posix()
-        for candidate in commit_candidate_files(root)
-    }
+    actual_tree_entries: dict[str, tuple[str, str]] = {}
     for source in baseline_paths(root):
         target = map_path(source)
         if target in seen_targets:
@@ -597,8 +634,12 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
             "baselineSha256": sha256(source_data),
             "targetExists": exists,
         }
-        if exists and target_path.is_file():
-            record["targetSha256"] = sha256(target_path.read_bytes())
+        if exists:
+            target_mode, target_blob_oid, target_data = candidate_git_entry(root, target_path)
+            actual_tree_entries[target] = (target_mode, target_blob_oid)
+            record["targetSha256"] = sha256(target_data)
+            record["targetGitMode"] = target_mode
+            record["targetGitBlobOid"] = target_blob_oid
         elif not exists:
             deletion_commit = deletion_commits.get(target) or deletion_commits.get(source)
             if source not in deleted_sources:
@@ -619,7 +660,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     findings.extend(validate_terminal_baseline_records(
         records,
         expected_keys={str(baseline_binding(root, source)["baselineKey"]) for source in baseline_paths(root)},
-        actual_paths=actual_paths,
+        actual_tree_entries=actual_tree_entries,
     ))
     return records, findings
 
@@ -684,6 +725,85 @@ def derive_refactor_conformance(root: Path) -> list[Finding]:
     return findings
 
 
+def current_product_public_declarations(
+    root: Path,
+) -> tuple[list[dict[str, object]], list[Finding]]:
+    records: list[dict[str, object]] = []
+    findings: list[Finding] = []
+    for candidate in commit_candidate_files(root):
+        target = candidate.relative_to(root).as_posix()
+        if not target.startswith("src/") or candidate.suffix != ".cs":
+            continue
+        try:
+            text = candidate.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            findings.append(Finding("public-api-current", target, "current C# source is not UTF-8"))
+            continue
+        occurrences: Counter[str] = Counter()
+        for match in PUBLIC_DECLARATION.finditer(text):
+            declaration = match.group(0).strip()
+            declaration_sha = sha256(declaration.encode("utf-8"))
+            occurrence = occurrences[declaration_sha]
+            occurrences[declaration_sha] += 1
+            line = text.count("\n", 0, match.start()) + 1
+            records.append(
+                {
+                    "targetPath": target,
+                    "targetLine": line,
+                    "targetDeclarationSha256": declaration_sha,
+                    "targetDeclarationOccurrence": occurrence,
+                }
+            )
+    return records, findings
+
+
+def public_target_key(record: Mapping[str, object]) -> tuple[str, str, int] | None:
+    path = record.get("targetPath")
+    declaration_sha = record.get("targetDeclarationSha256")
+    occurrence = record.get("targetDeclarationOccurrence")
+    if (
+        not isinstance(path, str)
+        or not isinstance(declaration_sha, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", declaration_sha)
+        or not isinstance(occurrence, int)
+        or occurrence < 0
+    ):
+        return None
+    return path, declaration_sha, occurrence
+
+
+def validate_current_public_api_records(
+    records: Iterable[Mapping[str, object]],
+    expected_current_keys: set[tuple[str, str, int]],
+) -> list[Finding]:
+    bound_keys: list[tuple[str, str, int]] = []
+    findings: list[Finding] = []
+    for record in records:
+        disposition = record.get("apiDisposition")
+        target = str(record.get("targetPath") or "")
+        if disposition == "CURRENT_ADDED":
+            if record.get("targetPresent") is not True or not target.startswith("src/"):
+                findings.append(Finding("public-api-current", target, "current-added declaration is not live product API"))
+            if any(
+                field in record
+                for field in ("baselineKey", "baselineLine", "baselineDeclarationSha256")
+            ):
+                findings.append(Finding("public-api-current", target, "current-added declaration carries baseline identity"))
+        if target.startswith("src/") and record.get("targetPresent") is True:
+            if disposition not in {"MAPPED_PRESENT", "CURRENT_ADDED"}:
+                findings.append(Finding("public-api-current", target, "live product declaration has invalid disposition"))
+            key = public_target_key(record)
+            if key is None:
+                findings.append(Finding("public-api-current", target, "live product declaration key is invalid"))
+            else:
+                bound_keys.append(key)
+    if len(bound_keys) != len(set(bound_keys)):
+        findings.append(Finding("public-api-current", "PUBLIC_API_MAPPING.json", "duplicate current declaration binding"))
+    if set(bound_keys) != expected_current_keys:
+        findings.append(Finding("public-api-current", "PUBLIC_API_MAPPING.json", "missing or invented current declaration binding"))
+    return findings
+
+
 def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list[Finding]]:
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
@@ -742,6 +862,38 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
                     "apiDisposition": disposition,
                 }
             )
+    current_declarations, current_findings = current_product_public_declarations(root)
+    findings.extend(current_findings)
+    current_keys: set[tuple[str, str, int]] = set()
+    for declaration in current_declarations:
+        key = public_target_key(declaration)
+        if key is None:
+            findings.append(Finding("public-api-current", str(declaration.get("targetPath") or ""), "current declaration key is invalid"))
+            continue
+        current_keys.add(key)
+        if key in target_keys:
+            continue
+        target = str(declaration["targetPath"])
+        target_line = int(declaration["targetLine"])
+        declaration_sha = str(declaration["targetDeclarationSha256"])
+        occurrence = int(declaration["targetDeclarationOccurrence"])
+        api_key = sha256(
+            "\0".join(("CURRENT_ADDED", target, str(target_line), declaration_sha, str(occurrence))).encode(
+                "utf-8", errors="surrogateescape"
+            )
+        )
+        records.append(
+            {
+                "apiBindingSha256": api_key,
+                "targetPath": target,
+                "targetLine": target_line,
+                "targetDeclarationSha256": declaration_sha,
+                "targetDeclarationOccurrence": occurrence,
+                "targetPresent": True,
+                "apiDisposition": "CURRENT_ADDED",
+            }
+        )
+    findings.extend(validate_current_public_api_records(records, current_keys))
     return records, findings
 
 
@@ -1041,6 +1193,22 @@ def run_gate(root: Path, output: Path | None, evidence: Path | None = None) -> i
             "baselinePaths": len(mapping),
             "changedBaselineFiles": len(notices),
             "publicDeclarationRecords": len(api),
+            "liveBaselineTargetsWithGitIdentity": sum(
+                1
+                for record in mapping
+                if record.get("targetExists") is True
+                and record.get("targetGitMode")
+                and record.get("targetGitBlobOid")
+            ),
+            "currentProductPublicDeclarations": sum(
+                1
+                for record in api
+                if record.get("targetPresent") is True
+                and str(record.get("targetPath") or "").startswith("src/")
+            ),
+            "currentAddedPublicDeclarations": sum(
+                1 for record in api if record.get("apiDisposition") == "CURRENT_ADDED"
+            ),
             "findings": len(findings),
         },
         "licenseByteIdentical": license_equal,

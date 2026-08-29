@@ -17,7 +17,9 @@ from identity_gate import (
     GENERATED_EVIDENCE_CONTRACTS,
     GENERATED_EVIDENCE_MANIFEST,
     generated_evidence_manifest,
+    candidate_git_entry,
     commit_tree,
+    derive_public_api_mapping,
     legal_identity_contexts,
     modification_format_exception_bindings,
     notice_format_exception_targets,
@@ -28,6 +30,7 @@ from identity_gate import (
     public_declaration_disposition,
     run_gate,
     validate_historical_identity_policy,
+    validate_current_public_api_records,
     validate_terminal_baseline_records,
     validate_evidence_records,
     validate_format_exceptions,
@@ -261,6 +264,8 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
             "baselineDisposition": "MAPPED_EXISTING",
             "pathDisposition": "UNCHANGED",
             "targetExists": True,
+            "targetGitMode": "100644",
+            "targetGitBlobOid": "1" * 40,
         },
         "key-b": {
             "baselineKey": "key-b",
@@ -268,6 +273,8 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
             "baselineDisposition": "MOVED_EXACT",
             "pathDisposition": "RENAMED",
             "targetExists": True,
+            "targetGitMode": "100644",
+            "targetGitBlobOid": "2" * 40,
         },
         "key-c": {
             "baselineKey": "key-c",
@@ -280,11 +287,18 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
         },
     }
 
-    def findings(self, records: list[dict[str, object]], paths: set[str] | None = None):
+    def findings(
+        self,
+        records: list[dict[str, object]],
+        entries: dict[str, tuple[str, str]] | None = None,
+    ):
         return validate_terminal_baseline_records(
             records,
             expected_keys={"key-a", "key-b", "key-c"},
-            actual_paths=paths if paths is not None else {"src/A.cs", "src/B.cs"},
+            actual_tree_entries=entries if entries is not None else {
+                "src/A.cs": ("100644", "1" * 40),
+                "src/B.cs": ("100644", "2" * 40),
+            },
         )
 
     def test_accepts_one_exact_terminal_state_per_baseline_key(self) -> None:
@@ -306,8 +320,14 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
                 self.assertTrue(self.findings(records))
 
     def test_rejects_resurrected_retired_and_missing_live_targets(self) -> None:
-        self.assertTrue(self.findings(list(self.EXISTING.values()), {"src/A.cs", "src/B.cs", "removed/C.cs"}))
-        self.assertTrue(self.findings(list(self.EXISTING.values()), {"src/A.cs"}))
+        self.assertTrue(self.findings(list(self.EXISTING.values()), {
+            "src/A.cs": ("100644", "1" * 40),
+            "src/B.cs": ("100644", "2" * 40),
+            "removed/C.cs": ("100644", "3" * 40),
+        }))
+        self.assertTrue(self.findings(list(self.EXISTING.values()), {
+            "src/A.cs": ("100644", "1" * 40),
+        }))
 
     def test_rejects_retirement_without_git_and_change_list_provenance(self) -> None:
         for field in ("retirementCommit", "retirementEvidence", "retirementTree"):
@@ -325,6 +345,50 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
         invented_retirement = [dict(item) for item in self.EXISTING.values()]
         invented_retirement[0]["retirementCommit"] = "e" * 40
         self.assertTrue(any("carries retirement" in item.reason for item in self.findings(invented_retirement)))
+
+    def test_rejects_missing_stale_or_invented_live_git_identity(self) -> None:
+        for field in ("targetGitMode", "targetGitBlobOid"):
+            records = [dict(item) for item in self.EXISTING.values()]
+            records[0].pop(field)
+            with self.subTest(field=field):
+                self.assertTrue(self.findings(records))
+
+        wrong_mode = {
+            "src/A.cs": ("100755", "1" * 40),
+            "src/B.cs": ("100644", "2" * 40),
+        }
+        self.assertTrue(any("Git mode is stale" in item.reason for item in self.findings(
+            list(self.EXISTING.values()), wrong_mode
+        )))
+
+        wrong_blob = {
+            "src/A.cs": ("100644", "3" * 40),
+            "src/B.cs": ("100644", "2" * 40),
+        }
+        self.assertTrue(any("Git blob oid is stale" in item.reason for item in self.findings(
+            list(self.EXISTING.values()), wrong_blob
+        )))
+
+    def test_candidate_git_entry_distinguishes_regular_executable_and_symlink_modes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            regular = root / "regular.txt"
+            regular.write_text("payload\n", encoding="utf-8")
+            regular.chmod(0o644)
+            normal_mode, normal_oid, _ = candidate_git_entry(root, regular)
+            regular.chmod(0o755)
+            executable_mode, executable_oid, _ = candidate_git_entry(root, regular)
+            link = root / "link.txt"
+            link.symlink_to("regular.txt")
+            link_mode, link_oid, link_data = candidate_git_entry(root, link)
+
+        self.assertEqual("100644", normal_mode)
+        self.assertEqual("100755", executable_mode)
+        self.assertEqual(normal_oid, executable_oid)
+        self.assertEqual("120000", link_mode)
+        self.assertEqual(b"regular.txt", link_data)
+        self.assertNotEqual(normal_oid, link_oid)
 
     def test_retirement_tree_resolves_from_the_deletion_commit_not_current_head(self) -> None:
         deletion_commit = "a" * 40
@@ -454,6 +518,63 @@ class IdentityGatePublicProjectionTests(unittest.TestCase):
     def test_rejects_impossible_present_declaration_on_retired_path(self) -> None:
         with self.assertRaisesRegex(ValueError, "retired path"):
             public_declaration_disposition(False, True)
+
+    def test_current_product_declaration_without_baseline_is_explicitly_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            source = root / "src/New/Added.cs"
+            source.parent.mkdir(parents=True)
+            source.write_text("public sealed class Added { }\n", encoding="utf-8")
+            subprocess.run(["git", "add", "src/New/Added.cs"], cwd=root, check=True)
+            with patch("identity_gate.baseline_paths", return_value=[]):
+                records, findings = derive_public_api_mapping(root)
+
+        self.assertEqual([], findings)
+        self.assertEqual(1, len(records))
+        self.assertEqual("CURRENT_ADDED", records[0]["apiDisposition"])
+        self.assertEqual("src/New/Added.cs", records[0]["targetPath"])
+        self.assertIs(records[0]["targetPresent"], True)
+        self.assertNotIn("baselineKey", records[0])
+
+    def test_current_product_projection_rejects_missing_duplicate_and_invented_bindings(self) -> None:
+        declaration_sha = hashlib.sha256(b"public sealed class Added { }").hexdigest()
+        key = ("src/New/Added.cs", declaration_sha, 0)
+        valid = {
+            "apiBindingSha256": "a" * 64,
+            "targetPath": key[0],
+            "targetLine": 1,
+            "targetDeclarationSha256": key[1],
+            "targetDeclarationOccurrence": key[2],
+            "targetPresent": True,
+            "apiDisposition": "CURRENT_ADDED",
+        }
+        invented = dict(valid, targetDeclarationSha256="b" * 64)
+        for records in ([], [valid, dict(valid)], [invented]):
+            with self.subTest(records=len(records)):
+                self.assertTrue(validate_current_public_api_records(records, {key}))
+
+    def test_current_added_projection_rejects_baseline_identity_or_non_product_path(self) -> None:
+        declaration_sha = "c" * 64
+        for record in (
+            {
+                "baselineKey": "d" * 64,
+                "targetPath": "src/New.cs",
+                "targetDeclarationSha256": declaration_sha,
+                "targetDeclarationOccurrence": 0,
+                "targetPresent": True,
+                "apiDisposition": "CURRENT_ADDED",
+            },
+            {
+                "targetPath": "tests2/NewTests.cs",
+                "targetDeclarationSha256": declaration_sha,
+                "targetDeclarationOccurrence": 0,
+                "targetPresent": True,
+                "apiDisposition": "CURRENT_ADDED",
+            },
+        ):
+            with self.subTest(path=record["targetPath"]):
+                self.assertTrue(validate_current_public_api_records([record], set()))
 
 
 class IdentityGateGeneratedEvidenceManifestTests(unittest.TestCase):
