@@ -13,17 +13,10 @@ public class Connection :
 {
     public Connection(AWSCredentials? credentials, RegionEndpoint? regionEndpoint = null, AmazonSQSConfig? amazonSqsConfig = null,
         AmazonSimpleNotificationServiceConfig? amazonSnsConfig = null)
+        : this(
+            () => CreateSqsClient(credentials, regionEndpoint, amazonSqsConfig),
+            () => CreateSnsClient(credentials, regionEndpoint, amazonSnsConfig))
     {
-        amazonSqsConfig ??= new AmazonSQSConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
-        amazonSnsConfig ??= new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
-
-        SqsClient = credentials == null
-            ? new AmazonSQSClient(amazonSqsConfig)
-            : new AmazonSQSClient(credentials, amazonSqsConfig);
-
-        SnsClient = credentials == null
-            ? new AmazonSimpleNotificationServiceClient(amazonSnsConfig)
-            : new AmazonSimpleNotificationServiceClient(credentials, amazonSnsConfig);
     }
 
     internal Connection(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
@@ -31,16 +24,56 @@ public class Connection :
         ArgumentNullException.ThrowIfNull(sqsClientFactory);
         ArgumentNullException.ThrowIfNull(snsClientFactory);
 
-        SqsClient = sqsClientFactory() ?? throw new InvalidOperationException("The SQS client factory returned null.");
+        (SqsClient, SnsClient) = CreateClientPair(sqsClientFactory, snsClientFactory);
+    }
+
+    static (IAmazonSQS SqsClient, IAmazonSimpleNotificationService SnsClient) CreateClientPair(
+        Func<IAmazonSQS> sqsClientFactory,
+        Func<IAmazonSimpleNotificationService> snsClientFactory)
+    {
+        IAmazonSQS sqsClient = sqsClientFactory() ?? throw new InvalidOperationException("The SQS client factory returned null.");
         try
         {
-            SnsClient = snsClientFactory() ?? throw new InvalidOperationException("The SNS client factory returned null.");
+            IAmazonSimpleNotificationService snsClient = snsClientFactory()
+                ?? throw new InvalidOperationException("The SNS client factory returned null.");
+            return (sqsClient, snsClient);
         }
-        catch
+        catch (Exception primaryException)
         {
-            SqsClient.Dispose();
+            try
+            {
+                sqsClient.Dispose();
+            }
+            catch (Exception cleanupException)
+            {
+                throw new AggregateException(
+                    "Creating the Amazon SNS client and disposing the partially created SQS client failed.",
+                    primaryException,
+                    cleanupException);
+            }
+
+            ExceptionDispatchInfo.Capture(primaryException).Throw();
             throw;
         }
+    }
+
+    static IAmazonSQS CreateSqsClient(AWSCredentials? credentials, RegionEndpoint? regionEndpoint, AmazonSQSConfig? config)
+    {
+        config ??= new AmazonSQSConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
+        return credentials == null
+            ? new AmazonSQSClient(config)
+            : new AmazonSQSClient(credentials, config);
+    }
+
+    static IAmazonSimpleNotificationService CreateSnsClient(
+        AWSCredentials? credentials,
+        RegionEndpoint? regionEndpoint,
+        AmazonSimpleNotificationServiceConfig? config)
+    {
+        config ??= new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
+        return credentials == null
+            ? new AmazonSimpleNotificationServiceClient(config)
+            : new AmazonSimpleNotificationServiceClient(credentials, config);
     }
 
     public IAmazonSQS SqsClient { get; }

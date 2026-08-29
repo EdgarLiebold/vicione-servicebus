@@ -21,12 +21,13 @@ public class TopicCache :
     Lazy<Task> _loadExistingTopics;
     bool _topicsLoaded;
 
-    public TopicCache(IAmazonSimpleNotificationService client, CancellationToken cancellationToken)
+    public TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options, CancellationToken cancellationToken)
     {
-        _client = client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(options);
         _cancellationToken = cancellationToken;
 
-        _cache = ClientContextCacheDefaults.CreateCache<string, TopicInfo>();
+        _cache = options.CreateCache<string, TopicInfo>();
 
         _loadExistingTopics = ResetLoadExistingTopics();
 

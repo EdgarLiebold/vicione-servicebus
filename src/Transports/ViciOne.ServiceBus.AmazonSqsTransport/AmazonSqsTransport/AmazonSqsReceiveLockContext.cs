@@ -77,25 +77,14 @@ public class AmazonSqsReceiveLockContext :
 
     public async Task Complete()
     {
-        await StopRenewal().ConfigureAwait(false);
-
         try
         {
+            await StopRenewal().ConfigureAwait(false);
             await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
-            Interlocked.Exchange(ref _locked, 0);
-        }
-        catch (MessageNotInflightException)
-        {
-            Interlocked.Exchange(ref _locked, 0);
-            throw;
-        }
-        catch (ReceiptHandleIsInvalidException)
-        {
-            Interlocked.Exchange(ref _locked, 0);
-            throw;
         }
         finally
         {
+            Interlocked.Exchange(ref _locked, 0);
             DisposeRenewalTokens();
         }
     }

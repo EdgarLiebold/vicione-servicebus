@@ -25,8 +25,6 @@ public class AmazonSqsHostConfigurator :
             Region = regionEndpoint
         };
 
-        if (!string.IsNullOrEmpty(address.UserInfo))
-            throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI. Use the AWS SDK credential chain or Credentials(AWSCredentials).");
     }
 
     public AmazonSqsHostSettings Settings => _settings.Freeze();
@@ -52,6 +50,11 @@ public class AmazonSqsHostConfigurator :
     public void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
     {
         _settings.SetClientFactories(sqsClientFactory, snsClientFactory);
+    }
+
+    public void ClientContextCache(AmazonSqsClientContextCacheOptions options)
+    {
+        _settings.ClientContextCacheOptions = options;
     }
 
     public void AllowTransportHeader(AllowTransportHeader? allowTransportHeader)

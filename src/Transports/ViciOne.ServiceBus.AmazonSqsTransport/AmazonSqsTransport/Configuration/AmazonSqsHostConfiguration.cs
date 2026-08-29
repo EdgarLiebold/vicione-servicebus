@@ -15,7 +15,7 @@ public class AmazonSqsHostConfiguration :
     readonly IAmazonSqsBusTopology _busTopology;
     readonly Recycle<IConnectionContextSupervisor> _connectionContext;
     readonly IAmazonSqsTopologyConfiguration _topologyConfiguration;
-    AmazonSqsHostSettings _hostSettings;
+    AmazonSqsHostSettings? _hostSettings;
 
     public AmazonSqsHostConfiguration(IAmazonSqsBusConfiguration busConfiguration, IAmazonSqsTopologyConfiguration
         topologyConfiguration)
@@ -23,8 +23,6 @@ public class AmazonSqsHostConfiguration :
     {
         _busConfiguration = busConfiguration;
         _topologyConfiguration = topologyConfiguration;
-
-        _hostSettings = new ConfigurationHostSettings();
 
         var messageNameFormatter = new AmazonSqsMessageNameFormatter();
 
@@ -43,18 +41,16 @@ public class AmazonSqsHostConfiguration :
 
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
-    public override Uri HostAddress => _hostSettings.HostAddress;
+    public override Uri HostAddress => Settings.HostAddress;
 
     public AmazonSqsHostSettings Settings
     {
-        get => _hostSettings;
+        get => _hostSettings ?? throw new ConfigurationException("The Amazon SQS host must be configured.");
         set
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            _hostSettings = value is ConfigurationHostSettings settings
-                ? settings.Freeze()
-                : value;
+            _hostSettings = value;
 
             var hostAddress = new AmazonSqsHostAddress(value.HostAddress);
 

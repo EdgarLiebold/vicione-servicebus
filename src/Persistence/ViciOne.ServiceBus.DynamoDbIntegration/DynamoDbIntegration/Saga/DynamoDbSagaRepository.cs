@@ -17,7 +17,8 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
             var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
 
-            var repositoryContextFactory = new DynamoDbSagaRepositoryContextFactory<TSaga>(dynamoDbFactory, consumeContextFactory, options);
+            var contextFactory = new DynamoDbContextFactory<TSaga>(dynamoDbFactory);
+            var repositoryContextFactory = new DynamoDbSagaRepositoryContextFactory<TSaga>(contextFactory, consumeContextFactory, options);
 
             return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
         }

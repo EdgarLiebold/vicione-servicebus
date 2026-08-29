@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2043 predeclared unfiltered cases;
+- `UnitArchitecture`: 2055 predeclared unfiltered cases;
 - `LocalIntegration`: 149 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1901,7 +1901,8 @@ plan. It changes neither the 111-row R0 disposition nor the real-AWS External bo
    `ValidateLockStatus` fails closed.
 6. Update the passive AWS requirement projection with unique variants for each new carrier. Use
    xUnit 4/MTP v2, source-mirrored namespaces, fresh subjects, exact identities and bounded causal
-   barriers. Do not add LocalIntegration cases for hermetic configuration/ownership defects.
+   barriers. The twelve materialized cases raise the UnitArchitecture floor from 2043 to 2055;
+   LocalIntegration remains 149 because these are hermetic configuration/ownership defects.
 7. Run focused locked Release builds and tests, then full UnitArchitecture, LocalIntegration and
    Engineering profiles with isolated CLI home, build-server/node reuse disabled and no shared
    compilation. A restricted-sandbox NamedPipe failure is rerun unchanged outside the sandbox; tests

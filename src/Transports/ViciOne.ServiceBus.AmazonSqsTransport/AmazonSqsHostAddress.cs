@@ -16,6 +16,17 @@ public readonly struct AmazonSqsHostAddress
 
     public AmazonSqsHostAddress(Uri address)
     {
+        ArgumentNullException.ThrowIfNull(address);
+
+        if (!address.IsAbsoluteUri)
+            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host URI must be absolute.");
+        if (!string.IsNullOrEmpty(address.UserInfo))
+            throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI.");
+        if (!string.IsNullOrEmpty(address.Query))
+            throw new AmazonSqsTransportConfigurationException("Query parameters are not supported in an Amazon SQS host URI.");
+        if (!string.IsNullOrEmpty(address.Fragment))
+            throw new AmazonSqsTransportConfigurationException("Fragments are not supported in an Amazon SQS host URI.");
+
         var scheme = address.Scheme.ToLowerInvariant();
         switch (scheme)
         {
@@ -33,6 +44,9 @@ public readonly struct AmazonSqsHostAddress
 
     public AmazonSqsHostAddress(string host, string? scope)
     {
+        if (string.IsNullOrWhiteSpace(host))
+            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host must be specified.");
+
         Scheme = AmazonSqsScheme;
         Host = host;
         Scope = scope ?? "/";

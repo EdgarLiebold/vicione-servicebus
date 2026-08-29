@@ -8,14 +8,15 @@ using Amazon.SQS;
 using Transports;
 
 
-public class ConfigurationHostSettings :
-    AmazonSqsHostSettings
+internal sealed class ConfigurationHostSettings
 {
     AllowTransportHeader? _allowTransportHeader;
     Func<IConnection>? _connectionFactory;
     AWSCredentials? _credentials;
     bool _frozen;
     RegionEndpoint? _region;
+    AmazonSqsClientContextCacheOptions _clientContextCacheOptions = new();
+    AmazonSqsHostSettings? _snapshot;
     string? _scope;
     bool _scopeTopics;
 
@@ -69,25 +70,34 @@ public class ConfigurationHostSettings :
         }
     }
 
-    public Uri HostAddress => FormatHostAddress();
-
-    public IConnection CreateConnection()
+    internal AmazonSqsClientContextCacheOptions ClientContextCacheOptions
     {
-        Freeze();
-        return (_connectionFactory ?? throw new InvalidOperationException("The host settings do not have a connection factory."))();
+        get => _clientContextCacheOptions;
+        set
+        {
+            ThrowIfFrozen();
+            _clientContextCacheOptions = value ?? throw new ArgumentNullException(nameof(value));
+        }
     }
 
-    internal ConfigurationHostSettings Freeze()
+    internal AmazonSqsHostSettings Freeze()
     {
-        if (_frozen)
-            return this;
+        if (_snapshot != null)
+            return _snapshot;
 
-        _ = FormatHostAddress();
+        Uri hostAddress = FormatHostAddress();
         AWSCredentials? credentials = _credentials;
-        RegionEndpoint? region = _region;
-        _connectionFactory ??= () => new Connection(credentials, region);
+        RegionEndpoint region = _region!;
+        Func<IConnection> connectionFactory = _connectionFactory ?? (() => new Connection(credentials, region));
         _frozen = true;
-        return this;
+        return _snapshot = new AmazonSqsHostSettings(
+            region,
+            _allowTransportHeader,
+            _scopeTopics,
+            hostAddress,
+            _clientContextCacheOptions,
+            connectionFactory,
+            credentials);
     }
 
     internal void SetClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)

@@ -12,8 +12,7 @@ namespace ViciOneServiceBusBenchmark
 
 
     class AmazonSqsOptionSet :
-        OptionSet,
-        AmazonSqsHostSettings
+        OptionSet
     {
         string _accessKey;
         AWSCredentials _credentials;
@@ -54,15 +53,25 @@ namespace ViciOneServiceBusBenchmark
         public string AccessKey => (_immutableCredentials ??= GetImmutableCredentials()).AccessKey;
         public string SecretKey => (_immutableCredentials ??= GetImmutableCredentials()).SecretKey;
 
-        public AllowTransportHeader AllowTransportHeader { get; set; }
-
-        public bool ScopeTopics => false;
-
         public Uri HostAddress { get; private set; }
 
-        public IConnection CreateConnection()
+        public AmazonSqsHostSettings HostSettings
         {
-            return new Connection(Credentials, Region, AmazonSqsConfig, AmazonSnsConfig);
+            get
+            {
+                var configurator = new ViciOne.ServiceBus.AmazonSqsTransport.Configuration.AmazonSqsHostConfigurator(HostAddress);
+                configurator.ClientFactories(
+                    () => Credentials == null
+                        ? new AmazonSQSClient(AmazonSqsConfig)
+                        : new AmazonSQSClient(Credentials, AmazonSqsConfig),
+                    () => Credentials == null
+                        ? new AmazonSimpleNotificationServiceClient(AmazonSnsConfig)
+                        : new AmazonSimpleNotificationServiceClient(Credentials, AmazonSnsConfig));
+                if (!string.IsNullOrWhiteSpace(Scope))
+                    configurator.Scope(Scope, false);
+
+                return configurator.Settings;
+            }
         }
 
         public override string ToString()

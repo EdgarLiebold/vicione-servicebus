@@ -26,8 +26,9 @@ public class AmazonSqsConnectionContext :
 
         Topology = hostConfiguration.Topology;
 
-        _queueCache = new QueueCache(Connection.SqsClient);
-        _topicCache = new TopicCache(Connection.SnsClient, cancellationToken);
+        AmazonSqsClientContextCacheOptions cacheOptions = hostConfiguration.Settings.ClientContextCacheOptions;
+        _queueCache = new QueueCache(Connection.SqsClient, cacheOptions);
+        _topicCache = new TopicCache(Connection.SnsClient, cacheOptions, cancellationToken);
     }
 
     public IConnection Connection { get; }

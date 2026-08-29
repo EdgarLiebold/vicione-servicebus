@@ -152,7 +152,7 @@ namespace ViciOneServiceBusBenchmark
 
                 amazonSqsOptionSet.ShowOptions();
 
-                transport = new AmazonSqsMessageLatencyTransport(amazonSqsOptionSet, settings);
+                transport = new AmazonSqsMessageLatencyTransport(amazonSqsOptionSet.HostSettings, settings);
             }
             else if (optionSet.Transport == ProgramOptionSet.TransportOptions.ActiveMq)
             {

@@ -1192,3 +1192,24 @@ future cohorts as complete.
 - This is a pre-implementation checkpoint, not an acceptance claim. Product/test changes, local
   execution, mutation evidence, separate technical/evidence freezes, two independent PASS reviews,
   remote backup and final architecture acceptance remain mandatory.
+
+## AWS native closure — review-correction technical candidate
+
+- All five independently reproduced product boundaries are corrected in the isolated worktree.
+  DynamoDB owns one immutable context factory per saga type; the SQS low-level API accepts only a
+  sealed snapshot from the typed builder; user info/query/fragment are rejected centrally; queue and
+  topic caches receive immutable per-host capacity/max-age/clock options; SQS/SNS partial creation
+  preserves primary/cleanup causality; failed or cancelled completion loses the receive lock.
+- The non-packable benchmark no longer implements arbitrary host settings and instead consumes the
+  same sealed snapshot. Architecture commit `ad85105` binds this necessary two-path consumer scope.
+- Focused Release results are SQS 61/61 and DynamoDB 14/14, both with zero failure/skip. The complete
+  UnitArchitecture profile is 2055/2055 and the local run-scoped PostgreSQL/Azurite/LocalStack
+  profile is 149/149, everywhere with zero failure/skip. Unit, LocalIntegration, Benchmark and full
+  Engineering Release builds finish with zero warnings/errors.
+- The first fresh-worktree Unit run exposed missing generated MTP props for six not-yet-restored
+  LocalIntegration projects. After the required locked LocalIntegration restore, the unchanged
+  architecture test and complete Unit profile passed. `.testagent/research.md` retains this distinct
+  build-state diagnosis; no test or product rule was weakened.
+- This remains a technical candidate, not acceptance. Exact one-cause mutations, generated
+  CHANGELIST, a separate evidence child, remote backup, two independent read-only PASS reviews and
+  final architecture acceptance remain open. Real AWS and GitHub Actions remain untouched.

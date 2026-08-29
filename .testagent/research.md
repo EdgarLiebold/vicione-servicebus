@@ -2312,3 +2312,16 @@ real AWS remains External and no cloud credential, resource or cost is introduce
 These are product defects, not test accommodations. The correction adds direct causal carriers and
 one-cause mutations for every branch, retains all previously green S3 and AWS provider boundaries,
 and does not reclassify any External row as locally executed.
+
+### Local build-state diagnosis retained for future runs
+
+In a fresh isolated worktree, a UnitArchitecture run performed immediately after restoring only
+`ViciOne.ServiceBus.Tests.Unit.slnx` produced one failure in
+`EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery`. Read-only per-project
+evaluation identified exactly the six LocalIntegration projects: their generated NuGet/MTP props did
+not yet exist, so `IsTestingPlatformApplication` evaluated empty. The product and all 61 SQS plus 14
+DynamoDB focused cases were already green. This is neither a test assertion to weaken nor a sandbox
+failure. The complete repository-local verification order must restore both UnitArchitecture and
+LocalIntegration locked graphs before running the architecture module, because that module
+deliberately evaluates all `tests2` projects. Restricted-sandbox NamedPipe/process failures remain a
+different diagnosis and use the already established unchanged-command outside-sandbox rerun.

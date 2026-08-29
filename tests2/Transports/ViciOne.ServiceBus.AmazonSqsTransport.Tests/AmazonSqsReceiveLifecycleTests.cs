@@ -163,6 +163,37 @@ public sealed class AmazonSqsReceiveLifecycleTests
         Assert.Equal(0, Volatile.Read(ref renewalCalls));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "failed-or-cancelled-completion-preserves-error-and-loses-lock")]
+    public async Task FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLost(bool callerCancellation)
+    {
+        using var cancellationSource = new CancellationTokenSource();
+        if (callerCancellation)
+            cancellationSource.Cancel();
+
+        Exception expected = callerCancellation
+            ? new OperationCanceledException("caller cancellation observed by provider", CancellationToken.None)
+            : new InvalidOperationException("provider settlement failed");
+        QueueReceiveSettings settings = CreateSettings();
+        settings.VisibilityTimeout = 30;
+        var receiveLock = new AmazonSqsReceiveLockContext(
+            new Uri("amazonsqs://eu-central-1/orders"),
+            new Message { ReceiptHandle = "receipt" },
+            settings,
+            cancellationSource.Token,
+            new FakeTimeProvider(StartTime),
+            (_, _, _, _) => Task.CompletedTask,
+            (_, _, _) => Task.FromException(expected),
+            () => false);
+
+        Exception actual = await Assert.ThrowsAnyAsync<Exception>(receiveLock.Complete);
+
+        Assert.Same(expected, actual);
+        await Assert.ThrowsAsync<TransportException>(receiveLock.ValidateLockStatus);
+    }
+
     private static QueueReceiveSettings CreateSettings()
     {
         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());

@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 2659 |
-| Modified | 4213 |
-| Deleted | 1435 |
+| Added | 2662 |
+| Modified | 4212 |
+| Deleted | 1436 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -26,6 +26,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.github/workflows/native-tests.yml` | Added |  |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
+| `.testagent/activemq-native-obligation-map.tsv` | Added |  |
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
@@ -2182,6 +2183,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/IDynamoDbSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/IDynamoDbSagaRepositoryConfigurator.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DatabaseContext.cs` |
+| `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbContextFactory.cs` | Added |  |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbDatabaseContext.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbDatabaseContext.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSaga.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSaga.cs` |
 | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs` |
@@ -2329,6 +2331,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/packages.lock.json` | Added |  |
 | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
 | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
+| `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
 | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
@@ -2631,6 +2634,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsSendContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsSendContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` |
+| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsDelay.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` |
@@ -2648,7 +2652,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContext.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextBatchSettings.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextBatchSettings.cs` |
-| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextFactory.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextFactory.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextSupervisor.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextSupervisor.cs` |
 | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsBusConfiguration.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsBusConfiguration.cs` |

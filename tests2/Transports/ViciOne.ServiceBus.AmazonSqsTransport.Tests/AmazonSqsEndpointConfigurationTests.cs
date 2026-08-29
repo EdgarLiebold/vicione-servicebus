@@ -39,7 +39,7 @@ public sealed class AmazonSqsEndpointConfigurationTests
     public void NativeRedrivePolicy_IsRejectedWhileProductErrorAndSkippedQueuesOwnSettlement()
     {
         AmazonSqsBusConfiguration bus = CreateBusConfiguration();
-        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 };
+        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
         var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
             bus.HostConfiguration.CreateReceiveEndpointConfiguration(
                 "orders",

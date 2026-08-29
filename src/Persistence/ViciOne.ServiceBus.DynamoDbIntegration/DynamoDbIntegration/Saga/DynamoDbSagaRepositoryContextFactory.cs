@@ -7,16 +7,16 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
     using ViciOne.ServiceBus.Saga;
 
 
-    public class DynamoDbSagaRepositoryContextFactory<TSaga> :
+    internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
         ISagaRepositoryContextFactory<TSaga>,
         ILoadSagaRepositoryContextFactory<TSaga>
         where TSaga : class, ISagaVersion
     {
-        readonly Func<IDynamoDBContext> _databaseFactory;
+        readonly DynamoDbContextFactory<TSaga> _databaseFactory;
         readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
         readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
 
-        public DynamoDbSagaRepositoryContextFactory(Func<IDynamoDBContext> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
+        public DynamoDbSagaRepositoryContextFactory(DynamoDbContextFactory<TSaga> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
             DynamoDbSagaRepositoryOptions<TSaga> options)
         {
             _databaseFactory = databaseFactory ?? throw new ArgumentNullException(nameof(databaseFactory));
@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
+            var database = _databaseFactory.Create();
 
             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
             try
@@ -51,7 +51,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
         public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
             where T : class
         {
-            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
+            var database = _databaseFactory.Create();
 
             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
             try
