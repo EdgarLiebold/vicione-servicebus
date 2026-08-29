@@ -248,33 +248,41 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
 
         self.assertTrue(any("no baseline-to-target file binding" in item.reason for item in findings))
 
-    def test_legal_authority_document_must_be_a_regular_git_candidate(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
-            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
-            ignored = root / "ignored/NOTICE"
-            ignored.parent.mkdir(parents=True)
-            ignored.write_text("outside authority\n", encoding="utf-8")
-            (root / "NOTICE").symlink_to(ignored)
-            (root / "MODIFICATIONS.md").write_text("\n", encoding="utf-8")
-            (root / "LICENSE.txt").write_bytes(b"license")
-            subprocess.run(
-                ["git", "add", ".gitignore", "NOTICE", "MODIFICATIONS.md", "LICENSE.txt"],
-                cwd=root,
-                check=True,
-            )
-            with contextlib.ExitStack() as stack:
-                stack.enter_context(patch("identity_gate.validate_format_exceptions", return_value=[]))
-                stack.enter_context(patch("identity_gate.baseline_bytes", return_value=b"license"))
-                findings = validate_legal_documents(root)
+    def test_legal_authority_documents_must_be_regular_git_candidates(self) -> None:
+        for authority_path in ("NOTICE", "MODIFICATIONS.md", "LICENSE.txt"):
+            with self.subTest(path=authority_path), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+                (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+                ignored = root / "ignored/authority"
+                ignored.parent.mkdir(parents=True)
+                ignored.write_bytes(b"license" if authority_path == "LICENSE.txt" else b"outside authority\n")
+                for path, data in (
+                    ("NOTICE", b"\n"),
+                    ("MODIFICATIONS.md", b"\n"),
+                    ("LICENSE.txt", b"license"),
+                ):
+                    candidate = root / path
+                    if path == authority_path:
+                        candidate.symlink_to(ignored)
+                    else:
+                        candidate.write_bytes(data)
+                subprocess.run(
+                    ["git", "add", ".gitignore", "NOTICE", "MODIFICATIONS.md", "LICENSE.txt"],
+                    cwd=root,
+                    check=True,
+                )
+                with contextlib.ExitStack() as stack:
+                    stack.enter_context(patch("identity_gate.validate_format_exceptions", return_value=[]))
+                    stack.enter_context(patch("identity_gate.baseline_bytes", return_value=b"license"))
+                    findings = validate_legal_documents(root)
 
-        self.assertTrue(any(
-            finding.gate == "legal"
-            and finding.path == "NOTICE"
-            and "regular Git candidate" in finding.reason
-            for finding in findings
-        ))
+            self.assertTrue(any(
+                finding.gate == "legal"
+                and finding.path == authority_path
+                and "regular Git candidate" in finding.reason
+                for finding in findings
+            ))
 
     def test_active_legal_documents_and_format_exceptions_are_consistent(self) -> None:
         root = Path(__file__).resolve().parents[2]
