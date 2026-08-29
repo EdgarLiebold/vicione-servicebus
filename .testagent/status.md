@@ -1901,3 +1901,26 @@ future cohorts as complete.
   candidate resurrection, zero C# projection findings and zero current public-API set drift.
 - Final audit hashing, CHANGELIST closure and two fresh independent read-only reviews remain. This
   chain is local and F-REP-02 remains open; no F-REP-02 commit has been pushed.
+
+## 2026-08-29 — F-REP-02 conservative declaration-source and candidate closure
+
+- The preceding `f0afbc91...` / `e4ddc742...` / `335f131f...` chain is superseded for acceptance:
+  final review found truncated secondary base types, unbound accessor/protected declaration shape,
+  symlink dereferencing and an ignored-artifact package inventory.
+- The final correction range is `335f131f...` through `92ec4d496a916ab5597bfb301beacd4060497770`
+  and `0451de02425d6faab3bf8ef50ee1cc271264596e` (tree
+  `8096461f34fd0b9e3bfe390e903793e389678d59`). It changes only
+  `tools/identity/identity_gate.py` and `tools/identity/test_identity_gate.py`.
+- The declaration contract is now explicitly conservative source identity, not a claim that Python
+  reproduces MSBuild/compiler evaluation: every conditional branch is retained with its directive
+  context. Full base lists, multiple declarators, accessor shapes, public/protected declarations and
+  implicit interface/enum members are bound.
+- All scan/API/legal/package consumers use Git-candidate bytes. C# symlinks fail closed. Ignored
+  projects and ignored build artifacts cannot enter `PACKAGE_INVENTORY.json`; build artifacts remain
+  owned by the separate build-bound `ARTIFACT_GATE.json`.
+- The full gate is `PASS` with zero findings: 5,654 baseline records, 4,206 live Git identities,
+  1,448 retirements, 43,173 declaration records, 24,756 current product declarations and 1,364
+  `CURRENT_ADDED` records. Identity tests are 136/136. M11-M19 are independently red and restore the
+  exact Technical SHA-256.
+- A direct Evidence child, committed-tree replay and two new independent read-only reviews remain
+  mandatory. This correction is local; no F-REP-02 commit has been pushed.
