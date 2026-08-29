@@ -755,6 +755,20 @@ public enum State
         self.assertNotEqual(attributed, plain)
         self.assertTrue(any("{ [ Obsolete ] get ; set }" in item[0] for item in attributed))
 
+    def test_conditional_property_and_event_accessors_bind_their_branch_provenance(self) -> None:
+        fixtures = (
+            "public int Value {\n#if FEATURE_A\n get;\n#endif\n set; }",
+            "public event Action Changed {\n#if FEATURE_A\n add { }\n#endif\n remove { } }",
+        )
+        for feature_a in fixtures:
+            with self.subTest(source=feature_a):
+                feature_b = feature_a.replace("FEATURE_A", "FEATURE_B")
+                first = csharp_public_declarations(feature_a)
+                second = csharp_public_declarations(feature_b)
+
+                self.assertNotEqual(first, second)
+                self.assertTrue(any("conditional if(FEATURE_A)" in item[0] for item in first))
+
     def test_conditional_declaration_attributes_are_part_of_identity(self) -> None:
         feature_a = csharp_public_declarations(
             "#if FEATURE_A\n[Obsolete]\n#endif\npublic class Contract { }\n"

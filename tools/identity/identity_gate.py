@@ -1058,7 +1058,9 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
 
         def accessor_identity(segment: list[CSharpToken], accessor: int) -> str:
             start = csharp_declaration_prefix_start(segment, accessor)
-            return " ".join(item.text for item in segment[start:accessor + 1])
+            context = preprocessor_contexts.get(segment[accessor].line, ())
+            prefix = "conditional " + " && ".join(context) + " " if context else ""
+            return prefix + " ".join(item.text for item in segment[start:accessor + 1])
 
         segment_start = body_start + 1
         cursor = segment_start
