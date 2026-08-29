@@ -1746,3 +1746,14 @@ future cohorts as complete.
   work is the status/CHANGELIST child freeze, remote backup of the canonical integration branch and
   final architecture acceptance. The legacy parallel branch names remain only as immutable history;
   the persistent checkout is the canonical working location.
+
+## ServiceBus native closures — canonical remote backup completed
+
+- Following the PO's explicit branch-and-payload approval, the canonical integration status child
+  `6c16b1878c143950fb7b7c06675ed5f183d26663` was pushed without force to
+  `origin/integration/servicebus-native-closures`. A read-only remote lookup returned that exact
+  commit; the local persistent checkout and its upstream therefore matched byte-for-byte.
+- This additive status child only records the completed backup. Product, test, requirement,
+  workflow, Evidence and CHANGELIST bytes are unchanged; GitHub Actions remain manually disabled.
+  The remaining governance step is the corresponding final architecture-status update and remote
+  verification.
