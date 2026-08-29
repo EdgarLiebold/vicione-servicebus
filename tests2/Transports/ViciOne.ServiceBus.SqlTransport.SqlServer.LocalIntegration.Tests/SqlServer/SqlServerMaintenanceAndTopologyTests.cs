@@ -195,7 +195,11 @@ public sealed class SqlServerMaintenanceAndTopologyTests
             if (Interlocked.Increment(ref ready) == 8)
                 allReady.TrySetResult();
             await release.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            return await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+            return await CreateQueueWithTransientRetry(
+                connection,
+                fixture.Schema,
+                queueName,
+                cancellationToken);
         }
 
         Task<long>[] declarations = Enumerable.Range(0, 8).Select(_ => CreateConcurrently()).ToArray();
@@ -282,6 +286,32 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         string queueName,
         CancellationToken cancellationToken) =>
         await ExecuteScalar(connection, schema, "CreateQueueV2", cancellationToken, ("QueueName", queueName));
+
+    private static async Task<long> CreateQueueWithTransientRetry(
+        SqlConnection connection,
+        string schema,
+        string queueName,
+        CancellationToken cancellationToken)
+    {
+        const int retryLimit = 10;
+
+        for (int attempt = 0;; attempt++)
+        {
+            try
+            {
+                return await CreateQueue(connection, schema, queueName, cancellationToken);
+            }
+            catch (SqlException exception) when (
+                attempt < retryLimit
+                && SqlServerDbConnectionContext.IsTransientErrorNumber(exception.Number))
+            {
+                // The product uses the same immediate, bounded transient retry policy. The test invokes
+                // the procedure directly so that it can synchronize all declarations at the database
+                // boundary; preserving that policy here keeps a legitimate 1205 victim from turning the
+                // uniqueness oracle into a scheduler-dependent result.
+            }
+        }
+    }
 
     private static async Task<long> CreateTopic(
         SqlConnection connection,
