@@ -169,6 +169,7 @@ public sealed class ViciOneTestOptions
                 LocalTestResource.ActiveMq => LocalInfrastructure.ActiveMq,
                 LocalTestResource.Artemis => LocalInfrastructure.Artemis,
                 LocalTestResource.PostgreSql => LocalInfrastructure.PostgreSql,
+                LocalTestResource.SqlServer => LocalInfrastructure.SqlServer,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
                 LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
                 _ => throw new UnreachableException(),
@@ -200,6 +201,8 @@ public enum LocalTestResource
     ActiveMq = 4,
 
     Artemis = 5,
+
+    SqlServer = 6,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -219,6 +222,8 @@ public sealed class LocalInfrastructureOptions
     public ArtemisLocalOptions? Artemis { get; set; }
 
     public PostgreSqlLocalOptions? PostgreSql { get; set; }
+
+    public SqlServerLocalOptions? SqlServer { get; set; }
 
     public AzureTableLocalOptions? AzureTable { get; set; }
 
@@ -301,6 +306,28 @@ public sealed class ArtemisLocalOptions : ILocalTestResourceConfiguration
 }
 
 public sealed class PostgreSqlLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? Port { get; set; }
+
+    public string? Database { get; set; }
+
+    public string? UserName { get; set; }
+
+    public string? Password { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (string.IsNullOrWhiteSpace(Database)) yield return nameof(Database);
+        if (string.IsNullOrWhiteSpace(UserName)) yield return nameof(UserName);
+        if (string.IsNullOrWhiteSpace(Password)) yield return nameof(Password);
+    }
+}
+
+public sealed class SqlServerLocalOptions : ILocalTestResourceConfiguration
 {
     public string? Host { get; set; }
 

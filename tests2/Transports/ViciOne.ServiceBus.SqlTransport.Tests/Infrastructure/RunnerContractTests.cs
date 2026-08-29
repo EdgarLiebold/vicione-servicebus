@@ -1,5 +1,6 @@
 using System.Reflection;
 using ViciOne.ServiceBus.TestInfrastructure;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -86,6 +87,23 @@ public sealed class RunnerContractTests
         var exception = Assert.IsType<TestRunnerContractException>(wrapper.InnerException);
 
         Assert.Contains(TestRunnerContract.PostgresPortVariable, exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0054", "native-owner")]
+    public void LocalConfiguration_RejectsAnUnknownResourceSelection()
+    {
+        var options = new ViciOneTestOptions
+        {
+            Profile = TestProfile.LocalIntegration,
+            OperationTimeout = TimeSpan.FromSeconds(1),
+            LocalInfrastructure = new LocalInfrastructureOptions(),
+        };
+
+        IReadOnlyList<string> findings = options.ValidateForLocal(
+            (LocalTestResource)int.MaxValue);
+
+        Assert.Contains("LocalInfrastructure:Selection", findings);
     }
 
     private static string[] PostgresVariables() =>

@@ -23,6 +23,11 @@
       "Port": 5432,
       "Database": "postgres"
     },
+    "SqlServer": {
+      "Host": "localhost",
+      "Port": 1433,
+      "Database": "master"
+    },
     "AzureTable": {
       "Host": "localhost",
       "Port": 10002

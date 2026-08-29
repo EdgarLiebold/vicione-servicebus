@@ -29,6 +29,7 @@ public sealed class TestConfigurationProviderTests
         ActiveMqLocalOptions activeMq = Assert.IsType<ActiveMqLocalOptions>(localInfrastructure.ActiveMq);
         ArtemisLocalOptions artemis = Assert.IsType<ArtemisLocalOptions>(localInfrastructure.Artemis);
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
+        SqlServerLocalOptions sqlServer = Assert.IsType<SqlServerLocalOptions>(localInfrastructure.SqlServer);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
         LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
         Assert.Equal("localhost", rabbitMq.Host);
@@ -43,6 +44,9 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal("localhost", postgreSql.Host);
         Assert.Equal(5432, postgreSql.Port);
         Assert.Equal("postgres", postgreSql.Database);
+        Assert.Equal("localhost", sqlServer.Host);
+        Assert.Equal(1433, sqlServer.Port);
+        Assert.Equal("master", sqlServer.Database);
         Assert.Equal("localhost", azureTable.Host);
         Assert.Equal(10002, azureTable.Port);
         Assert.Equal("localhost", localStack.Host);
@@ -188,6 +192,43 @@ public sealed class TestConfigurationProviderTests
     }
 
     [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Host", "", "LocalInfrastructure:SqlServer:Host")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Port", "0", "LocalInfrastructure:SqlServer:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Port", "65536", "LocalInfrastructure:SqlServer:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Database", "", "LocalInfrastructure:SqlServer:Database")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__UserName", "", "LocalInfrastructure:SqlServer:UserName")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Password", "", "LocalInfrastructure:SqlServer:Password")]
+    public void LocalSqlServerSelection_RejectsAnInvalidSetting(
+        string key,
+        string value,
+        string expectedError)
+    {
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__SqlServer__UserName", "run-user"),
+            ("VICIONE_TESTS__LocalInfrastructure__SqlServer__Password", "run-secret"),
+            (key, value)).GetOptions();
+
+        Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.SqlServer));
+    }
+
+    [Theory]
+    [InlineData("1")]
+    [InlineData("65535")]
+    public void LocalSqlServerSelection_AcceptsPortBoundaries(string port)
+    {
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__SqlServer__Port", port),
+            ("VICIONE_TESTS__LocalInfrastructure__SqlServer__UserName", "run-user"),
+            ("VICIONE_TESTS__LocalInfrastructure__SqlServer__Password", "run-secret")).GetOptions();
+
+        Assert.DoesNotContain(
+            "LocalInfrastructure:SqlServer:Port",
+            options.ValidateForLocal(LocalTestResource.SqlServer));
+    }
+
+    [Theory]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Host", "", "LocalInfrastructure:LocalStack:Host")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Port", "0", "LocalInfrastructure:LocalStack:Port")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__LocalStack__Region", "", "LocalInfrastructure:LocalStack:Region")]
@@ -326,6 +367,32 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(expected, actual);
     }
 
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_MSSQL_HOST", "db.internal", "db.internal")]
+    [InlineData("VICIONE_SERVICEBUS_MSSQL_PORT", "31433", "31433")]
+    [InlineData("VICIONE_SERVICEBUS_MSSQL_DATABASE", "master", "master")]
+    [InlineData("VICIONE_SERVICEBUS_MSSQL_USER", "run-user", "run-user")]
+    [InlineData("VICIONE_SERVICEBUS_MSSQL_PASS", "run-secret", "run-secret")]
+    public void CanonicalSqlServerVariables_MapIntoTheSingleTypedConfiguration(
+        string key,
+        string value,
+        string expected)
+    {
+        SqlServerLocalOptions sqlServer = Assert.IsType<SqlServerLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.SqlServer);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_MSSQL_HOST" => sqlServer.Host!,
+            "VICIONE_SERVICEBUS_MSSQL_PORT" => sqlServer.Port!.Value.ToString(),
+            "VICIONE_SERVICEBUS_MSSQL_DATABASE" => sqlServer.Database!,
+            "VICIONE_SERVICEBUS_MSSQL_USER" => sqlServer.UserName!,
+            "VICIONE_SERVICEBUS_MSSQL_PASS" => sqlServer.Password!,
+            _ => throw new InvalidOperationException(key),
+        };
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public void ExplicitPrefixedSetting_OverridesTheCanonicalFixtureProjection()
     {
@@ -459,7 +526,7 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["ActiveMq", "Artemis", "AzureTable", "LocalStack", "PostgreSql", "RabbitMq"],
+            ["ActiveMq", "Artemis", "AzureTable", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "Password", "Port", "UserName"],
@@ -473,6 +540,9 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(
             ["Database", "Host", "Password", "Port", "UserName"],
             PublicPropertyNames<PostgreSqlLocalOptions>());
+        Assert.Equal(
+            ["Database", "Host", "Password", "Port", "UserName"],
+            PublicPropertyNames<SqlServerLocalOptions>());
         Assert.Equal(
             ["AccountKey", "AccountName", "Host", "Port"],
             PublicPropertyNames<AzureTableLocalOptions>());
@@ -494,6 +564,7 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<ActiveMqLocalOptions>());
         Assert.Empty(PublicFields<ArtemisLocalOptions>());
         Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
+        Assert.Empty(PublicFields<SqlServerLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
         Assert.Empty(PublicFields<LocalStackLocalOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
