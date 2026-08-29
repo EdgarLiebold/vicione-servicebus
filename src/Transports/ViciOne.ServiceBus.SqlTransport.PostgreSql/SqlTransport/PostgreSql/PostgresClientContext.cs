@@ -252,7 +252,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             return result.Any();
         }
 
-        public override async Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, SendHeaders sendHeaders)
+        public override async Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
+            DateTime? expirationTime, SendHeaders sendHeaders)
         {
             IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
             var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options) : null;
@@ -263,6 +264,7 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                 lock_id = lockId,
                 queue_name = queueName,
                 queue_type = (int)queueType,
+                expiration_time = expirationTime,
                 headers = new JsonParameter(headersAsJson),
             }), CancellationToken);
 

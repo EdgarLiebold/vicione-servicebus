@@ -98,9 +98,10 @@ namespace ViciOne.ServiceBus.SqlTransport
             return _context.DeleteScheduledMessage(tokenId, cancellationToken);
         }
 
-        public Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, SendHeaders sendHeaders)
+        public Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTime? expirationTime,
+            SendHeaders sendHeaders)
         {
-            return _context.MoveMessage(lockId, messageDeliveryId, queueName, queueType, sendHeaders);
+            return _context.MoveMessage(lockId, messageDeliveryId, queueName, queueType, expirationTime, sendHeaders);
         }
     }
 }

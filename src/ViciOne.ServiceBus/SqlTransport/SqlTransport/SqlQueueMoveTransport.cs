@@ -33,7 +33,8 @@ namespace ViciOne.ServiceBus.SqlTransport
 
             preSend(message, transportHeaders);
 
-            await clientContext.MoveMessage(messageContext.LockId.Value, messageContext.DeliveryMessageId, _queueName, _queueType, transportHeaders);
+            await clientContext.MoveMessage(messageContext.LockId.Value, messageContext.DeliveryMessageId, _queueName, _queueType,
+                message.ExpirationTime, transportHeaders);
         }
     }
 }

@@ -169,6 +169,77 @@ public sealed class PostgreSqlDeliveryStateTests
         Assert.Equal(1, await connection.MessageCount(fixture.Schema, locked.MessageId, cancellationToken));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("OBL-R0-SQL-0133", "postgresql-native-owner")]
+    public async Task ErrorQueueMove_ResetsExistingExpirationToFourteenDaysAndKeepsMissingExpirationNull(bool hasTimeToLive)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
+            hasTimeToLive ? "error-ttl" : "error-no-ttl",
+            cancellationToken);
+        string queueName = fixture.Name("fault-input");
+        string faultQueueName = fixture.Name("fault-observer");
+        var faulted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IBusControl bus = SqlBusFactory.Create(configurator =>
+        {
+            fixture.ConfigureHost(configurator);
+            configurator.ReceiveEndpoint(queueName, endpoint =>
+                endpoint.Handler<ErrorMessage>(_ => throw new DeliberateStateException()));
+            configurator.ReceiveEndpoint(faultQueueName, endpoint =>
+                endpoint.Handler<Fault<ErrorMessage>>(_ =>
+                {
+                    faulted.TrySetResult();
+                    return Task.CompletedTask;
+                }));
+        });
+        bool started = false;
+        var message = new ErrorMessage(Guid.NewGuid());
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.Send(
+                    message,
+                    context =>
+                    {
+                        context.MessageId = message.Id;
+                        if (hasTimeToLive)
+                            context.TimeToLive = TimeSpan.FromMinutes(30);
+                    },
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await faulted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+        }
+
+        await using NpgsqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        ErrorExpiration stored = await ErrorExpirationForMessage(
+            connection,
+            fixture.Schema,
+            message.Id,
+            cancellationToken);
+        Assert.Equal(2, stored.QueueType);
+        if (hasTimeToLive)
+        {
+            DateTime expiration = Assert.IsType<DateTime>(stored.ExpirationTimeUtc);
+            Assert.InRange(
+                expiration - stored.DatabaseNowUtc,
+                TimeSpan.FromDays(14) - TimeSpan.FromMinutes(2),
+                TimeSpan.FromDays(14) + TimeSpan.FromMinutes(2));
+        }
+        else
+            Assert.Null(stored.ExpirationTimeUtc);
+    }
+
     private static async Task DeclareQueue(
         PostgreSqlTestDatabase fixture,
         string queueName,
@@ -333,6 +404,35 @@ public sealed class PostgreSqlDeliveryStateTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
+    private static async Task<ErrorExpiration> ErrorExpirationForMessage(
+        NpgsqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        string commandText = $"SELECT q.type, d.expiration_time, clock_timestamp() "
+            + $"FROM \"{schema}\".message_delivery d "
+            + $"JOIN \"{schema}\".message m ON m.transport_message_id = d.transport_message_id "
+            + $"JOIN \"{schema}\".queue q ON q.id = d.queue_id "
+            + "WHERE m.message_id = @messageId";
+        await using var command = new NpgsqlCommand(commandText, connection);
+        command.Parameters.AddWithValue("messageId", messageId);
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        Assert.True(await reader.ReadAsync(cancellationToken), "The faulted delivery is missing from PostgreSQL.");
+        var result = new ErrorExpiration(
+            reader.GetInt32(0),
+            reader.IsDBNull(1) ? null : reader.GetDateTime(1),
+            reader.GetDateTime(2));
+        Assert.False(await reader.ReadAsync(cancellationToken), "The faulted message has more than one delivery.");
+        return result;
+    }
+
     private sealed record StateMessage(Guid Id, string Value);
     private sealed record ScheduledState(Guid MessageId, Guid TokenId, string Value);
+    private sealed record ErrorMessage(Guid Id);
+    private sealed record ErrorExpiration(int QueueType, DateTime? ExpirationTimeUtc, DateTime DatabaseNowUtc);
+
+    private sealed class DeliberateStateException : Exception
+    {
+    }
 }

@@ -176,7 +176,7 @@ namespace ViciOne.ServiceBus.SqlTransport
                     transportHeaders.Set(MessageHeaders.Reason, "expired");
 
                     await _clientContext.MoveMessage(_message.LockId.Value, _message.MessageDeliveryId, _settings.QueueName, SqlQueueType.DeadLetterQueue,
-                        transportHeaders);
+                        _message.ExpirationTime, transportHeaders);
 
                     _locked = false;
 

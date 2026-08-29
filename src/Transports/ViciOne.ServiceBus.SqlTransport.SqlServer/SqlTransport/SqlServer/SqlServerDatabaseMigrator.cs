@@ -1418,6 +1418,7 @@ CREATE OR ALTER PROCEDURE {0}.MoveMessage
     @lockId uniqueidentifier,
     @queueName nvarchar(256),
     @queueType int,
+    @expirationTime datetime2,
     @headers nvarchar(max)
 AS
 BEGIN
@@ -1439,7 +1440,8 @@ BEGIN
     );
 
     UPDATE md
-    SET EnqueueTime = SYSUTCDATETIME(), QueueId = @queueId, LockId = NULL, ConsumerId = NULL, TransportHeaders = @headers
+    SET EnqueueTime = SYSUTCDATETIME(), QueueId = @queueId, LockId = NULL, ConsumerId = NULL,
+        ExpirationTime = @expirationTime, TransportHeaders = @headers
     OUTPUT inserted.MessageDeliveryId, inserted.QueueId INTO @updatedMessages
     FROM {0}.MessageDelivery md
     WHERE md.MessageDeliveryId = @messageDeliveryId AND md.LockId = @lockId;

@@ -69,7 +69,8 @@ namespace ViciOne.ServiceBus.SqlTransport
 
         Task<bool> DeleteMessage(Guid lockId, long messageDeliveryId);
         Task<bool> DeleteScheduledMessage(Guid tokenId, CancellationToken cancellationToken);
-        Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, SendHeaders sendHeaders);
+        Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTime? expirationTime,
+            SendHeaders sendHeaders);
         Task<bool> RenewLock(Guid lockId, long messageDeliveryId, TimeSpan duration);
         Task<bool> Unlock(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders);
     }

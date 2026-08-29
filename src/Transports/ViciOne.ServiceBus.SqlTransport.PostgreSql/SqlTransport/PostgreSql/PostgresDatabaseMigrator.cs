@@ -702,7 +702,10 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             END;
             $$;
 
-            CREATE OR REPLACE FUNCTION "{0}".move_message(message_delivery_id bigint, lock_id uuid, queue_name text, queue_type integer, headers jsonb)
+            DROP FUNCTION IF EXISTS "{0}".move_message(bigint, uuid, text, integer, jsonb);
+
+            CREATE OR REPLACE FUNCTION "{0}".move_message(message_delivery_id bigint, lock_id uuid, queue_name text, queue_type integer,
+                expiration_time timestamptz, headers jsonb)
                 RETURNS bigint
                 LANGUAGE PLPGSQL
             AS
@@ -721,7 +724,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                 v_enqueue_time := (now() at time zone 'utc');
 
                 UPDATE "{0}".message_delivery md
-                    SET enqueue_time = v_enqueue_time, queue_id = v_queue_id, lock_id = NULL, consumer_id = NULL, transport_headers = headers
+                    SET enqueue_time = v_enqueue_time, queue_id = v_queue_id, lock_id = NULL, consumer_id = NULL,
+                        expiration_time = move_message.expiration_time, transport_headers = headers
                     FROM (SELECT mdx.message_delivery_id, queue_id, consumer_id FROM "{0}".message_delivery mdx
                         WHERE mdx.message_delivery_id = move_message.message_delivery_id AND mdx.lock_id = move_message.lock_id FOR UPDATE) mdy
                     WHERE mdy.message_delivery_id = md.message_delivery_id

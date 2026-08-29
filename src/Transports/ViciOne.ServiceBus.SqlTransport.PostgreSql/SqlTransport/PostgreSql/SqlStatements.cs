@@ -35,7 +35,8 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
         public const string DbReceivePartitionedSql =
             """SELECT * FROM "{0}".fetch_messages_partitioned(@queue_name,@fetch_consumer_id,@fetch_lock_id,@lock_duration,@fetch_count,@concurrent_count,@ordered)""";
 
-        public const string DbMoveMessageSql = """SELECT * FROM "{0}".move_message(@message_delivery_id,@lock_id,@queue_name,@queue_type,@headers)""";
+        public const string DbMoveMessageSql =
+            """SELECT * FROM "{0}".move_message(@message_delivery_id,@lock_id,@queue_name,@queue_type,@expiration_time,@headers)""";
         public const string DbDeleteMessageSql = """SELECT * FROM "{0}".delete_message(@message_delivery_id,@lock_id)""";
         public const string DbDeleteScheduledMessageSql = """SELECT * FROM "{0}".delete_scheduled_message(@token_id)""";
         public const string DbRenewLockSql = """SELECT * FROM "{0}".renew_message_lock(@message_delivery_id,@lock_id,@duration)""";
