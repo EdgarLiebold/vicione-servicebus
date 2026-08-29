@@ -25,7 +25,6 @@ from identity_gate import (
     derive_package_inventory,
     derive_public_api_mapping,
     legal_identity_contexts,
-    map_text,
     modification_format_exception_bindings,
     notice_format_exception_targets,
     omitted_baseline_findings,
@@ -735,12 +734,30 @@ public enum State
         self.assertTrue(any("owner namespace N1 :: type" in item[0] for item in namespace_one))
 
     def test_identity_mapping_happens_before_owner_tokenization(self) -> None:
-        baseline = f"namespace {OLD} {{ public class Contract {{ public void Execute() {{ }} }} }}"
-        target = "namespace ViciOne.ServiceBus { public class Contract { public void Execute() { } } }"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            target = "src/ViciOne.ServiceBus/Contract.cs"
+            target_file = root / target
+            target_file.parent.mkdir(parents=True)
+            target_file.write_text(
+                "namespace ViciOne.ServiceBus { public class Contract { public void Execute() { } } }",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", target], cwd=root, check=True)
+            source = "src/" + OLD + "/Contract.cs"
+            baseline = f"namespace {OLD} {{ public class Contract {{ public void Execute() {{ }} }} }}".encode()
+            with contextlib.ExitStack() as stack:
+                stack.enter_context(patch("identity_gate.baseline_paths", return_value=[source]))
+                stack.enter_context(patch("identity_gate.baseline_bytes", return_value=baseline))
+                stack.enter_context(patch("identity_gate.map_path", return_value=target))
+                stack.enter_context(patch("identity_gate.baseline_binding", return_value={"baselineKey": "a" * 64}))
+                records, findings = derive_public_api_mapping(root)
 
+        self.assertEqual([], findings)
         self.assertEqual(
-            csharp_public_declarations(target),
-            csharp_public_declarations(map_text(baseline)),
+            ["MAPPED_PRESENT", "MAPPED_PRESENT"],
+            [record["apiDisposition"] for record in records],
         )
 
     def test_else_elif_nested_and_commented_directive_provenance_is_unambiguous(self) -> None:
