@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Diagnostics.Tests.MessageSequenceLedgerTests.BudgetExpiryReportsTimeout (41ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Diagnostics.Tests.MessageSequenceLedgerTests.BudgetExpiryReportsTimeout() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedgerTests.cs:121
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M01-results/M01.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 630ms

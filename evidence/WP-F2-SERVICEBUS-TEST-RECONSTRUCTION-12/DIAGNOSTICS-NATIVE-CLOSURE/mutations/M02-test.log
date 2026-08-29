@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Diagnostics.Tests.ObservationBoundaryTests.SnapshotIsReadAfterStopCompletes (20ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Diagnostics.Tests.ObservationBoundaryTests.SnapshotIsReadAfterStopCompletes() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundaryTests.cs:81
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M02-results/M02.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 334ms

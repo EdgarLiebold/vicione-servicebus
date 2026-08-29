@@ -2009,3 +2009,19 @@ future cohorts as complete.
   byte-identical Technical patch and M11-M33 with exact occurrence, mutant and restore hashes.
 - Only two final independent delta reviews and architecture acceptance remain. No FINAL6 commit has
   been pushed.
+
+## Diagnostics native closure — pre-Evidence-commit checkpoint (2026-08-29)
+
+- Technical `ae2ae679e3b1d157d10e0b40cdc733eca9bd53f0`, tree
+  `233eb7777ea001738bb921c2d4e8935abb8b5cfd`, replaces all 44 inherited Diagnostics identities
+  `OBL-R0-SML-0222..0265` with 44 unique xUnit 4/MTP v2 carriers plus one requirement-projection
+  Fact. The inherited three C# files, NUnit/VSTest project, lock file and empty `tests/Tools`
+  directory are removed.
+- The final focused run is 45/45 and the complete UnitArchitecture run is 2,335/2,335 with zero
+  failures or skips. The complete Engineering Release build ends with zero warnings and errors;
+  the verification model passes and 257/257 CI tool self-tests pass outside the restricted sandbox.
+- M01-M05 independently bind fake-time budget completion, snapshot ordering, exactness, fallback
+  delivery and quiescence interpretation. All five build successfully and make only their named
+  carrier red in under one second; every mutated file is restored byte-identically.
+- This is explicitly the pre-Evidence-commit checkpoint. The Evidence child, independent read-only
+  acceptance, architecture binding and remote push remain pending and are not self-approved here.

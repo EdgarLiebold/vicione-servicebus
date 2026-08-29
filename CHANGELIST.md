@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3738 |
+| Added | 3772 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -28,6 +28,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.gitignore` | Modified | `.gitignore` |
 | `.testagent/activemq-native-obligation-map.tsv` | Added |  |
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
+| `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
 | `.testagent/status.md` | Added |  |
@@ -160,7 +161,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/verification/VERIFICATION_MODEL.json` | Added |  |
 | `build/verification/expected/benchmarks.txt` | Added |  |
 | `build/verification/expected/core.txt` | Added |  |
-| `build/verification/expected/diagnostics.txt` | Added |  |
 | `build/verification/expected/rabbitmq.txt` | Added |  |
 | `build/verification/expected/sql-transport.txt` | Added |  |
 | `docs/build.md` | Added |  |
@@ -2014,6 +2014,37 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/TECHNICAL_PATCH.diff.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M01-results/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M02-results/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M03-results/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M04-results/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M05-results/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_42_32.477935.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_42_33.814883.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_42_41.974143.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_42_43.148139.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_07.864413.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_11.344128.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_16.808136.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_18.719103.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_21.301481.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_28.130445.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_43_39.064843.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_16.050876.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_35.759775.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_38.613710.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_39.855002.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_41.256568.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_42.489993.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_43.940176.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_45.247696.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-29_15_45_46.614885.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-02/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-02/MUTATION_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/ENTITY-FRAMEWORK-CORE-CORRECTION-02/MUTATION_MANIFEST.md` | Added |  |
@@ -8198,11 +8229,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` |
 | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
-| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLine_Specs.cs` | Added |  |
-| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedger_Specs.cs` | Added |  |
-| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundary_Specs.cs` | Added |  |
-| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
-| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Address_Specs.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusEndpointUriCreator.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/AzureServiceBusTestFixture.cs` | Added |  |
@@ -8938,6 +8964,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
 | `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLineTests.cs` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedgerTests.cs` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundaryTests.cs` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/DiagnosticsRequirements.json` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ResultDeliveryTests.cs` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
+| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqCompressionTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqConnectionTests.cs` | Added |  |
 | `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqDeployTopologyTests.cs` | Added |  |

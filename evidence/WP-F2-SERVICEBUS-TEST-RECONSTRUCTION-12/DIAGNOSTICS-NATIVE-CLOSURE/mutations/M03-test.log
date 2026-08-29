@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.Diagnostics.Tests.MessageSequenceLedgerTests.CompleteSetWithDuplicateIsNotExact (17ms)
+  Assert.False() Failure
+  Expected: False
+  Actual:   True
+    um ViciOne.ServiceBus.Diagnostics.Tests.MessageSequenceLedgerTests.CompleteSetWithDuplicateIsNotExact() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedgerTests.cs:72
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/mutations/M03-results/M03.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 322ms

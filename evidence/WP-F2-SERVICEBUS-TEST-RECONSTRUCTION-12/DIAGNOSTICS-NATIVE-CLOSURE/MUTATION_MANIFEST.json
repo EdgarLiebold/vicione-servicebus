@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "kind": "DIAGNOSTICS_NATIVE_CLOSURE_MUTATIONS",
+  "technicalCommit": "ae2ae679e3b1d157d10e0b40cdc733eca9bd53f0",
+  "mutations": [
+    {
+      "id": "M01",
+      "path": "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/MessageSequenceLedger.cs",
+      "oldText": "Task delay = Task.Delay(budget, timeProvider, linked.Token);",
+      "newText": "Task delay = Task.Delay(budget, TimeProvider.System, linked.Token);",
+      "occurrenceCount": 1,
+      "baselineSha256": "6433574a6923f09dcea8d87a68ce782f9610b81d81f4ea41fbd8fec790998373",
+      "mutantSha256": "19fb4c16a71bc4fc09c8a4dd80d3ff3126bd718d1a91f3f5018d598ee4fd454d",
+      "restoredSha256": "6433574a6923f09dcea8d87a68ce782f9610b81d81f4ea41fbd8fec790998373",
+      "carrier": "MessageSequenceLedgerTests.BudgetExpiryReportsTimeout",
+      "result": "FAILED",
+      "exitCode": 2,
+      "cause": "The injected fake clock no longer completes the budget delay; the explicit completion assertion fails immediately."
+    },
+    {
+      "id": "M02",
+      "path": "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/PublishLoadScenario.cs",
+      "oldText": "quiesce then read the ledger",
+      "newText": "read the ledger before quiescence",
+      "occurrenceCount": 1,
+      "baselineSha256": "e2558098aec640997a04509a7677c08b468e24dee8bfd8e95a687f8b2e223ae6",
+      "mutantSha256": "fc1f246d2c726275acc42eb89321ac225165a228beebcef1e45fd0a5411917b8",
+      "restoredSha256": "e2558098aec640997a04509a7677c08b468e24dee8bfd8e95a687f8b2e223ae6",
+      "carrier": "ObservationBoundaryTests.SnapshotIsReadAfterStopCompletes",
+      "result": "FAILED",
+      "exitCode": 2
+    },
+    {
+      "id": "M03",
+      "path": "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/MessageSequenceLedger.cs",
+      "oldText": "the complete exactness predicate",
+      "newText": "UniqueConsumed == Expected",
+      "occurrenceCount": 1,
+      "baselineSha256": "6433574a6923f09dcea8d87a68ce782f9610b81d81f4ea41fbd8fec790998373",
+      "mutantSha256": "e787116dd2ba71117ebb99be050f2f4db43ec5b6bf46b95cd0fd3d548c4f1a8e",
+      "restoredSha256": "6433574a6923f09dcea8d87a68ce782f9610b81d81f4ea41fbd8fec790998373",
+      "carrier": "MessageSequenceLedgerTests.CompleteSetWithDuplicateIsNotExact",
+      "result": "FAILED",
+      "exitCode": 2
+    },
+    {
+      "id": "M04",
+      "path": "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/Program.cs",
+      "oldText": "write the undelivered JSON to the caller-visible destination before returning false",
+      "newText": "return false without writing the JSON fallback",
+      "occurrenceCount": 1,
+      "baselineSha256": "fd98fa9a04e2ad373d347fd9fc7c48954721906b677e8774c2bc24186fc285b0",
+      "mutantSha256": "978674321bbe745ee63188481ca8486a1022352a7fb6c4d1fdb393870160b26d",
+      "restoredSha256": "fd98fa9a04e2ad373d347fd9fc7c48954721906b677e8774c2bc24186fc285b0",
+      "carrier": "ResultDeliveryTests.FallbackOutputCarriesUndeliveredResult",
+      "result": "FAILED",
+      "exitCode": 2
+    },
+    {
+      "id": "M05",
+      "path": "tools/diagnostics/ViciOne.ServiceBus.Diagnostics/PublishLoadScenario.cs",
+      "oldText": "return !bounded.IsCancellationRequested;",
+      "newText": "return true;",
+      "occurrenceCount": 1,
+      "baselineSha256": "e2558098aec640997a04509a7677c08b468e24dee8bfd8e95a687f8b2e223ae6",
+      "mutantSha256": "353346b86467e06f839e16b94824b42ef23e81525978857ca896d55f9acf391a",
+      "restoredSha256": "e2558098aec640997a04509a7677c08b468e24dee8bfd8e95a687f8b2e223ae6",
+      "carrier": "ObservationBoundaryTests.SwallowedBudgetCancellationIsNotQuiescence",
+      "result": "FAILED",
+      "exitCode": 2
+    }
+  ],
+  "equivalentProbe": {
+    "description": "Removing only Duplicates.Count == 0 remains behaviorally equivalent because ObservationCount == Expected independently rejects the same in-range duplicate.",
+    "countedAsMutation": false
+  }
+}

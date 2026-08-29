@@ -1,0 +1,26 @@
+the result could not be written to '/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/vicione-2251c7be438643898d53cd77228d6bae/nested/out.json': Could not find a part of the path '/var/folders/l7/0mq4nw5d3r90l5168402_v7c0000gn/T/vicione-2251c7be438643898d53cd77228d6bae/nested/out.json'.
+{
+  "scenario": "publish-load",
+  "status": "failed",
+  "error": "--messages must be a positive number, not \u00270\u0027"
+}
+{
+  "scenario": "publish-load",
+  "status": "failed",
+  "error": "--not-an-option is not an option of this scenario. It takes: --messages, --concurrency, --prefetch, --completion-limit-seconds, --output"
+}
+{
+  "scenario": "not-a-scenario",
+  "status": "failed",
+  "error": "unknown scenario \u0027not-a-scenario\u0027. It is bus-lifecycle or publish-load"
+}
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/DIAGNOSTICS-NATIVE-CLOSURE/positive/focused.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64)
+  gesamt: 45
+  fehlerhaft: 0
+  erfolgreich: 45
+  übersprungen: 0
+  Dauer: 348ms

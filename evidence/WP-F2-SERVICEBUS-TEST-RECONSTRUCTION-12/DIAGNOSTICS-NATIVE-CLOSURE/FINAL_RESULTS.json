@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "DIAGNOSTICS_NATIVE_CLOSURE_RESULTS",
+  "baselineCommit": "8764bcd81b11a6b25061a69cfdd23d5babd08d0f",
+  "technicalCommit": "ae2ae679e3b1d157d10e0b40cdc733eca9bd53f0",
+  "technicalTree": "233eb7777ea001738bb921c2d4e8935abb8b5cfd",
+  "technicalParent": "9f112e118ea700165609d54316dc56aeb0763da4",
+  "obligations": {
+    "first": "OBL-R0-SML-0222",
+    "last": "OBL-R0-SML-0265",
+    "count": 44,
+    "disposition": "REPLACED_EXECUTING",
+    "profile": "UnitArchitecture"
+  },
+  "focused": { "tests": 45, "passed": 45, "failed": 0, "skipped": 0 },
+  "unitArchitecture": {
+    "ctrfFiles": 20,
+    "tests": 2335,
+    "passed": 2335,
+    "failed": 0,
+    "skipped": 0,
+    "declaredFloor": 2333
+  },
+  "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0 },
+  "ciSelfTests": { "tests": 257, "result": "PASS" },
+  "verificationModel": "PASS",
+  "localIntegrationRuntimeRun": false,
+  "localIntegrationRationale": "No broker, provider or LocalIntegration product/test path changed; the Engineering build compiled the complete LocalIntegration graph."
+}
