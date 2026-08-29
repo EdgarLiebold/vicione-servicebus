@@ -2454,3 +2454,36 @@ Engineering. The product tool also joins UnitArchitecture so Release configurati
 tested binary. Forty-four replacement cases plus one projection Fact raise the active Unit floor
 from 2,288 to 2,333. Only after all 44 R0 rows execute green is the complete inherited Diagnostics
 project (three C# files, csproj and lock file) deleted and removed from Engineering.
+
+## SQL transport native closure research
+
+The next cohesive local cohort is the complete inherited SQL transport project. The frozen R0
+ledger contains 135 source-derived obligations: 30 shared hermetic rows, 65 PostgreSQL rows and 40
+SQL Server rows. Forty-four obligations are hermetic (the 30 shared rows plus ten PostgreSQL and four
+SQL Server parsing/formatting rows); the remaining 91 require only the two already pinned local
+containers. One of the 44 hermetic obligations is the inherited cross-provider runtime dialect
+resolver. Separate native provider executables make that dispatch structurally impossible, so it is
+retired explicitly rather than copied; 43 behavior Facts plus the passive projection Fact preserve
+the 44-case UnitArchitecture floor increase. No SQL row is External, unlike Event Hubs and Azure
+Service Bus, so this cohort can be completed locally without cloud credentials.
+
+The mandatory Roslyn static pairing analyzer was run once against the repository at the start of
+this cohort. It indexed 3,899 source and 1,174 test files and reported 2,874 statically unpaired
+sources. This is only a source-to-symbol heuristic, not coverage evidence; cohort selection remains
+anchored to the complete 135-row R0 SQL ledger and the 110 inherited executable identities.
+
+The target shape follows the current native profile boundary rather than mixing hermetic and
+container tests in one executable: one shared hermetic SQL test project references the common and
+both provider products, while PostgreSQL and SQL Server each own a separate LocalIntegration
+project. The provider-neutral project therefore carries all 44 no-connection rows; the two local
+projects carry 55 and 36 real-provider rows. The existing runner contract and database endpoint
+support remains temporarily in the framework-neutral inherited TestInfrastructure project because
+the other four inherited executable projects still consume it; it is not duplicated or retired in
+this cohort.
+
+Acceptance is terminal only when all 135 obligations map exactly once to executing xUnit 4/MTP v2
+carriers, both pinned fixtures run with run-scoped database identity, the complete Engineering and
+Unit/Local profiles remain green, and the 37 inherited C# files plus csproj/compose/lock bytes can be
+deleted together. If a provider fixture is genuinely unavailable, the technical tree is restored to
+the last coherent phase before switching to another planned cohort; no partial retirement is
+reported as completion.

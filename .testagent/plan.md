@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2333 predeclared unfiltered cases;
+- `UnitArchitecture`: 2377 predeclared unfiltered cases;
 - `LocalIntegration`: 244 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -2046,3 +2046,40 @@ Acceptance checklist to concrete test owners:
    old NUnit/VSTest csproj and lock file, including the now-empty directory. Regenerate CHANGELIST,
    freeze technical and direct evidence commits, require independent read-only review, then request
    remote push approval for the new commits.
+
+## SQL transport native closure execution plan
+
+1. Materialize an exact 135-row SQL obligation map from the frozen ledger and keep the 110 inherited
+   identity census auditable. Split execution by actual environment: 44 hermetic obligations in
+   `ViciOne.ServiceBus.SqlTransport.Tests`, 55 PostgreSQL rows and 36 SQL Server rows in separate
+   LocalIntegration projects. The obsolete cross-provider runtime dialect resolver is retired
+   explicitly because the two native provider executables no longer dispatch through that helper;
+   the other 43 hermetic obligations remain executing Facts.
+2. Rebuild the hermetic address, runner-contract, channel-name, connection-string, multi-host,
+   instance and port contracts first. Use xUnit 4/MTP v2, source-mirrored namespaces, passive
+   requirement JSON and independent expected values; do not copy NUnit fixture inheritance.
+3. Build one run-scoped provider harness per engine from the pinned compose contract. Database
+   create/drop, connection identity, schema and transport operations must use positive provider
+   acknowledgements and bounded operation tokens, never sleeps or absence-only timing oracles.
+4. Rebuild every PostgreSQL and SQL Server behavior row against its owning product path, including
+   provisioning, topology, faults, outbox, scheduling, purge, jobs, renew-lock, delayed delivery,
+   serialization, delivery limits, partitioning, publish/request and redelivery-header behavior.
+5. Add all three native projects to the exact Unit/Local/Engineering solution graphs, bind their
+   requirement projections, update the active floors once from actual discovery and extend the
+   fixture runner only where the existing pinned PostgreSQL/SQL Server contract requires it.
+6. Perform assertion-quality and pseudo-mutation review, then run focused projects, complete
+   UnitArchitecture, complete LocalIntegration and Engineering Release once. Mutations must target
+   provider selection, run-scoped identity, address parsing, schema/provisioning and at least one
+   end-to-end delivery invariant.
+7. Only after all 135 obligations are terminal (134 executing and the one obsolete runtime resolver
+   explicitly retired) delete the complete inherited SQL project (37 C# files,
+   csproj, compose and lock file), remove the empty directory and legacy verification category,
+   regenerate CHANGELIST and freeze Technical plus direct Evidence children. If one provider is
+   genuinely blocked, restore a coherent non-retired phase and continue another planned task rather
+   than leaving an ambiguous half-deletion.
+
+Hermetic checkpoint: 43 behavior Facts plus one requirement-projection Fact are present and execute
+44/44 green. The complete
+UnitArchitecture profile executes 2,381/2,381 green; its fail-closed lower bound is therefore 2,377,
+preserving the pre-existing four-case discovery margin. Provider LocalIntegration remains open, so
+the inherited SQL project is deliberately still present and no terminal 135/135 claim is made.
