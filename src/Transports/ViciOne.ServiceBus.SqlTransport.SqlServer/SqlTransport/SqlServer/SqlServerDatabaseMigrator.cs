@@ -110,11 +110,16 @@ BEGIN
     ALTER TABLE {0}.Queue ADD MaxDeliveryCount integer not null DEFAULT 10;
 END
 
-IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
-    INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_Queue_Name_Type' AND objects.name = 'Queue')
+IF EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
+    WHERE indexes.name = 'IX_Queue_Name_Type' AND indexes.object_id = OBJECT_ID('{0}.Queue') AND indexes.is_unique = 0)
 BEGIN
-    CREATE INDEX IX_Queue_Name_Type ON {0}.Queue (Name, Type) INCLUDE (Id);
+    DROP INDEX IX_Queue_Name_Type ON {0}.Queue;
+END;
+
+IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
+    WHERE indexes.name = 'IX_Queue_Name_Type' AND indexes.object_id = OBJECT_ID('{0}.Queue'))
+BEGIN
+    CREATE UNIQUE INDEX IX_Queue_Name_Type ON {0}.Queue (Name, Type) INCLUDE (Id);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
@@ -397,7 +402,7 @@ BEGIN
     END
 
     DECLARE @QueueTable table (Id BIGINT, Type tinyint)
-    MERGE INTO {0}.Queue WITH (ROWLOCK) AS target
+    MERGE INTO {0}.Queue WITH (HOLDLOCK) AS target
         USING (VALUES
                    (@QueueName, 1, @AutoDelete, @MaxDeliveryCount),
                    (@QueueName, 2, @AutoDelete, @MaxDeliveryCount),
@@ -714,6 +719,7 @@ BEGIN
         DELETE FROM {0}.Message WHERE TransportMessageId = @transportMessageId;
     END;
 
+    SELECT @vRowCount;
     RETURN @vRowCount;
 END;
 ";
@@ -775,6 +781,7 @@ BEGIN
     @delay,
     @schedulingTokenId;
 
+    SELECT @vDeliveryId;
     RETURN @vDeliveryId;
 END;
 ";
@@ -810,6 +817,7 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @vDeliveryId bigint;
+    DECLARE @vDelivery table (MessageDeliveryId bigint);
     DECLARE @vQueueId bigint;
     DECLARE @vMaxDeliveryCount int;
     DECLARE @vEnqueueTime datetimeoffset;
@@ -846,9 +854,11 @@ BEGIN
     );
 
     INSERT INTO {0}.MessageDelivery (QueueId, TransportMessageId, Priority, EnqueueTime, ExpirationTime, DeliveryCount, MaxDeliveryCount, PartitionKey, RoutingKey)
+    OUTPUT inserted.MessageDeliveryId INTO @vDelivery
     VALUES (@vQueueId, @transportMessageId, @priority, @vEnqueueTime, @expirationTime, 0, @vMaxDeliveryCount, @partitionKey, @routingKey);
-    SELECT @vDeliveryId = SCOPE_IDENTITY();
+    SELECT TOP 1 @vDeliveryId = MessageDeliveryId FROM @vDelivery;
 
+    SELECT @vDeliveryId;
     RETURN @vDeliveryId;
 END;
 ";
@@ -1212,6 +1222,7 @@ BEGIN
             VALUES (SYSUTCDATETIME(), @outQueueId, 1, 0, 0);
     END;
 
+    SELECT @outMessageDeliveryId;
     RETURN @outMessageDeliveryId;
 END";
 
@@ -1235,6 +1246,7 @@ BEGIN
     INSERT INTO {0}.QueueMetricCapture (Captured, QueueId, ConsumeCount, ErrorCount, DeadLetterCount)
         VALUES (SYSUTCDATETIME(), @queueId, 0, 0, 0);
 
+    SELECT @queueId;
 END";
 
         const string SqlFnDeadLetterMessages = @"
@@ -1282,12 +1294,13 @@ BEGIN
 
     DECLARE @vRowCount bigint;
     SELECT @vRowCount = @@ROWCOUNT;
-    IF @vRowCount = 0
+    IF @vRowCount > 0
     BEGIN
         INSERT INTO {0}.QueueMetricCapture (Captured, QueueId, ConsumeCount, ErrorCount, DeadLetterCount)
             VALUES (SYSUTCDATETIME(), @sourceQueueId, 0, 0, @vRowCount);
     END;
 
+    SELECT @vRowCount;
 END";
 
         const string SqlFnPurgeQueue = @"

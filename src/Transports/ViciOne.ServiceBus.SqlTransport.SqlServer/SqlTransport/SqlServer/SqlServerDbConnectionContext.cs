@@ -164,8 +164,7 @@ public class SqlServerDbConnectionContext :
 
             var random = new Random();
 
-            var cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
-                + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
+            var cleanupInterval = AddJitter(_hostConfiguration.Settings.QueueCleanupInterval, random);
 
             DateTime? lastCleanup = null;
 
@@ -173,8 +172,7 @@ public class SqlServerDbConnectionContext :
             {
                 try
                 {
-                    var maintenanceInterval = _hostConfiguration.Settings.MaintenanceInterval
-                        + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.MaintenanceInterval.TotalSeconds / 10)));
+                    var maintenanceInterval = AddJitter(_hostConfiguration.Settings.MaintenanceInterval, random);
 
                     try
                     {
@@ -203,11 +201,11 @@ public class SqlServerDbConnectionContext :
                             await Execute<long>(purgeTopologySql, new { }, CancellationToken.None);
 
                             lastCleanup = DateTime.UtcNow;
-                            cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
-                                + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
+                            cleanupInterval = AddJitter(_hostConfiguration.Settings.QueueCleanupInterval, random);
 
                             await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
-                                new { RowLimit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), Stopping);
+                                new { RowLimit = _hostConfiguration.Settings.MaintenanceBatchSize }, t,
+                                commandType: CommandType.StoredProcedure), Stopping);
                         }
                     }, Stopping, Stopping);
                 }
@@ -226,6 +224,14 @@ public class SqlServerDbConnectionContext :
         {
             return _context.Query((connection, transaction) => connection
                 .ExecuteScalarAsync<T?>(functionName, values, transaction, commandType: CommandType.StoredProcedure), cancellationToken);
+        }
+
+        static TimeSpan AddJitter(TimeSpan interval, Random random)
+        {
+            int jitterSeconds = (int)(interval.TotalSeconds / 10);
+            return jitterSeconds > 0
+                ? interval + TimeSpan.FromSeconds(random.Next(0, jitterSeconds))
+                : interval;
         }
     }
 }
