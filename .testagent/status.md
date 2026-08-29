@@ -1757,3 +1757,27 @@ future cohorts as complete.
   workflow, Evidence and CHANGELIST bytes are unchanged; GitHub Actions remain manually disabled.
   The remaining governance step is the corresponding final architecture-status update and remote
   verification.
+## 2026-08-29 — F-REP-02 local technical freeze and candidate Evidence
+
+- The source-derived identity/provenance tooling is frozen locally at Technical commit
+  `1090e11ecc250441e2ecf0357a8e114b84b94001`, tree
+  `02053909b2340685137b46deccc8504e6650adad`, with direct parent
+  `1c52dd2d4d5942f087a725a6256d6b6f41b0ba4c`.
+- The full candidate scan against separately generated Evidence reports `PASS`, zero findings,
+  5,654 terminal baseline records, 5,650 changed-or-retired records and 35,055 public declaration
+  records. The terminal partition is 20 `MAPPED_EXISTING`, 4,186 `MOVED_EXACT` and 1,448
+  `RETIRED_DELETED`; the public projection is 23,301 present, 710 modified-or-removed and 11,044
+  retired-path records.
+- The historical policy is limited to 53 exact paths, 5,772 counted UTF-8 identity contexts and
+  seven full binary blobs. Active product source has no general exception. Five generated contract
+  files are independently bound by `GENERATED_SHA256SUMS`, currently 5/5 verified.
+- Focused hostile Identity tests are 55/55 green; the complete Identity self-test suite is 120/120
+  green after deterministic CHANGELIST regeneration to 9,304 entries. Three injected one-cause counter-mutations for
+  context-inventory bypass, binary-digest bypass and ignored external Evidence root each made its
+  dedicated test red and were immediately restored.
+- No .NET, MSBuild, container or network process was required. The Python syntax check initially hit
+  the macOS cache sandbox; setting `PYTHONPYCACHEPREFIX=/private/tmp/frep02-pycache` is the verified
+  unchanged-command remedy.
+- The default in-repository scan now also reports `PASS` with zero findings. This is not final
+  acceptance: Evidence commit/tree binding and two independent read-only reviews remain mandatory.
+  No F-REP-02 commit has been pushed.

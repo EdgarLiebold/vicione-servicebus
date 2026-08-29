@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "1090e11ecc250441e2ecf0357a8e114b84b94001",
+  "technicalTree": "02053909b2340685137b46deccc8504e6650adad",
+  "targetPath": "tools/identity/identity_gate.py",
+  "baselineSha256": "48b4555398b41f7f0814585fbe28a0bc919c9df07151502968a743f236e4d693",
+  "mutations": [
+    {
+      "id": "M01",
+      "purpose": "historical text inventory cannot be bypassed",
+      "oldText": "    if (\n        sum(actual_inventory.values()) != authorized_line_count\n",
+      "newText": "    if False and (\n        sum(actual_inventory.values()) != authorized_line_count\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "1d1a4b383a00a026416b2701ca76563ee9e848afe3c66c77f73763dc184e4ad7",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateHistoricalContextTests.test_new_identity_line_is_not_covered_by_an_existing_exact_context",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_M01.log",
+      "rawLogSha256": "9efb80c02d5057d4185bfe3a55e91bf1761ccc6ff9f6283ec1276b5ab0a429b5",
+      "causalFailure": "inventory is stale assertion became false"
+    },
+    {
+      "id": "M02",
+      "purpose": "historical binary blob digest cannot be bypassed",
+      "oldText": "            if record.get(\"blobSha256\") != sha256(data):\n",
+      "newText": "            if False and record.get(\"blobSha256\") != sha256(data):\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "8b4af8cbda7e791c002c2b21bf80f939180150f5105961d144745f2bda8f77fd",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateHistoricalContextTests.test_binary_digest_and_path_authorization_are_independent_fail_closed_axes",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_M02.log",
+      "rawLogSha256": "761186d24db66b249430c0f67f000af66412058b8647755d734f1d044092eabd",
+      "causalFailure": "stale binary policy assertion became false"
+    },
+    {
+      "id": "M03",
+      "purpose": "explicit candidate Evidence root cannot be ignored",
+      "oldText": "        evidence or root / \"evidence\" / \"WP-F2-SERVICEBUS-IDENTITY\",\n",
+      "newText": "        root / \"evidence\" / \"WP-F2-SERVICEBUS-IDENTITY\",\n",
+      "occurrenceCount": 1,
+      "mutantSha256": "a375b8b5d91a87a5ae865da655053302db211bdec7d966649f03b93a26361688",
+      "command": "python3 -B -m unittest test_identity_gate.IdentityGateGeneratedEvidenceManifestTests.test_scan_uses_the_explicit_external_evidence_root",
+      "workingDirectory": "tools/identity",
+      "exitCode": 1,
+      "rawLog": "FREP02_M03.log",
+      "rawLogSha256": "f2953bcd25f8ef3ce807af57d241bc0dd681ed7a47739de0e32119b7c9dcfef8",
+      "causalFailure": "actual Evidence root differed from the explicit candidate path"
+    }
+  ],
+  "postRestoreSha256": "48b4555398b41f7f0814585fbe28a0bc919c9df07151502968a743f236e4d693"
+}

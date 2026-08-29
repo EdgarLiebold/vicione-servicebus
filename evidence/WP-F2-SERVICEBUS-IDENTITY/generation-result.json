@@ -1,10 +1,4 @@
 {
-  "findings": [
-    {
-      "gate": "change-notice",
-      "path": ".gitattributes",
-      "reason": "changed baseline file lacks effective notice"
-    }
-  ],
-  "status": "FAIL"
+  "findings": [],
+  "status": "PASS"
 }

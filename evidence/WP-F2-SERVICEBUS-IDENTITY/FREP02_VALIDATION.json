@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "subject": "F-REP-02 repository-wide ServiceBus identity and provenance reconciliation",
+  "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
+  "integratedParentCommit": "1c52dd2d4d5942f087a725a6256d6b6f41b0ba4c",
+  "technicalCommit": "1090e11ecc250441e2ecf0357a8e114b84b94001",
+  "technicalTree": "02053909b2340685137b46deccc8504e6650adad",
+  "evidenceParentRequirement": "direct child of technicalCommit",
+  "architecturePlan": {
+    "path": "vicione-architecture/work/delivery/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FREP02_IDENTITY_PROVENANCE_IMPLEMENTATION_PLAN.md",
+    "sha256": "07f10d676d1042f7ce7fa9552d161ea28832943d5195562118889eb0b2f3f6e8"
+  },
+  "initialFullScan": {
+    "status": "FAIL",
+    "findings": 59631,
+    "outputSha256": "d9a0ce2a5d327f3b3a198f056ca45277c57389e3ab5dd6153942dcd2e053acba"
+  },
+  "finalFullScan": {
+    "status": "PASS",
+    "findings": 0,
+    "baselinePaths": 5654,
+    "changedOrRetiredBaselinePaths": 5650,
+    "publicDeclarationRecords": 35055,
+    "sourceResult": "SOURCE_IDENTITY_GATE.json",
+    "sourceResultSha256": "29f82fe838ec9c43936786c55e2f03eed6de507b0a105a1e13a15d1b8c71044f"
+  },
+  "terminalBaselinePartition": {
+    "MAPPED_EXISTING": 20,
+    "MOVED_EXACT": 4186,
+    "RETIRED_DELETED": 1448,
+    "total": 5654
+  },
+  "publicApiPartition": {
+    "MAPPED_PRESENT": 23301,
+    "MODIFIED_OR_REMOVED": 710,
+    "RETIRED_PATH": 11044,
+    "total": 35055
+  },
+  "historicalPolicy": {
+    "exactPaths": 53,
+    "authorizedUtf8LineContexts": 5772,
+    "fullBinaryBlobs": 7,
+    "activeProductWildcardExceptions": 0
+  },
+  "tests": {
+    "focusedHostile": {"executed": 55, "passed": 55, "failed": 0},
+    "allIdentitySelfTests": {"executed": 120, "passed": 120, "failed": 0},
+    "counterMutations": {"executed": 3, "causallyKilled": 3, "restored": 3},
+    "selfTestLog": "FREP02_IDENTITY_SELFTESTS.log",
+    "selfTestLogSha256": "78b2ae25672b7245ac1f6e22e8dfda1d0f146658ee2c9d27168aee50a76486b8",
+    "counterMutationManifest": "FREP02_COUNTER_MUTATIONS.json",
+    "counterMutationManifestSha256": "2e49772cacdb716b10ce3a55296d086c43afa33536f72a741a88403009691f06"
+  },
+  "supportingEvidence": {
+    "generatedContractManifest": "GENERATED_SHA256SUMS",
+    "generatedContractManifestSha256": "e0f88ee374ad48b44a9003543fa020f68e2c22e237c3a37860e4e27af4ee947b",
+    "defaultScanLog": "FREP02_DEFAULT_SCAN.log",
+    "defaultScanLogSha256": "29f82fe838ec9c43936786c55e2f03eed6de507b0a105a1e13a15d1b8c71044f",
+    "changeListCheckLog": "FREP02_CHANGE_LIST_CHECK.log",
+    "changeListCheckLogSha256": "9418aa921fddd9b54427028e687052297981746bb0d768a919fe99c494c1c8e7",
+    "changeListEntries": 9304,
+    "statusPolicyCheckLog": "FREP02_STATUS_POLICY_CHECK.log",
+    "statusPolicyCheckLogSha256": "1095916f1492ec656bacebba47814cb479e4a49a8bbc540d0412f76f7e93f48b",
+    "technicalPatch": "FREP02_TECHNICAL.diff.gz",
+    "technicalPatchCompression": "gzip -n",
+    "technicalPatchSha256": "3e284886db1e44a31daf70a30e5c3c6914521844a0fd76fa9ca0c196537cc572"
+  },
+  "executionBoundary": {
+    "dotnetOrMsbuildStarted": false,
+    "containerStarted": false,
+    "networkUsed": false,
+    "pythonSandboxRemedy": "PYTHONPYCACHEPREFIX=/private/tmp/frep02-pycache"
+  },
+  "scope": {
+    "productChanged": false,
+    "csharpTestsChanged": false,
+    "solutionsChanged": false,
+    "workflowsChanged": false,
+    "testFloorsChanged": false,
+    "legacyTestsRestoredOrDeleted": false
+  },
+  "acceptance": "PENDING_INDEPENDENT_REVIEWS"
+}

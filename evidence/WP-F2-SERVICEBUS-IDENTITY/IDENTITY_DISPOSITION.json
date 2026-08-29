@@ -95,6 +95,14 @@
       "scanPatternSha256": "318fb51f2dfb52016eb5c2afd0c8464af44b1d14746cfc4e08f09e301f46d84f"
     },
     {
+      "family": "superseded-header-prefix",
+      "mappingRuleCount": 1,
+      "scanExampleSha256": [
+        "ebc3a490d1876796778198190cdd158a682e2149ffcc2ad758da24ffa15854e1"
+      ],
+      "scanPatternSha256": "3594efd3b2c52165647fa3bd0b0e71326b8fa10b22213194126742ecd154af61"
+    },
+    {
       "family": "environment-prefix",
       "mappingRuleCount": 1,
       "scanExampleSha256": [
@@ -152,6 +160,18 @@
       "scanPatternSha256": "ab25050e537ed021183939c31e725253f58518bd822cceea7e56bcdfb37527a0"
     }
   ],
+  "historicalIdentityPolicy": {
+    "categories": {
+      "HISTORICAL_EVIDENCE": 45,
+      "IDENTITY_TOOL_SELF_REFERENCE": 4,
+      "LEGAL_PROVENANCE": 3,
+      "NEGATIVE_TEST_ORACLE": 1
+    },
+    "entryCount": 53,
+    "path": "tools/identity/historical_identity_policy.json",
+    "schemaVersion": 1,
+    "sha256": "d8827e8865b962ffeb1d9651aca4b8235fceaa378c41eccaddbf3f0cc7da318d"
+  },
   "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
   "retainedLegalProvenanceContexts": [
     {
@@ -161,7 +181,7 @@
     },
     {
       "authorizedContextSha256": [],
-      "path": "LICENSE",
+      "path": "LICENSE.txt",
       "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"
     },
     {
@@ -181,8 +201,7 @@
     },
     {
       "authorizedContextSha256": [
-        "0b2eb5ea869d1b25b114673537dc4fb7847c41a2deb6e9841c66bd9509d3d244",
-        "0103777a21663fca6d2f5de092d67f3b267e8d4796b7d0a4566794cf31ba1c4b"
+        "471da51b06aaabd520328cca4cdbf4d90020f2f1fd9151a7aa5ff3ec61413095"
       ],
       "path": "README.md",
       "reason": "path-and-context-bound Apache-2.0 attribution or mandated bilingual provenance"

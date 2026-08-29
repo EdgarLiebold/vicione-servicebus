@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3641 |
+| Added | 3654 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -661,7 +661,19 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/DEVELOPER_REPORT.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/ENDPOINT_IDENTITY_RERUN_GATE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/EOL_CANONICALIZATION_GATE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_CHANGE_LIST_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_COUNTER_MUTATIONS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_DEFAULT_SCAN.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_IDENTITY_SELFTESTS.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_M01.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_M02.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_M03.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_STATUS_POLICY_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_TECHNICAL.diff.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_VALIDATION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/GATE_SUMMARY.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/GENERATED_SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/GUA-DX-003/compiler.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/GUA-DX-003/contract.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/GUA-DX-003/module-host.json` | Added |  |
@@ -9294,6 +9306,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/identity/change_list.py` | Added |  |
 | `tools/identity/evidence_summary_gate.py` | Added |  |
 | `tools/identity/freeze_manifest.py` | Added |  |
+| `tools/identity/historical_identity_policy.json` | Added |  |
 | `tools/identity/identity_gate.py` | Added |  |
 | `tools/identity/identity_rules.py` | Added |  |
 | `tools/identity/not_executed_source_gate.py` | Added |  |
