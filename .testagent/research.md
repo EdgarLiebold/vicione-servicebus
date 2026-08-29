@@ -2281,3 +2281,34 @@ not implement. Time sourcing, host/address parsing, disposal, temporary-entity o
 consumer identity are **generalized** to one correct owner each. No old workaround is copied into
 native tests, and no Product API uncertainty remains that requires a PO choice before this bounded
 implementation.
+
+## AWS native closure — independent review correction research
+
+The independently frozen review of technical commit `d0043bae8dccfee74d8ae223b5e8031409a2784d`
+and evidence child `9195e5fcde26b5a525d00fe716fcc7c21256f5c1` found five source-derived boundaries
+which the otherwise internally consistent AWS evidence did not cover. Architecture commit
+`c7a8b28` authorizes this bounded follow-up. The 111 inherited AWS dispositions remain unchanged;
+real AWS remains External and no cloud credential, resource or cost is introduced here.
+
+- DynamoDB saga registrations share one untyped `Func<IDynamoDBContext>` singleton. A second saga
+  type therefore receives the first saga's context factory. The owner must be generic in `TSaga`,
+  immutable and proven in both registration orders.
+- The public SQS low-level host surface accepts arbitrary mutable `AmazonSqsHostSettings`
+  implementations. Its one-time check neither snapshots the object nor rejects URI user info,
+  query or fragment centrally. The accepted product value must instead be a sealed immutable
+  snapshot produced by the typed builder, with all URI input paths sharing one fail-closed guard.
+- SQS/SNS construction is not atomic. If SNS creation fails and disposal of the already-created SQS
+  client also fails, cleanup replaces the primary error. One creation owner must attempt cleanup,
+  preserve the primary error and stack when cleanup succeeds, and aggregate primary then cleanup
+  deterministically when both fail. The normal disposal path also needs an independent EDI stack
+  oracle rather than reference identity alone.
+- `ClientContextCacheDefaults` is public process-global mutable state. Its capacity and maximum age
+  can race between buses while its public minimum age does nothing. Cache options must be immutable,
+  validated, snapshotted per host/connection and exercised with an injected `TimeProvider`; the
+  dead minimum-age promise is removed instead of simulated.
+- A failed or caller-cancelled SQS `Complete` permanently stops lock renewal but leaves `_locked`
+  true. Settlement must mark the lock lost in `finally` and propagate the exact original failure.
+
+These are product defects, not test accommodations. The correction adds direct causal carriers and
+one-cause mutations for every branch, retains all previously green S3 and AWS provider boundaries,
+and does not reclassify any External row as locally executed.

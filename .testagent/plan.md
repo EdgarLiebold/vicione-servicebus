@@ -1876,3 +1876,39 @@ hashed and bound by the Lead architecture order before the first product or test
     acceptance requires two independent strict read-only reviews of the same commit/tree covering
     every changed product/test line, structure, 113-row closure, source-derived requirements,
     mutations and Evidence. Team 1 remains review-only and starts only on an explicit frozen scope.
+
+## AWS native closure — bounded review-correction plan
+
+This plan is authorized by architecture commit `c7a8b28` and is additive to the frozen AWS-native
+plan. It changes neither the 111-row R0 disposition nor the real-AWS External boundary.
+
+1. Replace the untyped DynamoDB context delegate with an internal immutable
+   `DynamoDbContextFactory<TSaga>` owner. Make every repository factory consume its saga-specific
+   owner and prove two distinct saga registrations in both orders with exact context identity.
+2. Replace arbitrary public SQS host-setting implementations with one sealed immutable snapshot.
+   Keep mutation inside the configurator only, freeze the connection factory and cache options, and
+   reject user info, query and fragment through the single `AmazonSqsHostAddress` input boundary.
+3. Introduce immutable validated per-host SQS cache options carrying capacity, maximum age and
+   `TimeProvider`. Pass them explicitly through the host snapshot into queue/topic caches; delete
+   process-global defaults and the unused minimum-age API. Prove two-host isolation, builder freeze,
+   invalid boundaries and deterministic expiration without sleeps or wall-clock assertions.
+4. Route both SQS/SNS constructors through one atomic pair builder. On second-client failure always
+   clean the first client; preserve the primary instance and stack if cleanup succeeds, otherwise
+   throw a deterministic `AggregateException(primary, cleanup)`. Strengthen normal disposal with
+   stack-provenance assertions.
+5. Mark SQS receive-lock ownership lost after every attempted `Complete`, including provider failure
+   and requested cancellation, while preserving the exact original exception. Prove subsequent
+   `ValidateLockStatus` fails closed.
+6. Update the passive AWS requirement projection with unique variants for each new carrier. Use
+   xUnit 4/MTP v2, source-mirrored namespaces, fresh subjects, exact identities and bounded causal
+   barriers. Do not add LocalIntegration cases for hermetic configuration/ownership defects.
+7. Run focused locked Release builds and tests, then full UnitArchitecture, LocalIntegration and
+   Engineering profiles with isolated CLI home, build-server/node reuse disabled and no shared
+   compilation. A restricted-sandbox NamedPipe failure is rerun unchanged outside the sandbox; tests
+   are never weakened for the environment.
+8. Bind one-cause mutations for typed Dynamo ownership, host snapshot/URI rejection, per-host cache
+   propagation, client-pair primary/cleanup handling, Complete lock loss and EDI stack preservation.
+   Record commands, CTRF/raw results, hashes and byte-identical restoration.
+9. Freeze separate technical and direct evidence commits, push the correction branch, and require
+   both independent reviewers to return PASS against the exact hashes before architecture acceptance.
+   GitHub Actions remain disabled and real AWS remains untouched.

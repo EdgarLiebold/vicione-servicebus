@@ -1177,3 +1177,18 @@ future cohorts as complete.
   and currently reports 59,494 stale baseline/API bindings. That existing repository-governance debt
   is outside this 18-path AWS correction and requires a separately authorized regeneration/review;
   it is not hidden inside or counted as an AWS test result.
+
+## AWS native closure — independent review correction started
+
+- Independent product/API and test/evidence reviews of `d0043bae` plus `9195e5fc` agree that the
+  stored execution evidence is internally consistent but incomplete for five source-derived product
+  boundaries: typed DynamoDB multi-saga factory ownership, immutable/secret-free low-level SQS host
+  settings, atomic SQS/SNS pair construction, per-host immutable client-cache options and lock loss
+  after failed `Complete`. The normal connection-disposal EDI stack is also strengthened in the same
+  ownership correction.
+- Architecture commit `c7a8b28` authorizes exactly this follow-up. Work proceeds on isolated branch
+  `feature/aws-native-review-correction` from remotely backed-up commit `2afee3f3`; GitHub workflows
+  stay disabled, real AWS remains External and no cloud resource or credential is used.
+- This is a pre-implementation checkpoint, not an acceptance claim. Product/test changes, local
+  execution, mutation evidence, separate technical/evidence freezes, two independent PASS reviews,
+  remote backup and final architecture acceptance remain mandatory.
