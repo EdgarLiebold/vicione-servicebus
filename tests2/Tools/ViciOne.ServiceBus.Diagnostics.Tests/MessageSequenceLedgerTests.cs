@@ -116,7 +116,9 @@ public sealed class MessageSequenceLedgerTests
 
         Task<bool> waiting = ledger.WaitForAllExpected(TimeSpan.FromMinutes(1), CancellationToken.None, time);
         time.Advance(TimeSpan.FromMinutes(1));
+        await Task.Yield();
 
+        Assert.True(waiting.IsCompleted);
         Assert.False(await waiting);
     }
 

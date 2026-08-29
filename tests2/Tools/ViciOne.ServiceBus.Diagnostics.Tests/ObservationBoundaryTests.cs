@@ -18,19 +18,16 @@ public sealed class ObservationBoundaryTests
     public async Task SwallowedBudgetCancellationIsNotQuiescence()
     {
         var time = new FakeTimeProvider();
-        Task<bool> quiescing = PublishLoadScenario.Quiesce(async token =>
+        var stopFinished = new TaskCompletionSource();
+        Task<bool> quiescing = PublishLoadScenario.Quiesce(token =>
         {
-            try
-            {
-                await Task.Delay(Timeout.InfiniteTimeSpan, time, token);
-            }
-            catch (OperationCanceledException)
-            {
-            }
+            token.Register(() => stopFinished.TrySetResult());
+            return stopFinished.Task;
         }, TimeSpan.FromMinutes(1), time);
 
         time.Advance(TimeSpan.FromMinutes(1));
 
+        Assert.True(quiescing.IsCompleted);
         Assert.False(await quiescing);
     }
 
@@ -43,7 +40,10 @@ public sealed class ObservationBoundaryTests
             token => Task.Delay(Timeout.InfiniteTimeSpan, time, token), TimeSpan.FromMinutes(1), time);
 
         time.Advance(TimeSpan.FromMinutes(1));
+        await Task.Yield();
+        await Task.Yield();
 
+        Assert.True(quiescing.IsCompleted);
         Assert.False(await quiescing);
     }
 
@@ -95,7 +95,9 @@ public sealed class ObservationBoundaryTests
 
         Assert.False(stopCalled.Task.IsCompleted);
         time.Advance(TimeSpan.FromMinutes(1));
+        await Task.Yield();
 
+        Assert.True(stopCalled.Task.IsCompleted);
         await stopCalled.Task;
         await observing;
     }
