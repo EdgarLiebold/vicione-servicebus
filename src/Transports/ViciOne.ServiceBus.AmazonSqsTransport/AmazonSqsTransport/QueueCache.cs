@@ -20,11 +20,12 @@ public class QueueCache :
     readonly IAmazonSQS _client;
     readonly IDictionary<string, QueueInfo> _durableQueues;
 
-    public QueueCache(IAmazonSQS client)
+    public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options)
     {
-        _client = client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(options);
 
-        _cache = ClientContextCacheDefaults.CreateCache<string, QueueInfo>();
+        _cache = options.CreateCache<string, QueueInfo>();
 
         _durableQueues = new Dictionary<string, QueueInfo>();
     }

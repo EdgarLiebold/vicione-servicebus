@@ -66,7 +66,7 @@ namespace ViciOne.ServiceBus.Configuration
             Func<IServiceProvider, IDynamoDBContext> contextFactory = _contextFactory
                 ?? throw new InvalidOperationException("The DynamoDB context factory must be configured before registration.");
 
-            configurator.TryAddSingleton<Func<IDynamoDBContext>>(provider => () => contextFactory(provider));
+            configurator.TryAddSingleton(provider => new DynamoDbContextFactory<TSaga>(() => contextFactory(provider)));
             configurator.TryAddSingleton(new DynamoDbSagaRepositoryOptions<TSaga>(TableName, Expiration, TimeProvider, ConsistentRead,
                 IsEmptyStringValueEnabled, RetrieveDateTimeInUtc, Conversion));
             configurator.RegisterLoadSagaRepository<TSaga, DynamoDbSagaRepositoryContextFactory<TSaga>>();

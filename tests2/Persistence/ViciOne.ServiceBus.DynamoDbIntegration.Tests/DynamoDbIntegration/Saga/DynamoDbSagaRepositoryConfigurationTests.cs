@@ -42,13 +42,61 @@ public sealed class DynamoDbSagaRepositoryConfigurationTests
                 retained.ContextFactory(() => later);
         });
 
-        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
+        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(DynamoDbContextFactory<TestSaga>));
         Assert.NotNull(descriptor.ImplementationFactory);
-        var runtimeFactory = Assert.IsType<Func<IDynamoDBContext>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
+        var runtimeFactory = Assert.IsType<DynamoDbContextFactory<TestSaga>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
 
-        IDynamoDBContext actual = runtimeFactory();
+        IDynamoDBContext actual = runtimeFactory.Create();
         Assert.Same(registered, actual);
         Assert.NotSame(later, actual);
+        Assert.DoesNotContain(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "multiple-saga-types-own-independent-context-factories")]
+    public void MultipleSagaTypes_OwnIndependentContextFactoriesInEitherRegistrationOrder(bool reverseRegistrationOrder)
+    {
+        IDynamoDBContext firstContext = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
+        IDynamoDBContext secondContext = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
+        var services = new ServiceCollection();
+
+        services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+        {
+            void RegisterFirst() => configuration.AddSaga<TestSaga>()
+                .DynamoDbRepository(repository =>
+                {
+                    repository.TableName = "first-saga-table";
+                    repository.ContextFactory(() => firstContext);
+                });
+
+            void RegisterSecond() => configuration.AddSaga<SecondSaga>()
+                .DynamoDbRepository(repository =>
+                {
+                    repository.TableName = "second-saga-table";
+                    repository.ContextFactory(() => secondContext);
+                });
+
+            if (reverseRegistrationOrder)
+            {
+                RegisterSecond();
+                RegisterFirst();
+            }
+            else
+            {
+                RegisterFirst();
+                RegisterSecond();
+            }
+        });
+
+        DynamoDbContextFactory<TestSaga> firstFactory = ResolveRegisteredFactory<TestSaga>(services);
+        DynamoDbContextFactory<SecondSaga> secondFactory = ResolveRegisteredFactory<SecondSaga>(services);
+
+        Assert.Same(firstContext, firstFactory.Create());
+        Assert.Same(secondContext, secondFactory.Create());
+        Assert.NotSame(firstFactory.Create(), secondFactory.Create());
+        Assert.DoesNotContain(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
     }
 
     [Fact]
@@ -134,6 +182,20 @@ public sealed class DynamoDbSagaRepositoryConfigurationTests
     {
         public Guid CorrelationId { get; set; }
         public int Version { get; set; }
+    }
+
+    private sealed class SecondSaga : ISagaVersion
+    {
+        public Guid CorrelationId { get; set; }
+        public int Version { get; set; }
+    }
+
+    private static DynamoDbContextFactory<TSaga> ResolveRegisteredFactory<TSaga>(IServiceCollection services)
+        where TSaga : class, ISagaVersion
+    {
+        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(DynamoDbContextFactory<TSaga>));
+        Assert.NotNull(descriptor.ImplementationFactory);
+        return Assert.IsType<DynamoDbContextFactory<TSaga>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
     }
 
     private class UnsupportedInvocationProxy : DispatchProxy

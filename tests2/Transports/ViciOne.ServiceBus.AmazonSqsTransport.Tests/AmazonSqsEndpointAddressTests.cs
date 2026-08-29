@@ -92,7 +92,7 @@ public sealed class AmazonSqsEndpointAddressTests
         busConfiguration.HostConfiguration.Settings = new ConfigurationHostSettings
         {
             Region = global::Amazon.RegionEndpoint.EUCentral1,
-        };
+        }.Freeze();
 
         Assert.Throws<AmazonSqsTransportConfigurationException>(
             () => busConfiguration.HostConfiguration.Topology.GetDestinationAddress(name));

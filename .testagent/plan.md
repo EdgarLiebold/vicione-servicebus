@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2271 predeclared unfiltered cases;
+- `UnitArchitecture`: 2288 predeclared unfiltered cases;
 - `LocalIntegration`: 244 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1930,3 +1930,50 @@ and bind their hashes plus the exact scope in the Lead architecture order.
 12. Freeze separate technical and evidence commits, require two independent strict read-only PASS
     reviews over the same bytes, then fast-forward both product and architecture branches to their
     remotes. The later full Core closure and atomic `tests2` promotion remain separate slices.
+## AWS native closure — bounded review-correction plan
+
+This plan is authorized by architecture commit `c7a8b28` and is additive to the frozen AWS-native
+plan. It changes neither the 111-row R0 disposition nor the real-AWS External boundary.
+
+1. Replace the untyped DynamoDB context delegate with an internal immutable
+   `DynamoDbContextFactory<TSaga>` owner. Make every repository factory consume its saga-specific
+   owner and prove two distinct saga registrations in both orders with exact context identity.
+2. Replace arbitrary public SQS host-setting implementations with one sealed immutable snapshot.
+   Keep mutation inside the configurator only, freeze the connection factory and cache options, and
+   reject user info, query and fragment through the single `AmazonSqsHostAddress` input boundary.
+3. Introduce immutable validated per-host SQS cache options carrying capacity, maximum age and
+   `TimeProvider`. Pass them explicitly through the host snapshot into queue/topic caches; delete
+   process-global defaults and the unused minimum-age API. Prove two-host isolation, builder freeze,
+   invalid boundaries and deterministic expiration without sleeps or wall-clock assertions.
+4. Route both SQS/SNS constructors through one atomic pair builder. On second-client failure always
+   clean the first client; preserve the primary instance and stack if cleanup succeeds, otherwise
+   throw a deterministic `AggregateException(primary, cleanup)`. Strengthen normal disposal with
+   stack-provenance assertions.
+5. Mark SQS receive-lock ownership lost after every attempted `Complete`, including provider failure
+   and requested cancellation, while preserving the exact original exception. Prove subsequent
+   `ValidateLockStatus` fails closed.
+6. Update the passive AWS requirement projection with unique variants for each new carrier. Use
+   xUnit 4/MTP v2, source-mirrored namespaces, fresh subjects, exact identities and bounded causal
+   barriers. The twelve materialized cases raise the UnitArchitecture floor from 2043 to 2055;
+   LocalIntegration remains 149 because these are hermetic configuration/ownership defects.
+7. Run focused locked Release builds and tests, then full UnitArchitecture, LocalIntegration and
+   Engineering profiles with isolated CLI home, build-server/node reuse disabled and no shared
+   compilation. A restricted-sandbox NamedPipe failure is rerun unchanged outside the sandbox; tests
+   are never weakened for the environment.
+8. Bind one-cause mutations for typed Dynamo ownership, host snapshot/URI rejection, per-host cache
+   propagation, client-pair primary/cleanup handling, Complete lock loss and EDI stack preservation.
+   Record commands, CTRF/raw results, hashes and byte-identical restoration.
+9. Freeze separate technical and direct evidence commits, push the correction branch, and require
+   both independent reviewers to return PASS against the exact hashes before architecture acceptance.
+   GitHub Actions remain disabled and real AWS remains untouched.
+
+## AWS native closure — final host-input correction
+
+The second independent Evidence review found one remaining public input gap: an absolute
+`amazonsqs:/scope` URI has no host but passed the central address boundary. Close that gap together
+with explicit carriers for the already intended relative-URI and string-host guards. The two new
+theories materialize five hermetic cases, raising the UnitArchitecture floor from 2055 to 2060 while
+LocalIntegration remains 149. Bind three separate one-cause mutations for hostless URI, relative URI
+and null/empty/whitespace string host. Regenerate the Evidence child and make M32's replacement
+literal encompass its unique `Complete` finally block rather than claiming the repeated exchange
+line is unique.

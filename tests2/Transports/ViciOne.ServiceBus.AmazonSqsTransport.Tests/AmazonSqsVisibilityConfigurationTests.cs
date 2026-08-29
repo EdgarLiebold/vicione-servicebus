@@ -14,7 +14,7 @@ public sealed class AmazonSqsVisibilityConfigurationTests
     {
         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());
         var bus = new AmazonSqsBusConfiguration(topology);
-        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 };
+        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
         IAmazonSqsReceiveEndpointConfigurator? configurator = null;
         var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
             bus.HostConfiguration.CreateReceiveEndpointConfiguration("orders", value => configurator = value));

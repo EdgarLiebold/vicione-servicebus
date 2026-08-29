@@ -37,6 +37,12 @@ public interface IAmazonSqsHostConfigurator
     void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory);
 
     /// <summary>
+    /// Configures the immutable queue and topic client-context cache for this host.
+    /// </summary>
+    /// <param name="options">Validated per-host cache options.</param>
+    void ClientContextCache(AmazonSqsClientContextCacheOptions options);
+
+    /// <summary>
     /// Specifies a method used to determine if a header should be copied to the transport message
     /// </summary>
     /// <param name="allowTransportHeader"></param>

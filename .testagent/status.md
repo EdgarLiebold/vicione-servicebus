@@ -1599,3 +1599,118 @@ future cohorts as complete.
   wording.
 - Remaining acceptance is limited to a targeted read-only verification of this status-only child,
   remote fast-forward and final architecture acceptance. This section does not self-accept the slice.
+## AWS native closure — independent review correction started
+
+- Independent product/API and test/evidence reviews of `d0043bae` plus `9195e5fc` agree that the
+  stored execution evidence is internally consistent but incomplete for five source-derived product
+  boundaries: typed DynamoDB multi-saga factory ownership, immutable/secret-free low-level SQS host
+  settings, atomic SQS/SNS pair construction, per-host immutable client-cache options and lock loss
+  after failed `Complete`. The normal connection-disposal EDI stack is also strengthened in the same
+  ownership correction.
+- Architecture commit `c7a8b28` authorizes exactly this follow-up. Work proceeds on isolated branch
+  `feature/aws-native-review-correction` from remotely backed-up commit `2afee3f3`; GitHub workflows
+  stay disabled, real AWS remains External and no cloud resource or credential is used.
+- This is a pre-implementation checkpoint, not an acceptance claim. Product/test changes, local
+  execution, mutation evidence, separate technical/evidence freezes, two independent PASS reviews,
+  remote backup and final architecture acceptance remain mandatory.
+
+## AWS native closure — review-correction technical candidate
+
+- All five independently reproduced product boundaries are corrected in the isolated worktree.
+  DynamoDB owns one immutable context factory per saga type; the SQS low-level API accepts only a
+  sealed snapshot from the typed builder; user info/query/fragment are rejected centrally; queue and
+  topic caches receive immutable per-host capacity/max-age/clock options; SQS/SNS partial creation
+  preserves primary/cleanup causality; failed or cancelled completion loses the receive lock.
+- The non-packable benchmark no longer implements arbitrary host settings and instead consumes the
+  same sealed snapshot. Architecture commit `ad85105` binds this necessary two-path consumer scope.
+- Focused Release results are SQS 61/61 and DynamoDB 14/14, both with zero failure/skip. The complete
+  UnitArchitecture profile is 2055/2055 and the local run-scoped PostgreSQL/Azurite/LocalStack
+  profile is 149/149, everywhere with zero failure/skip. Unit, LocalIntegration, Benchmark and full
+  Engineering Release builds finish with zero warnings/errors.
+- The first fresh-worktree Unit run exposed missing generated MTP props for six not-yet-restored
+  LocalIntegration projects. After the required locked LocalIntegration restore, the unchanged
+  architecture test and complete Unit profile passed. `.testagent/research.md` retains this distinct
+  build-state diagnosis; no test or product rule was weakened.
+- This remains a technical candidate, not acceptance. Exact one-cause mutations, generated
+  CHANGELIST, a separate evidence child, remote backup, two independent read-only PASS reviews and
+  final architecture acceptance remain open. Real AWS and GitHub Actions remain untouched.
+
+## AWS native closure — review-correction evidence candidate
+
+- Technical Commit `1d6016f7`, Tree `62a2bbb1`, is frozen and remotely backed up. Fresh positive
+  execution against exactly that commit is UnitArchitecture 2,055/2,055 and LocalIntegration
+  149/149, with zero failure/skip. Unit, LocalIntegration and Engineering Release builds each finish
+  with zero warnings/errors; the local broker runner uses only PostgreSQL, Azurite and LocalStack on
+  dynamically allocated loopback ports.
+- Eleven exact one-cause mutants M24-M34 cover the typed DynamoDB owner, URI security, sealed/frozen
+  host snapshot, partial client cleanup/stack/aggregate order, queue/topic cache clock propagation,
+  failed-completion lock loss and fully built connection-disposal stack. All build and every owning
+  MTP invocation is causally red: 19 failed cases, seven green controls, zero skips. The disposable
+  mutation worktree is byte-clean at the Technical Commit after restoration.
+- A second diagnostic full LocalIntegration repeat left every AWS module green but observed the
+  inherited EF-only `InboxOutboxConcurrencyTests.ConcurrentRedeliveries_EnterTheConsumerOnceAndCommitOneEffectSet`
+  once at counter 2 instead of 3. The unchanged carrier passed immediately in isolation against a
+  fresh PostgreSQL fixture. This is transparent non-AWS follow-up evidence, not an AWS acceptance
+  count and not authorization to change the EF slice here.
+- The Evidence Child is not frozen or accepted yet. Generated CHANGELIST/SHA closure, two independent
+  read-only PASS reviews, remote backup and final architecture acceptance remain mandatory. Real AWS,
+  credentials and GitHub Actions remain untouched.
+
+## AWS native closure — final host-input correction candidate
+
+- The first product review of Technical `1d6016f7` and Evidence `7aa0ec82` returned PASS. The second
+  review confirmed the DynamoDB owner closure but found one remaining product-input gap: the central
+  address accepted an absolute hostless `amazonsqs:/scope` URI. It also found that M32 used the
+  correct occurrence index and mutant bytes but incorrectly described a repeated exchange line as a
+  one-occurrence literal.
+- The central address now rejects a missing URI host. Two direct public theories bind hostless and
+  relative URI inputs through both `AmazonSqsHostAddress` and `AmazonSqsHostConfigurator`, plus
+  null/empty/whitespace string-host inputs through the public string constructor. All five focused
+  cases pass after a zero-warning, zero-error Release build; the UnitArchitecture floor is 2,060 and
+  the focused SQS count is 66.
+- This remains a correction candidate. A new Technical freeze, full positive verification, three
+  separate host-input mutants, corrected unique M32 recipe, regenerated Evidence child, two new
+  independent read-only PASS reviews, remote backup and architecture acceptance remain mandatory.
+  Real AWS, credentials and GitHub Actions remain untouched.
+
+## AWS native closure — final host-input freeze
+
+- Technical `fba681ade996b48877497d71165426e1e92d4b0f`, Tree
+  `f5a7f4d2851595b605c9a6649b2945ae986d3267`, is frozen as the direct child of the preceding
+  reviewed Evidence. Its direct Evidence child is `2335df2ba241fbe44ac132d12467bcfba1e3a09e`,
+  Tree `7932fd9477731c04f6ab0f064eb889602d24e1a5`.
+- Fresh execution at the exact Technical freeze is UnitArchitecture 2,060/2,060 and
+  LocalIntegration 149/149, both with zero failure/skip. Unit, LocalIntegration and Engineering
+  locked restores and Release builds complete with zero warnings/errors. The SQS module is 66/66.
+- M35-M37 independently kill hostless URI, relative URI and null/empty/whitespace string-host
+  regressions. The re-bound M32 uses one unique full `Complete` method literal and kills both
+  failed/cancelled settlement axes. Four mutation builds pass; seven causal cases fail, two controls
+  pass and none skip. All targets restore byte-identically.
+- The Evidence directory contains 47 files with 46/46 nonmanifest hashes; CHANGELIST matches 8,424
+  generated entries. The only remaining local acceptance work is two independent read-only PASS
+  reviews, remote fast-forward and final architecture acceptance. Real AWS, credentials and GitHub
+  Actions remain untouched.
+
+## AWS native closure — independent final review result
+
+- Independent product/API and test/evidence red-team reviews both return PASS for Technical
+  `fba681ade996b48877497d71165426e1e92d4b0f`, Evidence
+  `2335df2ba241fbe44ac132d12467bcfba1e3a09e` and the status freeze
+  `ea49fef68d74fdfcf69ab64bb97c864be639e6a4`; neither review reports a BLOCKER, MAJOR or MINOR.
+- Both reviews independently confirm the five public invalid-host cases, the 2,060/149/66 positive
+  counts, the corrected unique M32 recipe, M35-M37 causality, byte-identical restoration and the
+  complete 47-file/46-hash Evidence closure.
+- A remote fast-forward was attempted only after both PASS results. The managed security gate
+  rejected repository-content egress because the exact payload and destination require explicit PO
+  approval. No workaround was attempted; the local branch remains four commits ahead of its remote.
+- The technical and evidence review is complete locally. Remote backup and final architecture
+  acceptance remain open; real AWS, credentials, costs and GitHub Actions remain untouched.
+
+## AWS native closure — remote backup completed
+
+- Following explicit PO approval, `origin/feature/aws-native-review-correction` was fast-forwarded
+  from `1d6016f78b2f903c691d12f6e8d4efa6929ba227` through the independently reviewed completion
+  status `6a8e0510c79fc24b74023ffe543a895120b8b904`.
+- This additive status-only child records the completed ServiceBus backup. After its own fast-forward,
+  only the final architecture acceptance and architecture-branch backup remain.
+- No real AWS resource, credential, cost-bearing operation or GitHub Actions run was introduced.
