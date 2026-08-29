@@ -1234,3 +1234,20 @@ future cohorts as complete.
 - The Evidence Child is not frozen or accepted yet. Generated CHANGELIST/SHA closure, two independent
   read-only PASS reviews, remote backup and final architecture acceptance remain mandatory. Real AWS,
   credentials and GitHub Actions remain untouched.
+
+## AWS native closure — final host-input correction candidate
+
+- The first product review of Technical `1d6016f7` and Evidence `7aa0ec82` returned PASS. The second
+  review confirmed the DynamoDB owner closure but found one remaining product-input gap: the central
+  address accepted an absolute hostless `amazonsqs:/scope` URI. It also found that M32 used the
+  correct occurrence index and mutant bytes but incorrectly described a repeated exchange line as a
+  one-occurrence literal.
+- The central address now rejects a missing URI host. Two direct public theories bind hostless and
+  relative URI inputs through both `AmazonSqsHostAddress` and `AmazonSqsHostConfigurator`, plus
+  null/empty/whitespace string-host inputs through the public string constructor. All five focused
+  cases pass after a zero-warning, zero-error Release build; the UnitArchitecture floor is 2,060 and
+  the focused SQS count is 66.
+- This remains a correction candidate. A new Technical freeze, full positive verification, three
+  separate host-input mutants, corrected unique M32 recipe, regenerated Evidence child, two new
+  independent read-only PASS reviews, remote backup and architecture acceptance remain mandatory.
+  Real AWS, credentials and GitHub Actions remain untouched.

@@ -81,6 +81,36 @@ public sealed class AmazonSqsHostConfigurationTests
         Assert.Equal(addressException.Message, configuratorException.Message);
     }
 
+    [Theory]
+    [InlineData("amazonsqs:/production", UriKind.Absolute, "must be specified")]
+    [InlineData("production", UriKind.Relative, "must be absolute")]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "host-uri-requires-absolute-address-and-host")]
+    public void HostUris_RequireAnAbsoluteAddressWithAHost(string address, UriKind uriKind, string expectedReason)
+    {
+        var uri = new Uri(address, uriKind);
+
+        AmazonSqsTransportConfigurationException addressException = Assert.Throws<AmazonSqsTransportConfigurationException>(
+            () => new AmazonSqsHostAddress(uri));
+        AmazonSqsTransportConfigurationException configuratorException = Assert.Throws<AmazonSqsTransportConfigurationException>(
+            () => new AmazonSqsHostConfigurator(uri));
+
+        Assert.Contains(expectedReason, addressException.Message, StringComparison.Ordinal);
+        Assert.Equal(addressException.Message, configuratorException.Message);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "string-host-rejects-null-empty-or-whitespace")]
+    public void StringHostConstruction_RejectsMissingHost(string? host)
+    {
+        AmazonSqsTransportConfigurationException exception = Assert.Throws<AmazonSqsTransportConfigurationException>(
+            () => new AmazonSqsHostAddress(host!, "/"));
+
+        Assert.Contains("must be specified", exception.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "immutable-host-snapshot-and-client-factories")]
     public void HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources()

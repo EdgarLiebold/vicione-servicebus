@@ -20,6 +20,8 @@ public readonly struct AmazonSqsHostAddress
 
         if (!address.IsAbsoluteUri)
             throw new AmazonSqsTransportConfigurationException("The Amazon SQS host URI must be absolute.");
+        if (string.IsNullOrWhiteSpace(address.Host))
+            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host must be specified.");
         if (!string.IsNullOrEmpty(address.UserInfo))
             throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI.");
         if (!string.IsNullOrEmpty(address.Query))

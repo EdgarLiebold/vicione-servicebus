@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2055 predeclared unfiltered cases;
+- `UnitArchitecture`: 2060 predeclared unfiltered cases;
 - `LocalIntegration`: 149 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -1913,3 +1913,14 @@ plan. It changes neither the 111-row R0 disposition nor the real-AWS External bo
 9. Freeze separate technical and direct evidence commits, push the correction branch, and require
    both independent reviewers to return PASS against the exact hashes before architecture acceptance.
    GitHub Actions remain disabled and real AWS remains untouched.
+
+## AWS native closure — final host-input correction
+
+The second independent Evidence review found one remaining public input gap: an absolute
+`amazonsqs:/scope` URI has no host but passed the central address boundary. Close that gap together
+with explicit carriers for the already intended relative-URI and string-host guards. The two new
+theories materialize five hermetic cases, raising the UnitArchitecture floor from 2055 to 2060 while
+LocalIntegration remains 149. Bind three separate one-cause mutations for hostless URI, relative URI
+and null/empty/whitespace string host. Regenerate the Evidence child and make M32's replacement
+literal encompass its unique `Complete` finally block rather than claiming the repeated exchange
+line is unique.
