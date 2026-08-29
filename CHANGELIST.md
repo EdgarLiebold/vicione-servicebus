@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3680 |
+| Added | 3684 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -682,6 +682,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M04.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M05.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_M06.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_POSTCOMMIT_CHANGE_LIST_CHECK.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_POSTCOMMIT_RECONSTRUCTION.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_POSTCOMMIT_SCAN.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_POSTCOMMIT_STATUS_POLICY_CHECK.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_STATUS_POLICY_CHECK.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-IDENTITY/FREP02_FINAL_TECHNICAL.diff.gz` | Added |  |
