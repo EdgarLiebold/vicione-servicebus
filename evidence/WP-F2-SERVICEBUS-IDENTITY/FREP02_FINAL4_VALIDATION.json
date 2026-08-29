@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 4,
+  "subject": "F-REP-02 final owner, branch-provenance and semantic-authority closure",
+  "supersedes": {
+    "technicalCommit": "0451de02425d6faab3bf8ef50ee1cc271264596e",
+    "evidenceCommit": "5711faceb40c6a4512bb606e5768e6032a449141",
+    "auditCommit": "e1600d0e10062caa7ff30f4907ebde4d7ebdc21b",
+    "reason": "declaration owner, branch history and semantic-authority symlink boundaries were incomplete"
+  },
+  "technicalRangeBase": "e1600d0e10062caa7ff30f4907ebde4d7ebdc21b",
+  "technicalCommits": [
+    {
+      "commit": "6399bbfc57afa936810a8526e10242d0867508d7",
+      "tree": "800b070a3b55884e0e828699573f1b0ccf3cc494",
+      "parent": "e1600d0e10062caa7ff30f4907ebde4d7ebdc21b"
+    },
+    {
+      "commit": "2bdf49bd9e559cc366006261920e3590e27f4629",
+      "tree": "06a7697410886e39c33d38eba6436dbd39032994",
+      "parent": "6399bbfc57afa936810a8526e10242d0867508d7"
+    },
+    {
+      "commit": "ca38261b35886bbf602fa6c4c6d08dfbef9a831a",
+      "tree": "27dd959bfec743079e0eaf9df48c04dcaf7b9c21",
+      "parent": "2bdf49bd9e559cc366006261920e3590e27f4629"
+    },
+    {
+      "commit": "dea4c403c83ebcf9db1007448202dd05b38d78a7",
+      "tree": "af2d91ebc3f94d25c35ca23281b25ca594574b67",
+      "parent": "ca38261b35886bbf602fa6c4c6d08dfbef9a831a"
+    },
+    {
+      "commit": "e0a7f66142bf9b5a7b6cb2872af0ff6447929abd",
+      "tree": "9b1e0b54aff0fa3fb8b39334f1d86b04c1dce190",
+      "parent": "dea4c403c83ebcf9db1007448202dd05b38d78a7"
+    }
+  ],
+  "technicalScope": [
+    "tools/identity/identity_gate.py",
+    "tools/identity/test_identity_gate.py"
+  ],
+  "candidateSnapshot": {
+    "definition": "tracked plus non-ignored untracked Git blobs",
+    "semanticAuthority": [
+      "historical identity policy",
+      "NOTICE",
+      "MODIFICATIONS.md",
+      "LICENSE.txt",
+      "project inventory"
+    ],
+    "authoritySymlinks": "FAIL_CLOSED",
+    "csharpSymlinks": "FAIL_CLOSED",
+    "ignoredProjectsAdmitted": 0,
+    "ignoredBuildArtifactsInPackageInventory": 0
+  },
+  "declarationProjection": {
+    "contract": "conservative all-branch CSharp declaration-source identity; it does not claim compiler semantic evaluation",
+    "namespaceAndContainingTypeBound": true,
+    "declarationAttributesBound": true,
+    "completeIfElifElseHistoryBound": true,
+    "commentAwareDirectiveScan": true,
+    "identityMappingBeforeTokenization": true,
+    "publicDeclarationRecords": 43520,
+    "currentProductDeclarations": 24756,
+    "currentAdded": 1711,
+    "dispositions": {
+      "MAPPED_PRESENT": 27724,
+      "MODIFIED_OR_REMOVED": 1642,
+      "RETIRED_PATH": 12443,
+      "CURRENT_ADDED": 1711
+    }
+  },
+  "candidateScan": {
+    "status": "PASS",
+    "findings": 0,
+    "baselinePaths": 5654,
+    "changedOrRetiredBaselinePaths": 5650,
+    "liveBaselineTargetsWithGitIdentity": 4206,
+    "sourceResult": "SOURCE_IDENTITY_GATE.json",
+    "sourceResultSha256": "a3df3a14a039e8cbcbdc780d69a044b0db0b3ee18128f8fc4be2dee577d90ba8"
+  },
+  "packageInventory": {
+    "projects": 64,
+    "ignoredArtifacts": 0,
+    "sha256": "37443c9d77d3671beb27089e3d3514b911fc90fd684d7db52e60dfc2a497e363",
+    "artifactEvidenceOwner": "ARTIFACT_GATE.json"
+  },
+  "tests": {
+    "identityExecuted": 142,
+    "identityPassed": 142,
+    "identityFailed": 0,
+    "identityRawLog": "FREP02_FINAL4_IDENTITY_SELFTESTS.log",
+    "identityRawLogSha256": "d4da87bc17ae1dc916a5c34d7297b555f904a0ffa41bcb043e29cef4808d42c0",
+    "verificationModelStatus": "PASS",
+    "verificationModelRawLog": "FREP02_FINAL4_VERIFICATION_MODEL.log",
+    "verificationModelRawLogSha256": "c0093c3336844a391b7e7685ec5b37dba34ec7a7e931f02e5fe32f17a86034d0",
+    "ciToolSelftests": "INHERITED_UNCHANGED_FROM_FINAL2_257_OF_257"
+  },
+  "counterMutations": {
+    "manifest": "FREP02_FINAL4_COUNTER_MUTATIONS.json",
+    "manifestSha256": "100a610d2d3b420f1aebe860268d7ef4dc9bdfa9a1e6ddf78dc0c18978080801",
+    "combinedRawLog": "FREP02_FINAL4_MUTATIONS.log",
+    "combinedRawLogSha256": "fd76b2cb58f0da7d25386a614a9cb227b9c05ad9a200c72f03240860b8a98bec",
+    "mutationIds": [
+      "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19",
+      "M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27"
+    ],
+    "allOccurrenceCounts": 1,
+    "allExitCodes": 1,
+    "baselineAndPostRestoreSha256": "ab34d2e9c47cd929399f6a0d2fbf4c8f84b743a43e0c696dce6f54042a1b5319"
+  },
+  "technicalPatch": {
+    "path": "FREP02_FINAL4_TECHNICAL.diff.gz",
+    "compression": "gzip -n",
+    "sha256": "02919ac7c3e957278b12be27eadf21aa26b577f9949b5cd798b7824d541c1d1b"
+  },
+  "generatedContractManifest": {
+    "path": "GENERATED_SHA256SUMS",
+    "sha256": "89cb38a3a5fccb324d7aa5ee837ed3e27f2c4a34ace8b306940c8c2995fd312f",
+    "entries": 5
+  },
+  "executionBoundary": {
+    "dotnetOrMsbuildStarted": false,
+    "containerStarted": false,
+    "networkUsed": false,
+    "pythonBytecodeCache": "/private/tmp/frep02-pycache"
+  }
+}

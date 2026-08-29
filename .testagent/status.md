@@ -1935,3 +1935,20 @@ future cohorts as complete.
   all M11-M19 replacements with one occurrence and the declared mutant hash.
 - The remaining gates are the final audit hash/CHANGELIST child and two independent read-only PASS
   reviews. F-REP-02 remains local and open; no commit in this correction chain has been pushed.
+
+## 2026-08-29 — F-REP-02 FINAL4 owner and authority closure
+
+- The preceding FINAL3 chain ending at audit `e1600d0e10062caa7ff30f4907ebde4d7ebdc21b`
+  is superseded for acceptance: final review found declaration-owner, conditional-branch-provenance
+  and semantic-authority symlink gaps.
+- The final Technical range is `e1600d0e...e0a7f66142bf9b5a7b6cb2872af0ff6447929abd`
+  (tree `9b1e0b54aff0fa3fb8b39334f1d86b04c1dce190`) and changes only
+  `tools/identity/identity_gate.py` and `tools/identity/test_identity_gate.py`.
+- Namespace, containing-type and declaration-attribute identity, complete `if/elif/else` provenance,
+  comment-aware directives and pre-tokenization identity mapping are closed. Historical policy,
+  NOTICE, MODIFICATIONS, LICENSE and project inventory consume regular Git-candidate bytes and reject
+  symlink authority.
+- The full projection has 5,654 baseline records, 4,206 live Git identities, 43,520 declaration
+  records, 24,756 current product declarations, 1,711 `CURRENT_ADDED` records and zero findings.
+- A direct Evidence child, committed-tree replay and two independent read-only reviews remain
+  mandatory. This closure is local and has not been pushed.

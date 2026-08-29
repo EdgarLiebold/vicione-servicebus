@@ -1,0 +1,27 @@
+Retained capabilities and how each one is verified:
+
+  test-framework                     COMPILE_AND_PACK_PROOF        no required run
+  benchmarks                         DEVELOPER_TOOL_COMPILE_PROOF  benchmarks
+  diagnostics                        DEVELOPER_TOOL_COMPILE_PROOF  diagnostics
+  order-workflow-sample              DEVELOPER_TOOL_COMPILE_PROOF  no required run
+  core                               LOCAL_REQUIRED_RUN            core
+  serialization-messagepack          LOCAL_REQUIRED_RUN            no required run
+  state-machine-visualizer           LOCAL_REQUIRED_RUN            no required run
+  abstractions                       NATIVE_TEST_ESTATE            no required run
+  analyzers                          NATIVE_TEST_ESTATE            no required run
+  message-data-amazon-s3             NATIVE_TEST_ESTATE            no required run
+  persistence-azure-table            NATIVE_TEST_ESTATE            no required run
+  persistence-dynamodb               NATIVE_TEST_ESTATE            no required run
+  persistence-entity-framework-core  NATIVE_TEST_ESTATE            no required run
+  scheduling-quartz                  NATIVE_TEST_ESTATE            no required run
+  signalr                            NATIVE_TEST_ESTATE            no required run
+  transport-activemq                 NATIVE_TEST_ESTATE            no required run
+  transport-amazon-sqs               NATIVE_TEST_ESTATE            no required run
+  transport-rabbitmq                 PINNED_FIXTURE_REQUIRED_RUN   rabbitmq
+  transport-sql                      PINNED_FIXTURE_REQUIRED_RUN   sql-transport
+  message-data-azure-storage         REAL_EPHEMERAL_CLOUD          no required run
+  rider-azure-event-hubs             REAL_EPHEMERAL_CLOUD          no required run
+  transport-azure-service-bus        REAL_EPHEMERAL_CLOUD          no required run
+  test-infrastructure                SUPPORT_LIBRARY               no required run
+
+A capability that is not listed here is not part of this product.
