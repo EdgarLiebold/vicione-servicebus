@@ -1,7 +1,9 @@
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql;
 
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Npgsql;
+using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -84,6 +86,43 @@ public sealed class PostgreSqlProvisioningTests
         Assert.True(routines > 0);
     }
 
+    [Theory]
+    [InlineData(true, true, true, "database,schema,infrastructure")]
+    [InlineData(true, false, false, "database")]
+    [InlineData(false, true, false, "schema")]
+    [InlineData(false, false, true, "infrastructure")]
+    [RequirementCoverage("OBL-R0-SQL-0130", "postgresql-native-owner")]
+    public async Task MigrationStartup_InvokesOnlyTheIndependentlyEnabledStagesInStableOrder(
+        bool createDatabase,
+        bool createSchema,
+        bool createInfrastructure,
+        string expectedCalls)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var migrator = new RecordingMigrator();
+        var transportOptions = new SqlTransportOptions { Database = "owner-database" };
+        var migrationOptions = new SqlTransportMigrationOptions
+        {
+            CreateDatabase = createDatabase,
+            CreateSchema = createSchema,
+            CreateInfrastructure = createInfrastructure,
+        };
+        var service = new SqlTransportMigrationHostedService(
+            migrator,
+            NullLogger<SqlTransportMigrationHostedService>.Instance,
+            Options.Create(migrationOptions),
+            Options.Create(transportOptions));
+
+        await service.StartAsync(cancellationToken);
+
+        Assert.Equal(expectedCalls.Split(','), migrator.Calls.Select(call => call.Stage));
+        Assert.All(migrator.Calls, call =>
+        {
+            Assert.Same(transportOptions, call.Options);
+            Assert.Equal(cancellationToken, call.CancellationToken);
+        });
+    }
+
     private static async Task<long> RoutineCount(
         NpgsqlConnection connection,
         string schema,
@@ -95,4 +134,32 @@ public sealed class PostgreSqlProvisioningTests
         command.Parameters.AddWithValue("schema", schema);
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
+
+    private sealed class RecordingMigrator : ISqlTransportDatabaseMigrator
+    {
+        public List<MigrationCall> Calls { get; } = [];
+
+        public Task CreateDatabase(SqlTransportOptions options, CancellationToken cancellationToken = default) =>
+            Record("database", options, cancellationToken);
+
+        public Task CreateSchemaIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken = default) =>
+            Record("schema", options, cancellationToken);
+
+        public Task CreateInfrastructure(SqlTransportOptions options, CancellationToken cancellationToken = default) =>
+            Record("infrastructure", options, cancellationToken);
+
+        public Task DeleteDatabase(SqlTransportOptions options, CancellationToken cancellationToken = default) =>
+            Record("delete", options, cancellationToken);
+
+        private Task Record(string stage, SqlTransportOptions options, CancellationToken cancellationToken)
+        {
+            Calls.Add(new MigrationCall(stage, options, cancellationToken));
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed record MigrationCall(
+        string Stage,
+        SqlTransportOptions Options,
+        CancellationToken CancellationToken);
 }
