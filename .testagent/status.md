@@ -1213,3 +1213,24 @@ future cohorts as complete.
 - This remains a technical candidate, not acceptance. Exact one-cause mutations, generated
   CHANGELIST, a separate evidence child, remote backup, two independent read-only PASS reviews and
   final architecture acceptance remain open. Real AWS and GitHub Actions remain untouched.
+
+## AWS native closure — review-correction evidence candidate
+
+- Technical Commit `1d6016f7`, Tree `62a2bbb1`, is frozen and remotely backed up. Fresh positive
+  execution against exactly that commit is UnitArchitecture 2,055/2,055 and LocalIntegration
+  149/149, with zero failure/skip. Unit, LocalIntegration and Engineering Release builds each finish
+  with zero warnings/errors; the local broker runner uses only PostgreSQL, Azurite and LocalStack on
+  dynamically allocated loopback ports.
+- Eleven exact one-cause mutants M24-M34 cover the typed DynamoDB owner, URI security, sealed/frozen
+  host snapshot, partial client cleanup/stack/aggregate order, queue/topic cache clock propagation,
+  failed-completion lock loss and fully built connection-disposal stack. All build and every owning
+  MTP invocation is causally red: 19 failed cases, seven green controls, zero skips. The disposable
+  mutation worktree is byte-clean at the Technical Commit after restoration.
+- A second diagnostic full LocalIntegration repeat left every AWS module green but observed the
+  inherited EF-only `InboxOutboxConcurrencyTests.ConcurrentRedeliveries_EnterTheConsumerOnceAndCommitOneEffectSet`
+  once at counter 2 instead of 3. The unchanged carrier passed immediately in isolation against a
+  fresh PostgreSQL fixture. This is transparent non-AWS follow-up evidence, not an AWS acceptance
+  count and not authorization to change the EF slice here.
+- The Evidence Child is not frozen or accepted yet. Generated CHANGELIST/SHA closure, two independent
+  read-only PASS reviews, remote backup and final architecture acceptance remain mandatory. Real AWS,
+  credentials and GitHub Actions remain untouched.

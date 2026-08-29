@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "subject": {
+    "technicalCommit": "1d6016f78b2f903c691d12f6e8d4efa6929ba227",
+    "technicalTree": "62a2bbb154b0c3316fcfc848baf9d53f144b7844",
+    "technicalParent": "a6c97049ca4d91bba834170fc202c4d437a187a6",
+    "technicalPatchSha256": "a8edba8dc2a6f8f2ea02c7808df8dad78ae8264bd39626ff5620fe711a40db23",
+    "architectureScopeCommits": [
+      {
+        "commit": "c7a8b28acb709769343c3646e38b58733986c8cb",
+        "tree": "c5681362959241849817c1047743cd79c7812b79"
+      },
+      {
+        "commit": "ad8510539d0c62c6906b59b3c8e108c4d5cde7cc",
+        "tree": "fcbfafdd2aef453aa5249f364557b9b25066af0e"
+      }
+    ]
+  },
+  "positive": {
+    "unitArchitecture": {
+      "command": "env VICIONE_TESTS__Profile=UnitArchitecture DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages MSBUILDDISABLENODEREUSE=1 /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory /private/tmp/vsb-aws-review-evidence-final/positive/unit-results --minimum-expected-tests 2055 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "modules": 17,
+      "tests": 2055,
+      "passed": 2055,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "evidenceDirectory": "positive/unit-modules"
+    },
+    "localIntegration": {
+      "command": "env VICIONE_TESTS__Profile=LocalIntegration DOTNET_CLI_HOME=/private/tmp/vsb-dotnet-home DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1 DOTNET_MULTILEVEL_LOOKUP=0 NUGET_PACKAGES=/Users/edgar.liebold/.nuget/packages MSBUILDDISABLENODEREUSE=1 python3 -B tools/ci/run_broker_category.py --broker postgres --broker azurite --broker localstack --evidence-dir /private/tmp/vsb-aws-review-evidence-final/positive/local-fixture --command -- /usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx --configuration Release --no-build --no-restore --results-directory /private/tmp/vsb-aws-review-evidence-final/positive/local-results --minimum-expected-tests 149 --max-parallel-test-modules 1 --report-xunit-ctrf",
+      "runIdentity": "vicione-0de4f67f232f",
+      "brokers": ["postgres", "azurite", "localstack"],
+      "endpointBinding": "loopback-only dynamic ports",
+      "modules": 6,
+      "tests": 149,
+      "passed": 149,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "evidenceDirectory": "positive/local-modules",
+      "fixtureEvidenceDirectory": "positive/local-fixture"
+    },
+    "focused": {
+      "amazonSqs": { "tests": 61, "passed": 61, "failed": 0, "skipped": 0 },
+      "dynamoDb": { "tests": 14, "passed": 14, "failed": 0, "skipped": 0 }
+    },
+    "builds": [
+      { "subject": "ViciOne.ServiceBus.Tests.Unit.slnx", "configuration": "Release", "exitCode": 0, "warnings": 0, "errors": 0, "restoreEvidence": "positive/binlogs/unit-restore.binlog", "buildEvidence": "positive/binlogs/unit-build.binlog" },
+      { "subject": "ViciOne.ServiceBus.Tests.LocalIntegration.slnx", "configuration": "Release", "exitCode": 0, "warnings": 0, "errors": 0, "restoreEvidence": "positive/binlogs/local-restore.binlog", "buildEvidence": "positive/binlogs/local-build.binlog" },
+      { "subject": "ViciOne.ServiceBus.Engineering.slnx", "configuration": "Release", "exitCode": 0, "warnings": 0, "errors": 0, "restoreEvidence": "positive/binlogs/engineering-restore.binlog", "buildEvidence": "positive/binlogs/engineering-build.binlog" }
+    ],
+    "tooling": {
+      "ciToolSelfTests": { "tests": 257, "passed": 257, "failed": 0, "evidence": "positive/ci-tool-selftests.log" },
+      "identitySelfTests": { "tests": 103, "passed": 103, "failed": 0, "evidence": "positive/identity-selftests.log" },
+      "verificationModel": { "exitCode": 0, "evidence": "positive/verification-model.log" },
+      "changeList": { "exitCode": 0, "evidence": "positive/change-list.log" }
+    }
+  },
+  "mutations": {
+    "range": "M24-M34",
+    "count": 11,
+    "buildExitCodes": { "0": 11 },
+    "testExitCodes": { "2": 11 },
+    "testCases": 26,
+    "passedControls": 7,
+    "failedCausalCases": 19,
+    "skipped": 0,
+    "manifest": "MUTATION_MANIFEST.json"
+  },
+  "externalBoundary": {
+    "realAwsUsed": false,
+    "credentialsUsed": false,
+    "githubActionsTriggered": false,
+    "localStackOnly": true
+  }
+}

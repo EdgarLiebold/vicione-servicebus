@@ -1,0 +1,1398 @@
+diff --git a/.github/workflows/native-tests.yml b/.github/workflows/native-tests.yml
+index 8369b7e2..0f35f996 100644
+--- a/.github/workflows/native-tests.yml
++++ b/.github/workflows/native-tests.yml
+@@ -37,7 +37,7 @@ jobs:
+       - name: Build release test binaries
+         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+       - name: Run the complete profile without filters
+-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2043 --max-parallel-test-modules 1
++        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 --max-parallel-test-modules 1
+ 
+   local-integration:
+     name: "Required: Native Local Integration"
+diff --git a/.testagent/plan.md b/.testagent/plan.md
+index 6cfad2f2..55603783 100644
+--- a/.testagent/plan.md
++++ b/.testagent/plan.md
+@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
+ 
+ ## Current profile floors
+ 
+-- `UnitArchitecture`: 2043 predeclared unfiltered cases;
++- `UnitArchitecture`: 2055 predeclared unfiltered cases;
+ - `LocalIntegration`: 149 predeclared unfiltered cases.
+ 
+ The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
+@@ -1901,7 +1901,8 @@ plan. It changes neither the 111-row R0 disposition nor the real-AWS External bo
+    `ValidateLockStatus` fails closed.
+ 6. Update the passive AWS requirement projection with unique variants for each new carrier. Use
+    xUnit 4/MTP v2, source-mirrored namespaces, fresh subjects, exact identities and bounded causal
+-   barriers. Do not add LocalIntegration cases for hermetic configuration/ownership defects.
++   barriers. The twelve materialized cases raise the UnitArchitecture floor from 2043 to 2055;
++   LocalIntegration remains 149 because these are hermetic configuration/ownership defects.
+ 7. Run focused locked Release builds and tests, then full UnitArchitecture, LocalIntegration and
+    Engineering profiles with isolated CLI home, build-server/node reuse disabled and no shared
+    compilation. A restricted-sandbox NamedPipe failure is rerun unchanged outside the sandbox; tests
+diff --git a/.testagent/research.md b/.testagent/research.md
+index 2e7a0f25..1d5dcd57 100644
+--- a/.testagent/research.md
++++ b/.testagent/research.md
+@@ -2312,3 +2312,16 @@ real AWS remains External and no cloud credential, resource or cost is introduce
+ These are product defects, not test accommodations. The correction adds direct causal carriers and
+ one-cause mutations for every branch, retains all previously green S3 and AWS provider boundaries,
+ and does not reclassify any External row as locally executed.
++
++### Local build-state diagnosis retained for future runs
++
++In a fresh isolated worktree, a UnitArchitecture run performed immediately after restoring only
++`ViciOne.ServiceBus.Tests.Unit.slnx` produced one failure in
++`EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery`. Read-only per-project
++evaluation identified exactly the six LocalIntegration projects: their generated NuGet/MTP props did
++not yet exist, so `IsTestingPlatformApplication` evaluated empty. The product and all 61 SQS plus 14
++DynamoDB focused cases were already green. This is neither a test assertion to weaken nor a sandbox
++failure. The complete repository-local verification order must restore both UnitArchitecture and
++LocalIntegration locked graphs before running the architecture module, because that module
++deliberately evaluates all `tests2` projects. Restricted-sandbox NamedPipe/process failures remain a
++different diagnosis and use the already established unchanged-command outside-sandbox rerun.
+diff --git a/.testagent/status.md b/.testagent/status.md
+index 01239802..81324566 100644
+--- a/.testagent/status.md
++++ b/.testagent/status.md
+@@ -1192,3 +1192,24 @@ future cohorts as complete.
+ - This is a pre-implementation checkpoint, not an acceptance claim. Product/test changes, local
+   execution, mutation evidence, separate technical/evidence freezes, two independent PASS reviews,
+   remote backup and final architecture acceptance remain mandatory.
++
++## AWS native closure — review-correction technical candidate
++
++- All five independently reproduced product boundaries are corrected in the isolated worktree.
++  DynamoDB owns one immutable context factory per saga type; the SQS low-level API accepts only a
++  sealed snapshot from the typed builder; user info/query/fragment are rejected centrally; queue and
++  topic caches receive immutable per-host capacity/max-age/clock options; SQS/SNS partial creation
++  preserves primary/cleanup causality; failed or cancelled completion loses the receive lock.
++- The non-packable benchmark no longer implements arbitrary host settings and instead consumes the
++  same sealed snapshot. Architecture commit `ad85105` binds this necessary two-path consumer scope.
++- Focused Release results are SQS 61/61 and DynamoDB 14/14, both with zero failure/skip. The complete
++  UnitArchitecture profile is 2055/2055 and the local run-scoped PostgreSQL/Azurite/LocalStack
++  profile is 149/149, everywhere with zero failure/skip. Unit, LocalIntegration, Benchmark and full
++  Engineering Release builds finish with zero warnings/errors.
++- The first fresh-worktree Unit run exposed missing generated MTP props for six not-yet-restored
++  LocalIntegration projects. After the required locked LocalIntegration restore, the unchanged
++  architecture test and complete Unit profile passed. `.testagent/research.md` retains this distinct
++  build-state diagnosis; no test or product rule was weakened.
++- This remains a technical candidate, not acceptance. Exact one-cause mutations, generated
++  CHANGELIST, a separate evidence child, remote backup, two independent read-only PASS reviews and
++  final architecture acceptance remain open. Real AWS and GitHub Actions remain untouched.
+diff --git a/CHANGELIST.md b/CHANGELIST.md
+index d958cc30..f5ebce19 100644
+--- a/CHANGELIST.md
++++ b/CHANGELIST.md
+@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ 
+ | Status | Count |
+ |---|---|
+-| Added | 2659 |
+-| Modified | 4213 |
+-| Deleted | 1435 |
++| Added | 2662 |
++| Modified | 4212 |
++| Deleted | 1436 |
+ | Renamed | 2 |
+ 
+ | Path | Status | Baseline path |
+@@ -26,6 +26,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ | `.github/workflows/native-tests.yml` | Added |  |
+ | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
+ | `.gitignore` | Modified | `.gitignore` |
++| `.testagent/activemq-native-obligation-map.tsv` | Added |  |
+ | `.testagent/aws-native-obligation-map.tsv` | Added |  |
+ | `.testagent/plan.md` | Added |  |
+ | `.testagent/research.md` | Added |  |
+@@ -2182,6 +2183,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/DynamoDbSagaRepositoryRegistrationExtensions.cs` |
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/IDynamoDbSagaRepositoryConfigurator.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/Configuration/IDynamoDbSagaRepositoryConfigurator.cs` |
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DatabaseContext.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DatabaseContext.cs` |
++| `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbContextFactory.cs` | Added |  |
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbDatabaseContext.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbDatabaseContext.cs` |
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSaga.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSaga.cs` |
+ | `src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs` | Modified | `src/Persistence/MassTransit.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs` |
+@@ -2329,6 +2331,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ | `src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/packages.lock.json` | Added |  |
+ | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/Exceptions/ActiveMqConnectException.cs` |
+ | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.ActiveMqTransport/NullableAttributes.cs` |
++| `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` |
+ | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Configuration/AmazonSqsMessageSchedulerExtensions.cs` |
+ | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/NullableAttributes.cs` |
+ | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` | Deleted | `src/Transports/MassTransit.AmazonSqsTransport/Testing/AmazonSqsTestHarness.cs` |
+@@ -2631,6 +2634,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsSendContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsSendContext.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsSendContextExtensions.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContext.cs` |
++| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs` | Added |  |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsDelay.cs` | Added |  |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsHeaderProvider.cs` |
+@@ -2648,7 +2652,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContext.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContext.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextBatchSettings.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextBatchSettings.cs` |
+-| `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextFactory.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextFactory.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextSupervisor.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/ClientContextSupervisor.cs` |
+ | `src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsBusConfiguration.cs` | Modified | `src/Transports/MassTransit.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsBusConfiguration.cs` |
+diff --git a/README.md b/README.md
+index 6519c0e8..c9f7bbe0 100644
+--- a/README.md
++++ b/README.md
+@@ -59,7 +59,7 @@ materialized hermetic profile runs directly through the .NET 10 CLI:
+ dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+ dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
+-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2043 \
++  --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 \
+   --max-parallel-test-modules 1
+ ```
+ 
+diff --git a/benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs b/benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs
+index 38005b9a..47cbed36 100644
+--- a/benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs
++++ b/benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs
+@@ -12,8 +12,7 @@ namespace ViciOneServiceBusBenchmark
+ 
+ 
+     class AmazonSqsOptionSet :
+-        OptionSet,
+-        AmazonSqsHostSettings
++        OptionSet
+     {
+         string _accessKey;
+         AWSCredentials _credentials;
+@@ -54,15 +53,25 @@ public AWSCredentials Credentials
+         public string AccessKey => (_immutableCredentials ??= GetImmutableCredentials()).AccessKey;
+         public string SecretKey => (_immutableCredentials ??= GetImmutableCredentials()).SecretKey;
+ 
+-        public AllowTransportHeader AllowTransportHeader { get; set; }
+-
+-        public bool ScopeTopics => false;
+-
+         public Uri HostAddress { get; private set; }
+ 
+-        public IConnection CreateConnection()
++        public AmazonSqsHostSettings HostSettings
+         {
+-            return new Connection(Credentials, Region, AmazonSqsConfig, AmazonSnsConfig);
++            get
++            {
++                var configurator = new ViciOne.ServiceBus.AmazonSqsTransport.Configuration.AmazonSqsHostConfigurator(HostAddress);
++                configurator.ClientFactories(
++                    () => Credentials == null
++                        ? new AmazonSQSClient(AmazonSqsConfig)
++                        : new AmazonSQSClient(Credentials, AmazonSqsConfig),
++                    () => Credentials == null
++                        ? new AmazonSimpleNotificationServiceClient(AmazonSnsConfig)
++                        : new AmazonSimpleNotificationServiceClient(Credentials, AmazonSnsConfig));
++                if (!string.IsNullOrWhiteSpace(Scope))
++                    configurator.Scope(Scope, false);
++
++                return configurator.Settings;
++            }
+         }
+ 
+         public override string ToString()
+diff --git a/benchmarks/ViciOne.ServiceBus.Benchmark/Program.cs b/benchmarks/ViciOne.ServiceBus.Benchmark/Program.cs
+index 4e13026a..d3113776 100644
+--- a/benchmarks/ViciOne.ServiceBus.Benchmark/Program.cs
++++ b/benchmarks/ViciOne.ServiceBus.Benchmark/Program.cs
+@@ -152,7 +152,7 @@ static async Task RunLatencyBenchmark(ProgramOptionSet optionSet)
+ 
+                 amazonSqsOptionSet.ShowOptions();
+ 
+-                transport = new AmazonSqsMessageLatencyTransport(amazonSqsOptionSet, settings);
++                transport = new AmazonSqsMessageLatencyTransport(amazonSqsOptionSet.HostSettings, settings);
+             }
+             else if (optionSet.Transport == ProgramOptionSet.TransportOptions.ActiveMq)
+             {
+diff --git a/docs/build.md b/docs/build.md
+index dfa62554..9a1cbd81 100644
+--- a/docs/build.md
++++ b/docs/build.md
+@@ -55,7 +55,7 @@ the native MTP command form and no VSTest argument separator:
+ ```bash
+ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
+   -c Release --no-build --no-restore \
+-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2043 \
++  --results-directory artifacts/test-results/unit --minimum-expected-tests 2055 \
+   --max-parallel-test-modules 1
+ 
+ VICIONE_TESTS__Profile=LocalIntegration \
+diff --git a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs
+index b4b44dae..36daa329 100644
+--- a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs
++++ b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/Configuration/Configuration/DynamoDbSagaRepositoryConfigurator.cs
+@@ -66,7 +66,7 @@ public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator
+             Func<IServiceProvider, IDynamoDBContext> contextFactory = _contextFactory
+                 ?? throw new InvalidOperationException("The DynamoDB context factory must be configured before registration.");
+ 
+-            configurator.TryAddSingleton<Func<IDynamoDBContext>>(provider => () => contextFactory(provider));
++            configurator.TryAddSingleton(provider => new DynamoDbContextFactory<TSaga>(() => contextFactory(provider)));
+             configurator.TryAddSingleton(new DynamoDbSagaRepositoryOptions<TSaga>(TableName, Expiration, TimeProvider, ConsistentRead,
+                 IsEmptyStringValueEnabled, RetrieveDateTimeInUtc, Conversion));
+             configurator.RegisterLoadSagaRepository<TSaga, DynamoDbSagaRepositoryContextFactory<TSaga>>();
+diff --git a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbContextFactory.cs b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbContextFactory.cs
+new file mode 100644
+index 00000000..1df2d45e
+--- /dev/null
++++ b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbContextFactory.cs
+@@ -0,0 +1,19 @@
++namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga;
++
++using System;
++using Amazon.DynamoDBv2.DataModel;
++
++
++internal sealed class DynamoDbContextFactory<TSaga>
++    where TSaga : class, ISagaVersion
++{
++    readonly Func<IDynamoDBContext> _contextFactory;
++
++    public DynamoDbContextFactory(Func<IDynamoDBContext> contextFactory)
++    {
++        _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
++    }
++
++    public IDynamoDBContext Create() =>
++        _contextFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
++}
+diff --git a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs
+index 945979fe..41cef4a1 100644
+--- a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs
++++ b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepository.cs
+@@ -17,7 +17,8 @@ public static class DynamoDbSagaRepository<TSaga>
+ 
+             var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
+ 
+-            var repositoryContextFactory = new DynamoDbSagaRepositoryContextFactory<TSaga>(dynamoDbFactory, consumeContextFactory, options);
++            var contextFactory = new DynamoDbContextFactory<TSaga>(dynamoDbFactory);
++            var repositoryContextFactory = new DynamoDbSagaRepositoryContextFactory<TSaga>(contextFactory, consumeContextFactory, options);
+ 
+             return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
+         }
+diff --git a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryContextFactory.cs b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryContextFactory.cs
+index 624e5b1a..86918e6b 100644
+--- a/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryContextFactory.cs
++++ b/src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryContextFactory.cs
+@@ -7,16 +7,16 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
+     using ViciOne.ServiceBus.Saga;
+ 
+ 
+-    public class DynamoDbSagaRepositoryContextFactory<TSaga> :
++    internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
+         ISagaRepositoryContextFactory<TSaga>,
+         ILoadSagaRepositoryContextFactory<TSaga>
+         where TSaga : class, ISagaVersion
+     {
+-        readonly Func<IDynamoDBContext> _databaseFactory;
++        readonly DynamoDbContextFactory<TSaga> _databaseFactory;
+         readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
+         readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
+ 
+-        public DynamoDbSagaRepositoryContextFactory(Func<IDynamoDBContext> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
++        public DynamoDbSagaRepositoryContextFactory(DynamoDbContextFactory<TSaga> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
+             DynamoDbSagaRepositoryOptions<TSaga> options)
+         {
+             _databaseFactory = databaseFactory ?? throw new ArgumentNullException(nameof(databaseFactory));
+@@ -28,7 +28,7 @@ public class DynamoDbSagaRepositoryContextFactory<TSaga> :
+         public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+             where T : class
+         {
+-            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
++            var database = _databaseFactory.Create();
+ 
+             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
+             try
+@@ -51,7 +51,7 @@ public void Probe(ProbeContext context)
+         public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+             where T : class
+         {
+-            var database = _databaseFactory() ?? throw new InvalidOperationException("The DynamoDB context factory returned null.");
++            var database = _databaseFactory.Create();
+ 
+             var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
+             try
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
+index 41b8a6e7..b63946e8 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostAddress.cs
+@@ -16,6 +16,17 @@ namespace ViciOne.ServiceBus;
+ 
+     public AmazonSqsHostAddress(Uri address)
+     {
++        ArgumentNullException.ThrowIfNull(address);
++
++        if (!address.IsAbsoluteUri)
++            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host URI must be absolute.");
++        if (!string.IsNullOrEmpty(address.UserInfo))
++            throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI.");
++        if (!string.IsNullOrEmpty(address.Query))
++            throw new AmazonSqsTransportConfigurationException("Query parameters are not supported in an Amazon SQS host URI.");
++        if (!string.IsNullOrEmpty(address.Fragment))
++            throw new AmazonSqsTransportConfigurationException("Fragments are not supported in an Amazon SQS host URI.");
++
+         var scheme = address.Scheme.ToLowerInvariant();
+         switch (scheme)
+         {
+@@ -33,6 +44,9 @@ public AmazonSqsHostAddress(Uri address)
+ 
+     public AmazonSqsHostAddress(string host, string? scope)
+     {
++        if (string.IsNullOrWhiteSpace(host))
++            throw new AmazonSqsTransportConfigurationException("The Amazon SQS host must be specified.");
++
+         Scheme = AmazonSqsScheme;
+         Host = host;
+         Scope = scope ?? "/";
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostSettings.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostSettings.cs
+index 4cdafa76..dc247e11 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostSettings.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsHostSettings.cs
+@@ -2,28 +2,59 @@ namespace ViciOne.ServiceBus;
+ 
+ using System;
+ using Amazon;
++using Amazon.Runtime;
+ using AmazonSqsTransport;
+ using Transports;
+ 
+ 
+ /// <summary>
+-/// Settings to configure a AmazonSQS host explicitly without requiring the fluent interface
++/// Immutable settings for an Amazon SQS host produced by the typed host configurator.
+ /// </summary>
+-public interface AmazonSqsHostSettings
++public sealed class AmazonSqsHostSettings
+ {
++    readonly Func<IConnection> _connectionFactory;
++
++    internal AmazonSqsHostSettings(
++        RegionEndpoint region,
++        AllowTransportHeader? allowTransportHeader,
++        bool scopeTopics,
++        Uri hostAddress,
++        AmazonSqsClientContextCacheOptions clientContextCacheOptions,
++        Func<IConnection> connectionFactory,
++        AWSCredentials? credentials)
++    {
++        Region = region ?? throw new ArgumentNullException(nameof(region));
++        HostAddress = hostAddress ?? throw new ArgumentNullException(nameof(hostAddress));
++        ClientContextCacheOptions = clientContextCacheOptions ?? throw new ArgumentNullException(nameof(clientContextCacheOptions));
++        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
++        AllowTransportHeader = allowTransportHeader;
++        ScopeTopics = scopeTopics;
++        Credentials = credentials;
++    }
++
+     /// <summary>
+     /// The AmazonSQS region to connect
+     /// </summary>
+-    RegionEndpoint? Region { get; }
++    public RegionEndpoint Region { get; }
+ 
+-    AllowTransportHeader? AllowTransportHeader { get; }
++    public AllowTransportHeader? AllowTransportHeader { get; }
+ 
+     /// <summary>
+     /// If true, topics are named "{Scope}_{topicName}" when publishing messages
+     /// </summary>
+-    bool ScopeTopics { get; }
++    public bool ScopeTopics { get; }
++
++    public Uri HostAddress { get; }
++
++    public AmazonSqsClientContextCacheOptions ClientContextCacheOptions { get; }
++
++    internal AWSCredentials? Credentials { get; }
+ 
+-    Uri HostAddress { get; }
++    public IConnection CreateConnection() => _connectionFactory();
+ 
+-    IConnection CreateConnection();
++    public override string ToString() => new UriBuilder
++    {
++        Scheme = "https",
++        Host = Region.SystemName
++    }.Uri.ToString();
+ }
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs
+new file mode 100644
+index 00000000..dc0c2155
+--- /dev/null
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs
+@@ -0,0 +1,41 @@
++namespace ViciOne.ServiceBus;
++
++using System;
++using Internals.Caching;
++
++
++/// <summary>
++/// Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS host.
++/// </summary>
++public sealed class AmazonSqsClientContextCacheOptions
++{
++    public AmazonSqsClientContextCacheOptions()
++        : this(1000, TimeSpan.FromDays(427), TimeProvider.System)
++    {
++    }
++
++    public AmazonSqsClientContextCacheOptions(int capacity, TimeSpan maxAge, TimeProvider timeProvider)
++    {
++        if (capacity < 8)
++            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be at least 8.");
++        if (maxAge <= TimeSpan.Zero)
++            throw new ArgumentOutOfRangeException(nameof(maxAge), "Maximum age must be greater than zero.");
++
++        Capacity = capacity;
++        MaxAge = maxAge;
++        TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
++    }
++
++    public int Capacity { get; }
++    public TimeSpan MaxAge { get; }
++    public TimeProvider TimeProvider { get; }
++
++    internal ICache<TKey, TValue, ITimeToLiveCacheValue<TValue>> CreateCache<TKey, TValue>()
++        where TValue : class
++    {
++        var options = new CacheOptions { Capacity = Capacity };
++        var policy = new TimeToLiveCachePolicy<TValue>(MaxAge, TimeProvider);
++
++        return new ViciOneServiceBusCache<TKey, TValue, ITimeToLiveCacheValue<TValue>>(policy, options);
++    }
++}
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs
+index 958cc51c..3a3dfb84 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsConnectionContext.cs
+@@ -26,8 +26,9 @@ public AmazonSqsConnectionContext(IConnection connection, IAmazonSqsHostConfigur
+ 
+         Topology = hostConfiguration.Topology;
+ 
+-        _queueCache = new QueueCache(Connection.SqsClient);
+-        _topicCache = new TopicCache(Connection.SnsClient, cancellationToken);
++        AmazonSqsClientContextCacheOptions cacheOptions = hostConfiguration.Settings.ClientContextCacheOptions;
++        _queueCache = new QueueCache(Connection.SqsClient, cacheOptions);
++        _topicCache = new TopicCache(Connection.SnsClient, cacheOptions, cancellationToken);
+     }
+ 
+     public IConnection Connection { get; }
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs
+index f5085ad4..4c81f4f8 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs
+@@ -77,25 +77,14 @@ public class AmazonSqsReceiveLockContext :
+ 
+     public async Task Complete()
+     {
+-        await StopRenewal().ConfigureAwait(false);
+-
+         try
+         {
++            await StopRenewal().ConfigureAwait(false);
+             await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
+-            Interlocked.Exchange(ref _locked, 0);
+-        }
+-        catch (MessageNotInflightException)
+-        {
+-            Interlocked.Exchange(ref _locked, 0);
+-            throw;
+-        }
+-        catch (ReceiptHandleIsInvalidException)
+-        {
+-            Interlocked.Exchange(ref _locked, 0);
+-            throw;
+         }
+         finally
+         {
++            Interlocked.Exchange(ref _locked, 0);
+             DisposeRenewalTokens();
+         }
+     }
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs
+deleted file mode 100644
+index 2e2ec71b..00000000
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/ClientContextCacheDefaults.cs
++++ /dev/null
+@@ -1,28 +0,0 @@
+-namespace ViciOne.ServiceBus.AmazonSqsTransport;
+-
+-using System;
+-using Internals.Caching;
+-
+-
+-public static class ClientContextCacheDefaults
+-{
+-    static ClientContextCacheDefaults()
+-    {
+-        Capacity = 1000;
+-        MinAge = TimeSpan.FromHours(1);
+-        MaxAge = TimeSpan.FromDays(427);
+-    }
+-
+-    public static int Capacity { get; set; }
+-    public static TimeSpan MinAge { get; set; }
+-    public static TimeSpan MaxAge { get; set; }
+-
+-    public static ICache<TKey, TValue, ITimeToLiveCacheValue<TValue>> CreateCache<TKey, TValue>()
+-        where TValue : class
+-    {
+-        var options = new CacheOptions { Capacity = Capacity };
+-        var policy = new TimeToLiveCachePolicy<TValue>(MaxAge);
+-
+-        return new ViciOneServiceBusCache<TKey, TValue, ITimeToLiveCacheValue<TValue>>(policy, options);
+-    }
+-}
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfiguration.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfiguration.cs
+index 25e58706..54c11674 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfiguration.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfiguration.cs
+@@ -15,7 +15,7 @@ public class AmazonSqsHostConfiguration :
+     readonly IAmazonSqsBusTopology _busTopology;
+     readonly Recycle<IConnectionContextSupervisor> _connectionContext;
+     readonly IAmazonSqsTopologyConfiguration _topologyConfiguration;
+-    AmazonSqsHostSettings _hostSettings;
++    AmazonSqsHostSettings? _hostSettings;
+ 
+     public AmazonSqsHostConfiguration(IAmazonSqsBusConfiguration busConfiguration, IAmazonSqsTopologyConfiguration
+         topologyConfiguration)
+@@ -24,8 +24,6 @@ public class AmazonSqsHostConfiguration :
+         _busConfiguration = busConfiguration;
+         _topologyConfiguration = topologyConfiguration;
+ 
+-        _hostSettings = new ConfigurationHostSettings();
+-
+         var messageNameFormatter = new AmazonSqsMessageNameFormatter();
+ 
+         _busTopology = new AmazonSqsBusTopology(this, messageNameFormatter, topologyConfiguration);
+@@ -43,18 +41,16 @@ public class AmazonSqsHostConfiguration :
+ 
+     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
+ 
+-    public override Uri HostAddress => _hostSettings.HostAddress;
++    public override Uri HostAddress => Settings.HostAddress;
+ 
+     public AmazonSqsHostSettings Settings
+     {
+-        get => _hostSettings;
++        get => _hostSettings ?? throw new ConfigurationException("The Amazon SQS host must be configured.");
+         set
+         {
+             ArgumentNullException.ThrowIfNull(value);
+ 
+-            _hostSettings = value is ConfigurationHostSettings settings
+-                ? settings.Freeze()
+-                : value;
++            _hostSettings = value;
+ 
+             var hostAddress = new AmazonSqsHostAddress(value.HostAddress);
+ 
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfigurator.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfigurator.cs
+index 8720a51b..e25f7b03 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfigurator.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/AmazonSqsHostConfigurator.cs
+@@ -25,8 +25,6 @@ public AmazonSqsHostConfigurator(Uri address)
+             Region = regionEndpoint
+         };
+ 
+-        if (!string.IsNullOrEmpty(address.UserInfo))
+-            throw new AmazonSqsTransportConfigurationException("Credentials must not be embedded in an Amazon SQS host URI. Use the AWS SDK credential chain or Credentials(AWSCredentials).");
+     }
+ 
+     public AmazonSqsHostSettings Settings => _settings.Freeze();
+@@ -54,6 +52,11 @@ public void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpl
+         _settings.SetClientFactories(sqsClientFactory, snsClientFactory);
+     }
+ 
++    public void ClientContextCache(AmazonSqsClientContextCacheOptions options)
++    {
++        _settings.ClientContextCacheOptions = options;
++    }
++
+     public void AllowTransportHeader(AllowTransportHeader? allowTransportHeader)
+     {
+         _settings.AllowTransportHeader = allowTransportHeader;
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/ConfigurationHostSettings.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/ConfigurationHostSettings.cs
+index 2bba94b3..fcbea0a6 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/ConfigurationHostSettings.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Configuration/ConfigurationHostSettings.cs
+@@ -8,14 +8,15 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+ using Transports;
+ 
+ 
+-public class ConfigurationHostSettings :
+-    AmazonSqsHostSettings
++internal sealed class ConfigurationHostSettings
+ {
+     AllowTransportHeader? _allowTransportHeader;
+     Func<IConnection>? _connectionFactory;
+     AWSCredentials? _credentials;
+     bool _frozen;
+     RegionEndpoint? _region;
++    AmazonSqsClientContextCacheOptions _clientContextCacheOptions = new();
++    AmazonSqsHostSettings? _snapshot;
+     string? _scope;
+     bool _scopeTopics;
+ 
+@@ -69,25 +70,34 @@ internal set
+         }
+     }
+ 
+-    public Uri HostAddress => FormatHostAddress();
+-
+-    public IConnection CreateConnection()
++    internal AmazonSqsClientContextCacheOptions ClientContextCacheOptions
+     {
+-        Freeze();
+-        return (_connectionFactory ?? throw new InvalidOperationException("The host settings do not have a connection factory."))();
++        get => _clientContextCacheOptions;
++        set
++        {
++            ThrowIfFrozen();
++            _clientContextCacheOptions = value ?? throw new ArgumentNullException(nameof(value));
++        }
+     }
+ 
+-    internal ConfigurationHostSettings Freeze()
++    internal AmazonSqsHostSettings Freeze()
+     {
+-        if (_frozen)
+-            return this;
++        if (_snapshot != null)
++            return _snapshot;
+ 
+-        _ = FormatHostAddress();
++        Uri hostAddress = FormatHostAddress();
+         AWSCredentials? credentials = _credentials;
+-        RegionEndpoint? region = _region;
+-        _connectionFactory ??= () => new Connection(credentials, region);
++        RegionEndpoint region = _region!;
++        Func<IConnection> connectionFactory = _connectionFactory ?? (() => new Connection(credentials, region));
+         _frozen = true;
+-        return this;
++        return _snapshot = new AmazonSqsHostSettings(
++            region,
++            _allowTransportHeader,
++            _scopeTopics,
++            hostAddress,
++            _clientContextCacheOptions,
++            connectionFactory,
++            credentials);
+     }
+ 
+     internal void SetClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Connection.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Connection.cs
+index ad3dc86b..e9ee00da 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Connection.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Connection.cs
+@@ -13,17 +13,10 @@ public class Connection :
+ {
+     public Connection(AWSCredentials? credentials, RegionEndpoint? regionEndpoint = null, AmazonSQSConfig? amazonSqsConfig = null,
+         AmazonSimpleNotificationServiceConfig? amazonSnsConfig = null)
++        : this(
++            () => CreateSqsClient(credentials, regionEndpoint, amazonSqsConfig),
++            () => CreateSnsClient(credentials, regionEndpoint, amazonSnsConfig))
+     {
+-        amazonSqsConfig ??= new AmazonSQSConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
+-        amazonSnsConfig ??= new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
+-
+-        SqsClient = credentials == null
+-            ? new AmazonSQSClient(amazonSqsConfig)
+-            : new AmazonSQSClient(credentials, amazonSqsConfig);
+-
+-        SnsClient = credentials == null
+-            ? new AmazonSimpleNotificationServiceClient(amazonSnsConfig)
+-            : new AmazonSimpleNotificationServiceClient(credentials, amazonSnsConfig);
+     }
+ 
+     internal Connection(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
+@@ -31,18 +24,58 @@ internal Connection(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotific
+         ArgumentNullException.ThrowIfNull(sqsClientFactory);
+         ArgumentNullException.ThrowIfNull(snsClientFactory);
+ 
+-        SqsClient = sqsClientFactory() ?? throw new InvalidOperationException("The SQS client factory returned null.");
++        (SqsClient, SnsClient) = CreateClientPair(sqsClientFactory, snsClientFactory);
++    }
++
++    static (IAmazonSQS SqsClient, IAmazonSimpleNotificationService SnsClient) CreateClientPair(
++        Func<IAmazonSQS> sqsClientFactory,
++        Func<IAmazonSimpleNotificationService> snsClientFactory)
++    {
++        IAmazonSQS sqsClient = sqsClientFactory() ?? throw new InvalidOperationException("The SQS client factory returned null.");
+         try
+         {
+-            SnsClient = snsClientFactory() ?? throw new InvalidOperationException("The SNS client factory returned null.");
++            IAmazonSimpleNotificationService snsClient = snsClientFactory()
++                ?? throw new InvalidOperationException("The SNS client factory returned null.");
++            return (sqsClient, snsClient);
+         }
+-        catch
++        catch (Exception primaryException)
+         {
+-            SqsClient.Dispose();
++            try
++            {
++                sqsClient.Dispose();
++            }
++            catch (Exception cleanupException)
++            {
++                throw new AggregateException(
++                    "Creating the Amazon SNS client and disposing the partially created SQS client failed.",
++                    primaryException,
++                    cleanupException);
++            }
++
++            ExceptionDispatchInfo.Capture(primaryException).Throw();
+             throw;
+         }
+     }
+ 
++    static IAmazonSQS CreateSqsClient(AWSCredentials? credentials, RegionEndpoint? regionEndpoint, AmazonSQSConfig? config)
++    {
++        config ??= new AmazonSQSConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
++        return credentials == null
++            ? new AmazonSQSClient(config)
++            : new AmazonSQSClient(credentials, config);
++    }
++
++    static IAmazonSimpleNotificationService CreateSnsClient(
++        AWSCredentials? credentials,
++        RegionEndpoint? regionEndpoint,
++        AmazonSimpleNotificationServiceConfig? config)
++    {
++        config ??= new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint ?? RegionEndpoint.USEast1 };
++        return credentials == null
++            ? new AmazonSimpleNotificationServiceClient(config)
++            : new AmazonSimpleNotificationServiceClient(credentials, config);
++    }
++
+     public IAmazonSQS SqsClient { get; }
+     public IAmazonSimpleNotificationService SnsClient { get; }
+ 
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/QueueCache.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/QueueCache.cs
+index 2c39ffd2..80c6b745 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/QueueCache.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/QueueCache.cs
+@@ -20,11 +20,12 @@ public class QueueCache :
+     readonly IAmazonSQS _client;
+     readonly IDictionary<string, QueueInfo> _durableQueues;
+ 
+-    public QueueCache(IAmazonSQS client)
++    public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options)
+     {
+-        _client = client;
++        _client = client ?? throw new ArgumentNullException(nameof(client));
++        ArgumentNullException.ThrowIfNull(options);
+ 
+-        _cache = ClientContextCacheDefaults.CreateCache<string, QueueInfo>();
++        _cache = options.CreateCache<string, QueueInfo>();
+ 
+         _durableQueues = new Dictionary<string, QueueInfo>();
+     }
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/TopicCache.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/TopicCache.cs
+index a7315c9e..ef0e962f 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/TopicCache.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/TopicCache.cs
+@@ -21,12 +21,13 @@ public class TopicCache :
+     Lazy<Task> _loadExistingTopics;
+     bool _topicsLoaded;
+ 
+-    public TopicCache(IAmazonSimpleNotificationService client, CancellationToken cancellationToken)
++    public TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options, CancellationToken cancellationToken)
+     {
+-        _client = client;
++        _client = client ?? throw new ArgumentNullException(nameof(client));
++        ArgumentNullException.ThrowIfNull(options);
+         _cancellationToken = cancellationToken;
+ 
+-        _cache = ClientContextCacheDefaults.CreateCache<string, TopicInfo>();
++        _cache = options.CreateCache<string, TopicInfo>();
+ 
+         _loadExistingTopics = ResetLoadExistingTopics();
+ 
+diff --git a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs
+index 23217701..bacaf4e8 100644
+--- a/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs
++++ b/src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/Configuration/IAmazonSqsHostConfigurator.cs
+@@ -36,6 +36,12 @@ public interface IAmazonSqsHostConfigurator
+     /// <param name="snsClientFactory">Creates a fresh SNS client.</param>
+     void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory);
+ 
++    /// <summary>
++    /// Configures the immutable queue and topic client-context cache for this host.
++    /// </summary>
++    /// <param name="options">Validated per-host cache options.</param>
++    void ClientContextCache(AmazonSqsClientContextCacheOptions options);
++
+     /// <summary>
+     /// Specifies a method used to determine if a header should be copied to the transport message
+     /// </summary>
+diff --git a/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs b/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
+index 54836a57..c40c3bb1 100644
+--- a/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
++++ b/tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs
+@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
+ /// </remarks>
+ public sealed class TestingPlatformConfigurationTests
+ {
+-    private const int ExpectedUnitTestFloor = 2043;
++    private const int ExpectedUnitTestFloor = 2055;
+     private const int ExpectedLocalIntegrationTestFloor = 149;
+ 
+     [Fact]
+diff --git a/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs b/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs
+index 6ef325a9..076ffa99 100644
+--- a/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs
++++ b/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs
+@@ -42,13 +42,61 @@ public void RegisteredContextFactory_IsFrozenAgainstRetainedConfiguratorMutation
+                 retained.ContextFactory(() => later);
+         });
+ 
+-        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
++        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(DynamoDbContextFactory<TestSaga>));
+         Assert.NotNull(descriptor.ImplementationFactory);
+-        var runtimeFactory = Assert.IsType<Func<IDynamoDBContext>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
++        var runtimeFactory = Assert.IsType<DynamoDbContextFactory<TestSaga>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
+ 
+-        IDynamoDBContext actual = runtimeFactory();
++        IDynamoDBContext actual = runtimeFactory.Create();
+         Assert.Same(registered, actual);
+         Assert.NotSame(later, actual);
++        Assert.DoesNotContain(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
++    }
++
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "multiple-saga-types-own-independent-context-factories")]
++    public void MultipleSagaTypes_OwnIndependentContextFactoriesInEitherRegistrationOrder(bool reverseRegistrationOrder)
++    {
++        IDynamoDBContext firstContext = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
++        IDynamoDBContext secondContext = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
++        var services = new ServiceCollection();
++
++        services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
++        {
++            void RegisterFirst() => configuration.AddSaga<TestSaga>()
++                .DynamoDbRepository(repository =>
++                {
++                    repository.TableName = "first-saga-table";
++                    repository.ContextFactory(() => firstContext);
++                });
++
++            void RegisterSecond() => configuration.AddSaga<SecondSaga>()
++                .DynamoDbRepository(repository =>
++                {
++                    repository.TableName = "second-saga-table";
++                    repository.ContextFactory(() => secondContext);
++                });
++
++            if (reverseRegistrationOrder)
++            {
++                RegisterSecond();
++                RegisterFirst();
++            }
++            else
++            {
++                RegisterFirst();
++                RegisterSecond();
++            }
++        });
++
++        DynamoDbContextFactory<TestSaga> firstFactory = ResolveRegisteredFactory<TestSaga>(services);
++        DynamoDbContextFactory<SecondSaga> secondFactory = ResolveRegisteredFactory<SecondSaga>(services);
++
++        Assert.Same(firstContext, firstFactory.Create());
++        Assert.Same(secondContext, secondFactory.Create());
++        Assert.NotSame(firstFactory.Create(), secondFactory.Create());
++        Assert.DoesNotContain(services, item => item.ServiceType == typeof(Func<IDynamoDBContext>));
+     }
+ 
+     [Fact]
+@@ -136,6 +184,20 @@ private sealed class TestSaga : ISagaVersion
+         public int Version { get; set; }
+     }
+ 
++    private sealed class SecondSaga : ISagaVersion
++    {
++        public Guid CorrelationId { get; set; }
++        public int Version { get; set; }
++    }
++
++    private static DynamoDbContextFactory<TSaga> ResolveRegisteredFactory<TSaga>(IServiceCollection services)
++        where TSaga : class, ISagaVersion
++    {
++        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(DynamoDbContextFactory<TSaga>));
++        Assert.NotNull(descriptor.ImplementationFactory);
++        return Assert.IsType<DynamoDbContextFactory<TSaga>>(descriptor.ImplementationFactory(EmptyServiceProvider.Instance));
++    }
++
+     private class UnsupportedInvocationProxy : DispatchProxy
+     {
+         protected override object? Invoke(System.Reflection.MethodInfo? targetMethod, object?[]? args) =>
+diff --git a/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json b/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json
+index e6869782..aa94d54a 100644
+--- a/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json
++++ b/tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json
+@@ -1,6 +1,7 @@
+ [
+   { "requirementId": "REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "variantKey": "invalid-input-rejected-and-runtime-options-frozen", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaRepositoryConfigurationTests", "testMethod": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" },
+   { "requirementId": "REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "variantKey": "registered-context-factory-snapshot-is-immutable", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaRepositoryConfigurationTests", "testMethod": "RegisteredContextFactory_IsFrozenAgainstRetainedConfiguratorMutation" },
++  { "requirementId": "REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "variantKey": "multiple-saga-types-own-independent-context-factories", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaRepositoryConfigurationTests", "testMethod": "MultipleSagaTypes_OwnIndependentContextFactoriesInEitherRegistrationOrder" },
+   { "requirementId": "REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "variantKey": "provider-failures-preserve-identity-and-update-version", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaFailureBoundaryTests", "testMethod": "ProviderFailure_IsPreservedAndFailedUpdateRestoresVersion" },
+   { "requirementId": "REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "variantKey": "corrupt-persisted-saga-never-masquerades-as-absent-or-valid", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaFailureBoundaryTests", "testMethod": "CorruptPersistedSaga_FailsClosed" },
+   { "requirementId": "REQ-VSB-AWS-DYNAMODB-SAGA-CANCELLATION", "variantKey": "requested-cancellation-is-forwarded-and-preserved", "testAssembly": "ViciOne.ServiceBus.DynamoDbIntegration.Tests", "testType": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga.DynamoDbSagaFailureBoundaryTests", "testMethod": "RequestedCancellation_IsForwardedAndPreservedAcrossEveryDatabaseOperation" },
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs
+index 406deeab..69a9e852 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs
+@@ -92,7 +92,7 @@ public void TopologyDestinationNames_AreValidatedAsData(string name)
+         busConfiguration.HostConfiguration.Settings = new ConfigurationHostSettings
+         {
+             Region = global::Amazon.RegionEndpoint.EUCentral1,
+-        };
++        }.Freeze();
+ 
+         Assert.Throws<AmazonSqsTransportConfigurationException>(
+             () => busConfiguration.HostConfiguration.Topology.GetDestinationAddress(name));
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs
+index ffc3225a..017185f6 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs
+@@ -39,7 +39,7 @@ public void ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings()
+     public void NativeRedrivePolicy_IsRejectedWhileProductErrorAndSkippedQueuesOwnSettlement()
+     {
+         AmazonSqsBusConfiguration bus = CreateBusConfiguration();
+-        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 };
++        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
+         var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
+             bus.HostConfiguration.CreateReceiveEndpointConfiguration(
+                 "orders",
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
+index aab3933b..bed87863 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs
+@@ -1,8 +1,12 @@
+ using System.Reflection;
++using System.Runtime.CompilerServices;
+ using global::Amazon;
+ using global::Amazon.Runtime;
+ using global::Amazon.SimpleNotificationService;
++using global::Amazon.SimpleNotificationService.Model;
+ using global::Amazon.SQS;
++using global::Amazon.SQS.Model;
++using Microsoft.Extensions.Time.Testing;
+ using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+ using ViciOne.ServiceBus.AmazonSqsTransport.Tests.TestDoubles;
+ using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+@@ -34,6 +38,7 @@ public void PublicConfiguration_ContainsNoRawCredentialOrProductTestHarnessSurfa
+         Assert.Null(assembly.GetType("ViciOne.ServiceBus.Testing.AmazonSqsTestHarness"));
+         Assert.DoesNotContain(typeof(IAmazonSqsHostConfigurator).GetMethods(), method => method.Name == "Config");
+         Assert.Contains(typeof(IAmazonSqsHostConfigurator).GetMethods(), method => method.Name == "ClientFactories");
++        Assert.Contains(typeof(IAmazonSqsHostConfigurator).GetMethods(), method => method.Name == "ClientContextCache");
+     }
+ 
+     [Fact]
+@@ -45,27 +50,35 @@ public void HostComposition_UsesTheSdkChainOrAnExplicitCredentialObject()
+ 
+         defaultConfigurator.UseDefaultHost(RegionEndpoint.EUCentral1);
+ 
+-        var defaultSettings = Assert.IsType<ConfigurationHostSettings>(defaultBus.HostConfiguration.Settings);
++        AmazonSqsHostSettings defaultSettings = defaultBus.HostConfiguration.Settings;
+         Assert.Null(defaultSettings.Credentials);
+-        Assert.Equal(RegionEndpoint.EUCentral1, defaultSettings.Region);
++        Assert.Same(RegionEndpoint.EUCentral1, defaultSettings.Region);
+ 
+         AmazonSqsBusConfiguration explicitBus = CreateBusConfiguration();
+         var explicitConfigurator = new AmazonSqsBusFactoryConfigurator(explicitBus);
+         var credentials = new AnonymousAWSCredentials();
+         explicitConfigurator.Host(new Uri("amazonsqs://eu-central-1"), host => host.Credentials(credentials));
+ 
+-        var explicitSettings = Assert.IsType<ConfigurationHostSettings>(explicitBus.HostConfiguration.Settings);
++        AmazonSqsHostSettings explicitSettings = explicitBus.HostConfiguration.Settings;
+         Assert.Same(credentials, explicitSettings.Credentials);
+     }
+ 
+-    [Fact]
+-    [RequirementCoverage("REQ-VSB-AWS-CREDENTIALS", "uri-credentials-rejected")]
+-    public void HostUris_RejectEmbeddedCredentials()
++    [Theory]
++    [InlineData("amazonsqs://access:secret@eu-central-1/", "Credentials")]
++    [InlineData("amazonsqs://eu-central-1/?accessKey=secret", "Query")]
++    [InlineData("amazonsqs://eu-central-1/#secret", "Fragments")]
++    [RequirementCoverage("REQ-VSB-AWS-CREDENTIALS", "uri-credentials-and-control-components-rejected")]
++    public void HostUris_RejectCredentialsAndControlComponents(string address, string expectedReason)
+     {
+-        AmazonSqsTransportConfigurationException exception = Assert.Throws<AmazonSqsTransportConfigurationException>(
+-            () => new AmazonSqsHostConfigurator(new Uri("amazonsqs://access:secret@eu-central-1")));
++        var uri = new Uri(address);
++
++        AmazonSqsTransportConfigurationException addressException = Assert.Throws<AmazonSqsTransportConfigurationException>(
++            () => new AmazonSqsHostAddress(uri));
++        AmazonSqsTransportConfigurationException configuratorException = Assert.Throws<AmazonSqsTransportConfigurationException>(
++            () => new AmazonSqsHostConfigurator(uri));
+ 
+-        Assert.Contains("must not be embedded", exception.Message, StringComparison.Ordinal);
++        Assert.Contains(expectedReason, addressException.Message, StringComparison.Ordinal);
++        Assert.Equal(addressException.Message, configuratorException.Message);
+     }
+ 
+     [Fact]
+@@ -77,6 +90,7 @@ public void HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources()
+         Assert.Throws<ArgumentNullException>(() => configurator.Credentials(null!));
+         Assert.Throws<ArgumentNullException>(() => configurator.ClientFactories(null!, () => CreateSnsClient()));
+         Assert.Throws<ArgumentNullException>(() => configurator.ClientFactories(() => CreateSqsClient(), null!));
++        Assert.Throws<ArgumentNullException>(() => configurator.ClientContextCache(null!));
+ 
+         var credentials = new AnonymousAWSCredentials();
+         configurator.Credentials(credentials);
+@@ -87,6 +101,26 @@ public void HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources()
+         Assert.Equal(new Uri("amazonsqs://eu-central-1/"), frozen.HostAddress);
+     }
+ 
++    [Fact]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "low-level-host-accepts-only-sealed-immutable-snapshots")]
++    public void LowLevelHost_AcceptsOnlyTheSealedSnapshotProducedByTheTypedBuilder()
++    {
++        Assert.True(typeof(AmazonSqsHostSettings).IsSealed);
++        Assert.False(typeof(AmazonSqsHostSettings).IsInterface);
++        Assert.Empty(typeof(AmazonSqsHostSettings).GetConstructors(BindingFlags.Public | BindingFlags.Instance));
++
++        var hostConfigurator = new AmazonSqsHostConfigurator(new Uri("amazonsqs://eu-central-1/production"));
++        AmazonSqsHostSettings snapshot = hostConfigurator.Settings;
++        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
++
++        new AmazonSqsBusFactoryConfigurator(bus).Host(snapshot);
++
++        Assert.Same(snapshot, bus.HostConfiguration.Settings);
++        Assert.Throws<InvalidOperationException>(() => hostConfigurator.Scope("mutated", true));
++        Assert.Throws<InvalidOperationException>(() => hostConfigurator.ClientContextCache(new AmazonSqsClientContextCacheOptions()));
++        Assert.Equal(new Uri("amazonsqs://eu-central-1/production"), bus.HostConfiguration.Settings.HostAddress);
++    }
++
+     [Fact]
+     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "fresh-owned-client-pair-per-reconnect")]
+     public void ClientFactories_CreateAFreshOwnedPairForEveryConnection()
+@@ -140,13 +174,13 @@ public void OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(bool sqs
+             {
+                 sqsDisposed++;
+                 if (sqsFails)
+-                    throw sqsFailure;
++                    ThrowOnDispose(sqsFailure);
+             }),
+             () => CreateSnsClient(() =>
+             {
+                 snsDisposed++;
+                 if (snsFails)
+-                    throw snsFailure;
++                    ThrowOnDispose(snsFailure);
+             }));
+         IConnection connection = configurator.Settings.CreateConnection();
+ 
+@@ -160,17 +194,91 @@ public void OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(bool sqs
+             Assert.Equal([snsFailure, sqsFailure], aggregate.InnerExceptions);
+         }
+         else
++        {
+             Assert.Same(sqsFails ? sqsFailure : snsFailure, actual);
++            Assert.Contains(nameof(ThrowOnDispose), actual.StackTrace, StringComparison.Ordinal);
++        }
++    }
++
++    [Theory]
++    [InlineData(false, false)]
++    [InlineData(false, true)]
++    [InlineData(true, false)]
++    [InlineData(true, true)]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "partial-client-construction-preserves-primary-and-cleans-sqs")]
++    public void PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs(bool nullSnsClient, bool cleanupFails)
++    {
++        var primaryFailure = new InvalidOperationException("SNS creation failed");
++        var cleanupFailure = new InvalidOperationException("SQS cleanup failed");
++        var cleanupCalls = 0;
++        IAmazonSQS sqsClient = CreateSqsClient(() =>
++        {
++            cleanupCalls++;
++            if (cleanupFails)
++                ThrowOnDispose(cleanupFailure);
++        });
++
++        Exception actual = Assert.ThrowsAny<Exception>(() => new Connection(
++            () => sqsClient,
++            () => nullSnsClient ? null! : ThrowFromSnsFactory(primaryFailure)));
++
++        Assert.Equal(1, cleanupCalls);
++        if (cleanupFails)
++        {
++            AggregateException aggregate = Assert.IsType<AggregateException>(actual);
++            Assert.Equal(2, aggregate.InnerExceptions.Count);
++            if (nullSnsClient)
++                Assert.Contains("returned null", aggregate.InnerExceptions[0].Message, StringComparison.Ordinal);
++            else
++                Assert.Same(primaryFailure, aggregate.InnerExceptions[0]);
++            Assert.Same(cleanupFailure, aggregate.InnerExceptions[1]);
++        }
++        else if (nullSnsClient)
++            Assert.Contains("returned null", Assert.IsType<InvalidOperationException>(actual).Message, StringComparison.Ordinal);
++        else
++        {
++            Assert.Same(primaryFailure, actual);
++            Assert.Contains(nameof(ThrowFromSnsFactory), actual.StackTrace, StringComparison.Ordinal);
++        }
++    }
++
++    [Fact]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "per-host-cache-options-are-immutable-validated-and-time-provider-driven")]
++    public async Task ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProvider()
++    {
++        Assert.Throws<ArgumentOutOfRangeException>(
++            () => new AmazonSqsClientContextCacheOptions(7, TimeSpan.FromMinutes(1), TimeProvider.System));
++        Assert.Throws<ArgumentOutOfRangeException>(
++            () => new AmazonSqsClientContextCacheOptions(8, TimeSpan.Zero, TimeProvider.System));
++        Assert.Throws<ArgumentNullException>(
++            () => new AmazonSqsClientContextCacheOptions(8, TimeSpan.FromMinutes(1), null!));
++        Assert.Null(typeof(AmazonSqsClientContextCacheOptions).GetProperty("MinAge"));
++
++        var shortClock = new FakeTimeProvider(new DateTimeOffset(2042, 1, 2, 3, 4, 5, TimeSpan.Zero));
++        var longClock = new FakeTimeProvider(shortClock.GetUtcNow());
++        var shortOptions = new AmazonSqsClientContextCacheOptions(8, TimeSpan.FromMinutes(1), shortClock);
++        var longOptions = new AmazonSqsClientContextCacheOptions(8, TimeSpan.FromHours(1), longClock);
++
++        (int shortQueueCalls, int shortTopicCalls) = await ExerciseClientContextCaches(shortOptions, shortClock, TimeSpan.FromMinutes(2));
++        (int longQueueCalls, int longTopicCalls) = await ExerciseClientContextCaches(longOptions, longClock, TimeSpan.FromMinutes(2));
++
++        Assert.Equal(2, shortQueueCalls);
++        Assert.Equal(2, shortTopicCalls);
++        Assert.Equal(1, longQueueCalls);
++        Assert.Equal(1, longTopicCalls);
++        Assert.Equal(8, shortOptions.Capacity);
++        Assert.Equal(TimeSpan.FromMinutes(1), shortOptions.MaxAge);
++        Assert.Same(shortClock, shortOptions.TimeProvider);
+     }
+ 
+     [Fact]
+     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "host-equality-and-hash-contract")]
+     public void HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing()
+     {
+-        var first = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true };
+-        var same = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true };
+-        var differentScope = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "staging", ScopeTopics = true };
+-        var differentScopingMode = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = false };
++        AmazonSqsHostSettings first = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true }.Freeze();
++        AmazonSqsHostSettings same = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = true }.Freeze();
++        AmazonSqsHostSettings differentScope = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "staging", ScopeTopics = true }.Freeze();
++        AmazonSqsHostSettings differentScopingMode = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1, Scope = "production", ScopeTopics = false }.Freeze();
+ 
+         Assert.True(AmazonSqsHostEqualityComparer.Default.Equals(first, same));
+         Assert.Equal(
+@@ -198,4 +306,119 @@ public void HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing()
+         action?.Invoke();
+         return null;
+     }
++
++    private static async Task<(int QueueCalls, int TopicCalls)> ExerciseClientContextCaches(
++        AmazonSqsClientContextCacheOptions options,
++        FakeTimeProvider timeProvider,
++        TimeSpan advance)
++    {
++        var queueCalls = new Dictionary<string, int>(StringComparer.Ordinal);
++        var topicCalls = new Dictionary<string, int>(StringComparer.Ordinal);
++        IAmazonSQS sqsClient = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
++        {
++            nameof(IAmazonSQS.GetQueueUrlAsync) => GetQueueUrl(args, queueCalls),
++            nameof(IAmazonSQS.GetQueueAttributesAsync) => Task.FromResult(new GetQueueAttributesResponse
++            {
++                HttpStatusCode = System.Net.HttpStatusCode.OK,
++                Attributes = new Dictionary<string, string>
++                {
++                    [QueueAttributeName.QueueArn] = "arn:aws:sqs:eu-central-1:123456789012:test-queue"
++                }
++            }),
++            nameof(IDisposable.Dispose) => null,
++            _ => throw new NotSupportedException(method.Name)
++        });
++        IAmazonSimpleNotificationService snsClient = InterfaceProxy<IAmazonSimpleNotificationService>.Create((method, args) => method.Name switch
++        {
++            nameof(IAmazonSimpleNotificationService.ListTopicsAsync) => Task.FromResult(new ListTopicsResponse
++            {
++                HttpStatusCode = System.Net.HttpStatusCode.OK,
++                Topics = []
++            }),
++            nameof(IAmazonSimpleNotificationService.CreateTopicAsync) => CreateTopic(args, topicCalls),
++            nameof(IAmazonSimpleNotificationService.GetTopicAttributesAsync) => Task.FromResult(new GetTopicAttributesResponse
++            {
++                HttpStatusCode = System.Net.HttpStatusCode.OK,
++                Attributes = new Dictionary<string, string>()
++            }),
++            nameof(IDisposable.Dispose) => null,
++            _ => throw new NotSupportedException(method.Name)
++        });
++        IConnection connection = new Connection(() => sqsClient, () => snsClient);
++        AmazonSqsBusConfiguration bus = CreateBusConfiguration();
++        var host = new AmazonSqsHostConfigurator(new Uri("amazonsqs://eu-central-1"));
++        IAmazonSqsHostConfigurator publicHost = host;
++        publicHost.ClientContextCache(options);
++        bus.HostConfiguration.Settings = host.Settings;
++        await using var context = new AmazonSqsConnectionContext(connection, bus.HostConfiguration, CancellationToken.None);
++
++        await context.GetQueueByName("target", CancellationToken.None);
++        await context.GetQueueByName("a", CancellationToken.None);
++        await context.GetQueueByName("b", CancellationToken.None);
++        await context.GetQueueByName("target", CancellationToken.None);
++        await context.GetQueueByName("c", CancellationToken.None);
++        timeProvider.Advance(advance);
++        await context.GetQueueByName("d", CancellationToken.None);
++        await context.GetQueueByName("e", CancellationToken.None);
++        await context.GetQueueByName("f", CancellationToken.None);
++        await context.GetQueueByName("target", CancellationToken.None);
++
++        await ExerciseTopicCache(context, timeProvider, advance);
++
++        return (queueCalls["target"], topicCalls["target"]);
++    }
++
++    private static async Task ExerciseTopicCache(AmazonSqsConnectionContext context, FakeTimeProvider timeProvider, TimeSpan advance)
++    {
++        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("a"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("b"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("c"), CancellationToken.None);
++        timeProvider.Advance(advance);
++        await context.GetTopic(new TestTopic("d"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("e"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("f"), CancellationToken.None);
++        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
++    }
++
++    private static Task<GetQueueUrlResponse> GetQueueUrl(object?[]? args, IDictionary<string, int> calls)
++    {
++        string queueName = Assert.IsType<string>(args![0]);
++        calls.TryGetValue(queueName, out int observedCalls);
++        calls[queueName] = observedCalls + 1;
++        return Task.FromResult(new GetQueueUrlResponse
++        {
++            HttpStatusCode = System.Net.HttpStatusCode.OK,
++            QueueUrl = $"https://sqs.eu-central-1.amazonaws.com/123456789012/{queueName}"
++        });
++    }
++
++    private static Task<CreateTopicResponse> CreateTopic(object?[]? args, IDictionary<string, int> calls)
++    {
++        CreateTopicRequest request = Assert.IsType<CreateTopicRequest>(args![0]);
++        calls.TryGetValue(request.Name, out int observedCalls);
++        calls[request.Name] = observedCalls + 1;
++        return Task.FromResult(new CreateTopicResponse
++        {
++            HttpStatusCode = System.Net.HttpStatusCode.OK,
++            TopicArn = $"arn:aws:sns:eu-central-1:123456789012:{request.Name}"
++        });
++    }
++
++    private sealed class TestTopic(string entityName) : ViciOne.ServiceBus.AmazonSqsTransport.Topology.Topic
++    {
++        public string EntityName { get; } = entityName;
++        public bool Durable => false;
++        public bool AutoDelete => true;
++        public IDictionary<string, object> TopicAttributes { get; } = new Dictionary<string, object>();
++        public IDictionary<string, object> TopicSubscriptionAttributes { get; } = new Dictionary<string, object>();
++        public IDictionary<string, string> TopicTags { get; } = new Dictionary<string, string>();
++    }
++
++    [MethodImpl(MethodImplOptions.NoInlining)]
++    private static void ThrowOnDispose(Exception exception) => throw exception;
++
++    [MethodImpl(MethodImplOptions.NoInlining)]
++    private static IAmazonSimpleNotificationService ThrowFromSnsFactory(Exception exception) => throw exception;
+ }
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs
+index c4aaa51c..444c89ae 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs
+@@ -163,6 +163,37 @@ public async Task Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessage(
+         Assert.Equal(0, Volatile.Read(ref renewalCalls));
+     }
+ 
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "failed-or-cancelled-completion-preserves-error-and-loses-lock")]
++    public async Task FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLost(bool callerCancellation)
++    {
++        using var cancellationSource = new CancellationTokenSource();
++        if (callerCancellation)
++            cancellationSource.Cancel();
++
++        Exception expected = callerCancellation
++            ? new OperationCanceledException("caller cancellation observed by provider", CancellationToken.None)
++            : new InvalidOperationException("provider settlement failed");
++        QueueReceiveSettings settings = CreateSettings();
++        settings.VisibilityTimeout = 30;
++        var receiveLock = new AmazonSqsReceiveLockContext(
++            new Uri("amazonsqs://eu-central-1/orders"),
++            new Message { ReceiptHandle = "receipt" },
++            settings,
++            cancellationSource.Token,
++            new FakeTimeProvider(StartTime),
++            (_, _, _, _) => Task.CompletedTask,
++            (_, _, _) => Task.FromException(expected),
++            () => false);
++
++        Exception actual = await Assert.ThrowsAnyAsync<Exception>(receiveLock.Complete);
++
++        Assert.Same(expected, actual);
++        await Assert.ThrowsAsync<TransportException>(receiveLock.ValidateLockStatus);
++    }
++
+     private static QueueReceiveSettings CreateSettings()
+     {
+         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs
+index a585bdeb..d3d9e2d8 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs
+@@ -14,7 +14,7 @@ public void VisibilityDurations_ValidateAndClampAtAwsBoundaries()
+     {
+         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());
+         var bus = new AmazonSqsBusConfiguration(topology);
+-        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 };
++        bus.HostConfiguration.Settings = new ConfigurationHostSettings { Region = RegionEndpoint.EUCentral1 }.Freeze();
+         IAmazonSqsReceiveEndpointConfigurator? configurator = null;
+         var endpoint = Assert.IsType<AmazonSqsReceiveEndpointConfiguration>(
+             bus.HostConfiguration.CreateReceiveEndpointConfiguration("orders", value => configurator = value));
+diff --git a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
+index 96118eb8..9e8b4f7d 100644
+--- a/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
++++ b/tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json
+@@ -8,10 +8,13 @@
+   { "requirementId": "REQ-VSB-AWS-ENTITY-NAME", "variantKey": "queue-and-topic-aws-grammar-fifo-suffix", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsEntityNameTests", "testMethod": "QueueAndTopicNames_EnforceAwsGrammarAndFifoSuffix" },
+   { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "secret-free-public-api", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "PublicConfiguration_ContainsNoRawCredentialOrProductTestHarnessSurface" },
+   { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "sdk-chain-or-explicit-credential-object", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostComposition_UsesTheSdkChainOrAnExplicitCredentialObject" },
+-  { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "uri-credentials-rejected", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostUris_RejectEmbeddedCredentials" },
++  { "requirementId": "REQ-VSB-AWS-CREDENTIALS", "variantKey": "uri-credentials-and-control-components-rejected", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostUris_RejectCredentialsAndControlComponents" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "immutable-host-snapshot-and-client-factories", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources" },
++  { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "low-level-host-accepts-only-sealed-immutable-snapshots", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "LowLevelHost_AcceptsOnlyTheSealedSnapshotProducedByTheTypedBuilder" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "fresh-owned-client-pair-per-reconnect", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "ClientFactories_CreateAFreshOwnedPairForEveryConnection" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "owned-client-disposal-attempts-both-clients-and-preserves-failures", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures" },
++  { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "partial-client-construction-preserves-primary-and-cleans-sqs", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs" },
++  { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "per-host-cache-options-are-immutable-validated-and-time-provider-driven", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProvider" },
+   { "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "variantKey": "host-equality-and-hash-contract", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsHostConfigurationTests", "testMethod": "HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing" },
+   { "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION", "variantKey": "prefetch-and-concurrency-inheritance", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsEndpointConfigurationTests", "testMethod": "ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings" },
+   { "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY", "variantKey": "duration-and-service-boundaries", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsVisibilityConfigurationTests", "testMethod": "VisibilityDurations_ValidateAndClampAtAwsBoundaries" },
+@@ -26,6 +29,7 @@
+   { "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY", "variantKey": "unrequested-renewal-cancellation-loses-lock", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsReceiveLifecycleTests", "testMethod": "UnrequestedProviderCancellationDuringRenewal_MarksTheReceiveLockLost" },
+   { "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY", "variantKey": "maximum-renewal-window-expiry-loses-lock", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsReceiveLifecycleTests", "testMethod": "MaximumRenewalWindowExpiry_MarksTheReceiveLockLost" },
+   { "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY", "variantKey": "settings-snapshot-and-settlement-order", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsReceiveLifecycleTests", "testMethod": "Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessage" },
++  { "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY", "variantKey": "failed-or-cancelled-completion-preserves-error-and-loses-lock", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsReceiveLifecycleTests", "testMethod": "FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLost" },
+   { "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE", "variantKey": "purge-is-single-flight-and-retryable", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsLifecycleBoundaryTests", "testMethod": "PurgeOnStartup_IsSingleFlightAndRetriesAfterFailure" },
+   { "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE", "variantKey": "topology-entities-declared-exactly-once", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsLifecycleBoundaryTests", "testMethod": "TopologyDeclaration_CreatesEachEntityExactlyOnce" },
+   { "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION", "variantKey": "attribute-update-failure-propagates", "testAssembly": "ViciOne.ServiceBus.AmazonSqsTransport.Tests", "testType": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.AmazonSqsLifecycleBoundaryTests", "testMethod": "ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccess" },
