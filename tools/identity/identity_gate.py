@@ -280,11 +280,25 @@ def mask_authorized_text_lines(
     return b"".join(masked_lines), findings
 
 
-def load_historical_identity_policy(root: Path) -> tuple[list[dict[str, object]], list[Finding]]:
-    path = root / HISTORICAL_IDENTITY_POLICY_PATH
+def regular_candidate_bytes(
+    root: Path,
+    path: str,
+    candidates: Mapping[str, tuple[str, str, bytes]] | None = None,
+) -> bytes:
+    snapshot = candidate_git_entries(root) if candidates is None else candidates
+    entry = snapshot.get(path)
+    if entry is None or entry[0] == "120000":
+        raise ValueError(f"semantic input must be a regular Git candidate: {path}")
+    return entry[2]
+
+
+def load_historical_identity_policy(
+    root: Path,
+    candidates: Mapping[str, tuple[str, str, bytes]] | None = None,
+) -> tuple[list[dict[str, object]], list[Finding]]:
     try:
-        document = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
+        document = json.loads(regular_candidate_bytes(root, HISTORICAL_IDENTITY_POLICY_PATH, candidates).decode("utf-8"))
+    except (ValueError, UnicodeDecodeError, json.JSONDecodeError) as error:
         return [], [Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, f"cannot load policy: {error}")]
     if not isinstance(document, dict) or document.get("schemaVersion") != HISTORICAL_IDENTITY_POLICY_SCHEMA_VERSION:
         return [], [Finding("historical-identity-policy", HISTORICAL_IDENTITY_POLICY_PATH, "unsupported schema")]
@@ -295,9 +309,10 @@ def load_historical_identity_policy(root: Path) -> tuple[list[dict[str, object]]
 
 
 def scan_tree(root: Path) -> list[Finding]:
+    candidates = candidate_git_entries(root)
     candidate_bytes = {
         path: entry[2]
-        for path, entry in candidate_git_entries(root).items()
+        for path, entry in candidates.items()
     }
     raw_by_path = {
         path: scan_entry(path, data)
@@ -309,7 +324,7 @@ def scan_tree(root: Path) -> list[Finding]:
         for path, path_findings in raw_by_path.items()
         if any(finding.gate in suppressible_gates for finding in path_findings)
     }
-    records, load_findings = load_historical_identity_policy(root)
+    records, load_findings = load_historical_identity_policy(root, candidates)
     policy_findings = validate_historical_identity_policy(records, candidate_bytes, expected_policy_paths)
     records_by_path = {str(record.get("path") or ""): record for record in records}
     invalid_policy_paths = {
@@ -860,7 +875,10 @@ def canonical_csharp_declaration(prefix: str, tokens: Iterable[CSharpToken]) -> 
     return prefix + " " + " ".join(token.text for token in tokens).strip()
 
 
-def csharp_preprocessor_contexts(text: str) -> dict[int, tuple[str, ...]]:
+def csharp_preprocessor_contexts(
+    text: str,
+    tokens: Iterable[CSharpToken] | None = None,
+) -> dict[int, tuple[str, ...]]:
     """Bind every declaration to its lexical conditional-compilation context.
 
     The identity gate deliberately projects every branch instead of pretending to reproduce MSBuild and
@@ -868,20 +886,22 @@ def csharp_preprocessor_contexts(text: str) -> dict[int, tuple[str, ...]]:
     changing a directive, branch, or file-local define changes the declaration identity.
     """
     contexts: dict[int, tuple[str, ...]] = {}
-    branches: list[str] = []
+    token_lines: dict[int, list[str]] = {}
+    for token in tokens if tokens is not None else csharp_tokens(text):
+        token_lines.setdefault(token.line, []).append(token.text)
+    branches: list[list[str]] = []
     defines: set[str] = set()
-    directive = re.compile(r"^\s*#\s*(if|elif|else|endif|define|undef)\b(.*)$")
-    for line_number, line in enumerate(text.splitlines(), 1):
-        match = directive.match(line)
-        if match:
-            kind = match.group(1)
-            argument = " ".join(match.group(2).split())
+    for line_number in range(1, len(text.splitlines()) + 1):
+        line_tokens = token_lines.get(line_number, [])
+        if len(line_tokens) >= 2 and line_tokens[0] == "#":
+            kind = line_tokens[1]
+            argument = " ".join(line_tokens[2:])
             if kind == "if":
-                branches.append(f"if({argument})")
+                branches.append([f"if({argument})"])
             elif kind == "elif" and branches:
-                branches[-1] = f"elif({argument})"
+                branches[-1].append(f"elif({argument})")
             elif kind == "else" and branches:
-                branches[-1] = "else"
+                branches[-1].append("else")
             elif kind == "endif" and branches:
                 branches.pop()
             elif kind == "define" and argument:
@@ -889,7 +909,10 @@ def csharp_preprocessor_contexts(text: str) -> dict[int, tuple[str, ...]]:
             elif kind == "undef" and argument:
                 defines.discard(argument)
         contexts[line_number] = tuple(
-            [*(f"define({name})" for name in sorted(defines)), *branches]
+            [
+                *(f"define({name})" for name in sorted(defines)),
+                *(" -> ".join(branch) for branch in branches),
+            ]
         )
     return contexts
 
@@ -897,12 +920,16 @@ def csharp_preprocessor_contexts(text: str) -> dict[int, tuple[str, ...]]:
 def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
     """Project explicit and language-defined implicit public C# declarations deterministically."""
     tokens = csharp_tokens(text)
-    preprocessor_contexts = csharp_preprocessor_contexts(text)
+    preprocessor_contexts = csharp_preprocessor_contexts(text, tokens)
     declarations: list[tuple[str, int]] = []
 
-    def bind_context(declaration: str, line: int) -> str:
+    def bind_context(declaration: str, line: int, token_index: int) -> str:
+        owner = owner_context(token_index)
         context = preprocessor_contexts.get(line, ())
-        return declaration if not context else "conditional " + " && ".join(context) + " " + declaration
+        prefix = ("owner " + owner + " ") if owner else ""
+        if context:
+            prefix += "conditional " + " && ".join(context) + " "
+        return prefix + declaration
 
     brace_stack: list[int] = []
     brace_pairs: dict[int, int] = {}
@@ -911,6 +938,65 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
             brace_stack.append(index)
         elif token.text == "}" and brace_stack:
             brace_pairs[brace_stack.pop()] = index
+
+    bracket_stack: list[int] = []
+    bracket_open_by_close: dict[int, int] = {}
+    for index, token in enumerate(tokens):
+        if token.text == "[":
+            bracket_stack.append(index)
+        elif token.text == "]" and bracket_stack:
+            bracket_open_by_close[index] = bracket_stack.pop()
+
+    owner_regions: list[tuple[int, int, str]] = []
+    for keyword_index, token in enumerate(tokens):
+        if token.text == "namespace":
+            boundary = next(
+                (
+                    cursor
+                    for cursor in range(keyword_index + 1, len(tokens))
+                    if tokens[cursor].text in {"{", ";"}
+                ),
+                None,
+            )
+            if boundary is None:
+                continue
+            name = " ".join(item.text for item in tokens[keyword_index + 1:boundary])
+            end = brace_pairs.get(boundary, len(tokens)) if tokens[boundary].text == "{" else len(tokens)
+            owner_regions.append((boundary, end, "namespace " + name))
+    seen_type_bodies: set[int] = set()
+    for keyword_index, token in enumerate(tokens):
+        if token.text not in CSHARP_TYPE_KEYWORDS:
+            continue
+        body_start = next(
+            (
+                cursor
+                for cursor in range(keyword_index + 1, len(tokens))
+                if tokens[cursor].text in {"{", ";"}
+            ),
+            None,
+        )
+        if (
+            body_start is None
+            or tokens[body_start].text != "{"
+            or body_start not in brace_pairs
+            or body_start in seen_type_bodies
+        ):
+            continue
+        seen_type_bodies.add(body_start)
+        header_start = keyword_index
+        while header_start > 0 and tokens[header_start - 1].text not in {"{", "}", ";"}:
+            header_start -= 1
+        header = " ".join(item.text for item in tokens[header_start:body_start])
+        owner_regions.append((body_start, brace_pairs[body_start], "type " + header))
+
+    def owner_context(token_index: int) -> str:
+        owners = [
+            (start, end, name)
+            for start, end, name in owner_regions
+            if start < token_index < end
+        ]
+        owners.sort(key=lambda item: (-(item[1] - item[0]), item[0]))
+        return " :: ".join(name for _, _, name in owners)
 
     def accessor_shape(body_start: int) -> str:
         body_end = brace_pairs.get(body_start, body_start)
@@ -955,8 +1041,14 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
         if token.text not in {"public", "protected"}:
             continue
         start = visibility_index
-        while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
-            start -= 1
+        while True:
+            previous = start
+            while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
+                start -= 1
+            if start > 0 and start - 1 in bracket_open_by_close:
+                start = bracket_open_by_close[start - 1]
+            if start == previous:
+                break
         modifier_end = visibility_index + 1
         while modifier_end < len(tokens) and tokens[modifier_end].text in CSHARP_DECLARATION_MODIFIERS:
             modifier_end += 1
@@ -1010,7 +1102,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
             declaration = canonical_csharp_declaration("explicit", signature)
             if property_body is not None:
                 declaration += " { " + accessor_shape(property_body) + " }"
-            declarations.append((bind_context(declaration, token.line), token.line))
+            declarations.append((bind_context(declaration, token.line, visibility_index), token.line))
 
     raw_regions: list[dict[str, object]] = []
     for keyword_index, token in enumerate(tokens):
@@ -1077,7 +1169,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     accessors = accessor_shape(cursor)
                     if accessors:
                         declaration += " { " + accessors + " }"
-                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
+                    declarations.append((bind_context(declaration, segment[0].line, segment_start), segment[0].line))
                 cursor = brace_pairs[cursor] + 1
                 segment_start = cursor
                 continue
@@ -1090,7 +1182,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                     and not values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
                 ):
                     declaration = canonical_csharp_declaration("implicit-interface", segment)
-                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
+                    declarations.append((bind_context(declaration, segment[0].line, segment_start), segment[0].line))
                 segment_start = cursor + 1
             cursor += 1
 
@@ -1119,7 +1211,7 @@ def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
                 segment = tokens[segment_start:cursor]
                 if segment:
                     declaration = canonical_csharp_declaration("implicit-enum", segment)
-                    declarations.append((bind_context(declaration, segment[0].line), segment[0].line))
+                    declarations.append((bind_context(declaration, segment[0].line, segment_start), segment[0].line))
                 segment_start = cursor + 1
             cursor += 1
 
@@ -1329,7 +1421,7 @@ def derive_package_inventory(root: Path) -> list[dict[str, object]]:
         ):
             continue
         if mode == "120000":
-            continue
+            raise ValueError(f"project source must be a regular Git candidate: {project_path}")
         project = root / project_path
         tree = ET.fromstring(data.decode("utf-8"))
         project_name = project.stem
@@ -1355,7 +1447,7 @@ def derive_package_inventory(root: Path) -> list[dict[str, object]]:
 
 
 def identity_disposition(root: Path) -> dict[str, object]:
-    policy_bytes = (root / HISTORICAL_IDENTITY_POLICY_PATH).read_bytes()
+    policy_bytes = regular_candidate_bytes(root, HISTORICAL_IDENTITY_POLICY_PATH)
     policy = json.loads(policy_bytes.decode("utf-8"))
     policy_entries = policy["entries"]
     return {
@@ -1445,8 +1537,22 @@ def modification_format_exception_bindings(text: str) -> list[tuple[str, str]]:
 
 def validate_legal_documents(root: Path) -> list[Finding]:
     findings = validate_format_exceptions(root)
-    notice = (root / "NOTICE").read_text(encoding="utf-8")
-    modifications = (root / "MODIFICATIONS.md").read_text(encoding="utf-8")
+    candidates = candidate_git_entries(root)
+
+    def legal_text(path: str) -> str:
+        try:
+            return regular_candidate_bytes(root, path, candidates).decode("utf-8")
+        except (ValueError, UnicodeDecodeError) as error:
+            findings.append(Finding("legal", path, str(error)))
+            return ""
+
+    notice = legal_text("NOTICE")
+    modifications = legal_text("MODIFICATIONS.md")
+    try:
+        license_bytes = regular_candidate_bytes(root, "LICENSE.txt", candidates)
+    except ValueError as error:
+        findings.append(Finding("legal", "LICENSE.txt", str(error)))
+        license_bytes = b""
     expected_targets = sorted(COMMENTLESS_OR_BINARY_EXCEPTIONS)
     if notice_format_exception_targets(notice) != expected_targets:
         findings.append(Finding(
@@ -1470,7 +1576,7 @@ def validate_legal_documents(root: Path) -> list[Finding]:
     # The baseline carries the licence as LICENSE, the product carries it as LICENSE.txt. The name is
     # the only thing that changed, so the historical path and the active path are named separately and
     # their bytes are compared.
-    if baseline_bytes(root, "LICENSE") != (root / "LICENSE.txt").read_bytes():
+    if baseline_bytes(root, "LICENSE") != license_bytes:
         findings.append(Finding("legal", "LICENSE.txt", "the licence text differs from the imported baseline"))
     return findings
 
@@ -1569,7 +1675,7 @@ def run_gate(root: Path, output: Path | None, evidence: Path | None = None) -> i
     packages = derive_package_inventory(root)
     scan_findings = scan_tree(root)
     conformance_findings = derive_refactor_conformance(root)
-    license_equal = baseline_bytes(root, "LICENSE") == (root / "LICENSE.txt").read_bytes()
+    license_equal = baseline_bytes(root, "LICENSE") == regular_candidate_bytes(root, "LICENSE.txt")
     legal_findings = validate_legal_documents(root)
     persisted_findings = validate_persisted_evidence(
         evidence or root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY",

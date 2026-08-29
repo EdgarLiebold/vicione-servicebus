@@ -178,6 +178,31 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
 
         self.assertFalse(any(item.path == "src/Linked.cs" for item in findings))
 
+    def test_historical_policy_must_be_a_regular_git_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/policy.json"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text('{"schemaVersion": 1, "entries": []}\n', encoding="utf-8")
+            policy = root / "tools/identity/historical_identity_policy.json"
+            policy.parent.mkdir(parents=True)
+            policy.symlink_to(ignored)
+            subprocess.run(
+                ["git", "add", ".gitignore", "tools/identity/historical_identity_policy.json"],
+                cwd=root,
+                check=True,
+            )
+
+            findings = scan_tree(root)
+
+        self.assertTrue(any(
+            finding.gate == "historical-identity-policy"
+            and "regular Git candidate" in finding.reason
+            for finding in findings
+        ))
+
     def assert_extra_legal_identity_rejected(self, path: str) -> None:
         authorized = "\n".join(legal_identity_contexts()[path])
         findings = scan_entry(path, f"{authorized}\nextra={OLD}\n".encode("utf-8"))
@@ -222,6 +247,34 @@ class IdentityGateHostileFixtureTests(unittest.TestCase):
                 findings = validate_format_exceptions(root, {target})
 
         self.assertTrue(any("no baseline-to-target file binding" in item.reason for item in findings))
+
+    def test_legal_authority_document_must_be_a_regular_git_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/NOTICE"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text("outside authority\n", encoding="utf-8")
+            (root / "NOTICE").symlink_to(ignored)
+            (root / "MODIFICATIONS.md").write_text("\n", encoding="utf-8")
+            (root / "LICENSE.txt").write_bytes(b"license")
+            subprocess.run(
+                ["git", "add", ".gitignore", "NOTICE", "MODIFICATIONS.md", "LICENSE.txt"],
+                cwd=root,
+                check=True,
+            )
+            with contextlib.ExitStack() as stack:
+                stack.enter_context(patch("identity_gate.validate_format_exceptions", return_value=[]))
+                stack.enter_context(patch("identity_gate.baseline_bytes", return_value=b"license"))
+                findings = validate_legal_documents(root)
+
+        self.assertTrue(any(
+            finding.gate == "legal"
+            and finding.path == "NOTICE"
+            and "regular Git candidate" in finding.reason
+            for finding in findings
+        ))
 
     def test_active_legal_documents_and_format_exceptions_are_consistent(self) -> None:
         root = Path(__file__).resolve().parents[2]
@@ -615,10 +668,10 @@ public enum State
         self.assertIn("explicit public int First , Second", declarations)
         self.assertIn("explicit public int Property { get ; private set }", declarations)
         self.assertIn("explicit protected internal virtual void Hook ( )", declarations)
-        self.assertIn("implicit-interface void Added ( )", declarations)
-        self.assertIn("implicit-interface string Name { get ; set }", declarations)
-        self.assertIn("implicit-enum None", declarations)
-        self.assertIn("implicit-enum Ready = 2", declarations)
+        self.assertIn("owner type public interface IFoo implicit-interface void Added ( )", declarations)
+        self.assertIn("owner type public interface IFoo implicit-interface string Name { get ; set }", declarations)
+        self.assertIn("owner type public enum State implicit-enum None", declarations)
+        self.assertIn("owner type public enum State implicit-enum Ready = 2", declarations)
         self.assertFalse(any("AlsoHidden" in declaration for declaration in declarations))
         self.assertFalse(any("NotApi" in declaration for declaration in declarations))
         self.assertFalse(any("private void Hidden" in declaration for declaration in declarations))
@@ -638,7 +691,7 @@ public enum State
             {declaration for declaration, _ in with_secondary_base},
         )
         self.assertIn(
-            "explicit public int Value { get ; private set }",
+            "owner type public class Added : BaseType , ISecond explicit public int Value { get ; private set }",
             {declaration for declaration, _ in with_secondary_base},
         )
 
@@ -651,6 +704,50 @@ public enum State
             "conditional if(false) explicit public void Added ( )",
             conditional[0][0],
         )
+
+    def test_owner_namespace_and_declaration_attributes_are_part_of_identity(self) -> None:
+        namespace_one = csharp_public_declarations(
+            "namespace N1 { [Obsolete] public class Contract { public void Execute() { } } }"
+        )
+        namespace_two = csharp_public_declarations(
+            "namespace N2 { [Obsolete] public class Contract { public void Execute() { } } }"
+        )
+        no_attribute = csharp_public_declarations(
+            "namespace N1 { public class Contract { public void Execute() { } } }"
+        )
+        moved_member = csharp_public_declarations(
+            "namespace N1 { public class Other { public void Execute() { } } }"
+        )
+
+        self.assertNotEqual(namespace_one, namespace_two)
+        self.assertNotEqual(namespace_one, no_attribute)
+        self.assertNotEqual(no_attribute, moved_member)
+        self.assertTrue(any("explicit [ Obsolete ] public class Contract" in item[0] for item in namespace_one))
+        self.assertTrue(any("owner namespace N1 :: type" in item[0] for item in namespace_one))
+
+    def test_else_elif_nested_and_commented_directive_provenance_is_unambiguous(self) -> None:
+        else_a = csharp_public_declarations(
+            "#if A\ninternal class Hidden { }\n#else\npublic class Contract { }\n#endif\n"
+        )
+        else_b = csharp_public_declarations(
+            "#if B\ninternal class Hidden { }\n#else\npublic class Contract { }\n#endif\n"
+        )
+        elif_a = csharp_public_declarations(
+            "#if A\ninternal class Hidden { }\n#elif SHARED\npublic class Contract { }\n#endif\n"
+        )
+        elif_b = csharp_public_declarations(
+            "#if B\ninternal class Hidden { }\n#elif SHARED\npublic class Contract { }\n#endif\n"
+        )
+        nested = csharp_public_declarations(
+            "#if OUTER\n#if INNER\npublic class Contract { }\n#endif\n#endif\n"
+        )
+        commented_a = csharp_public_declarations("/* #if A */\npublic class Contract { }\n")
+        commented_b = csharp_public_declarations("/* #if B */\npublic class Contract { }\n")
+
+        self.assertNotEqual(else_a, else_b)
+        self.assertNotEqual(elif_a, elif_b)
+        self.assertIn("conditional if(OUTER) && if(INNER)", nested[0][0])
+        self.assertEqual(commented_a, commented_b)
 
     def test_new_implicit_interface_member_is_a_current_added_terminal_record(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -705,6 +802,26 @@ public enum State
 
         self.assertEqual(["src/Real/Real.csproj"], [record["project"] for record in records])
         self.assertEqual([], records[0]["artifacts"])
+
+    def test_project_source_symlink_is_rejected_without_dereferencing_ignored_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("ignored/\n", encoding="utf-8")
+            ignored = root / "ignored/Phantom.csproj"
+            ignored.parent.mkdir(parents=True)
+            ignored.write_text("<Project Sdk=\"Microsoft.NET.Sdk\" />\n", encoding="utf-8")
+            linked = root / "src/Linked/Linked.csproj"
+            linked.parent.mkdir(parents=True)
+            linked.symlink_to(ignored)
+            subprocess.run(
+                ["git", "add", ".gitignore", "src/Linked/Linked.csproj"],
+                cwd=root,
+                check=True,
+            )
+
+            with self.assertRaisesRegex(ValueError, "project source must be a regular Git candidate"):
+                derive_package_inventory(root)
 
     def test_current_product_declaration_without_baseline_is_explicitly_terminal(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -826,6 +943,7 @@ class IdentityGateGeneratedEvidenceManifestTests(unittest.TestCase):
                     ("identity_gate.scan_tree", []),
                     ("identity_gate.derive_refactor_conformance", []),
                     ("identity_gate.baseline_bytes", b"license"),
+                    ("identity_gate.regular_candidate_bytes", b"license"),
                     ("identity_gate.validate_legal_documents", []),
                 ):
                     stack.enter_context(patch(target, return_value=value))
