@@ -116,6 +116,33 @@ internal static class SqlServerTransportInspection
             cancellationToken,
             ("messageId", messageId));
 
+    public static async Task<string?> TransportHeadersForMessage(
+        this SqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        await using SqlCommand command = connection.Command(
+            $"SELECT d.TransportHeaders FROM [{schema}].[MessageDelivery] d "
+            + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
+            + "WHERE m.MessageId = @messageId",
+            ("messageId", messageId));
+        object? value = await command.ExecuteScalarAsync(cancellationToken);
+        return value is null or DBNull ? null : Convert.ToString(value);
+    }
+
+    public static Task<long> DeliveryAttemptForMessage(
+        this SqlConnection connection,
+        string schema,
+        Guid messageId,
+        CancellationToken cancellationToken) =>
+        connection.Scalar(
+            $"SELECT d.DeliveryCount FROM [{schema}].[MessageDelivery] d "
+            + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
+            + "WHERE m.MessageId = @messageId",
+            cancellationToken,
+            ("messageId", messageId));
+
     public static async Task<ScheduledDelivery> ScheduledDeliveryForMessage(
         this SqlConnection connection,
         string schema,
