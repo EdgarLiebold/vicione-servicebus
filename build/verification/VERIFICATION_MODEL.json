@@ -14,8 +14,7 @@
     "local": {
       "members": [
         "core",
-        "benchmarks",
-        "diagnostics"
+        "benchmarks"
       ],
       "note": "everything that needs no container"
     },
@@ -36,11 +35,6 @@
         "benchmarks"
       ]
     },
-    "diagnostics": {
-      "members": [
-        "diagnostics"
-      ]
-    },
     "rabbitmq": {
       "members": [
         "rabbitmq"
@@ -53,10 +47,9 @@
     },
     "engineering": {
       "members": [
-        "benchmarks",
-        "diagnostics"
+        "benchmarks"
       ],
-      "note": "the engineering solution's own tests: the benchmark harness and the diagnostics tool"
+      "note": "the retained engineering-model category; native diagnostics tests run in UnitArchitecture"
     }
   },
   "jobs": {
@@ -184,23 +177,8 @@
       "toolProjects": [
         "tools/diagnostics/ViciOne.ServiceBus.Diagnostics"
       ],
-      "rationale": "Two deliberately started scenarios that gate nothing, and the correctness cases of the tool itself, which do. The scenarios are compiled by the engineering solution so a broken one is found; their measurements are never part of a required run. The ledger, the observation boundary and the command line are held by the 'diagnostics' category of the engineering job, which runs them through tools/ci/run_test_category.py like every other required category. Saying that the tests gate the tool while no required job started them was a claim about a run that did not exist.",
-      "runs": [
-        {
-          "job": "benchmarks",
-          "category": "diagnostics",
-          "project": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
-          "minimumExecutedCases": 45,
-          "notExecuted": [],
-          "testProjectDirectory": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 300,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/diagnostics.txt"
-        }
-      ]
+      "rationale": "The two deliberately started measurement scenarios gate nothing and are compile-proven by the Engineering solution. Their correctness contract now belongs to the native xUnit 4/MTP v2 Diagnostics project in the UnitArchitecture profile; the legacy category and its VSTest expected set are retired rather than taught to execute a second test architecture.",
+      "runs": []
     },
     {
       "id": "message-data-amazon-s3",
