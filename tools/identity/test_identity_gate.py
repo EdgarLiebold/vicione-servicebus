@@ -18,7 +18,10 @@ from identity_gate import (
     GENERATED_EVIDENCE_MANIFEST,
     generated_evidence_manifest,
     candidate_git_entry,
+    candidate_git_entries,
     commit_tree,
+    csharp_public_declarations,
+    derive_baseline_mapping,
     derive_public_api_mapping,
     legal_identity_contexts,
     modification_format_exception_bindings,
@@ -390,6 +393,35 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
         self.assertEqual(b"regular.txt", link_data)
         self.assertNotEqual(normal_oid, link_oid)
 
+    def test_ignored_existing_target_is_not_a_live_git_candidate_or_baseline_target(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / ".gitignore").write_text("retired.cs\n", encoding="utf-8")
+            (root / "retired.cs").write_text("public sealed class Resurrected { }\n", encoding="utf-8")
+            self.assertNotIn("retired.cs", candidate_git_entries(root))
+            binding = {
+                "baselineKey": "1" * 64,
+                "baselineCommit": "2" * 40,
+                "baselinePathSha256": "3" * 64,
+                "baselineGitBlobOid": "4" * 40,
+                "baselineGitMode": "100644",
+            }
+            with (
+                patch("identity_gate.baseline_paths", return_value=["retired.cs"]),
+                patch("identity_gate.baseline_bytes", return_value=b"baseline\n"),
+                patch("identity_gate.baseline_binding", return_value=binding),
+                patch("identity_gate.change_list_deleted_baseline_paths", return_value={"retired.cs"}),
+                patch("identity_gate.deleted_path_commits", return_value={"retired.cs": "a" * 40}),
+                patch("identity_gate.commit_tree", return_value="b" * 40),
+            ):
+                records, findings = derive_baseline_mapping(root)
+
+        self.assertEqual([], findings)
+        self.assertEqual("RETIRED_DELETED", records[0]["baselineDisposition"])
+        self.assertIs(records[0]["targetExists"], False)
+        self.assertNotIn("targetGitBlobOid", records[0])
+
     def test_retirement_tree_resolves_from_the_deletion_commit_not_current_head(self) -> None:
         deletion_commit = "a" * 40
         deletion_tree = "b" * 40
@@ -518,6 +550,52 @@ class IdentityGatePublicProjectionTests(unittest.TestCase):
     def test_rejects_impossible_present_declaration_on_retired_path(self) -> None:
         with self.assertRaisesRegex(ValueError, "retired path"):
             public_declaration_disposition(False, True)
+
+    def test_csharp_projection_covers_multiline_modifiers_and_implicit_public_members(self) -> None:
+        source = '''
+const string NotApi = "public class Hidden";
+// public class AlsoHidden { }
+public
+sealed class Added<T, U> { }
+sealed public class Reordered { }
+public interface IFoo
+{
+    void Added();
+    string Name { get; }
+    private void Hidden();
+}
+public enum State
+{
+    None,
+    Ready = 2,
+}
+'''
+        declarations = {declaration for declaration, _ in csharp_public_declarations(source)}
+
+        self.assertIn("explicit public sealed class Added < T , U >", declarations)
+        self.assertIn("explicit sealed public class Reordered", declarations)
+        self.assertIn("implicit-interface void Added ( )", declarations)
+        self.assertIn("implicit-interface string Name", declarations)
+        self.assertIn("implicit-enum None", declarations)
+        self.assertIn("implicit-enum Ready = 2", declarations)
+        self.assertFalse(any("AlsoHidden" in declaration for declaration in declarations))
+        self.assertFalse(any("NotApi" in declaration for declaration in declarations))
+        self.assertFalse(any("private void Hidden" in declaration for declaration in declarations))
+
+    def test_new_implicit_interface_member_is_a_current_added_terminal_record(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            source = root / "src/New/IFoo.cs"
+            source.parent.mkdir(parents=True)
+            source.write_text("public interface IFoo { void Added(); }\n", encoding="utf-8")
+            subprocess.run(["git", "add", "src/New/IFoo.cs"], cwd=root, check=True)
+            with patch("identity_gate.baseline_paths", return_value=[]):
+                records, findings = derive_public_api_mapping(root)
+
+        self.assertEqual([], findings)
+        self.assertEqual(2, len(records))
+        self.assertTrue(all(record["apiDisposition"] == "CURRENT_ADDED" for record in records))
 
     def test_current_product_declaration_without_baseline_is_explicitly_terminal(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

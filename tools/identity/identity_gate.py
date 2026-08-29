@@ -39,7 +39,6 @@ FORBIDDEN_COMPATIBILITY_FORMS = (
     "".join(("extern", " alias")).encode("ascii"),
 )
 BUILD_OUTPUT_PARTS = frozenset({".git", "bin", "obj"})
-PUBLIC_DECLARATION = re.compile(r"^\s*public\s+.+", re.MULTILINE)
 TEST_SABOTAGE_FORMS = ("[Ignore", "[Explicit", "Assert.Pass(", ".Skip =", "Skip =")
 NOTICE_EXCEPTION_HEADING = "covered by exact path-bound entries in MODIFICATIONS.md:"
 MODIFICATIONS_EXCEPTION_HEADING = "## Changed files without an in-file modification comment"
@@ -78,6 +77,12 @@ class Finding:
 
     def as_dict(self) -> dict[str, str]:
         return {"gate": self.gate, "path": self.path, "reason": self.reason}
+
+
+@dataclass(frozen=True)
+class CSharpToken:
+    text: str
+    line: int
 
 
 def git(root: Path, *arguments: str) -> bytes:
@@ -395,6 +400,14 @@ def candidate_git_entry(root: Path, path: Path) -> tuple[str, str, bytes]:
     return mode, git_blob_oid(root, data), data
 
 
+def candidate_git_entries(root: Path) -> dict[str, tuple[str, str, bytes]]:
+    """Snapshot only tracked or non-ignored untracked blobs that Git could commit."""
+    return {
+        path.relative_to(root).as_posix(): candidate_git_entry(root, path)
+        for path in commit_candidate_files(root)
+    }
+
+
 def deleted_path_commits(root: Path) -> dict[str, str]:
     cached = _DELETED_PATH_COMMITS.get(root)
     if cached is not None:
@@ -611,6 +624,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     deletion_commits = deleted_path_commits(root)
     retirement_trees: dict[str, str] = {}
     actual_tree_entries: dict[str, tuple[str, str]] = {}
+    candidates = candidate_git_entries(root)
     for source in baseline_paths(root):
         target = map_path(source)
         if target in seen_targets:
@@ -618,8 +632,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
                 Finding("path-bijection", target, f"target also mapped from {seen_targets[target]}")
             )
         seen_targets[target] = source
-        target_path = root / target
-        exists = target_path.exists() or target_path.is_symlink()
+        exists = target in candidates
         source_data = baseline_bytes(root, source)
         disposition = (
             "RETIRED_DELETED"
@@ -635,7 +648,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
             "targetExists": exists,
         }
         if exists:
-            target_mode, target_blob_oid, target_data = candidate_git_entry(root, target_path)
+            target_mode, target_blob_oid, target_data = candidates[target]
             actual_tree_entries[target] = (target_mode, target_blob_oid)
             record["targetSha256"] = sha256(target_data)
             record["targetGitMode"] = target_mode
@@ -668,10 +681,11 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
 def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Finding]]:
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
+    candidates = candidate_git_entries(root)
     for source in baseline_paths(root):
         target = map_path(source)
-        target_path = root / target
-        if not target_path.exists() or not target_path.is_file():
+        candidate = candidates.get(target)
+        if candidate is None:
             records.append(
                 {
                     **baseline_binding(root, source),
@@ -685,7 +699,7 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
             )
             continue
         before = baseline_bytes(root, source)
-        after = target_path.read_bytes()
+        after = candidate[2]
         if source == target and before == after:
             continue
 
@@ -709,20 +723,305 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
 def derive_refactor_conformance(root: Path) -> list[Finding]:
     """Retain only anti-sabotage checks after the identity-only refactor phase ended."""
     findings: list[Finding] = []
+    candidates = candidate_git_entries(root)
     for source in baseline_paths(root):
         target = map_path(source)
-        target_path = root / target
-        if not target_path.exists() or not target_path.is_file() or source in LEGAL_OR_PROVENANCE_PATHS:
+        candidate = candidates.get(target)
+        if candidate is None or candidate[0] == "120000" or source in LEGAL_OR_PROVENANCE_PATHS:
             continue
         before = baseline_bytes(root, source)
         try:
             before_text = before.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        actual = target_path.read_bytes().decode("utf-8")
+        actual = candidate[2].decode("utf-8")
         if source.startswith("tests/"):
             findings.extend(test_sabotage_findings(map_text(before_text), actual, target))
     return findings
+
+
+CSHARP_DECLARATION_MODIFIERS = frozenset({
+    "abstract", "async", "extern", "file", "new", "override", "partial", "readonly",
+    "required", "sealed", "static", "unsafe", "virtual", "volatile",
+})
+CSHARP_RESTRICTED_INTERFACE_MODIFIERS = frozenset({"private", "protected", "internal"})
+CSHARP_TYPE_KEYWORDS = frozenset({"class", "enum", "interface", "record", "struct"})
+
+
+def csharp_tokens(text: str) -> list[CSharpToken]:
+    """Tokenize declaration-relevant C# without treating comments or literal contents as code."""
+    tokens: list[CSharpToken] = []
+    index = 0
+    line = 1
+    length = len(text)
+    multi_character = (
+        ">>>=", "<<=", ">>=", "??=", "=>", "::", "?.", "??", "++", "--", "&&", "||",
+        "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<", ">>", "..",
+    )
+
+    def consume_quoted(start: int, quote_index: int, quote: str, verbatim: bool) -> int:
+        nonlocal line
+        quote_count = 1
+        if quote == '"':
+            while quote_index + quote_count < length and text[quote_index + quote_count] == '"':
+                quote_count += 1
+        cursor = quote_index + quote_count
+        if quote == '"' and quote_count >= 3:
+            marker = '"' * quote_count
+            closing = text.find(marker, cursor)
+            if closing < 0:
+                line += text[start:].count("\n")
+                return length
+            end = closing + quote_count
+            line += text[start:end].count("\n")
+            return end
+        while cursor < length:
+            character = text[cursor]
+            if character == "\n":
+                line += 1
+            if character == quote:
+                if verbatim and cursor + 1 < length and text[cursor + 1] == quote:
+                    cursor += 2
+                    continue
+                return cursor + 1
+            if character == "\\" and not verbatim:
+                cursor += 2
+            else:
+                cursor += 1
+        return length
+
+    while index < length:
+        character = text[index]
+        if character.isspace():
+            if character == "\n":
+                line += 1
+            index += 1
+            continue
+        if text.startswith("//", index):
+            newline = text.find("\n", index + 2)
+            index = length if newline < 0 else newline
+            continue
+        if text.startswith("/*", index):
+            closing = text.find("*/", index + 2)
+            end = length if closing < 0 else closing + 2
+            line += text[index:end].count("\n")
+            index = end
+            continue
+
+        literal_quote = -1
+        if character == "'":
+            literal_quote = index
+        elif character == '"':
+            literal_quote = index
+        elif character in "@$":
+            cursor = index
+            while cursor < length and text[cursor] in "@$" and cursor - index < 3:
+                cursor += 1
+            if cursor < length and text[cursor] == '"':
+                literal_quote = cursor
+        if literal_quote >= 0:
+            token_line = line
+            verbatim = "@" in text[index:literal_quote]
+            end = consume_quoted(index, literal_quote, text[literal_quote], verbatim)
+            tokens.append(CSharpToken(text[index:end], token_line))
+            index = end
+            continue
+
+        if character == "@" and index + 1 < length and (text[index + 1].isalpha() or text[index + 1] == "_"):
+            end = index + 2
+            while end < length and (text[end].isalnum() or text[end] == "_"):
+                end += 1
+            tokens.append(CSharpToken(text[index:end], line))
+            index = end
+            continue
+        if character.isalpha() or character == "_":
+            end = index + 1
+            while end < length and (text[end].isalnum() or text[end] == "_"):
+                end += 1
+            tokens.append(CSharpToken(text[index:end], line))
+            index = end
+            continue
+        if character.isdigit():
+            end = index + 1
+            while end < length and (text[end].isalnum() or text[end] in "._"):
+                end += 1
+            tokens.append(CSharpToken(text[index:end], line))
+            index = end
+            continue
+        operator = next((item for item in multi_character if text.startswith(item, index)), character)
+        tokens.append(CSharpToken(operator, line))
+        index += len(operator)
+    return tokens
+
+
+def canonical_csharp_declaration(prefix: str, tokens: Iterable[CSharpToken]) -> str:
+    return prefix + " " + " ".join(token.text for token in tokens).strip()
+
+
+def csharp_public_declarations(text: str) -> list[tuple[str, int]]:
+    """Project explicit and language-defined implicit public C# declarations deterministically."""
+    tokens = csharp_tokens(text)
+    declarations: list[tuple[str, int]] = []
+
+    # Explicit public declarations are token based, so modifier whitespace and line breaks are irrelevant.
+    for public_index, token in enumerate(tokens):
+        if token.text != "public":
+            continue
+        start = public_index
+        while start > 0 and tokens[start - 1].text in CSHARP_DECLARATION_MODIFIERS:
+            start -= 1
+        parentheses = 0
+        brackets = 0
+        angles = 0
+        saw_parentheses = False
+        end = len(tokens)
+        for cursor in range(public_index + 1, len(tokens)):
+            value = tokens[cursor].text
+            if value == "(":
+                parentheses += 1
+                saw_parentheses = True
+            elif value == ")":
+                if parentheses == 0 and not saw_parentheses:
+                    end = cursor
+                    break
+                parentheses = max(0, parentheses - 1)
+            elif value == "[":
+                brackets += 1
+            elif value == "]":
+                brackets = max(0, brackets - 1)
+            elif value == "<":
+                angles += 1
+            elif value == ">":
+                angles = max(0, angles - 1)
+            elif value == ">>":
+                angles = max(0, angles - 2)
+            elif parentheses == 0 and brackets == 0 and (
+                value in {"{", ";", "=>"} or value == "," and angles == 0
+            ):
+                end = cursor
+                break
+        signature = tokens[start:end]
+        if signature:
+            declarations.append((canonical_csharp_declaration("explicit", signature), token.line))
+
+    brace_stack: list[int] = []
+    brace_pairs: dict[int, int] = {}
+    for index, token in enumerate(tokens):
+        if token.text == "{":
+            brace_stack.append(index)
+        elif token.text == "}" and brace_stack:
+            brace_pairs[brace_stack.pop()] = index
+
+    raw_regions: list[dict[str, object]] = []
+    for keyword_index, token in enumerate(tokens):
+        if token.text not in CSHARP_TYPE_KEYWORDS:
+            continue
+        body_start = next(
+            (
+                cursor for cursor in range(keyword_index + 1, len(tokens))
+                if tokens[cursor].text in {"{", ";"}
+            ),
+            None,
+        )
+        if body_start is None or tokens[body_start].text != "{" or body_start not in brace_pairs:
+            continue
+        header_start = keyword_index
+        while header_start > 0 and tokens[header_start - 1].text not in {"{", "}", ";"}:
+            header_start -= 1
+        raw_regions.append({
+            "kind": token.text,
+            "keyword": keyword_index,
+            "bodyStart": body_start,
+            "bodyEnd": brace_pairs[body_start],
+            "headerStart": header_start,
+            "headerTokens": tokens[header_start:body_start],
+            "public": False,
+        })
+
+    raw_regions.sort(key=lambda region: int(region["bodyStart"]))
+    for region in raw_regions:
+        keyword_index = int(region["keyword"])
+        parents = [
+            candidate for candidate in raw_regions
+            if int(candidate["bodyStart"]) < keyword_index < int(candidate["bodyEnd"])
+        ]
+        parent = min(parents, key=lambda candidate: int(candidate["bodyEnd"]) - int(candidate["bodyStart"]), default=None)
+        header_values = {token.text for token in region["headerTokens"]}  # type: ignore[index]
+        implicit_public = (
+            parent is not None
+            and parent["kind"] == "interface"
+            and parent["public"] is True
+            and not header_values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
+        )
+        region["public"] = "public" in header_values or implicit_public
+
+    def implicit_interface_members(region: Mapping[str, object]) -> None:
+        cursor = int(region["bodyStart"]) + 1
+        body_end = int(region["bodyEnd"])
+        segment_start = cursor
+        while cursor < body_end:
+            value = tokens[cursor].text
+            if value == "{" and cursor in brace_pairs:
+                segment = tokens[segment_start:cursor]
+                values = {item.text for item in segment}
+                if (
+                    segment
+                    and "public" not in values
+                    and not values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
+                ):
+                    declarations.append((canonical_csharp_declaration("implicit-interface", segment), segment[0].line))
+                cursor = brace_pairs[cursor] + 1
+                segment_start = cursor
+                continue
+            if value == ";":
+                segment = tokens[segment_start:cursor]
+                values = {item.text for item in segment}
+                if (
+                    segment
+                    and "public" not in values
+                    and not values.intersection(CSHARP_RESTRICTED_INTERFACE_MODIFIERS)
+                ):
+                    declarations.append((canonical_csharp_declaration("implicit-interface", segment), segment[0].line))
+                segment_start = cursor + 1
+            cursor += 1
+
+    def implicit_enum_members(region: Mapping[str, object]) -> None:
+        cursor = int(region["bodyStart"]) + 1
+        body_end = int(region["bodyEnd"])
+        segment_start = cursor
+        parentheses = 0
+        brackets = 0
+        braces = 0
+        while cursor <= body_end:
+            value = tokens[cursor].text if cursor < body_end else ","
+            if value == "(":
+                parentheses += 1
+            elif value == ")":
+                parentheses = max(0, parentheses - 1)
+            elif value == "[":
+                brackets += 1
+            elif value == "]":
+                brackets = max(0, brackets - 1)
+            elif value == "{":
+                braces += 1
+            elif value == "}":
+                braces = max(0, braces - 1)
+            elif value == "," and parentheses == 0 and brackets == 0 and braces == 0:
+                segment = tokens[segment_start:cursor]
+                if segment:
+                    declarations.append((canonical_csharp_declaration("implicit-enum", segment), segment[0].line))
+                segment_start = cursor + 1
+            cursor += 1
+
+    for region in raw_regions:
+        if region["public"] is not True:
+            continue
+        if region["kind"] == "interface":
+            implicit_interface_members(region)
+        elif region["kind"] == "enum":
+            implicit_enum_members(region)
+
+    return sorted(declarations, key=lambda item: (item[1], item[0]))
 
 
 def current_product_public_declarations(
@@ -740,12 +1039,10 @@ def current_product_public_declarations(
             findings.append(Finding("public-api-current", target, "current C# source is not UTF-8"))
             continue
         occurrences: Counter[str] = Counter()
-        for match in PUBLIC_DECLARATION.finditer(text):
-            declaration = match.group(0).strip()
+        for declaration, line in csharp_public_declarations(text):
             declaration_sha = sha256(declaration.encode("utf-8"))
             occurrence = occurrences[declaration_sha]
             occurrences[declaration_sha] += 1
-            line = text.count("\n", 0, match.start()) + 1
             records.append(
                 {
                     "targetPath": target,
@@ -808,6 +1105,7 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
     target_keys: set[tuple[str, str, int]] = set()
+    candidates = candidate_git_entries(root)
     for source in baseline_paths(root):
         if not source.endswith(".cs"):
             continue
@@ -817,20 +1115,21 @@ def derive_public_api_mapping(root: Path) -> tuple[list[dict[str, object]], list
         except UnicodeDecodeError:
             continue
         target = map_path(source)
-        target_exists = (root / target).exists()
-        target_text = (root / target).read_text(encoding="utf-8") if target_exists else ""
+        target_candidate = candidates.get(target)
+        target_exists = target_candidate is not None
+        try:
+            target_text = target_candidate[2].decode("utf-8") if target_candidate is not None else ""
+        except UnicodeDecodeError:
+            target_text = ""
         target_declarations: dict[str, list[int]] = {}
-        for target_match in PUBLIC_DECLARATION.finditer(target_text):
-            target_declaration = target_match.group(0).strip()
+        for target_declaration, target_line in csharp_public_declarations(target_text):
             target_declarations.setdefault(target_declaration, []).append(
-                target_text.count("\n", 0, target_match.start()) + 1
+                target_line
             )
         declaration_occurrences: Counter[str] = Counter()
         binding = baseline_binding(root, source)
-        for match in PUBLIC_DECLARATION.finditer(text):
-            declaration = match.group(0).strip()
+        for declaration, line in csharp_public_declarations(text):
             mapped = map_text(declaration)
-            line = text.count("\n", 0, match.start()) + 1
             occurrence = declaration_occurrences[mapped]
             declaration_occurrences[mapped] += 1
             target_lines = target_declarations.get(mapped, [])
