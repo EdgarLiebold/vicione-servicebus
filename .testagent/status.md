@@ -1251,3 +1251,21 @@ future cohorts as complete.
   separate host-input mutants, corrected unique M32 recipe, regenerated Evidence child, two new
   independent read-only PASS reviews, remote backup and architecture acceptance remain mandatory.
   Real AWS, credentials and GitHub Actions remain untouched.
+
+## AWS native closure — final host-input freeze
+
+- Technical `fba681ade996b48877497d71165426e1e92d4b0f`, Tree
+  `f5a7f4d2851595b605c9a6649b2945ae986d3267`, is frozen as the direct child of the preceding
+  reviewed Evidence. Its direct Evidence child is `2335df2ba241fbe44ac132d12467bcfba1e3a09e`,
+  Tree `7932fd9477731c04f6ab0f064eb889602d24e1a5`.
+- Fresh execution at the exact Technical freeze is UnitArchitecture 2,060/2,060 and
+  LocalIntegration 149/149, both with zero failure/skip. Unit, LocalIntegration and Engineering
+  locked restores and Release builds complete with zero warnings/errors. The SQS module is 66/66.
+- M35-M37 independently kill hostless URI, relative URI and null/empty/whitespace string-host
+  regressions. The re-bound M32 uses one unique full `Complete` method literal and kills both
+  failed/cancelled settlement axes. Four mutation builds pass; seven causal cases fail, two controls
+  pass and none skip. All targets restore byte-identically.
+- The Evidence directory contains 47 files with 46/46 nonmanifest hashes; CHANGELIST matches 8,424
+  generated entries. The only remaining local acceptance work is two independent read-only PASS
+  reviews, remote fast-forward and final architecture acceptance. Real AWS, credentials and GitHub
+  Actions remain untouched.
