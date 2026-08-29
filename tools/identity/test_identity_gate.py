@@ -17,6 +17,7 @@ from identity_gate import (
     GENERATED_EVIDENCE_CONTRACTS,
     GENERATED_EVIDENCE_MANIFEST,
     generated_evidence_manifest,
+    commit_tree,
     legal_identity_contexts,
     modification_format_exception_bindings,
     notice_format_exception_targets,
@@ -324,6 +325,18 @@ class IdentityGateTerminalDispositionTests(unittest.TestCase):
         invented_retirement = [dict(item) for item in self.EXISTING.values()]
         invented_retirement[0]["retirementCommit"] = "e" * 40
         self.assertTrue(any("carries retirement" in item.reason for item in self.findings(invented_retirement)))
+
+    def test_retirement_tree_resolves_from_the_deletion_commit_not_current_head(self) -> None:
+        deletion_commit = "a" * 40
+        deletion_tree = "b" * 40
+        with patch("identity_gate.git", return_value=(deletion_tree + "\n").encode("ascii")) as resolve:
+            self.assertEqual(deletion_tree, commit_tree(Path("/repository"), deletion_commit))
+        resolve.assert_called_once_with(Path("/repository"), "rev-parse", f"{deletion_commit}^{{tree}}")
+
+    def test_retirement_tree_rejects_symbolic_or_malformed_commit_identity(self) -> None:
+        for commit in ("HEAD", "a" * 39, "A" * 40):
+            with self.subTest(commit=commit), self.assertRaisesRegex(ValueError, "full lowercase"):
+                commit_tree(Path("/repository"), commit)
 
 
 class IdentityGateHistoricalContextTests(unittest.TestCase):

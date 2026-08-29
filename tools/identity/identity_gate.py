@@ -401,6 +401,15 @@ def change_list_deleted_baseline_paths(root: Path) -> set[str]:
     }
 
 
+def commit_tree(root: Path, commit: str) -> str:
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise ValueError("commit must be a full lowercase Git object id")
+    tree = git(root, "rev-parse", f"{commit}^{{tree}}").decode("ascii").strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", tree):
+        raise ValueError("resolved tree must be a full lowercase Git object id")
+    return tree
+
+
 def validate_terminal_baseline_records(
     records: Iterable[Mapping[str, object]],
     expected_keys: set[str],
@@ -560,7 +569,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     seen_targets: dict[str, str] = {}
     deleted_sources = change_list_deleted_baseline_paths(root)
     deletion_commits = deleted_path_commits(root)
-    retirement_tree = git(root, "rev-parse", "HEAD^{tree}").decode("ascii").strip()
+    retirement_trees: dict[str, str] = {}
     actual_paths = {
         candidate.relative_to(root).as_posix()
         for candidate in commit_candidate_files(root)
@@ -596,6 +605,11 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
                 findings.append(Finding("baseline-retirement", target, f"CHANGELIST has no deletion for {source}"))
             if not deletion_commit:
                 findings.append(Finding("baseline-retirement", target, f"Git history has no deletion for {source}"))
+            retirement_tree = None
+            if deletion_commit:
+                if deletion_commit not in retirement_trees:
+                    retirement_trees[deletion_commit] = commit_tree(root, deletion_commit)
+                retirement_tree = retirement_trees[deletion_commit]
             record.update({
                 "retirementCommit": deletion_commit,
                 "retirementEvidence": "ROOT_CHANGE_LIST",
