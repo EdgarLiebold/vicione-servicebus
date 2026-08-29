@@ -14,7 +14,6 @@ AssertionError: 'explicit public class Added : BaseType , ISecond' not found in 
 Ran 1 test in 0.001s
 
 FAILED (failures=1)
-
 M12 purpose=property indexer and event accessor shape remains bound
 occurrenceCount=1 mutantSha256=5eb3feeb12ba342d32b1576eb43403840b8ddba49572b0d7e3fc7f0e651964ce exitCode=1
 test=IdentityGatePublicProjectionTests.test_accessor_and_secondary_base_type_changes_have_distinct_public_identities
@@ -415,4 +414,3 @@ AssertionError: False is not true
 Ran 1 test in 0.001s
 
 FAILED (failures=1)
-
