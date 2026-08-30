@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4300 |
-| Modified | 4184 |
-| Deleted | 1464 |
+| Added | 4361 |
+| Modified | 4178 |
+| Deleted | 1470 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -32,6 +32,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
@@ -2308,6 +2309,63 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/focused-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/format-scoped.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/unit-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/unit-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/focused/focused-final.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_08_18.567031.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_08_22.828285.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_08_36.125734.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_08_38.420969.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_04.176741.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_07.731143.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_11.560847.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_14.870325.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_20.502211.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_22.975618.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_25.567049.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_47.620133.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_49.678482.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_09_54.220490.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_10.019037.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_12.024458.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_14.397956.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_16.770839.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_19.091393.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_21.561775.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_16_12_23.742507.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/positive/postrestore/positive.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/postrestore-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/SHA256SUMS` | Added |  |
@@ -8590,6 +8648,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/CronExpressionTests.cs` | Deleted | `tests/MassTransit.Tests/CronExpressionTests.cs` |
 | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
 | `tests/MassTransit.Tests/DelayProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
+| `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
 | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` | Deleted | `tests/MassTransit.Tests/Diagnostics/StatsD_Specs.cs` |
 | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` | Deleted | `tests/MassTransit.Tests/Diagnostics/Trace_Specs.cs` |
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
@@ -8689,6 +8748,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/PublishHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishHeader_Specs.cs` |
 | `tests/MassTransit.Tests/PublishObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishObserver_Specs.cs` |
 | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` |
+| `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` |
+| `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` |
+| `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` |
 | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` |
 | `tests/MassTransit.Tests/RequestClient_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClient_Specs.cs` |
 | `tests/MassTransit.Tests/RequestFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
@@ -8722,6 +8784,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` |
 | `tests/MassTransit.Tests/SerializationFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationFault_Specs.cs` |
 | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` |
+| `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/StartStop_Specs.cs` | Deleted | `tests/MassTransit.Tests/StartStop_Specs.cs` |
 | `tests/MassTransit.Tests/StaticProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/StaticProperty_Specs.cs` |
 | `tests/MassTransit.Tests/TaskExecutor_Specs.cs` | Deleted | `tests/MassTransit.Tests/TaskExecutor_Specs.cs` |
 | `tests/MassTransit.Tests/TaskExtension_Specs.cs` | Deleted | `tests/MassTransit.Tests/TaskExtension_Specs.cs` |
@@ -9026,7 +9090,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/TwoActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/UriArgument_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/DelayedRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ErrorQueue_Specs.cs` | Modified | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/EventPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/EventPublish_Specs.cs` |
@@ -9059,9 +9122,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/PolymorphicFault_Specs.cs` | Modified | `tests/MassTransit.Tests/PolymorphicFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/PublishSubscribe_Specs.cs` | Modified | `tests/MassTransit.Tests/PublishSubscribe_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReceiveEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RecurringJobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RecurringSchedule_Specs.cs` | Modified | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/RedeliveryHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Command.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Command.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/CreateState.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/CreateState.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Event.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Event.cs` |
@@ -9221,12 +9281,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SeparateSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationTest.cs` | Modified | `tests/MassTransit.Tests/Serialization/SerializationTest.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ServiceInstanceEndpoints_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ServiceProviderExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SimpleConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/StartStop_Specs.cs` | Modified | `tests/MassTransit.Tests/StartStop_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Telemetry_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
@@ -9713,6 +9768,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/BuiltPipelineConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs` | Added |  |
@@ -9727,6 +9783,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
@@ -9739,6 +9796,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
@@ -9775,6 +9833,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/RecurringJobScheduleConfiguratorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs` | Added |  |
@@ -9808,6 +9867,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
@@ -9816,6 +9876,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs` | Added |  |

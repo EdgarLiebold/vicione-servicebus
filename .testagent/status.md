@@ -2216,3 +2216,23 @@ future cohorts as complete.
   CHANGELIST are green. No empty legacy test directory remains and no cloud fixture was required.
 - No remote push was performed. Independent read-only acceptance, architecture binding and any future
   remote publication remain pending and are not self-approved by this local freeze.
+
+## Core runtime, scheduling and lifecycle — large-package local Evidence freeze (2026-08-30)
+
+- Technical `23f5936ddee72d0f1606bd7a2601a88fa6401bd7`, tree
+  `c359b0282cdcc9b7c91dee835c1c956233633fb2`, closes 34 obligations across delayed redelivery,
+  recurring scheduling, service-instance and built-pipeline configuration, in-memory lifecycle,
+  telemetry and deterministic test-harness timing.
+- Fifteen new xUnit methods materialize 18 executable cases. Nine fully replaced inherited files and
+  1,584 legacy test lines are removed atomically; the Technical package adds 1,364 lines and deletes
+  1,588, reducing the repository by 224 lines.
+- Focused execution is 33/33. Complete UnitArchitecture is 2,473/2,473 with no failure or skip above
+  the 2,468 floor; full and post-restore Release builds report zero warnings and zero errors.
+- Six independent, buildable mutations bind redelivery count, message identity, cron steps,
+  service-instance endpoint configuration, cancelled test-scope renewal and trace baggage. Every
+  intended carrier turns red and all source hashes are restored exactly.
+- The Evidence package reuses the one complete Technical run and adds only a 10/10 post-restore
+  control; it does not repeat the complete profile per mutant. No empty legacy directory remains and
+  no external fixture was used.
+- No remote push was performed. Independent read-only acceptance, architecture binding and any future
+  remote publication remain pending and are not self-approved by this local freeze.
