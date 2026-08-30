@@ -1,0 +1,22 @@
+^Drun identity vicione-8b657dee0a79, output under artifacts/run-output/vicione-8b657dee0a79
+fixture mssql ready on loopback: VICIONE_SERVICEBUS_MSSQL_HOST=127.0.0.1, VICIONE_SERVICEBUS_MSSQL_PORT=34674
+endpoints projected to artifacts/run-output/vicione-8b657dee0a79/endpoints.json
+fehlerhaft ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests.ConcurrentQueueDeclarationsCreateOneRowForEachQueueType (6s 946ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests.ConcurrentQueueDeclarationsCreateOneRowForEachQueueType() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs:214
+    um ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests.ConcurrentQueueDeclarationsCreateOneRowForEachQueueType() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs:214
+    um ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests.ConcurrentQueueDeclarationsCreateOneRowForEachQueueType() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs:214
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-results/M04.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 7s 482ms
+broker log mssql: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-8b657dee0a79/mssql-broker.log (416 lines)

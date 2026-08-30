@@ -1,0 +1,58 @@
+postgres-1  | 2026-08-30T00:07:35.117393455Z The files belonging to this database system will be owned by user "postgres".
+postgres-1  | 2026-08-30T00:07:35.119143879Z This user must also own the server process.
+postgres-1  | 2026-08-30T00:07:35.119171900Z 
+postgres-1  | 2026-08-30T00:07:35.119285607Z The database cluster will be initialized with locale "en_US.utf8".
+postgres-1  | 2026-08-30T00:07:35.119302123Z The default database encoding has accordingly been set to "UTF8".
+postgres-1  | 2026-08-30T00:07:35.119319062Z The default text search configuration will be set to "english".
+postgres-1  | 2026-08-30T00:07:35.119369458Z 
+postgres-1  | 2026-08-30T00:07:35.119385480Z Data page checksums are disabled.
+postgres-1  | 2026-08-30T00:07:35.119401219Z 
+postgres-1  | 2026-08-30T00:07:35.119417100Z fixing permissions on existing directory /var/lib/postgresql/data ... ok
+postgres-1  | 2026-08-30T00:07:35.120527278Z creating subdirectories ... ok
+postgres-1  | 2026-08-30T00:07:35.120826968Z selecting dynamic shared memory implementation ... posix
+postgres-1  | 2026-08-30T00:07:35.161882381Z selecting default max_connections ... 100
+postgres-1  | 2026-08-30T00:07:35.207241578Z selecting default shared_buffers ... 128MB
+postgres-1  | 2026-08-30T00:07:35.246293815Z selecting default time zone ... Etc/UTC
+postgres-1  | 2026-08-30T00:07:35.247300450Z creating configuration files ... ok
+postgres-1  | 2026-08-30T00:07:35.532745443Z running bootstrap script ... ok
+postgres-1  | 2026-08-30T00:07:35.981018313Z performing post-bootstrap initialization ... ok
+postgres-1  | 2026-08-30T00:07:35.988914136Z initdb: warning: enabling "trust" authentication for local connections
+postgres-1  | 2026-08-30T00:07:35.988986412Z syncing data to disk ... ok
+postgres-1  | 2026-08-30T00:07:35.989006810Z 
+postgres-1  | 2026-08-30T00:07:35.989133221Z initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+postgres-1  | 2026-08-30T00:07:35.989275867Z 
+postgres-1  | 2026-08-30T00:07:35.989294006Z Success. You can now start the database server using:
+postgres-1  | 2026-08-30T00:07:35.989309817Z 
+postgres-1  | 2026-08-30T00:07:35.989325133Z     pg_ctl -D /var/lib/postgresql/data -l logfile start
+postgres-1  | 2026-08-30T00:07:35.989340661Z 
+postgres-1  | 2026-08-30T00:07:36.033877924Z waiting for server to start....2026-08-30 00:07:36.033 UTC [48] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-30T00:07:36.038921446Z 2026-08-30 00:07:36.035 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-30T00:07:36.039655777Z 2026-08-30 00:07:36.039 UTC [51] LOG:  database system was shut down at 2026-08-30 00:07:35 UTC
+postgres-1  | 2026-08-30T00:07:36.043228524Z 2026-08-30 00:07:36.043 UTC [48] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-30T00:07:36.114598468Z  done
+postgres-1  | 2026-08-30T00:07:36.114940502Z server started
+postgres-1  | 2026-08-30T00:07:36.155790245Z 
+postgres-1  | 2026-08-30T00:07:36.156336147Z /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1  | 2026-08-30T00:07:36.156634193Z 
+postgres-1  | 2026-08-30T00:07:36.158920224Z waiting for server to shut down...2026-08-30 00:07:36.158 UTC [48] LOG:  received fast shutdown request
+postgres-1  | 2026-08-30T00:07:36.159692691Z .2026-08-30 00:07:36.159 UTC [48] LOG:  aborting any active transactions
+postgres-1  | 2026-08-30T00:07:36.163433566Z 2026-08-30 00:07:36.163 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+postgres-1  | 2026-08-30T00:07:36.165981762Z 2026-08-30 00:07:36.165 UTC [49] LOG:  shutting down
+postgres-1  | 2026-08-30T00:07:36.166567986Z 2026-08-30 00:07:36.166 UTC [49] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-08-30T00:07:36.168083383Z 2026-08-30 00:07:36.167 UTC [49] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/14F2B20, redo lsn=0/14F2B20
+postgres-1  | 2026-08-30T00:07:36.172854026Z 2026-08-30 00:07:36.172 UTC [48] LOG:  database system is shut down
+postgres-1  | 2026-08-30T00:07:36.260215686Z  done
+postgres-1  | 2026-08-30T00:07:36.260750801Z server stopped
+postgres-1  | 2026-08-30T00:07:36.261882855Z 
+postgres-1  | 2026-08-30T00:07:36.261906964Z PostgreSQL init process complete; ready for start up.
+postgres-1  | 2026-08-30T00:07:36.261923389Z 
+postgres-1  | 2026-08-30T00:07:36.280959152Z 2026-08-30 00:07:36.280 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-30T00:07:36.283734126Z 2026-08-30 00:07:36.282 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-08-30T00:07:36.284932796Z 2026-08-30 00:07:36.282 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-08-30T00:07:36.285182625Z 2026-08-30 00:07:36.283 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-30T00:07:36.289405393Z 2026-08-30 00:07:36.289 UTC [62] LOG:  database system was shut down at 2026-08-30 00:07:36 UTC
+postgres-1  | 2026-08-30T00:07:36.297272248Z 2026-08-30 00:07:36.296 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-30T00:11:41.510440878Z 2026-08-30 00:11:41.508 UTC [464] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:11:41.510588318Z 2026-08-30 00:11:41.508 UTC [461] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:11:41.610045155Z 2026-08-30 00:11:41.609 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:11:41.612819886Z 2026-08-30 00:11:41.611 UTC [60] LOG:  checkpoint complete: wrote 62 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=27, longest=0.001 s, average=0.001 s; distance=4555 kB, estimate=4555 kB; lsn=0/1965920, redo lsn=0/19658E8

@@ -2030,3 +2030,21 @@ future cohorts as complete.
 
 - Evidence `b47aa04b367f853e3b6e4e302664f8218b233dce` is the direct child of Technical `ae2ae679e3b1d157d10e0b40cdc733eca9bd53f0`.
 - The 17 hash-bound raw logs are now tracked explicitly; the generated CHANGELIST therefore closes at 9,439 entries. Product, test, mutation and result bytes are unchanged.
+
+## SQL transport native closure — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `99665084c190f2affc9540c383a9d11172824ce0`, tree
+  `765093f8acc43ca997e88f377c890293cebd985e`, closes all 135 SQL obligations:
+  134 are `REPLACED_EXECUTING` and only obsolete runtime dialect resolver
+  `OBL-R0-SQL-0054` is explicitly retired.
+- The inherited 40-file NUnit/VSTest SQL project and its empty directories are absent. Native SQL
+  execution is 45/45 hermetic, 71/71 PostgreSQL and 60/60 SQL Server. Complete UnitArchitecture is
+  2,399/2,399 and LocalIntegration is exactly 244 + 71 + 60 = 375/375, all without skips.
+- Locked Engineering restore and Release build pass; the build has 0 warnings and 0 errors. The
+  verification model passes and the CI tool suite passes 257/257 outside the restricted sandbox.
+- M01-M05 independently bind transient provider selection, run-scoped database identity, address
+  rejection, concurrent schema uniqueness and delivery identifiers. Every mutant builds cleanly,
+  is killed by its named behavioral carrier and is restored to its exact Technical-tree SHA.
+- This is explicitly the pre-Evidence-commit checkpoint. The direct Evidence child, regenerated
+  identity/CHANGELIST closure, architecture binding and remote push remain pending. No SQL closure
+  commit in this local range is self-approved or newly pushed.

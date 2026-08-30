@@ -1,0 +1,1236 @@
+mssql-1  | 2026-08-30T00:07:34.939979203Z SQL Server 2025 will run as non-root by default.
+mssql-1  | 2026-08-30T00:07:34.940075048Z This container is running as user mssql.
+mssql-1  | 2026-08-30T00:07:34.940093567Z To learn more visit https://go.microsoft.com/fwlink/?linkid=2099216.
+mssql-1  | 2026-08-30T00:07:41.509830139Z 2026-08-30 00:07:41.48 Server      Setup step is copying system data file 'C:\templatedata\master.mdf' to '/var/opt/mssql/data/master.mdf'.
+mssql-1  | 2026-08-30T00:07:41.522961124Z 
+2026-08-30 00:07:41.51 Server      Did not find an existing master data file /var/opt/mssql/data/master.mdf, copying the missing default master and other system database files. If you have moved the database location, but not moved the database files, startup may fail. To repair: shutdown SQL Server, move the master database to configured location, and restart.
+mssql-1  | 2026-08-30T00:07:41.523700472Z 
+2026-08-30 00:07:41.52 Server      Setup step is copying system data file 'C:\templatedata\mastlog.ldf' to '/var/opt/mssql/data/mastlog.ldf'.
+mssql-1  | 2026-08-30T00:07:41.527803700Z 
+2026-08-30 00:07:41.52 Server      Setup step is copying system data file 'C:\templatedata\model.mdf' to '/var/opt/mssql/data/model.mdf'.
+mssql-1  | 2026-08-30T00:07:41.545207718Z 
+2026-08-30 00:07:41.54 Server      Setup step is copying system data file 'C:\templatedata\modellog.ldf' to '/var/opt/mssql/data/modellog.ldf'.
+mssql-1  | 2026-08-30T00:07:41.561839125Z 
+2026-08-30 00:07:41.55 Server      Setup step is copying system data file 'C:\templatedata\msdbdata.mdf' to '/var/opt/mssql/data/msdbdata.mdf'.
+mssql-1  | 2026-08-30T00:07:41.583688254Z 
+2026-08-30 00:07:41.58 Server      Setup step is copying system data file 'C:\templatedata\msdblog.ldf' to '/var/opt/mssql/data/msdblog.ldf'.
+mssql-1  | 2026-08-30T00:07:41.586753894Z 
+2026-08-30 00:07:41.58 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_replicatedmaster.mdf' to '/var/opt/mssql/data/model_replicatedmaster.mdf'.
+mssql-1  | 2026-08-30T00:07:41.597385939Z 
+2026-08-30 00:07:41.59 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_replicatedmaster.ldf' to '/var/opt/mssql/data/model_replicatedmaster.ldf'.
+mssql-1  | 2026-08-30T00:07:41.601741138Z 
+2026-08-30 00:07:41.59 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_msdbdata.mdf' to '/var/opt/mssql/data/model_msdbdata.mdf'.
+mssql-1  | 2026-08-30T00:07:41.634199212Z 
+2026-08-30 00:07:41.63 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_msdblog.ldf' to '/var/opt/mssql/data/model_msdblog.ldf'.
+mssql-1  | 2026-08-30T00:07:41.665544356Z 
+2026-08-30 00:07:41.66 Server      Microsoft SQL Server 2025 (RTM-CU8) (KB5104822) - 17.0.4075.5 (X64) 
+mssql-1  | 2026-08-30T00:07:41.665572858Z 
+	Jul 22 2026 00:20:30 
+mssql-1  | 2026-08-30T00:07:41.665590058Z 
+	Copyright (C) 2025 Microsoft Corporation
+mssql-1  | 2026-08-30T00:07:41.665605482Z 
+	Enterprise Developer Edition (64-bit) on Linux (Ubuntu 24.04.4 LTS) <X64>
+mssql-1  | 2026-08-30T00:07:41.666052133Z 
+2026-08-30 00:07:41.66 Server      UTC adjustment: 0:00
+mssql-1  | 2026-08-30T00:07:41.666176518Z 
+2026-08-30 00:07:41.66 Server      (c) Microsoft Corporation.
+mssql-1  | 2026-08-30T00:07:41.666621179Z 
+2026-08-30 00:07:41.66 Server      All rights reserved.
+mssql-1  | 2026-08-30T00:07:41.666639019Z 
+2026-08-30 00:07:41.66 Server      Server process ID is 792.
+mssql-1  | 2026-08-30T00:07:41.667168048Z 
+2026-08-30 00:07:41.66 Server      Logging SQL Server messages in file '/var/opt/mssql/log/errorlog'.
+mssql-1  | 2026-08-30T00:07:41.667185960Z 
+2026-08-30 00:07:41.66 Server      Registry startup parameters: 
+mssql-1  | 2026-08-30T00:07:41.667201526Z 
+	 -d /var/opt/mssql/data/master.mdf
+mssql-1  | 2026-08-30T00:07:41.667216665Z 
+	 -l /var/opt/mssql/data/mastlog.ldf
+mssql-1  | 2026-08-30T00:07:41.667231591Z 
+	 -e /var/opt/mssql/log/errorlog
+mssql-1  | 2026-08-30T00:07:41.668654206Z 
+2026-08-30 00:07:41.66 Server      SQL Server detected 1 sockets with 2 cores per socket and 2 logical processors per socket, 2 total logical processors; using 2 logical processors based on SQL Server licensing. This is an informational message; no user action is required.
+mssql-1  | 2026-08-30T00:07:41.669064749Z 
+2026-08-30 00:07:41.66 Server      SQL Server is starting at normal priority base (=7). This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:41.669488513Z 
+2026-08-30 00:07:41.66 Server      Using conventional memory in the memory manager.
+mssql-1  | 2026-08-30T00:07:41.670800815Z 
+2026-08-30 00:07:41.66 Server      SQL Server detected the following NUMA node configuration (NUMA Node number 0, Processor Group number 0, CPU Mask 0x0000000000000003).
+mssql-1  | 2026-08-30T00:07:41.671374126Z 
+2026-08-30 00:07:41.66 Server      Page exclusion bitmap is enabled.
+mssql-1  | 2026-08-30T00:07:41.697395713Z 
+2026-08-30 00:07:41.69 Server      Detected 3132 MB of RAM, 2856 MB of available memory, 2856 MB of available page file. This is an informational message; no user action is required.
+mssql-1  | 2026-08-30T00:07:41.697427840Z 
+2026-08-30 00:07:41.69 Server      Buffer pool extension is not supported on Linux platform.
+mssql-1  | 2026-08-30T00:07:41.701758019Z 
+2026-08-30 00:07:41.69 Server      Buffer Pool: Allocating 4194304 bytes for 449102 hashPages.
+mssql-1  | 2026-08-30T00:07:42.061546607Z 
+2026-08-30 00:07:42.06 Server      Buffer pool extension is already disabled. No action is necessary.
+mssql-1  | 2026-08-30T00:07:42.084986226Z 
+[EnableRbpexForGP] : Rbpex non HS FS Toggled, isGeneralPurpose:[0] 
+mssql-1  | 2026-08-30T00:07:42.086585494Z 
+[EnableRbpexForLogicalMaster] : Rbpex for LM Toggled
+mssql-1  | 2026-08-30T00:07:42.256563408Z 
+[RbpexEnableGrowWithoutShrink] : Rbpex Thin Provisioning FS Toggled
+mssql-1  | 2026-08-30T00:07:42.951358512Z 
+2026-08-30 00:07:42.93 Server      Skipping small memory environment configuration. State 1.
+mssql-1  | 2026-08-30T00:07:42.981266698Z 
+[INFO] [InitXdbSrvGlobals]: In InitXdbSrvGlobals, FAlternateIoFactorEnabled() = [1]. IsRBPEXEnabledNonHyperscaleEdition() = [0].
+mssql-1  | 2026-08-30T00:07:43.044591772Z 
+[RSC Capacity config] MaximumNumberOfCachePerDb: 0, MaximumSpaceForCachePerDbInMB: -1, MaximumNumberOfCacheGlobal: -1
+mssql-1  | 2026-08-30T00:07:43.070246998Z 
+[INFO] [InitServerComponents]: IsRBPEXEnabledNonHyperscaleEdition() = [0], IsSubCoreCPUAllocation = [0], GetSchedulersNumber*100 = [200], GetCPUCorePercentCap = [200.000000], EnableResilientBufferPoolExtension = [0], , RbpexEnableShrink (thin provisioning)  = [0], RbpexEnableGrowWithoutShrink = [0].
+mssql-1  | 2026-08-30T00:07:43.077588673Z 
+2026-08-30 00:07:43.05 Server      Installing Client TLS certificates to the store.
+mssql-1  | 2026-08-30T00:07:43.089822131Z 
+2026-08-30 00:07:43.07 Server      CPU vectorization level(s) detected:  SSE SSE2 SSE3 SSSE3 SSE41 SSE42 AVX AVX2 POPCNT BMI1 BMI2
+mssql-1  | 2026-08-30T00:07:43.125743398Z 
+SqlInstanceNetworkManager: Finished setting callback functions for network IO tracking in UCS broker.
+mssql-1  | 2026-08-30T00:07:43.151103334Z 
+2026-08-30 00:07:43.13 Server      Successfully initialized the TLS configuration. Allowed TLS protocol versions are ['1.0 1.1 1.2 1.3']. Allowed TLS ciphers are ['TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:!DHE-RSA-AES256-GCM-SHA384:!DHE-RSA-AES128-GCM-SHA256:!DHE-RSA-AES256-SHA:!DHE-RSA-AES128-SHA'].
+mssql-1  | 2026-08-30T00:07:43.175318572Z 
+2026-08-30 00:07:43.15 Server      Query Store settings initialized with enabled = 1, 
+mssql-1  | 2026-08-30T00:07:43.181226135Z 
+2026-08-30 00:07:43.16 Server      The maximum number of dedicated administrator connections for this instance is '1'
+mssql-1  | 2026-08-30T00:07:43.190320362Z 
+2026-08-30 00:07:43.17 Server      Node configuration: node 0: CPU mask: 0x0000000000000003:0 Active CPU mask: 0x0000000000000003:0. This message provides a description of the NUMA configuration for this computer. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:43.202520971Z 
+2026-08-30 00:07:43.18 Server      Using dynamic lock allocation.  Initial allocation of 2500 Lock blocks and 5000 Lock Owner blocks per node.  This is an informational message only.  No user action is required.
+mssql-1  | 2026-08-30T00:07:43.231683284Z 
+2026-08-30 00:07:43.21 Server      In-Memory OLTP initialized on lowend machine.
+mssql-1  | 2026-08-30T00:07:43.252087791Z 
+2026-08-30 00:07:43.23 Server      [INFO] Created Extended Events session 'hkenginexesession'
+mssql-1  | 2026-08-30T00:07:43.255646629Z 
+2026-08-30 00:07:43.23 Server      Database Instant File Initialization: enabled. For security and performance considerations see the topic 'Database Instant File Initialization' in SQL Server Books Online. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:43.258928019Z 
+ForceFlush is enabled for this instance. 
+mssql-1  | 2026-08-30T00:07:43.264334276Z 
+2026-08-30 00:07:43.24 Server      Total Log Writer threads: 1. This is an informational message; no user action is required.
+mssql-1  | 2026-08-30T00:07:43.273436291Z 
+2026-08-30 00:07:43.25 Server      clflushopt is selected for pmem flush operation.
+mssql-1  | 2026-08-30T00:07:43.279413092Z 
+2026-08-30 00:07:43.25 Server      Software Usage Metrics is disabled.
+mssql-1  | 2026-08-30T00:07:43.279436808Z 
+Failed to open password policy registry path. Using default password policy values.
+mssql-1  | 2026-08-30T00:07:43.316120830Z 
+2026-08-30 00:07:43.29 spid15s     [1]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:43.320420052Z 
+2026-08-30 00:07:43.30 spid15s     Starting up database 'master'.
+mssql-1  | 2026-08-30T00:07:43.338650063Z 
+BulkAdmin AllowedPathsList cleared (path filtering disabled)
+mssql-1  | 2026-08-30T00:07:43.353536669Z 
+2026-08-30 00:07:43.33 Server      CLR version v4.0.30319 loaded.
+mssql-1  | 2026-08-30T00:07:43.708649687Z 
+2026-08-30 00:07:43.69 Server      Common language runtime (CLR) functionality initialized.
+mssql-1  | 2026-08-30T00:07:43.989150637Z 
+ForceFlush feature is enabled for log durability.
+mssql-1  | 2026-08-30T00:07:44.264988328Z 
+2026-08-30 00:07:44.26 spid15s     Converting database 'master' from version 984 to the current version 998.
+mssql-1  | 2026-08-30T00:07:44.265589328Z 
+2026-08-30 00:07:44.26 spid15s     Database 'master' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-30T00:07:44.291693066Z 
+2026-08-30 00:07:44.29 Server      External governance manager initialized
+mssql-1  | 2026-08-30T00:07:44.292393090Z 
+2026-08-30 00:07:44.29 Server      Detected pause instruction latency: 128 cycles.
+mssql-1  | 2026-08-30T00:07:44.305985810Z 
+2026-08-30 00:07:44.30 spid15s     Database 'master' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-30T00:07:44.311719941Z 
+2026-08-30 00:07:44.31 spid15s     Database 'master' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-30T00:07:44.317089713Z 
+2026-08-30 00:07:44.32 spid15s     Database 'master' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-30T00:07:44.327505607Z 
+2026-08-30 00:07:44.33 spid15s     Database 'master' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-30T00:07:44.333289427Z 
+2026-08-30 00:07:44.33 spid15s     Database 'master' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-30T00:07:44.339762104Z 
+2026-08-30 00:07:44.34 spid15s     Database 'master' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-30T00:07:44.341068075Z 
+2026-08-30 00:07:44.34 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-30T00:07:44.345926329Z 
+2026-08-30 00:07:44.34 spid15s     Database 'master' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-30T00:07:44.352262026Z 
+2026-08-30 00:07:44.35 spid15s     Database 'master' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-30T00:07:44.358345462Z 
+2026-08-30 00:07:44.36 spid15s     Database 'master' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-30T00:07:44.359035591Z 
+2026-08-30 00:07:44.36 spid15s     [METADATA] Successfully updated max_duration metadata of XE session 65536
+mssql-1  | 2026-08-30T00:07:44.359644578Z 
+2026-08-30 00:07:44.36 spid15s     [METADATA] Successfully updated max_duration metadata of XE session 65537
+mssql-1  | 2026-08-30T00:07:44.365934897Z 
+2026-08-30 00:07:44.36 spid15s     Database 'master' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-30T00:07:44.381359949Z 
+2026-08-30 00:07:44.38 spid15s     Database 'master' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-30T00:07:44.387750070Z 
+2026-08-30 00:07:44.39 spid15s     Database 'master' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-30T00:07:44.395242885Z 
+2026-08-30 00:07:44.39 spid15s     Database 'master' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-30T00:07:44.478424298Z 
+[INFO] [StartUp::OpenDBsAndRecover]: In Startup, FEnableResilientBufferPoolExtensionEnabled() = [0]. IsRBPEXSupportedNonHyperscaleEdition() = [0]. IsSubCore = [0].
+mssql-1  | 2026-08-30T00:07:44.480044093Z 
+[INFO][DBDDLAgent::AttachDatabase] Starting Database Attach.
+mssql-1  | 2026-08-30T00:07:44.484501373Z 
+2026-08-30 00:07:44.48 spid20s     [32767]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:44.488015841Z 
+2026-08-30 00:07:44.49 spid20s     Starting up database 'mssqlsystemresource'.
+mssql-1  | 2026-08-30T00:07:44.492661910Z 
+2026-08-30 00:07:44.49 spid20s     The resource database build version is 17.00.4075. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:44.529464196Z 
+2026-08-30 00:07:44.53 spid25s     Password policy update was successful.
+mssql-1  | 2026-08-30T00:07:44.541597496Z 
+2026-08-30 00:07:44.54 spid20s     [3]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:44.542254970Z 
+2026-08-30 00:07:44.54 spid20s     Starting up database 'model'.
+mssql-1  | 2026-08-30T00:07:44.615428671Z 
+2026-08-30 00:07:44.62 spid20s     Converting database 'model' from version 984 to the current version 998.
+mssql-1  | 2026-08-30T00:07:44.615479137Z 
+2026-08-30 00:07:44.62 spid20s     Database 'model' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-30T00:07:44.631446312Z 
+2026-08-30 00:07:44.63 spid20s     Database 'model' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-30T00:07:44.637079864Z 
+2026-08-30 00:07:44.64 spid20s     Database 'model' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-30T00:07:44.643843251Z 
+2026-08-30 00:07:44.64 spid20s     Database 'model' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-30T00:07:44.654888065Z 
+2026-08-30 00:07:44.66 spid20s     Database 'model' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-30T00:07:44.661822853Z 
+2026-08-30 00:07:44.66 spid20s     Database 'model' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-30T00:07:44.668906708Z 
+2026-08-30 00:07:44.67 spid20s     Database 'model' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-30T00:07:44.670616974Z 
+2026-08-30 00:07:44.67 spid20s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-30T00:07:44.677525328Z 
+2026-08-30 00:07:44.68 spid20s     Database 'model' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-30T00:07:44.684306456Z 
+2026-08-30 00:07:44.69 spid20s     Database 'model' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-30T00:07:44.688965954Z 
+2026-08-30 00:07:44.69 spid20s     Database 'model' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-30T00:07:44.695338264Z 
+2026-08-30 00:07:44.70 spid20s     Database 'model' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-30T00:07:44.703548843Z 
+2026-08-30 00:07:44.71 spid20s     Database 'model' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-30T00:07:44.710061172Z 
+2026-08-30 00:07:44.71 spid20s     Database 'model' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-30T00:07:44.715520072Z 
+2026-08-30 00:07:44.72 spid20s     Database 'model' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-30T00:07:44.730414875Z 
+2026-08-30 00:07:44.73 spid20s     Synchronize Database 'model' (3) with Resource Database.
+mssql-1  | 2026-08-30T00:07:45.334690917Z 
+2026-08-30 00:07:45.33 spid25s     A self-generated certificate was successfully loaded for encryption.
+mssql-1  | 2026-08-30T00:07:45.337016186Z 
+2026-08-30 00:07:45.33 spid25s     Server is listening on [ 'any' <ipv6> 1433] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.337300483Z 
+2026-08-30 00:07:45.33 spid25s     Server is listening on [ 'any' <ipv4> 1433] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.340490856Z 
+2026-08-30 00:07:45.33 Server      Server is listening on [ ::1 <ipv6> 1434] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.346731146Z 
+2026-08-30 00:07:45.34 Server      Server is listening on [ 127.0.0.1 <ipv4> 1434] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.346763612Z 
+2026-08-30 00:07:45.34 Server      Dedicated admin connection support was established for listening locally on port 1434.
+mssql-1  | 2026-08-30T00:07:45.346780552Z 
+TDS initialization result: 0.
+mssql-1  | 2026-08-30T00:07:45.354146951Z 
+2026-08-30 00:07:45.35 spid25s     Server is listening on [ ::1 <ipv6> 1431] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.354680538Z 
+2026-08-30 00:07:45.35 spid25s     Server is listening on [ 127.0.0.1 <ipv4> 1431] accept sockets 1.
+mssql-1  | 2026-08-30T00:07:45.357887144Z 
+SQLSERVR_SSL_CERTIFICATE_DNS_OR_SUBJECT_NAME environment variable was not set as SSL cert is self signed or untrusted.
+mssql-1  | 2026-08-30T00:07:45.358121471Z 
+2026-08-30 00:07:45.35 spid25s     SQL Server is now ready for client connections. This is an informational message; no user action is required.
+mssql-1  | 2026-08-30T00:07:45.362656045Z 
+2026-08-30 00:07:45.35 spid15s     [32762]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:45.367999824Z 
+2026-08-30 00:07:45.36 spid15s     Starting up database 'model_replicatedmaster'.
+mssql-1  | 2026-08-30T00:07:45.423943915Z 
+2026-08-30 00:07:45.42 spid15s     Converting database 'model_replicatedmaster' from version 984 to the current version 998.
+mssql-1  | 2026-08-30T00:07:45.424914747Z 
+2026-08-30 00:07:45.42 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-30T00:07:45.429969217Z 
+2026-08-30 00:07:45.42 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-30T00:07:45.435962405Z 
+2026-08-30 00:07:45.43 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-30T00:07:45.442313506Z 
+2026-08-30 00:07:45.43 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-30T00:07:45.453819583Z 
+2026-08-30 00:07:45.45 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-30T00:07:45.459783409Z 
+2026-08-30 00:07:45.45 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-30T00:07:45.466431230Z 
+2026-08-30 00:07:45.46 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-30T00:07:45.468621691Z 
+2026-08-30 00:07:45.46 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-30T00:07:45.473414872Z 
+2026-08-30 00:07:45.47 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-30T00:07:45.478704656Z 
+2026-08-30 00:07:45.47 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-30T00:07:45.488725229Z 
+2026-08-30 00:07:45.48 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-30T00:07:45.493701566Z 
+2026-08-30 00:07:45.49 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-30T00:07:45.506614944Z 
+2026-08-30 00:07:45.50 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-30T00:07:45.511125168Z 
+2026-08-30 00:07:45.51 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-30T00:07:45.516838717Z 
+2026-08-30 00:07:45.51 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-30T00:07:45.530324008Z 
+2026-08-30 00:07:45.52 spid15s     Synchronize Database 'model_replicatedmaster' (32762) with Resource Database.
+mssql-1  | 2026-08-30T00:07:45.554517747Z 
+2026-08-30 00:07:45.55 Logon       Error: 18456, Severity: 14, State: 7.
+mssql-1  | 2026-08-30T00:07:45.554550567Z 
+2026-08-30 00:07:45.55 Logon       Login failed for user 'sa'. Reason: An error occurred while evaluating the password. [CLIENT: 172.21.0.2]
+mssql-1  | 2026-08-30T00:07:45.584988830Z 
+[INFO][DBDDLAgent::AttachDatabase] Starting Database Attach.
+mssql-1  | 2026-08-30T00:07:45.617481335Z 
+2026-08-30 00:07:45.61 spid15s     [32761]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:45.617626024Z 
+2026-08-30 00:07:45.61 spid15s     Starting up database 'model_msdb'.
+mssql-1  | 2026-08-30T00:07:45.668268968Z 
+2026-08-30 00:07:45.66 spid15s     Converting database 'model_msdb' from version 984 to the current version 998.
+mssql-1  | 2026-08-30T00:07:45.670856725Z 
+2026-08-30 00:07:45.66 spid15s     Database 'model_msdb' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-30T00:07:45.676667675Z 
+2026-08-30 00:07:45.67 spid15s     Database 'model_msdb' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-30T00:07:45.682158966Z 
+2026-08-30 00:07:45.68 spid15s     Database 'model_msdb' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-30T00:07:45.688416689Z 
+2026-08-30 00:07:45.68 spid15s     Database 'model_msdb' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-30T00:07:45.703827270Z 
+2026-08-30 00:07:45.70 spid15s     Database 'model_msdb' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-30T00:07:45.710054996Z 
+2026-08-30 00:07:45.71 spid15s     Database 'model_msdb' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-30T00:07:45.715846325Z 
+2026-08-30 00:07:45.71 spid15s     Database 'model_msdb' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-30T00:07:45.718103484Z 
+2026-08-30 00:07:45.71 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-30T00:07:45.724087990Z 
+2026-08-30 00:07:45.72 spid15s     Database 'model_msdb' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-30T00:07:45.729365211Z 
+2026-08-30 00:07:45.73 spid15s     Database 'model_msdb' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-30T00:07:45.735455306Z 
+2026-08-30 00:07:45.73 spid15s     Database 'model_msdb' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-30T00:07:45.740522974Z 
+2026-08-30 00:07:45.74 spid15s     Database 'model_msdb' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-30T00:07:45.752884979Z 
+2026-08-30 00:07:45.75 spid15s     Database 'model_msdb' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-30T00:07:45.764082267Z 
+2026-08-30 00:07:45.76 spid15s     Database 'model_msdb' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-30T00:07:45.769575534Z 
+2026-08-30 00:07:45.77 spid15s     Database 'model_msdb' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-30T00:07:45.774830028Z 
+2026-08-30 00:07:45.77 spid15s     Synchronize Database 'model_msdb' (32761) with Resource Database.
+mssql-1  | 2026-08-30T00:07:45.831445903Z 
+2026-08-30 00:07:45.83 spid15s     Resource governor reconfiguration succeeded.
+mssql-1  | 2026-08-30T00:07:45.831652986Z 
+2026-08-30 00:07:45.83 spid15s     SQL Server Audit is starting the audits. This is an informational message. No user action is required.
+mssql-1  | 2026-08-30T00:07:45.832643793Z 
+[Auditing][SecAuditPkg::AutoStartAuditSessions] Entered function.
+mssql-1  | 2026-08-30T00:07:45.834402513Z 
+2026-08-30 00:07:45.83 spid15s     [AutoStartAuditSessions] Starting audit session task
+mssql-1  | 2026-08-30T00:07:45.835903475Z 
+2026-08-30 00:07:45.83 spid15s     SQL Server Audit has started the audits. This is an informational message. No user action is required.
+mssql-1  | 2026-08-30T00:07:45.868434869Z 
+2026-08-30 00:07:45.87 spid15s     SQL Trace ID 1 was started by login "sa".
+mssql-1  | 2026-08-30T00:07:45.880528950Z 
+2026-08-30 00:07:45.88 spid15s     Server name is '806a957dc99f'. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:45.904523582Z 
+2026-08-30 00:07:45.90 spid20s     Clearing tempdb database.
+mssql-1  | 2026-08-30T00:07:45.904551673Z 
+2026-08-30 00:07:45.90 spid37s     Always On Availability Groups: The availability replica manager is starting. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:45.906183702Z 
+2026-08-30 00:07:45.90 spid37s     Always On Availability Groups: The availability replica manager is waiting for the instance of SQL Server to allow client connections. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:45.915332890Z 
+2026-08-30 00:07:45.91 spid39s     [4]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:45.920409734Z 
+2026-08-30 00:07:45.92 spid39s     Starting up database 'msdb'.
+mssql-1  | 2026-08-30T00:07:45.991765959Z 
+2026-08-30 00:07:45.99 spid39s     Converting database 'msdb' from version 984 to the current version 998.
+mssql-1  | 2026-08-30T00:07:45.993339618Z 
+2026-08-30 00:07:45.99 spid39s     Database 'msdb' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-30T00:07:46.013112530Z 
+2026-08-30 00:07:46.01 spid39s     Database 'msdb' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-30T00:07:46.022542922Z 
+2026-08-30 00:07:46.02 spid39s     Database 'msdb' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-30T00:07:46.026069582Z 
+2026-08-30 00:07:46.03 spid39s     Database 'msdb' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-30T00:07:46.049938070Z 
+2026-08-30 00:07:46.05 spid39s     Database 'msdb' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-30T00:07:46.060488726Z 
+2026-08-30 00:07:46.06 spid39s     Database 'msdb' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-30T00:07:46.067626566Z 
+2026-08-30 00:07:46.07 spid39s     Database 'msdb' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-30T00:07:46.071165563Z 
+2026-08-30 00:07:46.07 spid39s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-30T00:07:46.076470462Z 
+2026-08-30 00:07:46.08 spid39s     Database 'msdb' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-30T00:07:46.086449355Z 
+2026-08-30 00:07:46.09 spid39s     Database 'msdb' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-30T00:07:46.096343586Z 
+2026-08-30 00:07:46.10 spid20s     [2]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:46.098305810Z 
+2026-08-30 00:07:46.10 spid39s     Database 'msdb' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-30T00:07:46.099807578Z 
+2026-08-30 00:07:46.10 spid20s     Starting up database 'tempdb'.
+mssql-1  | 2026-08-30T00:07:46.105266645Z 
+2026-08-30 00:07:46.11 spid39s     Database 'msdb' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-30T00:07:46.128679329Z 
+2026-08-30 00:07:46.13 spid39s     Database 'msdb' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-30T00:07:46.144136038Z 
+2026-08-30 00:07:46.15 spid39s     Database 'msdb' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-30T00:07:46.151496846Z 
+2026-08-30 00:07:46.15 spid20s     The tempdb database has 1 data file(s).
+mssql-1  | 2026-08-30T00:07:46.152577352Z 
+2026-08-30 00:07:46.15 spid39s     Database 'msdb' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-30T00:07:46.156441036Z 
+2026-08-30 00:07:46.16 spid41s     The Service Broker endpoint is in disabled or stopped state.
+mssql-1  | 2026-08-30T00:07:46.156559252Z 
+2026-08-30 00:07:46.16 spid41s     The Database Mirroring endpoint is in disabled or stopped state.
+mssql-1  | 2026-08-30T00:07:46.160780614Z 
+2026-08-30 00:07:46.16 spid39s     Synchronize Database 'msdb' (4) with Resource Database.
+mssql-1  | 2026-08-30T00:07:46.172515964Z 
+2026-08-30 00:07:46.17 spid41s     Service Broker manager has started.
+mssql-1  | 2026-08-30T00:07:46.204369116Z 
+2026-08-30 00:07:46.20 spid15s     Recovery is complete. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-30T00:07:46.259545357Z 
+2026-08-30 00:07:46.26 spid23s     The default language (LCID 0) has been set for engine and full-text services.
+mssql-1  | 2026-08-30T00:07:46.307978303Z 
+2026-08-30 00:07:46.31 spid23s     The tempdb database has 2 data file(s).
+mssql-1  | 2026-08-30T00:07:52.892815291Z 
+2026-08-30 00:07:52.88 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:07:52.994991433Z 
+2026-08-30 00:07:52.99 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:07:52.996117784Z 
+2026-08-30 00:07:52.99 spid51      Starting up database 'vsbms_443027a4a62907b62bef3bbcd6398c55'.
+mssql-1  | 2026-08-30T00:07:53.027943919Z 
+2026-08-30 00:07:53.02 spid51      Parallel redo is started for database 'vsbms_443027a4a62907b62bef3bbcd6398c55' with worker pool size [1].
+mssql-1  | 2026-08-30T00:07:53.041172535Z 
+2026-08-30 00:07:53.03 spid51      Parallel redo is shutdown for database 'vsbms_443027a4a62907b62bef3bbcd6398c55' with worker pool size [1].
+mssql-1  | 2026-08-30T00:07:57.431653429Z 
+2026-08-30 00:07:57.43 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_443027a4a62907b62bef3bbcd6398c55'.
+mssql-1  | 2026-08-30T00:08:00.380711629Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_443027a4a62907b62bef3bbcd6398c55.mdf'.
+mssql-1  | 2026-08-30T00:08:00.384369907Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_443027a4a62907b62bef3bbcd6398c55_log.ldf'.
+mssql-1  | 2026-08-30T00:08:00.394991454Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:00.408461028Z 
+[DeleteDbName] Database vsbms_443027a4a62907b62bef3bbcd6398c55 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:00.475801773Z 
+2026-08-30 00:08:00.47 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:00.588726057Z 
+2026-08-30 00:08:00.58 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:00.588903485Z 
+2026-08-30 00:08:00.58 spid51      Starting up database 'vsbms_f42d2288f970164989c5f4bcbe12fbee'.
+mssql-1  | 2026-08-30T00:08:00.614526964Z 
+2026-08-30 00:08:00.61 spid51      Parallel redo is started for database 'vsbms_f42d2288f970164989c5f4bcbe12fbee' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:00.623346449Z 
+2026-08-30 00:08:00.62 spid51      Parallel redo is shutdown for database 'vsbms_f42d2288f970164989c5f4bcbe12fbee' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:01.415265432Z 
+2026-08-30 00:08:01.41 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_f42d2288f970164989c5f4bcbe12fbee'.
+mssql-1  | 2026-08-30T00:08:04.407972558Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_f42d2288f970164989c5f4bcbe12fbee.mdf'.
+mssql-1  | 2026-08-30T00:08:04.411682882Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_f42d2288f970164989c5f4bcbe12fbee_log.ldf'.
+mssql-1  | 2026-08-30T00:08:04.415144183Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:04.420930029Z 
+[DeleteDbName] Database vsbms_f42d2288f970164989c5f4bcbe12fbee with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:04.491301708Z 
+2026-08-30 00:08:04.49 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:04.588150699Z 
+2026-08-30 00:08:04.58 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:04.588925194Z 
+2026-08-30 00:08:04.58 spid51      Starting up database 'vsbms_fd2b33878a5158fbc1a556479768557a'.
+mssql-1  | 2026-08-30T00:08:04.610406705Z 
+2026-08-30 00:08:04.61 spid51      Parallel redo is started for database 'vsbms_fd2b33878a5158fbc1a556479768557a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:04.618686176Z 
+2026-08-30 00:08:04.61 spid51      Parallel redo is shutdown for database 'vsbms_fd2b33878a5158fbc1a556479768557a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:11.775250502Z 
+2026-08-30 00:08:11.77 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_fd2b33878a5158fbc1a556479768557a'.
+mssql-1  | 2026-08-30T00:08:15.524752473Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fd2b33878a5158fbc1a556479768557a.mdf'.
+mssql-1  | 2026-08-30T00:08:15.527814888Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fd2b33878a5158fbc1a556479768557a_log.ldf'.
+mssql-1  | 2026-08-30T00:08:15.534771944Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:15.541708181Z 
+[DeleteDbName] Database vsbms_fd2b33878a5158fbc1a556479768557a with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:15.578408601Z 
+2026-08-30 00:08:15.58 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:15.687048241Z 
+2026-08-30 00:08:15.69 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:15.687755690Z 
+2026-08-30 00:08:15.69 spid51      Starting up database 'vsbms_044bf0548d7f7faf5544c484f370055a'.
+mssql-1  | 2026-08-30T00:08:15.712318314Z 
+2026-08-30 00:08:15.72 spid51      Parallel redo is started for database 'vsbms_044bf0548d7f7faf5544c484f370055a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:15.720331392Z 
+2026-08-30 00:08:15.72 spid51      Parallel redo is shutdown for database 'vsbms_044bf0548d7f7faf5544c484f370055a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:28.292792809Z 
+2026-08-30 00:08:28.28 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_044bf0548d7f7faf5544c484f370055a'.
+mssql-1  | 2026-08-30T00:08:31.425059834Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_044bf0548d7f7faf5544c484f370055a.mdf'.
+mssql-1  | 2026-08-30T00:08:31.427835186Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_044bf0548d7f7faf5544c484f370055a_log.ldf'.
+mssql-1  | 2026-08-30T00:08:31.434447607Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:31.445895907Z 
+[DeleteDbName] Database vsbms_044bf0548d7f7faf5544c484f370055a with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:31.481170450Z 
+2026-08-30 00:08:31.48 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:31.571593480Z 
+2026-08-30 00:08:31.57 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:31.572245467Z 
+2026-08-30 00:08:31.57 spid51      Starting up database 'vsbms_6ac1f3a9be06d95ec7225d2b88a84df2'.
+mssql-1  | 2026-08-30T00:08:31.600444472Z 
+2026-08-30 00:08:31.59 spid51      Parallel redo is started for database 'vsbms_6ac1f3a9be06d95ec7225d2b88a84df2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:31.622970863Z 
+2026-08-30 00:08:31.62 spid51      Parallel redo is shutdown for database 'vsbms_6ac1f3a9be06d95ec7225d2b88a84df2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:41.327432366Z 
+2026-08-30 00:08:41.32 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_6ac1f3a9be06d95ec7225d2b88a84df2'.
+mssql-1  | 2026-08-30T00:08:44.666015226Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6ac1f3a9be06d95ec7225d2b88a84df2.mdf'.
+mssql-1  | 2026-08-30T00:08:44.669213498Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6ac1f3a9be06d95ec7225d2b88a84df2_log.ldf'.
+mssql-1  | 2026-08-30T00:08:44.676249951Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:44.682763337Z 
+[DeleteDbName] Database vsbms_6ac1f3a9be06d95ec7225d2b88a84df2 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:44.713225911Z 
+2026-08-30 00:08:44.71 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:44.803798708Z 
+2026-08-30 00:08:44.80 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:44.804270105Z 
+2026-08-30 00:08:44.80 spid51      Starting up database 'vsbms_249396fbb444a0ccfb3e7ba1d932ff4c'.
+mssql-1  | 2026-08-30T00:08:44.827632186Z 
+2026-08-30 00:08:44.83 spid51      Parallel redo is started for database 'vsbms_249396fbb444a0ccfb3e7ba1d932ff4c' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:44.835034291Z 
+2026-08-30 00:08:44.83 spid51      Parallel redo is shutdown for database 'vsbms_249396fbb444a0ccfb3e7ba1d932ff4c' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:53.341225194Z 
+2026-08-30 00:08:53.33 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_249396fbb444a0ccfb3e7ba1d932ff4c'.
+mssql-1  | 2026-08-30T00:08:56.658487311Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_249396fbb444a0ccfb3e7ba1d932ff4c.mdf'.
+mssql-1  | 2026-08-30T00:08:56.661594811Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_249396fbb444a0ccfb3e7ba1d932ff4c_log.ldf'.
+mssql-1  | 2026-08-30T00:08:56.674654505Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:08:56.682004613Z 
+[DeleteDbName] Database vsbms_249396fbb444a0ccfb3e7ba1d932ff4c with id 5 is deleted.
+mssql-1  | 2026-08-30T00:08:56.711479839Z 
+2026-08-30 00:08:56.71 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:08:56.803245846Z 
+2026-08-30 00:08:56.80 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:08:56.803737516Z 
+2026-08-30 00:08:56.80 spid51      Starting up database 'vsbms_e08a76b3df43ca901d91bad560bedaac'.
+mssql-1  | 2026-08-30T00:08:56.825471693Z 
+2026-08-30 00:08:56.83 spid51      Parallel redo is started for database 'vsbms_e08a76b3df43ca901d91bad560bedaac' with worker pool size [1].
+mssql-1  | 2026-08-30T00:08:56.833425270Z 
+2026-08-30 00:08:56.83 spid51      Parallel redo is shutdown for database 'vsbms_e08a76b3df43ca901d91bad560bedaac' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:12.521548750Z 
+2026-08-30 00:09:12.51 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_e08a76b3df43ca901d91bad560bedaac'.
+mssql-1  | 2026-08-30T00:09:15.637068177Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e08a76b3df43ca901d91bad560bedaac.mdf'.
+mssql-1  | 2026-08-30T00:09:15.671708360Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e08a76b3df43ca901d91bad560bedaac_log.ldf'.
+mssql-1  | 2026-08-30T00:09:15.686200961Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:09:15.693340713Z 
+[DeleteDbName] Database vsbms_e08a76b3df43ca901d91bad560bedaac with id 5 is deleted.
+mssql-1  | 2026-08-30T00:09:15.724978107Z 
+2026-08-30 00:09:15.72 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:09:15.815624012Z 
+2026-08-30 00:09:15.81 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:09:15.816481206Z 
+2026-08-30 00:09:15.81 spid51      Starting up database 'vsbms_2cf21bcb76ad53060e85eba709efdea3'.
+mssql-1  | 2026-08-30T00:09:15.839441560Z 
+2026-08-30 00:09:15.84 spid51      Parallel redo is started for database 'vsbms_2cf21bcb76ad53060e85eba709efdea3' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:15.847898160Z 
+2026-08-30 00:09:15.84 spid51      Parallel redo is shutdown for database 'vsbms_2cf21bcb76ad53060e85eba709efdea3' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:25.231804792Z 
+2026-08-30 00:09:25.22 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_2cf21bcb76ad53060e85eba709efdea3'.
+mssql-1  | 2026-08-30T00:09:28.406654894Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_2cf21bcb76ad53060e85eba709efdea3.mdf'.
+mssql-1  | 2026-08-30T00:09:28.410366656Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_2cf21bcb76ad53060e85eba709efdea3_log.ldf'.
+mssql-1  | 2026-08-30T00:09:28.416609128Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:09:28.423497720Z 
+[DeleteDbName] Database vsbms_2cf21bcb76ad53060e85eba709efdea3 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:09:28.454498033Z 
+2026-08-30 00:09:28.61 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:09:28.545936543Z 
+2026-08-30 00:09:28.65 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:09:28.546560583Z 
+2026-08-30 00:09:28.65 spid51      Starting up database 'vsbms_8143fff8ec8167236a2137656b8ba878'.
+mssql-1  | 2026-08-30T00:09:28.570276159Z 
+2026-08-30 00:09:28.65 spid51      Parallel redo is started for database 'vsbms_8143fff8ec8167236a2137656b8ba878' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:28.578110022Z 
+2026-08-30 00:09:28.65 spid51      Parallel redo is shutdown for database 'vsbms_8143fff8ec8167236a2137656b8ba878' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:40.266539487Z 
+2026-08-30 00:09:40.26 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_8143fff8ec8167236a2137656b8ba878'.
+mssql-1  | 2026-08-30T00:09:44.274257474Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_8143fff8ec8167236a2137656b8ba878.mdf'.
+mssql-1  | 2026-08-30T00:09:44.277400053Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_8143fff8ec8167236a2137656b8ba878_log.ldf'.
+mssql-1  | 2026-08-30T00:09:44.284240391Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:09:44.290596962Z 
+[DeleteDbName] Database vsbms_8143fff8ec8167236a2137656b8ba878 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:09:44.321257506Z 
+2026-08-30 00:09:44.32 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:09:44.406143695Z 
+2026-08-30 00:09:44.40 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:09:44.406620675Z 
+2026-08-30 00:09:44.40 spid51      Starting up database 'vsbms_0283ade5b2b6086b3f6daa47a5b3d82e'.
+mssql-1  | 2026-08-30T00:09:44.427507237Z 
+2026-08-30 00:09:44.43 spid51      Parallel redo is started for database 'vsbms_0283ade5b2b6086b3f6daa47a5b3d82e' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:44.435344099Z 
+2026-08-30 00:09:44.43 spid51      Parallel redo is shutdown for database 'vsbms_0283ade5b2b6086b3f6daa47a5b3d82e' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:46.398211635Z 
+2026-08-30 00:09:46.39 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_0283ade5b2b6086b3f6daa47a5b3d82e'.
+mssql-1  | 2026-08-30T00:09:49.301772733Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0283ade5b2b6086b3f6daa47a5b3d82e.mdf'.
+mssql-1  | 2026-08-30T00:09:49.303952613Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0283ade5b2b6086b3f6daa47a5b3d82e_log.ldf'.
+mssql-1  | 2026-08-30T00:09:49.310798783Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:09:49.316902718Z 
+[DeleteDbName] Database vsbms_0283ade5b2b6086b3f6daa47a5b3d82e with id 5 is deleted.
+mssql-1  | 2026-08-30T00:09:49.347466859Z 
+2026-08-30 00:09:49.34 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:09:49.435728689Z 
+2026-08-30 00:09:49.43 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:09:49.436303433Z 
+2026-08-30 00:09:49.43 spid51      Starting up database 'vsbms_50add56230f99cabf041cf88f8315ddd'.
+mssql-1  | 2026-08-30T00:09:49.458448793Z 
+2026-08-30 00:09:49.45 spid51      Parallel redo is started for database 'vsbms_50add56230f99cabf041cf88f8315ddd' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:49.466111685Z 
+2026-08-30 00:09:49.46 spid51      Parallel redo is shutdown for database 'vsbms_50add56230f99cabf041cf88f8315ddd' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:51.493416491Z 
+2026-08-30 00:09:51.49 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_50add56230f99cabf041cf88f8315ddd'.
+mssql-1  | 2026-08-30T00:09:54.551318865Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_50add56230f99cabf041cf88f8315ddd.mdf'.
+mssql-1  | 2026-08-30T00:09:54.554245064Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_50add56230f99cabf041cf88f8315ddd_log.ldf'.
+mssql-1  | 2026-08-30T00:09:54.560461082Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:09:54.566858661Z 
+[DeleteDbName] Database vsbms_50add56230f99cabf041cf88f8315ddd with id 5 is deleted.
+mssql-1  | 2026-08-30T00:09:54.598488808Z 
+2026-08-30 00:09:54.59 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:09:54.681820521Z 
+2026-08-30 00:09:54.68 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:09:54.682243034Z 
+2026-08-30 00:09:54.68 spid51      Starting up database 'vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b'.
+mssql-1  | 2026-08-30T00:09:54.702146323Z 
+2026-08-30 00:09:54.70 spid51      Parallel redo is started for database 'vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:54.716187669Z 
+2026-08-30 00:09:54.71 spid51      Parallel redo is shutdown for database 'vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:09:57.612676811Z 
+2026-08-30 00:09:57.61 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b'.
+mssql-1  | 2026-08-30T00:10:00.518715984Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b.mdf'.
+mssql-1  | 2026-08-30T00:10:00.521647024Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b_log.ldf'.
+mssql-1  | 2026-08-30T00:10:00.528251721Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:00.535127217Z 
+[DeleteDbName] Database vsbms_4a401ca16d1dc2c91eba3400ba0e8d6b with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:00.563919333Z 
+2026-08-30 00:10:00.56 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:00.660499118Z 
+2026-08-30 00:10:00.65 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:00.661111144Z 
+2026-08-30 00:10:00.66 spid51      Starting up database 'vsbms_1f6f3ea086339273d45f74c0da4b5f96'.
+mssql-1  | 2026-08-30T00:10:00.683439203Z 
+2026-08-30 00:10:00.68 spid51      Parallel redo is started for database 'vsbms_1f6f3ea086339273d45f74c0da4b5f96' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:00.691331180Z 
+2026-08-30 00:10:00.69 spid51      Parallel redo is shutdown for database 'vsbms_1f6f3ea086339273d45f74c0da4b5f96' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:03.610068034Z 
+2026-08-30 00:10:03.60 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_1f6f3ea086339273d45f74c0da4b5f96'.
+mssql-1  | 2026-08-30T00:10:06.655029139Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_1f6f3ea086339273d45f74c0da4b5f96.mdf'.
+mssql-1  | 2026-08-30T00:10:06.658390282Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_1f6f3ea086339273d45f74c0da4b5f96_log.ldf'.
+mssql-1  | 2026-08-30T00:10:06.664027252Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:06.670475124Z 
+[DeleteDbName] Database vsbms_1f6f3ea086339273d45f74c0da4b5f96 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:06.708383816Z 
+2026-08-30 00:10:06.70 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:06.794733196Z 
+2026-08-30 00:10:06.79 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:06.795305361Z 
+2026-08-30 00:10:06.79 spid51      Starting up database 'vsbms_63c716b820fbabea0416f3262af55f3b'.
+mssql-1  | 2026-08-30T00:10:06.816326129Z 
+2026-08-30 00:10:06.81 spid51      Parallel redo is started for database 'vsbms_63c716b820fbabea0416f3262af55f3b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:06.824777459Z 
+2026-08-30 00:10:06.82 spid51      Parallel redo is shutdown for database 'vsbms_63c716b820fbabea0416f3262af55f3b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:07.509160221Z 
+2026-08-30 00:10:07.52 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_63c716b820fbabea0416f3262af55f3b'.
+mssql-1  | 2026-08-30T00:10:10.386534997Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_63c716b820fbabea0416f3262af55f3b.mdf'.
+mssql-1  | 2026-08-30T00:10:10.390834264Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_63c716b820fbabea0416f3262af55f3b_log.ldf'.
+mssql-1  | 2026-08-30T00:10:10.396059445Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:10.403384733Z 
+[DeleteDbName] Database vsbms_63c716b820fbabea0416f3262af55f3b with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:10.431922519Z 
+2026-08-30 00:10:10.43 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:10.523870044Z 
+2026-08-30 00:10:10.52 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:10.524353204Z 
+2026-08-30 00:10:10.52 spid51      Starting up database 'vsbms_4394703d7d40830d73b6bdb1e251a78e'.
+mssql-1  | 2026-08-30T00:10:10.545062446Z 
+2026-08-30 00:10:10.54 spid51      Parallel redo is started for database 'vsbms_4394703d7d40830d73b6bdb1e251a78e' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:10.552942797Z 
+2026-08-30 00:10:10.55 spid51      Parallel redo is shutdown for database 'vsbms_4394703d7d40830d73b6bdb1e251a78e' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:11.221666580Z 
+2026-08-30 00:10:11.22 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_4394703d7d40830d73b6bdb1e251a78e'.
+mssql-1  | 2026-08-30T00:10:14.237008736Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4394703d7d40830d73b6bdb1e251a78e.mdf'.
+mssql-1  | 2026-08-30T00:10:14.240140392Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4394703d7d40830d73b6bdb1e251a78e_log.ldf'.
+mssql-1  | 2026-08-30T00:10:14.246773903Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:14.254816666Z 
+[DeleteDbName] Database vsbms_4394703d7d40830d73b6bdb1e251a78e with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:14.282853199Z 
+2026-08-30 00:10:14.28 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:14.368169034Z 
+2026-08-30 00:10:14.36 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:14.368854574Z 
+2026-08-30 00:10:14.36 spid51      Starting up database 'vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195'.
+mssql-1  | 2026-08-30T00:10:14.389397597Z 
+2026-08-30 00:10:14.39 spid51      Parallel redo is started for database 'vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:14.397354049Z 
+2026-08-30 00:10:14.39 spid51      Parallel redo is shutdown for database 'vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:15.085139183Z 
+2026-08-30 00:10:15.09 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195'.
+mssql-1  | 2026-08-30T00:10:17.935565271Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195.mdf'.
+mssql-1  | 2026-08-30T00:10:17.938554225Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195_log.ldf'.
+mssql-1  | 2026-08-30T00:10:17.944842175Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:17.950986249Z 
+[DeleteDbName] Database vsbms_0fa46a0c3c8d21d3217cfbcc0b7a7195 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:17.978841278Z 
+2026-08-30 00:10:18.14 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:18.069904169Z 
+2026-08-30 00:10:18.23 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:18.070463264Z 
+2026-08-30 00:10:18.23 spid51      Starting up database 'vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f'.
+mssql-1  | 2026-08-30T00:10:18.091449576Z 
+2026-08-30 00:10:18.25 spid51      Parallel redo is started for database 'vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:18.099677326Z 
+2026-08-30 00:10:18.26 spid51      Parallel redo is shutdown for database 'vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:19.625035285Z 
+2026-08-30 00:10:19.62 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f'.
+mssql-1  | 2026-08-30T00:10:22.637928492Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f.mdf'.
+mssql-1  | 2026-08-30T00:10:22.640904539Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f_log.ldf'.
+mssql-1  | 2026-08-30T00:10:22.646263253Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:22.652527144Z 
+[DeleteDbName] Database vsbms_e72dc9b16f9c50f81bb4ac9206f7da8f with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:22.681260370Z 
+2026-08-30 00:10:22.68 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:22.771170336Z 
+2026-08-30 00:10:22.77 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:22.771641933Z 
+2026-08-30 00:10:22.77 spid51      Starting up database 'vsbms_4249f2c4487ad63986ee8f5021faf793'.
+mssql-1  | 2026-08-30T00:10:22.791883364Z 
+2026-08-30 00:10:22.79 spid51      Parallel redo is started for database 'vsbms_4249f2c4487ad63986ee8f5021faf793' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:22.800033075Z 
+2026-08-30 00:10:22.80 spid51      Parallel redo is shutdown for database 'vsbms_4249f2c4487ad63986ee8f5021faf793' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:23.453391231Z 
+2026-08-30 00:10:23.45 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_4249f2c4487ad63986ee8f5021faf793'.
+mssql-1  | 2026-08-30T00:10:26.451110174Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4249f2c4487ad63986ee8f5021faf793.mdf'.
+mssql-1  | 2026-08-30T00:10:26.452590022Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4249f2c4487ad63986ee8f5021faf793_log.ldf'.
+mssql-1  | 2026-08-30T00:10:26.457844529Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:26.464296421Z 
+[DeleteDbName] Database vsbms_4249f2c4487ad63986ee8f5021faf793 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:26.491391816Z 
+2026-08-30 00:10:26.48 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:26.579518166Z 
+2026-08-30 00:10:26.57 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:26.579943447Z 
+2026-08-30 00:10:26.57 spid51      Starting up database 'vsbms_293e4499136b250047bb34602315260a'.
+mssql-1  | 2026-08-30T00:10:26.600452661Z 
+2026-08-30 00:10:26.59 spid51      Parallel redo is started for database 'vsbms_293e4499136b250047bb34602315260a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:26.608666865Z 
+2026-08-30 00:10:26.60 spid51      Parallel redo is shutdown for database 'vsbms_293e4499136b250047bb34602315260a' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:27.306502607Z 
+2026-08-30 00:10:27.31 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_293e4499136b250047bb34602315260a'.
+mssql-1  | 2026-08-30T00:10:30.226428381Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_293e4499136b250047bb34602315260a.mdf'.
+mssql-1  | 2026-08-30T00:10:30.230061335Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_293e4499136b250047bb34602315260a_log.ldf'.
+mssql-1  | 2026-08-30T00:10:30.236488722Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:30.243288049Z 
+[DeleteDbName] Database vsbms_293e4499136b250047bb34602315260a with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:30.274165275Z 
+2026-08-30 00:10:30.27 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:30.361596847Z 
+2026-08-30 00:10:30.36 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:30.362066636Z 
+2026-08-30 00:10:30.36 spid51      Starting up database 'vsbms_06470dd0d94a3fd02b8052814d02f950'.
+mssql-1  | 2026-08-30T00:10:30.387696221Z 
+2026-08-30 00:10:30.38 spid51      Parallel redo is started for database 'vsbms_06470dd0d94a3fd02b8052814d02f950' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:30.395147494Z 
+2026-08-30 00:10:30.39 spid51      Parallel redo is shutdown for database 'vsbms_06470dd0d94a3fd02b8052814d02f950' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:31.270462500Z 
+2026-08-30 00:10:31.26 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_06470dd0d94a3fd02b8052814d02f950'.
+mssql-1  | 2026-08-30T00:10:34.292445544Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_06470dd0d94a3fd02b8052814d02f950.mdf'.
+mssql-1  | 2026-08-30T00:10:34.296847767Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_06470dd0d94a3fd02b8052814d02f950_log.ldf'.
+mssql-1  | 2026-08-30T00:10:34.301401270Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:34.307441903Z 
+[DeleteDbName] Database vsbms_06470dd0d94a3fd02b8052814d02f950 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:34.334700921Z 
+2026-08-30 00:10:34.33 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:34.417164882Z 
+2026-08-30 00:10:34.41 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:34.418091361Z 
+2026-08-30 00:10:34.42 spid51      Starting up database 'vsbms_d6e1eb640ec37e2a28486307689ed5f2'.
+mssql-1  | 2026-08-30T00:10:34.439348202Z 
+2026-08-30 00:10:34.44 spid51      Parallel redo is started for database 'vsbms_d6e1eb640ec37e2a28486307689ed5f2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:34.448114192Z 
+2026-08-30 00:10:34.45 spid51      Parallel redo is shutdown for database 'vsbms_d6e1eb640ec37e2a28486307689ed5f2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:35.312866825Z 
+2026-08-30 00:10:35.31 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_d6e1eb640ec37e2a28486307689ed5f2'.
+mssql-1  | 2026-08-30T00:10:38.159374071Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_d6e1eb640ec37e2a28486307689ed5f2.mdf'.
+mssql-1  | 2026-08-30T00:10:38.162274638Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_d6e1eb640ec37e2a28486307689ed5f2_log.ldf'.
+mssql-1  | 2026-08-30T00:10:38.165908861Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:38.171680170Z 
+[DeleteDbName] Database vsbms_d6e1eb640ec37e2a28486307689ed5f2 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:38.202722124Z 
+2026-08-30 00:10:38.19 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:38.289238490Z 
+2026-08-30 00:10:38.28 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:38.289930634Z 
+2026-08-30 00:10:38.28 spid51      Starting up database 'vsbms_faf3ac16f8b280a2c1c0372b4d801202'.
+mssql-1  | 2026-08-30T00:10:38.311870255Z 
+2026-08-30 00:10:38.30 spid51      Parallel redo is started for database 'vsbms_faf3ac16f8b280a2c1c0372b4d801202' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:38.319644222Z 
+2026-08-30 00:10:38.31 spid51      Parallel redo is shutdown for database 'vsbms_faf3ac16f8b280a2c1c0372b4d801202' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:39.116531318Z 
+2026-08-30 00:10:39.10 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_faf3ac16f8b280a2c1c0372b4d801202'.
+mssql-1  | 2026-08-30T00:10:42.146873281Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_faf3ac16f8b280a2c1c0372b4d801202.mdf'.
+mssql-1  | 2026-08-30T00:10:42.150058736Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_faf3ac16f8b280a2c1c0372b4d801202_log.ldf'.
+mssql-1  | 2026-08-30T00:10:42.155724195Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:42.161745004Z 
+[DeleteDbName] Database vsbms_faf3ac16f8b280a2c1c0372b4d801202 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:42.188251703Z 
+2026-08-30 00:10:42.18 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:42.268734063Z 
+2026-08-30 00:10:42.26 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:42.269264429Z 
+2026-08-30 00:10:42.27 spid51      Starting up database 'vsbms_8dfc6040a353238d8033d9d5d71c01bc'.
+mssql-1  | 2026-08-30T00:10:42.290679380Z 
+2026-08-30 00:10:42.29 spid51      Parallel redo is started for database 'vsbms_8dfc6040a353238d8033d9d5d71c01bc' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:42.299540793Z 
+2026-08-30 00:10:42.30 spid51      Parallel redo is shutdown for database 'vsbms_8dfc6040a353238d8033d9d5d71c01bc' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:42.931834788Z 
+2026-08-30 00:10:42.92 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_8dfc6040a353238d8033d9d5d71c01bc'.
+mssql-1  | 2026-08-30T00:10:45.933668670Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_8dfc6040a353238d8033d9d5d71c01bc.mdf'.
+mssql-1  | 2026-08-30T00:10:45.936682177Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_8dfc6040a353238d8033d9d5d71c01bc_log.ldf'.
+mssql-1  | 2026-08-30T00:10:45.942328496Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:45.948365815Z 
+[DeleteDbName] Database vsbms_8dfc6040a353238d8033d9d5d71c01bc with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:45.978569637Z 
+2026-08-30 00:10:45.97 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:46.063541310Z 
+2026-08-30 00:10:46.06 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:46.064028684Z 
+2026-08-30 00:10:46.06 spid51      Starting up database 'vsbms_dc73cc38d00054616a41648c6206ca1b'.
+mssql-1  | 2026-08-30T00:10:46.084556794Z 
+2026-08-30 00:10:46.08 spid51      Parallel redo is started for database 'vsbms_dc73cc38d00054616a41648c6206ca1b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:46.091965763Z 
+2026-08-30 00:10:46.09 spid51      Parallel redo is shutdown for database 'vsbms_dc73cc38d00054616a41648c6206ca1b' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:46.738629629Z 
+2026-08-30 00:10:46.74 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_dc73cc38d00054616a41648c6206ca1b'.
+mssql-1  | 2026-08-30T00:10:49.728461370Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_dc73cc38d00054616a41648c6206ca1b.mdf'.
+mssql-1  | 2026-08-30T00:10:49.731872780Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_dc73cc38d00054616a41648c6206ca1b_log.ldf'.
+mssql-1  | 2026-08-30T00:10:49.737559707Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:49.743786920Z 
+[DeleteDbName] Database vsbms_dc73cc38d00054616a41648c6206ca1b with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:49.773901038Z 
+2026-08-30 00:10:49.77 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:49.867468733Z 
+2026-08-30 00:10:49.87 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:49.867852965Z 
+2026-08-30 00:10:49.87 spid51      Starting up database 'vsbms_6df8d56e57e49ccb0d53c67cbdf5d912'.
+mssql-1  | 2026-08-30T00:10:49.888928074Z 
+2026-08-30 00:10:49.89 spid51      Parallel redo is started for database 'vsbms_6df8d56e57e49ccb0d53c67cbdf5d912' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:49.897362617Z 
+2026-08-30 00:10:49.90 spid51      Parallel redo is shutdown for database 'vsbms_6df8d56e57e49ccb0d53c67cbdf5d912' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:50.639498099Z 
+2026-08-30 00:10:50.64 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_6df8d56e57e49ccb0d53c67cbdf5d912'.
+mssql-1  | 2026-08-30T00:10:53.645394968Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6df8d56e57e49ccb0d53c67cbdf5d912.mdf'.
+mssql-1  | 2026-08-30T00:10:53.648362796Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6df8d56e57e49ccb0d53c67cbdf5d912_log.ldf'.
+mssql-1  | 2026-08-30T00:10:53.654588615Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:53.660991560Z 
+[DeleteDbName] Database vsbms_6df8d56e57e49ccb0d53c67cbdf5d912 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:53.687884817Z 
+2026-08-30 00:10:53.68 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:53.777146911Z 
+2026-08-30 00:10:53.77 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:53.778123846Z 
+2026-08-30 00:10:53.77 spid51      Starting up database 'vsbms_253c7e9e473c044641bce0d1f63f92c3'.
+mssql-1  | 2026-08-30T00:10:53.800585415Z 
+2026-08-30 00:10:53.79 spid51      Parallel redo is started for database 'vsbms_253c7e9e473c044641bce0d1f63f92c3' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:53.810412050Z 
+2026-08-30 00:10:53.80 spid51      Parallel redo is shutdown for database 'vsbms_253c7e9e473c044641bce0d1f63f92c3' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:54.743161552Z 
+2026-08-30 00:10:54.74 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_253c7e9e473c044641bce0d1f63f92c3'.
+mssql-1  | 2026-08-30T00:10:57.739714015Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_253c7e9e473c044641bce0d1f63f92c3.mdf'.
+mssql-1  | 2026-08-30T00:10:57.744007295Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_253c7e9e473c044641bce0d1f63f92c3_log.ldf'.
+mssql-1  | 2026-08-30T00:10:57.752875476Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:10:57.760340595Z 
+[DeleteDbName] Database vsbms_253c7e9e473c044641bce0d1f63f92c3 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:10:57.879033216Z 
+2026-08-30 00:10:57.88 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:10:57.978589844Z 
+2026-08-30 00:10:57.98 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:10:57.979794539Z 
+2026-08-30 00:10:57.98 spid51      Starting up database 'vsbms_359c5faf74b503e40a83ce54ac34114c'.
+mssql-1  | 2026-08-30T00:10:58.003570204Z 
+2026-08-30 00:10:58.00 spid51      Parallel redo is started for database 'vsbms_359c5faf74b503e40a83ce54ac34114c' with worker pool size [1].
+mssql-1  | 2026-08-30T00:10:58.011384186Z 
+2026-08-30 00:10:58.01 spid51      Parallel redo is shutdown for database 'vsbms_359c5faf74b503e40a83ce54ac34114c' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:03.015089422Z 
+2026-08-30 00:11:03.01 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_359c5faf74b503e40a83ce54ac34114c'.
+mssql-1  | 2026-08-30T00:11:06.006587309Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_359c5faf74b503e40a83ce54ac34114c.mdf'.
+mssql-1  | 2026-08-30T00:11:06.010231930Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_359c5faf74b503e40a83ce54ac34114c_log.ldf'.
+mssql-1  | 2026-08-30T00:11:06.016604809Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:06.023633812Z 
+[DeleteDbName] Database vsbms_359c5faf74b503e40a83ce54ac34114c with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:06.050836674Z 
+2026-08-30 00:11:06.05 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:06.138420229Z 
+2026-08-30 00:11:06.14 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:06.138478542Z 
+2026-08-30 00:11:06.14 spid51      Starting up database 'vsbms_bdbd4980ed842b692fb5c218c700ca55'.
+mssql-1  | 2026-08-30T00:11:06.159720561Z 
+2026-08-30 00:11:06.16 spid51      Parallel redo is started for database 'vsbms_bdbd4980ed842b692fb5c218c700ca55' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:06.167365415Z 
+2026-08-30 00:11:06.17 spid51      Parallel redo is shutdown for database 'vsbms_bdbd4980ed842b692fb5c218c700ca55' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:10.230813500Z 
+2026-08-30 00:11:10.23 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_bdbd4980ed842b692fb5c218c700ca55'.
+mssql-1  | 2026-08-30T00:11:13.232758646Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_bdbd4980ed842b692fb5c218c700ca55.mdf'.
+mssql-1  | 2026-08-30T00:11:13.235742665Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_bdbd4980ed842b692fb5c218c700ca55_log.ldf'.
+mssql-1  | 2026-08-30T00:11:13.242780210Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:13.249529795Z 
+[DeleteDbName] Database vsbms_bdbd4980ed842b692fb5c218c700ca55 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:13.279851346Z 
+2026-08-30 00:11:13.28 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:13.376202667Z 
+2026-08-30 00:11:13.37 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:13.376728263Z 
+2026-08-30 00:11:13.37 spid51      Starting up database 'vsbms_e90dfc741aaa9622ab4ef7b55187c7bd'.
+mssql-1  | 2026-08-30T00:11:13.397946437Z 
+2026-08-30 00:11:13.40 spid51      Parallel redo is started for database 'vsbms_e90dfc741aaa9622ab4ef7b55187c7bd' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:13.406001067Z 
+2026-08-30 00:11:13.40 spid51      Parallel redo is shutdown for database 'vsbms_e90dfc741aaa9622ab4ef7b55187c7bd' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:15.516928763Z 
+2026-08-30 00:11:15.52 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_e90dfc741aaa9622ab4ef7b55187c7bd'.
+mssql-1  | 2026-08-30T00:11:18.518922895Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e90dfc741aaa9622ab4ef7b55187c7bd.mdf'.
+mssql-1  | 2026-08-30T00:11:18.522783268Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e90dfc741aaa9622ab4ef7b55187c7bd_log.ldf'.
+mssql-1  | 2026-08-30T00:11:18.529071722Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:18.535407767Z 
+[DeleteDbName] Database vsbms_e90dfc741aaa9622ab4ef7b55187c7bd with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:18.564961817Z 
+2026-08-30 00:11:18.56 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:18.655644339Z 
+2026-08-30 00:11:18.65 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:18.656068401Z 
+2026-08-30 00:11:18.65 spid51      Starting up database 'vsbms_de3810712b7de2e52e12eb30ee5bcf88'.
+mssql-1  | 2026-08-30T00:11:18.678891415Z 
+2026-08-30 00:11:18.67 spid51      Parallel redo is started for database 'vsbms_de3810712b7de2e52e12eb30ee5bcf88' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:18.689181200Z 
+2026-08-30 00:11:18.69 spid51      Parallel redo is shutdown for database 'vsbms_de3810712b7de2e52e12eb30ee5bcf88' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:27.813011077Z 
+2026-08-30 00:11:27.81 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_de3810712b7de2e52e12eb30ee5bcf88'.
+mssql-1  | 2026-08-30T00:11:30.943520312Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_de3810712b7de2e52e12eb30ee5bcf88.mdf'.
+mssql-1  | 2026-08-30T00:11:30.944735699Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_de3810712b7de2e52e12eb30ee5bcf88_log.ldf'.
+mssql-1  | 2026-08-30T00:11:30.951672274Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:30.958230809Z 
+[DeleteDbName] Database vsbms_de3810712b7de2e52e12eb30ee5bcf88 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:30.989920042Z 
+2026-08-30 00:11:30.99 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:31.086905969Z 
+2026-08-30 00:11:31.09 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:31.087561492Z 
+2026-08-30 00:11:31.09 spid51      Starting up database 'vsbms_3c24280156804e67d2e1629663a35baf'.
+mssql-1  | 2026-08-30T00:11:31.112799513Z 
+2026-08-30 00:11:31.11 spid51      Parallel redo is started for database 'vsbms_3c24280156804e67d2e1629663a35baf' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:31.122321752Z 
+2026-08-30 00:11:31.12 spid51      Parallel redo is shutdown for database 'vsbms_3c24280156804e67d2e1629663a35baf' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:33.096379772Z 
+2026-08-30 00:11:33.09 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_3c24280156804e67d2e1629663a35baf'.
+mssql-1  | 2026-08-30T00:11:36.118365665Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_3c24280156804e67d2e1629663a35baf.mdf'.
+mssql-1  | 2026-08-30T00:11:36.121599572Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_3c24280156804e67d2e1629663a35baf_log.ldf'.
+mssql-1  | 2026-08-30T00:11:36.128703895Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:36.134992405Z 
+[DeleteDbName] Database vsbms_3c24280156804e67d2e1629663a35baf with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:36.164758534Z 
+2026-08-30 00:11:36.17 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:36.248747878Z 
+2026-08-30 00:11:36.25 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:36.249128987Z 
+2026-08-30 00:11:36.25 spid51      Starting up database 'vsbms_00e5185b9fad2efef946c414fee99bb4'.
+mssql-1  | 2026-08-30T00:11:36.271154703Z 
+2026-08-30 00:11:36.28 spid51      Parallel redo is started for database 'vsbms_00e5185b9fad2efef946c414fee99bb4' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:36.280768169Z 
+2026-08-30 00:11:36.29 spid51      Parallel redo is shutdown for database 'vsbms_00e5185b9fad2efef946c414fee99bb4' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:38.131353889Z 
+2026-08-30 00:11:38.13 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_00e5185b9fad2efef946c414fee99bb4'.
+mssql-1  | 2026-08-30T00:11:41.122652281Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_00e5185b9fad2efef946c414fee99bb4.mdf'.
+mssql-1  | 2026-08-30T00:11:41.126387185Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_00e5185b9fad2efef946c414fee99bb4_log.ldf'.
+mssql-1  | 2026-08-30T00:11:41.133875581Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:41.142886729Z 
+[DeleteDbName] Database vsbms_00e5185b9fad2efef946c414fee99bb4 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:41.643124181Z 
+2026-08-30 00:11:41.64 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:41.725323663Z 
+2026-08-30 00:11:41.72 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:41.725352243Z 
+2026-08-30 00:11:41.72 spid51      Starting up database 'vsb_credential_c2b18342b083'.
+mssql-1  | 2026-08-30T00:11:41.746458960Z 
+2026-08-30 00:11:41.74 spid51      Parallel redo is started for database 'vsb_credential_c2b18342b083' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:41.774248955Z 
+2026-08-30 00:11:41.77 spid51      Parallel redo is shutdown for database 'vsb_credential_c2b18342b083' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:42.278921973Z 
+2026-08-30 00:11:42.29 spid51      Setting database option SINGLE_USER to ON for database 'vsb_credential_c2b18342b083'.
+mssql-1  | 2026-08-30T00:11:45.229651982Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsb_credential_c2b18342b083.mdf'.
+mssql-1  | 2026-08-30T00:11:45.232631094Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsb_credential_c2b18342b083_log.ldf'.
+mssql-1  | 2026-08-30T00:11:45.236099550Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:45.242905585Z 
+[DeleteDbName] Database vsb_credential_c2b18342b083 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:45.375141780Z 
+2026-08-30 00:11:45.37 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:45.452671154Z 
+2026-08-30 00:11:45.45 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:45.453036538Z 
+2026-08-30 00:11:45.45 spid51      Starting up database 'vsbms_87dd0ebbb038cb77c44170f95fb6f8d6'.
+mssql-1  | 2026-08-30T00:11:45.476387426Z 
+2026-08-30 00:11:45.47 spid51      Parallel redo is started for database 'vsbms_87dd0ebbb038cb77c44170f95fb6f8d6' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:45.484951273Z 
+2026-08-30 00:11:45.48 spid51      Parallel redo is shutdown for database 'vsbms_87dd0ebbb038cb77c44170f95fb6f8d6' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:49.423904316Z 
+2026-08-30 00:11:49.42 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_87dd0ebbb038cb77c44170f95fb6f8d6'.
+mssql-1  | 2026-08-30T00:11:52.434631158Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_87dd0ebbb038cb77c44170f95fb6f8d6.mdf'.
+mssql-1  | 2026-08-30T00:11:52.437469464Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_87dd0ebbb038cb77c44170f95fb6f8d6_log.ldf'.
+mssql-1  | 2026-08-30T00:11:52.443741490Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:52.450705012Z 
+[DeleteDbName] Database vsbms_87dd0ebbb038cb77c44170f95fb6f8d6 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:52.481526815Z 
+2026-08-30 00:11:52.50 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:52.566241968Z 
+2026-08-30 00:11:52.56 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:52.566495619Z 
+2026-08-30 00:11:52.56 spid51      Starting up database 'vsbms_0af0d69e0dfa5759849748d433fac996'.
+mssql-1  | 2026-08-30T00:11:52.587558430Z 
+2026-08-30 00:11:52.58 spid51      Parallel redo is started for database 'vsbms_0af0d69e0dfa5759849748d433fac996' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:52.595787202Z 
+2026-08-30 00:11:52.59 spid51      Parallel redo is shutdown for database 'vsbms_0af0d69e0dfa5759849748d433fac996' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:54.852611374Z 
+2026-08-30 00:11:54.85 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_0af0d69e0dfa5759849748d433fac996'.
+mssql-1  | 2026-08-30T00:11:57.849008010Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0af0d69e0dfa5759849748d433fac996.mdf'.
+mssql-1  | 2026-08-30T00:11:57.852813401Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_0af0d69e0dfa5759849748d433fac996_log.ldf'.
+mssql-1  | 2026-08-30T00:11:57.859309935Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:11:57.865889902Z 
+[DeleteDbName] Database vsbms_0af0d69e0dfa5759849748d433fac996 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:11:57.895943886Z 
+2026-08-30 00:11:57.89 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:11:57.989770357Z 
+2026-08-30 00:11:57.99 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:11:57.990016671Z 
+2026-08-30 00:11:57.99 spid51      Starting up database 'vsbms_cbd07c50339e23bff7f345072ca2f1a2'.
+mssql-1  | 2026-08-30T00:11:58.011425005Z 
+2026-08-30 00:11:58.01 spid51      Parallel redo is started for database 'vsbms_cbd07c50339e23bff7f345072ca2f1a2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:11:58.020174279Z 
+2026-08-30 00:11:58.02 spid51      Parallel redo is shutdown for database 'vsbms_cbd07c50339e23bff7f345072ca2f1a2' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:03.956702019Z 
+2026-08-30 00:12:03.95 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_cbd07c50339e23bff7f345072ca2f1a2'.
+mssql-1  | 2026-08-30T00:12:06.997451660Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_cbd07c50339e23bff7f345072ca2f1a2.mdf'.
+mssql-1  | 2026-08-30T00:12:07.001207786Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_cbd07c50339e23bff7f345072ca2f1a2_log.ldf'.
+mssql-1  | 2026-08-30T00:12:07.008202256Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:07.015987863Z 
+[DeleteDbName] Database vsbms_cbd07c50339e23bff7f345072ca2f1a2 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:07.052650864Z 
+2026-08-30 00:12:07.05 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:07.220254339Z 
+2026-08-30 00:12:07.22 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:07.221388151Z 
+2026-08-30 00:12:07.22 spid51      Starting up database 'vsbms_4deba9ea945fe7d4bd79c147b38f2f48'.
+mssql-1  | 2026-08-30T00:12:07.246969203Z 
+2026-08-30 00:12:07.25 spid51      Parallel redo is started for database 'vsbms_4deba9ea945fe7d4bd79c147b38f2f48' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:07.254562651Z 
+2026-08-30 00:12:07.25 spid51      Parallel redo is shutdown for database 'vsbms_4deba9ea945fe7d4bd79c147b38f2f48' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:09.124983291Z 
+2026-08-30 00:12:09.12 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_4deba9ea945fe7d4bd79c147b38f2f48'.
+mssql-1  | 2026-08-30T00:12:12.107517028Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4deba9ea945fe7d4bd79c147b38f2f48.mdf'.
+mssql-1  | 2026-08-30T00:12:12.108950189Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_4deba9ea945fe7d4bd79c147b38f2f48_log.ldf'.
+mssql-1  | 2026-08-30T00:12:12.114330867Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:12.121304442Z 
+[DeleteDbName] Database vsbms_4deba9ea945fe7d4bd79c147b38f2f48 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:12.156598774Z 
+2026-08-30 00:12:12.15 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:12.243234090Z 
+2026-08-30 00:12:12.24 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:12.243716096Z 
+2026-08-30 00:12:12.24 spid51      Starting up database 'vsbms_f42f94643d4a59db2815dfab539408d6'.
+mssql-1  | 2026-08-30T00:12:12.265350049Z 
+2026-08-30 00:12:12.26 spid51      Parallel redo is started for database 'vsbms_f42f94643d4a59db2815dfab539408d6' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:12.273512708Z 
+2026-08-30 00:12:12.27 spid51      Parallel redo is shutdown for database 'vsbms_f42f94643d4a59db2815dfab539408d6' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:12.880847973Z 
+2026-08-30 00:12:12.89 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_f42f94643d4a59db2815dfab539408d6'.
+mssql-1  | 2026-08-30T00:12:15.833844409Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_f42f94643d4a59db2815dfab539408d6.mdf'.
+mssql-1  | 2026-08-30T00:12:15.836734593Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_f42f94643d4a59db2815dfab539408d6_log.ldf'.
+mssql-1  | 2026-08-30T00:12:15.839595473Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:15.845986754Z 
+[DeleteDbName] Database vsbms_f42f94643d4a59db2815dfab539408d6 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:15.877224517Z 
+2026-08-30 00:12:15.87 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:15.958232971Z 
+2026-08-30 00:12:15.95 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:15.958261926Z 
+2026-08-30 00:12:15.95 spid51      Starting up database 'vsbms_5581af9e9abac7737be621a92ddd6500'.
+mssql-1  | 2026-08-30T00:12:15.978821833Z 
+2026-08-30 00:12:15.97 spid51      Parallel redo is started for database 'vsbms_5581af9e9abac7737be621a92ddd6500' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:15.986915310Z 
+2026-08-30 00:12:15.98 spid51      Parallel redo is shutdown for database 'vsbms_5581af9e9abac7737be621a92ddd6500' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:16.608747638Z 
+2026-08-30 00:12:16.62 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_5581af9e9abac7737be621a92ddd6500'.
+mssql-1  | 2026-08-30T00:12:19.471512875Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_5581af9e9abac7737be621a92ddd6500.mdf'.
+mssql-1  | 2026-08-30T00:12:19.475412017Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_5581af9e9abac7737be621a92ddd6500_log.ldf'.
+mssql-1  | 2026-08-30T00:12:19.479060648Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:19.485975636Z 
+[DeleteDbName] Database vsbms_5581af9e9abac7737be621a92ddd6500 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:19.514496653Z 
+2026-08-30 00:12:19.51 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:19.599536943Z 
+2026-08-30 00:12:19.59 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:19.599817564Z 
+2026-08-30 00:12:19.59 spid51      Starting up database 'vsbms_fc8043e764d7f0a13ef61eb43a943b2d'.
+mssql-1  | 2026-08-30T00:12:19.621771397Z 
+2026-08-30 00:12:19.61 spid51      Parallel redo is started for database 'vsbms_fc8043e764d7f0a13ef61eb43a943b2d' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:19.629105943Z 
+2026-08-30 00:12:19.62 spid51      Parallel redo is shutdown for database 'vsbms_fc8043e764d7f0a13ef61eb43a943b2d' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:20.227315264Z 
+2026-08-30 00:12:20.23 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_fc8043e764d7f0a13ef61eb43a943b2d'.
+mssql-1  | 2026-08-30T00:12:23.201149349Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fc8043e764d7f0a13ef61eb43a943b2d.mdf'.
+mssql-1  | 2026-08-30T00:12:23.204244786Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fc8043e764d7f0a13ef61eb43a943b2d_log.ldf'.
+mssql-1  | 2026-08-30T00:12:23.207657805Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:23.214877052Z 
+[DeleteDbName] Database vsbms_fc8043e764d7f0a13ef61eb43a943b2d with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:23.244436210Z 
+2026-08-30 00:12:23.25 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:23.328212857Z 
+2026-08-30 00:12:23.33 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:23.328628865Z 
+2026-08-30 00:12:23.33 spid51      Starting up database 'vsbms_91bf36f1b1f137d152ff092b8171b0b5'.
+mssql-1  | 2026-08-30T00:12:23.351267558Z 
+2026-08-30 00:12:23.35 spid51      Parallel redo is started for database 'vsbms_91bf36f1b1f137d152ff092b8171b0b5' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:23.358596244Z 
+2026-08-30 00:12:23.36 spid51      Parallel redo is shutdown for database 'vsbms_91bf36f1b1f137d152ff092b8171b0b5' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:23.953496464Z 
+2026-08-30 00:12:23.95 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_91bf36f1b1f137d152ff092b8171b0b5'.
+mssql-1  | 2026-08-30T00:12:26.916466055Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_91bf36f1b1f137d152ff092b8171b0b5.mdf'.
+mssql-1  | 2026-08-30T00:12:26.919589617Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_91bf36f1b1f137d152ff092b8171b0b5_log.ldf'.
+mssql-1  | 2026-08-30T00:12:26.922816729Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:26.929831308Z 
+[DeleteDbName] Database vsbms_91bf36f1b1f137d152ff092b8171b0b5 with id 5 is deleted.
+mssql-1  | 2026-08-30T00:12:26.979484046Z 
+2026-08-30 00:12:26.97 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-30T00:12:27.063002636Z 
+2026-08-30 00:12:27.06 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-30T00:12:27.063581224Z 
+2026-08-30 00:12:27.06 spid51      Starting up database 'vsbms_87b7322ce01562e59faee6af8d58c3d5'.
+mssql-1  | 2026-08-30T00:12:27.084758213Z 
+2026-08-30 00:12:27.08 spid51      Parallel redo is started for database 'vsbms_87b7322ce01562e59faee6af8d58c3d5' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:27.091444091Z 
+2026-08-30 00:12:27.09 spid51      Parallel redo is shutdown for database 'vsbms_87b7322ce01562e59faee6af8d58c3d5' with worker pool size [1].
+mssql-1  | 2026-08-30T00:12:27.778769336Z 
+2026-08-30 00:12:27.79 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_87b7322ce01562e59faee6af8d58c3d5'.
+mssql-1  | 2026-08-30T00:12:30.737137800Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_87b7322ce01562e59faee6af8d58c3d5.mdf'.
+mssql-1  | 2026-08-30T00:12:30.739971771Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_87b7322ce01562e59faee6af8d58c3d5_log.ldf'.
+mssql-1  | 2026-08-30T00:12:30.743413280Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-30T00:12:30.749927829Z 
+[DeleteDbName] Database vsbms_87b7322ce01562e59faee6af8d58c3d5 with id 5 is deleted.

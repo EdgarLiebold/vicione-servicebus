@@ -235,15 +235,6 @@
   },
   {
     "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "project": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Diagnostics.Tests.dll"
-  },
-  {
-    "artifacts": [],
     "assemblyName": "ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests",
     "isPackable": false,
     "packageId": "ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests",
@@ -268,15 +259,6 @@
     "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
     "rootNamespace": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
     "targetArtifactPattern": "ViciOne.ServiceBus.RabbitMqTransport.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.SqlTransport.Tests",
-    "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.SqlTransport.Tests",
-    "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.DbTransport.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.Tests.dll"
   },
   {
     "artifacts": [],
@@ -451,6 +433,15 @@
   },
   {
     "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "isPackable": true,
+    "packageId": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "project": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Diagnostics.Tests.dll"
+  },
+  {
+    "artifacts": [],
     "assemblyName": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
     "isPackable": true,
     "packageId": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
@@ -493,6 +484,33 @@
     "project": "tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
     "rootNamespace": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
     "targetArtifactPattern": "ViciOne.ServiceBus.RabbitMqTransport.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "isPackable": true,
+    "packageId": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "isPackable": true,
+    "packageId": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "isPackable": true,
+    "packageId": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.Tests.dll"
   },
   {
     "artifacts": [],

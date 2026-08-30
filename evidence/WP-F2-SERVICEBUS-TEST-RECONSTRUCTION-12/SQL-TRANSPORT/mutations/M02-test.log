@@ -1,0 +1,17 @@
+^Dfehlerhaft ViciOne.ServiceBus.SqlTransport.Tests.Infrastructure.RunnerContractTests.DatabaseName_IsStableWithinOneRunAndDifferentBetweenRuns (36ms)
+  Assert.NotEqual() Failure: Strings are equal
+  Expected: Not "vsbpg_28a3384a9219ee0e25c5f66a90071c44"
+  Actual:       "vsbpg_28a3384a9219ee0e25c5f66a90071c44"
+    um ViciOne.ServiceBus.SqlTransport.Tests.Infrastructure.RunnerContractTests.DatabaseName_IsStableWithinOneRunAndDifferentBetweenRuns() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Infrastructure/RunnerContractTests.cs:118
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02-results/M02.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests.Unit/release/ViciOne.ServiceBus.SqlTransport.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 525ms

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "kind": "SQL_TRANSPORT_NATIVE_CLOSURE_RESULTS",
+  "baselineCommit": "0e31f083fefe22ab1c19b5c76c06d1f22bb7f0e6",
+  "technicalCommit": "99665084c190f2affc9540c383a9d11172824ce0",
+  "technicalTree": "765093f8acc43ca997e88f377c890293cebd985e",
+  "technicalParent": "c6765d9e5cb4def859847dd1da07840fb2844fb3",
+  "technicalRange": "0e31f083fefe22ab1c19b5c76c06d1f22bb7f0e6..99665084c190f2affc9540c383a9d11172824ce0",
+  "obligations": {
+    "first": "OBL-R0-SQL-0001",
+    "last": "OBL-R0-SQL-0135",
+    "count": 135,
+    "replacedExecuting": 134,
+    "obsoleteRuntimeResolverRetired": 1,
+    "unitArchitectureObligations": 43,
+    "localIntegrationObligations": 91
+  },
+  "focusedHermetic": {
+    "tests": 45,
+    "passed": 45,
+    "failed": 0,
+    "skipped": 0,
+    "composition": "43 R0 carriers, one requirement projection, one run-scoped database identity carrier"
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2399,
+    "passed": 2399,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2394
+  },
+  "localIntegration": {
+    "declaredFloor": 375,
+    "base": { "ctrfFiles": 7, "tests": 244, "passed": 244, "failed": 0, "skipped": 0 },
+    "postgresql": { "ctrfFiles": 1, "tests": 71, "passed": 71, "failed": 0, "skipped": 0 },
+    "sqlServer": { "ctrfFiles": 1, "tests": 60, "passed": 60, "failed": 0, "skipped": 0 },
+    "aggregate": { "ctrfFiles": 9, "tests": 375, "passed": 375, "failed": 0, "skipped": 0 }
+  },
+  "engineeringRestore": { "exitCode": 0, "lockedMode": true },
+  "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0 },
+  "ciSelfTests": { "tests": 257, "passed": 257, "failed": 0 },
+  "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0 },
+  "architectureTests": { "tests": 137, "passed": 137, "failed": 0 },
+  "verificationModel": "PASS",
+  "identityGate": {
+    "status": "PASS",
+    "findings": 0,
+    "baselinePaths": 5654,
+    "liveBaselineTargetsWithGitIdentity": 4206,
+    "currentProductPublicDeclarations": 24987,
+    "publicDeclarationRecords": 44090,
+    "currentAddedPublicDeclarations": 1711,
+    "historicalIdentityPolicyEntries": 54
+  },
+  "retirement": {
+    "trackedFilesRemoved": 40,
+    "legacyDirectoryPresent": false,
+    "emptyLegacyTransportDirectories": 0,
+    "legacyWorkflowCategoryPresent": false
+  },
+  "localExecution": {
+    "architecture": "darwin-arm64",
+    "splitRationale": "The canonical x64 CI command remains one 375-test profile. Local ARM64 acceptance was split into 244 + 71 + 60 to keep the amd64 SQL Server 2025 fixture isolated from the other broker cohort; the exact aggregate and all module sets remain unchanged."
+  }
+}

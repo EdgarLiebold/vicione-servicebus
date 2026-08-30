@@ -1,0 +1,286 @@
+postgres-1  | 2026-08-29T23:58:27.726675561Z The files belonging to this database system will be owned by user "postgres".
+postgres-1  | 2026-08-29T23:58:27.726711390Z This user must also own the server process.
+postgres-1  | 2026-08-29T23:58:27.726728636Z 
+postgres-1  | 2026-08-29T23:58:27.726743981Z The database cluster will be initialized with locale "en_US.utf8".
+postgres-1  | 2026-08-29T23:58:27.726759326Z The default database encoding has accordingly been set to "UTF8".
+postgres-1  | 2026-08-29T23:58:27.726774601Z The default text search configuration will be set to "english".
+postgres-1  | 2026-08-29T23:58:27.726790158Z 
+postgres-1  | 2026-08-29T23:58:27.726805081Z Data page checksums are disabled.
+postgres-1  | 2026-08-29T23:58:27.726820144Z 
+postgres-1  | 2026-08-29T23:58:27.726835490Z fixing permissions on existing directory /var/lib/postgresql/data ... ok
+postgres-1  | 2026-08-29T23:58:27.726851187Z creating subdirectories ... ok
+postgres-1  | 2026-08-29T23:58:27.726863787Z selecting dynamic shared memory implementation ... posix
+postgres-1  | 2026-08-29T23:58:27.693538697Z selecting default max_connections ... 100
+postgres-1  | 2026-08-29T23:58:27.832167627Z selecting default shared_buffers ... 128MB
+postgres-1  | 2026-08-29T23:58:27.931692508Z selecting default time zone ... Etc/UTC
+postgres-1  | 2026-08-29T23:58:27.934643310Z creating configuration files ... ok
+postgres-1  | 2026-08-29T23:58:29.088530156Z running bootstrap script ... ok
+postgres-1  | 2026-08-29T23:58:31.765777595Z performing post-bootstrap initialization ... ok
+postgres-1  | 2026-08-29T23:58:31.822615994Z syncing data to disk ... ok
+postgres-1  | 2026-08-29T23:58:31.822651021Z 
+postgres-1  | 2026-08-29T23:58:31.822665017Z 
+postgres-1  | 2026-08-29T23:58:31.822680789Z Success. You can now start the database server using:
+postgres-1  | 2026-08-29T23:58:31.822696065Z 
+postgres-1  | 2026-08-29T23:58:31.822716242Z     pg_ctl -D /var/lib/postgresql/data -l logfile start
+postgres-1  | 2026-08-29T23:58:31.822732654Z 
+postgres-1  | 2026-08-29T23:58:31.822807610Z initdb: warning: enabling "trust" authentication for local connections
+postgres-1  | 2026-08-29T23:58:31.822827929Z initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+postgres-1  | 2026-08-29T23:58:32.204540748Z waiting for server to start....2026-08-29 23:58:32.204 UTC [48] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-29T23:58:32.255873935Z 2026-08-29 23:58:32.252 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-29T23:58:32.297773787Z 2026-08-29 23:58:32.297 UTC [57] LOG:  database system was shut down at 2026-08-29 23:58:31 UTC
+postgres-1  | 2026-08-29T23:58:32.381502518Z 2026-08-29 23:58:32.381 UTC [48] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-29T23:58:32.431994533Z  done
+postgres-1  | 2026-08-29T23:58:32.432732686Z server started
+postgres-1  | 2026-08-29T23:58:33.378550428Z 
+postgres-1  | 2026-08-29T23:58:33.378582983Z /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1  | 2026-08-29T23:58:33.378610019Z 
+postgres-1  | 2026-08-29T23:58:33.391724625Z 2026-08-29 23:58:33.388 UTC [48] LOG:  received fast shutdown request
+postgres-1  | 2026-08-29T23:58:33.391757960Z 2026-08-29 23:58:33.388 UTC [48] LOG:  aborting any active transactions
+postgres-1  | 2026-08-29T23:58:33.416647651Z waiting for server to shut down....2026-08-29 23:58:33.416 UTC [48] LOG:  background worker "logical replication launcher" (PID 60) exited with exit code 1
+postgres-1  | 2026-08-29T23:58:33.426903874Z 2026-08-29 23:58:33.425 UTC [55] LOG:  shutting down
+postgres-1  | 2026-08-29T23:58:33.426939968Z 2026-08-29 23:58:33.425 UTC [55] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-08-29T23:58:33.437119615Z 2026-08-29 23:58:33.436 UTC [55] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/14F2B20, redo lsn=0/14F2B20
+postgres-1  | 2026-08-29T23:58:33.449711421Z 2026-08-29 23:58:33.446 UTC [48] LOG:  database system is shut down
+postgres-1  | 2026-08-29T23:58:33.498668774Z  done
+postgres-1  | 2026-08-29T23:58:33.498704869Z server stopped
+postgres-1  | 2026-08-29T23:58:33.519570968Z 
+postgres-1  | 2026-08-29T23:58:33.519609681Z PostgreSQL init process complete; ready for start up.
+postgres-1  | 2026-08-29T23:58:33.519730562Z 
+postgres-1  | 2026-08-29T23:58:33.622527833Z 2026-08-29 23:58:33.621 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-29T23:58:33.628680703Z 2026-08-29 23:58:33.623 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-08-29T23:58:33.628760677Z 2026-08-29 23:58:33.625 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-08-29T23:58:33.630541894Z 2026-08-29 23:58:33.629 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-29T23:58:33.643235542Z 2026-08-29 23:58:33.639 UTC [70] LOG:  database system was shut down at 2026-08-29 23:58:33 UTC
+postgres-1  | 2026-08-29T23:58:33.674546476Z 2026-08-29 23:58:33.673 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-30T00:03:33.302093837Z 2026-08-30 00:03:33.301 UTC [68] LOG:  checkpoint starting: time
+postgres-1  | 2026-08-30T00:03:36.717767431Z 2026-08-30 00:03:36.717 UTC [68] LOG:  checkpoint complete: wrote 37 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.415 s, sync=0.001 s, total=3.417 s; sync files=10, longest=0.001 s, average=0.001 s; distance=191 kB, estimate=191 kB; lsn=0/1522AF0, redo lsn=0/1522AB8
+postgres-1  | 2026-08-30T00:03:41.934349445Z 2026-08-30 00:03:41.934 UTC [558] ERROR:  canceling statement due to lock timeout
+postgres-1  | 2026-08-30T00:03:41.934391646Z 2026-08-30 00:03:41.934 UTC [558] CONTEXT:  while locking tuple (0,1) in relation "PessimisticSagas"
+postgres-1  | 2026-08-30T00:03:41.934412321Z 2026-08-30 00:03:41.934 UTC [558] STATEMENT:  SELECT v."CorrelationId", v."Value"
+postgres-1  | 2026-08-30T00:03:41.934431291Z 	FROM (
+postgres-1  | 2026-08-30T00:03:41.934513279Z 	    SELECT *, xmin FROM "PessimisticSagas" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:41.934544255Z 	) AS v
+postgres-1  | 2026-08-30T00:03:41.934579423Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:42.033519926Z 2026-08-30 00:03:42.033 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:42.036005203Z 2026-08-30 00:03:42.035 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4327 kB, estimate=4327 kB; lsn=0/195C870, redo lsn=0/195C838
+postgres-1  | 2026-08-30T00:03:44.987172160Z 2026-08-30 00:03:44.986 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:44.995246108Z 2026-08-30 00:03:44.994 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.008 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4388 kB, estimate=4388 kB; lsn=0/1DA5A18, redo lsn=0/1DA59E0
+postgres-1  | 2026-08-30T00:03:45.490216785Z 2026-08-30 00:03:45.490 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:45.492313054Z 2026-08-30 00:03:45.491 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4388 kB, estimate=4388 kB; lsn=0/21EED48, redo lsn=0/21EED10
+postgres-1  | 2026-08-30T00:03:45.966299832Z 2026-08-30 00:03:45.965 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:45.966329398Z 2026-08-30 00:03:45.965 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4388 kB, estimate=4388 kB; lsn=0/2638130, redo lsn=0/26380F8
+postgres-1  | 2026-08-30T00:03:46.429822140Z 2026-08-30 00:03:46.428 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:46.429858506Z 2026-08-30 00:03:46.429 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4389 kB, estimate=4389 kB; lsn=0/2A81590, redo lsn=0/2A81558
+postgres-1  | 2026-08-30T00:03:47.151945065Z 2026-08-30 00:03:47.149 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:47.152017297Z 2026-08-30 00:03:47.150 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4415 kB, estimate=4415 kB; lsn=0/2ED11E8, redo lsn=0/2ED11B0
+postgres-1  | 2026-08-30T00:03:47.559321305Z 2026-08-30 00:03:47.559 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:47.560782631Z 2026-08-30 00:03:47.560 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4412 kB, estimate=4414 kB; lsn=0/33203B0, redo lsn=0/3320378
+postgres-1  | 2026-08-30T00:03:47.931559594Z 2026-08-30 00:03:47.931 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:47.932230196Z 2026-08-30 00:03:47.931 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4412 kB, estimate=4414 kB; lsn=0/376F4A8, redo lsn=0/376F470
+postgres-1  | 2026-08-30T00:03:48.430491786Z 2026-08-30 00:03:48.429 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:48.434255627Z 2026-08-30 00:03:48.434 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.005 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4412 kB, estimate=4414 kB; lsn=0/3BBE840, redo lsn=0/3BBE808
+postgres-1  | 2026-08-30T00:03:48.939399475Z 2026-08-30 00:03:48.939 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:48.941522023Z 2026-08-30 00:03:48.941 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.002 s, total=0.003 s; sync files=6, longest=0.002 s, average=0.001 s; distance=4412 kB, estimate=4414 kB; lsn=0/400DB28, redo lsn=0/400DAF0
+postgres-1  | 2026-08-30T00:03:50.327998844Z 2026-08-30 00:03:50.327 UTC [747] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:50.328044173Z 2026-08-30 00:03:50.327 UTC [747] STATEMENT:  SELECT *, xmin FROM "OutboxState" ORDER BY "Created" LIMIT 1 FOR UPDATE SKIP LOCKED
+postgres-1  | 2026-08-30T00:03:50.328063987Z 	
+postgres-1  | 2026-08-30T00:03:50.670694141Z 2026-08-30 00:03:50.670 UTC [755] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:50.670735194Z 2026-08-30 00:03:50.670 UTC [755] STATEMENT:  SELECT *, xmin FROM "OutboxState" ORDER BY "Created" LIMIT 1 FOR UPDATE SKIP LOCKED
+postgres-1  | 2026-08-30T00:03:50.670750019Z 	
+postgres-1  | 2026-08-30T00:03:50.764417023Z 2026-08-30 00:03:50.764 UTC [761] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:50.764469693Z 2026-08-30 00:03:50.764 UTC [761] STATEMENT:  SELECT *, xmin FROM "OutboxState" ORDER BY "Created" LIMIT 1 FOR UPDATE SKIP LOCKED
+postgres-1  | 2026-08-30T00:03:50.764503191Z 	
+postgres-1  | 2026-08-30T00:03:51.876023068Z 2026-08-30 00:03:51.875 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:51.879172437Z 2026-08-30 00:03:51.878 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4756 kB, estimate=4756 kB; lsn=0/44B2BA8, redo lsn=0/44B2B70
+postgres-1  | 2026-08-30T00:03:52.124368439Z 2026-08-30 00:03:52.124 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:52.125051076Z 2026-08-30 00:03:52.124 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4413 kB, estimate=4721 kB; lsn=0/4902028, redo lsn=0/4901FD8
+postgres-1  | 2026-08-30T00:03:52.475399333Z 2026-08-30 00:03:52.475 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:52.479313965Z 2026-08-30 00:03:52.479 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.004 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4413 kB, estimate=4690 kB; lsn=0/4D515B8, redo lsn=0/4D51580
+postgres-1  | 2026-08-30T00:03:52.931278407Z 2026-08-30 00:03:52.931 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:52.932142311Z 2026-08-30 00:03:52.932 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4331 kB, estimate=4654 kB; lsn=0/518C1F8, redo lsn=0/518C1C0
+postgres-1  | 2026-08-30T00:03:53.206800690Z 2026-08-30 00:03:53.205 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:53.206828661Z 2026-08-30 00:03:53.206 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4331 kB, estimate=4622 kB; lsn=0/55C6E18, redo lsn=0/55C6DE0
+postgres-1  | 2026-08-30T00:03:53.423211694Z 2026-08-30 00:03:53.423 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:53.424155120Z 2026-08-30 00:03:53.424 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4331 kB, estimate=4593 kB; lsn=0/5A01AB0, redo lsn=0/5A01A78
+postgres-1  | 2026-08-30T00:03:53.688376232Z 2026-08-30 00:03:53.687 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:53.690435370Z 2026-08-30 00:03:53.690 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4331 kB, estimate=4567 kB; lsn=0/5E3C850, redo lsn=0/5E3C818
+postgres-1  | 2026-08-30T00:03:54.056047550Z 2026-08-30 00:03:54.055 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:54.056917380Z 2026-08-30 00:03:54.056 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4331 kB, estimate=4543 kB; lsn=0/62777B8, redo lsn=0/6277780
+postgres-1  | 2026-08-30T00:03:54.259753689Z 2026-08-30 00:03:54.259 UTC [856] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:54.259787340Z 2026-08-30 00:03:54.259 UTC [856] STATEMENT:  SELECT v."CorrelationId", v."Counter", v."CurrentState"
+postgres-1  | 2026-08-30T00:03:54.259804307Z 	FROM (
+postgres-1  | 2026-08-30T00:03:54.259820284Z 	    SELECT *, xmin FROM "SerializedSagas" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:54.259835837Z 	) AS v
+postgres-1  | 2026-08-30T00:03:54.259851036Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:54.333470650Z 2026-08-30 00:03:54.333 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:54.334375969Z 2026-08-30 00:03:54.334 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4332 kB, estimate=4522 kB; lsn=0/66B2890, redo lsn=0/66B2858
+postgres-1  | 2026-08-30T00:03:54.646289694Z 2026-08-30 00:03:54.646 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:54.647198406Z 2026-08-30 00:03:54.647 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4332 kB, estimate=4503 kB; lsn=0/6AED938, redo lsn=0/6AED900
+postgres-1  | 2026-08-30T00:03:55.406870304Z 2026-08-30 00:03:55.406 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:55.407854293Z 2026-08-30 00:03:55.407 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4417 kB, estimate=4494 kB; lsn=0/6F3DDE8, redo lsn=0/6F3DDB0
+postgres-1  | 2026-08-30T00:03:55.789178210Z 2026-08-30 00:03:55.789 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:55.790156482Z 2026-08-30 00:03:55.790 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4362 kB, estimate=4481 kB; lsn=0/7380780, redo lsn=0/7380748
+postgres-1  | 2026-08-30T00:03:56.109877317Z 2026-08-30 00:03:56.109 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:56.110748100Z 2026-08-30 00:03:56.110 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4362 kB, estimate=4469 kB; lsn=0/77C31D8, redo lsn=0/77C31A0
+postgres-1  | 2026-08-30T00:03:56.679114136Z 2026-08-30 00:03:56.678 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:56.679148683Z 2026-08-30 00:03:56.678 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4427 kB, estimate=4465 kB; lsn=0/7C160B0, redo lsn=0/7C16078
+postgres-1  | 2026-08-30T00:03:56.979164245Z 2026-08-30 00:03:56.978 UTC [917] ERROR:  duplicate key value violates unique constraint "PK_PersistedEntities"
+postgres-1  | 2026-08-30T00:03:56.979236793Z 2026-08-30 00:03:56.978 UTC [917] DETAIL:  Key ("Id")=(806962a1-f1b1-40e8-94d3-55dd7abf033c) already exists.
+postgres-1  | 2026-08-30T00:03:56.979255758Z 2026-08-30 00:03:56.978 UTC [917] STATEMENT:  INSERT INTO "PersistedEntities" ("Id")
+postgres-1  | 2026-08-30T00:03:56.979269295Z 	VALUES ($1)
+postgres-1  | 2026-08-30T00:03:57.146174085Z 2026-08-30 00:03:57.145 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:57.146534518Z 2026-08-30 00:03:57.146 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4432 kB, estimate=4462 kB; lsn=0/806A440, redo lsn=0/806A408
+postgres-1  | 2026-08-30T00:03:57.375824188Z 2026-08-30 00:03:57.375 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:57.376681468Z 2026-08-30 00:03:57.376 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4333 kB, estimate=4449 kB; lsn=0/84A59C0, redo lsn=0/84A5988
+postgres-1  | 2026-08-30T00:03:57.508098957Z 2026-08-30 00:03:57.507 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:57.508843064Z 2026-08-30 00:03:57.508 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4333 kB, estimate=4437 kB; lsn=0/88E0F10, redo lsn=0/88E0ED8
+postgres-1  | 2026-08-30T00:03:57.641526437Z 2026-08-30 00:03:57.641 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:57.643636642Z 2026-08-30 00:03:57.641 UTC [68] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4333 kB, estimate=4427 kB; lsn=0/8D1C558, redo lsn=0/8D1C520
+postgres-1  | 2026-08-30T00:03:57.965872933Z 2026-08-30 00:03:57.964 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:57.965905007Z 2026-08-30 00:03:57.965 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4340 kB, estimate=4418 kB; lsn=0/9159940, redo lsn=0/9159908
+postgres-1  | 2026-08-30T00:03:58.176924869Z 2026-08-30 00:03:58.176 UTC [969] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:58.176959252Z 2026-08-30 00:03:58.176 UTC [969] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:03:58.176977232Z 	FROM (
+postgres-1  | 2026-08-30T00:03:58.176994351Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:58.177007890Z 	) AS v
+postgres-1  | 2026-08-30T00:03:58.177169919Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:58.177187254Z 2026-08-30 00:03:58.176 UTC [970] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:58.177203228Z 2026-08-30 00:03:58.176 UTC [970] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:03:58.177221493Z 	FROM (
+postgres-1  | 2026-08-30T00:03:58.177237109Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:58.177250361Z 	) AS v
+postgres-1  | 2026-08-30T00:03:58.177262753Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:58.334131372Z 2026-08-30 00:03:58.331 UTC [971] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:58.334168763Z 2026-08-30 00:03:58.331 UTC [971] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:03:58.334188676Z 	FROM (
+postgres-1  | 2026-08-30T00:03:58.334206942Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:58.334224778Z 	) AS v
+postgres-1  | 2026-08-30T00:03:58.334242113Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:58.704756024Z 2026-08-30 00:03:58.704 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:58.705732641Z 2026-08-30 00:03:58.705 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4343 kB, estimate=4411 kB; lsn=0/9597780, redo lsn=0/9597748
+postgres-1  | 2026-08-30T00:03:58.991338518Z 2026-08-30 00:03:58.990 UTC [983] ERROR:  could not serialize access due to read/write dependencies among transactions
+postgres-1  | 2026-08-30T00:03:58.991586719Z 2026-08-30 00:03:58.990 UTC [983] DETAIL:  Reason code: Canceled on identification as a pivot, during commit attempt.
+postgres-1  | 2026-08-30T00:03:58.991605343Z 2026-08-30 00:03:58.990 UTC [983] HINT:  The transaction might succeed if retried.
+postgres-1  | 2026-08-30T00:03:58.991622176Z 2026-08-30 00:03:58.990 UTC [983] STATEMENT:  COMMIT
+postgres-1  | 2026-08-30T00:03:59.029053837Z 2026-08-30 00:03:59.028 UTC [985] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:59.029095399Z 2026-08-30 00:03:59.028 UTC [985] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:03:59.029119607Z 	FROM (
+postgres-1  | 2026-08-30T00:03:59.029162811Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:59.029179522Z 	) AS v
+postgres-1  | 2026-08-30T00:03:59.029192804Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:59.257163458Z 2026-08-30 00:03:59.256 UTC [990] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:03:59.257494951Z 2026-08-30 00:03:59.256 UTC [990] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:03:59.257518017Z 	FROM (
+postgres-1  | 2026-08-30T00:03:59.257538298Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:03:59.257555008Z 	) AS v
+postgres-1  | 2026-08-30T00:03:59.257575718Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:03:59.541896098Z 2026-08-30 00:03:59.540 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:59.541938088Z 2026-08-30 00:03:59.541 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4349 kB, estimate=4405 kB; lsn=0/99D6D28, redo lsn=0/99D6CF0
+postgres-1  | 2026-08-30T00:03:59.872179093Z 2026-08-30 00:03:59.872 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:03:59.875128823Z 2026-08-30 00:03:59.874 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4341 kB, estimate=4398 kB; lsn=0/9E14440, redo lsn=0/9E14408
+postgres-1  | 2026-08-30T00:04:00.162518321Z 2026-08-30 00:04:00.162 UTC [1012] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:04:00.162547806Z 2026-08-30 00:04:00.162 UTC [1012] STATEMENT:  SELECT v."CorrelationId", v."Command", v."Completed", v."Created", v."CurrentState", v."Faulted", v."Faults", v."Location", v."Pending", v."Results", v."Subscriptions", v."Variables", v."Version"
+postgres-1  | 2026-08-30T00:04:00.162581351Z 	FROM (
+postgres-1  | 2026-08-30T00:04:00.162596022Z 	    SELECT *, xmin FROM "FutureState" WHERE "CorrelationId" = $1 FOR UPDATE
+postgres-1  | 2026-08-30T00:04:00.162612616Z 	) AS v
+postgres-1  | 2026-08-30T00:04:00.162625436Z 	LIMIT 2
+postgres-1  | 2026-08-30T00:04:00.429061639Z 2026-08-30 00:04:00.428 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:00.430666790Z 2026-08-30 00:04:00.430 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4345 kB, estimate=4393 kB; lsn=0/A252868, redo lsn=0/A252830
+postgres-1  | 2026-08-30T00:04:00.769985701Z 2026-08-30 00:04:00.769 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:00.770791694Z 2026-08-30 00:04:00.770 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4342 kB, estimate=4388 kB; lsn=0/A690400, redo lsn=0/A6903C8
+postgres-1  | 2026-08-30T00:04:01.275389039Z 2026-08-30 00:04:01.273 UTC [1033] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:04:01.275423996Z 2026-08-30 00:04:01.273 UTC [1033] STATEMENT:  SELECT *, xmin FROM "InboxState" WHERE "MessageId" = $1 AND "ConsumerId" = $2 FOR UPDATE
+postgres-1  | 2026-08-30T00:04:01.275439983Z 	
+postgres-1  | 2026-08-30T00:04:01.275457035Z 2026-08-30 00:04:01.274 UTC [1034] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:04:01.275470535Z 2026-08-30 00:04:01.274 UTC [1034] STATEMENT:  SELECT *, xmin FROM "InboxState" WHERE "MessageId" = $1 AND "ConsumerId" = $2 FOR UPDATE
+postgres-1  | 2026-08-30T00:04:01.275487019Z 	
+postgres-1  | 2026-08-30T00:04:01.371127697Z 2026-08-30 00:04:01.369 UTC [1037] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:04:01.371192922Z 2026-08-30 00:04:01.369 UTC [1037] STATEMENT:  SELECT *, xmin FROM "InboxState" WHERE "MessageId" = $1 AND "ConsumerId" = $2 FOR UPDATE
+postgres-1  | 2026-08-30T00:04:01.371210614Z 	
+postgres-1  | 2026-08-30T00:04:01.371408209Z 2026-08-30 00:04:01.369 UTC [1036] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:04:01.371428033Z 2026-08-30 00:04:01.369 UTC [1036] STATEMENT:  SELECT *, xmin FROM "InboxState" WHERE "MessageId" = $1 AND "ConsumerId" = $2 FOR UPDATE
+postgres-1  | 2026-08-30T00:04:01.371444588Z 	
+postgres-1  | 2026-08-30T00:04:02.570855543Z 2026-08-30 00:04:02.569 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:02.570955589Z 2026-08-30 00:04:02.570 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4452 kB, estimate=4452 kB; lsn=0/AAE9640, redo lsn=0/AAE9608
+postgres-1  | 2026-08-30T00:04:03.251568144Z 2026-08-30 00:04:03.251 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:03.252641254Z 2026-08-30 00:04:03.252 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4430 kB, estimate=4450 kB; lsn=0/AF3D0C0, redo lsn=0/AF3D088
+postgres-1  | 2026-08-30T00:04:03.853465863Z 2026-08-30 00:04:03.852 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:03.855170651Z 2026-08-30 00:04:03.854 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4430 kB, estimate=4448 kB; lsn=0/B390C30, redo lsn=0/B390BF8
+postgres-1  | 2026-08-30T00:04:04.636713082Z 2026-08-30 00:04:04.635 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:04.636817947Z 2026-08-30 00:04:04.635 UTC [68] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=8, longest=0.001 s, average=0.001 s; distance=4453 kB, estimate=4453 kB; lsn=0/B7EA268, redo lsn=0/B7EA230
+postgres-1  | 2026-08-30T00:04:05.460002795Z 2026-08-30 00:04:05.459 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:05.461299292Z 2026-08-30 00:04:05.461 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4430 kB, estimate=4451 kB; lsn=0/BC3DBA0, redo lsn=0/BC3DB68
+postgres-1  | 2026-08-30T00:04:06.242097576Z 2026-08-30 00:04:06.237 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:06.242161853Z 2026-08-30 00:04:06.239 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4428 kB, estimate=4448 kB; lsn=0/C090DF8, redo lsn=0/C090DC0
+postgres-1  | 2026-08-30T00:04:06.980304280Z 2026-08-30 00:04:06.979 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:06.981879560Z 2026-08-30 00:04:06.981 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4429 kB, estimate=4447 kB; lsn=0/C4E4550, redo lsn=0/C4E4518
+postgres-1  | 2026-08-30T00:04:07.830701024Z 2026-08-30 00:04:07.830 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:07.840704711Z 2026-08-30 00:04:07.840 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.006 s, sync=0.001 s, total=0.010 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4421 kB, estimate=4444 kB; lsn=0/C935A18, redo lsn=0/C9359E0
+postgres-1  | 2026-08-30T00:04:08.718765956Z 2026-08-30 00:04:08.718 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:08.723082052Z 2026-08-30 00:04:08.722 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.001 s, total=0.005 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4414 kB, estimate=4441 kB; lsn=0/CD85508, redo lsn=0/CD854D0
+postgres-1  | 2026-08-30T00:04:10.234695543Z 2026-08-30 00:04:10.234 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:10.240419677Z 2026-08-30 00:04:10.239 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.006 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4414 kB, estimate=4438 kB; lsn=0/D1D5058, redo lsn=0/D1D5020
+postgres-1  | 2026-08-30T00:04:11.116516572Z 2026-08-30 00:04:11.116 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:11.119154966Z 2026-08-30 00:04:11.118 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4413 kB, estimate=4436 kB; lsn=0/D624538, redo lsn=0/D624500
+postgres-1  | 2026-08-30T00:04:14.714468191Z 2026-08-30 00:04:14.706 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:14.714533065Z 2026-08-30 00:04:14.712 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.007 s; sync files=6, longest=0.005 s, average=0.001 s; distance=4434 kB, estimate=4436 kB; lsn=0/DA78EB8, redo lsn=0/DA78E80
+postgres-1  | 2026-08-30T00:04:16.653912905Z 2026-08-30 00:04:16.653 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:16.655677741Z 2026-08-30 00:04:16.655 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4426 kB, estimate=4435 kB; lsn=0/DECB8D8, redo lsn=0/DECB8A0
+postgres-1  | 2026-08-30T00:04:20.040109467Z 2026-08-30 00:04:20.039 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:20.052265874Z 2026-08-30 00:04:20.052 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.001 s, total=0.013 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4435 kB, estimate=4435 kB; lsn=0/E320538, redo lsn=0/E320500
+postgres-1  | 2026-08-30T00:04:21.834527134Z 2026-08-30 00:04:21.831 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:21.843228422Z 2026-08-30 00:04:21.842 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.012 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4430 kB, estimate=4434 kB; lsn=0/E774098, redo lsn=0/E774060
+postgres-1  | 2026-08-30T00:04:22.771833383Z 2026-08-30 00:04:22.771 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:22.773719445Z 2026-08-30 00:04:22.773 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4427 kB, estimate=4433 kB; lsn=0/EBC6DC8, redo lsn=0/EBC6D90
+postgres-1  | 2026-08-30T00:04:24.369579332Z 2026-08-30 00:04:24.369 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:24.371067393Z 2026-08-30 00:04:24.370 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4431 kB, estimate=4433 kB; lsn=0/F01ABB0, redo lsn=0/F01AB78
+postgres-1  | 2026-08-30T00:04:24.920070518Z 2026-08-30 00:04:24.919 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:24.921590185Z 2026-08-30 00:04:24.921 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4343 kB, estimate=4424 kB; lsn=0/F4588B8, redo lsn=0/F458880
+postgres-1  | 2026-08-30T00:04:25.270436979Z 2026-08-30 00:04:25.270 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:25.271422970Z 2026-08-30 00:04:25.271 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4345 kB, estimate=4416 kB; lsn=0/F896D80, redo lsn=0/F896D48
+postgres-1  | 2026-08-30T00:04:25.762209971Z 2026-08-30 00:04:25.761 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:25.765960762Z 2026-08-30 00:04:25.765 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.004 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4344 kB, estimate=4409 kB; lsn=0/FCD5168, redo lsn=0/FCD5130
+postgres-1  | 2026-08-30T00:04:26.201675240Z 2026-08-30 00:04:26.200 UTC [1304] ERROR:  could not serialize access due to read/write dependencies among transactions
+postgres-1  | 2026-08-30T00:04:26.201716631Z 2026-08-30 00:04:26.200 UTC [1304] DETAIL:  Reason code: Canceled on identification as a pivot, during write.
+postgres-1  | 2026-08-30T00:04:26.201735458Z 2026-08-30 00:04:26.200 UTC [1304] HINT:  The transaction might succeed if retried.
+postgres-1  | 2026-08-30T00:04:26.201752734Z 2026-08-30 00:04:26.200 UTC [1304] STATEMENT:  INSERT INTO journal."MessageJournal" ("EntryId", "Body", "ContentSizeInBytes", "ContentType", "DataClassification", "HeadersJson", "MessageTypesJson", "MetadataJson", "ObservedAt", "Operation", "Outcome")
+postgres-1  | 2026-08-30T00:04:26.201770786Z 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+postgres-1  | 2026-08-30T00:04:26.212077310Z 2026-08-30 00:04:26.211 UTC [1305] ERROR:  could not serialize access due to read/write dependencies among transactions
+postgres-1  | 2026-08-30T00:04:26.212115176Z 2026-08-30 00:04:26.211 UTC [1305] DETAIL:  Reason code: Canceled on identification as a pivot, during write.
+postgres-1  | 2026-08-30T00:04:26.212132522Z 2026-08-30 00:04:26.211 UTC [1305] HINT:  The transaction might succeed if retried.
+postgres-1  | 2026-08-30T00:04:26.212150856Z 2026-08-30 00:04:26.211 UTC [1305] STATEMENT:  INSERT INTO journal."MessageJournal" ("EntryId", "Body", "ContentSizeInBytes", "ContentType", "DataClassification", "HeadersJson", "MessageTypesJson", "MetadataJson", "ObservedAt", "Operation", "Outcome")
+postgres-1  | 2026-08-30T00:04:26.212166087Z 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+postgres-1  | 2026-08-30T00:04:26.214310682Z 2026-08-30 00:04:26.214 UTC [1309] ERROR:  could not serialize access due to read/write dependencies among transactions
+postgres-1  | 2026-08-30T00:04:26.214363003Z 2026-08-30 00:04:26.214 UTC [1309] DETAIL:  Reason code: Canceled on identification as a pivot, during write.
+postgres-1  | 2026-08-30T00:04:26.214486190Z 2026-08-30 00:04:26.214 UTC [1309] HINT:  The transaction might succeed if retried.
+postgres-1  | 2026-08-30T00:04:26.214520530Z 2026-08-30 00:04:26.214 UTC [1309] STATEMENT:  INSERT INTO journal."MessageJournal" ("EntryId", "Body", "ContentSizeInBytes", "ContentType", "DataClassification", "HeadersJson", "MessageTypesJson", "MetadataJson", "ObservedAt", "Operation", "Outcome")
+postgres-1  | 2026-08-30T00:04:26.214562697Z 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+postgres-1  | 2026-08-30T00:04:26.226291125Z 2026-08-30 00:04:26.223 UTC [1302] ERROR:  could not serialize access due to read/write dependencies among transactions
+postgres-1  | 2026-08-30T00:04:26.226339709Z 2026-08-30 00:04:26.223 UTC [1302] DETAIL:  Reason code: Canceled on identification as a pivot, during write.
+postgres-1  | 2026-08-30T00:04:26.227325346Z 2026-08-30 00:04:26.223 UTC [1302] HINT:  The transaction might succeed if retried.
+postgres-1  | 2026-08-30T00:04:26.227349109Z 2026-08-30 00:04:26.223 UTC [1302] STATEMENT:  INSERT INTO journal."MessageJournal" ("EntryId", "Body", "ContentSizeInBytes", "ContentType", "DataClassification", "HeadersJson", "MessageTypesJson", "MetadataJson", "ObservedAt", "Operation", "Outcome")
+postgres-1  | 2026-08-30T00:04:26.227374353Z 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+postgres-1  | 2026-08-30T00:04:26.262091145Z 2026-08-30 00:04:26.261 UTC [1307] ERROR:  could not serialize access due to concurrent delete
+postgres-1  | 2026-08-30T00:04:26.262256288Z 2026-08-30 00:04:26.261 UTC [1307] STATEMENT:  DELETE FROM journal."MessageJournal" AS m
+postgres-1  | 2026-08-30T00:04:26.262275538Z 	WHERE m."EntryId" IN (
+postgres-1  | 2026-08-30T00:04:26.262605893Z 	    SELECT m0."EntryId"
+postgres-1  | 2026-08-30T00:04:26.262622464Z 	    FROM journal."MessageJournal" AS m0
+postgres-1  | 2026-08-30T00:04:26.262637060Z 	    ORDER BY m0."ObservedAt", m0."EntryId"
+postgres-1  | 2026-08-30T00:04:26.262660612Z 	    LIMIT 1
+postgres-1  | 2026-08-30T00:04:26.262719984Z 	)
+postgres-1  | 2026-08-30T00:04:26.266837616Z 2026-08-30 00:04:26.266 UTC [1306] ERROR:  could not serialize access due to concurrent delete
+postgres-1  | 2026-08-30T00:04:26.266872379Z 2026-08-30 00:04:26.266 UTC [1306] STATEMENT:  DELETE FROM journal."MessageJournal" AS m
+postgres-1  | 2026-08-30T00:04:26.266894097Z 	WHERE m."EntryId" IN (
+postgres-1  | 2026-08-30T00:04:26.266911584Z 	    SELECT m0."EntryId"
+postgres-1  | 2026-08-30T00:04:26.266928578Z 	    FROM journal."MessageJournal" AS m0
+postgres-1  | 2026-08-30T00:04:26.266945360Z 	    ORDER BY m0."ObservedAt", m0."EntryId"
+postgres-1  | 2026-08-30T00:04:26.266962425Z 	    LIMIT 1
+postgres-1  | 2026-08-30T00:04:26.266979066Z 	)
+postgres-1  | 2026-08-30T00:04:26.336881566Z 2026-08-30 00:04:26.336 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:26.337328198Z 2026-08-30 00:04:26.337 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4344 kB, estimate=4403 kB; lsn=0/10113488, redo lsn=0/10113450
+postgres-1  | 2026-08-30T00:04:26.569694765Z 2026-08-30 00:04:26.568 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:26.569949953Z 2026-08-30 00:04:26.569 UTC [68] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4344 kB, estimate=4397 kB; lsn=0/10551548, redo lsn=0/10551510
+postgres-1  | 2026-08-30T00:04:27.409259402Z 2026-08-30 00:04:27.408 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:27.410415361Z 2026-08-30 00:04:27.409 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4340 kB, estimate=4391 kB; lsn=0/1098E6C8, redo lsn=0/1098E690
+postgres-1  | 2026-08-30T00:04:28.183549000Z 2026-08-30 00:04:28.179 UTC [68] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:04:28.185391583Z 2026-08-30 00:04:28.181 UTC [68] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.003 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4340 kB, estimate=4386 kB; lsn=0/10DCB700, redo lsn=0/10DCB6C8

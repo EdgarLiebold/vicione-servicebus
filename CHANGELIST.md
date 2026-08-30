@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 3807 |
+| Added | 3898 |
 | Modified | 4200 |
 | Deleted | 1448 |
 | Renamed | 2 |
@@ -2401,6 +2401,97 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M18-topology-formatted-name-injection.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RABBITMQ-ADDRESSES/mutations/M19-topology-message-lifetime.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/RETROSPECTIVE_PRODUCT_DEFECT_ACCOMMODATION_AUDIT.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01-results/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02-results/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M03-results/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-mssql-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-results/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-mssql-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-results/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/ci-tooltests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-244.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-activemq-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-artemis-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-azurite-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-localstack-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/local-base-postgres-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/postgresql-71.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/postgresql-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/postgresql-endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/postgresql-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/sqlserver-60.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/sqlserver-endpoints.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/sqlserver-findings.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/sqlserver-mssql-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/sqlserver-postgres-broker.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/unit-architecture.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-29_23_59_59.846339.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_00_06.471363.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_02_30.399823.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_03_38.141063.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_04_28.952143.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_04_34.472294.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/local-base/edgar.liebold_Edgars-iMac-2_2026-08-30_00_04_51.117786.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/postgresql/postgresql.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/sqlserver/sqlserver.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_00.863957.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_02.604525.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_04.328172.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_06.105079.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_08.237521.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_13.518017.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_16.821694.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_18.263222.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_24.098926.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_43.892747.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_45.311524.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_48.342661.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_53_58.461880.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_54_00.200092.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_35.388053.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_36.769300.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_38.324590.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_40.271709.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_41.950237.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_55_43.388552.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/results/unit/edgar.liebold_Edgars-iMac-2_2026-08-29_23_56_02.898215.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-01/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-01/MUTATION_EXECUTION.tsv` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-01/MUTATION_MANIFEST.json` | Added |  |

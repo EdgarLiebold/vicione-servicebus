@@ -1,0 +1,55 @@
+artemis-1  | 2026-08-29T23:58:26.554792043Z Creating Broker with args --user XXXXX --password XXXXX --role admin --name broker --allow-anonymous --http-host 172.21.0.3 --host 172.21.0.3   --force --no-autotune --nio --relax-jolokia
+artemis-1  | 2026-08-29T23:58:39.378485687Z Creating ActiveMQ Artemis instance at: /home/jboss/broker
+artemis-1  | 2026-08-29T23:58:40.975287577Z 
+artemis-1  | 2026-08-29T23:58:40.975793624Z You can now start the broker by executing:  
+artemis-1  | 2026-08-29T23:58:40.976630273Z 
+artemis-1  | 2026-08-29T23:58:40.977039341Z    "/home/jboss/broker/bin/artemis" run
+artemis-1  | 2026-08-29T23:58:40.978482578Z 
+artemis-1  | 2026-08-29T23:58:40.978517539Z Or you can run the broker in the background using:
+artemis-1  | 2026-08-29T23:58:40.978539256Z 
+artemis-1  | 2026-08-29T23:58:40.978567951Z    "/home/jboss/broker/bin/artemis-service" start
+artemis-1  | 2026-08-29T23:58:40.978592446Z 
+artemis-1  | 2026-08-29T23:58:41.034020749Z Running Broker
+artemis-1  | 2026-08-29T23:59:16.668770428Z      _        _               _
+artemis-1  | 2026-08-29T23:59:16.668816516Z     / \  ____| |_  ___ __  __(_) _____
+artemis-1  | 2026-08-29T23:59:16.670533137Z    / _ \|  _ \ __|/ _ \  \/  | |/  __/
+artemis-1  | 2026-08-29T23:59:16.670674785Z   / ___ \ | \/ |_/  __/ |\/| | |\___ \
+artemis-1  | 2026-08-29T23:59:16.670717421Z  /_/   \_\|   \__\____|_|  |_|_|/___ /
+artemis-1  | 2026-08-29T23:59:16.670856673Z  Apache ActiveMQ Artemis 2.38.0
+artemis-1  | 2026-08-29T23:59:16.670907060Z 
+artemis-1  | 2026-08-29T23:59:16.670956531Z 
+artemis-1  | 2026-08-29T23:59:28.266498515Z 2026-08-29 23:59:28,228 INFO  [org.apache.activemq.artemis.integration.bootstrap] AMQ101000: Starting ActiveMQ Artemis Server version 2.38.0
+artemis-1  | 2026-08-29T23:59:28.849529220Z 2026-08-29 23:59:28,846 INFO  [org.apache.activemq.artemis.core.server] AMQ221000: Primary message broker is starting with configuration Broker Configuration (clustered=false,journalDirectory=data/journal,bindingsDirectory=data/bindings,largeMessagesDirectory=data/large-messages,pagingDirectory=data/paging)
+artemis-1  | 2026-08-29T23:59:29.500216592Z 2026-08-29 23:59:29,497 INFO  [org.apache.activemq.artemis.core.server] AMQ221013: Using NIO Journal
+artemis-1  | 2026-08-29T23:59:30.585949127Z 2026-08-29 23:59:30,584 INFO  [org.apache.activemq.artemis.core.server] AMQ221057: Global Max Size is being adjusted to 1/2 of the JVM max size (-Xmx). being defined as 1073741824
+artemis-1  | 2026-08-29T23:59:30.960710163Z 2026-08-29 23:59:30,959 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-server]. Adding protocol support for: CORE
+artemis-1  | 2026-08-29T23:59:30.971922893Z 2026-08-29 23:59:30,970 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-amqp-protocol]. Adding protocol support for: AMQP
+artemis-1  | 2026-08-29T23:59:30.983728999Z 2026-08-29 23:59:30,978 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-hornetq-protocol]. Adding protocol support for: HORNETQ
+artemis-1  | 2026-08-29T23:59:30.989149315Z 2026-08-29 23:59:30,987 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-mqtt-protocol]. Adding protocol support for: MQTT
+artemis-1  | 2026-08-29T23:59:30.992029849Z 2026-08-29 23:59:30,990 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-openwire-protocol]. Adding protocol support for: OPENWIRE
+artemis-1  | 2026-08-29T23:59:30.999427277Z 2026-08-29 23:59:30,995 INFO  [org.apache.activemq.artemis.core.server] AMQ221043: Protocol module found: [artemis-stomp-protocol]. Adding protocol support for: STOMP
+artemis-1  | 2026-08-29T23:59:31.409524658Z 2026-08-29 23:59:31,407 INFO  [org.apache.activemq.artemis.core.server] AMQ221034: Waiting indefinitely to obtain primary lock
+artemis-1  | 2026-08-29T23:59:31.410525983Z 2026-08-29 23:59:31,408 INFO  [org.apache.activemq.artemis.core.server] AMQ221035: Primary Server Obtained primary lock
+artemis-1  | 2026-08-29T23:59:31.875560092Z 2026-08-29 23:59:31,875 INFO  [org.apache.activemq.artemis.core.server] AMQ221080: Deploying address DLQ supporting [ANYCAST]
+artemis-1  | 2026-08-29T23:59:31.943670303Z 2026-08-29 23:59:31,943 INFO  [org.apache.activemq.artemis.core.server] AMQ221003: Deploying ANYCAST queue DLQ on address DLQ
+artemis-1  | 2026-08-29T23:59:32.216787710Z 2026-08-29 23:59:32,215 INFO  [org.apache.activemq.artemis.core.server] AMQ221080: Deploying address ExpiryQueue supporting [ANYCAST]
+artemis-1  | 2026-08-29T23:59:32.221860974Z 2026-08-29 23:59:32,221 INFO  [org.apache.activemq.artemis.core.server] AMQ221003: Deploying ANYCAST queue ExpiryQueue on address ExpiryQueue
+artemis-1  | 2026-08-29T23:59:36.696071370Z 2026-08-29 23:59:36,693 INFO  [org.apache.activemq.artemis.core.server] AMQ221020: Started EPOLL Acceptor at 172.21.0.3:61616 for protocols [CORE,MQTT,AMQP,STOMP,HORNETQ,OPENWIRE]
+artemis-1  | 2026-08-29T23:59:36.762436275Z 2026-08-29 23:59:36,758 INFO  [org.apache.activemq.artemis.core.server] AMQ221020: Started EPOLL Acceptor at 172.21.0.3:5445 for protocols [HORNETQ,STOMP]
+artemis-1  | 2026-08-29T23:59:36.842772497Z 2026-08-29 23:59:36,836 INFO  [org.apache.activemq.artemis.core.server] AMQ221020: Started EPOLL Acceptor at 172.21.0.3:5672 for protocols [AMQP]
+artemis-1  | 2026-08-29T23:59:36.923168423Z 2026-08-29 23:59:36,920 INFO  [org.apache.activemq.artemis.core.server] AMQ221020: Started EPOLL Acceptor at 172.21.0.3:1883 for protocols [MQTT]
+artemis-1  | 2026-08-29T23:59:36.953932884Z 2026-08-29 23:59:36,953 INFO  [org.apache.activemq.artemis.core.server] AMQ221020: Started EPOLL Acceptor at 172.21.0.3:61613 for protocols [STOMP]
+artemis-1  | 2026-08-29T23:59:36.992925834Z 2026-08-29 23:59:36,989 INFO  [org.apache.activemq.artemis.core.server] AMQ221007: Server is now active
+artemis-1  | 2026-08-29T23:59:37.000751721Z 2026-08-29 23:59:37,000 INFO  [org.apache.activemq.artemis.core.server] AMQ221001: Apache ActiveMQ Artemis Message Broker version 2.38.0 [broker, nodeID=abb7d7c7-a405-11f1-9a94-d636e54f2c1f] 
+artemis-1  | 2026-08-29T23:59:37.191122959Z 2026-08-29 23:59:37,190 INFO  [org.apache.activemq.artemis] AMQ241003: Starting embedded web server
+artemis-1  | 2026-08-29T23:59:44.823309208Z 2026-08-29 23:59:44,822 INFO  [org.apache.activemq.hawtio.branding.PluginContextListener] Initialized activemq-branding plugin
+artemis-1  | 2026-08-29T23:59:45.610788682Z 2026-08-29 23:59:45,608 INFO  [org.apache.activemq.hawtio.plugin.PluginContextListener] Initialized artemis-plugin plugin
+artemis-1  | 2026-08-29T23:59:46.046010767Z 2026-08-29 23:59:46,045 INFO  [io.hawt.HawtioContextListener] Initialising hawtio services
+artemis-1  | 2026-08-29T23:59:46.114064781Z 2026-08-29 23:59:46,113 INFO  [io.hawt.system.ConfigManager] Configuration will be discovered via system properties
+artemis-1  | 2026-08-29T23:59:46.135876594Z 2026-08-29 23:59:46,128 INFO  [io.hawt.jmx.JmxTreeWatcher] Welcome to Hawtio 2.17.7
+artemis-1  | 2026-08-29T23:59:46.188166641Z 2026-08-29 23:59:46,186 INFO  [io.hawt.web.auth.AuthenticationConfiguration] Starting hawtio authentication filter, JAAS realm: "activemq" authorized role(s): "admin" role principal classes: "org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal"
+artemis-1  | 2026-08-29T23:59:46.253927850Z 2026-08-29 23:59:46,250 INFO  [io.hawt.web.auth.LoginRedirectFilter] Hawtio loginRedirectFilter is using 1800 sec. HttpSession timeout
+artemis-1  | 2026-08-29T23:59:46.351967565Z 2026-08-29 23:59:46,351 INFO  [org.apache.activemq.artemis] AMQ241001: HTTP Server started at http://172.21.0.3:8161
+artemis-1  | 2026-08-29T23:59:46.353680790Z 2026-08-29 23:59:46,353 INFO  [org.apache.activemq.artemis] AMQ241002: Artemis Jolokia REST API available at http://172.21.0.3:8161/console/jolokia
+artemis-1  | 2026-08-29T23:59:46.358204868Z 2026-08-29 23:59:46,357 INFO  [org.apache.activemq.artemis] AMQ241004: Artemis Console available at http://172.21.0.3:8161/console
+artemis-1  | 2026-08-30T00:01:37.059739730Z 2026-08-30 00:01:37,052 INFO  [io.hawt.web.servlets.JolokiaConfiguredAgentServlet] Jolokia overridden property: [key=policyLocation, value=file:/home/jboss/broker/etc/jolokia-access.xml]

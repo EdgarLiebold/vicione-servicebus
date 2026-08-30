@@ -1,0 +1,496 @@
+mssql-1  | 2026-08-29T23:46:31.519374565Z SQL Server 2025 will run as non-root by default.
+mssql-1  | 2026-08-29T23:46:31.519501248Z This container is running as user mssql.
+mssql-1  | 2026-08-29T23:46:31.519523533Z To learn more visit https://go.microsoft.com/fwlink/?linkid=2099216.
+mssql-1  | 2026-08-29T23:46:34.871199528Z 2026-08-29 23:46:34.84 Server      Setup step is copying system data file 'C:\templatedata\master.mdf' to '/var/opt/mssql/data/master.mdf'.
+mssql-1  | 2026-08-29T23:46:34.887742465Z 
+2026-08-29 23:46:34.88 Server      Did not find an existing master data file /var/opt/mssql/data/master.mdf, copying the missing default master and other system database files. If you have moved the database location, but not moved the database files, startup may fail. To repair: shutdown SQL Server, move the master database to configured location, and restart.
+mssql-1  | 2026-08-29T23:46:34.888748300Z 
+2026-08-29 23:46:34.88 Server      Setup step is copying system data file 'C:\templatedata\mastlog.ldf' to '/var/opt/mssql/data/mastlog.ldf'.
+mssql-1  | 2026-08-29T23:46:34.893314276Z 
+2026-08-29 23:46:34.88 Server      Setup step is copying system data file 'C:\templatedata\model.mdf' to '/var/opt/mssql/data/model.mdf'.
+mssql-1  | 2026-08-29T23:46:34.910630813Z 
+2026-08-29 23:46:34.90 Server      Setup step is copying system data file 'C:\templatedata\modellog.ldf' to '/var/opt/mssql/data/modellog.ldf'.
+mssql-1  | 2026-08-29T23:46:34.927401818Z 
+2026-08-29 23:46:34.92 Server      Setup step is copying system data file 'C:\templatedata\msdbdata.mdf' to '/var/opt/mssql/data/msdbdata.mdf'.
+mssql-1  | 2026-08-29T23:46:34.954383199Z 
+2026-08-29 23:46:34.95 Server      Setup step is copying system data file 'C:\templatedata\msdblog.ldf' to '/var/opt/mssql/data/msdblog.ldf'.
+mssql-1  | 2026-08-29T23:46:34.957785458Z 
+2026-08-29 23:46:34.95 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_replicatedmaster.mdf' to '/var/opt/mssql/data/model_replicatedmaster.mdf'.
+mssql-1  | 2026-08-29T23:46:34.966788124Z 
+2026-08-29 23:46:34.96 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_replicatedmaster.ldf' to '/var/opt/mssql/data/model_replicatedmaster.ldf'.
+mssql-1  | 2026-08-29T23:46:34.970200550Z 
+2026-08-29 23:46:34.96 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_msdbdata.mdf' to '/var/opt/mssql/data/model_msdbdata.mdf'.
+mssql-1  | 2026-08-29T23:46:34.995631060Z 
+2026-08-29 23:46:34.99 Server      Setup step is FORCE copying system data file 'C:\templatedata\model_msdblog.ldf' to '/var/opt/mssql/data/model_msdblog.ldf'.
+mssql-1  | 2026-08-29T23:46:35.033012399Z 
+2026-08-29 23:46:35.02 Server      Microsoft SQL Server 2025 (RTM-CU8) (KB5104822) - 17.0.4075.5 (X64) 
+mssql-1  | 2026-08-29T23:46:35.033047094Z 
+	Jul 22 2026 00:20:30 
+mssql-1  | 2026-08-29T23:46:35.033064935Z 
+	Copyright (C) 2025 Microsoft Corporation
+mssql-1  | 2026-08-29T23:46:35.033081295Z 
+	Enterprise Developer Edition (64-bit) on Linux (Ubuntu 24.04.4 LTS) <X64>
+mssql-1  | 2026-08-29T23:46:35.033481485Z 
+2026-08-29 23:46:35.03 Server      UTC adjustment: 0:00
+mssql-1  | 2026-08-29T23:46:35.033504051Z 
+2026-08-29 23:46:35.03 Server      (c) Microsoft Corporation.
+mssql-1  | 2026-08-29T23:46:35.033753543Z 
+2026-08-29 23:46:35.03 Server      All rights reserved.
+mssql-1  | 2026-08-29T23:46:35.033998594Z 
+2026-08-29 23:46:35.03 Server      Server process ID is 784.
+mssql-1  | 2026-08-29T23:46:35.034352312Z 
+2026-08-29 23:46:35.03 Server      Logging SQL Server messages in file '/var/opt/mssql/log/errorlog'.
+mssql-1  | 2026-08-29T23:46:35.034747847Z 
+2026-08-29 23:46:35.03 Server      Registry startup parameters: 
+mssql-1  | 2026-08-29T23:46:35.034786844Z 
+	 -d /var/opt/mssql/data/master.mdf
+mssql-1  | 2026-08-29T23:46:35.034825629Z 
+	 -l /var/opt/mssql/data/mastlog.ldf
+mssql-1  | 2026-08-29T23:46:35.034975973Z 
+	 -e /var/opt/mssql/log/errorlog
+mssql-1  | 2026-08-29T23:46:35.036681734Z 
+2026-08-29 23:46:35.03 Server      SQL Server detected 1 sockets with 2 cores per socket and 2 logical processors per socket, 2 total logical processors; using 2 logical processors based on SQL Server licensing. This is an informational message; no user action is required.
+mssql-1  | 2026-08-29T23:46:35.037441777Z 
+2026-08-29 23:46:35.03 Server      SQL Server is starting at normal priority base (=7). This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:35.037835267Z 
+2026-08-29 23:46:35.03 Server      Using conventional memory in the memory manager.
+mssql-1  | 2026-08-29T23:46:35.039955533Z 
+2026-08-29 23:46:35.03 Server      SQL Server detected the following NUMA node configuration (NUMA Node number 0, Processor Group number 0, CPU Mask 0x0000000000000003).
+mssql-1  | 2026-08-29T23:46:35.040479693Z 
+2026-08-29 23:46:35.03 Server      Page exclusion bitmap is enabled.
+mssql-1  | 2026-08-29T23:46:35.067696193Z 
+2026-08-29 23:46:35.06 Server      Detected 3132 MB of RAM, 2890 MB of available memory, 2890 MB of available page file. This is an informational message; no user action is required.
+mssql-1  | 2026-08-29T23:46:35.067729336Z 
+2026-08-29 23:46:35.06 Server      Buffer pool extension is not supported on Linux platform.
+mssql-1  | 2026-08-29T23:46:35.070548788Z 
+2026-08-29 23:46:35.06 Server      Buffer Pool: Allocating 4194304 bytes for 454475 hashPages.
+mssql-1  | 2026-08-29T23:46:35.458203540Z 
+2026-08-29 23:46:35.45 Server      Buffer pool extension is already disabled. No action is necessary.
+mssql-1  | 2026-08-29T23:46:35.484996085Z 
+[EnableRbpexForGP] : Rbpex non HS FS Toggled, isGeneralPurpose:[0] 
+mssql-1  | 2026-08-29T23:46:35.486700717Z 
+[EnableRbpexForLogicalMaster] : Rbpex for LM Toggled
+mssql-1  | 2026-08-29T23:46:35.678483423Z 
+[RbpexEnableGrowWithoutShrink] : Rbpex Thin Provisioning FS Toggled
+mssql-1  | 2026-08-29T23:46:36.444511427Z 
+2026-08-29 23:46:36.43 Server      Skipping small memory environment configuration. State 1.
+mssql-1  | 2026-08-29T23:46:36.471591588Z 
+[INFO] [InitXdbSrvGlobals]: In InitXdbSrvGlobals, FAlternateIoFactorEnabled() = [1]. IsRBPEXEnabledNonHyperscaleEdition() = [0].
+mssql-1  | 2026-08-29T23:46:36.534535784Z 
+[RSC Capacity config] MaximumNumberOfCachePerDb: 0, MaximumSpaceForCachePerDbInMB: -1, MaximumNumberOfCacheGlobal: -1
+mssql-1  | 2026-08-29T23:46:36.565993654Z 
+[INFO] [InitServerComponents]: IsRBPEXEnabledNonHyperscaleEdition() = [0], IsSubCoreCPUAllocation = [0], GetSchedulersNumber*100 = [200], GetCPUCorePercentCap = [200.000000], EnableResilientBufferPoolExtension = [0], , RbpexEnableShrink (thin provisioning)  = [0], RbpexEnableGrowWithoutShrink = [0].
+mssql-1  | 2026-08-29T23:46:36.577407534Z 
+2026-08-29 23:46:36.56 Server      Installing Client TLS certificates to the store.
+mssql-1  | 2026-08-29T23:46:36.595438693Z 
+2026-08-29 23:46:36.58 Server      CPU vectorization level(s) detected:  SSE SSE2 SSE3 SSSE3 SSE41 SSE42 AVX AVX2 POPCNT BMI1 BMI2
+mssql-1  | 2026-08-29T23:46:36.633473057Z 
+SqlInstanceNetworkManager: Finished setting callback functions for network IO tracking in UCS broker.
+mssql-1  | 2026-08-29T23:46:36.654252628Z 
+2026-08-29 23:46:36.64 Server      Successfully initialized the TLS configuration. Allowed TLS protocol versions are ['1.0 1.1 1.2 1.3']. Allowed TLS ciphers are ['TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:!DHE-RSA-AES256-GCM-SHA384:!DHE-RSA-AES128-GCM-SHA256:!DHE-RSA-AES256-SHA:!DHE-RSA-AES128-SHA'].
+mssql-1  | 2026-08-29T23:46:36.673287244Z 
+2026-08-29 23:46:36.66 Server      Query Store settings initialized with enabled = 1, 
+mssql-1  | 2026-08-29T23:46:36.682296941Z 
+2026-08-29 23:46:36.67 Server      The maximum number of dedicated administrator connections for this instance is '1'
+mssql-1  | 2026-08-29T23:46:36.691314528Z 
+2026-08-29 23:46:36.68 Server      Node configuration: node 0: CPU mask: 0x0000000000000003:0 Active CPU mask: 0x0000000000000003:0. This message provides a description of the NUMA configuration for this computer. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:36.703428913Z 
+2026-08-29 23:46:36.69 Server      Using dynamic lock allocation.  Initial allocation of 2500 Lock blocks and 5000 Lock Owner blocks per node.  This is an informational message only.  No user action is required.
+mssql-1  | 2026-08-29T23:46:36.732243815Z 
+2026-08-29 23:46:36.72 Server      In-Memory OLTP initialized on lowend machine.
+mssql-1  | 2026-08-29T23:46:36.749492903Z 
+2026-08-29 23:46:36.74 Server      [INFO] Created Extended Events session 'hkenginexesession'
+mssql-1  | 2026-08-29T23:46:36.751465796Z 
+2026-08-29 23:46:36.74 Server      Database Instant File Initialization: enabled. For security and performance considerations see the topic 'Database Instant File Initialization' in SQL Server Books Online. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:36.754111087Z 
+ForceFlush is enabled for this instance. 
+mssql-1  | 2026-08-29T23:46:36.758897898Z 
+2026-08-29 23:46:36.75 Server      Total Log Writer threads: 1. This is an informational message; no user action is required.
+mssql-1  | 2026-08-29T23:46:36.765338518Z 
+2026-08-29 23:46:36.75 Server      clflushopt is selected for pmem flush operation.
+mssql-1  | 2026-08-29T23:46:36.771407509Z 
+2026-08-29 23:46:36.75 Server      Software Usage Metrics is disabled.
+mssql-1  | 2026-08-29T23:46:36.775488322Z 
+Failed to open password policy registry path. Using default password policy values.
+mssql-1  | 2026-08-29T23:46:36.818590474Z 
+2026-08-29 23:46:36.80 spid15s     [1]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:36.818626468Z 
+BulkAdmin AllowedPathsList cleared (path filtering disabled)
+mssql-1  | 2026-08-29T23:46:36.845724872Z 
+2026-08-29 23:46:36.83 Server      CLR version v4.0.30319 loaded.
+mssql-1  | 2026-08-29T23:46:36.918869517Z 
+2026-08-29 23:46:36.91 spid15s     Starting up database 'master'.
+mssql-1  | 2026-08-29T23:46:37.285785865Z 
+2026-08-29 23:46:37.27 Server      Common language runtime (CLR) functionality initialized.
+mssql-1  | 2026-08-29T23:46:37.540995540Z 
+ForceFlush feature is enabled for log durability.
+mssql-1  | 2026-08-29T23:46:37.687338772Z 
+2026-08-29 23:46:37.81 Server      External governance manager initialized
+mssql-1  | 2026-08-29T23:46:37.688058776Z 
+2026-08-29 23:46:37.81 Server      Detected pause instruction latency: 132 cycles.
+mssql-1  | 2026-08-29T23:46:37.692300890Z 
+2026-08-29 23:46:37.81 spid15s     Converting database 'master' from version 984 to the current version 998.
+mssql-1  | 2026-08-29T23:46:37.693231082Z 
+2026-08-29 23:46:37.82 spid15s     Database 'master' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-29T23:46:37.706640954Z 
+2026-08-29 23:46:37.83 spid15s     Database 'master' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-29T23:46:37.712992701Z 
+2026-08-29 23:46:37.84 spid15s     Database 'master' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-29T23:46:37.719229151Z 
+2026-08-29 23:46:37.84 spid15s     Database 'master' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-29T23:46:37.729225221Z 
+2026-08-29 23:46:37.85 spid15s     Database 'master' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-29T23:46:37.740500026Z 
+2026-08-29 23:46:37.86 spid15s     Database 'master' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-29T23:46:37.747964341Z 
+2026-08-29 23:46:37.87 spid15s     Database 'master' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-29T23:46:37.749958608Z 
+2026-08-29 23:46:37.87 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-29T23:46:37.756255222Z 
+2026-08-29 23:46:37.88 spid15s     Database 'master' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-29T23:46:37.763370855Z 
+2026-08-29 23:46:37.89 spid15s     Database 'master' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-29T23:46:37.770695768Z 
+2026-08-29 23:46:37.89 spid15s     Database 'master' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-29T23:46:37.771396835Z 
+2026-08-29 23:46:37.90 spid15s     [METADATA] Successfully updated max_duration metadata of XE session 65536
+mssql-1  | 2026-08-29T23:46:37.771651045Z 
+2026-08-29 23:46:37.90 spid15s     [METADATA] Successfully updated max_duration metadata of XE session 65537
+mssql-1  | 2026-08-29T23:46:37.778072877Z 
+2026-08-29 23:46:37.90 spid15s     Database 'master' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-29T23:46:37.789569888Z 
+2026-08-29 23:46:37.91 spid15s     Database 'master' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-29T23:46:37.796088709Z 
+2026-08-29 23:46:37.92 spid15s     Database 'master' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-29T23:46:37.802968929Z 
+2026-08-29 23:46:37.93 spid15s     Database 'master' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-29T23:46:37.893924123Z 
+[INFO] [StartUp::OpenDBsAndRecover]: In Startup, FEnableResilientBufferPoolExtensionEnabled() = [0]. IsRBPEXSupportedNonHyperscaleEdition() = [0]. IsSubCore = [0].
+mssql-1  | 2026-08-29T23:46:37.896963807Z 
+[INFO][DBDDLAgent::AttachDatabase] Starting Database Attach.
+mssql-1  | 2026-08-29T23:46:37.908818794Z 
+2026-08-29 23:46:38.03 spid20s     [32767]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:37.910953162Z 
+2026-08-29 23:46:38.04 spid20s     Starting up database 'mssqlsystemresource'.
+mssql-1  | 2026-08-29T23:46:37.918051606Z 
+2026-08-29 23:46:38.04 spid20s     The resource database build version is 17.00.4075. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:37.949417635Z 
+2026-08-29 23:46:38.07 spid25s     Password policy update was successful.
+mssql-1  | 2026-08-29T23:46:37.967996388Z 
+2026-08-29 23:46:38.09 spid20s     [3]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:37.971143123Z 
+2026-08-29 23:46:38.09 spid20s     Starting up database 'model'.
+mssql-1  | 2026-08-29T23:46:38.057970271Z 
+2026-08-29 23:46:38.18 spid20s     Converting database 'model' from version 984 to the current version 998.
+mssql-1  | 2026-08-29T23:46:38.058003024Z 
+2026-08-29 23:46:38.18 spid20s     Database 'model' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-29T23:46:38.076190947Z 
+2026-08-29 23:46:38.20 spid20s     Database 'model' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-29T23:46:38.086422453Z 
+2026-08-29 23:46:38.21 spid20s     Database 'model' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-29T23:46:38.093009653Z 
+2026-08-29 23:46:38.22 spid20s     Database 'model' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-29T23:46:38.105959210Z 
+2026-08-29 23:46:38.23 spid20s     Database 'model' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-29T23:46:38.115467705Z 
+2026-08-29 23:46:38.24 spid20s     Database 'model' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-29T23:46:38.121888061Z 
+2026-08-29 23:46:38.25 spid20s     Database 'model' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-29T23:46:38.123213868Z 
+2026-08-29 23:46:38.25 spid20s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-29T23:46:38.128419408Z 
+2026-08-29 23:46:38.25 spid20s     Database 'model' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-29T23:46:38.136004807Z 
+2026-08-29 23:46:38.26 spid20s     Database 'model' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-29T23:46:38.143612017Z 
+2026-08-29 23:46:38.27 spid20s     Database 'model' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-29T23:46:38.150160099Z 
+2026-08-29 23:46:38.27 spid20s     Database 'model' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-29T23:46:38.160655136Z 
+2026-08-29 23:46:38.28 spid20s     Database 'model' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-29T23:46:38.166448739Z 
+2026-08-29 23:46:38.29 spid20s     Database 'model' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-29T23:46:38.174102363Z 
+2026-08-29 23:46:38.30 spid20s     Database 'model' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-29T23:46:38.195111103Z 
+2026-08-29 23:46:38.32 spid20s     Synchronize Database 'model' (3) with Resource Database.
+mssql-1  | 2026-08-29T23:46:38.735220059Z 
+2026-08-29 23:46:38.73 spid25s     A self-generated certificate was successfully loaded for encryption.
+mssql-1  | 2026-08-29T23:46:38.737594841Z 
+2026-08-29 23:46:38.73 spid25s     Server is listening on [ 'any' <ipv6> 1433] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.738832184Z 
+2026-08-29 23:46:38.73 spid25s     Server is listening on [ 'any' <ipv4> 1433] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.744728983Z 
+2026-08-29 23:46:38.74 Server      Server is listening on [ ::1 <ipv6> 1434] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.745850616Z 
+2026-08-29 23:46:38.74 Server      Server is listening on [ 127.0.0.1 <ipv4> 1434] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.747117638Z 
+2026-08-29 23:46:38.74 Server      Dedicated admin connection support was established for listening locally on port 1434.
+mssql-1  | 2026-08-29T23:46:38.748939184Z 
+TDS initialization result: 0.
+mssql-1  | 2026-08-29T23:46:38.752789023Z 
+2026-08-29 23:46:38.74 spid25s     Server is listening on [ ::1 <ipv6> 1431] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.760261429Z 
+2026-08-29 23:46:38.75 spid15s     [32762]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:38.760320357Z 
+2026-08-29 23:46:38.75 spid25s     Server is listening on [ 127.0.0.1 <ipv4> 1431] accept sockets 1.
+mssql-1  | 2026-08-29T23:46:38.767290517Z 
+2026-08-29 23:46:38.76 spid15s     Starting up database 'model_replicatedmaster'.
+mssql-1  | 2026-08-29T23:46:38.767327061Z 
+SQLSERVR_SSL_CERTIFICATE_DNS_OR_SUBJECT_NAME environment variable was not set as SSL cert is self signed or untrusted.
+mssql-1  | 2026-08-29T23:46:38.767340792Z 
+2026-08-29 23:46:38.76 spid25s     SQL Server is now ready for client connections. This is an informational message; no user action is required.
+mssql-1  | 2026-08-29T23:46:38.824594290Z 
+2026-08-29 23:46:38.81 spid15s     Converting database 'model_replicatedmaster' from version 984 to the current version 998.
+mssql-1  | 2026-08-29T23:46:38.824627473Z 
+2026-08-29 23:46:38.82 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-29T23:46:38.832941819Z 
+2026-08-29 23:46:38.82 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-29T23:46:38.839834743Z 
+2026-08-29 23:46:38.83 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-29T23:46:38.846657583Z 
+2026-08-29 23:46:38.84 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-29T23:46:38.859417412Z 
+2026-08-29 23:46:38.85 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-29T23:46:38.868377033Z 
+2026-08-29 23:46:38.86 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-29T23:46:38.875275678Z 
+2026-08-29 23:46:38.87 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-29T23:46:38.876867305Z 
+2026-08-29 23:46:38.87 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-29T23:46:38.883391786Z 
+2026-08-29 23:46:38.87 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-29T23:46:38.891977601Z 
+2026-08-29 23:46:38.88 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-29T23:46:38.905419178Z 
+2026-08-29 23:46:38.90 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-29T23:46:38.911527374Z 
+2026-08-29 23:46:38.90 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-29T23:46:38.923424810Z 
+2026-08-29 23:46:38.91 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-29T23:46:38.930598500Z 
+2026-08-29 23:46:38.92 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-29T23:46:38.938211861Z 
+2026-08-29 23:46:38.93 spid15s     Database 'model_replicatedmaster' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-29T23:46:38.957906951Z 
+2026-08-29 23:46:38.95 spid15s     Synchronize Database 'model_replicatedmaster' (32762) with Resource Database.
+mssql-1  | 2026-08-29T23:46:39.122901253Z 
+2026-08-29 23:46:39.11 Logon       Error: 18456, Severity: 14, State: 7.
+mssql-1  | 2026-08-29T23:46:39.123014850Z 
+2026-08-29 23:46:39.11 Logon       Login failed for user 'sa'. Reason: An error occurred while evaluating the password. [CLIENT: 172.21.0.2]
+mssql-1  | 2026-08-29T23:46:39.143104932Z 
+[INFO][DBDDLAgent::AttachDatabase] Starting Database Attach.
+mssql-1  | 2026-08-29T23:46:39.182780581Z 
+2026-08-29 23:46:39.17 spid15s     [32761]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:39.182807322Z 
+2026-08-29 23:46:39.17 spid15s     Starting up database 'model_msdb'.
+mssql-1  | 2026-08-29T23:46:39.237835023Z 
+2026-08-29 23:46:39.23 spid15s     Converting database 'model_msdb' from version 984 to the current version 998.
+mssql-1  | 2026-08-29T23:46:39.239427369Z 
+2026-08-29 23:46:39.23 spid15s     Database 'model_msdb' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-29T23:46:39.246611322Z 
+2026-08-29 23:46:39.23 spid15s     Database 'model_msdb' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-29T23:46:39.253019141Z 
+2026-08-29 23:46:39.24 spid15s     Database 'model_msdb' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-29T23:46:39.261379276Z 
+2026-08-29 23:46:39.25 spid15s     Database 'model_msdb' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-29T23:46:39.277098716Z 
+2026-08-29 23:46:39.27 spid15s     Database 'model_msdb' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-29T23:46:39.284965531Z 
+2026-08-29 23:46:39.27 spid15s     Database 'model_msdb' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-29T23:46:39.291223456Z 
+2026-08-29 23:46:39.28 spid15s     Database 'model_msdb' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-29T23:46:39.292248248Z 
+2026-08-29 23:46:39.28 spid15s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-29T23:46:39.303200563Z 
+2026-08-29 23:46:39.29 spid15s     Database 'model_msdb' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-29T23:46:39.308595070Z 
+2026-08-29 23:46:39.30 spid15s     Database 'model_msdb' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-29T23:46:39.315350595Z 
+2026-08-29 23:46:39.30 spid15s     Database 'model_msdb' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-29T23:46:39.322299012Z 
+2026-08-29 23:46:39.31 spid15s     Database 'model_msdb' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-29T23:46:39.336218310Z 
+2026-08-29 23:46:39.32 spid15s     Database 'model_msdb' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-29T23:46:39.353642978Z 
+2026-08-29 23:46:39.34 spid15s     Database 'model_msdb' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-29T23:46:39.366150344Z 
+2026-08-29 23:46:39.35 spid15s     Database 'model_msdb' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-29T23:46:39.375745135Z 
+2026-08-29 23:46:39.36 spid15s     Synchronize Database 'model_msdb' (32761) with Resource Database.
+mssql-1  | 2026-08-29T23:46:39.434714480Z 
+2026-08-29 23:46:39.42 spid15s     Resource governor reconfiguration succeeded.
+mssql-1  | 2026-08-29T23:46:39.436709868Z 
+2026-08-29 23:46:39.42 spid15s     SQL Server Audit is starting the audits. This is an informational message. No user action is required.
+mssql-1  | 2026-08-29T23:46:39.436739176Z 
+[Auditing][SecAuditPkg::AutoStartAuditSessions] Entered function.
+mssql-1  | 2026-08-29T23:46:39.436756576Z 
+2026-08-29 23:46:39.42 spid15s     [AutoStartAuditSessions] Starting audit session task
+mssql-1  | 2026-08-29T23:46:39.437854175Z 
+2026-08-29 23:46:39.43 spid15s     SQL Server Audit has started the audits. This is an informational message. No user action is required.
+mssql-1  | 2026-08-29T23:46:39.464973825Z 
+2026-08-29 23:46:39.45 spid15s     SQL Trace ID 1 was started by login "sa".
+mssql-1  | 2026-08-29T23:46:39.480935718Z 
+2026-08-29 23:46:39.47 spid15s     Server name is 'f8f4b779a79c'. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:39.514087028Z 
+2026-08-29 23:46:39.50 spid20s     Clearing tempdb database.
+mssql-1  | 2026-08-29T23:46:39.529924128Z 
+2026-08-29 23:46:39.51 spid38s     [4]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:39.536909270Z 
+2026-08-29 23:46:39.52 spid38s     Starting up database 'msdb'.
+mssql-1  | 2026-08-29T23:46:39.625750963Z 
+2026-08-29 23:46:39.61 spid40s     Always On Availability Groups: The availability replica manager is starting. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:39.632052815Z 
+2026-08-29 23:46:39.61 spid40s     Always On Availability Groups: The availability replica manager is waiting for the instance of SQL Server to allow client connections. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:39.653255971Z 
+2026-08-29 23:46:39.64 spid38s     Converting database 'msdb' from version 984 to the current version 998.
+mssql-1  | 2026-08-29T23:46:39.654658846Z 
+2026-08-29 23:46:39.64 spid38s     Database 'msdb' running the upgrade step from version 984 to version 985.
+mssql-1  | 2026-08-29T23:46:39.700960949Z 
+2026-08-29 23:46:39.69 spid20s     [2]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:39.702837892Z 
+2026-08-29 23:46:39.69 spid20s     Starting up database 'tempdb'.
+mssql-1  | 2026-08-29T23:46:39.714197100Z 
+2026-08-29 23:46:39.70 spid38s     Database 'msdb' running the upgrade step from version 985 to version 986.
+mssql-1  | 2026-08-29T23:46:39.731574846Z 
+2026-08-29 23:46:39.72 spid38s     Database 'msdb' running the upgrade step from version 986 to version 987.
+mssql-1  | 2026-08-29T23:46:39.753884515Z 
+2026-08-29 23:46:39.74 spid38s     Database 'msdb' running the upgrade step from version 987 to version 988.
+mssql-1  | 2026-08-29T23:46:39.767267064Z 
+2026-08-29 23:46:39.76 spid20s     The tempdb database has 1 data file(s).
+mssql-1  | 2026-08-29T23:46:39.776496750Z 
+2026-08-29 23:46:39.76 spid40s     The Service Broker endpoint is in disabled or stopped state.
+mssql-1  | 2026-08-29T23:46:39.776655200Z 
+2026-08-29 23:46:39.76 spid40s     The Database Mirroring endpoint is in disabled or stopped state.
+mssql-1  | 2026-08-29T23:46:39.795973070Z 
+2026-08-29 23:46:39.78 spid40s     Service Broker manager has started.
+mssql-1  | 2026-08-29T23:46:39.806996266Z 
+2026-08-29 23:46:39.79 spid38s     Database 'msdb' running the upgrade step from version 988 to version 989.
+mssql-1  | 2026-08-29T23:46:39.816828092Z 
+2026-08-29 23:46:39.81 spid38s     Database 'msdb' running the upgrade step from version 989 to version 990.
+mssql-1  | 2026-08-29T23:46:39.825861819Z 
+2026-08-29 23:46:39.81 spid38s     Database 'msdb' running the upgrade step from version 990 to version 991.
+mssql-1  | 2026-08-29T23:46:39.827238167Z 
+2026-08-29 23:46:39.82 spid38s     [METADATA] XE max_rollover_files update status is : 0.
+mssql-1  | 2026-08-29T23:46:39.834604745Z 
+2026-08-29 23:46:39.82 spid38s     Database 'msdb' running the upgrade step from version 991 to version 992.
+mssql-1  | 2026-08-29T23:46:39.842616105Z 
+2026-08-29 23:46:39.83 spid38s     Database 'msdb' running the upgrade step from version 992 to version 993.
+mssql-1  | 2026-08-29T23:46:39.850258437Z 
+2026-08-29 23:46:39.84 spid38s     Database 'msdb' running the upgrade step from version 993 to version 994.
+mssql-1  | 2026-08-29T23:46:39.858850329Z 
+2026-08-29 23:46:39.85 spid38s     Database 'msdb' running the upgrade step from version 994 to version 995.
+mssql-1  | 2026-08-29T23:46:39.875620945Z 
+2026-08-29 23:46:39.86 spid38s     Database 'msdb' running the upgrade step from version 995 to version 996.
+mssql-1  | 2026-08-29T23:46:39.888934537Z 
+2026-08-29 23:46:39.88 spid38s     Database 'msdb' running the upgrade step from version 996 to version 997.
+mssql-1  | 2026-08-29T23:46:39.895110528Z 
+2026-08-29 23:46:39.88 spid38s     Database 'msdb' running the upgrade step from version 997 to version 998.
+mssql-1  | 2026-08-29T23:46:39.901484189Z 
+2026-08-29 23:46:39.89 spid38s     Synchronize Database 'msdb' (4) with Resource Database.
+mssql-1  | 2026-08-29T23:46:39.938002245Z 
+2026-08-29 23:46:39.92 spid15s     Recovery is complete. This is an informational message only. No user action is required.
+mssql-1  | 2026-08-29T23:46:40.004988402Z 
+2026-08-29 23:46:39.99 spid23s     The default language (LCID 0) has been set for engine and full-text services.
+mssql-1  | 2026-08-29T23:46:40.049297449Z 
+2026-08-29 23:46:40.04 spid23s     The tempdb database has 2 data file(s).
+mssql-1  | 2026-08-29T23:46:46.188118721Z 
+2026-08-29 23:46:46.18 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-29T23:46:46.303378341Z 
+2026-08-29 23:46:46.30 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:46.305024222Z 
+2026-08-29 23:46:46.30 spid51      Starting up database 'vsbms_13e9f0fa936c23a06ee1081e766616e3'.
+mssql-1  | 2026-08-29T23:46:46.332926007Z 
+2026-08-29 23:46:46.33 spid51      Parallel redo is started for database 'vsbms_13e9f0fa936c23a06ee1081e766616e3' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:46.343452148Z 
+2026-08-29 23:46:46.34 spid51      Parallel redo is shutdown for database 'vsbms_13e9f0fa936c23a06ee1081e766616e3' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:47.482503956Z 
+2026-08-29 23:46:47.48 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_13e9f0fa936c23a06ee1081e766616e3'.
+mssql-1  | 2026-08-29T23:46:50.436177517Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_13e9f0fa936c23a06ee1081e766616e3.mdf'.
+mssql-1  | 2026-08-29T23:46:50.446725021Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_13e9f0fa936c23a06ee1081e766616e3_log.ldf'.
+mssql-1  | 2026-08-29T23:46:50.460612180Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-29T23:46:50.479197897Z 
+[DeleteDbName] Database vsbms_13e9f0fa936c23a06ee1081e766616e3 with id 5 is deleted.
+mssql-1  | 2026-08-29T23:46:50.560303847Z 
+2026-08-29 23:46:50.55 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-29T23:46:50.704141250Z 
+2026-08-29 23:46:50.69 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:50.704187262Z 
+2026-08-29 23:46:50.69 spid51      Starting up database 'vsbms_ef4f5c09c1f5eb02698388042589c41c'.
+mssql-1  | 2026-08-29T23:46:50.754527928Z 
+2026-08-29 23:46:50.74 spid51      Parallel redo is started for database 'vsbms_ef4f5c09c1f5eb02698388042589c41c' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:50.767777523Z 
+2026-08-29 23:46:50.76 spid51      Parallel redo is shutdown for database 'vsbms_ef4f5c09c1f5eb02698388042589c41c' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:52.093925454Z 
+2026-08-29 23:46:52.08 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_ef4f5c09c1f5eb02698388042589c41c'.
+mssql-1  | 2026-08-29T23:46:55.136040375Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_ef4f5c09c1f5eb02698388042589c41c.mdf'.
+mssql-1  | 2026-08-29T23:46:55.142160518Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_ef4f5c09c1f5eb02698388042589c41c_log.ldf'.
+mssql-1  | 2026-08-29T23:46:55.150120476Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-29T23:46:55.159882101Z 
+[DeleteDbName] Database vsbms_ef4f5c09c1f5eb02698388042589c41c with id 5 is deleted.
+mssql-1  | 2026-08-29T23:46:55.205520899Z 
+2026-08-29 23:46:55.20 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-29T23:46:55.333186460Z 
+2026-08-29 23:46:55.33 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:55.334699872Z 
+2026-08-29 23:46:55.33 spid51      Starting up database 'vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5'.
+mssql-1  | 2026-08-29T23:46:55.363120265Z 
+2026-08-29 23:46:55.35 spid51      Parallel redo is started for database 'vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:55.373175434Z 
+2026-08-29 23:46:55.36 spid51      Parallel redo is shutdown for database 'vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:56.182039399Z 
+2026-08-29 23:46:56.18 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5'.
+mssql-1  | 2026-08-29T23:46:59.082096178Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5.mdf'.
+mssql-1  | 2026-08-29T23:46:59.084452466Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5_log.ldf'.
+mssql-1  | 2026-08-29T23:46:59.091076345Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-29T23:46:59.098311724Z 
+[DeleteDbName] Database vsbms_e94cc3cb9d12c4b50f9e30db5ea03dd5 with id 5 is deleted.
+mssql-1  | 2026-08-29T23:46:59.162441819Z 
+2026-08-29 23:46:59.15 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-29T23:46:59.279013844Z 
+2026-08-29 23:46:59.27 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:46:59.280005508Z 
+2026-08-29 23:46:59.27 spid51      Starting up database 'vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716'.
+mssql-1  | 2026-08-29T23:46:59.310089154Z 
+2026-08-29 23:46:59.30 spid51      Parallel redo is started for database 'vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716' with worker pool size [1].
+mssql-1  | 2026-08-29T23:46:59.324232518Z 
+2026-08-29 23:46:59.31 spid51      Parallel redo is shutdown for database 'vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716' with worker pool size [1].
+mssql-1  | 2026-08-29T23:47:00.401985476Z 
+2026-08-29 23:47:00.39 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716'.
+mssql-1  | 2026-08-29T23:47:03.442455053Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716.mdf'.
+mssql-1  | 2026-08-29T23:47:03.446984457Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716_log.ldf'.
+mssql-1  | 2026-08-29T23:47:03.453798328Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-29T23:47:03.460659085Z 
+[DeleteDbName] Database vsbms_6f76ae3c1e1d5fdf5d1f0825851cc716 with id 5 is deleted.
+mssql-1  | 2026-08-29T23:47:03.495231741Z 
+2026-08-29 23:47:03.49 spid51      [DBMgr::FindFreeDatabaseID] Next available DbId EX locked: 5
+mssql-1  | 2026-08-29T23:47:03.603016900Z 
+2026-08-29 23:47:03.60 spid51      [5]. Feature Status: PVS: 0. CTR: 0. ConcurrentPFSUpdate: 1. ConcurrentGAMUpdate: 1. ConcurrentSGAMUpdate: 1, CleanupUnderUserTransaction: 0. TranLevelPVS: 0. NestIdBasedHP: 0. m_nestIdBasedHPOnTempDB: 0
+mssql-1  | 2026-08-29T23:47:03.604006242Z 
+2026-08-29 23:47:03.60 spid51      Starting up database 'vsbms_fb65aafca16b212f92e41d13a98a0754'.
+mssql-1  | 2026-08-29T23:47:03.629516271Z 
+2026-08-29 23:47:03.62 spid51      Parallel redo is started for database 'vsbms_fb65aafca16b212f92e41d13a98a0754' with worker pool size [1].
+mssql-1  | 2026-08-29T23:47:03.637381009Z 
+2026-08-29 23:47:03.63 spid51      Parallel redo is shutdown for database 'vsbms_fb65aafca16b212f92e41d13a98a0754' with worker pool size [1].
+mssql-1  | 2026-08-29T23:47:04.420014491Z 
+2026-08-29 23:47:04.41 spid51      Setting database option SINGLE_USER to ON for database 'vsbms_fb65aafca16b212f92e41d13a98a0754'.
+mssql-1  | 2026-08-29T23:47:07.449031972Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fb65aafca16b212f92e41d13a98a0754.mdf'.
+mssql-1  | 2026-08-29T23:47:07.450923787Z 
+[DBMgr::EnqueueDbFileDeletes] enqueueing file for delete '/var/opt/mssql/data/vsbms_fb65aafca16b212f92e41d13a98a0754_log.ldf'.
+mssql-1  | 2026-08-29T23:47:07.458440097Z 
+RecoveryUnit::Shutdown. IsOnline: 1
+mssql-1  | 2026-08-29T23:47:07.466198548Z 
+[DeleteDbName] Database vsbms_fb65aafca16b212f92e41d13a98a0754 with id 5 is deleted.

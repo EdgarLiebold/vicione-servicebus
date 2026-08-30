@@ -1,0 +1,553 @@
+postgres-1  | 2026-08-30T00:05:37.277603250Z The files belonging to this database system will be owned by user "postgres".
+postgres-1  | 2026-08-30T00:05:37.277710769Z This user must also own the server process.
+postgres-1  | 2026-08-30T00:05:37.277735977Z 
+postgres-1  | 2026-08-30T00:05:37.277759424Z The database cluster will be initialized with locale "en_US.utf8".
+postgres-1  | 2026-08-30T00:05:37.277823641Z The default database encoding has accordingly been set to "UTF8".
+postgres-1  | 2026-08-30T00:05:37.277843426Z The default text search configuration will be set to "english".
+postgres-1  | 2026-08-30T00:05:37.277868564Z 
+postgres-1  | 2026-08-30T00:05:37.277891729Z Data page checksums are disabled.
+postgres-1  | 2026-08-30T00:05:37.277914613Z 
+postgres-1  | 2026-08-30T00:05:37.277938765Z fixing permissions on existing directory /var/lib/postgresql/data ... ok
+postgres-1  | 2026-08-30T00:05:37.277961578Z creating subdirectories ... ok
+postgres-1  | 2026-08-30T00:05:37.277987983Z selecting dynamic shared memory implementation ... posix
+postgres-1  | 2026-08-30T00:05:37.298449751Z selecting default max_connections ... 100
+postgres-1  | 2026-08-30T00:05:37.331153699Z selecting default shared_buffers ... 128MB
+postgres-1  | 2026-08-30T00:05:37.353081805Z selecting default time zone ... Etc/UTC
+postgres-1  | 2026-08-30T00:05:37.354334019Z creating configuration files ... ok
+postgres-1  | 2026-08-30T00:05:37.560020352Z running bootstrap script ... ok
+postgres-1  | 2026-08-30T00:05:37.990595872Z performing post-bootstrap initialization ... ok
+postgres-1  | 2026-08-30T00:05:38.002916203Z syncing data to disk ... ok
+postgres-1  | 2026-08-30T00:05:38.002952310Z 
+postgres-1  | 2026-08-30T00:05:38.002970651Z 
+postgres-1  | 2026-08-30T00:05:38.002987128Z Success. You can now start the database server using:
+postgres-1  | 2026-08-30T00:05:38.003003606Z 
+postgres-1  | 2026-08-30T00:05:38.003020012Z     pg_ctl -D /var/lib/postgresql/data -l logfile start
+postgres-1  | 2026-08-30T00:05:38.003036490Z 
+postgres-1  | 2026-08-30T00:05:38.003415547Z initdb: warning: enabling "trust" authentication for local connections
+postgres-1  | 2026-08-30T00:05:38.003449720Z initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+postgres-1  | 2026-08-30T00:05:38.077577313Z waiting for server to start....2026-08-30 00:05:38.077 UTC [48] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-30T00:05:38.079811109Z 2026-08-30 00:05:38.079 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-30T00:05:38.084239371Z 2026-08-30 00:05:38.083 UTC [51] LOG:  database system was shut down at 2026-08-30 00:05:37 UTC
+postgres-1  | 2026-08-30T00:05:38.088755610Z 2026-08-30 00:05:38.088 UTC [48] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-30T00:05:38.134513410Z  done
+postgres-1  | 2026-08-30T00:05:38.134563488Z server started
+postgres-1  | 2026-08-30T00:05:38.189406135Z 
+postgres-1  | 2026-08-30T00:05:38.189982853Z /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1  | 2026-08-30T00:05:38.190019892Z 
+postgres-1  | 2026-08-30T00:05:38.191477520Z waiting for server to shut down...2026-08-30 00:05:38.191 UTC [48] LOG:  received fast shutdown request
+postgres-1  | 2026-08-30T00:05:38.193470958Z .2026-08-30 00:05:38.191 UTC [48] LOG:  aborting any active transactions
+postgres-1  | 2026-08-30T00:05:38.195299046Z 2026-08-30 00:05:38.195 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+postgres-1  | 2026-08-30T00:05:38.195641996Z 2026-08-30 00:05:38.195 UTC [49] LOG:  shutting down
+postgres-1  | 2026-08-30T00:05:38.195721805Z 2026-08-30 00:05:38.195 UTC [49] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-08-30T00:05:38.196366583Z 2026-08-30 00:05:38.196 UTC [49] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/14F2B20, redo lsn=0/14F2B20
+postgres-1  | 2026-08-30T00:05:38.199928622Z 2026-08-30 00:05:38.199 UTC [48] LOG:  database system is shut down
+postgres-1  | 2026-08-30T00:05:38.312078759Z  done
+postgres-1  | 2026-08-30T00:05:38.312766235Z server stopped
+postgres-1  | 2026-08-30T00:05:38.315557048Z 
+postgres-1  | 2026-08-30T00:05:38.315632057Z PostgreSQL init process complete; ready for start up.
+postgres-1  | 2026-08-30T00:05:38.315680702Z 
+postgres-1  | 2026-08-30T00:05:38.355851145Z 2026-08-30 00:05:38.355 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+postgres-1  | 2026-08-30T00:05:38.360912507Z 2026-08-30 00:05:38.358 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-08-30T00:05:38.360945033Z 2026-08-30 00:05:38.358 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-08-30T00:05:38.361901166Z 2026-08-30 00:05:38.360 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-08-30T00:05:38.367895665Z 2026-08-30 00:05:38.367 UTC [62] LOG:  database system was shut down at 2026-08-30 00:05:38 UTC
+postgres-1  | 2026-08-30T00:05:38.373938881Z 2026-08-30 00:05:38.373 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-08-30T00:05:45.026581127Z 2026-08-30 00:05:45.026 UTC [75] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:45.129066410Z 2026-08-30 00:05:45.127 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:45.129111293Z 2026-08-30 00:05:45.128 UTC [60] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=5, longest=0.001 s, average=0.001 s; distance=4617 kB, estimate=4617 kB; lsn=0/1975180, redo lsn=0/1975148
+postgres-1  | 2026-08-30T00:05:45.335028763Z 2026-08-30 00:05:45.334 UTC [78] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:45.437447217Z 2026-08-30 00:05:45.436 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:45.442948260Z 2026-08-30 00:05:45.442 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.007 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4618 kB, estimate=4618 kB; lsn=0/1DF7A40, redo lsn=0/1DF7A08
+postgres-1  | 2026-08-30T00:05:47.723412195Z 2026-08-30 00:05:47.721 UTC [81] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:47.723454540Z 2026-08-30 00:05:47.721 UTC [93] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:47.723513725Z 2026-08-30 00:05:47.721 UTC [84] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:47.823104989Z 2026-08-30 00:05:47.821 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:47.823137830Z 2026-08-30 00:05:47.822 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4692 kB, estimate=4692 kB; lsn=0/228CDB8, redo lsn=0/228CD80
+postgres-1  | 2026-08-30T00:05:49.156070633Z 2026-08-30 00:05:49.155 UTC [94] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:49.257243403Z 2026-08-30 00:05:49.257 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:49.258211382Z 2026-08-30 00:05:49.258 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4608 kB, estimate=4684 kB; lsn=0/270CF68, redo lsn=0/270CF30
+postgres-1  | 2026-08-30T00:05:50.664124096Z 2026-08-30 00:05:50.663 UTC [98] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:50.765252285Z 2026-08-30 00:05:50.765 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:50.766020206Z 2026-08-30 00:05:50.765 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4636 kB, estimate=4679 kB; lsn=0/2B942A0, redo lsn=0/2B94268
+postgres-1  | 2026-08-30T00:05:50.968151554Z 2026-08-30 00:05:50.966 UTC [104] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:50.968673404Z 2026-08-30 00:05:50.966 UTC [106] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:50.969688893Z 2026-08-30 00:05:50.966 UTC [106] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:05:51.069657112Z 2026-08-30 00:05:51.068 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:51.069707217Z 2026-08-30 00:05:51.069 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4602 kB, estimate=4671 kB; lsn=0/3012D70, redo lsn=0/3012D38
+postgres-1  | 2026-08-30T00:05:51.322107981Z 2026-08-30 00:05:51.321 UTC [107] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:51.424107240Z 2026-08-30 00:05:51.423 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:51.425133087Z 2026-08-30 00:05:51.424 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4604 kB, estimate=4665 kB; lsn=0/3491E28, redo lsn=0/3491DF0
+postgres-1  | 2026-08-30T00:05:51.664012053Z 2026-08-30 00:05:51.661 UTC [112] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:51.665441303Z 2026-08-30 00:05:51.664 UTC [111] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:51.763416203Z 2026-08-30 00:05:51.763 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:51.764924200Z 2026-08-30 00:05:51.764 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4606 kB, estimate=4659 kB; lsn=0/3911840, redo lsn=0/3911808
+postgres-1  | 2026-08-30T00:05:51.966453406Z 2026-08-30 00:05:51.964 UTC [115] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:51.966488444Z 2026-08-30 00:05:51.964 UTC [116] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:52.066191997Z 2026-08-30 00:05:52.065 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:52.066786042Z 2026-08-30 00:05:52.066 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4611 kB, estimate=4654 kB; lsn=0/3D927C0, redo lsn=0/3D92788
+postgres-1  | 2026-08-30T00:05:52.338436906Z 2026-08-30 00:05:52.338 UTC [118] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:52.440092353Z 2026-08-30 00:05:52.439 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:52.440767249Z 2026-08-30 00:05:52.440 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4608 kB, estimate=4649 kB; lsn=0/4212980, redo lsn=0/4212948
+postgres-1  | 2026-08-30T00:05:54.125905254Z 2026-08-30 00:05:54.125 UTC [131] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:54.129289411Z 2026-08-30 00:05:54.127 UTC [132] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:54.229059996Z 2026-08-30 00:05:54.228 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:54.231039165Z 2026-08-30 00:05:54.229 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4625 kB, estimate=4647 kB; lsn=0/4696F90, redo lsn=0/4696F58
+postgres-1  | 2026-08-30T00:05:57.046500506Z 2026-08-30 00:05:57.046 UTC [135] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:57.147312888Z 2026-08-30 00:05:57.146 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:57.148258672Z 2026-08-30 00:05:57.147 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4625 kB, estimate=4645 kB; lsn=0/4B1B4B0, redo lsn=0/4B1B478
+postgres-1  | 2026-08-30T00:05:59.391792391Z 2026-08-30 00:05:59.389 UTC [139] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:59.391827544Z 2026-08-30 00:05:59.389 UTC [151] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:05:59.491321107Z 2026-08-30 00:05:59.491 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:05:59.492133340Z 2026-08-30 00:05:59.491 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4626 kB, estimate=4643 kB; lsn=0/4F9FFA0, redo lsn=0/4F9FF68
+postgres-1  | 2026-08-30T00:06:00.679793145Z 2026-08-30 00:06:00.679 UTC [152] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:00.781484389Z 2026-08-30 00:06:00.781 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:00.782574338Z 2026-08-30 00:06:00.782 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4603 kB, estimate=4639 kB; lsn=0/541EC00, redo lsn=0/541EBC8
+postgres-1  | 2026-08-30T00:06:02.018213031Z 2026-08-30 00:06:02.017 UTC [155] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:02.119945458Z 2026-08-30 00:06:02.119 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:02.119997449Z 2026-08-30 00:06:02.119 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4611 kB, estimate=4636 kB; lsn=0/589F8B8, redo lsn=0/589F880
+postgres-1  | 2026-08-30T00:06:04.347175513Z 2026-08-30 00:06:04.345 UTC [160] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:04.347206614Z 2026-08-30 00:06:04.345 UTC [172] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:04.348097360Z 2026-08-30 00:06:04.347 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:04.348851477Z 2026-08-30 00:06:04.348 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4604 kB, estimate=4633 kB; lsn=0/5D1EB40, redo lsn=0/5D1EB08
+postgres-1  | 2026-08-30T00:06:04.569201531Z 2026-08-30 00:06:04.567 UTC [173] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:04.668204800Z 2026-08-30 00:06:04.668 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:04.668954251Z 2026-08-30 00:06:04.668 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4614 kB, estimate=4631 kB; lsn=0/61A05B0, redo lsn=0/61A0578
+postgres-1  | 2026-08-30T00:06:04.874280009Z 2026-08-30 00:06:04.872 UTC [177] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:04.874308848Z 2026-08-30 00:06:04.872 UTC [180] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:04.874328144Z 2026-08-30 00:06:04.872 UTC [180] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:04.874341291Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:04.874366667Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:04.874379248Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:04.874411338Z 	        )
+postgres-1  | 2026-08-30T00:06:04.874426959Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:04.874442015Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:04.874456787Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:04.874471560Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:04.874484707Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:04.874500116Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:04.874515030Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:04.874528318Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:04.874543869Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:04.874558783Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:04.874573556Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:04.874588399Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:04.874603101Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:04.874615895Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:04.874677672Z 2026-08-30 00:06:04.872 UTC [180] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:04.973516391Z 2026-08-30 00:06:04.973 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:04.973988836Z 2026-08-30 00:06:04.973 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4615 kB, estimate=4629 kB; lsn=0/6622248, redo lsn=0/6622210
+postgres-1  | 2026-08-30T00:06:05.618300086Z 2026-08-30 00:06:05.617 UTC [187] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:05.618341447Z 2026-08-30 00:06:05.617 UTC [187] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:05.618364386Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:05.618378926Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:05.618397630Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:05.618418734Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:05.618440050Z 2026-08-30 00:06:05.617 UTC [187] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:09.272688509Z 2026-08-30 00:06:09.272 UTC [188] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:09.274922202Z 2026-08-30 00:06:09.274 UTC [184] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:09.274948563Z 2026-08-30 00:06:09.274 UTC [184] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:09.274965137Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:09.274981139Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:09.274996641Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:09.275011858Z 	        )
+postgres-1  | 2026-08-30T00:06:09.277438651Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:09.277455582Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:09.277470870Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:09.277486372Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:09.277567885Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:09.277584244Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:09.277599389Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:09.277614463Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:09.277629608Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:09.277715335Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:09.277730766Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:09.277744840Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:09.277760842Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:09.277866787Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:09.277879432Z 2026-08-30 00:06:09.274 UTC [184] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:09.277906864Z 2026-08-30 00:06:09.275 UTC [181] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:09.375310070Z 2026-08-30 00:06:09.374 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:09.376266571Z 2026-08-30 00:06:09.375 UTC [60] LOG:  checkpoint complete: wrote 47 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=15, longest=0.001 s, average=0.001 s; distance=4989 kB, estimate=4989 kB; lsn=0/6B01670, redo lsn=0/6B01638
+postgres-1  | 2026-08-30T00:06:09.582154146Z 2026-08-30 00:06:09.581 UTC [201] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:09.582188509Z 2026-08-30 00:06:09.581 UTC [201] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:09.583673089Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:09.583702593Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:09.583715881Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:09.583732240Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:09.583748386Z 2026-08-30 00:06:09.581 UTC [201] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:11.868371009Z 2026-08-30 00:06:11.868 UTC [198] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:11.870814711Z 2026-08-30 00:06:11.868 UTC [204] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:11.870854441Z 2026-08-30 00:06:11.868 UTC [204] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:11.870943992Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:11.870962187Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:11.870979884Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:11.870997368Z 	        )
+postgres-1  | 2026-08-30T00:06:11.871014639Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:11.871108811Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:11.871168014Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:11.871187275Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:11.871205896Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:11.871224375Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:11.871272350Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:11.871290260Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:11.871307673Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:11.871325299Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:11.871342499Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:11.871359769Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:11.871377680Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:11.871395235Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:11.871412434Z 2026-08-30 00:06:11.868 UTC [204] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:11.971157423Z 2026-08-30 00:06:11.969 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:11.971887911Z 2026-08-30 00:06:11.971 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4748 kB, estimate=4964 kB; lsn=0/6FA47B0, redo lsn=0/6FA4778
+postgres-1  | 2026-08-30T00:06:12.209695003Z 2026-08-30 00:06:12.208 UTC [208] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:12.209729259Z 2026-08-30 00:06:12.208 UTC [208] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:12.209758195Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:12.209790678Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:12.209824650Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:12.209850538Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:12.209872169Z 2026-08-30 00:06:12.208 UTC [208] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:15.619066852Z 2026-08-30 00:06:15.618 UTC [205] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:15.619231298Z 2026-08-30 00:06:15.618 UTC [220] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:15.620151914Z 2026-08-30 00:06:15.619 UTC [210] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:15.620176758Z 2026-08-30 00:06:15.619 UTC [210] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:15.620274578Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:15.620291940Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:15.620308526Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:15.620324477Z 	        )
+postgres-1  | 2026-08-30T00:06:15.620340568Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:15.620356731Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:15.620373811Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:15.620389902Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:15.620405853Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:15.620427308Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:15.620449540Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:15.620470502Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:15.620491040Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:15.620510943Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:15.620530281Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:15.620547220Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:15.620563665Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:15.620589919Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:15.620606929Z 2026-08-30 00:06:15.619 UTC [210] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:15.720332462Z 2026-08-30 00:06:15.719 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:15.721380259Z 2026-08-30 00:06:15.721 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4827 kB, estimate=4951 kB; lsn=0/745B5A0, redo lsn=0/745B568
+postgres-1  | 2026-08-30T00:06:16.000358011Z 2026-08-30 00:06:15.999 UTC [225] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:16.000398452Z 2026-08-30 00:06:15.999 UTC [225] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:16.000413697Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:16.000454914Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:16.000476229Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:16.000491121Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:16.000513988Z 2026-08-30 00:06:15.999 UTC [225] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:19.580698802Z 2026-08-30 00:06:19.579 UTC [225] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:19.580744261Z 2026-08-30 00:06:19.579 UTC [225] CONTEXT:  PL/pgSQL function transport.process_metrics(integer) line 2 at statement block
+postgres-1  | 2026-08-30T00:06:19.580781357Z 2026-08-30 00:06:19.579 UTC [225] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:19.580807446Z 2026-08-30 00:06:19.579 UTC [222] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:19.582813929Z 2026-08-30 00:06:19.581 UTC [228] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:19.586300972Z 2026-08-30 00:06:19.585 UTC [221] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:19.681676815Z 2026-08-30 00:06:19.681 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:19.682424528Z 2026-08-30 00:06:19.682 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4820 kB, estimate=4938 kB; lsn=0/7910900, redo lsn=0/79108C8
+postgres-1  | 2026-08-30T00:06:22.194279886Z 2026-08-30 00:06:22.193 UTC [237] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:22.195841809Z 2026-08-30 00:06:22.195 UTC [244] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:22.196655230Z 2026-08-30 00:06:22.195 UTC [240] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:22.196684957Z 2026-08-30 00:06:22.195 UTC [240] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:22.196718161Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:22.196735118Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:22.196752642Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:22.196768960Z 	        )
+postgres-1  | 2026-08-30T00:06:22.196785846Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:22.196802235Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:22.196818198Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:22.196834445Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:22.196860696Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:22.196884605Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:22.196901207Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:22.196917383Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:22.196933489Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:22.196949523Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:22.196965628Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:22.196981875Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:22.196997910Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:22.197014299Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:22.197030546Z 2026-08-30 00:06:22.195 UTC [240] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:22.295195964Z 2026-08-30 00:06:22.294 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:22.295346871Z 2026-08-30 00:06:22.294 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4790 kB, estimate=4923 kB; lsn=0/7DBE3F0, redo lsn=0/7DBE3B8
+postgres-1  | 2026-08-30T00:06:22.510225541Z 2026-08-30 00:06:22.509 UTC [246] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:22.510261228Z 2026-08-30 00:06:22.509 UTC [246] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:22.510281164Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:22.510296631Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:22.510310608Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:22.510333453Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:22.510361052Z 2026-08-30 00:06:22.509 UTC [246] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:26.185762414Z 2026-08-30 00:06:26.183 UTC [260] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:26.185876420Z 2026-08-30 00:06:26.184 UTC [245] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:26.189019372Z 2026-08-30 00:06:26.188 UTC [251] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:26.189070065Z 2026-08-30 00:06:26.188 UTC [251] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:26.189088044Z 	        DELETE FROM "transport".queue_metric
+postgres-1  | 2026-08-30T00:06:26.189107503Z 	            WHERE duration = interval '1 minute' AND start_time < (now() at time zone 'utc') - interval '8 hours'
+postgres-1  | 2026-08-30T00:06:26.189123084Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:26.189138102Z 	        )
+postgres-1  | 2026-08-30T00:06:26.189156292Z 	    INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:26.189174341Z 	        SELECT date_trunc('hour', m.start_time), interval '1 hour', m.queue_id,
+postgres-1  | 2026-08-30T00:06:26.189188090Z 	            sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:26.189206562Z 	            sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:26.189223201Z 	            sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:26.189277771Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:26.189348629Z 	            GROUP BY date_trunc('hour', m.start_time), m.queue_id
+postgres-1  | 2026-08-30T00:06:26.189374081Z 	        ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:26.189399039Z 	        UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:26.189413563Z 	                   error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:26.189484491Z 	                   dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:26.189640588Z 	PL/pgSQL function transport.process_metrics(integer) line 23 at SQL statement
+postgres-1  | 2026-08-30T00:06:26.189669988Z 2026-08-30 00:06:26.188 UTC [251] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:26.283761844Z 2026-08-30 00:06:26.283 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:26.284517441Z 2026-08-30 00:06:26.284 UTC [60] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4805 kB, estimate=4911 kB; lsn=0/826F998, redo lsn=0/826F960
+postgres-1  | 2026-08-30T00:06:26.486658023Z 2026-08-30 00:06:26.486 UTC [266] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:26.486690102Z 2026-08-30 00:06:26.486 UTC [266] CONTEXT:  SQL statement "INSERT INTO "transport".topic (name) VALUES (topic_name)
+postgres-1  | 2026-08-30T00:06:26.487299261Z 	        ON CONFLICT ON CONSTRAINT unique_topic DO
+postgres-1  | 2026-08-30T00:06:26.487342128Z 	        UPDATE SET updated = (now() at time zone 'utc')
+postgres-1  | 2026-08-30T00:06:26.487405441Z 	        RETURNING topic.id"
+postgres-1  | 2026-08-30T00:06:26.487426945Z 	PL/pgSQL function transport.create_topic(text) line 9 at SQL statement
+postgres-1  | 2026-08-30T00:06:26.487608283Z 2026-08-30 00:06:26.486 UTC [266] STATEMENT:  SELECT * FROM "transport".create_topic($1)
+postgres-1  | 2026-08-30T00:06:28.790127258Z 2026-08-30 00:06:28.788 UTC [264] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:28.790223122Z 2026-08-30 00:06:28.788 UTC [264] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:28.790235159Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:28.790250277Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:28.790266111Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:28.790287319Z 	        )
+postgres-1  | 2026-08-30T00:06:28.790305804Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:28.790319847Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:28.790355599Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:28.790369069Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:28.790384975Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:28.790400308Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:28.790415497Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:28.790816008Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:28.790831699Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:28.790846315Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:28.790861720Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:28.790876192Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:28.790891095Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:28.790906858Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:28.790921259Z 2026-08-30 00:06:28.788 UTC [264] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:28.791779242Z 2026-08-30 00:06:28.790 UTC [261] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:28.792730224Z 2026-08-30 00:06:28.792 UTC [268] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:28.891179800Z 2026-08-30 00:06:28.890 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:28.892143249Z 2026-08-30 00:06:28.891 UTC [60] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=6, longest=0.001 s, average=0.001 s; distance=4796 kB, estimate=4900 kB; lsn=0/871ECF0, redo lsn=0/871ECB8
+postgres-1  | 2026-08-30T00:06:29.096248811Z 2026-08-30 00:06:29.094 UTC [276] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:29.096281096Z 2026-08-30 00:06:29.094 UTC [278] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:29.096297381Z 2026-08-30 00:06:29.094 UTC [278] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:06:29.096312238Z 	        DELETE FROM "transport".queue_metric_capture
+postgres-1  | 2026-08-30T00:06:29.096327166Z 	            WHERE queue_metric_id < COALESCE((SELECT MIN(queue_metric_id) FROM "transport".queue_metric_capture), 0) + row_limit
+postgres-1  | 2026-08-30T00:06:29.096342094Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:06:29.096357594Z 	        )
+postgres-1  | 2026-08-30T00:06:29.096372379Z 	        INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:06:29.096384236Z 	            SELECT date_trunc('minute', m.captured),
+postgres-1  | 2026-08-30T00:06:29.096395807Z 	                   interval '1 minute',
+postgres-1  | 2026-08-30T00:06:29.096434877Z 	                   m.queue_id,
+postgres-1  | 2026-08-30T00:06:29.096447591Z 	                   sum(m.consume_count),
+postgres-1  | 2026-08-30T00:06:29.096461234Z 	                   sum(m.error_count),
+postgres-1  | 2026-08-30T00:06:29.096476947Z 	                   sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:06:29.096492375Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:06:29.096507304Z 	            GROUP BY date_trunc('minute', m.captured), m.queue_id
+postgres-1  | 2026-08-30T00:06:29.096564445Z 	            ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:06:29.096586515Z 	                UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:06:29.096603158Z 	                           error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:06:29.096618729Z 	                           dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:06:29.096633157Z 	PL/pgSQL function transport.process_metrics(integer) line 4 at SQL statement
+postgres-1  | 2026-08-30T00:06:29.096645799Z 2026-08-30 00:06:29.094 UTC [278] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:06:29.197089938Z 2026-08-30 00:06:29.196 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:29.197164650Z 2026-08-30 00:06:29.196 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4654 kB, estimate=4875 kB; lsn=0/8BAA528, redo lsn=0/8BAA4F0
+postgres-1  | 2026-08-30T00:06:30.403624386Z 2026-08-30 00:06:30.402 UTC [280] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:30.504993307Z 2026-08-30 00:06:30.504 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:30.505023296Z 2026-08-30 00:06:30.504 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4654 kB, estimate=4853 kB; lsn=0/9035F80, redo lsn=0/9035F48
+postgres-1  | 2026-08-30T00:06:30.748381819Z 2026-08-30 00:06:30.747 UTC [284] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:30.849368648Z 2026-08-30 00:06:30.848 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:30.849402484Z 2026-08-30 00:06:30.849 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4661 kB, estimate=4834 kB; lsn=0/94C36D8, redo lsn=0/94C36A0
+postgres-1  | 2026-08-30T00:06:31.062701101Z 2026-08-30 00:06:31.060 UTC [291] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:31.162653426Z 2026-08-30 00:06:31.162 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:31.163285035Z 2026-08-30 00:06:31.162 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4662 kB, estimate=4817 kB; lsn=0/9951080, redo lsn=0/9951048
+postgres-1  | 2026-08-30T00:06:32.409690941Z 2026-08-30 00:06:32.409 UTC [298] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:32.511904982Z 2026-08-30 00:06:32.511 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:32.511940085Z 2026-08-30 00:06:32.511 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4662 kB, estimate=4801 kB; lsn=0/9DDEC40, redo lsn=0/9DDEC08
+postgres-1  | 2026-08-30T00:06:33.747243405Z 2026-08-30 00:06:33.747 UTC [304] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:33.847906030Z 2026-08-30 00:06:33.847 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:33.849128202Z 2026-08-30 00:06:33.848 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4663 kB, estimate=4787 kB; lsn=0/A26C998, redo lsn=0/A26C960
+postgres-1  | 2026-08-30T00:06:34.068215985Z 2026-08-30 00:06:34.067 UTC [318] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:34.068259236Z 2026-08-30 00:06:34.067 UTC [322] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:34.168774606Z 2026-08-30 00:06:34.168 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:34.169601390Z 2026-08-30 00:06:34.169 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4664 kB, estimate=4775 kB; lsn=0/A6FABD0, redo lsn=0/A6FAB98
+postgres-1  | 2026-08-30T00:06:34.365000971Z 2026-08-30 00:06:34.362 UTC [327] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:34.365067261Z 2026-08-30 00:06:34.362 UTC [325] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:34.464895919Z 2026-08-30 00:06:34.463 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:34.465005247Z 2026-08-30 00:06:34.464 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4658 kB, estimate=4763 kB; lsn=0/AB87630, redo lsn=0/AB875F8
+postgres-1  | 2026-08-30T00:06:34.637880824Z 2026-08-30 00:06:34.637 UTC [329] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:34.739074781Z 2026-08-30 00:06:34.738 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:34.739772730Z 2026-08-30 00:06:34.739 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=4753 kB; lsn=0/B013BD8, redo lsn=0/B013BA0
+postgres-1  | 2026-08-30T00:06:38.285639357Z 2026-08-30 00:06:38.285 UTC [333] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:38.386424412Z 2026-08-30 00:06:38.386 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:38.387034201Z 2026-08-30 00:06:38.386 UTC [60] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=7, longest=0.001 s, average=0.001 s; distance=7743 kB, estimate=7743 kB; lsn=0/B7A3988, redo lsn=0/B7A3950
+postgres-1  | 2026-08-30T00:06:39.147979190Z 2026-08-30 00:06:39.147 UTC [356] ERROR:  could not serialize access due to concurrent update
+postgres-1  | 2026-08-30T00:06:39.148329212Z 2026-08-30 00:06:39.147 UTC [356] CONTEXT:  SQL statement "WITH msgs AS (
+postgres-1  | 2026-08-30T00:06:39.148353428Z 	        SELECT md.*
+postgres-1  | 2026-08-30T00:06:39.148393573Z 	        FROM "transport".message_delivery md
+postgres-1  | 2026-08-30T00:06:39.148470150Z 	        WHERE md.queue_id = v_queue_id
+postgres-1  | 2026-08-30T00:06:39.148608873Z 	            AND md.enqueue_time <= v_now
+postgres-1  | 2026-08-30T00:06:39.148632160Z 	            AND md.delivery_count < md.max_delivery_count
+postgres-1  | 2026-08-30T00:06:39.148803528Z 	        ORDER BY md.priority, md.enqueue_time, md.message_delivery_id
+postgres-1  | 2026-08-30T00:06:39.148824244Z 	        LIMIT fetch_count FOR UPDATE OF md SKIP LOCKED)
+postgres-1  | 2026-08-30T00:06:39.148843531Z 	        UPDATE "transport".message_delivery dm
+postgres-1  | 2026-08-30T00:06:39.148860675Z 	        SET delivery_count = dm.delivery_count + 1,
+postgres-1  | 2026-08-30T00:06:39.148879105Z 	            last_delivered = v_now,
+postgres-1  | 2026-08-30T00:06:39.148896963Z 	            consumer_id = fetch_consumer_id,
+postgres-1  | 2026-08-30T00:06:39.148914678Z 	            lock_id = fetch_lock_id,
+postgres-1  | 2026-08-30T00:06:39.148986326Z 	            enqueue_time = v_enqueue_time
+postgres-1  | 2026-08-30T00:06:39.149022399Z 	            FROM msgs
+postgres-1  | 2026-08-30T00:06:39.149039543Z 	            INNER JOIN "transport".message m on msgs.transport_message_id = m.transport_message_id
+postgres-1  | 2026-08-30T00:06:39.149055473Z 	        WHERE dm.message_delivery_id = msgs.message_delivery_id
+postgres-1  | 2026-08-30T00:06:39.149071045Z 	        RETURNING
+postgres-1  | 2026-08-30T00:06:39.149087546Z 	            dm.transport_message_id,
+postgres-1  | 2026-08-30T00:06:39.149103833Z 	            dm.queue_id,
+postgres-1  | 2026-08-30T00:06:39.149119406Z 	            dm.priority,
+postgres-1  | 2026-08-30T00:06:39.149135264Z 	            dm.message_delivery_id,
+postgres-1  | 2026-08-30T00:06:39.149151408Z 	            dm.consumer_id,
+postgres-1  | 2026-08-30T00:06:39.149167052Z 	            dm.lock_id,
+postgres-1  | 2026-08-30T00:06:39.149182624Z 	            dm.enqueue_time,
+postgres-1  | 2026-08-30T00:06:39.149198054Z 	            dm.expiration_time,
+postgres-1  | 2026-08-30T00:06:39.149213554Z 	            dm.delivery_count,
+postgres-1  | 2026-08-30T00:06:39.149229127Z 	            dm.partition_key,
+postgres-1  | 2026-08-30T00:06:39.149244628Z 	            dm.routing_key,
+postgres-1  | 2026-08-30T00:06:39.149260057Z 	            dm.transport_headers,
+postgres-1  | 2026-08-30T00:06:39.149275558Z 	            m.content_type,
+postgres-1  | 2026-08-30T00:06:39.149290917Z 	            m.message_type,
+postgres-1  | 2026-08-30T00:06:39.149306489Z 	            m.body,
+postgres-1  | 2026-08-30T00:06:39.149321990Z 	            m.binary_body,
+postgres-1  | 2026-08-30T00:06:39.149337420Z 	            m.message_id,
+postgres-1  | 2026-08-30T00:06:39.149352992Z 	            m.correlation_id,
+postgres-1  | 2026-08-30T00:06:39.149367350Z 	            m.conversation_id,
+postgres-1  | 2026-08-30T00:06:39.149383780Z 	            m.request_id,
+postgres-1  | 2026-08-30T00:06:39.149399138Z 	            m.initiator_id,
+postgres-1  | 2026-08-30T00:06:39.149415567Z 	            m.source_address,
+postgres-1  | 2026-08-30T00:06:39.149431140Z 	            m.destination_address,
+postgres-1  | 2026-08-30T00:06:39.149446855Z 	            m.response_address,
+postgres-1  | 2026-08-30T00:06:39.149462856Z 	            m.fault_address,
+postgres-1  | 2026-08-30T00:06:39.149479429Z 	            m.sent_time,
+postgres-1  | 2026-08-30T00:06:39.149494787Z 	            m.headers,
+postgres-1  | 2026-08-30T00:06:39.149510788Z 	            m.host"
+postgres-1  | 2026-08-30T00:06:39.149526289Z 	PL/pgSQL function transport.fetch_messages(text,uuid,uuid,interval,integer) line 15 at RETURN QUERY
+postgres-1  | 2026-08-30T00:06:39.149541933Z 2026-08-30 00:06:39.147 UTC [356] STATEMENT:  SELECT * FROM "transport".fetch_messages($1,$2,$3,$4,$5)
+postgres-1  | 2026-08-30T00:06:39.302609229Z 2026-08-30 00:06:39.302 UTC [354] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:39.403543689Z 2026-08-30 00:06:39.403 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:39.404486821Z 2026-08-30 00:06:39.404 UTC [60] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=8, longest=0.001 s, average=0.001 s; distance=5005 kB, estimate=7469 kB; lsn=0/BC870B8, redo lsn=0/BC87080
+postgres-1  | 2026-08-30T00:06:40.728638189Z 2026-08-30 00:06:40.728 UTC [360] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:40.829639458Z 2026-08-30 00:06:40.829 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:40.830663725Z 2026-08-30 00:06:40.830 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4655 kB, estimate=7188 kB; lsn=0/C112F68, redo lsn=0/C112F30
+postgres-1  | 2026-08-30T00:06:41.207263310Z 2026-08-30 00:06:41.205 UTC [367] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:41.307571432Z 2026-08-30 00:06:41.306 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:41.307607038Z 2026-08-30 00:06:41.307 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4745 kB, estimate=6943 kB; lsn=0/C5B54B0, redo lsn=0/C5B5478
+postgres-1  | 2026-08-30T00:06:44.704172545Z 2026-08-30 00:06:44.703 UTC [373] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:44.805292876Z 2026-08-30 00:06:44.804 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:44.805908523Z 2026-08-30 00:06:44.805 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4678 kB, estimate=6717 kB; lsn=0/CA47078, redo lsn=0/CA47040
+postgres-1  | 2026-08-30T00:06:47.098231378Z 2026-08-30 00:06:47.098 UTC [386] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:47.199180308Z 2026-08-30 00:06:47.198 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:47.199796476Z 2026-08-30 00:06:47.199 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=6511 kB; lsn=0/CED37C0, redo lsn=0/CED3788
+postgres-1  | 2026-08-30T00:06:48.241344249Z 2026-08-30 00:06:48.239 UTC [391] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:48.341300545Z 2026-08-30 00:06:48.340 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:48.341334435Z 2026-08-30 00:06:48.340 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4650 kB, estimate=6325 kB; lsn=0/D35E088, redo lsn=0/D35E050
+postgres-1  | 2026-08-30T00:06:49.500130517Z 2026-08-30 00:06:49.499 UTC [403] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:49.600230968Z 2026-08-30 00:06:49.600 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:49.601129157Z 2026-08-30 00:06:49.600 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4650 kB, estimate=6157 kB; lsn=0/D7E8AD8, redo lsn=0/D7E8AA0
+postgres-1  | 2026-08-30T00:06:49.783771987Z 2026-08-30 00:06:49.783 UTC [408] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:49.884376316Z 2026-08-30 00:06:49.884 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:49.885356679Z 2026-08-30 00:06:49.884 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4669 kB, estimate=6009 kB; lsn=0/DC78230, redo lsn=0/DC781F8
+postgres-1  | 2026-08-30T00:06:50.066477605Z 2026-08-30 00:06:50.066 UTC [412] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:50.167313574Z 2026-08-30 00:06:50.166 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:50.167849035Z 2026-08-30 00:06:50.167 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4670 kB, estimate=5875 kB; lsn=0/E107B18, redo lsn=0/E107AE0
+postgres-1  | 2026-08-30T00:06:53.337181483Z 2026-08-30 00:06:53.335 UTC [416] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:53.436375710Z 2026-08-30 00:06:53.436 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:53.437105847Z 2026-08-30 00:06:53.436 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4651 kB, estimate=5752 kB; lsn=0/E592AD0, redo lsn=0/E592A98
+postgres-1  | 2026-08-30T00:06:56.612590335Z 2026-08-30 00:06:56.612 UTC [427] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:56.712281033Z 2026-08-30 00:06:56.712 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:56.712707976Z 2026-08-30 00:06:56.712 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4653 kB, estimate=5642 kB; lsn=0/EA1E1A8, redo lsn=0/EA1E170
+postgres-1  | 2026-08-30T00:06:57.853416534Z 2026-08-30 00:06:57.853 UTC [431] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:57.954172983Z 2026-08-30 00:06:57.953 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:57.954902630Z 2026-08-30 00:06:57.954 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4650 kB, estimate=5543 kB; lsn=0/EEA8AE8, redo lsn=0/EEA8AB0
+postgres-1  | 2026-08-30T00:06:59.090144074Z 2026-08-30 00:06:59.088 UTC [435] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.090170207Z 2026-08-30 00:06:59.088 UTC [435] STATEMENT:  BEGIN ISOLATION LEVEL REPEATABLE READ
+postgres-1  | 2026-08-30T00:06:59.090189074Z 2026-08-30 00:06:59.088 UTC [434] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.190388540Z 2026-08-30 00:06:59.189 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:59.190498455Z 2026-08-30 00:06:59.190 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4650 kB, estimate=5454 kB; lsn=0/F333610, redo lsn=0/F3335D8
+postgres-1  | 2026-08-30T00:06:59.306286113Z 2026-08-30 00:06:59.305 UTC [445] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.407161491Z 2026-08-30 00:06:59.406 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:59.407193215Z 2026-08-30 00:06:59.406 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4647 kB, estimate=5373 kB; lsn=0/F7BD3C8, redo lsn=0/F7BD390
+postgres-1  | 2026-08-30T00:06:59.581684567Z 2026-08-30 00:06:59.580 UTC [447] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.581726214Z 2026-08-30 00:06:59.581 UTC [446] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.681728699Z 2026-08-30 00:06:59.681 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:59.682465683Z 2026-08-30 00:06:59.682 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4729 kB, estimate=5309 kB; lsn=0/FC5B880, redo lsn=0/FC5B848
+postgres-1  | 2026-08-30T00:06:59.782257700Z 2026-08-30 00:06:59.781 UTC [448] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:06:59.882683495Z 2026-08-30 00:06:59.882 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:06:59.883410976Z 2026-08-30 00:06:59.883 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4648 kB, estimate=5243 kB; lsn=0/100E58F8, redo lsn=0/100E58C0
+postgres-1  | 2026-08-30T00:07:01.118155430Z 2026-08-30 00:07:01.117 UTC [450] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:01.219345181Z 2026-08-30 00:07:01.218 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:01.219374529Z 2026-08-30 00:07:01.219 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4658 kB, estimate=5184 kB; lsn=0/105723B8, redo lsn=0/10572380
+postgres-1  | 2026-08-30T00:07:01.436390720Z 2026-08-30 00:07:01.435 UTC [455] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:01.536725396Z 2026-08-30 00:07:01.536 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:01.537570199Z 2026-08-30 00:07:01.537 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4666 kB, estimate=5132 kB; lsn=0/10A00D30, redo lsn=0/10A00CF8
+postgres-1  | 2026-08-30T00:07:02.729329330Z 2026-08-30 00:07:02.729 UTC [460] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:02.830251106Z 2026-08-30 00:07:02.829 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:02.830590006Z 2026-08-30 00:07:02.830 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4653 kB, estimate=5084 kB; lsn=0/10E8C240, redo lsn=0/10E8C208
+postgres-1  | 2026-08-30T00:07:04.037690458Z 2026-08-30 00:07:04.037 UTC [465] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:04.139072379Z 2026-08-30 00:07:04.138 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:04.140286780Z 2026-08-30 00:07:04.139 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4650 kB, estimate=5041 kB; lsn=0/11316BB8, redo lsn=0/11316B80
+postgres-1  | 2026-08-30T00:07:04.368660134Z 2026-08-30 00:07:04.367 UTC [477] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:04.469616218Z 2026-08-30 00:07:04.469 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:04.470498232Z 2026-08-30 00:07:04.470 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4662 kB, estimate=5003 kB; lsn=0/117A4560, redo lsn=0/117A4528
+postgres-1  | 2026-08-30T00:07:05.696299019Z 2026-08-30 00:07:05.695 UTC [482] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:05.797426458Z 2026-08-30 00:07:05.797 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:05.798262916Z 2026-08-30 00:07:05.797 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4661 kB, estimate=4969 kB; lsn=0/11C31B90, redo lsn=0/11C31B58
+postgres-1  | 2026-08-30T00:07:07.070571039Z 2026-08-30 00:07:07.070 UTC [487] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:07.172456525Z 2026-08-30 00:07:07.171 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:07.172497783Z 2026-08-30 00:07:07.172 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=4938 kB; lsn=0/120BE348, redo lsn=0/120BE310
+postgres-1  | 2026-08-30T00:07:08.345729854Z 2026-08-30 00:07:08.345 UTC [496] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:08.447203026Z 2026-08-30 00:07:08.446 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:08.450549245Z 2026-08-30 00:07:08.446 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4656 kB, estimate=4910 kB; lsn=0/1254A540, redo lsn=0/1254A508
+postgres-1  | 2026-08-30T00:07:08.455054220Z 2026-08-30 00:07:08.451 UTC [505] FATAL:  database 25797 does not exist
+postgres-1  | 2026-08-30T00:07:09.739561732Z 2026-08-30 00:07:09.737 UTC [512] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:09.839242090Z 2026-08-30 00:07:09.838 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:09.839994463Z 2026-08-30 00:07:09.839 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=4884 kB; lsn=0/129D6AA8, redo lsn=0/129D6A70
+postgres-1  | 2026-08-30T00:07:11.052106426Z 2026-08-30 00:07:11.051 UTC [523] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:11.154244443Z 2026-08-30 00:07:11.153 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:11.154273509Z 2026-08-30 00:07:11.154 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=4862 kB; lsn=0/12E62FB0, redo lsn=0/12E62F78
+postgres-1  | 2026-08-30T00:07:12.412753021Z 2026-08-30 00:07:12.412 UTC [528] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:12.513613275Z 2026-08-30 00:07:12.512 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:12.513759010Z 2026-08-30 00:07:12.513 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4656 kB, estimate=4841 kB; lsn=0/132EF1C0, redo lsn=0/132EF188
+postgres-1  | 2026-08-30T00:07:13.721422431Z 2026-08-30 00:07:13.721 UTC [536] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:13.822697621Z 2026-08-30 00:07:13.821 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:13.822759772Z 2026-08-30 00:07:13.822 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4657 kB, estimate=4823 kB; lsn=0/1377B628, redo lsn=0/1377B5F0
+postgres-1  | 2026-08-30T00:07:14.164687278Z 2026-08-30 00:07:14.163 UTC [548] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:14.167480493Z 2026-08-30 00:07:14.165 UTC [550] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:14.167515194Z 2026-08-30 00:07:14.165 UTC [550] CONTEXT:  SQL statement "WITH metrics AS (
+postgres-1  | 2026-08-30T00:07:14.167534417Z 	        DELETE FROM "transport".queue_metric
+postgres-1  | 2026-08-30T00:07:14.167552439Z 	            WHERE duration = interval '1 minute' AND start_time < (now() at time zone 'utc') - interval '8 hours'
+postgres-1  | 2026-08-30T00:07:14.167570672Z 	               RETURNING *
+postgres-1  | 2026-08-30T00:07:14.167588270Z 	        )
+postgres-1  | 2026-08-30T00:07:14.167605655Z 	    INSERT INTO "transport".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
+postgres-1  | 2026-08-30T00:07:14.167623253Z 	        SELECT date_trunc('hour', m.start_time), interval '1 hour', m.queue_id,
+postgres-1  | 2026-08-30T00:07:14.167656328Z 	            sum(m.consume_count),
+postgres-1  | 2026-08-30T00:07:14.167672936Z 	            sum(m.error_count),
+postgres-1  | 2026-08-30T00:07:14.167688272Z 	            sum(m.dead_letter_count)
+postgres-1  | 2026-08-30T00:07:14.167703750Z 	            FROM metrics m
+postgres-1  | 2026-08-30T00:07:14.167719015Z 	            GROUP BY date_trunc('hour', m.start_time), m.queue_id
+postgres-1  | 2026-08-30T00:07:14.167734139Z 	        ON CONFLICT ON CONSTRAINT unique_queue_metric DO
+postgres-1  | 2026-08-30T00:07:14.167749475Z 	        UPDATE SET consume_count = queue_metric.consume_count + excluded.consume_count,
+postgres-1  | 2026-08-30T00:07:14.167765165Z 	                   error_count = queue_metric.error_count + excluded.error_count,
+postgres-1  | 2026-08-30T00:07:14.167780996Z 	                   dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count"
+postgres-1  | 2026-08-30T00:07:14.167796402Z 	PL/pgSQL function transport.process_metrics(integer) line 23 at SQL statement
+postgres-1  | 2026-08-30T00:07:14.167811668Z 2026-08-30 00:07:14.165 UTC [550] STATEMENT:  SELECT * FROM "transport".process_metrics($1)
+postgres-1  | 2026-08-30T00:07:14.266396839Z 2026-08-30 00:07:14.265 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:14.266516277Z 2026-08-30 00:07:14.265 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4663 kB, estimate=4807 kB; lsn=0/13C092B0, redo lsn=0/13C09278
+postgres-1  | 2026-08-30T00:07:14.451006513Z 2026-08-30 00:07:14.450 UTC [553] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:14.552815300Z 2026-08-30 00:07:14.551 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:14.552850495Z 2026-08-30 00:07:14.552 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4658 kB, estimate=4792 kB; lsn=0/14095B08, redo lsn=0/14095AD0
+postgres-1  | 2026-08-30T00:07:14.673357067Z 2026-08-30 00:07:14.673 UTC [556] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-08-30T00:07:14.774781109Z 2026-08-30 00:07:14.773 UTC [60] LOG:  checkpoint starting: immediate force wait
+postgres-1  | 2026-08-30T00:07:14.774812276Z 2026-08-30 00:07:14.774 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.001 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4652 kB, estimate=4778 kB; lsn=0/14520E50, redo lsn=0/14520E18

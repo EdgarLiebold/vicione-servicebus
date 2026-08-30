@@ -1,0 +1,17 @@
+^Dfehlerhaft ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests.TransientErrorNumberSetIsClosed(errorNumber: 1205, expected: True) (1ms)
+  Assert.Equal() Failure: Values differ
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests.TransientErrorNumberSetIsClosed(Int32 errorNumber, Boolean expected) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConfigurationAndRetryTests.cs:36
+    um InvokeStub_SqlServerConfigurationAndRetryTests.TransientErrorNumberSetIsClosed(Object, Span`1)
+    um System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/mutations/M01-results/M01.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 15
+  fehlerhaft: 1
+  erfolgreich: 14
+  übersprungen: 0
+  Dauer: 441ms

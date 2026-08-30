@@ -428,6 +428,14 @@
       "allowedGates": [
         "binary-scan"
       ],
+      "blobSha256": "8b626fb404a8c5f8f4a30bf7dd89b79f114f05f4f8b3d047d333b86d045a2b2e",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/SQL-TRANSPORT/raw/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
       "blobSha256": "280a00dd468369b41cc40af0db1eee804d489f10fbe38506b4c252222cfdc435",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/TRANSACTIONAL-BUS-CAPABILITY-SPLIT/CORRECTION-02/positive/engineering-build.binlog"
