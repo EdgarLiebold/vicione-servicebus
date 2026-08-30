@@ -2048,3 +2048,18 @@ future cohorts as complete.
 - This is explicitly the pre-Evidence-commit checkpoint. The direct Evidence child, regenerated
   identity/CHANGELIST closure, architecture binding and remote push remain pending. No SQL closure
   commit in this local range is self-approved or newly pushed.
+
+## Core transform native closure — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `901e6d6d854b1a8231224dc468a50e1816b2a9e8`, tree
+  `03b05696fefa122f3f746f11912c456437034c56`, replaces all nine transform obligations
+  `OBL-R0-CORE-C-0441..0449` with nine unique xUnit 4 / MTP v2 carriers.
+- The three fully replaced inherited Transform files and their now-empty directory are removed.
+  No empty directory remains below `tests/ViciOne.ServiceBus.Tests`.
+- Focused execution is 9/9, requirement projection is 1/1 and the full UnitArchitecture profile is
+  2,408/2,408 with zero failures or skips. Locked Engineering restore and Release build pass with
+  zero warnings and errors; CI self-tests pass 257/257 outside the restricted process sandbox.
+- M01-M04 independently kill replacement, send-filter, consume-filter and class-construction
+  regressions. Every mutant builds cleanly, fails only its named carrier and is restored exactly.
+- This is explicitly the pre-Evidence-commit checkpoint. The direct Evidence child, final
+  CHANGELIST/identity fixed point, architecture binding and any future remote push remain pending.

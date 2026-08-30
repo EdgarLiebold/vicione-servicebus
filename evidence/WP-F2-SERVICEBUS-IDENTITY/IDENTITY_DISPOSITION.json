@@ -170,7 +170,7 @@
     "entryCount": 54,
     "path": "tools/identity/historical_identity_policy.json",
     "schemaVersion": 1,
-    "sha256": "31e32a66c880d87f98a5c7e0aa992e1beef86a891c8730cec203acf6b5691a92"
+    "sha256": "7a1043a38230b982e5f5bcb2eae55bdbfa87fa8b9b27f8e74ce0ee8b8f6e87ae"
   },
   "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
   "retainedLegalProvenanceContexts": [
