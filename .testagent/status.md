@@ -2171,3 +2171,26 @@ future cohorts as complete.
   individual carrier. No remote push was performed.
 - Independent read-only acceptance, architecture binding and any future remote publication remain
   pending and are not self-approved by this local freeze.
+
+## Core obligations 0182–0199 — large-package local Evidence freeze (2026-08-30)
+
+- Technical `d74650ff20469fe3e244ca63ae5d5215aaeb1830`, tree
+  `fbde8d428755178821056310e299c085b68da49b`, closes the contiguous range
+  `OBL-R0-CORE-D-0182..0199`: five new executable cases carry eight obligations and ten obligations
+  bind to already stronger executing native carriers.
+- Four fully replaced inherited test files are removed atomically. The technical package adds 453
+  lines and deletes 507, so the test estate becomes smaller by 54 lines while closing 18 obligations.
+- Direct Evidence child `c60943efccd9df48b12eaf33e1b8b02cde8a4785`, tree
+  `9ebadede182c42be8069a23c5f225deb230408f3`, binds 45/45 nonmanifest SHA-256 entries, the
+  byte-exact Technical patch, complete raw/binlog evidence and five independently reconstructible
+  product mutations.
+- The five new cases are 5/5 and requirement projection is 1/1. Complete UnitArchitecture is
+  2,427/2,427 with zero failures or skips above the 2,422 floor; focused and post-restore builds are
+  0 warnings / 0 errors; CI self-tests are 257/257 and identity self-tests 148/148.
+- M01–M05 independently bind failed-attempt outbox discard, consumer-factory interception,
+  all-interface dispatch, consumer-message redelivery and endpoint redelivery. Every mutant builds,
+  the intended carrier turns red, controls remain green where applicable, and all source hashes are
+  restored exactly.
+- Generated CHANGELIST closes at 9,897 entries; no empty legacy test directory remains. No remote
+  push was performed. Independent read-only acceptance, architecture binding and any future remote
+  publication remain pending and are not self-approved here.
