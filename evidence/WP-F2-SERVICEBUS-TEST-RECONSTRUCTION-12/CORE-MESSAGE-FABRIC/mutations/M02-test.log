@@ -1,0 +1,22 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests.HashPattern_DeliversTheRoutedMessage (39ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Assert.Equal() Failure: Collections differ
+                                   ↓ (pos 0)
+  Expected: ReceivedMessage[]     [ReceivedMessage { RoutingKey = alpha, Value = matching }]
+  Actual:   List<ReceivedMessage> []
+    um ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests.HashPattern_DeliversTheRoutedMessage() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs:83
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (843ms)
+Exitcode: 2
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vicione-message-fabric-evidence/mutations/M02-results/edgar.liebold_Edgars-iMac-2_2026-08-30_03_42_00.759842.ctrf
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 515ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

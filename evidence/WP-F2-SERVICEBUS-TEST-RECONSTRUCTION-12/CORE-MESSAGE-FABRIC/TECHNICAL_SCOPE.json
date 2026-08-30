@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "266ae0d4369c9ffa6860db4e5a8f2f8fded18be1",
+  "technicalTree": "5a28b0f2f52ab4a6addb4b7c458e31bd2a4b634c",
+  "technicalParent": "d2e719e0129784f6fff0ffb3450d7764dbe3be0e",
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/message-fabric-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/Transports/MessageFabric_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/Transports/TopicExchange_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "tests2/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs"
+  ]
+}

@@ -2063,3 +2063,21 @@ future cohorts as complete.
   regressions. Every mutant builds cleanly, fails only its named carrier and is restored exactly.
 - This is explicitly the pre-Evidence-commit checkpoint. The direct Evidence child, final
   CHANGELIST/identity fixed point, architecture binding and any future remote push remain pending.
+
+## Message-fabric and topic-routing native closure — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `266ae0d4369c9ffa6860db4e5a8f2f8fded18be1`, tree
+  `5a28b0f2f52ab4a6addb4b7c458e31bd2a4b634c`, replaces the exact five inherited identities
+  `OBL-R0-CORE-C-0450..0454` with five source-mirrored xUnit 4 / MTP v2 carriers.
+- The two fully replaced inherited Transports C# files and their now-empty directory are removed.
+  A repository check below `tests/` finds no remaining empty directory.
+- Focused execution is 5/5, requirement projection is 1/1 and complete UnitArchitecture is
+  2,413/2,413 with zero failures or skips above the independent 2,408 floor. Locked Engineering
+  restore and Release build pass with zero warnings and errors; CI tool tests pass 257/257 outside
+  the restricted sandbox and the verification model passes.
+- M01-M04 independently bind cycle validation, hash routing and both terminal/intermediate wildcard
+  branches. Every mutant builds cleanly, makes only its named carrier red and restores the exact
+  Technical-tree file SHA before the final positive build and tests.
+- This remains a pre-Evidence-commit checkpoint. Final identity/CHANGELIST regeneration, the direct
+  Evidence child, architecture binding and any remote publication remain pending and are not
+  self-approved here.
