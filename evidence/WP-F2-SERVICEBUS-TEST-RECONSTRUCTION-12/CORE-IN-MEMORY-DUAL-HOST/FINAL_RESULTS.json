@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_IN_MEMORY_DUAL_HOST_RETIREMENT_RESULTS",
+  "technicalCommit": "47f73aa331a58328b133ccf9d105cd1d824ffccd",
+  "technicalTree": "4e279274d7365b1285457738b4c64b5197baca78",
+  "technicalParent": "e3b449e291afb948ecdf53c13a482aebcba6cd6e",
+  "rangeBase": "b40354e946a2c00e42995ba704a105908addce12",
+  "obligations": {
+    "first": "OBL-R0-CORE-D-0175",
+    "last": "OBL-R0-CORE-D-0175",
+    "count": 1,
+    "replacedExecuting": 1,
+    "profile": "UnitArchitecture"
+  },
+  "nativeCarrier": {
+    "newTestCases": 1,
+    "target": "InMemoryTransportIsolationTests.DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource"
+  },
+  "focusedCarrier": { "tests": 1, "passed": 1, "failed": 0, "skipped": 0, "ctrf": "positive/focused.json" },
+  "requirementProjection": { "tests": 1, "passed": 1, "failed": 0, "skipped": 0, "ctrf": "positive/projection.json" },
+  "unitArchitecture": { "tests": 2416, "passed": 2416, "failed": 0, "skipped": 0, "declaredFloor": 2411, "rawLog": "raw/unit-architecture.log", "binlog": "binlogs/unit-architecture.binlog" },
+  "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0, "rawLog": "raw/engineering-build.log", "binlog": "binlogs/engineering-build.binlog" },
+  "focusedBuild": { "exitCode": 0, "warnings": 0, "errors": 0, "rawLog": "raw/positive-build.log", "binlog": "binlogs/positive-build.binlog" },
+  "formatVerification": { "exitCode": 0, "rawLog": "raw/format-verify.log", "binlog": "binlogs/format-verify.binlog" },
+  "ciSelfTests": { "tests": 257, "passed": 257, "failed": 0, "executionBoundary": "outside the restricted process sandbox because process inspection and IPC are denied inside it", "rawLog": "raw/ci-tooltests.log" },
+  "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0, "rawLog": "raw/identity-selftests.log" },
+  "verificationModel": { "status": "PASS", "rawLog": "raw/verification-model.log" },
+  "identityGate": {
+    "status": "PASS",
+    "findings": 0,
+    "baselinePaths": 5654,
+    "changedBaselineFiles": 5650,
+    "liveBaselineTargetsWithGitIdentity": 4196,
+    "currentProductPublicDeclarations": 24987,
+    "currentAddedPublicDeclarations": 1711,
+    "publicDeclarationRecords": 44090,
+    "rawJson": "raw/identity-gate.json",
+    "rawLog": "raw/identity-gate.log"
+  },
+  "changeList": { "status": "PASS", "entries": 9810, "rawLog": "raw/change-list.log" },
+  "retirement": { "trackedLegacyFilesRemoved": 1, "legacyProjectRootRetained": true, "emptyLegacyTestDirectories": 0 },
+  "mutations": { "count": 2, "built": 2, "killed": 2, "restored": 2 },
+  "remotePushPerformed": false
+}

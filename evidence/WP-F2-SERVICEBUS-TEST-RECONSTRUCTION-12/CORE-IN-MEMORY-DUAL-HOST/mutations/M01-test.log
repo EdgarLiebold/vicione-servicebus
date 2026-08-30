@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests.DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource (236ms)
+  Assert.Equal() Failure: Values differ
+  Expected: loopback://localhost/internal-22ec00006d6c1461320a08df068076b1/
+  Actual:   loopback://localhost/
+    um ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests.DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs:25
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vicione-in-memory-duo-evidence/mutations/M01.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 162ms

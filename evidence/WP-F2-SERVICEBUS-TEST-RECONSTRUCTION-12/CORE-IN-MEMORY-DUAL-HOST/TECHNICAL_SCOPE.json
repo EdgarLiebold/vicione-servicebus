@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "47f73aa331a58328b133ccf9d105cd1d824ffccd",
+  "technicalTree": "4e279274d7365b1285457738b4c64b5197baca78",
+  "technicalParent": "e3b449e291afb948ecdf53c13a482aebcba6cd6e",
+  "rangeBase": "b40354e946a2c00e42995ba704a105908addce12",
+  "behavioralRetirementCommit": "c124e4cda59838b6b38d7a2e44725385c2b2b839",
+  "preconditionCorrectionCommit": "e3b449e291afb948ecdf53c13a482aebcba6cd6e",
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/in-memory-duo-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "CHANGELIST.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/InMemoryDuo_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "tools/identity/historical_identity_policy.json"
+  ]
+}

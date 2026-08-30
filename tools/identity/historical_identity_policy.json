@@ -15,8 +15,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 9,
-      "authorizedLinesSha256": "06bdcf8911f30655f9428d7912167bc87095d1155ffc2b1558282b9539c18373",
+      "authorizedLineCount": 10,
+      "authorizedLinesSha256": "f67d1c3fc949287f8d397403df14d81bc1756b322ce128dfe3b5c06408bddf6f",
       "category": "HISTORICAL_EVIDENCE",
       "path": ".testagent/research.md"
     },
@@ -367,6 +367,14 @@
       "blobSha256": "db73b78080934ba12168020a6ef015e9c8fe1b704e662d319d6fb85cbd94cad7",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/AWS-NATIVE-CLOSURE/CORRECTION-03/positive/binlogs/unit-restore.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "f60f86e19dba174b954ce712c3ba555fa57c25387c30b5b1cf06dccc7e31c1a8",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/binlogs/unit-architecture.binlog"
     },
     {
       "allowedGates": [

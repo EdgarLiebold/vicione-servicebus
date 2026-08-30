@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_IN_MEMORY_DUAL_HOST_RETIREMENT_MUTATIONS",
+  "technicalCommit": "47f73aa331a58328b133ccf9d105cd1d824ffccd",
+  "technicalTree": "4e279274d7365b1285457738b4c64b5197baca78",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "virtual-host-separation",
+      "path": "src/ViciOne.ServiceBus/Testing/InMemoryTestHarness.cs",
+      "oldText": "                BaseAddress = new Uri(BaseAddress, virtualHost.Trim('/') + '/');\n",
+      "newText": "                BaseAddress = new Uri(\"loopback://localhost/\");\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "6eb7ff336c123a88436ad42cc4e1cf767714059861a91bbd0702d98790b4ab3a",
+      "mutantSha256": "b14b35f7fefcc9fb920fd255e757b4cded5b24253ce70e3ed7c28d8a48b1fc54",
+      "restoredSha256": "6eb7ff336c123a88436ad42cc4e1cf767714059861a91bbd0702d98790b4ab3a",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M01-build.log",
+        "binlog": "binlogs/M01-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-method ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests.DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource --minimum-expected-tests 1 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "ctrf": "mutations/M01.json",
+        "rawLog": "mutations/M01-test.log"
+      },
+      "cause": "Collapsing both configured virtual hosts to the root loopback address is rejected immediately by the independent exact BaseAddress precondition before any transport traffic can hide the regression."
+    },
+    {
+      "id": "M02",
+      "axis": "source-address-preservation",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/Middleware/CopyContextPipe.cs",
+      "oldText": "            context.SourceAddress = _context.SourceAddress;\n",
+      "newText": "            context.SourceAddress = _context.ReceiveContext.InputAddress;\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "86d3de8b79e7d17050b0df68f67be7ae9fc7491e33ac3dff1633c7b79d89376e",
+      "mutantSha256": "10d17dec7bf60e3226c0c270bf6b19421af498177dd7e0169c0be3a5b1eac1c4",
+      "restoredSha256": "86d3de8b79e7d17050b0df68f67be7ae9fc7491e33ac3dff1633c7b79d89376e",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M02-build.log",
+        "binlog": "binlogs/M02-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-method ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests.DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource --minimum-expected-tests 1 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "ctrf": "mutations/M02.json",
+        "rawLog": "mutations/M02-test.log"
+      },
+      "cause": "The relay still completes, but the carrier observes the external input queue instead of the original external bus address and fails at the exact source identity assertion."
+    }
+  ]
+}
