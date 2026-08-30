@@ -1,0 +1,79 @@
+using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.Contracts;
+
+public sealed class InterfaceMessageDispatchTests
+{
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INTERFACE-MESSAGE-DISPATCH", "all-implemented-contracts-exactly-once")]
+    public async Task ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = new InMemoryTestHarness($"interface-message-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        HandlerTestHarness<FirstMessageContract> first = harness.Handler<FirstMessageContract>();
+        HandlerTestHarness<SecondMessageContract> second = harness.Handler<SecondMessageContract>();
+        var message = new ConcreteMessage("Joe", 27);
+        var stopped = false;
+
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            Task<IReceivedMessage<FirstMessageContract>> firstDelivery = first.Consumed
+                .SelectAsync(cancellationToken)
+                .First();
+            Task<IReceivedMessage<SecondMessageContract>> secondDelivery = second.Consumed
+                .SelectAsync(cancellationToken)
+                .First();
+
+            await harness.InputQueueSendEndpoint.Send((object)message, cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            await Task.WhenAll(firstDelivery, secondDelivery).WaitAsync(timeout, cancellationToken);
+            IReceivedMessage<FirstMessageContract> firstReceived = await firstDelivery;
+            IReceivedMessage<SecondMessageContract> secondReceived = await secondDelivery;
+
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            stopped = true;
+
+            FirstMessageContract firstMessage = firstReceived.Context.Message;
+            SecondMessageContract secondMessage = secondReceived.Context.Message;
+            Assert.Equal(message.Name, firstMessage.Name);
+            Assert.Equal(message.Name, secondMessage.Name);
+            Assert.Equal(message.Age, secondMessage.Age);
+            Assert.Single(first.Consumed.Select(SnapshotOnlyToken()));
+            Assert.Single(second.Consumed.Select(SnapshotOnlyToken()));
+        }
+        finally
+        {
+            if (!stopped)
+                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
+
+    private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
+        .GetValidatedOptions()
+        .OperationTimeout!.Value;
+
+    public interface FirstMessageContract
+    {
+        string Name { get; }
+    }
+
+    public interface SecondMessageContract
+    {
+        string Name { get; }
+
+        int Age { get; }
+    }
+
+    private sealed record ConcreteMessage(string Name, int Age) : FirstMessageContract, SecondMessageContract;
+}

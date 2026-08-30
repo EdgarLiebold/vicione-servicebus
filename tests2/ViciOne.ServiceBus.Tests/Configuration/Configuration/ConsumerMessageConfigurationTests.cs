@@ -7,6 +7,43 @@ namespace ViciOne.ServiceBus.Tests.Configuration.Configuration;
 
 public sealed class ConsumerMessageConfigurationTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-INTERCEPTION", "around-consumer-exact-order")]
+    public async Task ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new LayerObservation();
+        var consumer = new LayeredConsumer(observation);
+        using var harness = new InMemoryTestHarness($"consumer-factory-filter-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+            endpoint.Consumer(
+                () => consumer,
+                configuration => configuration.UseFilter(new AroundConsumerFilter(observation)));
+
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            var message = new LayeredMessage(NewId.NextGuid());
+
+            await harness.InputQueueSendEndpoint.Send(message, cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal(["before", "consume", "after"], observation.Entries.Select(entry => entry.Layer));
+            Assert.All(observation.Entries, entry => Assert.Equal(message, entry.Message));
+            Assert.All(observation.Entries, entry => Assert.Same(consumer, entry.Consumer));
+        }
+        finally
+        {
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData(RegistrationShape.ConsumerFactory)]
     [InlineData(RegistrationShape.Instance)]
@@ -91,6 +128,25 @@ public sealed class ConsumerMessageConfigurationTests
             observation.Complete();
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class AroundConsumerFilter(LayerObservation observation) :
+        IFilter<ConsumerConsumeContext<LayeredConsumer>>
+    {
+        public async Task Send(
+            ConsumerConsumeContext<LayeredConsumer> context,
+            IPipe<ConsumerConsumeContext<LayeredConsumer>> next)
+        {
+            Assert.True(context.TryGetMessage(out ConsumeContext<LayeredMessage>? messageContext));
+            observation.Record("before", context.Consumer, messageContext.Message);
+
+            await next.Send(context);
+
+            observation.Record("after", context.Consumer, messageContext.Message);
+            observation.Complete();
+        }
+
+        public void Probe(ProbeContext context) => context.CreateFilterScope("aroundConsumer");
     }
 
     private sealed class LayerObservation

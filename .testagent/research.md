@@ -2571,3 +2571,35 @@ remove the null-setter guard, omit `ExecutePendingActions`, omit `DiscardPending
 `finally` disposal. Each mutant remains buildable and is owned by a positive state/order assertion;
 no timeout or scheduling race is needed. Six new Facts raise the predeclared UnitArchitecture floor
 from 2,411 to 2,417 while allowing both fully replaced inherited files to be deleted together.
+
+## Core package 0182-0199 native closure research
+
+The enlarged package contains eighteen consecutive frozen obligations but needs only five new
+materialized cases. `InMemoryTestHarnessBehaviorTests` already executes real handler delivery,
+handler startup and skipped-message shutdown more strongly than the assertion-free or await-only
+inherited cases. `BufferedBusTests.EverySendOverload_UsesTheSameBufferedBoundary` already exercises
+the runtime-object send overload through a real handler and proves all ten overload results exactly.
+`DynamicContractIntegrationTests.AnonymousValues_SendAsAnInterfaceWithEveryValueAndContextIntact`
+binds all five old interface-value assertions plus transport metadata in one real flow. The accepted
+structured `BusProbeTests` remains the terminal owner for `0199`.
+
+The three inherited outbox/redelivery tests use wall-clock 100 ms intervals, static counters and an
+absence-only zero assertion. The replacement uses the transport-owned `IInMemoryDelayProvider`, an
+observed scheduled-redelivery registration and the final published `Fault<T>` as positive barriers.
+It records two attempts before advancing and four attempts afterward with redelivery counts
+`0,0,1,1`; every attempt queues the real send/publish through the in-memory outbox. The final fault
+then makes zero sent, published and consumed side effects a terminal state assertion rather than a
+timing guess.
+
+The inherited consumer-factory fixture splits one interaction across three tests and never proves
+relative ordering. One native around-filter Fact records `before, consume, after`, binds the exact
+consumer and message instances, and completes only on the filter return path. The inherited
+interface-subscription fixture sends the same message twice and merely waits once per interface;
+its replacement sends once, drains the bus, asserts exact values and requires exactly one recorded
+delivery for each of the two implemented contracts.
+
+Pseudo-mutation targets are the actual integration seams rather than copied test helpers: bypassing
+outbox discard across a redelivery attempt exposes a deferred side effect; omitting the consumer
+filter return path loses the `after` event; suppressing one implemented-interface topology edge
+removes one handler delivery. The package therefore adds five cases, retires four complete legacy
+files and pays the full repository-wide closure cost only once.

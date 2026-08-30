@@ -3096,5 +3096,26 @@
       "testMethod" : "DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource",
       "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests",
       "variantKey" : "cross-host-relay-preserves-source-and-prevents-loop"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-REDELIVERY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedDelivery_NeverFlushesItsOutboxAcrossImmediateAndDelayedAttempts",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.InMemoryOutboxRedeliveryTests",
+      "variantKey" : "failed-attempts-never-flush-outbox"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUMER-FACTORY-INTERCEPTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests",
+      "variantKey" : "around-consumer-exact-order"
+   },
+   {
+      "requirementId" : "REQ-VSB-INTERFACE-MESSAGE-DISPATCH",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Contracts.InterfaceMessageDispatchTests",
+      "variantKey" : "all-implemented-contracts-exactly-once"
    }
 ]

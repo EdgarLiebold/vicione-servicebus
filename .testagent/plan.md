@@ -2209,3 +2209,28 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    checks. Bind one-cause mutations for the null-setter guard, pending-action execution, failure
    discard and scope restoration; restore every product byte exactly, then freeze Technical,
    Evidence and architecture children. Remote publication remains separately authorized.
+
+## Core package 0182-0199 native closure execution plan
+
+1. Close `OBL-R0-CORE-D-0182..0199` as one 18-obligation package. Reuse the stronger executing
+   handler-harness, buffered-object-send, dynamic-interface-contract and structured-probe carriers;
+   do not duplicate their behavior merely to preserve inherited fixture names.
+2. Add exactly three virtual-time outbox/redelivery cases: message-scoped publish, message-scoped
+   send and endpoint-scoped publish. Each must traverse immediate retry plus delayed redelivery,
+   reach one terminal `Fault<T>`, record the exact redelivery sequence and prove that no failed
+   attempt flushes its deferred send or publish.
+3. Add one around-consumer factory-filter case that proves the exact before/consumer/after sequence,
+   consumer identity and message identity. Add one interface-dispatch case that sends a concrete
+   two-interface message and, after terminal bus drain, proves exactly one delivery with exact values
+   to each interested interface handler.
+4. Raise the independent UnitArchitecture floor by exactly five materialized cases, from 2,417 to
+   2,422. LocalIntegration remains 375 because every new carrier is hermetic.
+5. Delete `InMemoryOutboxRedelivery_Specs.cs`, `InMemoryTest_Specs.cs`,
+   `InterceptingConsumer_Specs.cs` and `InterfaceSubscription_Specs.cs` only with all eighteen
+   terminal map rows present. `OBL-R0-CORE-D-0199` remains bound to its already accepted structured
+   probe and creates no new case.
+6. Run focused tests while implementing, then execute complete UnitArchitecture, Engineering,
+   tool-gate, Identity and Evidence closure once for the whole package. Bind independent mutations
+   for the redelivery/outbox integration, consumer-filter return path and multi-interface dispatch;
+   restore every product byte exactly before the single Technical freeze. Remote publication remains
+   separately authorized.

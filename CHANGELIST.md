@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4198 |
-| Modified | 4190 |
-| Deleted | 1458 |
+| Added | 4201 |
+| Modified | 4186 |
+| Deleted | 1462 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -30,6 +30,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
@@ -8505,6 +8506,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/HostInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/HostInfo_Specs.cs` |
 | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
 | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
+| `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
+| `tests/MassTransit.Tests/InMemoryTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryTest_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` |
@@ -8512,7 +8515,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Initializers/MessageInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/MessageInitializer_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/PropertyProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/PropertyProvider_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/State_Specs.cs` |
+| `tests/MassTransit.Tests/InterceptingConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/InterceptingConsumer_Specs.cs` |
 | `tests/MassTransit.Tests/InterfaceProxy_Specs.cs` | Deleted | `tests/MassTransit.Tests/InterfaceProxy_Specs.cs` |
+| `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` |
 | `tests/MassTransit.Tests/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/Introspection_Specs.cs` |
 | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` |
 | `tests/MassTransit.Tests/JsonToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
@@ -8928,10 +8933,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs` | Modified | `tests/MassTransit.Tests/ExcessiveAsyncFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/FaultPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPublish_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryTest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InterceptingConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/InterceptingConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InterfaceSubscription_Specs.cs` | Modified | `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobAttemptGeneration_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumer_Specs.cs` |
@@ -9639,6 +9640,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/MessageContextFlowTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/TransactionContextExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
@@ -9702,6 +9704,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
