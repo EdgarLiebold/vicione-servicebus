@@ -3047,5 +3047,12 @@
       "testMethod" : "MessageSerializerConvention_UsesRawJsonForTheConfiguredContract",
       "testType" : "ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests",
       "variantKey" : "message-specific-serializer"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-TRANSPORT-ISOLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests",
+      "variantKey" : "cross-host-relay-preserves-source-and-prevents-loop"
    }
 ]

@@ -2511,3 +2511,35 @@ tokens and deterministic harness cleanup. The correct closure is therefore an ex
 terminal map plus deletion of the redundant NUnit file, not a new duplicate Fact or floor increase.
 The narrow product counter-mutation removes only the scoped-consumer attachment call from the DI
 receive-endpoint extension; build validity is retained while the focused carrier loses its consumer.
+
+## In-memory dual-host isolation native closure research
+
+The remaining inherited `InMemoryDuo_Specs.cs` owns exactly one frozen R0 identity,
+`OBL-R0-CORE-D-0175`. Repository history shows no ViciOne-specific behavior change after the
+MassTransit 8.5.10 import: only the namespace/identity rename and removal of the obsolete per-file
+change notice touched it. The relevant product chain is `InMemoryTestHarness` virtual-host
+construction, the per-host `InMemoryTransportProvider` message fabric, publish delivery, and
+`CopyContextPipe` source-address preservation across an explicit relay.
+
+Static pairing and repository search found no existing native carrier for this exact contract. The
+AWS multi-bus LocalIntegration test owns provider-specific topic separation, while existing core
+multi-bus and test-harness cases own DI scope or observation behavior; none executes two independent
+in-memory fabrics connected by an application relay. The mandatory repository-wide Roslyn pairing
+scan was already executed once during the SQL cohort and is not repeated here.
+
+Assertion-quality and gap analysis grade the inherited case below the migration threshold. Its only
+assertion asks whether the final consumer observed a message; it neither establishes that direct
+cross-fabric delivery was impossible nor counts relay/consumer invocations, and it passes the
+asynchronous `Any()` result to NUnit without an explicit await. A shared transport, a relay loop or
+loss of the original source address can therefore remain falsely green. The replacement uses two
+run-scoped virtual hosts, positive observations at both relay endpoints and the final consumer,
+terminal bus drains, exact invocation queues, exact input/source addresses and exact message
+identity. It has no sleep, wall-clock quiet window, shared fixture, conditional assertion or
+absence-only verdict.
+
+Pseudo-mutation analysis identifies two independent product-side killers: collapsing the harness
+virtual-host path prevents the explicit bridge from being selected, while replacing the forwarded
+source with the relay input address violates the exact source assertions. A hypothetical shared
+message fabric causes more than one real-consumer invocation and is rejected by the post-drain exact
+count. One new Fact is therefore necessary and sufficient; it raises the predeclared UnitArchitecture
+floor from 2,410 to 2,411 before the fully replaced inherited file is removed.

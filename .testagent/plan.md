@@ -2166,3 +2166,23 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 4. Run the focused carrier, complete UnitArchitecture and Engineering Release checks, and bind one
    exact product mutation that omits scoped consumer attachment at the DI receive endpoint. Freeze
    separate Technical and Evidence commits. Remote publication remains separately authorized.
+
+## In-memory dual-host isolation native closure execution plan
+
+1. Bind `OBL-R0-CORE-D-0175` one-to-one to a source-mirrored xUnit 4/MTP v2 Fact in
+   `ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportIsolationTests`.
+2. Start two run-scoped in-memory virtual hosts, connect them only through the inherited explicit
+   relay, and prove the external relay forwards exactly once while the internal relay suppresses the
+   return path exactly once.
+3. Bind the original message id and source address across both fabrics, then stop/drain both buses
+   before asserting exact relay and real-consumer invocation counts. Use only positive observations
+   and the configured operation timeout; no sleep or absence-only completion owns the verdict.
+4. Raise the independent UnitArchitecture floor by exactly one materialized case, from 2,410 to
+   2,411. LocalIntegration remains 375 because both transports are hermetic.
+5. Delete `tests/ViciOne.ServiceBus.Tests/InMemoryDuo_Specs.cs` only with the executing native case
+   and its passive requirement projection in place. Retain every unrelated inherited file and remove
+   any directory only if the deletion makes it empty.
+6. Run the focused carrier, requirement projection, complete UnitArchitecture and Engineering
+   Release checks. Bind separate one-cause mutations for virtual-host separation and source-address
+   preservation, restore every product byte exactly, then freeze Technical and direct Evidence
+   commits. Remote publication remains separately authorized.
