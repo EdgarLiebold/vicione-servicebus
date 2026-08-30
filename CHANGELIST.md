@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4105 |
+| Added | 4115 |
 | Modified | 4191 |
 | Deleted | 1457 |
 | Renamed | 2 |
@@ -2022,6 +2022,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/restored-build.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/positive/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/positive/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-gate.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/SHA256SUMS` | Added |  |

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "1e86d84b46a0b6ca2febd3dec4002f82e1a59e30",
+  "technicalTree": "85587426fd17b1fd3e30abc19dfebcb24ee99244",
+  "technicalParent": "f88ff7a45a29660592b548e291a11f5f38236a5b",
+  "rangeBase": "d717536dc94b32d47fcbcb28f0e3cd691a0806cb",
+  "paths": [
+    ".testagent/consumer-request-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "CHANGELIST.md",
+    "tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs",
+    "tools/identity/historical_identity_policy.json"
+  ]
+}

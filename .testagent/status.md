@@ -2114,3 +2114,20 @@ future cohorts as complete.
   layers), Instance remains green, and the product source is restored byte-identically.
 - This remains a pre-Evidence-commit checkpoint. Identity/CHANGELIST fixed point, the direct Evidence
   child, architecture binding and any remote publication remain pending and are not self-approved.
+
+## Consumer request/response retirement — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `1e86d84b46a0b6ca2febd3dec4002f82e1a59e30`, tree
+  `85587426fd17b1fd3e30abc19dfebcb24ee99244`, binds `OBL-R0-CORE-D-0033` to the already stronger
+  native DI-harness request/response Fact instead of adding a duplicate test.
+- The fully replaced inherited `Consumer_Specs.cs` is removed; the non-empty legacy project root and
+  every unrelated inherited test remain. No empty directory remains below `tests` or `tests2`.
+- Focused execution and requirement projection are each 1/1; current complete UnitArchitecture is
+  2,415/2,415. The unchanged 21 CTRFs remain hash-bound in direct ancestor Evidence `d717536d`.
+  Locked Engineering restore and Release build pass with zero warnings/errors; CI tool tests pass
+  257/257 outside the restricted process sandbox and the verification model passes.
+- M01 removes endpoint attachment for the scoped consumer: the product still builds cleanly, the
+  Request endpoint has zero consumers and the exact native carrier turns red on request timeout.
+  The product source is then restored byte-identically.
+- This is explicitly a pre-Evidence-commit checkpoint. The direct Evidence child, final generated
+  CHANGELIST, architecture binding and any remote publication remain pending and are not self-approved.
