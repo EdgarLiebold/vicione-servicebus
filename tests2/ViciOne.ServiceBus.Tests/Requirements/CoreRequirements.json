@@ -3348,5 +3348,54 @@
       "testMethod" : "ExpiredTestBudget_DoesNotStopHarnessLifetimeInactivity",
       "testType" : "ViciOne.ServiceBus.Tests.Testing.TestHarnessTimeProviderTests",
       "variantKey" : "expired-budget-does-not-stop-inactivity"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-ERROR-TRANSPORT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SerializationFailure_MovesOneCompleteEnvelopeToTheErrorQueue",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryErrorTransportTests",
+      "variantKey" : "complete-envelope-moves-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-FAULT-PUBLICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FaultPublishingDisabled_RetriesAndMovesOnceWithoutPublishingAFault",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryErrorTransportTests",
+      "variantKey" : "disabled-retries-and-moves-without-fault"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUME-CONTEXT-PUBLISH",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerPublishesAllFourEventsExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryFaultPublicationTests",
+      "variantKey" : "four-distinct-events-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-STORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FaultStorm_PublishesExactlyOneFaultPerMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryFaultPublicationTests",
+      "variantKey" : "five-hundred-messages-produce-five-hundred-exact-faults"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-OVERLOADS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EveryPublishOverload_DeliversItsDeclaredMessageAndContextExactlyOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryPublishEndpointTests",
+      "variantKey" : "seven-declared-message-and-context-paths"
+   },
+   {
+      "requirementId" : "REQ-VSB-POLYMORPHIC-FAULT-DISPATCH",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "EverySupportedPolymorphicShape_PublishesTypedAndInterfaceFaults",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.PolymorphicFaultDispatchTests",
+      "variantKey" : "five-base-and-interface-shapes"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DerivedContextObtainedFromBaseContext_PublishesOneCompleteFault",
+      "testType" : "ViciOne.ServiceBus.Tests.Contexts.ConsumeContextEndpointExtensionsTests",
+      "variantKey" : "derived-context-from-base-context"
    }
 ]

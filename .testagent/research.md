@@ -2671,3 +2671,32 @@ The sixteen new methods produce eighteen materialized cases and raise the predec
 UnitArchitecture floor from 2,450 to 2,468. Product mutation seams are selected only after focused
 green execution; the broad build, UnitArchitecture, CI, Identity and Evidence cost is paid once for
 the complete thirty-four-obligation package.
+
+## Core fault and publication package 0144-0167, 0306-0310 and 0318-0324 research
+
+This larger cohort closes thirty-six frozen obligations as one in-memory fault/publication boundary
+and retires six complete inherited fixtures together. The mandatory repository-wide Roslyn pairing
+analyzer was built and executed once for this cohort; its output is a navigation heuristic only, and
+the frozen R0 anchor ledger plus bounded source inspection remain authoritative.
+
+Eleven obligations already have stronger executing native owners: fault diagnostic data, private
+property access/cache, exact class/interface fault metadata, derived-interface-to-base-fault
+publication and the retry terminal-fault count. They are mapped rather than copied. The remaining
+behavior needs compact real-transport owners: one complete error-move envelope, one four-event
+consumer publication flow, one bounded 500-message/32-concurrency fault storm, one terminal
+`PublishFaults=false` flow, one seven-overload publish matrix and one five-shape polymorphic-fault
+Theory.
+
+The error and disabled-fault carriers use the moved error message as their positive terminal barrier,
+then stop the bus before exact count assertions. The storm uses all 500 inherited messages and exact
+message identifiers; it is not weakened to a smaller sample. The event and overload matrices give
+every operation a unique value and assert terminal exact-once sets rather than merely awaiting one
+delivery. Polymorphic cases exercise both `Fault<T>` and `Fault<IMessageInterface>` through the real
+in-memory topology for every inherited base/interface shape.
+
+No type declared by the six inherited files is referenced outside its own file. Same-named transport
+fixtures live in other assemblies and are independent. `build/verification/expected/core.txt` is the
+frozen historical identity inventory and remains unchanged, as in earlier accepted retirements.
+Product mutations will target error movement, four-event fan-out, fault-count publication,
+`PublishFaults`, polymorphic fault topology and distinct publish overload dispatch. The full
+UnitArchitecture/build/identity/evidence cost is paid once after focused execution is green.

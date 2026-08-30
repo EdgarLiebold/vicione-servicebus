@@ -2286,3 +2286,26 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    independent one-cause mutations, restore every product byte, and freeze Technical, direct Evidence,
    status and architecture children. Remote publication remains separately authorized and never uses
    force-push.
+
+## Core fault and publication package execution plan
+
+1. Close exactly `OBL-R0-CORE-D-0144..0167`, `0306..0310` and `0318..0324` as one thirty-six-
+   obligation UnitArchitecture package. Reuse the eleven stronger native owners and do not create
+   renamed duplicates.
+2. Add one source-mirrored in-memory error-transport carrier that binds the move plus correlation,
+   source, destination, response and fault addresses after a positive error-endpoint delivery.
+3. Add one exact four-event consumer flow, one 500-message/32-concurrency fault-storm carrier and one
+   `PublishFaults=false` carrier whose moved-error terminal barrier makes the zero-fault assertion
+   deterministic.
+4. Add one five-row polymorphic-fault Theory and one seven-operation publish-overload matrix. Each
+   operation must carry an independent identity/metadata oracle and all final counts are asserted only
+   after transport stop/drain.
+5. Map all thirty-six obligations to exact executing methods, raise the UnitArchitecture floor only by
+   the actual new cases, then delete `ErrorQueue_Specs.cs`, `EventPublish_Specs.cs`,
+   `ExcessiveAsyncFault_Specs.cs`, `FaultPublish_Specs.cs`, `PolymorphicFault_Specs.cs` and
+   `PublishSubscribe_Specs.cs` atomically. Remove directories only when they are empty.
+6. Iterate with focused Release build/test commands only. Once green, run one locked Engineering
+   build, one complete UnitArchitecture profile, scoped format, CI tools, Identity and CHANGELIST.
+7. Bind a small independent mutation set for the real product seams, restore every source byte, then
+   freeze one Technical commit, one direct Evidence child and one architecture binding. Remote push
+   remains separately authorized and never uses force-push.
