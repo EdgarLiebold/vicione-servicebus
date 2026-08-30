@@ -2639,3 +2639,35 @@ registration, each job endpoint's outbox application, lifecycle semaphore owners
 stop/replace, and admission closure/reopen ordering. Mutations are selected only after focused green
 execution; the complete UnitArchitecture, Engineering, Identity and Evidence closure runs once for
 the entire package.
+
+## Core runtime scheduling, redelivery and lifecycle package 0111-0114, 0335-0345, 0426-0432 and 0453-0464 research
+
+This enlarged package contains thirty-four frozen obligations across nine complete inherited files.
+They form one runtime boundary: delayed redelivery and header projection, recurring-job scheduling,
+service-instance and pipeline construction, in-memory bus lifecycle, message activities and the
+test-harness lifetime clocks that bound every one of those asynchronous flows. The repository-wide
+Roslyn pairing scan was executed once for this package: 3,899 source files, 1,176 test files, 2,845
+unpaired and 1,054 paired. It is a navigation aid only; the frozen R0 identities remain authoritative.
+
+The native design materializes eighteen cases rather than copying thirty-four inherited methods.
+Delayed redelivery uses the transport-owned `IInMemoryDelayProvider` to cross the exact three
+configured deadlines and observes every scheduled send before advancing it. Message-id replacement,
+multiple exception-specific filters and outbound redelivery-header stripping remain separate
+mutation owners. Recurring-job execution uses positive submitted/completed/canceled consume barriers
+and explicit `RunRecurringJob` commands; a one-shot job advances the same provider-owned scheduler.
+The four cron shapes remain four data rows because each independently protects a public expression.
+
+Service-instance endpoint isolation, complete built-pipeline composition, restartable request routing
+and the entire send/receive/process activity tree each use one stronger end-to-end carrier. Those
+carriers assert the combined invariant only after the product-owned positive barrier or terminal
+stop, not through sleeps or quiet windows. The activity carrier binds exact source, operation kinds,
+parent chain, baggage and bounded tags in one process-wide-listener collection.
+
+Three new virtual-time harness cases close cancellation-scope isolation, explicit-cancel renewal and
+inactivity survival after an expired test budget. Existing accepted tests already prove expired-token
+replacement, live-deadline renewal and idempotent disposal more directly than the inherited NUnit
+fixture ordering, so those carriers are reused and the floor is not inflated for renamed duplicates.
+The sixteen new methods produce eighteen materialized cases and raise the predeclared
+UnitArchitecture floor from 2,450 to 2,468. Product mutation seams are selected only after focused
+green execution; the broad build, UnitArchitecture, CI, Identity and Evidence cost is paid once for
+the complete thirty-four-obligation package.

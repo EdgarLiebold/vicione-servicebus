@@ -3243,5 +3243,110 @@
       "testMethod" : "UnknownJobIdentity_ReturnsTheCompleteNotFoundState",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
       "variantKey" : "unknown-identity-is-explicitly-not-found"
+   },
+   {
+      "requirementId" : "REQ-VSB-DELAYED-REDELIVERY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConfiguredIntervals_AreScheduledAndDeliveredInTheExactProviderOwnedSequence",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Redelivery.DelayedRedeliveryIntegrationTests",
+      "variantKey" : "exact-provider-owned-interval-sequence"
+   },
+   {
+      "requirementId" : "REQ-VSB-DELAYED-REDELIVERY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ReplaceMessageId_GeneratesANewIdentityAndPreservesTheOriginalIdentity",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Redelivery.DelayedRedeliveryIntegrationTests",
+      "variantKey" : "replacement-id-preserves-original-id"
+   },
+   {
+      "requirementId" : "REQ-VSB-DELAYED-REDELIVERY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExceptionSpecificFilters_RedeliverOnlyThroughTheMatchingPolicyAndPublishOneTerminalFault",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Redelivery.DelayedRedeliveryIntegrationTests",
+      "variantKey" : "exception-specific-filters-coexist"
+   },
+   {
+      "requirementId" : "REQ-VSB-DELAYED-REDELIVERY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishFromARedeliveredConsumer_DoesNotForwardTheInboundRedeliveryHeader",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Redelivery.DelayedRedeliveryIntegrationTests",
+      "variantKey" : "outbound-message-excludes-inbound-redelivery-header"
+   },
+   {
+      "requirementId" : "REQ-VSB-RECURRING-JOB-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RecurringJob_CancelReAddAndManualRunPreserveItsIdentityAndContinuation",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "cancel-readd-and-manual-continuation"
+   },
+   {
+      "requirementId" : "REQ-VSB-RECURRING-JOB-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NamedRecurringJobs_KeepDistinctStableIdentitiesAcrossRunsUpdatesAndNoOpUpdates",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "named-identities-repeat-update-and-noop"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCHEDULED-JOB",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "OneShotJob_RunsAtTheProviderOwnedScheduledInstantAndThenCompletes",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "provider-timed-one-shot-execution"
+   },
+   {
+      "requirementId" : "REQ-VSB-RECURRING-JOB-SCHEDULE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Every_ProducesTheExactCronExpression",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests",
+      "variantKey" : "every-produces-exact-cron-expression"
+   },
+   {
+      "requirementId" : "REQ-VSB-SERVICE-INSTANCE-ENDPOINTS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ServiceInstances_AddDistinctInstanceEndpointsAndRetainTheSharedConsumerEndpoint",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.ServiceInstanceEndpointTests",
+      "variantKey" : "instance-isolation-with-shared-consumer-endpoint"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUILT-PIPELINE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StartedBusProbe_ContainsEveryConfiguredFilterComponentPersistenceAndLimit",
+      "testType" : "ViciOne.ServiceBus.Tests.Configuration.Configuration.BuiltPipelineConfigurationTests",
+      "variantKey" : "complete-configured-filter-and-component-shape"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StartRequestStopAndRestart_PreservesExactRequestRoutingAcrossBothRuns",
+      "testType" : "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryBusLifecycleTests",
+      "variantKey" : "start-request-stop-and-restart"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-ACTIVITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MessageFlow_EmitsOneCompleteTraceWithExactKindsParentsBaggageAndTags",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineActivityTests",
+      "variantKey" : "complete-send-receive-process-trace"
+   },
+   {
+      "requirementId" : "REQ-VSB-TEST-HARNESS-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Cancel_CancelsOnlyTasksOwnedByTheCurrentScope",
+      "testType" : "ViciOne.ServiceBus.Tests.Testing.TestHarnessTimeProviderTests",
+      "variantKey" : "cancel-is-confined-to-current-scope"
+   },
+   {
+      "requirementId" : "REQ-VSB-TEST-HARNESS-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "BeginTestScope_ReplacesAnExplicitlyCancelledBudget",
+      "testType" : "ViciOne.ServiceBus.Tests.Testing.TestHarnessTimeProviderTests",
+      "variantKey" : "scope-renews-explicitly-cancelled-budget"
+   },
+   {
+      "requirementId" : "REQ-VSB-TEST-HARNESS-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExpiredTestBudget_DoesNotStopHarnessLifetimeInactivity",
+      "testType" : "ViciOne.ServiceBus.Tests.Testing.TestHarnessTimeProviderTests",
+      "variantKey" : "expired-budget-does-not-stop-inactivity"
    }
 ]

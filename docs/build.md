@@ -55,7 +55,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2450 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2468 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \

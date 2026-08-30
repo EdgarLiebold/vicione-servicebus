@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -241,6 +242,169 @@ public sealed class InMemoryJobServiceTests
         Assert.Null(state.Reason);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-JOB-LIFECYCLE", "cancel-readd-and-manual-continuation")]
+    public async Task RecurringJob_CancelReAddAndManualRunPreserveItsIdentityAndContinuation()
+    {
+        var consumer = new CompletingJobConsumer();
+        await using JobServiceFixture fixture = await JobServiceFixture.Start(consumer);
+        string jobName = $"resumable-{NewId.NextGuid():N}";
+        DateTimeOffset start = fixture.Scheduler.UtcNow.AddDays(1).AddSeconds(1);
+
+        Guid initialJobId = await fixture.AddOrUpdateRecurring(
+            jobName,
+            new InMemoryJob("before-cancel"),
+            schedule =>
+            {
+                schedule.Start = start;
+                schedule.Every(hours: 1);
+            });
+        await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == initialJobId, 1);
+
+        await fixture.RunRecurring(jobName);
+        JobExecutionSnapshot first = await consumer.NextAttempt(fixture);
+        JobCompleted<InMemoryJob> firstCompleted = await fixture.Published<JobCompleted<InMemoryJob>>(
+            message => message.JobId == initialJobId && message.Job.Label == "before-cancel");
+        await fixture.ConsumedCount<JobCompleted>(message => message.JobId == initialJobId, 1);
+
+        Guid canceledJobId = await fixture.CancelRecurring(jobName, "operator-pause");
+        JobCanceled canceled = await fixture.Published<JobCanceled>(
+            message => message.JobId == initialJobId && message.Reason == "operator-pause");
+
+        Guid resumedJobId = await fixture.AddOrUpdateRecurring(
+            jobName,
+            new InMemoryJob("after-cancel"),
+            schedule =>
+            {
+                schedule.Start = start;
+                schedule.Every(hours: 1);
+            });
+        await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == initialJobId, 2);
+        await fixture.RunRecurring(jobName);
+        JobExecutionSnapshot second = await consumer.NextAttempt(fixture);
+        JobCompleted<InMemoryJob> secondCompleted = await fixture.Published<JobCompleted<InMemoryJob>>(
+            message => message.JobId == initialJobId && message.Job.Label == "after-cancel");
+
+        Assert.Equal(initialJobId, canceledJobId);
+        Assert.Equal(initialJobId, resumedJobId);
+        Assert.Equal(initialJobId, first.JobId);
+        Assert.Equal(initialJobId, second.JobId);
+        Assert.Equal(0, first.RetryAttempt);
+        Assert.Equal(0, second.RetryAttempt);
+        Assert.Equal("before-cancel", first.Label);
+        Assert.Equal("after-cancel", second.Label);
+        Assert.Equal("before-cancel", firstCompleted.Job.Label);
+        Assert.Equal("operator-pause", canceled.Reason);
+        Assert.Equal("after-cancel", secondCompleted.Job.Label);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-JOB-LIFECYCLE", "named-identities-repeat-update-and-noop")]
+    public async Task NamedRecurringJobs_KeepDistinctStableIdentitiesAcrossRunsUpdatesAndNoOpUpdates()
+    {
+        var consumer = new CompletingJobConsumer();
+        await using JobServiceFixture fixture = await JobServiceFixture.Start(consumer);
+        DateTimeOffset start = fixture.Scheduler.UtcNow.AddDays(1).AddSeconds(1);
+        (string Name, int Seconds)[] schedules =
+        [
+            ("one", 2),
+            ("two", 3),
+            ("three", 4),
+            ("four", 5),
+        ];
+        var jobIds = new Dictionary<string, Guid>(StringComparer.Ordinal);
+
+        foreach ((string name, int seconds) in schedules)
+        {
+            Guid jobId = await fixture.AddOrUpdateRecurring(
+                name,
+                new InMemoryJob(name),
+                schedule =>
+                {
+                    schedule.Start = start;
+                    schedule.Every(seconds: seconds);
+                });
+            jobIds.Add(name, jobId);
+            await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobId, 1);
+
+            JobState state = await fixture.GetState(jobId);
+            Assert.True(state.IsRecurring);
+            Assert.NotNull(state.NextStartDate);
+        }
+
+        Assert.Equal(schedules.Length, jobIds.Values.Distinct().Count());
+
+        await fixture.RunRecurring("one");
+        JobExecutionSnapshot first = await consumer.NextAttempt(fixture);
+        await fixture.PublishedCount<JobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 1);
+        await fixture.ConsumedCount<JobCompleted>(message => message.JobId == jobIds["one"], 1);
+
+        await fixture.RunRecurring("one");
+        JobExecutionSnapshot second = await consumer.NextAttempt(fixture);
+        await fixture.PublishedCount<JobCompleted<InMemoryJob>>(message => message.JobId == jobIds["one"], 2);
+        await fixture.ConsumedCount<JobCompleted>(message => message.JobId == jobIds["one"], 2);
+
+        JobState beforeUpdate = await fixture.GetState(jobIds["one"]);
+        Guid updatedJobId = await fixture.AddOrUpdateRecurring(
+            "one",
+            new InMemoryJob("one-updated"),
+            schedule =>
+            {
+                schedule.Start = start;
+                schedule.Every(seconds: 10);
+            });
+        await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobIds["one"], 2);
+        JobState afterUpdate = await fixture.GetState(jobIds["one"]);
+
+        Guid unchangedJobId = await fixture.AddOrUpdateRecurring(
+            "one",
+            new InMemoryJob("one-noop"),
+            schedule =>
+            {
+                schedule.Start = start;
+                schedule.Every(seconds: 10);
+            });
+        await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobIds["one"], 3);
+        JobState afterNoOp = await fixture.GetState(jobIds["one"]);
+
+        Assert.Equal(jobIds["one"], first.JobId);
+        Assert.Equal(jobIds["one"], second.JobId);
+        Assert.Equal(0, first.RetryAttempt);
+        Assert.Equal(0, second.RetryAttempt);
+        Assert.Equal(jobIds["one"], updatedJobId);
+        Assert.Equal(jobIds["one"], unchangedJobId);
+        Assert.NotEqual(beforeUpdate.NextStartDate, afterUpdate.NextStartDate);
+        Assert.Equal(afterUpdate.NextStartDate, afterNoOp.NextStartDate);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULED-JOB", "provider-timed-one-shot-execution")]
+    public async Task OneShotJob_RunsAtTheProviderOwnedScheduledInstantAndThenCompletes()
+    {
+        var consumer = new CompletingJobConsumer();
+        await using JobServiceFixture fixture = await JobServiceFixture.Start(consumer);
+        DateTimeOffset scheduledTime = fixture.Scheduler.UtcNow.AddHours(1);
+
+        Guid jobId = await fixture.Schedule(scheduledTime, new InMemoryJob("one-shot"));
+        await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobId, 1);
+        JobState scheduled = await fixture.GetState(jobId);
+
+        fixture.Scheduler.Advance(TimeSpan.FromHours(1));
+
+        JobExecutionSnapshot execution = await consumer.NextAttempt(fixture);
+        JobCompleted<InMemoryJob> completed = await fixture.Published<JobCompleted<InMemoryJob>>(
+            message => message.JobId == jobId);
+        await fixture.ConsumedCount<JobCompleted>(message => message.JobId == jobId, 1);
+        JobState terminal = await fixture.GetState(jobId);
+
+        Assert.False(scheduled.IsRecurring);
+        Assert.Equal("WaitingForSlot", scheduled.CurrentState);
+        Assert.Equal(jobId, execution.JobId);
+        Assert.Equal("one-shot", completed.Job.Label);
+        Assert.Equal("Completed", terminal.CurrentState);
+        Assert.NotNull(terminal.Completed);
+    }
+
     public sealed record InMemoryJob(string Label);
 
     private sealed class CompletingJobConsumer : IJobConsumer<InMemoryJob>
@@ -326,6 +490,7 @@ public sealed class InMemoryJobServiceTests
 
         public CancellationToken CancellationToken => TestContext.Current.CancellationToken;
         public ITestHarness Harness { get; }
+        public IInMemoryDelayProvider Scheduler => _provider.GetRequiredService<IInMemoryDelayProvider>();
         public TimeSpan OperationTimeout => TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
             .OperationTimeout!.Value;
@@ -400,6 +565,31 @@ public sealed class InMemoryJobServiceTests
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
 
+        public Task<Guid> AddOrUpdateRecurring(
+            string jobName,
+            InMemoryJob job,
+            Action<IRecurringJobScheduleConfigurator> configure)
+        {
+            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.GetRequestClient<SubmitJob<InMemoryJob>>();
+            return client.AddOrUpdateRecurringJob(jobName, job, configure, CancellationToken)
+                .WaitAsync(OperationTimeout, CancellationToken);
+        }
+
+        public Task<Guid> Schedule(DateTimeOffset start, InMemoryJob job)
+        {
+            IRequestClient<SubmitJob<InMemoryJob>> client = Harness.GetRequestClient<SubmitJob<InMemoryJob>>();
+            return client.ScheduleJob(start, job, CancellationToken)
+                .WaitAsync(OperationTimeout, CancellationToken);
+        }
+
+        public Task<Guid> CancelRecurring(string jobName, string reason) =>
+            Harness.Bus.CancelRecurringJob<InMemoryJob>(jobName, reason, CancellationToken)
+                .WaitAsync(OperationTimeout, CancellationToken);
+
+        public Task RunRecurring(string jobName) =>
+            Harness.Bus.RunRecurringJob<InMemoryJob>(jobName)
+                .WaitAsync(OperationTimeout, CancellationToken);
+
         public async Task<TMessage> Published<TMessage>(Func<TMessage, bool> predicate)
             where TMessage : class
         {
@@ -418,6 +608,28 @@ public sealed class InMemoryJobServiceTests
                 .First()
                 .WaitAsync(OperationTimeout, CancellationToken);
             return sent.Context.Message;
+        }
+
+        public async Task ConsumedCount<TMessage>(Func<TMessage, bool> predicate, int expectedCount)
+            where TMessage : class
+        {
+            int count = await Harness.Consumed
+                .SelectAsync<TMessage>(message => predicate(message.Context.Message), CancellationToken)
+                .Take(expectedCount)
+                .Count()
+                .WaitAsync(OperationTimeout, CancellationToken);
+            Assert.Equal(expectedCount, count);
+        }
+
+        public async Task PublishedCount<TMessage>(Func<TMessage, bool> predicate, int expectedCount)
+            where TMessage : class
+        {
+            int count = await Harness.Published
+                .SelectAsync<TMessage>(message => predicate(message.Context.Message), CancellationToken)
+                .Take(expectedCount)
+                .Count()
+                .WaitAsync(OperationTimeout, CancellationToken);
+            Assert.Equal(expectedCount, count);
         }
 
         public Task<JobState> GetState(Guid jobId)

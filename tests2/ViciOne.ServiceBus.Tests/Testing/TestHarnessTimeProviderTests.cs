@@ -140,4 +140,91 @@ public sealed class TestHarnessTimeProviderTests
         timeProvider.Advance(TimeSpan.FromSeconds(30));
         Assert.True(continued.IsCancellationRequested);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "cancel-is-confined-to-current-scope")]
+    public async Task Cancel_CancelsOnlyTasksOwnedByTheCurrentScope()
+    {
+        var timeProvider = new FakeTimeProvider(StartTime);
+        using var harness = new InMemoryTestHarness(timeProvider)
+        {
+            TestTimeout = TimeSpan.FromMinutes(1),
+        };
+
+        harness.BeginTestScope();
+        CancellationToken currentToken = harness.TestCancellationToken;
+        TaskCompletionSource<int> currentTask = harness.GetTask<int>();
+
+        harness.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await currentTask.Task);
+        Assert.True(currentToken.IsCancellationRequested);
+
+        harness.BeginTestScope();
+        CancellationToken nextToken = harness.TestCancellationToken;
+        TaskCompletionSource<int> nextTask = harness.GetTask<int>();
+
+        Assert.False(nextToken.IsCancellationRequested);
+        Assert.NotEqual(currentToken, nextToken);
+        Assert.True(nextTask.TrySetResult(42));
+        Assert.Equal(42, await nextTask.Task);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "scope-renews-explicitly-cancelled-budget")]
+    public void BeginTestScope_ReplacesAnExplicitlyCancelledBudget()
+    {
+        var timeProvider = new FakeTimeProvider(StartTime);
+        using var harness = new InMemoryTestHarness(timeProvider)
+        {
+            TestTimeout = TimeSpan.FromMinutes(1),
+        };
+
+        harness.BeginTestScope();
+        CancellationToken canceled = harness.TestCancellationToken;
+        harness.Cancel();
+        Assert.True(canceled.IsCancellationRequested);
+
+        harness.BeginTestScope();
+        CancellationToken renewed = harness.TestCancellationToken;
+
+        Assert.False(renewed.IsCancellationRequested);
+        Assert.NotEqual(canceled, renewed);
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+        Assert.True(renewed.IsCancellationRequested);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "expired-budget-does-not-stop-inactivity")]
+    public async Task ExpiredTestBudget_DoesNotStopHarnessLifetimeInactivity()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        using var harness = new InMemoryTestHarness(timeProvider)
+        {
+            TestTimeout = TimeSpan.FromMinutes(1),
+            TestInactivityTimeout = TimeSpan.FromMinutes(2),
+        };
+
+        harness.BeginTestScope();
+        CancellationToken firstBudget = harness.TestCancellationToken;
+        Task inactivity = harness.InactivityTask;
+        await timeProvider.WaitForTimerCount(2);
+
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+
+        Assert.True(firstBudget.IsCancellationRequested);
+        Assert.False(inactivity.IsCompleted);
+
+        harness.BeginTestScope();
+        CancellationToken secondBudget = harness.TestCancellationToken;
+        timeProvider.Advance(TimeSpan.FromSeconds(30));
+
+        Assert.False(secondBudget.IsCancellationRequested);
+        Assert.False(inactivity.IsCompleted);
+
+        timeProvider.Advance(TimeSpan.FromSeconds(30));
+        await inactivity;
+
+        Assert.True(harness.InactivityToken.IsCancellationRequested);
+    }
 }

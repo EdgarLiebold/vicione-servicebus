@@ -2260,3 +2260,29 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    CI-tool, identity and CHANGELIST closure. Bind independent one-cause mutations, restore every
    product byte exactly, then freeze Technical, direct Evidence, status and architecture children.
    Remote publication remains separately authorized and never uses force-push.
+
+## Core runtime scheduling, redelivery and lifecycle package execution plan
+
+1. Close the exact thirty-four-obligation set `OBL-R0-CORE-D-0111..0114`, `0335..0345`,
+   `0426..0432` and `0453..0464` as one UnitArchitecture package. Do not absorb unrelated gaps merely
+   because their numeric identifiers are adjacent.
+2. Add virtual-time delayed-redelivery owners for the exact interval sequence, message-id replacement,
+   exception-specific filter coexistence and outbound header isolation. Every scheduled transition
+   must be observed before advancing `IInMemoryDelayProvider`; no wall-clock wait owns a verdict.
+3. Add deterministic recurring-job carriers for cancel/re-add/manual continuation, distinct and stable
+   named identities across changed and unchanged schedules, and provider-timed one-shot execution.
+   Retain four independent cron-expression data rows.
+4. Add one complete carrier each for service-instance endpoint topology, built pipeline composition,
+   start/stop/restart request routing and message activity propagation. Bind all inherited assertions
+   after a positive product barrier and consolidate only where one flow observes the entire invariant.
+5. Strengthen `TestHarnessTimeProviderTests` with current-scope cancellation isolation, explicit-cancel
+   renewal and harness-lifetime inactivity after budget expiry. Reuse its existing expired-budget,
+   rolling-deadline and idempotent-dispose Facts for the remaining inherited identities.
+6. Raise the independent UnitArchitecture floor by exactly eighteen materialized cases, from 2,450 to
+   2,468. Add a machine-readable 34-row terminal map and passive Core requirement rows, then delete all
+   nine fully replaced inherited files and remove directories only if they are actually empty.
+7. Execute focused tests while implementing, then one locked Engineering build, complete
+   UnitArchitecture profile, CI tools, Identity and CHANGELIST closure for the whole package. Bind
+   independent one-cause mutations, restore every product byte, and freeze Technical, direct Evidence,
+   status and architecture children. Remote publication remains separately authorized and never uses
+   force-push.
