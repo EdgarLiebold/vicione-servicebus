@@ -1,0 +1,6 @@
+obligationId	disposition	profile	targetProject	targetMethod
+OBL-R0-CORE-C-0450	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	MessageFabricTests.AcyclicBindingGraph_ConnectsEveryDeclaredDestination
+OBL-R0-CORE-C-0451	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	MessageFabricTests.CyclicBinding_IsRejectedWithoutChangingTheGraph
+OBL-R0-CORE-C-0452	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	MessageTopicExchangeTests.HashPattern_DeliversTheRoutedMessage
+OBL-R0-CORE-C-0453	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	MessageTopicExchangeTests.SingleSegmentWildcard_DeliversOnlyTheMatchingRoute
+OBL-R0-CORE-C-0454	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	MessageTopicExchangeTests.ThreeSegmentWildcard_DeliversOnlyTheMatchingRoute

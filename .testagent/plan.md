@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2403 predeclared unfiltered cases;
+- `UnitArchitecture`: 2408 predeclared unfiltered cases;
 - `LocalIntegration`: 375 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -2103,3 +2103,21 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    one-cause mutation checks for send/publish isolation, Replace identity and class-specification
    application, then freeze separate Technical and Evidence commits. Remote publication remains a
    separately authorized action.
+
+## Message-fabric and topic-routing native closure execution plan
+
+1. Bind `OBL-R0-CORE-C-0450..0454` one-to-one to five source-mirrored xUnit 4/MTP v2 Facts in
+   `ViciOne.ServiceBus.Tests.Transports.Fabric`.
+2. Prove the complete acyclic exchange-to-exchange and exchange-to-queue graph by exact object
+   identity, and prove that a rejected cycle leaves every previously valid edge intact and adds no
+   partial destination edge.
+3. Exercise topic routing directly through the product exchange with deterministic in-process
+   delivery contexts. Bind `#`, `car.*` and `car.*.large` independently and assert the exact routed
+   message set without sleeps, wall-clock windows, brokers or absence-only completion oracles.
+4. Raise the independent UnitArchitecture floor by exactly five materialized cases, from 2,403 to
+   2,408. LocalIntegration remains 375 because the fabric and topic node are hermetic.
+5. Delete the two inherited Transports C# files only after the five native cases and passive
+   requirement projection are green, then remove the now-empty `tests/.../Transports` directory.
+6. Run focused, complete UnitArchitecture and Engineering Release checks, then perform one-cause
+   mutation checks for cycle validation, hash routing and both wildcard branches. Freeze separate
+   Technical and Evidence commits; remote publication remains separately authorized.

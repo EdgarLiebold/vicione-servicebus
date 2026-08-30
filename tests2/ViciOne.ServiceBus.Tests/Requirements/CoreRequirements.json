@@ -2998,5 +2998,40 @@
       "testMethod" : "ClassBasedTransform_ChangesEveryConfiguredProperty",
       "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
       "variantKey" : "class-based-specification"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "AcyclicBindingGraph_ConnectsEveryDeclaredDestination",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests",
+      "variantKey" : "acyclic-exchange-and-queue-graph"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CyclicBinding_IsRejectedWithoutChangingTheGraph",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests",
+      "variantKey" : "cycle-rejected-without-partial-edge"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HashPattern_DeliversTheRoutedMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
+      "variantKey" : "hash-pattern"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SingleSegmentWildcard_DeliversOnlyTheMatchingRoute",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
+      "variantKey" : "single-segment-wildcard"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThreeSegmentWildcard_DeliversOnlyTheMatchingRoute",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
+      "variantKey" : "three-segment-wildcard"
    }
 ]
