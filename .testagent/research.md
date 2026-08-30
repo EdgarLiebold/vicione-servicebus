@@ -2487,3 +2487,15 @@ Unit/Local profiles remain green, and the 37 inherited C# files plus csproj/comp
 deleted together. If a provider fixture is genuinely unavailable, the technical tree is restored to
 the last coherent phase before switching to another planned cohort; no partial retirement is
 reported as completion.
+
+## Consumer-factory middleware retirement research
+
+The one inherited obligation in `ConsumerFactoryMiddleware_Specs.cs` does not require another native
+test. The existing `ConsumerMessageConfigurationTests` theory executes both consumer-factory and
+instance registration. Its ConsumerFactory case directly proves the consumer-level pipe layer,
+message layer, consumer-message layer and consumer invocation occur once, in order, with the exact
+message and consumer instance. This is strictly stronger than the inherited request succeeding only
+because its filter added a payload. The remaining closure work is therefore an explicit one-row
+terminal map, deletion of the fully replaced NUnit file, focused re-execution and a product mutation
+that removes `ConsumerConfigurator.AddPipeSpecification` forwarding. No test-count or floor increase
+is truthful for this retirement-only cohort.

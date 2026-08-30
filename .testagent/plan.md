@@ -2138,3 +2138,16 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 6. Run focused, complete UnitArchitecture and Engineering Release checks, then bind one-cause
    mutations for correlation-selector application and serializer selection. Freeze separate Technical
    and Evidence commits; remote publication remains separately authorized.
+
+## Consumer-factory middleware retirement execution plan
+
+1. Bind `OBL-R0-CORE-D-0032` to the already executing xUnit 4/MTP v2 ConsumerFactory theory case in
+   `ConsumerMessageConfigurationTests`; do not add a redundant Fact or raise the test floor.
+2. Require the stronger native carrier to prove the consumer-level pipe executes exactly once with
+   the exact consumer instance and message, alongside the message and consumer-message layers.
+3. Delete `tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs` only after the focused
+   ConsumerFactory case and passive requirement projection remain green. The legacy project root is
+   retained because it contains unrelated inherited files; remove no unrelated path.
+4. Run the focused carrier, complete UnitArchitecture and Engineering Release checks, and bind one
+   exact product mutation that omits consumer-level pipe-specification registration. Freeze separate
+   Technical and Evidence commits. Remote publication remains separately authorized.
