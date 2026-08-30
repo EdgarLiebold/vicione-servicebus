@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4292 |
+| Added | 4300 |
 | Modified | 4184 |
 | Deleted | 1464 |
 | Renamed | 2 |
@@ -2218,6 +2218,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0182-0199/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/TECHNICAL.patch.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/TECHNICAL_SCOPE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/VALIDATION.md` | Added |  |
@@ -2229,7 +2230,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M06-build.binlog` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/format-scoped.binlog` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/postrestore-build.binlog` | Added |  |
-| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/unit-architecture-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/unit-architecture.binlog` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/unit-build.binlog` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M01.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M02.json` | Added |  |
@@ -2259,6 +2260,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_19_00.619197.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_19_02.083002.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/positive.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/raw/postrestore-build.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_MANIFEST.md` | Added |  |

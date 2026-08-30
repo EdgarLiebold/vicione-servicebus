@@ -14,7 +14,7 @@
   "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0 },
   "verificationModel": { "status": "PASS" },
   "changeListAtTechnicalFreeze": { "status": "PASS", "entries": 9898 },
-  "changeListAtEvidenceFreeze": { "status": "PASS", "entries": 9942 },
+  "changeListAtEvidenceFreeze": { "status": "PASS", "entries": 9950 },
   "retirement": { "trackedLegacyFilesRemoved": 5, "legacyLinesDeleted": 1697, "technicalLinesAdded": 1604, "technicalLinesDeleted": 1709, "technicalNetLines": -105, "emptyLegacyTestDirectories": 0 },
   "mutations": { "count": 6, "built": 6, "killed": 6, "restored": 6 },
   "remotePushPerformed": false

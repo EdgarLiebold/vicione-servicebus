@@ -2194,3 +2194,25 @@ future cohorts as complete.
 - Generated CHANGELIST closes at 9,897 entries; no empty legacy test directory remains. No remote
   push was performed. Independent read-only acceptance, architecture binding and any future remote
   publication remain pending and are not self-approved here.
+
+## Core Job Service obligations 0201–0227 — large-package local Evidence freeze (2026-08-30)
+
+- Technical `b2aa104c3bea11d0ff33df16271a97bf31073fc0`, tree
+  `7a5dce633444615cbd412b712974bf62b33bc406`, closes all 27 consecutive Job Service obligations
+  `OBL-R0-CORE-D-0201..0227` with 18 source-mirrored xUnit methods and 28 executable cases.
+- Five fully replaced inherited files and 1,697 legacy test lines are removed atomically. The complete
+  Technical delta adds 1,604 lines and deletes 1,709, so this package reduces the repository by 105
+  lines while increasing the executable UnitArchitecture floor from 2,422 to 2,450.
+- Direct Evidence child `848ae1ba1cbeb88af05dede4b63c491364e41d93`, tree
+  `412648c7b5ba0f87998704ced0c95cce5bc18715`, binds 50/50 nonmanifest SHA-256 entries,
+  the byte-exact Technical patch, 21 complete-profile CTRFs and six independent mutation CTRFs.
+- Focused Job Service execution is 28/28. Complete UnitArchitecture is 2,455/2,455 with zero failed,
+  skipped, pending or other cases; full and post-restore Release builds have zero warnings/errors;
+  scoped format verification is green.
+- M01–M06 independently bind stale-attempt generation, registration-context outbox, heartbeat drain,
+  admission closure, retry generation and containerless outbox. Every mutant builds, its intended
+  carrier turns red, and all product-source hashes are restored exactly.
+- Verification Model, 257/257 CI self-tests, 148/148 identity self-tests and the generated 9,950-entry
+  CHANGELIST are green. No empty legacy test directory remains and no cloud fixture was required.
+- No remote push was performed. Independent read-only acceptance, architecture binding and any future
+  remote publication remain pending and are not self-approved by this local freeze.
