@@ -1,0 +1,79 @@
+20:40:52.106-I Configured endpoint FailingOutboxBatch, Consumer: ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+FailingOutboxBatchConsumer
+20:40:52.242-D Starting bus instances: IBus
+20:40:52.245-D Starting bus: loopback://localhost/
+20:40:52.275-D Endpoint Ready: loopback://localhost/FailingOutboxBatch
+20:40:52.275-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9zcoyydppokgdjrgbdxopttz81
+20:40:52.279-I Bus started: loopback://localhost/
+20:40:52.300-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem
+20:40:52.384-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem fdd90000-6d6c-1461-6fa8-08df06c63805 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem
+20:40:52.386-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem fdd90000-6d6c-1461-7e24-08df06c63811 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem
+20:40:52.455-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchResult
+20:40:52.463-D Stopping bus instances: IBus
+20:40:52.466-D Stopping bus: loopback://localhost/
+20:40:52.471-D Endpoint Stopping: loopback://localhost/FailingOutboxBatch
+20:40:52.471-D Consumer Stopping: loopback://localhost/FailingOutboxBatch (Stop Receive Transport)
+20:40:52.491-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchResult fdd90000-6d6c-1461-c8b4-08df06c6381d ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchResult
+20:40:52.492-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchResult fdd90000-6d6c-1461-a682-08df06c63821 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchResult
+20:40:52.542-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem]]
+20:40:52.563-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem]] fdd90000-6d6c-1461-8384-08df06c63829 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem>
+20:40:52.563-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+BatchItem]] fdd90000-6d6c-1461-6386-08df06c63829 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem>
+20:40:52.566-E R-FAULT loopback://localhost/FailingOutboxBatch fdd90000-6d6c-1461-6fa8-08df06c63805 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem>(00:00:00.0897829)
+
+ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchFailureException: The batch and its buffered publications must fail together.
+   at ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailingOutboxBatchConsumer.Consume(ConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:line 619
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+20:40:52.566-E R-FAULT loopback://localhost/FailingOutboxBatch fdd90000-6d6c-1461-7e24-08df06c63811 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchItem>(00:00:00.0685032)
+
+ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchFailureException: The batch and its buffered publications must fail together.
+   at ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailingOutboxBatchConsumer.Consume(ConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:line 619
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+20:40:52.581-D Endpoint Completed: loopback://localhost/FailingOutboxBatch
+20:40:52.585-D Consumer Completed: loopback://localhost/FailingOutboxBatch: 2 received, 2 concurrent
+20:40:52.587-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9zcoyydppokgdjrgbdxopttz81
+20:40:52.587-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9zcoyydppokgdjrgbdxopttz81 (Stop Receive Transport)
+20:40:52.587-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9zcoyydppokgdjrgbdxopttz81
+20:40:52.587-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9zcoyydppokgdjrgbdxopttz81: 0 received, 0 concurrent
+20:40:52.595-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutbox (758ms)
+  Assert.Empty() Failure: Collection was not empty
+  Collection: [PublishedMessage`1 { ElapsedTime = 00:00:00.0252870, ElementId = fdd90000-6d6c-1461-c8b4-08df06c6381d, Exception = null, MessageType = typeof(ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchResult), ShortTypeName = "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchD"···, ··· }, PublishedMessage`1 { ElapsedTime = 00:00:00.0001740, ElementId = fdd90000-6d6c-1461-a682-08df06c63821, Exception = null, MessageType = typeof(ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+BatchResult), ShortTypeName = "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchD"···, ··· }]
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutbox() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:202
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutbox() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:207
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutbox() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:207
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M04.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 441ms

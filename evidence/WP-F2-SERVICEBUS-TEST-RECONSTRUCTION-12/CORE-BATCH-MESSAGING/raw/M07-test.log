@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Mediator.MediatorDispatchTests.PublishWithoutConsumer_UsesTheMandatoryBoundary(mandatory: True) (192ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(ViciOne.ServiceBus.MessageNotConsumedException)
+    um ViciOne.ServiceBus.Tests.Mediator.MediatorDispatchTests.PublishWithoutConsumer_UsesTheMandatoryBoundary(Boolean mandatory) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs:158
+    um ViciOne.ServiceBus.Tests.Mediator.MediatorDispatchTests.PublishWithoutConsumer_UsesTheMandatoryBoundary(Boolean mandatory) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs:165
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M07.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 1
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 864ms

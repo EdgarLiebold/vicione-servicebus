@@ -1,0 +1,93 @@
+20:38:53.292-I Configured endpoint StringGroup, Consumer: ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+StringGroupConsumer
+20:38:53.429-D Starting bus instances: IBus
+20:38:53.432-D Starting bus: loopback://localhost/
+20:38:53.463-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgnhf6bdxoptxtbb
+20:38:53.463-D Endpoint Ready: loopback://localhost/StringGroup
+20:38:53.466-I Bus started: loopback://localhost/
+20:38:53.488-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.572-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-1e76-08df06c5f134 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.574-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-4c78-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.575-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-5830-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.575-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-5a60-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.575-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-5dda-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.575-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-601e-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:38:53.676-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupBatchResult
+20:38:53.699-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupBatchResult 88d80000-6d6c-1461-18e2-08df06c5f150 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupBatchResult
+20:38:53.703-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-601e-08df06c5f140 ViciOne.ServiceBus.Batch<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem> ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+StringGroupConsumer(00:00:00.0395177)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-5dda-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0931739)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-1e76-08df06c5f134 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.1135719)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-5830-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0937109)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-5a60-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0937176)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-4c78-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0940944)
+20:38:53.707-D RECEIVE loopback://localhost/StringGroup 88d80000-6d6c-1461-601e-08df06c5f140 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0930410)
+wird ausgeführt... 0 abgeschlossen, 0 fehlgeschlagen | aktiv: ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.StringGrouping_ProducesBatchesOfOneTwoAndThreeIncludingNull
+20:39:23.592-D Stopping bus instances: IBus
+20:39:23.594-D Stopping bus: loopback://localhost/
+20:39:23.599-D Endpoint Stopping: loopback://localhost/StringGroup
+20:39:23.600-D Consumer Stopping: loopback://localhost/StringGroup (Stop Receive Transport)
+20:39:23.604-D Endpoint Completed: loopback://localhost/StringGroup
+20:39:23.608-D Consumer Completed: loopback://localhost/StringGroup: 6 received, 6 concurrent
+20:39:23.610-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgnhf6bdxoptxtbb
+20:39:23.610-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgnhf6bdxoptxtbb (Stop Receive Transport)
+20:39:23.610-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgnhf6bdxoptxtbb
+20:39:23.610-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgnhf6bdxoptxtbb: 0 received, 0 concurrent
+20:39:23.617-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.StringGrouping_ProducesBatchesOfOneTwoAndThreeIncludingNull (30s 588ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 3
+  Actual:   1
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:476
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:498
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:498
+    --- End of stack trace from previous location ---
+20:39:23.665-I Configured endpoint GuidGroup, Consumer: ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GuidGroupConsumer
+20:39:23.668-D Starting bus instances: IBus
+20:39:23.668-D Starting bus: loopback://localhost/
+20:39:23.669-D Endpoint Ready: loopback://localhost/GuidGroup
+20:39:23.669-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgdigobdxoptodbx
+20:39:23.669-I Bus started: loopback://localhost/
+20:39:23.669-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.669-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-65ee-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.669-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-7048-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.669-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-7336-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.669-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-7606-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.669-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-78d6-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.670-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupedItem 88d80000-6d6c-1461-7b7e-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem
+20:39:23.723-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupBatchResult
+20:39:23.723-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Consumers.Batching:BatchDeliveryIntegrationTests+GroupBatchResult 88d80000-6d6c-1461-9ca0-08df06c60338 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupBatchResult
+20:39:23.723-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-7b7e-08df06c60330 ViciOne.ServiceBus.Batch<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem> ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GuidGroupConsumer(00:00:00.0019448)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-7b7e-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0522518)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-65ee-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0545006)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-7336-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0527491)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-7048-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0529738)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-7606-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0525645)
+20:39:23.724-D RECEIVE loopback://localhost/GuidGroup 88d80000-6d6c-1461-78d6-08df06c60330 ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests+GroupedItem>(00:00:00.0524254)
+20:39:53.671-D Stopping bus instances: IBus
+20:39:53.671-D Stopping bus: loopback://localhost/
+20:39:53.671-D Endpoint Stopping: loopback://localhost/GuidGroup
+20:39:53.671-D Consumer Stopping: loopback://localhost/GuidGroup (Stop Receive Transport)
+20:39:53.671-D Endpoint Completed: loopback://localhost/GuidGroup
+20:39:53.671-D Consumer Completed: loopback://localhost/GuidGroup: 6 received, 6 concurrent
+20:39:53.671-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgdigobdxoptodbx
+20:39:53.671-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgdigobdxoptodbx (Stop Receive Transport)
+20:39:53.671-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgdigobdxoptodbx
+20:39:53.671-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_tdcyyydppokgdigobdxoptodbx: 0 received, 0 concurrent
+20:39:53.672-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.GuidGrouping_ProducesBatchesOfOneTwoAndThree (30s 015ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 3
+  Actual:   1
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:476
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:498
+    um ViciOne.ServiceBus.Tests.Consumers.Batching.BatchDeliveryIntegrationTests.RunGrouping(GroupKeyMode mode) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs:498
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M02.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1m 01s 345ms

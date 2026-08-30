@@ -1,0 +1,24 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.ConsumerConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased (437ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.ConsumerConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs:47
+    um ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.ConsumerConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs:64
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.SagaConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased (100ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 2
+  Actual:   3
+    um ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.SagaConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs:114
+    um ViciOne.ServiceBus.Tests.Consumers.ConsumerAndSagaConcurrencyTests.SagaConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs:123
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M03.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 223ms

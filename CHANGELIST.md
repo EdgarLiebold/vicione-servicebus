@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4417 |
-| Modified | 4172 |
-| Deleted | 1476 |
+| Added | 4493 |
+| Modified | 4162 |
+| Deleted | 1486 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -30,6 +30,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-batch-messaging-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-fault-publication-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
@@ -1984,6 +1985,75 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M12-open-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M13-probe-in-progress-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M14-concurrency-test-setup.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/format-scoped.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/unit-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/binlogs/unit-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/focused/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_26_52.903562.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_26_54.609855.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_03.788696.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_23.113794.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_41.565221.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_43.058350.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_45.942099.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_47.658947.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_53.321442.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_55.202958.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_27_56.817694.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_29.591979.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_48.290585.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_51.450014.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_53.029516.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_57.646427.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_29_59.590686.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_30_01.335899.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_30_03.428266.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_30_05.122595.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_18_30_06.723929.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/positive/postrestore/postrestore.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M06-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M07-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/M08-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-BATCH-MESSAGING/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/SHA256SUMS` | Added |  |
@@ -8673,10 +8743,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` | Deleted | `tests/MassTransit.Tests/Audit/Audit_Specs.cs` |
 | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` | Deleted | `tests/MassTransit.Tests/Audit/InMemoryAuditStore.cs` |
 | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/BadConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/Batch_Specs.cs` | Deleted | `tests/MassTransit.Tests/Batch_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/Cache_Specs.cs` |
 | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` | Deleted | `tests/MassTransit.Tests/Caching/LegacyCacheUpgrade_Specs.cs` |
 | `tests/MassTransit.Tests/Cancellation_Specs.cs` | Deleted | `tests/MassTransit.Tests/Cancellation_Specs.cs` |
 | `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/CircuitBreaker_Specs.cs` |
+| `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
 | `tests/MassTransit.Tests/Configuration/ConfigurationObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/ConfigurationObserver_Specs.cs` |
 | `tests/MassTransit.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/DefaultEndpointNameFormatter_Specs.cs` |
 | `tests/MassTransit.Tests/Configuration/InstanceSubscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/Configuration/InstanceSubscription_Specs.cs` |
@@ -8689,6 +8761,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/Consumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Consumer_Specs.cs` |
 | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` |
@@ -8706,6 +8779,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` | Deleted | `tests/MassTransit.Tests/Encryption/EncryptedFallbackDeserializerTests.cs` |
 | `tests/MassTransit.Tests/Encryption/TestMessage.cs` | Deleted | `tests/MassTransit.Tests/Encryption/TestMessage.cs` |
 | `tests/MassTransit.Tests/EndpointName_Specs.cs` | Deleted | `tests/MassTransit.Tests/EndpointName_Specs.cs` |
+| `tests/MassTransit.Tests/Enrichment_Specs.cs` | Deleted | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` | Deleted | `tests/MassTransit.Tests/ErrorQueue_Specs.cs` |
 | `tests/MassTransit.Tests/EventPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/EventPublish_Specs.cs` |
 | `tests/MassTransit.Tests/ExceptionInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/ExceptionInfo_Specs.cs` |
@@ -8739,6 +8813,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
 | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
 | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
+| `tests/MassTransit.Tests/Mediator_Specs.cs` | Deleted | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/MassTransit.Tests/MessageContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
 | `tests/MassTransit.Tests/MessageFlow_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageFlow_Specs.cs` |
 | `tests/MassTransit.Tests/MessageType_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageType_Specs.cs` |
@@ -8785,6 +8860,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Middleware/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Retry_Specs.cs` |
 | `tests/MassTransit.Tests/MinimalBody_Specs.cs` | Deleted | `tests/MassTransit.Tests/MinimalBody_Specs.cs` |
 | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` |
+| `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` |
 | `tests/MassTransit.Tests/Observer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Observer_Specs.cs` |
 | `tests/MassTransit.Tests/Outbox_Specs.cs` | Deleted | `tests/MassTransit.Tests/Outbox_Specs.cs` |
 | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` |
@@ -8805,6 +8881,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/PublishHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishHeader_Specs.cs` |
 | `tests/MassTransit.Tests/PublishObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishObserver_Specs.cs` |
 | `tests/MassTransit.Tests/PublishSubscribe_Specs.cs` | Deleted | `tests/MassTransit.Tests/PublishSubscribe_Specs.cs` |
+| `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` |
 | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReceiveObserver_Specs.cs` |
 | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` |
 | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` |
@@ -8814,9 +8891,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/RequestFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
 | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` | Deleted | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
 | `tests/MassTransit.Tests/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/SendByConvention_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendByConvention_Specs.cs` |
+| `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` |
 | `tests/MassTransit.Tests/SendObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendObserver_Specs.cs` |
 | `tests/MassTransit.Tests/SendProxy_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendProxy_Specs.cs` |
+| `tests/MassTransit.Tests/SendReceive_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendReceive_Specs.cs` |
 | `tests/MassTransit.Tests/SentTime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SentTime_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/Array_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Array_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/Attribute_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Attribute_Specs.cs` |
@@ -9057,10 +9137,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/AccessScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ConsumeContext.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_ConsumeContext.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Consumer.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Consumer.cs` |
@@ -9148,9 +9225,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Courier/TwoActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Courier/UriArgument_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Enrichment_Specs.cs` | Modified | `tests/MassTransit.Tests/Enrichment_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs` | Modified | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/DataBus_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/FileSystem_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/InMemory_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/InMemory_Specs.cs` |
@@ -9169,11 +9244,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Messages/SerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/SerializationTestMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/UpdateAcceptedMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateAcceptedMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/UpdateMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MultiTestConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs` | Modified | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
 | `tests/ViciOne.ServiceBus.Tests/NoLicensingResidue_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/NoOutboundVendorCall_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ReceiveEndpoint_Specs.cs` | Modified | `tests/MassTransit.Tests/ReceiveEndpoint_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Command.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Command.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/CreateState.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/CreateState.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Event.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Event.cs` |
@@ -9318,9 +9391,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Testing_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Testing_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendByConvention_Specs.cs` | Modified | `tests/MassTransit.Tests/SendByConvention_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendContextMiddleware_Specs.cs` | Modified | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SendReceive_Specs.cs` | Modified | `tests/MassTransit.Tests/SendReceive_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs` | Modified | `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` |
@@ -9837,6 +9907,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
@@ -9856,6 +9928,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryPublishEndpointTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemorySendEndpointTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | Added |  |
@@ -9901,6 +9974,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
@@ -9908,6 +9982,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
@@ -10009,6 +10084,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |

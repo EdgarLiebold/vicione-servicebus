@@ -2259,3 +2259,27 @@ future cohorts as complete.
   and hidden-duplicate false-green paths without sleeps or absence-only success oracles.
 - This section accompanies the local Evidence-child content. Independent read-only acceptance,
   architecture binding and any future remote publication remain pending and are not self-approved.
+
+## Core batch and messaging obligations — large-package local Evidence freeze (2026-08-30)
+
+- Technical `2007f55f2f5cdc668392da30b9ac9cf5727fa781`, tree
+  `b7acc14d56d50facdb91e8c1d664375485fff526`, closes 56 selected Core B/Core D obligations as
+  `REPLACED_EXECUTING` in UnitArchitecture. Thirty-five new executable cases and strengthened native
+  carriers cover batch delivery/failure/grouping/outbox, concurrency, mediator, conventions,
+  payload propagation, dynamic endpoints, multi-consumer behavior and send overloads.
+- Ten fully replaced inherited files and 2,820 legacy test lines are removed atomically. The complete
+  Technical package adds 1,844 lines and deletes 2,832, reducing the repository by 988 lines while
+  the executable floor rises from 2,479 to 2,514.
+- Focused execution is 39/39. Complete UnitArchitecture is 2,519/2,519 across 21 CTRFs with zero
+  failed, skipped, pending or other cases. Locked restore, Release build and scoped format
+  verification are green; the build has zero warnings and zero errors.
+- M01–M08 independently bind batch size, keyed grouping, consumer/saga admission, failed-outbox
+  discard, consume-context payloads, inherited endpoint conventions, mandatory mediator publish and
+  runtime send-pipe propagation. Every counted mutant builds, its intended carrier turns red, and
+  every touched product file is restored byte-exactly.
+- The known macOS sandbox `ps` denial was isolated as an environment-only diagnostic failure; the
+  canonical out-of-sandbox CI self-test run is 257/257. Identity self-tests are 148/148 and the
+  Verification Model and generated CHANGELIST are green.
+- No empty legacy test directory remains and no cloud fixture was required. This section accompanies
+  the local Evidence-child content; independent read-only acceptance, architecture binding and any
+  future remote publication remain pending and are not self-approved.
