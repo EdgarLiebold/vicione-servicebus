@@ -2309,3 +2309,27 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 7. Bind a small independent mutation set for the real product seams, restore every source byte, then
    freeze one Technical commit, one direct Evidence child and one architecture binding. Remote push
    remains separately authorized and never uses force-push.
+
+## Core batch, mediator and in-memory messaging 56-obligation execution plan
+
+1. Close `OBL-R0-CORE-B-0025..0039` together with Core-D `0014..0020`, `0025..0026`,
+   `0141..0143`, `0233..0241`, `0278..0280`, `0325..0326`, `0395..0402` and `0416..0422` as one
+   fifty-six-obligation UnitArchitecture package.
+2. Reuse and, only where required, strengthen the existing interface-dispatch, mediator-request,
+   multi-consumer and dynamic-endpoint owners. Add no test whose only purpose is to preserve an old
+   fixture or method name.
+3. Add compact source-mirrored owners for batch completion/grouping/deduplication/fault/outbox/
+   overlap, mediator dispatch and cancellation, consumer/saga concurrency, endpoint-convention
+   routing, consume-context payload propagation and the seven send overloads. Each owner uses a
+   positive product barrier and an exact terminal count or identity oracle.
+4. Create a machine-readable 56-row obligation map and passive requirement bindings. Raise the floor
+   only by the actual materialized xUnit cases.
+5. Delete `Batch_Specs.cs`, `ConcurrencyLimit_Specs.cs`, `Enrichment_Specs.cs`, `Mediator_Specs.cs`,
+   `MultiTestConsumer_Specs.cs`, `ReceiveEndpoint_Specs.cs`, `SendByConvention_Specs.cs`,
+   `SendContextMiddleware_Specs.cs`, `SendReceive_Specs.cs` and `ContainerTests/Batch_Specs.cs`
+   atomically after all carriers are green; remove only directories that are then empty.
+6. Iterate using focused Release build/test only. Then run exactly one locked restore, one clean
+   Release build, one complete UnitArchitecture profile, scoped format and repository gates.
+7. Bind one compact independent mutation block across the actual batching/mediator/routing seams,
+   restore every product byte, then freeze one Technical commit, one direct Evidence child and one
+   architecture binding. No remote push occurs without a new explicit authorization.

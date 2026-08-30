@@ -44,9 +44,13 @@ public sealed class InterfaceMessageDispatchTests
 
             FirstMessageContract firstMessage = firstReceived.Context.Message;
             SecondMessageContract secondMessage = secondReceived.Context.Message;
+            Assert.True(firstReceived.Context.TryGetMessage(
+                out ConsumeContext<SecondMessageContract>? projectedSecond));
             Assert.Equal(message.Name, firstMessage.Name);
             Assert.Equal(message.Name, secondMessage.Name);
             Assert.Equal(message.Age, secondMessage.Age);
+            Assert.Equal(message.Name, projectedSecond.Message.Name);
+            Assert.Equal(message.Age, projectedSecond.Message.Age);
             Assert.Single(first.Consumed.Select(SnapshotOnlyToken()));
             Assert.Single(second.Consumed.Select(SnapshotOnlyToken()));
         }

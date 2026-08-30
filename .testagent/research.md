@@ -2700,3 +2700,31 @@ frozen historical identity inventory and remains unchanged, as in earlier accept
 Product mutations will target error movement, four-event fan-out, fault-count publication,
 `PublishFaults`, polymorphic fault topology and distinct publish overload dispatch. The full
 UnitArchitecture/build/identity/evidence cost is paid once after focused execution is green.
+
+## Core batch, mediator and in-memory messaging 56-obligation package research
+
+The next package intentionally combines fifty-six related Core obligations rather than freezing
+batching, mediator dispatch and in-memory endpoint routing separately. It covers the fifteen
+`OBL-R0-CORE-B-0025..0039` container-batch obligations plus forty-one Core-D obligations from
+`0014..0020`, `0025..0026`, `0141..0143`, `0233..0241`, `0278..0280`, `0325..0326`,
+`0395..0402` and `0416..0422`. Ten complete inherited files carry the set and contain 2,820 lines.
+
+Existing native owners are reused where they are already stronger: interface dispatch carries the
+two interface deliveries and is strengthened for cross-contract `TryGetMessage`; mediator request
+tests retain exact response and exception ownership; the multi-consumer owner is strengthened for
+same-type correlation identity; and the dynamic endpoint connector retains registration-context and
+input-address projection. No renamed duplicate is added for these behaviors.
+
+Missing behavior is grouped into a small number of source-mirrored owners: batch size/time/grouping,
+duplicate suppression, fault fan-out, retry/redelivery/outbox and overlap; mediator connect/send/
+publish/cancellation/mandatory semantics; consumer and saga concurrency; endpoint-convention
+precedence; consume-payload flow through send/publish filters; duplicate dynamic endpoint rejection;
+and the seven send overload shapes. The tests use positive consumer, batch, error, fault, request or
+endpoint-ready barriers. Exact terminal snapshots are taken after stop/drain where late duplicates
+matter; no sleep or quiet-window success oracle is introduced.
+
+The package will update one 56-row terminal map, passive requirement rows and the executable floor
+only by materialized new cases. The ten inherited files are deleted together only after every row has
+an executing carrier and external references are absent. One focused development loop precedes one
+locked restore, one Release build, one complete UnitArchitecture run, one compact mutation block and
+one Evidence/architecture freeze.

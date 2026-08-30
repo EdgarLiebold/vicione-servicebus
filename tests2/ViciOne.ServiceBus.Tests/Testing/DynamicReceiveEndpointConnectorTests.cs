@@ -10,6 +10,44 @@ namespace ViciOne.ServiceBus.Tests.Testing;
 public sealed class DynamicReceiveEndpointConnectorTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-TESTING-DYNAMIC-ENDPOINT", "duplicate-endpoint-name-is-rejected")]
+    public async Task DynamicConnector_RejectsASecondEndpointWithTheSameName()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        string endpointName = $"duplicate-{NewId.NextGuid():N}";
+        using var harness = new InMemoryTestHarness($"duplicate-host-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        HostReceiveEndpointHandle? first = null;
+
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            first = harness.Bus.ConnectReceiveEndpoint(endpointName, _ => { });
+            ReceiveEndpointReady ready = await first.Ready.WaitAsync(timeout, cancellationToken);
+
+            ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(async () =>
+            {
+                HostReceiveEndpointHandle duplicate = harness.Bus.ConnectReceiveEndpoint(endpointName, _ => { });
+                await duplicate.Ready.WaitAsync(timeout, cancellationToken);
+            });
+
+            Assert.Equal(new Uri(harness.BaseAddress, endpointName), ready.InputAddress);
+            Assert.Contains(endpointName, exception.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            if (first is not null)
+                await first.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-DYNAMIC-ENDPOINT", "connector-overloads-and-registration-context")]
     public async Task DynamicConnector_UsesTheRegistrationContextForNamedAndDefinedEndpoints()
     {

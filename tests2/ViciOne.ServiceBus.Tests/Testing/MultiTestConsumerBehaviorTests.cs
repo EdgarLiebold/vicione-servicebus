@@ -31,19 +31,33 @@ public sealed class MultiTestConsumerBehaviorTests
         await harness.Start(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FirstMessage("first"), cancellationToken);
+            var firstCorrelationId = NewId.NextGuid();
+            var repeatedCorrelationId = NewId.NextGuid();
+            await harness.InputQueueSendEndpoint.Send(
+                new FirstMessage(firstCorrelationId, "first"),
+                cancellationToken);
+            await harness.InputQueueSendEndpoint.Send(
+                new FirstMessage(repeatedCorrelationId, "repeated"),
+                cancellationToken);
             await harness.InputQueueSendEndpoint.Send(new SecondMessage("second"), cancellationToken);
 
-            IReceivedMessage<FirstMessage> first = await firstMessages.SelectAsync(cancellationToken).First();
+            IReceivedMessage<FirstMessage>[] first = firstMessages
+                .Select(cancellationToken)
+                .Take(2)
+                .ToArray();
             IReceivedMessage<SecondMessage> second = await secondMessages.SelectAsync(cancellationToken).First();
-            IReceivedMessage[] aggregate = consumer.Received.Select(_ => true, cancellationToken).Take(2).ToArray();
+            IReceivedMessage[] aggregate = consumer.Received.Select(_ => true, cancellationToken).Take(3).ToArray();
 
-            Assert.Equal("first", first.Context.Message.Value);
+            Assert.Equal(
+                new[] { firstCorrelationId, repeatedCorrelationId }.Order(),
+                first.Select(message => message.Context.Message.CorrelationId).Order());
+            Assert.Equal(["first", "repeated"], first.Select(message => message.Context.Message.Value).Order());
             Assert.Equal("second", second.Context.Message.Value);
-            Assert.Null(first.Exception);
+            Assert.All(first, message => Assert.Null(message.Exception));
             Assert.Null(second.Exception);
-            Assert.Equal(2, aggregate.Length);
+            Assert.Equal(3, aggregate.Length);
             Assert.Contains(aggregate, message => message.MessageObject is FirstMessage { Value: "first" });
+            Assert.Contains(aggregate, message => message.MessageObject is FirstMessage { Value: "repeated" });
             Assert.Contains(aggregate, message => message.MessageObject is SecondMessage { Value: "second" });
         }
         finally
@@ -94,7 +108,7 @@ public sealed class MultiTestConsumerBehaviorTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private sealed record FirstMessage(string Value);
+    private sealed record FirstMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     private sealed record SecondMessage(string Value);
 
