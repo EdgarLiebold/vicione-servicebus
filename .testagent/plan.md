@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2408 predeclared unfiltered cases;
+- `UnitArchitecture`: 2410 predeclared unfiltered cases;
 - `LocalIntegration`: 375 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -2121,3 +2121,20 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 6. Run focused, complete UnitArchitecture and Engineering Release checks, then perform one-cause
    mutation checks for cycle validation, hash routing and both wildcard branches. Freeze separate
    Technical and Evidence commits; remote publication remains separately authorized.
+
+## Core send-topology native closure execution plan
+
+1. Bind `OBL-R0-CORE-C-0428..0429` one-to-one to two source-mirrored xUnit 4/MTP v2 Facts in
+   `ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests`.
+2. Prove all three inherited correlation-selector surfaces in one coherent positive transport flow:
+   an interface-specific bus topology selector, the built-in `CorrelationId` property convention and
+   the public global message selector. Assert both envelope and message values independently.
+3. Prove that a message-specific send-topology serializer selects raw System.Text.Json across a real
+   in-memory publish/consume boundary, including the exact received content type and payload.
+4. Raise the independent UnitArchitecture floor by exactly two materialized cases, from 2,408 to
+   2,410. LocalIntegration remains 375 because both topology flows are hermetic.
+5. Delete the two inherited Topology C# files only after both native cases and the passive requirement
+   projection are green, then remove the now-empty `tests/.../Topology` directory.
+6. Run focused, complete UnitArchitecture and Engineering Release checks, then bind one-cause
+   mutations for correlation-selector application and serializer selection. Freeze separate Technical
+   and Evidence commits; remote publication remains separately authorized.

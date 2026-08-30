@@ -3033,5 +3033,19 @@
       "testMethod" : "ThreeSegmentWildcard_DeliversOnlyTheMatchingRoute",
       "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
       "variantKey" : "three-segment-wildcard"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-TOPOLOGY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts",
+      "testType" : "ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests",
+      "variantKey" : "correlation-selector-syntax"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-TOPOLOGY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MessageSerializerConvention_UsesRawJsonForTheConfiguredContract",
+      "testType" : "ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests",
+      "variantKey" : "message-specific-serializer"
    }
 ]

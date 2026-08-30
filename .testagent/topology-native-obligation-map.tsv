@@ -1,0 +1,3 @@
+obligationId	disposition	profile	targetProject	targetMethod
+OBL-R0-CORE-C-0428	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	TopologyConventionIntegrationTests.CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts
+OBL-R0-CORE-C-0429	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	TopologyConventionIntegrationTests.MessageSerializerConvention_UsesRawJsonForTheConfiguredContract
