@@ -22,6 +22,9 @@ public sealed class InMemoryTransportIsolationTests
         var realDeliveries = new ConcurrentQueue<Delivery>();
         using var internalHarness = CreateHarness(timeout, internalVirtualHost);
         using var externalHarness = CreateHarness(timeout, externalVirtualHost);
+        Assert.Equal(new Uri($"loopback://localhost/{internalVirtualHost}/"), internalHarness.BaseAddress);
+        Assert.Equal(new Uri($"loopback://localhost/{externalVirtualHost}/"), externalHarness.BaseAddress);
+        Assert.NotEqual(internalHarness.BaseAddress, externalHarness.BaseAddress);
         ConsumerTestHarness<RelayConsumer> internalRelay = internalHarness.Consumer(
             () => new RelayConsumer(externalHarness.Bus, internalRelayDecisions));
         ConsumerTestHarness<RelayConsumer> externalRelay = externalHarness.Consumer(
