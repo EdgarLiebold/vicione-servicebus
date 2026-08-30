@@ -2603,3 +2603,39 @@ outbox discard across a redelivery attempt exposes a deferred side effect; omitt
 filter return path loses the `after` event; suppressing one implemented-interface topology edge
 removes one handler delivery. The package therefore adds five cases, retires four complete legacy
 files and pays the full repository-wide closure cost only once.
+
+## Core job-service package 0201-0227 native closure research
+
+The next enlarged package is one product boundary: job-saga attempt generation, in-memory job
+execution/fault/cancellation, the three product-owned saga endpoints, and the `JobService`
+lifecycle/admission gate. It contains exactly twenty-seven frozen obligations across five inherited
+files. Every test in those files belongs to that range, so the files can be retired atomically once
+the native carriers execute.
+
+The repository-wide Roslyn pairing pass was executed once for this package. It is a static
+source-to-test heuristic only: 3,899 source files, 1,177 test files, 1,046 paired and 2,853 unpaired.
+The result does not override the frozen R0 ledger. In particular, provider-specific ActiveMQ and
+Quartz job tests are useful design evidence but cannot silently replace the UnitArchitecture
+profile required by these core obligations.
+
+The inherited runtime cases use second-scale job durations and lifecycle `Task.Delay` windows. The
+native design instead uses consumer channels, exact published/sent message barriers, zero-delay
+immediate retry, and publication gates that block the product at Configured, Heartbeat or Stopped.
+`JobService` async methods execute synchronously up to their first incomplete await, so an
+immediately incomplete nested transition is a deterministic ownership oracle rather than a timed
+absence assertion. A zero heartbeat interval is used only with a blocked positive heartbeat
+publication; stop/restart releases and awaits that exact generation.
+
+The state-machine theory keeps all eleven frozen state variants and drives five stale-attempt event
+types per row, with a separate current-attempt control. Runtime scenarios are consolidated only
+where one stronger flow proves every inherited assertion: cancellation plus status, ordinary
+completion plus the newer registration path, and a single explicit lifecycle sequence covering
+stopped/during-stop/recovered/failed-start/failed-restart admission. The scoped publish-filter case
+observes the filter invocation instead of merely proving that registration did not break the job.
+This avoids redundant Facts while preserving every distinct state transition and failure boundary.
+
+Primary mutation seams are the stale-attempt id guards, job retry/fault branching, scoped filter
+registration, each job endpoint's outbox application, lifecycle semaphore ownership, heartbeat
+stop/replace, and admission closure/reopen ordering. Mutations are selected only after focused green
+execution; the complete UnitArchitecture, Engineering, Identity and Evidence closure runs once for
+the entire package.

@@ -30,6 +30,7 @@ public sealed class BusActivityIndicatorTests
             Assert.False(indicator.IsMet);
 
             timeProvider.Advance(TimeSpan.FromMinutes(1));
+            await signal.Signaled.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
             Assert.True(indicator.IsMet);
             Assert.Equal(1, signal.Count);
@@ -59,6 +60,7 @@ public sealed class BusActivityIndicatorTests
             Assert.False(indicator.IsMet);
 
             timeProvider.Advance(TimeSpan.FromMinutes(1));
+            await signal.Signaled.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
             Assert.True(indicator.IsMet);
             Assert.Equal(1, signal.Count);
@@ -92,6 +94,7 @@ public sealed class BusActivityIndicatorTests
             Assert.False(indicator.IsMet);
 
             timeProvider.Advance(TimeSpan.FromMinutes(1));
+            await signal.Signaled.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
             Assert.True(indicator.IsMet);
             Assert.Equal(1, signal.Count);

@@ -3117,5 +3117,131 @@
       "testMethod" : "ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce",
       "testType" : "ViciOne.ServiceBus.Tests.Contracts.InterfaceMessageDispatchTests",
       "variantKey" : "all-implemented-contracts-exactly-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-ATTEMPT-GENERATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StaleAttemptEvents_LeaveTheCompleteSagaSnapshotUnchanged",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests",
+      "variantKey" : "stale-attempt-events-preserve-every-state"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-ATTEMPT-GENERATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CurrentAttemptEvent_StillUsesTheConfiguredStateRule",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests",
+      "variantKey" : "current-attempt-keeps-state-rules"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-ENDPOINT-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ContainerlessConfiguration_AppliesTheOutboxWithoutInventingAScope",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Configuration.JobServiceEndpointConfigurationTests",
+      "variantKey" : "containerless-outbox-without-scope"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-ENDPOINT-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RegistrationContext_AppliesTheOutboxToEveryJobSagaEndpoint",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Configuration.JobServiceEndpointConfigurationTests",
+      "variantKey" : "registration-context-outbox-on-all-job-sagas"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StartAndStopTransitions_AreSerializedInBothDirections",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "bidirectional-transition-serialization"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Stop_DrainsTheExactHeartbeatGenerationBeforeReturning",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "stop-drains-heartbeat-and-leaves-no-generation"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RepeatedStarts_ReplaceRatherThanOverlapHeartbeatGenerations",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "repeated-start-replaces-heartbeat-generation"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedStart_LeavesNoHeartbeatAndDoesNotStrandTheLifecycleGate",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "failed-start-has-no-heartbeat-and-recovers"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-ADMISSION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Admission_FollowsTheCompleteSuccessfulAndFailedLifecycleSequence",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "complete-start-stop-failure-admission-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SERVICE-ADMISSION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Stop_WaitsForAnAdmittedJobUntilItsHandleIsRegistered",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "stop-waits-for-admitted-job-registration"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-FAULT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PermanentFailure_PublishesTheSubmittedFaultedAndTypedFaultContracts",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "permanent-fault-publishes-terminal-and-typed-fault"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-FAULT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConfiguredJobRetry_CompletesOnTheSecondDistinctAttempt",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "configured-retry-completes-later-attempt"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CancelRunningJob_ReachesTheConsumerAndClosesStatusAndSlotWithTheReason",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "running-cancel-closes-consumer-status-and-slot"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RetryAfterCancellation_UsesANewAttemptAndCompletes",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "retry-after-cancel-uses-new-attempt"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "CancelWaitingJob_PreservesTheRunningSlotAndPublishesItsWaitAndTerminalTransitions",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "waiting-job-cancels-without-consuming-slot"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-COMPLETION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RegisteredStateMachines_CompleteTheLifecycleThroughTheScopedPublishFilter",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "registered-lifecycle-through-scoped-publish-filter"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-IDENTITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishingJobs_GeneratesDistinctNonEmptyIdentitiesAcrossEachLifecycle",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "published-jobs-receive-distinct-nonempty-identities"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-STATE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "UnknownJobIdentity_ReturnsTheCompleteNotFoundState",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
+      "variantKey" : "unknown-identity-is-explicitly-not-found"
    }
 ]

@@ -2234,3 +2234,29 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    for the redelivery/outbox integration, consumer-filter return path and multi-interface dispatch;
    restore every product byte exactly before the single Technical freeze. Remote publication remains
    separately authorized.
+
+## Core job-service package 0201-0227 native closure execution plan
+
+1. Close `OBL-R0-CORE-D-0201..0227` as one twenty-seven-obligation UnitArchitecture package; keep
+   the already closed `0200` configuration obligation in its existing C26 owner.
+2. Add a source-mirrored state-machine Theory for all eleven job-saga states plus an independent
+   current-attempt control. Each row raises started, completed, faulted, canceled and start-faulted
+   stale events and asserts the complete saga snapshot remains byte-for-byte equivalent.
+3. Add hermetic in-memory job-service carriers for permanent fault, configured retry, cancellation
+   with terminal status, retry after cancellation, slot-wait cancellation, exact completion,
+   generated identity, unknown identity and an actually observed scoped publish filter. Use only
+   positive transport/message barriers and the configured operation timeout.
+4. Read the built bus probe for both container-less and registration-context endpoint paths and bind
+   the outbox on Job, JobAttempt and JobType independently; retain the explicit no-scope assertion
+   only on the container-less path where it is causal.
+5. Drive `JobService` directly through publication gates. Prove both lifecycle-overlap directions,
+   in-flight heartbeat draining, replacement of repeated heartbeat generations, failure recovery,
+   the complete admission state sequence and the admitted-but-not-registered stop boundary without
+   `Task.Delay`, `Thread.Sleep` or a quiet-window verdict.
+6. Add the twenty-eight materialized native cases to the UnitArchitecture floor, from 2,422 to 2,450, and map all twenty-seven
+   obligations to exact test methods. Delete the five inherited files only after focused execution
+   and requirement projection are green; remove directories only when actually empty.
+7. Run one final locked restore, Engineering Release build, full UnitArchitecture profile, format,
+   CI-tool, identity and CHANGELIST closure. Bind independent one-cause mutations, restore every
+   product byte exactly, then freeze Technical, direct Evidence, status and architecture children.
+   Remote publication remains separately authorized and never uses force-push.

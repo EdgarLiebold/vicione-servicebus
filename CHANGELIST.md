@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4247 |
-| Modified | 4186 |
-| Deleted | 1462 |
+| Added | 4248 |
+| Modified | 4184 |
+| Deleted | 1464 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -8566,6 +8566,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/InterfaceSubscription_Specs.cs` |
 | `tests/MassTransit.Tests/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/Introspection_Specs.cs` |
 | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/InvalidConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` |
+| `tests/MassTransit.Tests/JobConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/JobConsumer_Specs.cs` |
 | `tests/MassTransit.Tests/JsonToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
 | `tests/MassTransit.Tests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
 | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
@@ -8979,11 +8981,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs` | Modified | `tests/MassTransit.Tests/ExcessiveAsyncFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/FaultPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPublish_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/JobAttemptGeneration_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumerFault_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/JobConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/JobConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/JobServiceEndpointConfiguration_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/JobServiceLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Mediator_Specs.cs` | Modified | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/DataBus_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/FileSystem_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` |
@@ -9725,12 +9722,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheRecoveryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
