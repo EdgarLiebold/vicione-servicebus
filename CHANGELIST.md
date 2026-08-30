@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4104 |
-| Modified | 4192 |
-| Deleted | 1456 |
+| Added | 4105 |
+| Modified | 4191 |
+| Deleted | 1457 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -29,6 +29,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/activemq-native-obligation-map.tsv` | Added |  |
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
+| `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/message-fabric-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
@@ -8384,6 +8385,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
+| `tests/MassTransit.Tests/Consumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Consumer_Specs.cs` |
 | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
@@ -8736,7 +8738,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Consumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/AccessScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` |
