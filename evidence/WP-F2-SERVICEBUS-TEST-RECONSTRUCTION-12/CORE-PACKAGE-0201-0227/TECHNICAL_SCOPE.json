@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_PACKAGE_0201_0227_TECHNICAL_SCOPE",
+  "technicalCommit": "b2aa104c3bea11d0ff33df16271a97bf31073fc0",
+  "technicalTree": "7a5dce633444615cbd412b712974bf62b33bc406",
+  "technicalParent": "7a4e3ee4bc2736175fe913b91588d011fe22dc53",
+  "technicalPatch": {
+    "path": "TECHNICAL.patch.gz",
+    "sha256": "66fae5416ff7258810d6d9950577912f5fdfa4f7017253c2559ff8a63015e632"
+  },
+  "changedPaths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/core-package-0201-0227-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "CHANGELIST.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/JobAttemptGeneration_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/JobConsumerFault_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/JobConsumer_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/JobServiceEndpointConfiguration_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/JobServiceLifecycle_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "tests2/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs"
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_PACKAGE_0201_0227_MUTATIONS",
+  "technicalCommit": "b2aa104c3bea11d0ff33df16271a97bf31073fc0",
+  "technicalTree": "7a5dce633444615cbd412b712974bf62b33bc406",
+  "buildCommandTemplate": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --disable-build-servers --no-incremental --maxcpucount:1 -p:BuildInParallel=false -p:UseSharedCompilation=false /bl:binlogs/<ID>-build.binlog",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "stale-attempt-generation-guard",
+      "path": "src/ViciOne.ServiceBus/JobService/JobStateMachine.cs",
+      "oldText": "                Ignore(AttemptStarted, context => context.Saga.AttemptId != context.Message.AttemptId));\n",
+      "newText": "                Ignore(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId));\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "23f547e466eb6888be123fdec12fde7fd41560c30f82e8494b42c397bd820ff4",
+      "mutantSha256": "06ac5a96060603ef4397d4748b0d942c5776eebb1cb20cdf82c822928fa8bd11",
+      "restoredSha256": "23f547e466eb6888be123fdec12fde7fd41560c30f82e8494b42c397bd820ff4",
+      "build": { "exitCode": 0, "binlog": "binlogs/M01-build.binlog", "rawLog": "raw/M01-build.log" },
+      "test": { "exitCode": 2, "tests": 12, "passed": 6, "failed": 6, "skipped": 0, "ctrf": "mutations/M01.json" },
+      "cause": "Stale AttemptStarted events are no longer ignored and the current-generation control is swallowed."
+    },
+    {
+      "id": "M02",
+      "axis": "registration-context-job-saga-outbox",
+      "path": "src/ViciOne.ServiceBus/JobService/Configuration/JobSagaDefinition.cs",
+      "oldText": "            configurator.UseInMemoryOutbox(context);\n",
+      "newText": "            GC.KeepAlive(context);\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "9c0359edff9af5d8e7c247e054cc3d70692adc8272621f1f49e2558a8a9fa4fe",
+      "mutantSha256": "5520283e947884640b064a52c90e2f37d3aef751874a0d6402ea38fded02ca87",
+      "restoredSha256": "9c0359edff9af5d8e7c247e054cc3d70692adc8272621f1f49e2558a8a9fa4fe",
+      "build": { "exitCode": 0, "binlog": "binlogs/M02-build.binlog", "rawLog": "raw/M02-build.log" },
+      "test": { "exitCode": 2, "tests": 2, "passed": 1, "failed": 1, "skipped": 0, "ctrf": "mutations/M02.json" },
+      "cause": "The Job saga endpoint loses its registration-owned outbox while both other saga endpoints remain controls."
+    },
+    {
+      "id": "M03",
+      "axis": "heartbeat-stop-drain",
+      "path": "src/ViciOne.ServiceBus/JobService/JobService/JobService.cs",
+      "oldText": "                await _publishing.ConfigureAwait(false);\n",
+      "newText": "                await Task.CompletedTask.ConfigureAwait(false);\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "581f3d10adff828baffad0a97031032fc2f2c05e96392a4fd77a4aa1d3ae7529",
+      "mutantSha256": "8444ba1b6e75ddda47f6c58372750dd35bcdbc4316212f6b31d4b17901d559b4",
+      "restoredSha256": "581f3d10adff828baffad0a97031032fc2f2c05e96392a4fd77a4aa1d3ae7529",
+      "build": { "exitCode": 0, "binlog": "binlogs/M03-build.binlog", "rawLog": "raw/M03-build.log" },
+      "test": { "exitCode": 2, "tests": 6, "passed": 4, "failed": 2, "skipped": 0, "ctrf": "mutations/M03.json" },
+      "cause": "Stop returns while the exact heartbeat publication remains blocked."
+    },
+    {
+      "id": "M04",
+      "axis": "job-admission-stopping-gate",
+      "path": "src/ViciOne.ServiceBus/JobService/JobService/JobService.cs",
+      "oldText": "            if (!_stopping)\n",
+      "newText": "            if (true)\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "581f3d10adff828baffad0a97031032fc2f2c05e96392a4fd77a4aa1d3ae7529",
+      "mutantSha256": "67c842b718085dfb1468202ad59febeede3f8ff0722a7aede87f805ea3daab4a",
+      "restoredSha256": "581f3d10adff828baffad0a97031032fc2f2c05e96392a4fd77a4aa1d3ae7529",
+      "build": { "exitCode": 0, "binlog": "binlogs/M04-build.binlog", "rawLog": "raw/M04-build.log" },
+      "test": { "exitCode": 2, "tests": 6, "passed": 5, "failed": 1, "skipped": 0, "ctrf": "mutations/M04.json" },
+      "cause": "A stopped or failed service accepts a job and violates the complete admission sequence."
+    },
+    {
+      "id": "M05",
+      "axis": "retry-generation-increment",
+      "path": "src/ViciOne.ServiceBus/JobService/JobStateMachine.cs",
+      "oldText": "                    context.Saga.RetryAttempt++;\n",
+      "newText": "                    context.Saga.RetryAttempt += 0;\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "23f547e466eb6888be123fdec12fde7fd41560c30f82e8494b42c397bd820ff4",
+      "mutantSha256": "c47e14327124b4bc084977c6539600bbbfdfcfdc48858ddc7748b35072642dc3",
+      "restoredSha256": "23f547e466eb6888be123fdec12fde7fd41560c30f82e8494b42c397bd820ff4",
+      "build": { "exitCode": 0, "binlog": "binlogs/M05-build.binlog", "rawLog": "raw/M05-build.log" },
+      "test": { "exitCode": 2, "tests": 8, "passed": 6, "failed": 2, "skipped": 0, "ctrf": "mutations/M05.json" },
+      "cause": "Cancellation retry no longer advances the retry generation and two lifecycle carriers fail."
+    },
+    {
+      "id": "M06",
+      "axis": "containerless-job-service-outbox",
+      "path": "src/ViciOne.ServiceBus/JobService/Configuration/JobServiceConfigurator.cs",
+      "oldText": "                    configurator.UseInMemoryOutbox();\n",
+      "newText": "                    GC.KeepAlive(configurator);\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "92caa2e3a5db3cff684be0ddf6ecb2ccc43739628333ec4a39455f419f5a09e0",
+      "mutantSha256": "2b8056249a2679bdc3113a5f60f0489d8bb4377a3d35e889aaeaa99ccd0d9415",
+      "restoredSha256": "92caa2e3a5db3cff684be0ddf6ecb2ccc43739628333ec4a39455f419f5a09e0",
+      "build": { "exitCode": 0, "binlog": "binlogs/M06-build.binlog", "rawLog": "raw/M06-build.log" },
+      "test": { "exitCode": 2, "tests": 2, "passed": 1, "failed": 1, "skipped": 0, "ctrf": "mutations/M06.json" },
+      "cause": "All containerless job saga endpoints lose the outbox while the registration-context control remains green."
+    }
+  ]
+}

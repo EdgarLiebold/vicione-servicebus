@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4248 |
+| Added | 4292 |
 | Modified | 4184 |
 | Deleted | 1464 |
 | Renamed | 2 |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
@@ -2215,6 +2216,49 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0182-0199/raw/projection.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0182-0199/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0182-0199/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/format-scoped.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/unit-architecture-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/unit-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_36.106951.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_38.158262.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_40.384583.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_42.396160.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_55.048435.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_15_58.902628.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_16_22.210777.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_16_43.079404.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_16_45.713581.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_38.825082.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_40.240948.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_41.918637.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_48.761447.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_50.112504.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_51.660519.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_54.652897.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_56.099363.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_57.620881.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_18_59.237735.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_19_00.619197.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_15_19_02.083002.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/positive/positive.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/INHERITED_BEHAVIOR_DISPOSITION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_EXECUTION.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/MUTATION_MANIFEST.md` | Added |  |
