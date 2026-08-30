@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4493 |
-| Modified | 4162 |
-| Deleted | 1486 |
+| Added | 4550 |
+| Modified | 4154 |
+| Deleted | 1494 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -35,6 +35,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-serialization-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
@@ -2538,6 +2539,64 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/restored-build.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/postrestore-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/technical-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/technical-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/focused/core/core.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/focused/default-redelivery/default-redelivery.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/focused/messagepack/messagepack.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_03.800108.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_05.499546.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_10.456520.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_30.168962.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_31.697258.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_34.679285.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_35.964922.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_41.388847.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_42.780820.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_44.156141.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_50_45.411078.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_51_05.105229.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_52_41.372685.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_00.923674.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_03.897861.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_05.750796.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_07.124814.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_08.604274.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_10.043759.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_11.695061.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-30_19_53_21.188521.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M01-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M02-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M03-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M04-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M05-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/M06-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/postrestore-engineering-build.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/SHA256SUMS` | Added |  |
@@ -8905,8 +8964,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Serialization/DeserializerFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/DeserializerFault_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/ExtensionData_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/ExtensionData_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Forward_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` | Deleted | `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` |
 | `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/IEnumerable_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/JobDeserialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/JobDeserialization_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/JsonSerialization_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/MessageDataSerialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/MessageDataSerialization_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/MisnamedProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/MisnamedProperty_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/MoreSerialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/MoreSerialization_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/NsbInterop_Specs.cs` |
@@ -8914,6 +8977,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Serialization/PolymorphicProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/PolymorphicProperty_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/PropertyType_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/PropertyType_Specs.cs` |
 | `tests/MassTransit.Tests/Serialization/ProtoBufAsJson_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/ProtoBufAsJson_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/Redelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/Redelivery_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` |
+| `tests/MassTransit.Tests/Serialization/SerializationTest.cs` | Deleted | `tests/MassTransit.Tests/Serialization/SerializationTest.cs` |
 | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` | Deleted | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto` |
 | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TradeBookedMT.proto.cs` |
 | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto` | Deleted | `tests/MassTransit.Tests/Serialization/TradesBookedMT.proto` |
@@ -9391,17 +9458,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Testing_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Testing_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/UncorrelatedMessage_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/WhenEnterRequest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/GivenAComplexMessage.cs` | Modified | `tests/MassTransit.Tests/Serialization/GivenAComplexMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/InterfaceFormatterCaching_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/Interface_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Interface_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/JobDeserialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/JobDeserialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MessageDataSerialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/MessageDataSerialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackEnvelopeClone_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/MessagePackHardening_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/ReceiveFault_Serialization_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/Redelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/Redelivery_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/SeparateSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Serialization/SeparateSerializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationTest.cs` | Modified | `tests/MassTransit.Tests/Serialization/SerializationTest.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ServiceProviderExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
@@ -10040,6 +10096,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationContractIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs` | Added |  |

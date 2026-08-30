@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_SERIALIZATION_NATIVE_CLOSURE_MUTATIONS",
+  "technicalCommit": "564050280b901c93a59e883fab809616397512ed",
+  "technicalTree": "da8ca336f108d1eefc4ad1c62a7278fd80e779a8",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "system-text-json-interface-converter-admission",
+      "path": "src/ViciOne.ServiceBus/Serialization/JsonConverters/SystemTextJsonConverterFactory.cs",
+      "oldText": "            if (_openTypeFactory.TryGetValue(typeToConvert, out _))\n                return true;\n\n            if (IsConvertibleInterfaceType(typeToConvert))\n",
+      "newText": "            if (_openTypeFactory.TryGetValue(typeToConvert, out _))\n                return true;\n\n            if (false && IsConvertibleInterfaceType(typeToConvert))\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "3e4028988e89b4a0a7d77f3250139582c7ef5f63101d6955cb6e1e44973468f1",
+      "mutantSha256": "4f9b1444fed46afa2344dad0e9286ab83e18eb7c299f6afb5ab5ed95bd387a46",
+      "build": { "exitCode": 0, "binlog": "binlogs/M01-build.binlog", "log": "raw/M01-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 1, "passed": 0, "failed": 1, "skipped": 0, "ctrf": "mutations/M01.json", "owner": "ViciOne.ServiceBus.Tests.Serialization.SerializationContractIntegrationTests.SystemTextJson_JobPayloadRestoresNestedInterfaceList" },
+      "cause": "The nested interface job contract can no longer be deserialized and fails at the exact interface boundary.",
+      "restoredSha256": "3e4028988e89b4a0a7d77f3250139582c7ef5f63101d6955cb6e1e44973468f1"
+    },
+    {
+      "id": "M02",
+      "axis": "receive-fault-exception-information",
+      "path": "src/ViciOne.ServiceBus/Events/ReceiveFaultEvent.cs",
+      "oldText": "            Exceptions = aggregateException?.InnerExceptions.Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()\n                ?? [new FaultExceptionInfo(exception)];\n",
+      "newText": "            Exceptions = [];\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "98cc9ee6c285e7094a2c00dab7ad47422168a5b0d097763a588b5b90ec201542",
+      "mutantSha256": "638055195d9b7a4b73eb2ff10aa0cd82a8f705671fcc242f2eae014bfd7e7f99",
+      "build": { "exitCode": 0, "binlog": "binlogs/M02-build.binlog", "log": "raw/M02-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 2, "passed": 0, "failed": 2, "skipped": 0, "ctrf": "mutations/M02.json", "owner": "ViciOne.ServiceBus.Tests.Serialization.SerializationContractIntegrationTests.SystemTextJson_ReceiveFaultPreservesExceptionInformation" },
+      "cause": "Both serializable and nonserializable exception variants observe an empty exception collection.",
+      "restoredSha256": "98cc9ee6c285e7094a2c00dab7ad47422168a5b0d097763a588b5b90ec201542"
+    },
+    {
+      "id": "M03",
+      "axis": "system-text-json-message-data-reference",
+      "path": "src/ViciOne.ServiceBus/Serialization/JsonConverters/SystemTextJsonMessageDataConverter.cs",
+      "oldText": "        class MessageDataConverter<T> :\n            JsonConverter<MessageData<T>>\n        {\n            public override MessageData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)\n            {\n                var reference = JsonSerializer.Deserialize<SystemTextMessageDataReference>(ref reader, options);\n                if (reference?.Text != null)\n                    return (MessageData<T>)new StringInlineMessageData(reference.Text, reference.Reference);\n                if (reference?.Data != null)\n                    return (MessageData<T>)new BytesInlineMessageData(reference.Data, reference.Reference);\n\n                if (reference?.Reference == null)\n                    return EmptyMessageData<T>.Instance;\n\n                return new DeserializedMessageData<T>(reference.Reference);\n            }\n\n            public override void Write(Utf8JsonWriter writer, MessageData<T> value, JsonSerializerOptions options)\n            {\n                var reference = new SystemTextMessageDataReference();\n\n                if (value is IMessageData { HasValue: true } messageData)\n                {\n                    reference.Reference = messageData.Address;\n",
+      "newText": "        class MessageDataConverter<T> :\n            JsonConverter<MessageData<T>>\n        {\n            public override MessageData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)\n            {\n                var reference = JsonSerializer.Deserialize<SystemTextMessageDataReference>(ref reader, options);\n                if (reference?.Text != null)\n                    return (MessageData<T>)new StringInlineMessageData(reference.Text, reference.Reference);\n                if (reference?.Data != null)\n                    return (MessageData<T>)new BytesInlineMessageData(reference.Data, reference.Reference);\n\n                if (reference?.Reference == null)\n                    return EmptyMessageData<T>.Instance;\n\n                return new DeserializedMessageData<T>(reference.Reference);\n            }\n\n            public override void Write(Utf8JsonWriter writer, MessageData<T> value, JsonSerializerOptions options)\n            {\n                var reference = new SystemTextMessageDataReference();\n\n                if (value is IMessageData { HasValue: true } messageData)\n                {\n                    reference.Reference = null;\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "2381961caf85390690dc566f8e67ed1bbd64dac80496cfb5896226b788897a1f",
+      "mutantSha256": "d06c99dd18c590ae33127f72fa748c9765268bfbe8ea99ffe698ab7379afe4a9",
+      "build": { "exitCode": 0, "binlog": "binlogs/M03-build.binlog", "log": "raw/M03-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 1, "passed": 0, "failed": 1, "skipped": 0, "ctrf": "mutations/M03.json", "owner": "ViciOne.ServiceBus.Tests.Serialization.SerializationContractIntegrationTests.SystemTextJson_MessageDataPreservesExternalReference" },
+      "cause": "The external repository address becomes empty instead of surviving the round trip.",
+      "restoredSha256": "2381961caf85390690dc566f8e67ed1bbd64dac80496cfb5896226b788897a1f"
+    },
+    {
+      "id": "M04",
+      "axis": "raw-json-transport-message-type-headers",
+      "path": "src/ViciOne.ServiceBus/Serialization/SystemTextJsonRawMessageSerializer.cs",
+      "oldText": "            if (_options.HasFlag(RawSerializerOptions.AddTransportHeaders))\n",
+      "newText": "            if (false && _options.HasFlag(RawSerializerOptions.AddTransportHeaders))\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "6478963f5c8770aea8cbc24ae3673eb37b61a903c98f6300fc03653c60a61064",
+      "mutantSha256": "ecc6e514b816c913a84a59a6c5f691cc1eb9344b4cedcac2d4e1e1cd33a725dd",
+      "build": { "exitCode": 0, "binlog": "binlogs/M04-build.binlog", "log": "raw/M04-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 1, "passed": 0, "failed": 1, "skipped": 0, "ctrf": "mutations/M04.json", "owner": "ViciOne.ServiceBus.Tests.Serialization.SerializationContractIntegrationTests.RawSystemTextJson_RedeliveryPreservesTypeAndReplacesMessageId" },
+      "cause": "The delivery succeeds but its independently asserted supported-message-type URN is absent.",
+      "restoredSha256": "6478963f5c8770aea8cbc24ae3673eb37b61a903c98f6300fc03653c60a61064"
+    },
+    {
+      "id": "M05",
+      "axis": "redelivery-replaces-message-id",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Contexts/SendContextExtensions.cs",
+      "oldText": "                sendContext.ReplaceMessageId(consumeContext);\n",
+      "newText": "                GC.KeepAlive(consumeContext);\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "bc59cdf6eccd739c27d9a09fa811f252c6796e0b62722fca34d26be130c3dc2f",
+      "mutantSha256": "2cc1a9549d6dfa5963830a6d1fb050e3837770639aae022fbd3f997dea45d8d3",
+      "build": { "exitCode": 0, "binlog": "binlogs/M05-build.binlog", "log": "raw/M05-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 1, "passed": 0, "failed": 1, "skipped": 0, "ctrf": "mutations/M05.json", "owner": "ViciOne.ServiceBus.Tests.Serialization.SerializationContractIntegrationTests.RawSystemTextJson_RedeliveryPreservesTypeAndReplacesMessageId" },
+      "cause": "The second delivery retains the original MessageId instead of receiving a new identity.",
+      "restoredSha256": "bc59cdf6eccd739c27d9a09fa811f252c6796e0b62722fca34d26be130c3dc2f"
+    },
+    {
+      "id": "M06",
+      "axis": "messagepack-endpoint-response-serializer",
+      "path": "src/ViciOne.ServiceBus.MessagePack/Configuration/MessagePackConfigurationExtensions.cs",
+      "oldText": "    public static void UseMessagePackSerializer(this IReceiveEndpointConfigurator configurator, bool isDefault = true)\n    {\n        var factory = new MessagePackSerializerFactory();\n\n        configurator.AddSerializer(factory, isDefault);\n        configurator.AddDeserializer(factory, isDefault);\n",
+      "newText": "    public static void UseMessagePackSerializer(this IReceiveEndpointConfigurator configurator, bool isDefault = true)\n    {\n        var factory = new MessagePackSerializerFactory();\n\n        System.GC.KeepAlive(factory);\n        configurator.AddDeserializer(factory, isDefault);\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "d506f396a77d9bdf5195efbdadb2ee894fb61dff38cf9a1d18a3220efe0c4938",
+      "mutantSha256": "b8182b75cbfa79d1e141a9247faa4bc68f5ac02ea73bc2064ce27db01b301b20",
+      "build": { "exitCode": 0, "binlog": "binlogs/M06-build.binlog", "log": "raw/M06-build.log.gz" },
+      "test": { "exitCode": 2, "tests": 1, "passed": 0, "failed": 1, "skipped": 0, "ctrf": "mutations/M06.json", "owner": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests.MixedSerializers_PreserveEachDirectionAndExactContentType" },
+      "cause": "The request remains JSON but the response falls back to JSON instead of the exact MessagePack content type.",
+      "restoredSha256": "d506f396a77d9bdf5195efbdadb2ee894fb61dff38cf9a1d18a3220efe0c4938"
+    }
+  ],
+  "discardedCandidates": [
+    {
+      "path": "src/ViciOne.ServiceBus/Serialization/JsonConverters/SystemTextJsonConverterFactory.cs",
+      "axis": "receive-fault-converter-registration",
+      "reason": "Removing only the explicit ReceiveFault converter registration stayed green because this round-trip starts from the concrete ReceiveFaultEvent. It was restored and replaced by M02 at the exception-information owner."
+    }
+  ]
+}

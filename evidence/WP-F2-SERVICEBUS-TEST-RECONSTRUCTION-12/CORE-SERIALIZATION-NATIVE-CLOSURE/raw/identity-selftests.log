@@ -1,0 +1,37 @@
+^D...............PASS change-list written CHANGELIST.md
+.PASS change-list written CHANGELIST.md
+PASS change-list matches the generated evidence (4 entries)
+PASS change-list written CHANGELIST.md
+FAIL change-list line 16 differs
+  expected: | Modified | 1 |
+  actual:   | Renamed | 1 |
+PASS change-list written CHANGELIST.md
+FAIL change-list CHANGELIST.md is missing; the change evidence has no carrier
+PASS change-list written CHANGELIST.md
+FAIL change-list line 24 differs
+  expected: | `kept/Touched.cs` | Modified | `kept/Touched.cs` |
+  actual:   | `removed/Gone.cs` | Deleted | `removed/Gone.cs` |
+PASS change-list written CHANGELIST.md
+FAIL change-list has 1 line(s) too many
+PASS change-list written CHANGELIST.md
+.PASS change-list matches the generated evidence (10200 entries)
+..PASS change-list written CHANGELIST.md
+PASS change-list matches the generated evidence (4 entries)
+.PASS change-list written CHANGELIST.md
+FAIL change-list line 16 differs
+  expected: | Modified | 1 |
+  actual:   | Renamed | 1 |
+.PASS change-list written CHANGELIST.md
+FAIL change-list CHANGELIST.md is missing; the change evidence has no carrier
+.PASS change-list written CHANGELIST.md
+FAIL change-list line 24 differs
+  expected: | `kept/Touched.cs` | Modified | `kept/Touched.cs` |
+  actual:   | `removed/Gone.cs` | Deleted | `removed/Gone.cs` |
+.PASS change-list written CHANGELIST.md
+FAIL change-list has 1 line(s) too many
+.PASS change-list written CHANGELIST.md
+............................................................................................................................
+----------------------------------------------------------------------
+Ran 148 tests in 41.731s
+
+OK

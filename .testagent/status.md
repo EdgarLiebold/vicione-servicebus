@@ -2283,3 +2283,24 @@ future cohorts as complete.
 - No empty legacy test directory remains and no cloud fixture was required. This section accompanies
   the local Evidence-child content; independent read-only acceptance, architecture binding and any
   future remote publication remain pending and are not self-approved.
+
+## Core serialization obligations — large-package local Evidence freeze (2026-08-30)
+
+- Technical `564050280b901c93a59e883fab809616397512ed`, tree
+  `da8ca336f108d1eefc4ad1c62a7278fd80e779a8`, closes 58 selected serialization obligations as
+  `REPLACED_EXECUTING` in UnitArchitecture. Nine newly materialized cases and strengthened existing
+  carriers execute 14 focused System.Text.Json, raw JSON, redelivery and MessagePack cases.
+- Eleven fully replaced inherited serialization files and 1,865 legacy test lines are removed
+  atomically. The complete Technical package adds 814 lines and deletes 1,991, reducing the
+  repository by 1,177 lines while the executable floor rises from 2,514 to 2,523.
+- Focused execution is 14/14. Complete UnitArchitecture is 2,528/2,528 across 21 CTRFs with zero
+  failed, skipped, pending or other cases. Locked restore, Technical build, post-mutation Engineering
+  build and scoped format verification are green with zero build warnings and errors.
+- M01–M06 independently bind interface conversion, ReceiveFault exception information, external
+  MessageData references, raw type headers, redelivery MessageId replacement and MessagePack response
+  selection. Every counted mutant builds, its intended carrier turns red, and every product file is
+  restored byte-exactly.
+- The physical legacy serialization directory is absent after retirement; the frozen historical
+  identity baseline is intentionally unchanged. No cloud fixture was required and no remote push was
+  performed. Independent read-only acceptance, architecture binding and any future publication remain
+  pending and are not self-approved.
