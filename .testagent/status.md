@@ -2236,3 +2236,26 @@ future cohorts as complete.
   no external fixture was used.
 - No remote push was performed. Independent read-only acceptance, architecture binding and any future
   remote publication remain pending and are not self-approved by this local freeze.
+
+## Core fault and publication obligations 0144–0167, 0306–0310 and 0318–0324 — large-package local Evidence freeze (2026-08-30)
+
+- Technical `07be2a54e93450291092249e0930361de0cc1d2e`, tree
+  `3dae7390383d7baabe013399016153c626e11e64`, closes all 36 selected obligations as
+  `REPLACED_EXECUTING` in UnitArchitecture. Eleven new executable cases supply the missing native
+  fault, error-transport, polymorphism and publish-overload carriers; stronger existing owners carry
+  the remaining obligations.
+- Six fully replaced inherited files and 945 legacy test lines are removed atomically. The complete
+  Technical range adds 939 lines and deletes 949, reducing the repository by 10 lines while the
+  executable floor rises from 2,468 to 2,479.
+- Focused execution is 13/13. Complete UnitArchitecture is 2,484/2,484 across 21 CTRFs with zero
+  failed, skipped, pending or other cases. Locked restore, Release build and scoped format
+  verification are green with zero build warnings and errors.
+- M01–M07 independently bind the error-transport send, four-event exactly-once publication,
+  terminal 500-message fault-storm cardinality, typed and object publish-pipe propagation and
+  generic fault hierarchy projection. Every counted mutant builds, its intended carrier turns red,
+  and every product file is restored byte-exactly.
+- The assertion-quality and pseudo-mutation review replaced deduplicating recorders with raw
+  counters/queues and added a provider-owned final publication snapshot. This closes late-duplicate
+  and hidden-duplicate false-green paths without sleeps or absence-only success oracles.
+- This section accompanies the local Evidence-child content. Independent read-only acceptance,
+  architecture binding and any future remote publication remain pending and are not self-approved.
