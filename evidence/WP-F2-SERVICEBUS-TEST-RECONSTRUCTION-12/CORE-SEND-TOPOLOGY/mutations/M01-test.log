@@ -1,0 +1,22 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests.CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts (444ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  Assert.Equal() Failure: Values differ
+  Expected: 27810100-6d6c-1461-7ab8-08df0659c0d3
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests.CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs:54
+    um ViciOne.ServiceBus.Tests.Topology.Configuration.TopologyConventionIntegrationTests.CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs:61
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (1s 192ms)
+Exitcode: 2
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vicione-topology-evidence/mutations/M01.json
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 018ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)

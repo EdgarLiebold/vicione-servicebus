@@ -309,10 +309,10 @@
     "baselineSha256": "093403afbcd4c182148279e8a736d7c39956c094e675910c35b231e1dc167d81",
     "pathDisposition": "UNCHANGED",
     "targetExists": true,
-    "targetGitBlobOid": "5b449a24d4e733600c9f3946ffaed8d6bb1f1ce0",
+    "targetGitBlobOid": "795822e21789cc152ce2be712656701f4ea0405d",
     "targetGitMode": "100644",
     "targetPath": "README.md",
-    "targetSha256": "f4856a406d480dd39653006dfa2def8da5ae1997a228ceb3ae1a3cda65c70559"
+    "targetSha256": "dcbde989199f5e254e34f982284f330a119efd10ec1c8918cef862019f97afa7"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
@@ -84646,33 +84646,33 @@
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
-    "baselineDisposition": "MOVED_EXACT",
+    "baselineDisposition": "RETIRED_DELETED",
     "baselineGitBlobOid": "e2406a7127acb96c087f4161c9a95e78d362477b",
     "baselineGitMode": "100644",
     "baselineKey": "e115b9f845883e0fdebcfb12fe0a409b532f6440fb0b8fef6769887a4ba39219",
     "baselinePathSha256": "660209fa33a8083adebaea312cc4974118de897b0b3a13bf4c450e0c5862a8a0",
     "baselineSha256": "4a835789c6f78a336cbed150642865c6858f50dc53a3781d89261812340816d2",
     "pathDisposition": "RENAMED",
-    "targetExists": true,
-    "targetGitBlobOid": "ca8ca6e142b3dd299f85e3c79dc7e19acb2f8c86",
-    "targetGitMode": "100644",
-    "targetPath": "tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs",
-    "targetSha256": "9ad47976be2c1b50a2f48d1d634d721f51cd34ae0088fd1d4cc31e290f42eedd"
+    "retirementCommit": "a23e9f58bcb7b849a3f36116df16faab3c61d161",
+    "retirementEvidence": "ROOT_CHANGE_LIST",
+    "retirementTree": "8e7ccae6aa39493438d9e8ca2249630498637283",
+    "targetExists": false,
+    "targetPath": "tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
-    "baselineDisposition": "MOVED_EXACT",
+    "baselineDisposition": "RETIRED_DELETED",
     "baselineGitBlobOid": "aef29fba7d572a2e7814ac9575c307f9318e16ac",
     "baselineGitMode": "100644",
     "baselineKey": "9b8daeabd30a5b30d6929ecd62df77ac1d522553db206ac426068ef48eda45f9",
     "baselinePathSha256": "fc83217b31a939a6a8f9a605b3b02a0aac04d57806d72709eef5f362adea9261",
     "baselineSha256": "59c26a64ffd9e3408a6550b59ef59c16adc242253664a9a1c6324f05e7fe2388",
     "pathDisposition": "RENAMED",
-    "targetExists": true,
-    "targetGitBlobOid": "6769bc5fb2d66fb96f2e95920770189c4b792733",
-    "targetGitMode": "100644",
-    "targetPath": "tests/ViciOne.ServiceBus.Tests/Topology/MessageSerializer_Specs.cs",
-    "targetSha256": "83ea604a7c57d03d8132de40877fc148614ad0f482eb07c7460a52b93fe2e3e5"
+    "retirementCommit": "a23e9f58bcb7b849a3f36116df16faab3c61d161",
+    "retirementEvidence": "ROOT_CHANGE_LIST",
+    "retirementTree": "8e7ccae6aa39493438d9e8ca2249630498637283",
+    "targetExists": false,
+    "targetPath": "tests/ViciOne.ServiceBus.Tests/Topology/MessageSerializer_Specs.cs"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",

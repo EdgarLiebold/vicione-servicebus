@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_SEND_TOPOLOGY_NATIVE_CLOSURE_RESULTS",
+  "technicalCommit": "a23e9f58bcb7b849a3f36116df16faab3c61d161",
+  "technicalTree": "8e7ccae6aa39493438d9e8ca2249630498637283",
+  "technicalParent": "70691a661be7b9384098a6aa9ba0ab7f1728bfdb",
+  "obligations": { "first": "OBL-R0-CORE-C-0428", "last": "OBL-R0-CORE-C-0429", "count": 2, "replacedExecuting": 2, "profile": "UnitArchitecture" },
+  "focusedTopology": { "tests": 2, "passed": 2, "failed": 0, "skipped": 0, "ctrf": "positive/focused-topology.json" },
+  "requirementProjection": { "tests": 1, "passed": 1, "failed": 0, "skipped": 0, "ctrf": "positive/requirement-projection.json" },
+  "unitArchitecture": { "ctrfFiles": 21, "tests": 2415, "passed": 2415, "failed": 0, "skipped": 0, "pending": 0, "other": 0, "declaredFloor": 2410 },
+  "engineeringRestore": { "exitCode": 0, "lockedMode": true, "rawLog": "raw/engineering-restore.log" },
+  "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0, "rawLog": "raw/engineering-build.log" },
+  "ciSelfTests": { "tests": 257, "passed": 257, "failed": 0, "executionBoundary": "outside restricted sandbox because process inspection is denied inside it", "rawLog": "raw/ci-tooltests.log" },
+  "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0, "rawLog": "raw/identity-selftests.log" },
+  "verificationModel": { "status": "PASS", "rawLog": "raw/verification-model.log" },
+  "identityGate": { "status": "PASS", "findings": 0, "baselinePaths": 5654, "liveBaselineTargetsWithGitIdentity": 4199, "currentProductPublicDeclarations": 24987, "currentAddedPublicDeclarations": 1711, "publicDeclarationRecords": 44090, "rawLog": "raw/identity-evidence.log" },
+  "changeList": { "status": "PASS", "entries": 9709, "rawLog": "raw/change-list.log" },
+  "retirement": { "trackedLegacyFilesRemoved": 2, "legacyTopologyDirectoryPresent": false, "emptyLegacyTestDirectories": 0 },
+  "mutations": { "count": 3, "built": 3, "killed": 3, "restored": 3 },
+  "remotePushPerformed": false
+}

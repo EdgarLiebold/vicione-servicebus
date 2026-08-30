@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4007 |
-| Modified | 4195 |
-| Deleted | 1453 |
+| Added | 4059 |
+| Modified | 4193 |
+| Deleted | 1455 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -34,6 +34,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/research.md` | Added |  |
 | `.testagent/sql-native-obligation-map.tsv` | Added |  |
 | `.testagent/status.md` | Added |  |
+| `.testagent/topology-native-obligation-map.tsv` | Added |  |
 | `.testagent/transactional-bus-obligation-map.tsv` | Added |  |
 | `.testagent/transform-native-obligation-map.tsv` | Added |  |
 | `AGENTS.md` | Modified | `AGENTS.md` |
@@ -2069,6 +2070,56 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_32.896168.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_34.493325.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PIPELINE/positive/edgar.liebold_Edgars-iMac-2_2026-08-26_07_44_36.606972.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/focused-topology.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/requirement-projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_00.784312.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_02.030527.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_23.013350.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_25.993300.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_28.316522.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_29.767588.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_33.680303.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_35.378992.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_36.771815.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_40_56.613674.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_41_02.101788.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_43.338821.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_44.651717.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_47.793700.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_49.245274.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_50.582444.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_52.187280.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_53.637772.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_54.993668.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_56.424810.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_05_42_58.048561.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/ci-tooltests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/focused-topology.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/identity-evidence.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/identity-gate.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/requirement-projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/restored-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/unit-architecture.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SEND-TOPOLOGY/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/SHA256SUMS` | Added |  |
@@ -8440,6 +8491,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` | Deleted | `tests/MassTransit.Tests/Testing/StateMachineSagaTest_Specs.cs` |
 | `tests/MassTransit.Tests/Threading_Specs.cs` | Deleted | `tests/MassTransit.Tests/Threading_Specs.cs` |
 | `tests/MassTransit.Tests/Timeout_Specs.cs` | Deleted | `tests/MassTransit.Tests/Timeout_Specs.cs` |
+| `tests/MassTransit.Tests/Topology/CreateTopology_Specs.cs` | Deleted | `tests/MassTransit.Tests/Topology/CreateTopology_Specs.cs` |
+| `tests/MassTransit.Tests/Topology/MessageSerializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Topology/MessageSerializer_Specs.cs` |
 | `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalBusSendEndpoint_Specs.cs` |
 | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalBus_Specs.cs` |
 | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transactions/TransactionalEnlistmentBus_Specs.cs` |
@@ -8941,8 +8994,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/StartStop_Specs.cs` | Modified | `tests/MassTransit.Tests/StartStop_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Telemetry_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/TestTimeoutBudget_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/Topology/CreateTopology_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/CreateTopology_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Topology/MessageSerializer_Specs.cs` | Modified | `tests/MassTransit.Tests/Topology/MessageSerializer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
@@ -9600,6 +9651,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |

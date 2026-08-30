@@ -2081,3 +2081,21 @@ future cohorts as complete.
 - This remains a pre-Evidence-commit checkpoint. Final identity/CHANGELIST regeneration, the direct
   Evidence child, architecture binding and any remote publication remain pending and are not
   self-approved here.
+
+## Core send-topology native closure — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `a23e9f58bcb7b849a3f36116df16faab3c61d161`, tree
+  `8e7ccae6aa39493438d9e8ca2249630498637283`, replaces the exact two inherited identities
+  `OBL-R0-CORE-C-0428..0429` with two source-mirrored xUnit 4 / MTP v2 carriers.
+- The two fully replaced inherited Topology C# files and their now-empty directory are removed.
+  A repository check below `tests/` finds no remaining empty directory.
+- Focused execution is 2/2, requirement projection is 1/1 and complete UnitArchitecture is
+  2,415/2,415 with zero failures or skips above the independent 2,410 floor. Locked Engineering
+  restore and Release build pass with zero warnings and errors; CI tool tests pass 257/257 outside
+  the restricted process sandbox and the verification model passes.
+- M01-M03 independently bind global and interface correlation selectors plus the message-specific
+  Raw-JSON serializer. Every mutant builds cleanly, makes only its named carrier red and restores
+  the exact Technical-tree file SHA before the final positive build.
+- This is explicitly a pre-Evidence-commit checkpoint. Final identity/CHANGELIST regeneration, the
+  direct Evidence child, architecture binding and any remote publication remain pending and are not
+  self-approved here.
