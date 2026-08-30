@@ -2131,3 +2131,21 @@ future cohorts as complete.
   The product source is then restored byte-identically.
 - This is explicitly a pre-Evidence-commit checkpoint. The direct Evidence child, final generated
   CHANGELIST, architecture binding and any remote publication remain pending and are not self-approved.
+
+## In-memory dual-host retirement — local Evidence freeze (2026-08-30)
+
+- Technical `47f73aa331a58328b133ccf9d105cd1d824ffccd`, tree
+  `4e279274d7365b1285457738b4c64b5197baca78`, replaces the exact dual-host obligation
+  `OBL-R0-CORE-D-0175` with one stronger source-mirrored xUnit 4 / MTP v2 carrier.
+- Direct Evidence child `7c11ae93977bc788533614fc760459fea43d1fb0`, tree
+  `eb37206fcacd49221c72f25bbc67efb50cc4b6d6`, binds 32 nonmanifest artifacts with 32/32
+  SHA-256 closure, the byte-exact Technical patch and two independently reconstructible mutants.
+- Focused carrier and requirement projection are each 1/1. Complete UnitArchitecture is
+  2,416/2,416 with zero failures or skips; focused and Engineering Release builds have zero
+  warnings/errors; CI self-tests are 257/257, identity self-tests 148/148 and the verification
+  model passes.
+- The final identity gate passes with zero findings over 5,654 baseline paths and 24,987 current
+  product declarations; generated CHANGELIST closes at 9,810 entries. No empty test directory
+  remains. No remote push was performed.
+- Independent read-only acceptance, architecture binding and any future remote publication remain
+  pending and are not self-approved by this local freeze.
