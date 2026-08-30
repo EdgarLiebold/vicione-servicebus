@@ -273,26 +273,15 @@
     },
     {
       "id": "serialization-messagepack",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/ViciOne.ServiceBus.MessagePack"
       ],
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [],
-      "verifiedThroughCapability": "core",
-      "testAnchors": [
-        {
-          "category": "core",
-          "fixture": "ViciOne.ServiceBus.Tests.Serialization.Hardening_the_message_pack_reader"
-        },
-        {
-          "category": "core",
-          "fixture": "ViciOne.ServiceBus.Tests.Serialization.Owning_the_message_pack_option_set"
-        }
-      ]
+      "rationale": "The inherited MessagePack serialization fixtures are retired after complete closure of OBL-R0-CORE-C-0153 through OBL-R0-CORE-C-0350 where applicable. MessagePack behavior and its hardened serializer-owner boundary execute in the native xUnit 4/MTP v2 project in the UnitArchitecture profile.",
+      "runs": []
     },
     {
       "id": "signalr",

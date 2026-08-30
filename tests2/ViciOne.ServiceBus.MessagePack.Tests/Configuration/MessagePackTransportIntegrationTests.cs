@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -143,14 +144,20 @@ public sealed class MessagePackTransportIntegrationTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-REDELIVERY", "messagepack-envelope-remains-consumable")]
     public async Task DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDelivery()
     {
+        TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        TimeSpan interval = TimeSpan.FromHours(1);
         await using var provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration =>
             {
+                configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddConsumer<FaultOnceConsumer>();
                 configuration.AddConfigureEndpointsCallback((_, _, endpoint) =>
                     endpoint.UseDelayedRedelivery(redelivery =>
                     {
-                        redelivery.Intervals(TimeSpan.FromMilliseconds(5));
+                        redelivery.Intervals(interval);
                         redelivery.ReplaceMessageId = true;
                     }));
                 configuration.UsingInMemory((context, transport) =>
@@ -161,38 +168,110 @@ public sealed class MessagePackTransportIntegrationTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        var harness = await provider.StartTestHarness();
+        var harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        var scheduled = new MessagePackScheduledObserver();
+        using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
+        Guid originalMessageId = Guid.Parse("9d004f10-c5a8-42f7-bfd0-bf5df26fab78");
+        IList<IReceivedMessage<RetryMessage>> deliveries;
 
         try
         {
             await harness.Bus.Publish(
                 new RetryMessage { Value = "preserved" },
-                TestContext.Current.CancellationToken);
+                context => context.MessageId = originalMessageId,
+                cancellationToken);
 
-            Assert.True(await harness.Published.Any<CompletedMessage>(TestContext.Current.CancellationToken));
-            IList<IReceivedMessage<RetryMessage>> deliveries = await harness.Consumed
-                .SelectAsync<RetryMessage>(TestContext.Current.CancellationToken)
+            SendContext scheduledContext = await scheduled.Scheduled.WaitAsync(timeout, cancellationToken);
+            Assert.Equal(interval, scheduledContext.Delay);
+            provider.GetRequiredService<IInMemoryDelayProvider>().Advance(interval);
+
+            Assert.True(await harness.Published.Any<CompletedMessage>(cancellationToken));
+            deliveries = await harness.Consumed
+                .SelectAsync<RetryMessage>(cancellationToken)
                 .Take(2)
-                .ToListAsync(TestContext.Current.CancellationToken);
-
-            Assert.Equal(2, deliveries.Count);
-            Assert.All(deliveries, delivery =>
-            {
-                Assert.Equal("preserved", delivery.Context.Message.Value);
-                Assert.Equal(
-                    MessagePackMessageSerializer.MessagePackContentType,
-                    delivery.Context.ReceiveContext.ContentType);
-                Assert.Contains(
-                    MessageUrn.ForTypeString<RetryMessage>(),
-                    delivery.Context.SupportedMessageTypes);
-            });
-            Assert.Equal(0, deliveries[0].Context.GetRedeliveryCount());
-            Assert.Equal(1, deliveries[1].Context.GetRedeliveryCount());
+                .ToListAsync(cancellationToken);
         }
         finally
         {
-            await harness.Stop(TestContext.Current.CancellationToken);
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
+
+        Assert.Equal(2, deliveries.Count);
+        Assert.All(deliveries, delivery =>
+        {
+            Assert.Equal("preserved", delivery.Context.Message.Value);
+            Assert.Equal(
+                MessagePackMessageSerializer.MessagePackContentType,
+                delivery.Context.ReceiveContext.ContentType);
+            Assert.Contains(
+                MessageUrn.ForTypeString<RetryMessage>(),
+                delivery.Context.SupportedMessageTypes);
+        });
+        Assert.Equal(originalMessageId, deliveries[0].Context.MessageId);
+        Assert.NotNull(deliveries[1].Context.MessageId);
+        Assert.NotEqual(deliveries[0].Context.MessageId, deliveries[1].Context.MessageId);
+        Assert.Equal(0, deliveries[0].Context.GetRedeliveryCount());
+        Assert.Equal(1, deliveries[1].Context.GetRedeliveryCount());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-MIXED-SERIALIZERS", "json-request-messagepack-response")]
+    public async Task MixedSerializers_PreserveEachDirectionAndExactContentType()
+    {
+        TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions()
+            .OperationTimeout!.Value;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var pingReceived = new TaskCompletionSource<ConsumeContext<MixedPing>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.AddHandler<MixedPing>(async context =>
+                {
+                    pingReceived.TrySetResult(context);
+                    await context.RespondAsync(
+                        new MixedPong(context.Message.CorrelationId, "messagepack"));
+                });
+                configuration.AddConfigureEndpointsCallback((_, _, endpoint) =>
+                    endpoint.UseMessagePackSerializer());
+                configuration.UsingInMemory((context, transport) =>
+                {
+                    transport.UseMessagePackDeserializer();
+                    transport.ConfigureEndpoints(context);
+                });
+            })
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = await provider.StartTestHarness()
+            .WaitAsync(operationTimeout, cancellationToken);
+        Guid correlationId = Guid.Parse("a22b393a-5a4b-447b-bdc6-52089d5736a3");
+        ConsumeContext<MixedPing> ping;
+        ConsumeContext<MixedPong> pong;
+
+        try
+        {
+            Task<ConsumeContext<MixedPong>> pongReceived =
+                await harness.ConnectPublishHandler<MixedPong>(_ => true);
+            await harness.Bus.Publish(
+                    new MixedPing(correlationId, "json"),
+                    cancellationToken)
+                .WaitAsync(operationTimeout, cancellationToken);
+            ping = await pingReceived.Task.WaitAsync(operationTimeout, cancellationToken);
+            pong = await pongReceived.WaitAsync(operationTimeout, cancellationToken);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None)
+                .WaitAsync(operationTimeout, CancellationToken.None);
+        }
+
+        Assert.Equal(correlationId, ping.Message.CorrelationId);
+        Assert.Equal("json", ping.Message.Value);
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, ping.ReceiveContext.ContentType);
+        Assert.Equal(correlationId, pong.Message.CorrelationId);
+        Assert.Equal("messagepack", pong.Message.Value);
+        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, pong.ReceiveContext.ContentType);
     }
 
     private sealed class FaultOnceConsumer : IConsumer<RetryMessage>
@@ -220,6 +299,9 @@ public sealed class MessagePackTransportIntegrationTests
         public string Value { get; set; } = string.Empty;
     }
 
+    public sealed record MixedPing(Guid CorrelationId, string Value);
+    public sealed record MixedPong(Guid CorrelationId, string Value);
+
     private sealed class ForwardExpirationMessage
     {
         public string Value { get; set; } = string.Empty;
@@ -230,6 +312,35 @@ public sealed class MessagePackTransportIntegrationTests
         DateTime CapturedAtUtc);
 
     private sealed class ExpectedRedeliveryException : Exception;
+
+    private sealed class MessagePackScheduledObserver : ISendObserver
+    {
+        private readonly TaskCompletionSource<SendContext> _scheduled = new(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task<SendContext> Scheduled => _scheduled.Task;
+
+        public Task PreSend<T>(SendContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task PostSend<T>(SendContext<T> context)
+            where T : class
+        {
+            if (typeof(T) == typeof(RetryMessage) && context.Delay.HasValue)
+                _scheduled.TrySetResult(context);
+
+            return Task.CompletedTask;
+        }
+
+        public Task SendFault<T>(SendContext<T> context, Exception exception)
+            where T : class
+        {
+            if (typeof(T) == typeof(RetryMessage) && context.Delay.HasValue)
+                _scheduled.TrySetException(exception);
+
+            return Task.CompletedTask;
+        }
+    }
 
     private sealed class DestinationSendObserver(Uri destinationAddress) : ISendObserver
     {

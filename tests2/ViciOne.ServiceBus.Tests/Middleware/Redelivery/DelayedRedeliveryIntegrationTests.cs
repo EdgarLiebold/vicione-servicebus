@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -122,6 +123,9 @@ public sealed class DelayedRedeliveryIntegrationTests
         ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
         var scheduled = new ScheduledSendObserver(typeof(IdentityMessage));
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
+        DeliverySnapshot first;
+        DeliverySnapshot second;
+        ScheduleSnapshot schedule;
 
         try
         {
@@ -132,10 +136,10 @@ public sealed class DelayedRedeliveryIntegrationTests
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
-            DeliverySnapshot first = await deliveries.Next(timeout, cancellationToken);
-            ScheduleSnapshot schedule = await scheduled.Next(timeout, cancellationToken);
+            first = await deliveries.Next(timeout, cancellationToken);
+            schedule = await scheduled.Next(timeout, cancellationToken);
             provider.GetRequiredService<IInMemoryDelayProvider>().Advance(TimeSpan.FromHours(1));
-            DeliverySnapshot second = await deliveries.Next(timeout, cancellationToken);
+            second = await deliveries.Next(timeout, cancellationToken);
 
             Assert.Equal(originalMessageId, first.MessageId);
             Assert.Null(first.OriginalMessageId);
@@ -150,6 +154,14 @@ public sealed class DelayedRedeliveryIntegrationTests
         {
             await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
+
+        string messageUrn = MessageUrn.ForTypeString<IdentityMessage>();
+        Assert.Equal(2, deliveries.Count);
+        Assert.Equal(1, scheduled.Count);
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType.MediaType, first.ContentType);
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType.MediaType, second.ContentType);
+        Assert.Contains(messageUrn, first.SupportedMessageTypes, StringComparer.Ordinal);
+        Assert.Contains(messageUrn, second.SupportedMessageTypes, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -324,7 +336,9 @@ public sealed class DelayedRedeliveryIntegrationTests
             var snapshot = new DeliverySnapshot(
                 context.MessageId,
                 originalMessageId,
-                context.GetRedeliveryCount());
+                context.GetRedeliveryCount(),
+                context.ReceiveContext.ContentType.MediaType,
+                [.. context.SupportedMessageTypes]);
             _snapshots.Enqueue(snapshot);
             Assert.True(_deliveries.Writer.TryWrite(snapshot));
             return count;
@@ -385,7 +399,12 @@ public sealed class DelayedRedeliveryIntegrationTests
         }
     }
 
-    private sealed record DeliverySnapshot(Guid? MessageId, Guid? OriginalMessageId, int RedeliveryCount);
+    private sealed record DeliverySnapshot(
+        Guid? MessageId,
+        Guid? OriginalMessageId,
+        int RedeliveryCount,
+        string ContentType,
+        string[] SupportedMessageTypes);
     private sealed record ScheduleSnapshot(Type MessageType, TimeSpan Delay, Guid? MessageId, Guid? OriginalMessageId);
 
     private sealed class ExpectedIntervalFailure : Exception;

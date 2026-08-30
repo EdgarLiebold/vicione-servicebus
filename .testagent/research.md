@@ -2728,3 +2728,29 @@ only by materialized new cases. The ten inherited files are deleted together onl
 an executing carrier and external references are absent. One focused development loop precedes one
 locked restore, one Release build, one complete UnitArchitecture run, one compact mutation block and
 one Evidence/architecture freeze.
+
+## Core serialization 58-obligation package research
+
+This package closes fifty-eight frozen Core-C obligations from eleven complete inherited files as
+one serializer boundary. The files contain 1,865 lines and cover the retained System.Text.Json and
+MessagePack implementations, interface proxy dispatch, job dictionaries, MessageData references,
+ReceiveFault exception projection, delayed redelivery, raw-any dispatch and mixed serializers.
+
+Forty-nine obligations already have stronger executing native owners. MessagePack owns exact binary,
+DateTime, constructor-bound, scalar, precision, formatter-cache, envelope-clone, hardening, job,
+MessageData, ReceiveFault, interface-pipeline and redelivery tests. Existing envelope metadata tests
+also supersede the inherited shared-fixture assertions. Those carriers are mapped, not copied.
+
+The remaining surface needs eight new methods and nine materialized cases: one consolidated
+System.Text.Json challenging-contract round trip, one real interface-proxy dispatch, one job payload
+dictionary round trip, one MessageData external-reference round trip, a two-row ReceiveFault Theory,
+one virtual-time raw-redelivery flow, one raw concrete-to-requested-interface flow and one mixed
+System.Text.Json/MessagePack request-response flow. Every transport case uses a positive receive or
+scheduled-redelivery barrier and a terminal stop before exact-count assertions; no sleep or quiet
+window is introduced.
+
+All eleven inherited files are self-contained and glob-included. Their complete replacement leaves
+the inherited Serialization directory empty, so the directory disappears naturally when the files
+are deleted. `build/verification/expected/core.txt` remains the immutable historical inventory. The
+nine executable cases raise the fail-closed UnitArchitecture floor from 2,514 to 2,523; the complete
+restore/build/test and compact mutation/evidence cost is paid once for the whole package.

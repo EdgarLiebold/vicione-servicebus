@@ -2333,3 +2333,26 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 7. Bind one compact independent mutation block across the actual batching/mediator/routing seams,
    restore every product byte, then freeze one Technical commit, one direct Evidence child and one
    architecture binding. No remote push occurs without a new explicit authorization.
+
+## Core serialization 58-obligation execution plan
+
+1. Close exactly `OBL-R0-CORE-C-0153..0166`, `0172..0179`, `0180..0185`, `0275..0294`,
+   `0343..0351` and `0464` as one UnitArchitecture package.
+2. Reuse the accepted MessagePack formatter-cache, scalar, envelope-clone, hardening, interface,
+   job, MessageData, ReceiveFault and redelivery carriers plus the exact envelope-metadata owner.
+   Add no renamed duplicate for behavior those tests already prove more strongly.
+3. Add compact System.Text.Json owners for the remaining challenging shapes, interface dispatch,
+   job dictionary, MessageData reference, ReceiveFault variants, raw virtual-time redelivery and raw
+   concrete-to-interface dispatch. Add one MessagePack integration owner for JSON request plus
+   MessagePack response with both exact content types.
+4. Use positive product-owned completion or scheduled-redelivery barriers and stop/drain before
+   terminal exact-count assertions. No `Task.Delay`, sleep or absence-only success oracle is allowed.
+5. Add one 58-row terminal map and eight passive requirement bindings. Raise the executable floor by
+   the nine materialized cases from 2,514 to 2,523.
+6. Delete all eleven fully replaced inherited Serialization files atomically after focused green
+   execution. Verify that their directory is then absent; do not touch the historical expected-core
+   identity list.
+7. Run one locked restore, one Engineering Release build, one complete UnitArchitecture profile,
+   scoped format and repository gates. Bind a compact independent mutation set across the actual
+   serializer/transport seams, restore every byte, then freeze one Technical commit, one direct
+   Evidence child and one architecture binding. Remote publication remains separately authorized.
