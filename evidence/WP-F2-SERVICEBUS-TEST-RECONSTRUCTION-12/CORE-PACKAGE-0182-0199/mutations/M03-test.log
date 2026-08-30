@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Contracts.InterfaceMessageDispatchTests.ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce (30s 642ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : Message List was empty, or timed out
+    um ViciOne.ServiceBus.Testing.AsyncElementListExtensions.First[TElement](IAsyncEnumerable`1 elements) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Testing/AsyncElementListExtensions.cs:18
+    um ViciOne.ServiceBus.Tests.Contracts.InterfaceMessageDispatchTests.ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs:38
+    um ViciOne.ServiceBus.Tests.Contracts.InterfaceMessageDispatchTests.ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs:56
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/test-results/core-package-0182-0199/final/mutations/M03.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 31s 547ms
+EXIT_CODE=2

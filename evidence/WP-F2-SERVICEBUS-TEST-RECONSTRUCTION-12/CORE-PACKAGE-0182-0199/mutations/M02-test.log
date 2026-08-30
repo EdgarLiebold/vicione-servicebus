@@ -1,0 +1,20 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests.ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation (500ms)
+  Assert.Equal() Failure: Collections differ at index 0
+             ↓ (pos 0)
+  Expected: "before"
+  Actual:   "consume"
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests.ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs:37
+    um ViciOne.ServiceBus.Tests.Configuration.Configuration.ConsumerMessageConfigurationTests.ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs:43
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/test-results/core-package-0182-0199/final/mutations/M02.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 135ms
+EXIT_CODE=2

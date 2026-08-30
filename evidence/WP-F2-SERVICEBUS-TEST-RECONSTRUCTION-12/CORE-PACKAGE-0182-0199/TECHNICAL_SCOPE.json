@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "d74650ff20469fe3e244ca63ae5d5215aaeb1830",
+  "technicalTree": "fbde8d428755178821056310e299c085b68da49b",
+  "technicalParent": "318646c5e3eec7e757588b90e5989aadc207f74d",
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/core-package-0182-0199-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "CHANGELIST.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/InterceptingConsumer_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/InterfaceSubscription_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+  ]
+}
