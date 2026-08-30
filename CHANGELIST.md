@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4115 |
-| Modified | 4191 |
-| Deleted | 1457 |
+| Added | 4127 |
+| Modified | 4190 |
+| Deleted | 1458 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
+| `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/message-fabric-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
@@ -2028,10 +2029,20 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/TECHNICAL.patch.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/TECHNICAL_SCOPE.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/mutations/M01-test.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/mutations/M01.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/positive/focused.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/positive/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/ci-tooltests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-evidence.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-gate.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/unit-architecture.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/SHA256SUMS` | Added |  |
@@ -8421,6 +8432,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/HeaderObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/HeaderObject_Specs.cs` |
 | `tests/MassTransit.Tests/HostInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/HostInfo_Specs.cs` |
 | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
+| `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Class_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/Expando_Specs.cs` |
 | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Initializers/HeaderInitializer_Specs.cs` |
@@ -8844,7 +8856,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs` | Modified | `tests/MassTransit.Tests/ExcessiveAsyncFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/FaultPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPublish_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InMemoryDuo_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxDirectPath_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
@@ -9564,6 +9575,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs` | Added |  |
