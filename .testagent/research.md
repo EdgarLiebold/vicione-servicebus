@@ -2499,3 +2499,15 @@ because its filter added a payload. The remaining closure work is therefore an e
 terminal map, deletion of the fully replaced NUnit file, focused re-execution and a product mutation
 that removes `ConsumerConfigurator.AddPipeSpecification` forwarding. No test-count or floor increase
 is truthful for this retirement-only cohort.
+
+## Consumer request/response retirement research
+
+The single inherited obligation in `Consumer_Specs.cs` is assertion-free: it only awaits a response
+from a class consumer registered on the in-memory endpoint. The existing native DI-harness Fact
+`ScopedRequestClient_RecordsTheExactRequestAndResponse` already executes the same registration and
+request/response boundary more strongly. It proves exact request, response and sent correlation
+identity, exact request-id flow, and absence of consume/send exceptions, with bounded operation
+tokens and deterministic harness cleanup. The correct closure is therefore an explicit one-row
+terminal map plus deletion of the redundant NUnit file, not a new duplicate Fact or floor increase.
+The narrow product counter-mutation removes only the scoped-consumer attachment call from the DI
+receive-endpoint extension; build validity is retained while the focused carrier loses its consumer.

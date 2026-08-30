@@ -1,0 +1,2 @@
+obligationId	disposition	profile	targetProject	targetTest
+OBL-R0-CORE-D-0033	REPLACED_EXECUTING	UnitArchitecture	tests2/ViciOne.ServiceBus.Tests	DependencyInjectionTestHarnessTests.ScopedRequestClient_RecordsTheExactRequestAndResponse

@@ -2151,3 +2151,18 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 4. Run the focused carrier, complete UnitArchitecture and Engineering Release checks, and bind one
    exact product mutation that omits consumer-level pipe-specification registration. Freeze separate
    Technical and Evidence commits. Remote publication remains separately authorized.
+
+## Consumer request/response retirement execution plan
+
+1. Bind `OBL-R0-CORE-D-0033` to the already executing xUnit 4/MTP v2 DI harness Fact
+   `DependencyInjectionTestHarnessTests.ScopedRequestClient_RecordsTheExactRequestAndResponse`;
+   do not add a redundant Fact or raise the test floor.
+2. Require the stronger native carrier to prove the registered class consumer receives the exact
+   correlation id, returns the exact response, preserves the request id and records both terminal
+   observations without consume or send exceptions.
+3. Delete `tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs` only after the focused carrier and
+   passive requirement projection remain green. Retain the legacy project root and every unrelated
+   inherited test.
+4. Run the focused carrier, complete UnitArchitecture and Engineering Release checks, and bind one
+   exact product mutation that omits scoped consumer attachment at the DI receive endpoint. Freeze
+   separate Technical and Evidence commits. Remote publication remains separately authorized.
