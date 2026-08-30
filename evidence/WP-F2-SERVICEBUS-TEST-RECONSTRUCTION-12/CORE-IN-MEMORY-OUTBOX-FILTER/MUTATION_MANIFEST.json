@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_IN_MEMORY_OUTBOX_FILTER_RETIREMENT_MUTATIONS",
+  "technicalCommit": "917f54f60a5c237b1d6be477c383d4c800d91c4e",
+  "technicalTree": "b68e12b805b89b8ae8a07ecb7bc8d1ccd622d1f6",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "missing-bus-bound-setter",
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs",
+      "oldText": "            if (_setter != null && context.TryGetPayload(out IServiceScope scope))\n",
+      "newText": "            if (context.TryGetPayload(out IServiceScope scope))\n",
+      "occurrenceCount": 1,
+      "baselineSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "mutantSha256": "0cdbe59982bc3c9e8ef5e1033668f785d47e851362fe2165155ae3ffe11dab83",
+      "restoredSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M01-build.log",
+        "binlog": "binlogs/M01-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-method ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests.MissingBusBoundSetter_LeavesForeignScopeUntouchedAndContinuesThePipeline --minimum-expected-tests 1 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "ctrf": "mutations/M01.json",
+        "rawLog": "mutations/M01-test.log"
+      },
+      "cause": "Removing the null guard dereferences the absent bus-bound setter even though the foreign service-scope payload is valid; the direct-path carrier fails at the product call site."
+    },
+    {
+      "id": "M02",
+      "axis": "execute-pending-actions-after-success",
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs",
+      "oldText": "                await outboxContext.ExecutePendingActions(_concurrentMessageDelivery).ConfigureAwait(false);\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "baselineSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "mutantSha256": "f4801b19f44f75c5c479f864cb03d6fdf4a1f145a30b1ad2b3cc6cef1c0e8d29",
+      "restoredSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M02-build.log",
+        "binlog": "binlogs/M02-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-method ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests.SuccessfulConsume_ExecutesPendingActionOnlyAfterThePipeCompletes --minimum-expected-tests 1 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "ctrf": "mutations/M02.json",
+        "rawLog": "mutations/M02-test.log"
+      },
+      "cause": "The consume pipe completes but the independently recorded pending action never executes, so the exact event sequence is incomplete."
+    },
+    {
+      "id": "M03",
+      "axis": "discard-pending-actions-after-failure",
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs",
+      "oldText": "                await outboxContext.DiscardPendingActions().ConfigureAwait(false);\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "baselineSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "mutantSha256": "2a1a4e3fb2e8d20198631d5e0a2a5496d4d92b73ff684469a30935fe307d99b3",
+      "restoredSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M03-build.log",
+        "binlog": "binlogs/M03-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-method ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests.FailedConsume_DiscardsPendingActionAndPropagatesTheOriginalException --minimum-expected-tests 1 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "ctrf": "mutations/M03.json",
+        "rawLog": "mutations/M03-test.log"
+      },
+      "cause": "After the original consume exception is propagated, the test-owned manual drain observes that the failed message's pending action survived, proving cleanup was skipped."
+    },
+    {
+      "id": "M04",
+      "axis": "scoped-context-restoration",
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs",
+      "oldText": "                pop?.Dispose();\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "baselineSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "mutantSha256": "ba8819a0221741478dbd7b1232f910080e9d6a2ded9dfc8c5fff0d990bde1647",
+      "restoredSha256": "8c5ec3bdc809809357457ea6049b9e276bedda960e76cb12dd01d73fc0c24c33",
+      "build": {
+        "command": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --configuration Release --no-restore --no-incremental --disable-build-servers",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0,
+        "rawLog": "mutations/M04-build.log",
+        "binlog": "binlogs/M04-build.binlog"
+      },
+      "test": {
+        "command": "artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests --filter-class ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests --minimum-expected-tests 6 --zero-tests-policy strict --fail-skips on --parallel none",
+        "exitCode": 2,
+        "tests": 6,
+        "passed": 4,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M04.json",
+        "rawLog": "mutations/M04-test.log"
+      },
+      "cause": "Both success and failure carriers reach their normal terminal assertions but lack the exact final restoration event; unrelated filter carriers remain green."
+    }
+  ]
+}

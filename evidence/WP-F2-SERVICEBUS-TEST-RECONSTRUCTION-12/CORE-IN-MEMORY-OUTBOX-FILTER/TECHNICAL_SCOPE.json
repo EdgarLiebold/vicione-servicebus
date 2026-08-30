@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "technicalCommit": "917f54f60a5c237b1d6be477c383d4c800d91c4e",
+  "technicalTree": "b68e12b805b89b8ae8a07ecb7bc8d1ccd622d1f6",
+  "technicalParent": "58bee41e3c82b08e42e88b605875040ef8849a55",
+  "rangeBase": "58bee41e3c82b08e42e88b605875040ef8849a55",
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/in-memory-outbox-filter-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "CHANGELIST.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/InMemoryOutboxDirectPath_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/InMemoryOutboxLifecycle_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+  ]
+}

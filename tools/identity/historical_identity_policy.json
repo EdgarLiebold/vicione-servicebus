@@ -378,6 +378,14 @@
     },
     {
       "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "07a05e6ac6cc1871740a1bd856d685d0b15bd8caa10d2d7b7f6765558c184344",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/format-verify.binlog"
+    },
+    {
+      "allowedGates": [
         "binary-scan",
         "text-scan"
       ],

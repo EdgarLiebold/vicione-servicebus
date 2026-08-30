@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4159 |
+| Added | 4198 |
 | Modified | 4190 |
 | Deleted | 1458 |
 | Renamed | 2 |
@@ -32,6 +32,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
+| `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
 | `.testagent/message-fabric-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
 | `.testagent/research.md` | Added |  |
@@ -2076,6 +2077,44 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/raw/projection.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/positive-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/unit-architecture.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/positive/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/positive/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/ci-tooltests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/format-verify.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/identity-evidence.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/identity-gate.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/positive-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/unit-architecture.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/SHA256SUMS` | Added |  |
