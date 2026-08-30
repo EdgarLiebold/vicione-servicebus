@@ -2149,3 +2149,25 @@ future cohorts as complete.
   remains. No remote push was performed.
 - Independent read-only acceptance, architecture binding and any future remote publication remain
   pending and are not self-approved by this local freeze.
+
+## In-memory outbox filter retirement — local Evidence freeze (2026-08-30)
+
+- Technical `917f54f60a5c237b1d6be477c383d4c800d91c4e`, tree
+  `b68e12b805b89b8ae8a07ecb7bc8d1ccd622d1f6`, replaces `OBL-R0-CORE-D-0176..0181`
+  with six source-mirrored xUnit 4 / MTP v2 filter carriers.
+- Direct Evidence child `cd3c141aebd25fd9e0b72b0d684e6e3a5a7ea3c6`, tree
+  `6eef0b7450e5cd63dcdb560d10a9fc46f9ea6b85`, binds 37 nonmanifest artifacts with
+  37/37 SHA-256 closure, the byte-exact Technical patch and four independently reconstructible
+  product mutations.
+- Focused execution is 6/6 and requirement projection 1/1. Complete UnitArchitecture is
+  2,422/2,422 with no failures or skips; focused and Engineering Release builds have zero
+  warnings/errors; format verification changes zero files; CI self-tests are 257/257, identity
+  self-tests 148/148 and the verification model passes.
+- The full identity Evidence scan passes with zero findings over 5,654 baseline paths and 24,987
+  current product declarations; generated CHANGELIST closes at 9,848 entries. Both fully replaced
+  inherited files are removed, their non-empty project remains, and no empty test directory exists.
+- The next migration unit is deliberately enlarged to `OBL-R0-CORE-D-0182..0199`; Full Build,
+  UnitArchitecture, Identity and Evidence are run once for the complete package instead of per
+  individual carrier. No remote push was performed.
+- Independent read-only acceptance, architecture binding and any future remote publication remain
+  pending and are not self-approved by this local freeze.
