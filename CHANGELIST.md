@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4160 |
+| Added | 4159 |
 | Modified | 4190 |
 | Deleted | 1458 |
 | Renamed | 2 |
@@ -8889,8 +8889,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ExcessiveAsyncFault_Specs.cs` | Modified | `tests/MassTransit.Tests/ExcessiveAsyncFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/FaultPublish_Specs.cs` | Modified | `tests/MassTransit.Tests/FaultPublish_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxDirectPath_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxLifecycle_Specs.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryOutboxRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InMemoryTest_Specs.cs` | Modified | `tests/MassTransit.Tests/InMemoryTest_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/InterceptingConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/InterceptingConsumer_Specs.cs` |
@@ -9660,6 +9658,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |

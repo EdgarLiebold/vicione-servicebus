@@ -3049,6 +3049,48 @@
       "variantKey" : "message-specific-serializer"
    },
    {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ServiceScopePayload_IsPresentOnTheExactContextReadByTheFilter",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "service-scope-payload-control"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "MissingBusBoundSetter_LeavesForeignScopeUntouchedAndContinuesThePipeline",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "missing-setter-leaves-foreign-scope-alone"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedConsume_DiscardsPendingActionAndPropagatesTheOriginalException",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "failed-consume-discards-pending-actions"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SuccessfulConsume_ExecutesPendingActionOnlyAfterThePipeCompletes",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "pending-actions-run-after-successful-consume"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SuccessfulConsume_RestoresScopedContextAfterPendingActions",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "scope-restored-after-success"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-FILTER",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailedConsume_RestoresScopedContextAndPropagatesTheOriginalException",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests",
+      "variantKey" : "scope-restored-after-failure"
+   },
+   {
       "requirementId" : "REQ-VSB-INMEMORY-TRANSPORT-ISOLATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource",

@@ -2543,3 +2543,31 @@ source with the relay input address violates the exact source assertions. A hypo
 message fabric causes more than one real-consumer invocation and is rejected by the post-drain exact
 count. One new Fact is therefore necessary and sufficient; it raises the predeclared UnitArchitecture
 floor from 2,410 to 2,411 before the fully replaced inherited file is removed.
+
+## In-memory outbox direct-path and lifecycle native closure research
+
+The next cohesive batch contains exactly six frozen obligations, `OBL-R0-CORE-D-0176..0181`, from
+the two inherited direct-path and lifecycle files. Repository history shows that the four ordering
+and restoration branches are unchanged inherited product behavior. The only Greenfield correction
+is commit `64671fa4`, which made the bus-bound scoped-context setter genuinely optional for the
+container-less configuration; the later commits only added the corresponding legacy proof and
+clarified its comments.
+
+Existing native checkpoint and fault tests cover real transport rollback, batch checkpoints and
+request-fault publication, but none directly owns the filter's nullable-setter boundary, the exact
+success ordering or both scope-restoration branches. A new direct filter owner is therefore needed.
+It uses the existing internal-access factory only for the minimal real consume-context plumbing;
+every lifecycle decision and oracle belongs to the source-mirrored product test.
+
+The inherited failure test only observes that a pending callback has not run by the time the filter
+throws. That can remain green if `DiscardPendingActions` is removed, because the filter never executes
+the retained callback afterward. The stronger native carrier captures the real `OutboxContext`, then
+explicitly drains it after the failure. Only a real discard keeps the recorded action absent. The
+same carrier asserts reference identity of the original exception. Success uses an exact event list,
+and the two scope variants bind replacement and restoration around the real pending-action boundary.
+
+Pseudo-mutation analysis identifies four independent product axes in `InMemoryOutboxFilter.Send`:
+remove the null-setter guard, omit `ExecutePendingActions`, omit `DiscardPendingActions`, or omit the
+`finally` disposal. Each mutant remains buildable and is owned by a positive state/order assertion;
+no timeout or scheduling race is needed. Six new Facts raise the predeclared UnitArchitecture floor
+from 2,411 to 2,417 while allowing both fully replaced inherited files to be deleted together.

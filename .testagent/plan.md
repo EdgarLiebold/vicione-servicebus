@@ -2186,3 +2186,26 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    Release checks. Bind separate one-cause mutations for virtual-host separation and source-address
    preservation, restore every product byte exactly, then freeze Technical and direct Evidence
    commits. Remote publication remains separately authorized.
+
+## In-memory outbox direct-path and lifecycle native closure execution plan
+
+1. Bind `OBL-R0-CORE-D-0176..0181` one-to-one to six source-mirrored xUnit 4/MTP v2 Facts in
+   `ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxFilterTests`.
+2. Preserve the independent payload control, then drive the real filter with a foreign empty service
+   scope and no bus-bound setter. The downstream pipe must receive the real outbox context without
+   resolving or replacing anything from the foreign provider.
+3. Prove success ordering by recording consume completion before the pending action. On failure,
+   retain the exact original exception and manually drain the captured outbox after the filter
+   returns to prove that the action was actually discarded rather than merely left unexecuted.
+4. Prove exact scope replacement/restoration order independently for success and failure, including
+   the same scope and the exact real outbox context received by the setter. Use only immediate
+   in-process state transitions; no sleep, wall clock or absence-only terminal verdict.
+5. Raise the independent UnitArchitecture floor by exactly six materialized cases, from 2,411 to
+   2,417. LocalIntegration remains 375 because the complete filter boundary is hermetic.
+6. Delete `InMemoryOutboxDirectPath_Specs.cs` and `InMemoryOutboxLifecycle_Specs.cs` only after all
+   six mappings and the passive requirement projection are valid. Retain every unrelated inherited
+   file and remove a directory only if it is empty.
+7. Run the focused six-case carrier, projection, complete UnitArchitecture and Engineering Release
+   checks. Bind one-cause mutations for the null-setter guard, pending-action execution, failure
+   discard and scope restoration; restore every product byte exactly, then freeze Technical,
+   Evidence and architecture children. Remote publication remains separately authorized.
