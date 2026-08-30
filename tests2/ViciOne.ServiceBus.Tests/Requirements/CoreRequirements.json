@@ -2935,5 +2935,68 @@
       "testMethod" : "EverySendOverload_UsesTheSameBufferedBoundary",
       "testType" : "ViciOne.ServiceBus.Tests.Transactions.BufferedBusTests",
       "variantKey" : "every-send-overload-shares-one-buffer"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SendTransform_DoesNotChangeAPublishedMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "publish-isolation"
+   },
+   {
+      "requirementId" : "REQ-VSB-SEND-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SendTransform_ChangesTheSentMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "sent-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishTransform_ChangesThePublishedMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "published-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-PUBLISH-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishTransform_DoesNotChangeASentMessage",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "send-isolation"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUME-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumeTransform_WithReplace_ChangesTheOriginalMessageInstance",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "replace-original-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUME-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumeTransform_WithoutReplace_CreatesANewMessageInstance",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "create-new-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-HANDLER-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HandlerTransform_WithReplace_ChangesOnlyTheConfiguredInterfaceHandler",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "replace-interface-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-HANDLER-TRANSFORM",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HandlerTransform_WithoutReplace_ChangesOnlyTheConfiguredInterfaceHandler",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "copy-interface-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUME-TRANSFORM-SPECIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ClassBasedTransform_ChangesEveryConfiguredProperty",
+      "testType" : "ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests",
+      "variantKey" : "class-based-specification"
    }
 ]

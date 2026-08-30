@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2394 predeclared unfiltered cases;
+- `UnitArchitecture`: 2403 predeclared unfiltered cases;
 - `LocalIntegration`: 375 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
@@ -2084,3 +2084,22 @@ executing obligations and explicitly retires only OBL-R0-SQL-0054, the obsolete 
 runtime dialect resolver. The complete inherited 40-file SQL project and its empty directory are
 removed. UnitArchitecture executes 2,399/2,399; the independent accepted floor is 2,394. The
 LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carries floor 375.
+
+## Core transform native closure execution plan
+
+1. Bind `OBL-R0-CORE-C-0441..0449` one-to-one to nine source-mirrored xUnit 4/MTP v2 Facts in
+   `ViciOne.ServiceBus.Tests.Transformation.TransformPipelineTests`.
+2. Preserve and strengthen the inherited behavior boundaries: send and publish transforms remain
+   isolated, endpoint transforms distinguish in-place replacement from new-message creation,
+   handler-specific interface transforms do not alter an independently ready control endpoint, and
+   class-based specifications apply every configured property.
+3. Use only positive transport/endpoint-ready and message-consumed barriers with the run-scoped
+   operation timeout. No sleep, wall-clock delay or absence-only completion owns a verdict.
+4. Raise the independent UnitArchitecture floor by exactly nine materialized cases, from 2,394 to
+   2,403. LocalIntegration remains 375 because the in-memory transform pipeline is hermetic.
+5. Delete the three inherited Transform C# files only after all nine native cases and the passive
+   requirement projection are green, then remove the now-empty `tests/.../Transforms` directory.
+6. Run the focused project, complete UnitArchitecture and Engineering Release checks, perform
+   one-cause mutation checks for send/publish isolation, Replace identity and class-specification
+   application, then freeze separate Technical and Evidence commits. Remote publication remains a
+   separately authorized action.
