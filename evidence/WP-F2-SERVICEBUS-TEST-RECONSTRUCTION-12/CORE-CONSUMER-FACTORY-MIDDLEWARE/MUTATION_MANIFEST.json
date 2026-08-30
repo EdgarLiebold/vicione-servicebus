@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_CONSUMER_FACTORY_MIDDLEWARE_RETIREMENT_MUTATIONS",
+  "technicalCommit": "5937ebeb0b86e38ca420a482fb5b152e68b701d8",
+  "technicalTree": "f43f69958d562f488056fea3ef159066cc793ca4",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "consumer-factory-pipe-specification-forwarding",
+      "path": "src/ViciOne.ServiceBus/Consumers/Configuration/ConsumerConfigurator.cs",
+      "oldText": "            _specification.AddPipeSpecification(specification);\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "baselineSha256": "1f86c096496c81daac32b0412909bb9581e33cf41a2847ddc8ddf166df1e7c2f",
+      "mutantSha256": "54917fe492dc7fe37cf40028405895a81f553bea431f7795c822af2125d00694",
+      "restoredSha256": "1f86c096496c81daac32b0412909bb9581e33cf41a2847ddc8ddf166df1e7c2f",
+      "build": { "exitCode": 0, "warnings": 0, "errors": 0, "rawLog": "mutations/M01-build.log" },
+      "test": { "exitCode": 2, "tests": 2, "passed": 1, "failed": 1, "skipped": 0, "ctrf": "mutations/M01.json", "rawLog": "mutations/M01-test.log" },
+      "carrier": "ConsumerMessageConfigurationTests.Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnce",
+      "cause": "Only the ConsumerFactory theory case loses its consumer layer and observes three entries instead of four; the independent Instance control remains green."
+    }
+  ]
+}

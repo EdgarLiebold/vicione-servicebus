@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4059 |
-| Modified | 4193 |
-| Deleted | 1455 |
+| Added | 4104 |
+| Modified | 4192 |
+| Deleted | 1456 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -28,6 +28,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.gitignore` | Modified | `.gitignore` |
 | `.testagent/activemq-native-obligation-map.tsv` | Added |  |
 | `.testagent/aws-native-obligation-map.tsv` | Added |  |
+| `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/message-fabric-native-obligation-map.tsv` | Added |  |
 | `.testagent/plan.md` | Added |  |
@@ -1976,6 +1977,50 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M12-open-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M13-probe-in-progress-rejection-reason.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CIRCUIT-BREAKER/mutations/M14-concurrency-test-setup.txt` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/mutations/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/mutations/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.386738.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.607710.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.839831.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.109298.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.433339.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.935061.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.975089.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.309720.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.553976.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.875312.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.170365.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.429371.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.762138.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.066746.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.356654.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.912159.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_07.613650.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_08.105988.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_08.789313.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_09.145416.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/positive/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_09.718948.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/ci-tooltests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/focused.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/identity-evidence.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/identity-gate.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/restored-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/unit-architecture.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-FACTORY-MIDDLEWARE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/SHA256SUMS` | Added |  |
@@ -8338,6 +8383,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJToken_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeJsonObject_Specs.cs` |
 | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumeObserver_Specs.cs` |
+| `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
@@ -8690,7 +8736,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/Batch_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ConcurrencyLimit_Specs.cs` | Modified | `tests/MassTransit.Tests/ConcurrencyLimit_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs` | Modified | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Consumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Consumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/AccessScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Batch_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |

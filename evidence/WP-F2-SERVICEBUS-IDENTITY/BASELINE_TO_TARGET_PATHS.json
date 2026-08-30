@@ -77986,18 +77986,18 @@
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
-    "baselineDisposition": "MOVED_EXACT",
+    "baselineDisposition": "RETIRED_DELETED",
     "baselineGitBlobOid": "fbe3e1df5378e1132a0dbb31b6cf60a19c6274b5",
     "baselineGitMode": "100644",
     "baselineKey": "1423d4fcefd323b0ceacf546af8d856154177c5fca8d932d1cd2c73bca1565df",
     "baselinePathSha256": "ac1236bebb3fe0fd9e3c8afeb52068852981b0bc99195e00fa533fd091fb93cf",
     "baselineSha256": "bd36b9672c352b0e60dc5f53585de0032e1c60de80007cb80f88df37b8c77a54",
     "pathDisposition": "RENAMED",
-    "targetExists": true,
-    "targetGitBlobOid": "46eb5475633ec6fc37464fd66a321c5b63a62b32",
-    "targetGitMode": "100644",
-    "targetPath": "tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs",
-    "targetSha256": "38a0a8af6c7608a62d5650f417192132cdeaf25896778485eb7207a879b33665"
+    "retirementCommit": "5937ebeb0b86e38ca420a482fb5b152e68b701d8",
+    "retirementEvidence": "ROOT_CHANGE_LIST",
+    "retirementTree": "f43f69958d562f488056fea3ef159066cc793ca4",
+    "targetExists": false,
+    "targetPath": "tests/ViciOne.ServiceBus.Tests/ConsumerFactoryMiddleware_Specs.cs"
   },
   {
     "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",

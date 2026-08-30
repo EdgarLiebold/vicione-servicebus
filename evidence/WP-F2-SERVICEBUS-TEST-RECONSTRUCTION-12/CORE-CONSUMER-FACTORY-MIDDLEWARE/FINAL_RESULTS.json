@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_CONSUMER_FACTORY_MIDDLEWARE_RETIREMENT_RESULTS",
+  "technicalCommit": "5937ebeb0b86e38ca420a482fb5b152e68b701d8",
+  "technicalTree": "f43f69958d562f488056fea3ef159066cc793ca4",
+  "technicalParent": "880b23330a8a24466dffe21be54450cb1dad1056",
+  "obligations": { "first": "OBL-R0-CORE-D-0032", "last": "OBL-R0-CORE-D-0032", "count": 1, "replacedExecuting": 1, "profile": "UnitArchitecture" },
+  "nativeCarrier": { "newTestCases": 0, "reason": "the existing two-case native theory already proves the ConsumerFactory layer more strongly than the inherited request-only oracle" },
+  "focusedConsumerFactory": { "tests": 2, "passed": 2, "failed": 0, "skipped": 0, "ctrf": "positive/focused.json" },
+  "requirementProjection": { "tests": 1, "passed": 1, "failed": 0, "skipped": 0, "ctrf": "positive/projection.json" },
+  "unitArchitecture": { "ctrfFiles": 21, "tests": 2415, "passed": 2415, "failed": 0, "skipped": 0, "pending": 0, "other": 0, "declaredFloor": 2410 },
+  "engineeringRestore": { "exitCode": 0, "lockedMode": true, "rawLog": "raw/engineering-restore.log" },
+  "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0, "rawLog": "raw/engineering-build.log" },
+  "ciSelfTests": { "tests": 257, "passed": 257, "failed": 0, "executionBoundary": "outside restricted sandbox because process inspection is denied inside it", "rawLog": "raw/ci-tooltests.log" },
+  "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0, "rawLog": "raw/identity-selftests.log" },
+  "verificationModel": { "status": "PASS", "rawLog": "raw/verification-model.log" },
+  "identityGate": { "status": "PASS", "findings": 0, "baselinePaths": 5654, "liveBaselineTargetsWithGitIdentity": 4198, "currentProductPublicDeclarations": 24987, "currentAddedPublicDeclarations": 1711, "publicDeclarationRecords": 44090, "rawLog": "raw/identity-evidence.log" },
+  "changeList": { "status": "PASS", "entries": 9754, "rawLog": "raw/change-list.log" },
+  "retirement": { "trackedLegacyFilesRemoved": 1, "legacyProjectRootRetained": true, "emptyLegacyTestDirectories": 0 },
+  "mutations": { "count": 1, "built": 1, "killed": 1, "restored": 1 },
+  "remotePushPerformed": false
+}

@@ -2099,3 +2099,18 @@ future cohorts as complete.
 - This is explicitly a pre-Evidence-commit checkpoint. Final identity/CHANGELIST regeneration, the
   direct Evidence child, architecture binding and any remote publication remain pending and are not
   self-approved here.
+
+## Consumer-factory middleware retirement — pre-Evidence-commit checkpoint (2026-08-30)
+
+- Technical `5937ebeb0b86e38ca420a482fb5b152e68b701d8`, tree
+  `f43f69958d562f488056fea3ef159066cc793ca4`, binds `OBL-R0-CORE-D-0032` to the already stronger
+  native two-case ConsumerMessageConfiguration theory instead of adding a duplicate test.
+- The fully replaced inherited `ConsumerFactoryMiddleware_Specs.cs` is removed; the non-empty legacy
+  project root is retained and no empty directory remains below `tests`.
+- Focused execution is 2/2, requirement projection 1/1 and UnitArchitecture 2,415/2,415. Locked
+  Engineering restore and Release build pass with zero warnings/errors; CI tool tests pass 257/257
+  outside the restricted process sandbox and the verification model passes.
+- M01 removes consumer pipe-specification forwarding: only ConsumerFactory turns red (3 instead of 4
+  layers), Instance remains green, and the product source is restored byte-identically.
+- This remains a pre-Evidence-commit checkpoint. Identity/CHANGELIST fixed point, the direct Evidence
+  child, architecture binding and any remote publication remain pending and are not self-approved.

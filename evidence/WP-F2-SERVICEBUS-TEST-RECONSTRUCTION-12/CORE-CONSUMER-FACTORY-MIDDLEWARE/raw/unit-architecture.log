@@ -1,0 +1,94 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.Tests/release/ViciOne.ServiceBus.AmazonS3.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration.Tests/release/ViciOne.ServiceBus.QuartzIntegration.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR.Tests/release/ViciOne.ServiceBus.SignalR.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack.Tests/release/ViciOne.ServiceBus.MessagePack.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64) erfolgreich (1s 113ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64) erfolgreich (1s 742ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.Tests/release/ViciOne.ServiceBus.AmazonS3.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll (net10.0|x64) erfolgreich (2s 303ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64) erfolgreich (2s 293ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll (net10.0|x64) erfolgreich (2s 670ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR.Tests/release/ViciOne.ServiceBus.SignalR.Tests.dll (net10.0|x64) erfolgreich (4s 444ms)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll (net10.0|x64)
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests.Unit/release/ViciOne.ServiceBus.SqlTransport.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll (net10.0|x64) erfolgreich (1s 818ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64) erfolgreich (1s 983ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack.Tests/release/ViciOne.ServiceBus.MessagePack.Tests.dll (net10.0|x64) erfolgreich (4s 517ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll (net10.0|x64) erfolgreich (1s 793ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests.Unit/release/ViciOne.ServiceBus.SqlTransport.Tests.dll (net10.0|x64) erfolgreich (1s 501ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll (net10.0|x64) erfolgreich (6s 599ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll (net10.0|x64) erfolgreich (8s 147ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) erfolgreich (9s 765ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll (net10.0|x64) erfolgreich (12s 707ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration.Tests/release/ViciOne.ServiceBus.QuartzIntegration.Tests.dll (net10.0|x64) erfolgreich (23s 733ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.dll (net10.0|x64) erfolgreich (24s 942ms)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64) erfolgreich (1m 37s 320ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.839831.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.066746.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.553976.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.975089.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.762138.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.170365.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.433339.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.386738.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.309720.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_07.613650.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_08.105988.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.912159.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_09.145416.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_09.718948.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_03.875312.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.109298.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_02.935061.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_08.789313.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_05.356654.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_04.429371.ctrf
+    - /private/tmp/vicione-consumer-factory-evidence/unit-results/edgar.liebold_Edgars-iMac-2_2026-08-30_07_00_01.607710.ctrf
+
+Testlaufzusammenfassung: Bestanden!
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll (net10.0|x64) erfolgreich (1m 37s 320ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64) erfolgreich (9s 765ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll (net10.0|x64) erfolgreich (1s 113ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll (net10.0|x64) erfolgreich (6s 599ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll (net10.0|x64) erfolgreich (2s 303ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests.Unit/release/ViciOne.ServiceBus.SqlTransport.Tests.dll (net10.0|x64) erfolgreich (1s 501ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration.Tests/release/ViciOne.ServiceBus.QuartzIntegration.Tests.dll (net10.0|x64) erfolgreich (23s 733ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll (net10.0|x64) erfolgreich (2s 670ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll (net10.0|x64) erfolgreich (8s 147ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR.Tests/release/ViciOne.ServiceBus.SignalR.Tests.dll (net10.0|x64) erfolgreich (4s 444ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration.Tests/release/ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.dll (net10.0|x64) erfolgreich (24s 942ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.Tests/release/ViciOne.ServiceBus.AmazonS3.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64) erfolgreich (2s 293ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.Tests.dll (net10.0|x64) erfolgreich (1s 983ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64) erfolgreich (2s 302ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport.Tests/release/ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll (net10.0|x64) erfolgreich (1s 818ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll (net10.0|x64) erfolgreich (1s 793ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack.Tests/release/ViciOne.ServiceBus.MessagePack.Tests.dll (net10.0|x64) erfolgreich (4s 517ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll (net10.0|x64) erfolgreich (12s 707ms)
+  /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64) erfolgreich (1s 742ms)
+
+  gesamt: 2415
+  fehlgeschlagen: 0
+  erfolgreich: 2415
+  übersprungen: 0
+  Dauer: 1m 42s 034ms
