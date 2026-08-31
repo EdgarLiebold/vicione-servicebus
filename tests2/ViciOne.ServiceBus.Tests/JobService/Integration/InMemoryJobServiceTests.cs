@@ -345,12 +345,13 @@ public sealed class InMemoryJobServiceTests
         await fixture.ConsumedCount<JobCompleted>(message => message.JobId == jobIds["one"], 2);
 
         JobState beforeUpdate = await fixture.GetState(jobIds["one"]);
+        DateTimeOffset updatedStart = start.AddHours(12);
         Guid updatedJobId = await fixture.AddOrUpdateRecurring(
             "one",
             new InMemoryJob("one-updated"),
             schedule =>
             {
-                schedule.Start = start;
+                schedule.Start = updatedStart;
                 schedule.Every(seconds: 10);
             });
         await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobIds["one"], 2);
@@ -361,7 +362,7 @@ public sealed class InMemoryJobServiceTests
             new InMemoryJob("one-noop"),
             schedule =>
             {
-                schedule.Start = start;
+                schedule.Start = updatedStart;
                 schedule.Every(seconds: 10);
             });
         await fixture.ConsumedCount<JobSubmitted>(message => message.JobId == jobIds["one"], 3);
@@ -373,6 +374,10 @@ public sealed class InMemoryJobServiceTests
         Assert.Equal(0, second.RetryAttempt);
         Assert.Equal(jobIds["one"], updatedJobId);
         Assert.Equal(jobIds["one"], unchangedJobId);
+        Assert.NotNull(beforeUpdate.NextStartDate);
+        Assert.NotNull(afterUpdate.NextStartDate);
+        Assert.True(beforeUpdate.NextStartDate < updatedStart.UtcDateTime);
+        Assert.True(afterUpdate.NextStartDate > updatedStart.UtcDateTime);
         Assert.NotEqual(beforeUpdate.NextStartDate, afterUpdate.NextStartDate);
         Assert.Equal(afterUpdate.NextStartDate, afterNoOp.NextStartDate);
     }
