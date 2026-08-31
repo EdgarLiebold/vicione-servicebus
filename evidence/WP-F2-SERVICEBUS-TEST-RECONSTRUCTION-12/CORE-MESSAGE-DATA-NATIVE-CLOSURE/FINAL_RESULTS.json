@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_MESSAGE_DATA_NATIVE_CLOSURE_RESULTS",
+  "technicalParent": "c3791969c38e957d7847a63593acfc20466f3d24",
+  "technicalCommit": "06c5d2ede430a728759624d40b2b904431098284",
+  "technicalTree": "7d8d3d7fefac8297a24446fc030d657d2f4dd0ac",
+  "obligations": {
+    "count": 27,
+    "first": "OBL-R0-CORE-C-0103",
+    "last": "OBL-R0-CORE-C-0129",
+    "replacedExecuting": 27,
+    "profile": "UnitArchitecture",
+    "map": ".testagent/core-message-data-native-obligation-map.tsv"
+  },
+  "nativeCarrier": {
+    "newExecutableCases": 22,
+    "focusedTestsIncludingExistingPropertyProviderCarrier": 23,
+    "focusedPassed": 23,
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "ctrfRoot": "positive/focused"
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2586,
+    "passed": 2586,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2581,
+    "ctrfRoot": "positive/full",
+    "binlog": "binlogs/unit-test-dotnet-test.binlog"
+  },
+  "requirementProjection": {
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "ctrfRoot": "positive/projection"
+  },
+  "build": {
+    "technicalLockedRestoreExitCode": 0,
+    "technicalBuildExitCode": 0,
+    "postMutationLockedRestoreExitCode": 0,
+    "postMutationBuildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "technicalRestoreBinlog": "binlogs/technical-engineering-restore.binlog",
+    "technicalBuildBinlog": "binlogs/technical-engineering-build.binlog",
+    "postMutationRestoreBinlog": "binlogs/postrestore-engineering-restore.binlog",
+    "postMutationBuildBinlog": "binlogs/postrestore-engineering-build.binlog",
+    "postMutationFocusedBuildBinlog": "binlogs/postrestore-build.binlog"
+  },
+  "formatVerification": {
+    "exitCode": 0,
+    "binlog": "binlogs/format-verify.binlog"
+  },
+  "repositoryGates": {
+    "ciSelfTests": {
+      "tests": 257,
+      "passed": 257,
+      "failed": 0
+    },
+    "identitySelfTests": {
+      "tests": 148,
+      "passed": 148,
+      "failed": 0
+    },
+    "verificationModel": "PASS",
+    "changeList": "PASS",
+    "changeListEntries": 10428
+  },
+  "retirement": {
+    "trackedLegacyFilesRemoved": 10,
+    "legacyLinesDeleted": 1643,
+    "technicalLinesAdded": 1416,
+    "technicalLinesDeleted": 1684,
+    "technicalNetLines": -268,
+    "emptyLegacyTestDirectories": 0,
+    "historicalExpectedListChanged": false
+  },
+  "mutations": {
+    "count": 10,
+    "built": 10,
+    "killed": 10,
+    "mutatedTests": 10,
+    "mutatedPassed": 0,
+    "mutatedFailed": 10,
+    "restored": 10,
+    "discardedCandidates": 1,
+    "supersededDiagnosticRuns": 1
+  },
+  "evidence": {
+    "filesIncludingManifest": 112,
+    "sha256Entries": 111
+  },
+  "cloudFixtureRequired": false,
+  "remotePushPerformed": false
+}

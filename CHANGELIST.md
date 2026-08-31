@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4660 |
-| Modified | 4131 |
-| Deleted | 1517 |
+| Added | 4778 |
+| Modified | 4121 |
+| Deleted | 1527 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -33,6 +33,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-batch-messaging-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-courier-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-fault-publication-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-message-data-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
@@ -2341,6 +2342,118 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/positive-build.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/postrestore-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/postrestore-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/technical-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/technical-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01-nested.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01-test-nested.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D02-pre-final-reader-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D02-pre-final-reader-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D02-pre-final-reader-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D02-pre-final-reader.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/discarded/D02-pre-final-reader.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M06.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M07.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M08.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M09.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/patches/M10.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/focused/message-data-focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_17_48.259738.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_17_49.651857.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_17_53.699732.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_10.239923.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_11.749221.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_14.327305.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_15.462144.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_20.844817.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_22.135797.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_23.326917.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_25.950419.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_18_44.611471.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_19_03.785858.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_19_04.977068.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_27.956113.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_29.096090.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_30.731615.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_32.181755.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_33.451084.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_34.698756.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_04_20_36.253737.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/positive/projection/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M04-test.log.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M06-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M07-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M08-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M09-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M09-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M10-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/M10-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/focused-message-data.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/format-verify.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/postrestore-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/postrestore-engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/postrestore-engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/postrestore-focused-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/requirement-projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/technical-engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/technical-engineering-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/unit-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-FABRIC/SHA256SUMS` | Added |  |
@@ -8997,6 +9110,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
 | `tests/MassTransit.Tests/Mediator_Specs.cs` | Deleted | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/MassTransit.Tests/MessageContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/InMemory_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/InMemory_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/InitializerClassWithMessageData_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/InitializerClassWithMessageData_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/InitializerMessageData_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/InitializerMessageData_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/MessageDataOfT_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/MessageDataOfT_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/MessageData_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/MessageData_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/NestedInitializer_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/NestedInitializer_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/PublishMessageData_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/PublishMessageData_Specs.cs` |
+| `tests/MassTransit.Tests/MessageData/ResponseMessageData_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageData/ResponseMessageData_Specs.cs` |
 | `tests/MassTransit.Tests/MessageFlow_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageFlow_Specs.cs` |
 | `tests/MassTransit.Tests/MessageType_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageType_Specs.cs` |
 | `tests/MassTransit.Tests/MessageUrnSpecs.cs` | Deleted | `tests/MassTransit.Tests/MessageUrnSpecs.cs` |
@@ -9393,16 +9516,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Conventional/IHandler.cs` | Modified | `tests/MassTransit.Tests/Conventional/IHandler.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/DataBus_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/FileSystem_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/FileSystem_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/InMemory_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/InMemory_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/InitializerClassWithMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/InitializerClassWithMessageData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/InitializerMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/InitializerMessageData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataOfT_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/MessageDataOfT_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/MessageData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/NestedInitializer_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/NestedInitializer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/PublishMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/PublishMessageData_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/MessageData/ResponseMessageData_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/ResponseMessageData_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/ClientMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/ClientMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/DeleteMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/DeleteMessage.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Messages/PartialSerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/PartialSerializationTestMessage.cs` |
@@ -10142,6 +10255,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataTestSupport.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs` | Added |  |

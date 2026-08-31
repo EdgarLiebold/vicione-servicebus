@@ -1,0 +1,40 @@
+fehlerhaft ViciOne.ServiceBus.Tests.MessageData.MessageDataInitializerIntegrationTests.ApplicationObject_RoundTripsItsAddressAndEveryDictionaryValueIncludingFalse (378ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: ViciOne.ServiceBus.RequestException : An exception occurred while processing the ObjectRequest request
+  ---- System.AggregateException : One or more errors occurred. (Unsupported message data type: ViciOne.ServiceBus.Tests.MessageData.MessageDataInitializerIntegrationTests+SpecialPayload)
+  -------- ViciOne.ServiceBus.MessageDataException : Unsupported message data type: ViciOne.ServiceBus.Tests.MessageData.MessageDataInitializerIntegrationTests+SpecialPayload
+    um ViciOne.ServiceBus.Clients.ClientRequestHandle`1.SendRequest() in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/ClientRequestHandle.cs:181
+    um ViciOne.ServiceBus.Clients.ResponseHandlerConnectHandle`1.GetTask() in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/ResponseHandlerConnectHandle.cs:56
+    um ViciOne.ServiceBus.Clients.RequestClient`1.GetResponseInternal[T](SendRequestCallback request, CancellationToken cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback`1 callback) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/RequestClient.cs:206
+    um ViciOne.ServiceBus.Tests.MessageData.MessageDataInitializerIntegrationTests.ApplicationObject_RoundTripsItsAddressAndEveryDictionaryValueIncludingFalse() in /private/tmp/vsb-message-data-mutants-b610ccc4/tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs:67
+    um ViciOne.ServiceBus.Tests.MessageData.MessageDataInitializerIntegrationTests.ApplicationObject_RoundTripsItsAddressAndEveryDictionaryValueIncludingFalse() in /private/tmp/vsb-message-data-mutants-b610ccc4/tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs:82
+    --- End of stack trace from previous location ---
+    ----- Inner Stack Trace -----
+    um System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+    um System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+    um ViciOne.ServiceBus.Initializers.PropertyInitializers.ProviderPropertyInitializer`3.Apply(InitializeContext`2 context) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Initializers/PropertyInitializers/ProviderPropertyInitializer.cs:42
+    um ViciOne.ServiceBus.Initializers.MessageInitializer`2.<>c__DisplayClass12_0.<InitializeMessage>b__0(IPropertyInitializer`2 x) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Initializers/MessageInitializer.cs:126
+    um System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+    um System.Threading.Tasks.Task.WhenAll(IEnumerable`1 tasks)
+    um ViciOne.ServiceBus.Initializers.MessageInitializer`2.InitializeMessage(InitializeContext`1 messageContext, TInput input) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Initializers/MessageInitializer.cs:126
+    um ViciOne.ServiceBus.Middleware.TransformFilter`1.<>c__DisplayClass6_0.<<ViciOne-ServiceBus-IFilter<ViciOne-ServiceBus-SendContext<T>>-Send>g__SendAsync|0>d.MoveNext() in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Middleware/TransformFilter.cs:126
+    --- End of stack trace from previous location ---
+    um ViciOne.ServiceBus.Transports.SendEndpoint.SendEndpointPipe`1.Send(SendContext`1 context) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Transports/SendEndpoint.cs:214
+    um ViciOne.ServiceBus.InMemoryTransport.InMemorySendTransportContext.CreateSendContext[T](T message, IPipe`1 pipe, CancellationToken cancellationToken) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/InMemoryTransport/InMemoryTransport/InMemorySendTransportContext.cs:36
+    um ViciOne.ServiceBus.Transports.SendTransport`1.SendPipe`1.Send(TContext context) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Transports/SendTransport.cs:85
+    um ViciOne.ServiceBus.Clients.RequestSendEndpoint`1.Send(Guid requestId, Object values, IPipe`1 pipe, CancellationToken cancellationToken) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/RequestSendEndpoint.cs:32
+    um ViciOne.ServiceBus.Clients.RequestClient`1.<>c__DisplayClass9_0`1.<<GetResponse>g__Request|0>d.MoveNext() in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/RequestClient.cs:90
+    --- End of stack trace from previous location ---
+    um ViciOne.ServiceBus.Clients.ClientRequestHandle`1.SendRequest() in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/Clients/ClientRequestHandle.cs:156
+    ----- Inner Stack Trace -----
+    um ViciOne.ServiceBus.MessageData.PropertyProviders.PutMessageDataPropertyProvider`2.Put(PipeContext context, Task`1 valueTask) in /private/tmp/vsb-message-data-mutants-b610ccc4/src/ViciOne.ServiceBus/MessageData/PropertyProviders/PutMessageDataPropertyProvider.cs:101
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/message-data-mutation-run/results/M09.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-message-data-mutants-b610ccc4/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 998ms
+EXIT_CODE=2

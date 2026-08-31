@@ -1,0 +1,18 @@
+fehlerhaft ViciOne.ServiceBus.Tests.MessageData.MessageDataRepositoryTests.InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreams (29ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 1
+  Actual:   0
+    um ViciOne.ServiceBus.Tests.MessageData.MessageDataRepositoryTests.InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreams() in /private/tmp/vsb-message-data-mutants-b610ccc4/tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs:95
+    um ViciOne.ServiceBus.Tests.MessageData.MessageDataRepositoryTests.InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreams() in /private/tmp/vsb-message-data-mutants-b610ccc4/tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs:96
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/message-data-mutation-run/results/M07.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-message-data-mutants-b610ccc4/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 646ms
+EXIT_CODE=2

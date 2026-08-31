@@ -2284,6 +2284,30 @@ future cohorts as complete.
   the local Evidence-child content; independent read-only acceptance, architecture binding and any
   future remote publication remain pending and are not self-approved.
 
+## Core MessageData native closure — local Evidence freeze (2026-08-31)
+
+- Technical `06c5d2ede430a728759624d40b2b904431098284`, tree
+  `7d8d3d7fefac8297a24446fc030d657d2f4dd0ac`, closes all 27 selected obligations
+  `OBL-R0-CORE-C-0103..0129` as `REPLACED_EXECUTING` in UnitArchitecture.
+- Twenty-two new native cases cover repositories, thresholds, encryption, transport transforms,
+  initializer graphs, application objects, large JSON, publish and both request-client paths. The
+  focused MessageData namespace includes one existing provider carrier and executes 23/23.
+- Ten fully replaced inherited files and 1,643 legacy test lines are removed atomically; their
+  physical directory is absent and the immutable historical expected list is unchanged. The whole
+  Technical range is +1,416/-1,684, a net reduction of 268 lines, while the floor rises to 2,581.
+- Complete UnitArchitecture is 2,586/2,586 across 21 CTRFs with zero failure/skip/pending/other;
+  requirement projection is 1/1. Locked restores, both complete Engineering builds and scoped
+  format verification are green; builds report zero warnings and zero errors.
+- Ten exact product mutations build and are killed by their intended owner; every product file is
+  restored byte-identically. D01 records one green wrong-owner exploration; D02 preserves the
+  pre-correction timeout diagnostic, superseded by final M08's immediate original exception.
+- The full restore and Roslyn format operations stalled or lost process access only inside the
+  macOS sandbox. Identical out-of-sandbox commands completed normally. The detached post-mutation
+  build additionally required the complete Engineering restore rather than the earlier focused
+  project restore; after that explicit sequencing correction it passed 0/0.
+- The local Evidence inventory accompanies this status section. Independent read-only acceptance,
+  architecture binding and any future remote publication remain mandatory; no push was performed.
+
 ## Core serialization obligations — large-package local Evidence freeze (2026-08-30)
 
 - Technical `564050280b901c93a59e883fab809616397512ed`, tree

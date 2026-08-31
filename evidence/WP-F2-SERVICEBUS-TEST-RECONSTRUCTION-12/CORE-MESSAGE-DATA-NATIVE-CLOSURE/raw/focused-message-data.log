@@ -1,0 +1,11 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/message-data-final-evidence/positive/focused/message-data-focused.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 23
+  fehlerhaft: 0
+  erfolgreich: 23
+  übersprungen: 0
+  Dauer: 1s 596ms
+EXIT_CODE=0
