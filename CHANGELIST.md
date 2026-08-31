@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4778 |
-| Modified | 4121 |
-| Deleted | 1527 |
+| Added | 4913 |
+| Modified | 4117 |
+| Deleted | 1531 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -38,6 +38,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-serialization-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-state-machine-exception-observation-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-outbox-filter-native-obligation-map.tsv` | Added |  |
@@ -2810,6 +2811,138 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/postrestore-engineering-build.log.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/FULL_TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/JOB_ORACLE_CORRECTION.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/JOB_ORACLE_CORRECTION.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/job-oracle-correction-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/technical-engineering-build-control.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/technical-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/technical-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/technical-unit-solution-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/post-correction-control/corrected.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_58_56.152051.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_58_57.513603.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_07.516298.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_12.657069.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_35.173579.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_54.855891.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_57.647022.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_05_59_59.128275.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_00_04.608681.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_00_06.024503.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_00_07.435953.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_01_47.605737.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_08.942555.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_11.966445.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_13.260012.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_14.858171.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_16.718713.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_18.027588.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_19.427357.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_21.041289.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_02_22.506230.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-full/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/diagnostic/pre-correction-repro/repro.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/mutations/postrestore.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M06.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M07.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M08.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M09.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/patches/M10.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/focused/focused.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_06_47.377308.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_06_49.057203.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_06_50.533753.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_04.404871.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_09.830332.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_13.535774.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_15.420032.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_21.232045.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_24.124094.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_25.251530.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_26.380308.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_07_46.535712.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_24.020544.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_25.191624.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_44.716575.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_45.989056.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_47.691844.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_49.030080.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_50.689680.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_52.575179.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_06_09_54.278946.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/positive/projection/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M06-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M07-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M08-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M09-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M09-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M10-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/M10-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/binlog-inspection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/closure-validation.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/corrected-job-control.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/evidence-validation.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/focused-state-machine.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/format-verify.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/mutation-reconstruction.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/patch-validation.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/postrestore-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/postrestore-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/pre-correction-unit-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/requirement-projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/unit-test-final.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-TRANSFORMS/SHA256SUMS` | Added |  |
@@ -9196,6 +9329,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/RequestFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
 | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` | Deleted | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
 | `tests/MassTransit.Tests/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` |
 | `tests/MassTransit.Tests/SendByConvention_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendByConvention_Specs.cs` |
 | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` |
@@ -9581,13 +9718,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` |
@@ -9628,12 +9763,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` |
@@ -10308,6 +10441,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |

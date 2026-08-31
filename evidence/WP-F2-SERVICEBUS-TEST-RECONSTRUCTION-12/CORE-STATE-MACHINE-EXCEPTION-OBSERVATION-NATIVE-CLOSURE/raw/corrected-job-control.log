@@ -1,0 +1,7 @@
+Captured diagnostic terminal summary
+
+Unchanged pre-correction rerun: tests=1 passed=1 failed=0 skipped=0 exit=0
+Post-correction control: tests=1 passed=1 failed=0 skipped=0 exit=0
+
+The unchanged rerun proves the former inequality was input-time dependent. The corrected test binds
+the update to an explicit later-start boundary and retains stable-identity and no-op preservation.

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "kind": "JOB_SERVICE_TEST_ORACLE_CORRECTION",
+  "failingSubject": "fc818a1ac037746ab15918c3d895bd2feb22ffcd",
+  "correctionCommit": "9eb4cdc6f14481ba7868febd5ebff9aba58b0f5a",
+  "test": "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests.NamedRecurringJobs_KeepDistinctStableIdentitiesAcrossRunsUpdatesAndNoOpUpdates",
+  "preCorrectionFullRun": {
+    "tests": 2602,
+    "passed": 2601,
+    "failed": 1,
+    "skipped": 0,
+    "cause": "The */2 and */10 cron schedules shared the same Start value and can legally produce the same next second. Assert.NotEqual was therefore input-time dependent.",
+    "ctrfRoot": "diagnostic/pre-correction-full"
+  },
+  "preCorrectionSingleReproduction": {
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "meaning": "The unchanged test passing on immediate repetition confirms that the assertion was not a deterministic product invariant.",
+    "ctrf": "diagnostic/pre-correction-repro/repro.json"
+  },
+  "correction": {
+    "scope": "one existing test method",
+    "behavior": "The update and no-op use an update start twelve hours after the original start. The test now proves the original next time is before that boundary, the updated next time is after it, and the identical no-op preserves it.",
+    "productFilesChanged": 0,
+    "testCountChanged": 0,
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "buildBinlog": "binlogs/job-oracle-correction-build.binlog"
+  },
+  "postCorrectionSingleControl": {
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "ctrf": "diagnostic/post-correction-control/corrected.json"
+  },
+  "postCorrectionFullRun": {
+    "tests": 2602,
+    "passed": 2602,
+    "failed": 0,
+    "skipped": 0,
+    "ctrfRoot": "positive/full"
+  }
+}

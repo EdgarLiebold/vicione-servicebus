@@ -1,0 +1,28 @@
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEvent(style: Declarative) (159ms)
+  Assert.Equal() Failure: Collections differ
+                                         ↓ (pos 1)
+  Expected: [Tuple ("Initialized", Pre), Tuple ("Initialized", Post), Tuple ("LegCramped", Pre), Tuple ("LegCramped", Post)]
+  Actual:   [Tuple ("Initialized", Pre), Tuple ("Initialized", Pre), Tuple ("Initialized", Post), Tuple ("LegCramped", Pre), Tuple ("LegCramped", Pre), ···]
+                                         ↑ (pos 1)
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEvent(MachineStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs:67
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEvent(style: Dynamic) (7ms)
+  Assert.Equal() Failure: Collections differ
+                                         ↓ (pos 1)
+  Expected: [Tuple ("Initialized", Pre), Tuple ("Initialized", Post), Tuple ("LegCramped", Pre), Tuple ("LegCramped", Post)]
+  Actual:   [Tuple ("Initialized", Pre), Tuple ("Initialized", Pre), Tuple ("Initialized", Post), Tuple ("LegCramped", Pre), Tuple ("LegCramped", Pre), ···]
+                                         ↑ (pos 1)
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEvent(MachineStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs:67
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/state-machine-mutation-run/mutations/M06.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 932ms
+
+EXIT_CODE=2

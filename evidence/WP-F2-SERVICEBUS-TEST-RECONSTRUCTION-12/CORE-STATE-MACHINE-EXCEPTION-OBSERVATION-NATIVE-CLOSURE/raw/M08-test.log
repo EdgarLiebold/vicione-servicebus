@@ -1,0 +1,28 @@
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactly(style: Declarative) (206ms)
+  Assert.Equal() Failure: Collections differ
+             ↓ (pos 0)
+  Expected: [Tuple ("Running.BeforeEnter", Pre), Tuple ("Running.BeforeEnter", Post), Tuple ("Running.AfterLeave", Pre), Tuple ("Running.AfterLeave", Post)]
+  Actual:   [Tuple ("Running.AfterLeave", Pre), Tuple ("Running.AfterLeave", Post)]
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactly(MachineStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs:112
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactly(style: Dynamic) (7ms)
+  Assert.Equal() Failure: Collections differ
+             ↓ (pos 0)
+  Expected: [Tuple ("Running.BeforeEnter", Pre), Tuple ("Running.BeforeEnter", Post), Tuple ("Running.AfterLeave", Pre), Tuple ("Running.AfterLeave", Post)]
+  Actual:   [Tuple ("Running.AfterLeave", Pre), Tuple ("Running.AfterLeave", Post)]
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests.ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactly(MachineStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs:112
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/state-machine-mutation-run/mutations/M08.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 952ms
+
+EXIT_CODE=2

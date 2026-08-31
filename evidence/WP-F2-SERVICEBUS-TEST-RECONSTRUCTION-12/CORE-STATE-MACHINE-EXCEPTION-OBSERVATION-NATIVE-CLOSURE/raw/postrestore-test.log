@@ -1,0 +1,12 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/state-machine-mutation-run/mutations/postrestore.json
+
+Testlaufzusammenfassung: Bestanden! - /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 16
+  fehlerhaft: 0
+  erfolgreich: 16
+  übersprungen: 0
+  Dauer: 999ms
+
+EXIT_CODE=0

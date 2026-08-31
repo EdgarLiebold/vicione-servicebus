@@ -1,0 +1,11 @@
+Captured terminal summary
+
+Reader: Microsoft.Build.Logging.StructuredLogger.BinaryLog.ReadBuild
+
+/tmp/state-machine-technical-engineering-restore.binlog succeeded=True duration=00:00:10.3093600
+/tmp/state-machine-technical-engineering-build.binlog succeeded=True duration=00:02:36.7546370
+/tmp/state-machine-technical-engineering-build-final.binlog succeeded=True duration=00:01:21.5876820
+/tmp/state-machine-unit-solution-build-01.binlog succeeded=True duration=00:01:11.1335470
+/tmp/state-machine-core-build-03.binlog succeeded=True duration=00:00:26.5965280
+/tmp/state-machine-format.binlog succeeded=True duration=00:00:04.0370160
+/tmp/state-machine-job-oracle-correction-build.binlog succeeded=True duration=00:00:27.2664440

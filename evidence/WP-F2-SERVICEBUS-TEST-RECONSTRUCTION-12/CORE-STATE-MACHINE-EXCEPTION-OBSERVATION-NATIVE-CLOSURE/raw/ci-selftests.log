@@ -1,0 +1,11 @@
+Captured terminal summary
+
+Command:
+python3 -B -m unittest discover -s tools/ci/tests -p 'test_*.py'
+
+Result outside the macOS process sandbox:
+Ran 257 tests
+OK
+
+The initial sandbox run had eight PermissionError failures at ps invocation points only. The exact
+command above is the canonical run; no product or test source was changed between the two runs.

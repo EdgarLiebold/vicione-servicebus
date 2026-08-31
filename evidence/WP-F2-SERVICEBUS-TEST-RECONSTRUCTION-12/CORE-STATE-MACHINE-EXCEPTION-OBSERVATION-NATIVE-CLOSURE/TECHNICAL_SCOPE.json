@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_STATE_MACHINE_EXCEPTION_OBSERVATION_NATIVE_CLOSURE_TECHNICAL_SCOPE",
+  "technicalParent": "43d5d5b96041f8c946ae664fcf268bca3f842e11",
+  "stateMachineTechnicalCommit": "fc818a1ac037746ab15918c3d895bd2feb22ffcd",
+  "stateMachineTechnicalTree": "e5f7414f9e3825ea4c18d65c5623e3f817216afd",
+  "diagnosticCorrectionCommit": "9eb4cdc6f14481ba7868febd5ebff9aba58b0f5a",
+  "diagnosticCorrectionTree": "57a35031b4dec1088b9512ef9153c19947989b30",
+  "commits": [
+    "fc818a1ac037746ab15918c3d895bd2feb22ffcd",
+    "9eb4cdc6f14481ba7868febd5ebff9aba58b0f5a"
+  ],
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/core-state-machine-exception-observation-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs"
+  ]
+}

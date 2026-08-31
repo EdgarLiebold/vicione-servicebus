@@ -1,0 +1,13 @@
+Final static validation target
+
+- JSON parse: FINAL_RESULTS, JOB_ORACLE_CORRECTION, MUTATION_MANIFEST and TECHNICAL_SCOPE
+- Evidence inventory: 132 files including SHA256SUMS; 131 manifest entries
+- SHA-256: 131/131
+- Technical patches: state-machine, correction and full range byte-equal to their Git diffs
+- Mutants: 10/10 reconstructed from frozen blobs; selected occurrence and mutant hash exact
+- CTRF aggregates: Unit 2602/2602; focused 16/16; projection 1/1; mutations 0/20; postrestore 16/16
+- Terminal map: 102 unique obligations, nine unique compiled owners, fail-closed dispositions
+- CHANGELIST: 10563 entries, PASS
+- Identity self-tests: 148/148, PASS
+- CI self-tests: 257/257, PASS
+- Verification Model: PASS

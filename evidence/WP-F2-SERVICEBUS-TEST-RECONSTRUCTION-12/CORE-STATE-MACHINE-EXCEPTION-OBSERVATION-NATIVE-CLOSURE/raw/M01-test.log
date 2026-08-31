@@ -1,0 +1,26 @@
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.BaseCatch_PreservesTheDerivedExceptionAndTransitions(style: Declarative) (118ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 2)
+  Expected: ["before", "throw", "base-catch"]
+  Actual:   ["before", "throw"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.BaseCatch_PreservesTheDerivedExceptionAndTransitions(ConstructionStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs:43
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.BaseCatch_PreservesTheDerivedExceptionAndTransitions(style: Dynamic) (5ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 2)
+  Expected: ["before", "throw", "base-catch"]
+  Actual:   ["before", "throw"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.BaseCatch_PreservesTheDerivedExceptionAndTransitions(ConstructionStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs:43
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/state-machine-mutation-run/mutations/M01-final.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 767ms
+
+EXIT_CODE=2

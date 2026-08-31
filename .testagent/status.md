@@ -2351,3 +2351,27 @@ future cohorts as complete.
   remains unchanged. This section accompanies the local Evidence-child content; independent
   read-only acceptance, architecture binding and any future remote publication remain pending and
   are not self-approved.
+
+## Core state-machine exception and observation closure — large-package local Evidence freeze (2026-08-31)
+
+- State-machine Technical `fc818a1ac037746ab15918c3d895bd2feb22ffcd`, tree
+  `e5f7414f9e3825ea4c18d65c5623e3f817216afd`, closes 102 inherited exception and
+  observation obligations as `REPLACED_EXECUTING` in UnitArchitecture. Nine native owner methods
+  materialize 16 executable cases across both state-machine construction styles.
+- Four fully replaced inherited files and 1,861 legacy lines are removed atomically. The Technical
+  delta is +943/-1,866, reducing the repository by 923 lines while the floor rises from 2,581 to
+  2,597. Both containing legacy directories remain because they still contain tracked tests; no
+  empty directory remains and the frozen historical expected list is unchanged.
+- The first complete profile exposed one nondeterministic assertion in a pre-existing JobService
+  test. Direct correction `9eb4cdc6f14481ba7868febd5ebff9aba58b0f5a`, tree
+  `57a35031b4dec1088b9512ef9153c19947989b30`, changes only that test method and replaces the
+  coincidental cron inequality with an explicit later-start boundary. The test count and all product
+  bytes are unchanged.
+- Final focused execution is 16/16; complete UnitArchitecture is 2,602/2,602 across 21 CTRFs with
+  zero failure/skip/pending/other; requirement projection is 1/1. Locked restore, Engineering and
+  Unit builds, correction build, post-restore focused build and scoped format verification are green.
+- Ten independently reconstructed product mutations all build. Each executes both relevant carrier
+  styles and produces 2/2 causal failures, for 20/20 red mutation cases with no skip. Product hashes
+  restore byte-exactly and the post-restore control is 16/16.
+- This local Evidence content does not self-approve independent review, architecture binding or a
+  remote publication. No cloud fixture was required and no remote push was performed.

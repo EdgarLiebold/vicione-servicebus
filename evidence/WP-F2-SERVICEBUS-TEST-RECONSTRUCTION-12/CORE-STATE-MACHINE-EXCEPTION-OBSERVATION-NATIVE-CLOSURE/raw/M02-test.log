@@ -1,0 +1,26 @@
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(style: Declarative) (133ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 2)
+  Expected: ["before", "throw", "if-true", "if-async-true", "if-false-else", ···]
+  Actual:   ["before", "throw"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(ConstructionStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs:21
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(style: Dynamic) (6ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 2)
+  Expected: ["before", "throw", "if-true", "if-async-true", "if-false-else", ···]
+  Actual:   ["before", "throw"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests.TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(ConstructionStyle style) in /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs:21
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/state-machine-mutation-run/mutations/M02.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vsb-state-machine-mutants-fc818.sSI9f8/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 853ms
+
+EXIT_CODE=2

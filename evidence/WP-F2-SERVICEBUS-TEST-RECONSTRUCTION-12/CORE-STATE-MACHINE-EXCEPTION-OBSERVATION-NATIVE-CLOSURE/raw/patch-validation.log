@@ -1,0 +1,6 @@
+Captured terminal summary
+
+TECHNICAL PATCH PASS parent 43d5d5b..fc818a1 byte-equal
+CORRECTION PATCH PASS fc818a1..9eb4cdc byte-equal
+FULL PATCH PASS parent 43d5d5b..9eb4cdc byte-equal
+GZIP PASS all archives

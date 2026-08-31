@@ -1,0 +1,6 @@
+Captured terminal summary
+
+Command:
+/usr/local/share/dotnet/dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx --configuration Release --no-build --no-restore --results-directory /private/tmp/state-machine-positive-unit-final.gWFXMx --minimum-expected-tests 2597 --max-parallel-test-modules 1 --fail-skips on --report-xunit-ctrf --parallel none /bl:/tmp/state-machine-unit-test-final-dotnet-test.binlog
+
+Result: CTRF files=21 tests=2602 passed=2602 failed=0 skipped=0 pending=0 other=0 exit=0

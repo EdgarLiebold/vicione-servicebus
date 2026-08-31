@@ -1,0 +1,6 @@
+Captured diagnostic terminal summary
+
+Subject: fc818a1ac037746ab15918c3d895bd2feb22ffcd
+Result: CTRF files=21 tests=2602 passed=2601 failed=1 skipped=0 pending=0 other=0 exit=2
+Only failure: ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests.NamedRecurringJobs_KeepDistinctStableIdentitiesAcrossRunsUpdatesAndNoOpUpdates
+Machine results: diagnostic/pre-correction-full

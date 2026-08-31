@@ -1,0 +1,8 @@
+Captured terminal summary
+
+Commands:
+python3 -B tools/identity/change_list.py --write
+python3 -B tools/identity/change_list.py
+
+PASS change-list written CHANGELIST.md
+PASS change-list matches the generated evidence (10563 entries)
