@@ -2422,3 +2422,30 @@ future cohorts as complete.
 - The Evidence package committed together with this section is a local immutable review subject. It
   does not self-approve independent read-only review, architecture binding or remote publication; no
   push is authorized or performed by this package.
+
+## Core state-machine composite/recovery closure — large-package local Evidence freeze (2026-08-31)
+
+- Technical `c30c99d69385c22955194080f627fd99876664f1`, tree
+  `1ed19c3efe08aa2b3aa87a2c36f6534b5545cfb4`, closes 61 selected `OBL-R0-CORE-A`
+  composite-event, recovery, telephone, definition and visualizer obligations as
+  `REPLACED_EXECUTING` in UnitArchitecture. Twelve native owner methods across two projects bind the
+  full set; 26 executable cases cover the selected behavior in declarative and dynamic forms.
+- Sixteen completely replaced inherited specs and 2,529 legacy/old-package lines are removed in the
+  same 30-path Technical delta. The package adds 1,474 lines, reducing the repository by 1,055 lines
+  while the executable floor rises from 2,635 to 2,661. The containing inherited directories remain
+  intentionally because they still hold four and two tracked tests; neither directory is empty.
+- Complete UnitArchitecture is 2,666/2,666 across 21 CTRFs with zero failure/skip/pending/other;
+  post-mutation state-machine control is 80/80. Locked Engineering restore/build and scoped format
+  verification are green; build output contains zero warnings and errors. CI self-tests are 257/257,
+  identity self-tests 148/148 and the verification model is PASS.
+- Seventeen independently reconstructed product mutations all build and are killed. Their 46
+  executions contain 38 causal failures and eight passing controls with no skip. Nine touched product
+  files restore byte-exactly. A preliminary wrong-axis transition exploration stayed 6/6 green, is
+  transparently documented, replaced by the executed M12 target-enter mutation and excluded from all
+  counted Evidence.
+- The repository-wide full identity scan still reports the separately tracked F-REP mapping/binlog
+  backlog; it is not represented as a package PASS and does not expand this Technical scope. The green
+  identity self-tests and generated CHANGELIST remain the package gates.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only review, architecture binding and any future remote publication remain pending and are not
+  self-approved; no remote push is authorized or performed by this package.

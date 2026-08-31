@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_STATE_MACHINE_COMPOSITE_RECOVERY_NATIVE_CLOSURE_RESULTS",
+  "technicalParent": "7f6eb38bed6d8307a2fa21a161ce2fa055aae4b0",
+  "technicalCommit": "c30c99d69385c22955194080f627fd99876664f1",
+  "technicalTree": "1ed19c3efe08aa2b3aa87a2c36f6534b5545cfb4",
+  "technicalScope": {
+    "paths": 30,
+    "addedLines": 1474,
+    "deletedLines": 2529,
+    "netLines": -1055
+  },
+  "obligations": {
+    "count": 61,
+    "unique": 61,
+    "disposition": "REPLACED_EXECUTING",
+    "profile": "UnitArchitecture",
+    "targetMethods": 12,
+    "targetProjects": 2
+  },
+  "replacement": {
+    "newExecutableCases": 26,
+    "retiredFiles": 16,
+    "remainingAutomatonymousFiles": 4,
+    "remainingDynamicModifyFiles": 2,
+    "emptyDirectoriesRemoved": false,
+    "remainingDirectoriesAreNonEmpty": true
+  },
+  "focused": {
+    "tests": 80,
+    "passed": 80,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2666,
+    "passed": 2666,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2661,
+    "previousFloor": 2635
+  },
+  "engineeringBuild": {
+    "lockedRestoreExitCode": 0,
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "configuration": "Release"
+  },
+  "format": {
+    "result": "PASS"
+  },
+  "mutationClosure": {
+    "mutants": 17,
+    "built": 17,
+    "killed": 17,
+    "tests": 46,
+    "passedControls": 8,
+    "failedIntended": 38,
+    "skipped": 0,
+    "postRestoreProductFiles": 9,
+    "postRestoreHashesExact": true,
+    "postRestoreFocusedTests": 80,
+    "postRestoreFocusedPassed": 80
+  },
+  "repositoryGates": {
+    "ciSelfTests": {
+      "tests": 257,
+      "passed": 257,
+      "result": "PASS"
+    },
+    "verificationModel": "PASS",
+    "identitySelfTests": {
+      "tests": 148,
+      "passed": 148,
+      "result": "PASS"
+    },
+    "changeList": {
+      "entries": 10912,
+      "result": "PASS"
+    }
+  },
+  "evidence": {
+    "filesIncludingManifest": 108,
+    "sha256Entries": 107
+  },
+  "localIntegrationRuntimeRun": false,
+  "localIntegrationRationale": "No provider, broker, fixture or LocalIntegration product/test path changed. The locked Engineering Release build compiled the complete graph."
+}

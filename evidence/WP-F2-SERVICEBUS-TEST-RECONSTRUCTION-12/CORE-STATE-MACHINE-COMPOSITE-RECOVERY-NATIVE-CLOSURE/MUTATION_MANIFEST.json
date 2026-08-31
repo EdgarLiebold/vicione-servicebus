@@ -1,0 +1,492 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_STATE_MACHINE_COMPOSITE_RECOVERY_NATIVE_CLOSURE_MUTATIONS",
+  "technicalCommit": "c30c99d69385c22955194080f627fd99876664f1",
+  "technicalTree": "1ed19c3efe08aa2b3aa87a2c36f6534b5545cfb4",
+  "buildCommand": "dotnet build tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj -c Release --no-restore --disable-build-servers /m:1 /nr:false /p:UseSharedCompilation=false /p:BuildInParallel=false /bl:<binlog>",
+  "testCommand": "<MTP-executable> --filter-method|--filter-class <owner> --minimum-expected-tests <count> --zero-tests-policy strict --fail-skips on --parallel none --results-directory <dir> --report-xunit-ctrf",
+  "mutations": [
+    {
+      "id": "M01",
+      "axis": "composite-status-persists-the-new-constituent-flag",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/CompositeEventActivity.cs",
+      "oldText": "            value.Set(_flag);",
+      "newText": "            value.Set(0);",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "mutantSha256": "54e877b526594774b5030ea14720417eb2cbd26638d17736213777498a18edfe",
+      "restoredSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "patch": "patches/M01.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M01-build.binlog",
+        "log": "raw/M01-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M01.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus"
+      }
+    },
+    {
+      "id": "M02",
+      "axis": "composite-completion-requires-the-complete-mask",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/CompositeEventActivity.cs",
+      "oldText": "            return value.Equals(_complete)",
+      "newText": "            return value.IsSet(_flag)",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "mutantSha256": "0f574a6ec18b6483e40cbf5af5ce5d4d660428e71f9597970243669e73c90f5e",
+      "restoredSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "patch": "patches/M02.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M02-build.binlog",
+        "log": "raw/M02-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M02.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus"
+      }
+    },
+    {
+      "id": "M03",
+      "axis": "raise-once-suppresses-duplicate-composite-raises",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/CompositeEventActivity.cs",
+      "oldText": "            if (value.IsSet(_flag) && _options.HasFlag(CompositeEventOptions.RaiseOnce))",
+      "newText": "            if (value.IsSet(_flag) && !_options.HasFlag(CompositeEventOptions.RaiseOnce))",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "mutantSha256": "29ed6282792e029fb9eb9173abd9b5b9a2012303a085ad3fb3b0a37d50b276da",
+      "restoredSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "patch": "patches/M03.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M03-build.binlog",
+        "log": "raw/M03-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M03.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_DuplicateHandlingMatchesTheConfiguredOption"
+      }
+    },
+    {
+      "id": "M04",
+      "axis": "composite-constituent-continues-before-composite-raise",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/CompositeEventActivity.cs",
+      "oldText": "            await next.Execute(context).ConfigureAwait(false);",
+      "newText": "            return;",
+      "occurrenceCount": 2,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "mutantSha256": "e4c7d5879ced26074a788e10380424b6de7d1df2f9e7f4efb9fea82e71c0be56",
+      "restoredSha256": "b2e821d005895931fd0cffbed16af384a78496fb03cbb01b6454c25396f5e225",
+      "patch": "patches/M04.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M04-build.binlog",
+        "log": "raw/M04-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M04.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus"
+      }
+    },
+    {
+      "id": "M05",
+      "axis": "composite-event-is-part-of-the-declared-event-surface",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs",
+      "oldText": "            _compositeEvents.Add(@event.Name);\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "mutantSha256": "54ae06e30c679bf1f2bdbf6bc71fced893c6a5c87d803d4fa00f930269617657",
+      "restoredSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "patch": "patches/M05.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M05-build.binlog",
+        "log": "raw/M05-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M05.json",
+        "owner": "StateMachineCompositeEventTests.AssignedComposite_ReportsTheExactIntStructAndNextEventSurface"
+      }
+    },
+    {
+      "id": "M06",
+      "axis": "composite-binds-every-constituent-event",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs",
+      "oldText": "            for (var i = 0; i < events.Length; i++)",
+      "newText": "            for (var i = 1; i < events.Length; i++)",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "mutantSha256": "d73e109134069c31796ab44514006cd1b6f4431f767f937269e40d1d758edf43",
+      "restoredSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "patch": "patches/M06.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M06-build.binlog",
+        "log": "raw/M06-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M06.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus"
+      }
+    },
+    {
+      "id": "M07",
+      "axis": "struct-composite-status-writes-back-to-the-instance",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Accessors/StructCompositeEventStatusAccessor.cs",
+      "oldText": "            _write.Set(instance, status);",
+      "newText": "            _ = status;",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "0344e9711700cb6982df3cd9711e91bcfeb86cf73220010ad0929e1304ab83aa",
+      "mutantSha256": "6c1ae875d24ed334b19b0ca491a04247c74a029e79e7fbd8aceac8c722957cd5",
+      "restoredSha256": "0344e9711700cb6982df3cd9711e91bcfeb86cf73220010ad0929e1304ab83aa",
+      "patch": "patches/M07.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M07-build.binlog",
+        "log": "raw/M07-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M07.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus"
+      }
+    },
+    {
+      "id": "M08",
+      "axis": "integer-composite-status-writes-the-computed-bits",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Accessors/IntCompositeEventStatusAccessor.cs",
+      "oldText": "            _write.Set(instance, status.Bits);",
+      "newText": "            _write.Set(instance, 0);",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "7134f7393be3324f436f18c802b9005c95ba6435120e438f68082dc5f707e87c",
+      "mutantSha256": "35d16c94e627e0caa3bf53099f523a771fbcfa85b1cefcc8d4dada2fe8c9f7b7",
+      "restoredSha256": "7134f7393be3324f436f18c802b9005c95ba6435120e438f68082dc5f707e87c",
+      "patch": "patches/M08.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M08-build.binlog",
+        "log": "raw/M08-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M08.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_DuplicateHandlingMatchesTheConfiguredOption"
+      }
+    },
+    {
+      "id": "M09",
+      "axis": "typed-factory-activity-executes-the-created-activity",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/FactoryActivity.cs",
+      "oldText": "            return activity.Execute(context, next);",
+      "newText": "            return next.Execute(context);",
+      "occurrenceCount": 3,
+      "selectedOccurrenceIndex": 2,
+      "baselineSha256": "7ea47c75d3fe5a9873bf547b14b93f034e18d1ccb4a4038f6c28b562509d412b",
+      "mutantSha256": "f19db84309f026819fe66a3fec756b946587f00c37ef1c100550a8e80358b4a1",
+      "restoredSha256": "7ea47c75d3fe5a9873bf547b14b93f034e18d1ccb4a4038f6c28b562509d412b",
+      "patch": "patches/M09.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M09-build.binlog",
+        "log": "raw/M09-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M09.json",
+        "owner": "StateMachineRecoveryTests.FactoryActivity_UsesItsDependencyAndContinuesExactlyOnce"
+      }
+    },
+    {
+      "id": "M10",
+      "axis": "typed-faulted-behavior-preserves-the-event-execution-boundary",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Behaviors/FaultedBehavior.cs",
+      "oldText": "            throw new EventExecutionException($\"The {context.Event} execution faulted\", context.Exception);",
+      "newText": "            throw context.Exception;",
+      "occurrenceCount": 3,
+      "selectedOccurrenceIndex": 2,
+      "baselineSha256": "76837cae60801b9d853f7557590431d2de7b0f7bc745f449e9987321e5a4af01",
+      "mutantSha256": "bc0ed44016a2e669b0da7b23d6af3e6a3cd00af04c629995298682645c5ea30f",
+      "restoredSha256": "76837cae60801b9d853f7557590431d2de7b0f7bc745f449e9987321e5a4af01",
+      "patch": "patches/M10.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M10-build.binlog",
+        "log": "raw/M10-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M10.json",
+        "owner": "StateMachineRecoveryTests.CompensatingActivity_RestoresOriginalValueAndPreservesTheFailure"
+      }
+    },
+    {
+      "id": "M11",
+      "axis": "composite-condition-preserves-its-truth-value",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/ConditionActivity.cs",
+      "oldText": "            if (await _condition(context).ConfigureAwait(false))",
+      "newText": "            if (false == await _condition(context).ConfigureAwait(false))",
+      "occurrenceCount": 2,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "78ef8e7e48294dddc5b8b428f2f4018b72ff8e095da80bc47ec14bbd18f5dd24",
+      "mutantSha256": "b6544b5c6ee6d9f9ffc0d63fea4eb1fa9506138da126a2bbb7c8a44ef18399b5",
+      "restoredSha256": "78ef8e7e48294dddc5b8b428f2f4018b72ff8e095da80bc47ec14bbd18f5dd24",
+      "patch": "patches/M11.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M11-build.binlog",
+        "log": "raw/M11-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M11.json",
+        "owner": "StateMachineCompositeEventTests.CompositeEvent_RunsAfterConstituentActivitiesAndAppliesTheOrderCondition"
+      }
+    },
+    {
+      "id": "M12",
+      "axis": "transition-raises-the-direct-target-enter-event",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/TransitionActivity.cs",
+      "oldText": "                await _toState.Raise(enterContext).ConfigureAwait(false);",
+      "newText": "                await Task.CompletedTask.ConfigureAwait(false);",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "977e414347f4da5755679e8baa261214f5b17688995e59f4c651c4bf510ed017",
+      "mutantSha256": "a6c599dbdd326c10179e3da098305c9c0d54773078a059c9ab28031dc25ea79b",
+      "restoredSha256": "977e414347f4da5755679e8baa261214f5b17688995e59f4c651c4bf510ed017",
+      "patch": "patches/M12.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M12-build.binlog",
+        "log": "raw/M12-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 6,
+        "passed": 0,
+        "failed": 6,
+        "skipped": 0,
+        "ctrf": "mutations/M12.json",
+        "owner": "StateMachineTelephoneTests.ConnectedSuperstate_EntersAndLeavesExactlyOnceAcrossEveryCallPath"
+      }
+    },
+    {
+      "id": "M13",
+      "axis": "transition-leaves-every-exited-superstate",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/TransitionActivity.cs",
+      "oldText": "            State<TSaga> superState = fromState.SuperState;\n            while (superState != null && !superState.HasState(toState))\n            {\n                BehaviorContext<TSaga> superStateLeaveContext = context.CreateProxy(superState.Leave);\n                await superState.Raise(superStateLeaveContext).ConfigureAwait(false);\n\n                superState = superState.SuperState;\n            }\n",
+      "newText": "",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "977e414347f4da5755679e8baa261214f5b17688995e59f4c651c4bf510ed017",
+      "mutantSha256": "6d3374f2bd2ce6f4a257b5a64fbbc470bb9cdb1c1414122f4f45a8d42d6f7e5e",
+      "restoredSha256": "977e414347f4da5755679e8baa261214f5b17688995e59f4c651c4bf510ed017",
+      "patch": "patches/M13.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M13-build.binlog",
+        "log": "raw/M13-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 6,
+        "passed": 4,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M13.json",
+        "owner": "StateMachineTelephoneTests.ConnectedSuperstate_EntersAndLeavesExactlyOnceAcrossEveryCallPath"
+      }
+    },
+    {
+      "id": "M14",
+      "axis": "trigger-retry-preserves-original-failure-stack",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/RetryActivity.cs",
+      "oldText": "                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();\n                throw;",
+      "newText": "                throw exception.InnerException;",
+      "occurrenceCount": 3,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "1c67cc68f89927cf14fa616ae035b8e2a76ea85ebca3446068164c7e339f0d88",
+      "mutantSha256": "7fab5ba7ab21559fdbd74352373df222ed827a4740346b76366ec0d6cd3c10dc",
+      "restoredSha256": "1c67cc68f89927cf14fa616ae035b8e2a76ea85ebca3446068164c7e339f0d88",
+      "patch": "patches/M14.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M14-build.binlog",
+        "log": "raw/M14-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M14.json",
+        "owner": "StateMachineRecoveryTests.Retry_ExhaustsFourAttemptsAndEitherPropagatesOrRunsOneCatch"
+      }
+    },
+    {
+      "id": "M15",
+      "axis": "data-retry-preserves-original-failure-stack",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/Activities/RetryActivity.cs",
+      "oldText": "                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();\n                throw;",
+      "newText": "                throw exception.InnerException;",
+      "occurrenceCount": 3,
+      "selectedOccurrenceIndex": 2,
+      "baselineSha256": "1c67cc68f89927cf14fa616ae035b8e2a76ea85ebca3446068164c7e339f0d88",
+      "mutantSha256": "e5fc52ad3e2d48b7355651d35cffd80cfc9ac3cb56fcf49dec58e17504ca2038",
+      "restoredSha256": "1c67cc68f89927cf14fa616ae035b8e2a76ea85ebca3446068164c7e339f0d88",
+      "patch": "patches/M15.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M15-build.binlog",
+        "log": "raw/M15-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M15.json",
+        "owner": "StateMachineRecoveryTests.Retry_ExhaustsFourAttemptsAndEitherPropagatesOrRunsOneCatch"
+      }
+    },
+    {
+      "id": "M16",
+      "axis": "trigger-event-keeps-the-declared-name",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs",
+      "oldText": "            return DeclareEvent(_ => new TriggerEvent(name), name);",
+      "newText": "            return DeclareEvent(_ => new TriggerEvent(name + \"-mutant\"), name);",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "mutantSha256": "fe9cbdc1d071886688cc472476a7a5c8e1730e2e76ad0f73eefdb21e53a98596",
+      "restoredSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "patch": "patches/M16.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M16-build.binlog",
+        "log": "raw/M16-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M16.json",
+        "owner": "StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface"
+      }
+    },
+    {
+      "id": "M17",
+      "axis": "message-event-keeps-the-declared-name",
+      "path": "src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs",
+      "oldText": "            return DeclareEvent(_ => new MessageEvent<T>(name), name);",
+      "newText": "            return DeclareEvent(_ => new MessageEvent<T>(name + \"-mutant\"), name);",
+      "occurrenceCount": 1,
+      "selectedOccurrenceIndex": 0,
+      "baselineSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "mutantSha256": "2e73fb30b20192945717bd1838a0fee64f0940bd989efefb4c502d20d33e4004",
+      "restoredSha256": "9e2ad511f822dc659db2a78233be6b81eb43f89622f3046e736129d998c1baa1",
+      "patch": "patches/M17.patch.gz",
+      "build": {
+        "exitCode": 0,
+        "binlog": "binlogs/M17-build.binlog",
+        "log": "raw/M17-build.log"
+      },
+      "test": {
+        "exitCode": 2,
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "ctrf": "mutations/M17.json",
+        "owner": "StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface"
+      }
+    }
+  ],
+  "aggregate": {
+    "count": 17,
+    "built": 17,
+    "killed": 17,
+    "tests": 46,
+    "passed": 8,
+    "failed": 38,
+    "skipped": 0
+  },
+  "postRestore": {
+    "buildExitCode": 0,
+    "tests": 80,
+    "passed": 80,
+    "failed": 0,
+    "skipped": 0,
+    "buildBinlog": "binlogs/postrestore-build.binlog",
+    "ctrf": "positive/focused/state-machine.json"
+  },
+  "excludedExploration": {
+    "id": "D01",
+    "artifactSource": "M12",
+    "reason": "Removing only superstate-enter propagation did not intersect this package's direct-target telephone paths; 6/6 stayed green. It is excluded from counts and Evidence inventory. M12 is the executed direct-target-enter mutation sourced from M12b."
+  }
+}
