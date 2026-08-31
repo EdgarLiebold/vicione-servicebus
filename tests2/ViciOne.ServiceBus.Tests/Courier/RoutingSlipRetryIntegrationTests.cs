@@ -9,6 +9,59 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 public sealed class RoutingSlipRetryIntegrationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REDELIVERY", "redelivery-header-does-not-leak-into-compensation")]
+    public async Task RedeliveredActivity_DoesNotLeakItsRedeliveryCountIntoPreviousCompensation()
+    {
+        TimeSpan timeout = CourierTestSupport.OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var compensationCounts = new ConcurrentQueue<int>();
+        var redeliveryAttempts = new ConcurrentQueue<RetryObservation>();
+        using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-redelivery-header-isolation");
+        ActivityTestHarness<HeaderIsolationActivity, RetryArguments, RetryLog> compensating = harness.Activity<
+            HeaderIsolationActivity,
+            RetryArguments,
+            RetryLog>(
+            _ => new HeaderIsolationActivity(compensationCounts),
+            _ => new HeaderIsolationActivity(compensationCounts));
+        ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> failing = harness.ExecuteActivity<
+            RedeliverThenFaultActivity,
+            RedeliveryArguments>(_ => new RedeliverThenFaultActivity(redeliveryAttempts));
+        failing.OnConfigureExecuteReceiveEndpoint += endpoint => endpoint.UseDelayedRedelivery(
+            redelivery => redelivery.Interval(1, TimeSpan.Zero));
+        using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
+        using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
+        compensated.Configure(harness);
+        faulted.Configure(harness);
+        await harness.Start(cancellationToken);
+
+        try
+        {
+            Guid trackingNumber = NewId.NextGuid();
+            var builder = new RoutingSlipBuilder(trackingNumber);
+            builder.AddVariable("Seed", "header-isolation");
+            builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("log"));
+            builder.AddActivity(failing.Name, failing.ExecuteAddress, new RedeliveryArguments(1));
+
+            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await Task.WhenAll(
+                compensated.Wait(timeout, cancellationToken),
+                faulted.Wait(timeout, cancellationToken));
+            await harness.Stop();
+
+            Assert.Equal(
+                [new RetryObservation(0, 0, "header-isolation"), new RetryObservation(0, 1, "header-isolation")],
+                redeliveryAttempts);
+            Assert.Equal([0], compensationCounts);
+            Assert.Equal(compensating.Name, Assert.Single(compensated.Messages).Message.ActivityName);
+            Assert.Equal(trackingNumber, Assert.Single(faulted.Messages).Message.TrackingNumber);
+        }
+        finally
+        {
+            await harness.Stop();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-RETRY", "immediate-retry-eventually-succeeds")]
     public async Task ImmediateRetry_ReexecutesTheActivityWithTheSameVariablesThenCompletesOnce()
     {
@@ -386,6 +439,19 @@ public sealed class RoutingSlipRetryIntegrationTests
                 throw new CourierExpectedException("retry-once");
 
             return Task.FromResult(context.CompletedWithVariables(new { RetryResult = "immediate-retry-succeeded" }));
+        }
+    }
+
+    public sealed class HeaderIsolationActivity(ConcurrentQueue<int> compensationCounts) :
+        IActivity<RetryArguments, RetryLog>
+    {
+        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context) =>
+            Task.FromResult(context.Completed(new RetryLog(context.Arguments.Value)));
+
+        public Task<CompensationResult> Compensate(CompensateContext<RetryLog> context)
+        {
+            compensationCounts.Enqueue(context.GetRedeliveryCount());
+            return Task.FromResult(context.Compensated());
         }
     }
 

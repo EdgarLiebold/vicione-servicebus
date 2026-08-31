@@ -2563,3 +2563,32 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
    commit and one direct Evidence child. Remote publication requires a fresh explicit authorization and
    never uses force-push.
+
+## Core container/runtime native closure — 56-obligation large package (2026-08-31)
+
+1. Close exactly the 56 selected R0-CORE-B obligations owned by AccessScope, Dispatcher, EmptyBody,
+   EndpointConfiguration, endpoint/type exclusion, Handler, HealthCheck, MediatorFilter, MultiBus scope,
+   endpoint dependency, redelivery/request headers, Scheduler, Stop and TenantScope. Keep Future and the
+   unrelated saga-state-machine request fixture outside this package.
+2. Bind every obligation exactly once in `core-container-runtime-native-obligation-map.tsv`. Materialize
+   54 cases across source-mirrored dependency-injection, transport, mediator, scheduling, middleware and
+   Courier owners; reuse the stronger existing direct transport-stop carrier and allow one MultiBus owner
+   to carry the two independently asserted provider/setter obligations.
+3. Raise the independent UnitArchitecture floor from 2,698 to 2,752. Exact test results must remain above
+   the floor; the first post-deletion full run is 2,757/2,757 across 21 CTRFs with no failure or skip.
+4. Tests must bind actual product boundaries: exact AddHandler overload/dependency selection, endpoint
+   probe precedence, positive-control endpoint exclusion, owning DI scope, bound-bus isolation, dependency
+   readiness followed by terminal drain, exact raw/empty dispatch, health transitions, scoped scheduling,
+   tenant resolution order, retry cancellation and Courier header isolation. No sleep, polling or
+   timeout-as-success oracle is permitted.
+5. Delete exactly the sixteen fully replaced inherited ContainerTests files only after all carriers,
+   requirement rows, Release build and focused runs are green. Preserve `Future_Specs.cs`, every other
+   open legacy fixture and the frozen expected-core list; remove a directory only if physically empty.
+6. Perform assertion-quality, anti-pattern and source-derived pseudo-mutation review across the complete
+   carrier set. Execute independent buildable one-cause mutations for the high-value DI, configuration,
+   dispatch, scheduling, cancellation and Courier seams; bind targeted red cases and passing controls,
+   restore every byte exactly and rerun the focused post-restore cohort.
+7. Pay the broad validation once after mutations: locked Engineering restore/build with binlogs, complete
+   UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
+   commit and one direct Evidence child. Do not push remotely without a new explicit authorization and
+   never force-push.

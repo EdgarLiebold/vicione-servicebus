@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -7,6 +8,45 @@ namespace ViciOne.ServiceBus.Tests.Mediator;
 
 public sealed class MediatorDispatchTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "short-circuit-filter-responds-and-notifies-consumed")]
+    public async Task ShortCircuitFilter_RespondsWithoutInvokingConsumerAndStillNotifiesConsumed()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ShortCircuitObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddMediator(configuration =>
+            {
+                configuration.AddConsumer<ShortCircuitConsumer>();
+                configuration.ConfigureMediator((context, mediator) =>
+                    mediator.UseConsumeFilter(typeof(ShortCircuitFilter<>), context));
+            })
+            .BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            });
+        IMediator mediator = provider.GetRequiredService<IMediator>();
+        var observer = new ShortCircuitConsumeObserver(observation);
+        using ConnectHandle handle = mediator.ConnectConsumeObserver(observer);
+        IRequestClient<ShortCircuitRequest> client = mediator.CreateRequestClient<ShortCircuitRequest>();
+        Guid correlationId = NewId.NextGuid();
+
+        Response<ShortCircuitResponse> response = await client.GetResponse<ShortCircuitResponse>(
+            new ShortCircuitRequest(correlationId),
+            cancellationToken).WaitAsync(timeout, cancellationToken);
+        Guid postConsumed = await observation.PostConsumed.Task.WaitAsync(timeout, cancellationToken);
+
+        Assert.Equal(correlationId, response.Message.CorrelationId);
+        Assert.Equal("filter", response.Message.Source);
+        Assert.Equal(correlationId, postConsumed);
+        Assert.Equal(1, observation.FilterInvocations);
+        Assert.Equal(0, observation.ConsumerInvocations);
+        Assert.False(observation.ConsumeFault.Task.IsCompleted);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "dynamic-handler-connect-disconnect")]
     public async Task DynamicHandler_ReceivesBeforeDisconnectAndNotAfterDisconnect()
@@ -184,4 +224,82 @@ public sealed class MediatorDispatchTests
     private sealed record ResponseMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     private sealed class MediatorDispatchException(string message) : Exception(message);
+
+    public sealed record ShortCircuitRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record ShortCircuitResponse(Guid CorrelationId, string Source) : CorrelatedBy<Guid>;
+
+    public sealed class ShortCircuitObservation
+    {
+        private int _filterInvocations;
+        private int _consumerInvocations;
+
+        public int FilterInvocations => Volatile.Read(ref _filterInvocations);
+
+        public int ConsumerInvocations => Volatile.Read(ref _consumerInvocations);
+
+        public TaskCompletionSource<Guid> PostConsumed { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public TaskCompletionSource<Exception> ConsumeFault { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public void RecordFilter() => Interlocked.Increment(ref _filterInvocations);
+
+        public void RecordConsumer() => Interlocked.Increment(ref _consumerInvocations);
+    }
+
+    public sealed class ShortCircuitFilter<T>(ShortCircuitObservation observation) : IFilter<ConsumeContext<T>>
+        where T : class
+    {
+        public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        {
+            if (context is ConsumeContext<ShortCircuitRequest> request)
+            {
+                observation.RecordFilter();
+                await context.NotifyConsumed(context.ReceiveContext.ElapsedTime, nameof(ShortCircuitFilter<T>));
+                await request.RespondAsync(new ShortCircuitResponse(
+                    request.Message.CorrelationId,
+                    "filter"));
+                return;
+            }
+
+            await next.Send(context);
+        }
+
+        public void Probe(ProbeContext context) => context.CreateFilterScope("shortCircuit");
+    }
+
+    public sealed class ShortCircuitConsumer(ShortCircuitObservation observation) : IConsumer<ShortCircuitRequest>
+    {
+        public async Task Consume(ConsumeContext<ShortCircuitRequest> context)
+        {
+            observation.RecordConsumer();
+            await context.RespondAsync(new ShortCircuitResponse(
+                context.Message.CorrelationId,
+                "consumer"));
+        }
+    }
+
+    public sealed class ShortCircuitConsumeObserver(ShortCircuitObservation observation) : IConsumeObserver
+    {
+        public Task PreConsume<T>(ConsumeContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task PostConsume<T>(ConsumeContext<T> context)
+            where T : class
+        {
+            if (context.Message is ShortCircuitRequest request)
+                observation.PostConsumed.TrySetResult(request.CorrelationId);
+
+            return Task.CompletedTask;
+        }
+
+        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+            where T : class
+        {
+            observation.ConsumeFault.TrySetResult(exception);
+            return Task.CompletedTask;
+        }
+    }
 }

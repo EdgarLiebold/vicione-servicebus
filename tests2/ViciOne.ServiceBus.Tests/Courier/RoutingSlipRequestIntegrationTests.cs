@@ -91,6 +91,50 @@ public sealed class RoutingSlipRequestIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "response-proxy-retry-count-is-forwarded-to-request-fault")]
+    public async Task RetriedResponseProxy_ForwardsItsExactRetryCountToTheRequestFault()
+    {
+        TimeSpan timeout = CourierTestSupport.OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-request-retry-fault");
+        ExecuteActivityTestHarness<RequestFaultActivity, RequestActivityArguments> activity = harness.ExecuteActivity<
+            RequestFaultActivity,
+            RequestActivityArguments>();
+        var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
+        var responseProxy = new RetryingFaultResponseProxy();
+        harness.OnConfigureInMemoryBus += bus => bus.UseDelayedMessageScheduler();
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        {
+            endpoint.Instance(requestProxy);
+            endpoint.Instance(responseProxy);
+        };
+        await harness.Start(cancellationToken);
+
+        try
+        {
+            var request = new CourierRequest(NewId.NextGuid(), "retry-fault");
+            IRequestClient<CourierRequest> client = harness.Bus.CreateRequestClient<CourierRequest>(
+                harness.InputQueueAddress,
+                timeout);
+
+            RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
+                client.GetResponse<CourierResponse>(request, cancellationToken));
+            ISentMessage<Fault<CourierRequest>> sentFault = await harness.Sent
+                .SelectAsync<Fault<CourierRequest>>(cancellationToken)
+                .First();
+            await harness.Stop();
+
+            Assert.True(sentFault.Context.TryGetHeader(MessageHeaders.FaultRetryCount, out int? retryCount));
+            Assert.Equal(1, retryCount);
+            Assert.Equal(request, Assert.IsAssignableFrom<Fault<CourierRequest>>(exception.Fault).Message);
+        }
+        finally
+        {
+            await harness.Stop();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "declared-fault-response")]
     public async Task FaultedRoutingSlip_ReturnsTheDeclaredFaultResponseInsteadOfAStandardFault()
     {
@@ -206,6 +250,16 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     private sealed class StandardFaultResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
     {
+        protected override Task<CourierResponse> CreateResponseMessage(
+            ConsumeContext<RoutingSlipCompleted> context,
+            CourierRequest request) =>
+            throw new InvalidOperationException("The fault scenario must not create a success response.");
+    }
+
+    private sealed class RetryingFaultResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
+    {
+        protected override IRetryPolicy RetryPolicy { get; } = Retry.Immediate(1);
+
         protected override Task<CourierResponse> CreateResponseMessage(
             ConsumeContext<RoutingSlipCompleted> context,
             CourierRequest request) =>

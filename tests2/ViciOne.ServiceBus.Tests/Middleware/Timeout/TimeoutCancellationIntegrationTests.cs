@@ -206,6 +206,55 @@ public sealed class TimeoutCancellationIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUME-CANCELLATION", "transport-stop-cancels-pending-retry-without-another-attempt")]
+    public async Task TransportStop_CancelsAPendingRetryWithoutAnotherAttemptOrFault()
+    {
+        TimeSpan operationTimeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new RetryStopObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.AddOptions<ViciOneServiceBusHostOptions>()
+                    .Configure(options =>
+                    {
+                        options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);
+                        options.StopTimeout = TimeSpan.FromSeconds(5);
+                    });
+                configuration.AddConsumer<RetryStopConsumer>();
+                configuration.AddConfigureEndpointsCallback((_, endpoint) =>
+                    endpoint.UseMessageRetry(retry => retry.Interval(10, TimeSpan.FromDays(1))));
+            })
+            .BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        var stopped = false;
+
+        try
+        {
+            await harness.Bus.Publish(new RetryStopMessage("retry-stop"), cancellationToken);
+            await observation.FirstAttempt.Task.WaitAsync(operationTimeout, cancellationToken);
+
+            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            stopped = true;
+            await observation.Canceled.Task.WaitAsync(operationTimeout, cancellationToken);
+
+            Assert.Equal(1, observation.Attempts);
+            Assert.Empty(harness.Published.Select<Fault<RetryStopMessage>>(SnapshotOnlyToken()));
+        }
+        finally
+        {
+            if (!stopped)
+                await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-CANCELLATION", "independent-cancellation-is-a-fault")]
     public async Task IndependentHandlerCancellation_PublishesTheExactFault()
     {
@@ -260,5 +309,38 @@ public sealed class TimeoutCancellationIntegrationTests
 
     public sealed record IndependentCancellationMessage(string Value);
 
+    public sealed record RetryStopMessage(string Value);
+
     public sealed record SnapshotMessage(string Value);
+
+    public sealed class RetryStopObservation
+    {
+        private int _attempts;
+
+        public int Attempts => Volatile.Read(ref _attempts);
+
+        public TaskCompletionSource FirstAttempt { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public TaskCompletionSource Canceled { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public void RecordAttempt() => Interlocked.Increment(ref _attempts);
+    }
+
+    public sealed class RetryStopConsumer(RetryStopObservation observation) : IConsumer<RetryStopMessage>
+    {
+        public Task Consume(ConsumeContext<RetryStopMessage> context)
+        {
+            observation.RecordAttempt();
+            context.CancellationToken.Register(() =>
+            {
+                observation.Canceled.TrySetResult();
+            });
+            observation.FirstAttempt.TrySetResult();
+            throw new RetryStopException("enter retry delay");
+        }
+    }
+
+    public sealed class RetryStopException(string message) : Exception(message);
 }
