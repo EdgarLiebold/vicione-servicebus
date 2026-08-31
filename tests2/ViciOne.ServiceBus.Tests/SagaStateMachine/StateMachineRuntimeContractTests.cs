@@ -157,6 +157,24 @@ public sealed class StateMachineRuntimeContractTests
         Assert.Same(scenario.Running, instance.CurrentState);
     }
 
+    [Theory]
+    [InlineData(StateMachineConstructionStyle.Declarative)]
+    [InlineData(StateMachineConstructionStyle.Dynamic)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "enter-hook-observes-prior-mutation-and-transitions")]
+    public async Task EnterHook_ObservesTheCompletedTransitionActivityAndCanTransitionAgain(
+        StateMachineConstructionStyle style)
+    {
+        ChainedEnterScenario scenario = CreateChainedEnterScenario(style);
+        var instance = new RuntimeInstance();
+
+        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+
+        Assert.Equal(1, instance.SignalCount);
+        Assert.Equal(1, instance.OnEnterValue);
+        Assert.Equal(["running-enter:1"], instance.Markers);
+        Assert.Same(scenario.RunningFaster, instance.CurrentState);
+    }
+
     private static AnytimeScenario CreateAnytimeScenario(StateMachineConstructionStyle style)
     {
         if (style == StateMachineConstructionStyle.Declarative)
@@ -320,6 +338,39 @@ public sealed class StateMachineRuntimeContractTests
         return new DirectTransitionScenario(machine, running);
     }
 
+    private static ChainedEnterScenario CreateChainedEnterScenario(StateMachineConstructionStyle style)
+    {
+        if (style == StateMachineConstructionStyle.Declarative)
+        {
+            var declarativeMachine = new DeclarativeChainedEnterMachine();
+            return new ChainedEnterScenario(
+                declarativeMachine,
+                declarativeMachine.RunningFaster,
+                declarativeMachine.Start);
+        }
+
+        State running = null!;
+        State runningFaster = null!;
+        Event start = null!;
+        ViciOneServiceBusStateMachine<RuntimeInstance> machine = ViciOneServiceBusStateMachine<RuntimeInstance>.New(builder => builder
+            .State("Running", out running)
+            .State("RunningFaster", out runningFaster)
+            .Event("Start", out start)
+            .InstanceState(instance => instance.CurrentState!)
+            .Initially()
+            .When(start, behavior => behavior
+                .Then(context => context.Saga.SignalCount = 1)
+                .TransitionTo(running))
+            .WhenEnter(running, behavior => behavior
+                .Then(context =>
+                {
+                    context.Saga.OnEnterValue = context.Saga.SignalCount;
+                    context.Saga.Markers.Add($"running-enter:{context.Saga.SignalCount}");
+                })
+                .TransitionTo(runningFaster)));
+        return new ChainedEnterScenario(machine, runningFaster, start);
+    }
+
     private sealed record AnytimeScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
         State Ready,
@@ -348,6 +399,11 @@ public sealed class StateMachineRuntimeContractTests
     private sealed record DirectTransitionScenario(
         ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
         State Running);
+
+    private sealed record ChainedEnterScenario(
+        ViciOneServiceBusStateMachine<RuntimeInstance> Machine,
+        State RunningFaster,
+        Event Start);
 
     public sealed record RuntimeData(string Value);
 
@@ -378,6 +434,8 @@ public sealed class StateMachineRuntimeContractTests
         public int NestedCount { get; set; }
 
         public int Volts { get; set; }
+
+        public int OnEnterValue { get; set; }
 
         public string? Value { get; set; }
 
@@ -490,6 +548,33 @@ public sealed class StateMachineRuntimeContractTests
         }
 
         public State Running { get; private set; } = null!;
+    }
+
+    private sealed class DeclarativeChainedEnterMachine : ViciOneServiceBusStateMachine<RuntimeInstance>
+    {
+        public DeclarativeChainedEnterMachine()
+        {
+            InstanceState(instance => instance.CurrentState!);
+            Initially(
+                When(Start)
+                    .Then(context => context.Saga.SignalCount = 1)
+                    .TransitionTo(Running));
+            WhenEnter(
+                Running,
+                behavior => behavior
+                    .Then(context =>
+                    {
+                        context.Saga.OnEnterValue = context.Saga.SignalCount;
+                        context.Saga.Markers.Add($"running-enter:{context.Saga.SignalCount}");
+                    })
+                    .TransitionTo(RunningFaster));
+        }
+
+        public State Running { get; private set; } = null!;
+
+        public State RunningFaster { get; private set; } = null!;
+
+        public Event Start { get; private set; } = null!;
     }
 
     private sealed class StateRecorder : IStateObserver<RuntimeInstance>

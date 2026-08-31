@@ -104,12 +104,13 @@ public sealed class StateMachineActivityTests
     {
         DataScenario scenario = CreateDataActionScenario(style);
         var instance = new ActivityInstance();
-        var message = new ActivityData("Hello");
+        var message = new ActivityData("Audi", "A6");
 
         await Raise(scenario.Machine, instance, scenario.Event, message);
 
-        Assert.Equal("Hello", instance.Value);
-        Assert.Equal(["copy:Hello", "after-copy"], instance.Markers);
+        Assert.Equal("Audi", instance.Value);
+        Assert.Equal("A6", instance.SecondaryValue);
+        Assert.Equal(["copy:Audi:A6", "after-copy"], instance.Markers);
         Assert.Same(scenario.Running, instance.CurrentState);
     }
 
@@ -277,7 +278,8 @@ public sealed class StateMachineActivityTests
             .Then(context =>
             {
                 context.Saga.Value = context.Message.Value;
-                context.Saga.Markers.Add($"copy:{context.Message.Value}");
+                context.Saga.SecondaryValue = context.Message.SecondaryValue;
+                context.Saga.Markers.Add($"copy:{context.Message.Value}:{context.Message.SecondaryValue}");
             })
             .Then(context => context.Saga.Markers.Add("after-copy"))
             .TransitionTo(running);
@@ -317,7 +319,7 @@ public sealed class StateMachineActivityTests
 
     public sealed record ActivitySignal;
 
-    public sealed record ActivityData(string Value);
+    public sealed record ActivityData(string Value, string SecondaryValue = "");
 
     private sealed record LifecycleScenario(
         ViciOneServiceBusStateMachine<ActivityInstance> Machine,
@@ -352,6 +354,8 @@ public sealed class StateMachineActivityTests
         public State? StateBeforeFinal { get; set; }
 
         public string? Value { get; set; }
+
+        public string? SecondaryValue { get; set; }
 
         public List<string> Markers { get; } = [];
     }

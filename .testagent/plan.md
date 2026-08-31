@@ -2534,3 +2534,32 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical commit and one
    direct Evidence child; remote publication requires a fresh explicit authorization and never uses
    force-push.
+
+## Core state-machine integration/policy native closure — 74-obligation large package (2026-08-31)
+
+1. Close exactly the remaining 74 R0-CORE-A state-machine obligations owned by the 45 frozen Group,
+   request/response, correlation, lifecycle, scheduling, topology, concurrency, fault, missing-instance
+   and policy fixtures. Bind all 74 rows exactly once: 69 to executing UnitArchitecture carriers and five
+   to explicit invalid-source retirement for two empty RunParallel placeholders, one contradictory Enter
+   count and two assertion-free cases. Never invent replacement semantics for invalid legacy tests.
+2. Add source-mirrored integration owners for parallel and multi-response requests, correlation/lifecycle,
+   configuration, response/fault/outbox, publish/send/dynamic/topology, deterministic scheduling,
+   repository concurrency/partitioning and retry/ignore/container policy. Strengthen existing activity
+   and runtime owners where the native behavior is already the correct source owner.
+3. Materialize exactly 37 cases and raise the independent UnitArchitecture floor from 2,661 to 2,698.
+   Tests bind exact state, message, correlation, metadata, exception, retry, response and terminal-event
+   identities. Scheduling uses the in-memory delay provider or zero-delay provider path; no carrier uses
+   sleep, polling, timeout-as-success or a wall-clock absence oracle.
+4. The scheduled-outbox serializer-failure case must prove one exact serializer failure for Count=2,
+   committed-state retry, no Count=2 delivery, a real request/response loop, the exact Faulted terminal
+   result and retained Failed saga. Deleting the outbox boundary must be killed by the same carrier.
+5. Delete all 45 fully disposed inherited files atomically after the 74-row map, requirement projection,
+   Release build and 63-case focused carrier set are green. Remove the physically empty Dynamic Modify
+   directory; preserve nonempty inherited directories and never alter expected/core.txt.
+6. Perform assertion-quality, anti-pattern and pseudo-mutation review across every new owner. Execute
+   independent, buildable one-cause mutations for each high-value behavior axis, retain passing controls
+   where axes share a Theory, restore every product/test byte exactly and rerun the focused control.
+7. Pay broad validation once for the completed package: locked Engineering restore/build, complete
+   UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
+   commit and one direct Evidence child. Remote publication requires a fresh explicit authorization and
+   never uses force-push.
