@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.SagaStateMachine
 {
     using System;
+    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
     using RetryPolicies;
 
@@ -32,7 +33,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
 
         public async Task Execute(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
         {
-            await _retryPolicy.Retry(() => _retryBehavior.Execute(context), context.CancellationToken);
+            await _retryPolicy.Retry(() => ExecuteRetryBehavior(context), context.CancellationToken);
 
             await next.Execute(context).ConfigureAwait(false);
         }
@@ -40,7 +41,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
         public async Task Execute<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
             where T : class
         {
-            await _retryPolicy.Retry(() => _retryBehavior.Execute(context), context.CancellationToken);
+            await _retryPolicy.Retry(() => ExecuteRetryBehavior(context), context.CancellationToken);
 
             await next.Execute(context).ConfigureAwait(false);
         }
@@ -56,6 +57,33 @@ namespace ViciOne.ServiceBus.SagaStateMachine
             where TException : Exception
         {
             return next.Faulted(context);
+        }
+
+        async Task ExecuteRetryBehavior(BehaviorContext<TInstance> context)
+        {
+            try
+            {
+                await _retryBehavior.Execute(context).ConfigureAwait(false);
+            }
+            catch (EventExecutionException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+                throw;
+            }
+        }
+
+        async Task ExecuteRetryBehavior<T>(BehaviorContext<TInstance, T> context)
+            where T : class
+        {
+            try
+            {
+                await _retryBehavior.Execute(context).ConfigureAwait(false);
+            }
+            catch (EventExecutionException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+                throw;
+            }
         }
     }
 
@@ -95,7 +123,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
             where T : class
         {
             if (context is BehaviorContext<TInstance, TMessage> behaviorContext)
-                await _retryPolicy.Retry(() => _retryBehavior.Execute(behaviorContext), context.CancellationToken);
+                await _retryPolicy.Retry(() => ExecuteRetryBehavior(behaviorContext), context.CancellationToken);
 
             await next.Execute(context).ConfigureAwait(false);
         }
@@ -111,6 +139,19 @@ namespace ViciOne.ServiceBus.SagaStateMachine
             where TException : Exception
         {
             return next.Faulted(context);
+        }
+
+        async Task ExecuteRetryBehavior(BehaviorContext<TInstance, TMessage> context)
+        {
+            try
+            {
+                await _retryBehavior.Execute(context).ConfigureAwait(false);
+            }
+            catch (EventExecutionException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+                throw;
+            }
         }
     }
 }

@@ -2500,3 +2500,37 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 7. Pay broad validation once for the whole package: locked Engineering restore/build, complete
    UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one
    Technical commit and one direct Evidence child. No remote push without new explicit approval.
+
+## Core state-machine composite/recovery native closure — 61-obligation large package (2026-08-31)
+
+1. Close exactly the 61 selected R0-CORE-A obligations owned by the sixteen Combine, CompositeOrder,
+   CompositeCondition, Combine_Assigned, CompositeEventMultipleStates, Dependency, Faulted, Retry,
+   Telephone and declarative Event fixtures. Keep Group, SubStateOnEnter and dynamic Event questions
+   outside this package.
+2. Add `StateMachineCompositeEventTests` with five complete source-mirrored flows: constituent/status
+   truth table, activity order plus conditional completion, duplicate option behavior, assigned int/
+   struct NextEvents surface and cross-state declaration-order equivalence. Execute declarative and
+   dynamic construction separately wherever both inherited contracts exist.
+3. Add `StateMachineRecoveryTests` for dependency factory/continuation, compensating rollback and the
+   four trigger/data x catch/no-catch retry rows. Retry intervals are zero-duration but traverse the
+   real interval-policy path; assert four attempts and exact failure/catch identity rather than time.
+4. Add `StateMachineTelephoneTests` as six deterministic construction-style x call-path rows. Replace
+   Stopwatch and `Task.Delay` with exact Connected enter/leave counts, ordered state markers, number
+   propagation and terminal OffHook identity. Reuse the already stronger real-machine visualizer
+   owners for the two Draw obligations.
+5. Strengthen the existing definition owner with exact `TriggerEvent`/`MessageEvent<T>` runtime-type
+   and name assertions. Add nine passive native requirement rows and one exact 61-row terminal map.
+   Materialize 26 new cases and raise the UnitArchitecture floor from 2,635 to 2,661.
+6. Build/test only the three new carriers and strengthened definition owner while implementing. Run
+   assertion-quality and pseudo-mutation review before deletion; never weaken a carrier to match a
+   product failure.
+7. Bind independent single-cause mutations across composite completion/order/options/metadata,
+   dependency continuation, compensation and retry. Restore every product byte immediately and run
+   one focused post-restore control.
+8. Delete the sixteen fully replaced inherited files atomically only after the 61-row map,
+   requirements and focused tests are green. Retain the four question-owned files and observer
+   helpers; remove directories only if actually empty and never alter expected/core.txt.
+9. Pay broad validation once: locked Engineering restore/build with binlogs, complete UnitArchitecture,
+   scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical commit and one
+   direct Evidence child; remote publication requires a fresh explicit authorization and never uses
+   force-push.

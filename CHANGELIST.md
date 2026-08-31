@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 5150 |
-| Modified | 4078 |
-| Deleted | 1570 |
+| Added | 5154 |
+| Modified | 4062 |
+| Deleted | 1586 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -39,6 +39,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-serialization-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-state-machine-activity-condition-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-state-machine-composite-recovery-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-state-machine-definition-runtime-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-state-machine-exception-observation-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
@@ -9565,20 +9566,30 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AsyncActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AsyncActivity_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Condition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Condition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/DataActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/DataActivity_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` |
@@ -9588,11 +9599,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AsyncActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AsyncActivity_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Condition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Condition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/DataActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/DataActivity_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` |
@@ -9600,6 +9616,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` |
@@ -9971,20 +9988,10 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Saga/SagaTestContext.cs` | Modified | `tests/MassTransit.Tests/Saga/SagaTestContext.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/SimpleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/SimpleSaga.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/saga.nhibernate.cfg.xml` | Modified | `tests/MassTransit.Tests/Saga/saga.nhibernate.cfg.xml` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/SubStateOnEnter_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SubStateOnEnter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/BaseClass_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/BaseClass_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CatchFault_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CatchFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CatchInitial_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CatchInitial_Specs.cs` |
@@ -9998,14 +10005,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelateUsingTopology_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelateUsingTopology_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelationExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelationExpression_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelationUnknown_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelationUnknown_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/DynamicEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/DynamicEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/EnterEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/EnterEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/FaultRescue_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/FaultRescue_Specs.cs` |
@@ -10673,12 +10674,15 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRecoveryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTelephoneTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |

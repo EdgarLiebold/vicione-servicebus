@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -24,6 +25,10 @@ public sealed class StateMachineDefinitionTests
         Assert.Equal(
             ["Finish", "Handshake", "Ignored", "Start"],
             scenario.Machine.Events.Select(@event => @event.Name).Order().ToArray());
+        Assert.Equal("Start", scenario.Start.Name);
+        Assert.IsType<TriggerEvent>(scenario.Start);
+        Assert.Equal("Handshake", scenario.Handshake.Name);
+        Assert.IsType<MessageEvent<HandshakeData>>(scenario.Handshake);
         Assert.Equal(
             ["Finish", "Handshake", "Ignored"],
             scenario.Machine.NextEvents(scenario.Running).Select(@event => @event.Name).Order().ToArray());

@@ -2996,3 +2996,120 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
   zero warnings/errors, and scoped Roslyn verification is clean. The first format attempt reproduced
   the known macOS sandbox NamedPipe denial; the identical bounded command completed outside that
   sandbox without changing source or project files.
+
+## Core state-machine composite/recovery native closure — 61-obligation research freeze (2026-08-31)
+
+### Bounded source and obligation inventory
+
+- The selected inherited sources are the declarative/dynamic pairs `Combine_Specs.cs`,
+  `CompositeOrder_Specs.cs`, `CompositeCondition_Specs.cs`, `Dependency_Specs.cs`,
+  `Faulted_Specs.cs` and `Telephone_Sample.cs`, plus declarative `Combine_Assigned_Specs.cs`,
+  `CompositeEventMultipleStates_Specs.cs`, `Retry_Specs.cs` and `Event_Specs.cs`. This is exactly
+  sixteen files and 61 frozen R0-CORE-A obligations: 41 composite-event identities and 20
+  dependency, compensation, retry, telephone, event-metadata and graph identities.
+- The adjacent unresolved questions remain outside the package: declarative/dynamic Group
+  (`0022`, `0211`), SubStateOnEnter (`0062`) and dynamic Event (`0310`). No retained fixture or
+  helper is retired incidentally.
+- All sixteen selected files are glob-compiled and no nested test/support type is referenced from a
+  retained source. After exact replacement they are independently deletable; the historical
+  `build/verification/expected/core.txt` identity inventory remains frozen and untouched.
+
+### Existing stronger owners and exact gaps
+
+- `StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface`
+  already owns both construction APIs and the complete event set. Four independent runtime-type/name
+  assertions strengthen it to bind declarative trigger and message-event metadata (`0124..0127`)
+  without adding a duplicate case.
+- `StateMachineInputTests.DeclarativeStateMachineGraph_RendersStatesEventsAndEdges` and
+  `DynamicStateMachineGraph_RendersStatesEventsAndEdges` already render real machines and compare
+  complete canonical documents. They are strictly stronger than the two inherited telephone `Draw`
+  methods, whose only contract was non-throwing console output (`0066`, `0254`).
+- No native owner currently binds the complete composite bit/status truth table, duplicate policy,
+  assigned NextEvents surface, declaration-order across states, dependency factory continuation,
+  compensating rollback, state-machine retry exhaustion or telephone super/substate lifecycle.
+
+### Native test design and oracle checklist
+
+- [x] Composite plain status: for each construction API use three fresh instances (first-only,
+  second-only and complete), assert exact status bits, zero premature composite executions, exact
+  constituent markers and one terminal composite execution.
+- [x] Composite ordering/condition: for each construction API execute both event orders on fresh
+  instances and assert the complete marker sequence, both constituent activities before the
+  composite, exactly one true-condition completion and exact false-condition exclusion.
+- [x] Duplicate policy: execute `RaiseOnce` and `None` independently; prove one constituent cannot
+  raise, completion raises once, and one repeated constituent produces exactly one or two total
+  composite executions according to the option.
+- [x] Int/status/assigned surface: per construction API execute both struct- and int-tracked machines,
+  assert Initial/Waiting/Final NextEvents by direct state and `GetState`, exact composite
+  classification, assigned int state values, constituent-before-composite order and terminal Final.
+- [x] Cross-state declaration order: for both construction APIs and both declaration points consume
+  constituents in Waiting then WaitingForSecond and assert the exact transition and completion trace.
+- [x] Dependency and compensation: per construction API assert exact `56+23=79`, factory/activity/
+  continuation cardinality and terminal state; on downstream failure assert the original value is
+  restored, the failing exception remains the inner cause and no transition completes.
+- [x] Retry: four independent trigger/data x catch/no-catch rows use zero-duration interval retries,
+  assert exactly four attempts, exact original exception identity for the uncaught rows, exactly one
+  catch for caught rows and no post-retry continuation.
+- [x] Telephone: six construction-style x path rows replace Stopwatch/Delay with exact enter/leave
+  counters and ordered transition markers. Hold is a Connected substate and cannot stop/restart the
+  connected lifetime; hang-up from Connected or OnHold leaves exactly once.
+- [x] No carrier uses shared mutable fixtures, sleep, polling, wall-clock duration, timeout-as-success
+  or absence-only terminal verdicts. Every verdict follows awaited state-machine completion.
+
+### Static pairing and mutation boundary
+
+- The mandatory Roslyn pairing scan ran once over 3,899 source files and 1,104 test files: 1,059 were
+  statically paired and 2,840 reported unpaired in about 4.5 seconds. It confirms that current
+  composite/retry product owners still depend heavily on the inherited specs, but remains a lexical
+  heuristic rather than coverage evidence.
+- Product review covered `CompositeEventActivity`, both composite status accessors, composite binding
+  and options, the dynamic modifier/activity builder, retry binders/activities and the retry loop.
+  Planned one-cause mutations target constituent completion, RaiseOnce, condition filtering,
+  NextEvents/composite classification, activity continuation/compensation, retry attempt/catch
+  propagation and Connected superstate enter/leave behavior. Every accepted mutant must build, kill
+  the intended carrier and restore the technical product blob byte-exactly.
+
+### Assertion-quality and pseudo-mutation review
+
+- The nine new requirement methods materialize 26 cases and contain 89 concrete xUnit assertion
+  call sites including their shared event-surface oracle. Every method has meaningful equality,
+  identity, collection, Boolean/state or exception assertions; there are zero assertion-free,
+  null-only, always-true or self-referential carriers. Negative assertions cover partial composite
+  sets, false conditions, non-composite constituents, missing catches and suppressed continuation.
+- Composite mutations are independently observable: dropping a status bit/write prevents exact
+  completion; premature completion violates the first-only/second-only rows; removing RaiseOnce
+  changes the exact duplicate count; removing composite classification changes the exact NextEvents
+  surface; dropping either constituent activity breaks the ordered marker sequence. Both int and
+  struct accessors are exercised through real persisted status across separate raises.
+- Factory and compensation assertions bind factory/activity/continuation cardinality, exact data
+  result, ordered markers, rollback, exact nested failure identity and unchanged Initial state.
+  Telephone assertions bind every transition trace plus exact Connected superstate Enter/Leave
+  cardinality, so independently deleting superstate entry or exit propagation is observable.
+- One empirical survivor was found in the new retry product correction: replacing
+  `ExceptionDispatchInfo.Capture(inner).Throw()` with `throw inner` left all four retry cases green
+  because type and object identity survive while stack provenance is reset. The existing carrier is
+  strengthened, without a new case, to require the original `Attempt` frame. The same direct-throw
+  mutant now fails exactly the two trigger rows; the corresponding data-path mutant is included in
+  the final mutation set.
+
+### Empirical mutation result
+
+- Seventeen accepted, independently built one-cause mutants are killed by the intended native
+  carriers: composite status write/completion/duplicate policy/continuation/classification/binding,
+  both persisted status accessors, factory delegation, compensation wrapping, condition polarity,
+  direct and superstate transition lifecycle, trigger/data retry stack provenance, and trigger/data
+  event metadata. Every mutant build completed with zero warnings and zero errors and produced a
+  machine-readable red CTRF result.
+- Control separation is explicit where the contract has independent axes. The trigger retry mutant
+  fails only the two trigger rows while both data rows stay green; the data retry mutant has the
+  inverse result. Removing Connected-superstate Leave propagation fails only both `HoldHangUp`
+  rows, while the four paths that do not leave from the substate remain green. Duplicate-option and
+  composite truth-table mutations fail both construction styles independently.
+- One exploratory mutation that removed only superstate-enter propagation was discarded rather
+  than counted: the selected telephone paths enter `Connected` directly, so that product branch is
+  outside this package's scoped contract. The accepted entry mutant instead removes the direct
+  target-state Enter raise and is killed by all six lifecycle rows. No green or scope-equivalent
+  candidate is represented as mutation evidence.
+- After every run the changed file was restored and checked against its frozen SHA-256. The final
+  post-restore build is clean at zero warnings/errors and all 80 native SagaStateMachine cases pass
+  with zero failures and zero skips.
