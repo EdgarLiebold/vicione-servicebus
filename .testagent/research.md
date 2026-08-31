@@ -2828,3 +2828,50 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
   control. Only after that control passed were all 23 inherited Courier files deleted; the resulting
   empty directory was removed. The UnitArchitecture floor therefore rises by the actual 36 cases,
   from 2,523 to 2,559.
+
+## Core MessageData native closure — bounded research (2026-08-31)
+
+### Frozen candidate set
+
+- The selected set is exactly `OBL-R0-CORE-C-0103..0129`, 27 UnitArchitecture obligations from ten
+  inherited files below `tests/ViciOne.ServiceBus.Tests/MessageData` (1,643 lines).
+- The obligations cover inline and stored string/byte/stream values, filesystem time-paths,
+  encryption, explicit repository references, nested object/array/list/dictionary graphs, interface
+  and concrete initializers, application objects, large System.Text.Json payloads, publish and both
+  request-client construction paths.
+- All inherited test-local contracts are self-contained. The glob-based legacy project has no
+  remaining source dependency on the ten files. `build/verification/expected/core.txt` remains the
+  immutable historical inventory and is not edited.
+
+### Native owner and stronger oracles
+
+- Five source-mirrored files under `tests2/ViciOne.ServiceBus.Tests/MessageData` materialize 22 cases.
+  Four repository cases, five transport cases, six initializer cases and four endpoint cases carry
+  the inherited behavior; two additional encryption boundary cases bind null rejection and owned
+  stream disposal.
+- The large JSON carrier executes 1,000, 50,000 and 1,000,000 integer values sequentially. Each
+  receive is awaited and its complete array, correlation, address and terminal delivery count are
+  asserted; the inherited first-consume-only false green is not preserved.
+- Publish and both request-client paths assert exact repository-backed addresses and contents after
+  transport stop/drain. Nested transforms assert every collection member and both dictionary keys,
+  including the historically missed Boolean `false` value.
+- The transport tests use positive receive/request completion barriers and configured operation
+  timeouts only as failure budgets. They contain no sleep, delay, skip or quiet-window verdict.
+
+### Product defect found by the native carrier
+
+- `EncryptedMessageDataRepository.Put` previously assigned `NameValueCollection.ToString()` to the
+  URI query, returning `?System.Collections.Specialized.NameValueCollection` instead of a usable
+  repository address. Filesystem reads happened to ignore the query; a key-addressed in-memory
+  repository correctly exposed that the repository could not read its own returned address.
+- The correction returns the exact inner repository address, consistently uses the configured
+  crypto provider's default key for encrypt and decrypt, rejects null public inputs, and disposes an
+  inner stream if decrypt-stream construction fails. Direct tests bind ciphertext-at-rest, exact
+  address reuse, all three value types, original exception identity and stream ownership.
+
+### Local build environment lesson retained
+
+- The scoped `dotnet format` call can fail inside the macOS sandbox because Roslyn's build host
+  cannot bind its named pipe (`SocketException (13): Permission denied`). Repeating the identical
+  command outside only that sandbox boundary succeeds with exit zero. Build/test failures continue
+  to be diagnosed from binlogs before any product conclusion is drawn.

@@ -1,12 +1,10 @@
 namespace ViciOne.ServiceBus.MessageData
 {
     using System;
-    using System.Collections.Specialized;
     using System.IO;
     using System.Security.Cryptography;
     using System.Threading;
     using System.Threading.Tasks;
-    using Internals;
     using Serialization;
 
 
@@ -23,52 +21,37 @@ namespace ViciOne.ServiceBus.MessageData
         /// <param name="streamProvider">The encrypted stream provider</param>
         public EncryptedMessageDataRepository(IMessageDataRepository repository, ICryptoStreamProvider streamProvider)
         {
+            ArgumentNullException.ThrowIfNull(repository);
+            ArgumentNullException.ThrowIfNull(streamProvider);
+
             _repository = repository;
             _streamProvider = streamProvider;
         }
 
-        public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(address);
+
             var stream = await _repository.Get(address, cancellationToken).ConfigureAwait(false);
 
-            address.TryGetValueFromQueryString("keyId", out var keyId);
-
-            return _streamProvider.GetDecryptStream(stream, keyId, CryptoStreamMode.Read);
+            try
+            {
+                return _streamProvider.GetDecryptStream(stream, null, CryptoStreamMode.Read);
+            }
+            catch
+            {
+                await stream.DisposeAsync().ConfigureAwait(false);
+                throw;
+            }
         }
 
-        public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
         {
-            string keyId = null;
+            ArgumentNullException.ThrowIfNull(stream);
 
-            using var cryptoStream = _streamProvider.GetEncryptStream(stream, keyId, CryptoStreamMode.Read);
+            using var cryptoStream = _streamProvider.GetEncryptStream(stream, null, CryptoStreamMode.Read);
 
-            var address = await _repository.Put(cryptoStream, timeToLive, cancellationToken).ConfigureAwait(false);
-
-            var addressBuilder = new UriBuilder(address);
-
-            var parameters = new NameValueCollection();
-            if (!string.IsNullOrWhiteSpace(addressBuilder.Query))
-            {
-                var query = addressBuilder.Query;
-
-                if (query.Contains("?"))
-                    query = query.Substring(query.IndexOf('?') + 1);
-
-                foreach (var parameter in query.Split('&'))
-                {
-                    if (string.IsNullOrWhiteSpace(parameter))
-                        continue;
-
-                    var pair = parameter.Split('=');
-
-                    parameters.Add(pair[0], pair.Length == 2 ? pair[1] : "");
-                }
-            }
-
-            parameters["keyId"] = "";
-            addressBuilder.Query = parameters.ToString();
-
-            return addressBuilder.Uri;
+            return await _repository.Put(cryptoStream, timeToLive, cancellationToken).ConfigureAwait(false);
         }
     }
 }

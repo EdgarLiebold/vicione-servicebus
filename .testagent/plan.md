@@ -2392,3 +2392,28 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 9. Freeze one direct Evidence child containing byte-exact Technical patch, CTRFs, binlogs, raw logs,
    mutation recipes/results and complete SHA-256 inventory; then bind Technical and Evidence hashes
    once in the architecture repository. No remote push without fresh explicit PO authorization.
+
+## Core MessageData native closure — 27-obligation large cohort (2026-08-31)
+
+1. Close exactly `OBL-R0-CORE-C-0103..0129` as one UnitArchitecture package and map all 27
+   obligations exactly once to executing native carriers.
+2. Replace the repository, threshold, filesystem, encryption, nested-graph, initializer, JSON,
+   publish and request/response fixtures with source-mirrored xUnit 4 / MTP v2 tests. Consolidate
+   only where one execution observes the complete inherited contract.
+3. Bind string, byte array and stream payloads independently; require exact content, address and
+   ciphertext-at-rest or path-class oracles as applicable. The large System.Text.Json carrier must
+   complete and validate every declared size, including one million values.
+4. Use positive receive/request/repository barriers and the configured operation timeout only as a
+   failure budget. No sleep, quiet-window or first-message-only success oracle is allowed.
+5. Execute a compact independent mutation set over actual MessageData product seams, require the
+   intended native carrier to turn red, and restore every product byte exactly after each mutation.
+6. Delete the ten fully replaced inherited MessageData files only after focused execution,
+   requirement projection and the 27-row terminal map are green. Remove the directory only if it is
+   physically empty; never alter the frozen historical expected-core inventory.
+7. Raise the UnitArchitecture floor by the exact twenty-two materialized cases, from 2,559 to 2,581;
+   the two additional cases bind the public encryption null boundary and owned-stream cleanup.
+   Then run one locked Engineering restore/build, one complete UnitArchitecture profile, scoped
+   format, CI tools, Identity, Verification Model and CHANGELIST closure for the whole package.
+8. Freeze one Technical commit and one direct Evidence child. Independent read-only acceptance,
+   architecture binding and remote publication remain separate; no push without fresh explicit PO
+   authorization and never force-push.
