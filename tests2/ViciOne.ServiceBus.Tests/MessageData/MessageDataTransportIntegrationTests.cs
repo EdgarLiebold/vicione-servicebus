@@ -23,17 +23,18 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-inline", timeout, repository);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(async context =>
-        {
-            await using Stream stream = await context.Message.Stream.Value;
-            observed.TrySetResult(new TransportSnapshot(
-                context.Message.Text.Address,
-                context.Message.Bytes.Address,
-                context.Message.Stream.Address,
-                await context.Message.Text.Value,
-                await context.Message.Bytes.Value,
-                await ReadBytes(stream, context.CancellationToken)));
-        });
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+            Observe(observed, async () =>
+            {
+                await using Stream stream = await context.Message.Stream.Value;
+                return new TransportSnapshot(
+                    context.Message.Text.Address,
+                    context.Message.Bytes.Address,
+                    context.Message.Stream.Address,
+                    await context.Message.Text.Value,
+                    await context.Message.Bytes.Value,
+                    await ReadBytes(stream, context.CancellationToken));
+            }));
         byte[] bytes = [1, 2, 3, 4, 5];
         byte[] streamBytes = [6, 7, 8, 9];
         await using var source = new MemoryStream(streamBytes, writable: false);
@@ -76,17 +77,18 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new FileSystemMessageDataRepository(directory);
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-stored", timeout, repository);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(async context =>
-        {
-            await using Stream stream = await context.Message.Stream.Value;
-            observed.TrySetResult(new TransportSnapshot(
-                context.Message.Text.Address,
-                context.Message.Bytes.Address,
-                context.Message.Stream.Address,
-                await context.Message.Text.Value,
-                await context.Message.Bytes.Value,
-                await ReadBytes(stream, context.CancellationToken)));
-        });
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+            Observe(observed, async () =>
+            {
+                await using Stream stream = await context.Message.Stream.Value;
+                return new TransportSnapshot(
+                    context.Message.Text.Address,
+                    context.Message.Bytes.Address,
+                    context.Message.Stream.Address,
+                    await context.Message.Text.Value,
+                    await context.Message.Bytes.Value,
+                    await ReadBytes(stream, context.CancellationToken));
+            }));
         string text = $"stored-{NewId.NextGuid():N}";
         byte[] bytes = Enumerable.Range(0, 129).Select(index => (byte)(index % 127)).ToArray();
         byte[] streamBytes = Enumerable.Range(0, 73).Select(index => (byte)(index + 31)).ToArray();
@@ -135,17 +137,18 @@ public sealed class MessageDataTransportIntegrationTests
             new AesCryptoStreamProvider(new FixedSymmetricKeyProvider(), "default"));
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-encrypted", timeout, repository);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(async context =>
-        {
-            await using Stream stream = await context.Message.Stream.Value;
-            observed.TrySetResult(new TransportSnapshot(
-                context.Message.Text.Address,
-                context.Message.Bytes.Address,
-                context.Message.Stream.Address,
-                await context.Message.Text.Value,
-                await context.Message.Bytes.Value,
-                await ReadBytes(stream, context.CancellationToken)));
-        });
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+            Observe(observed, async () =>
+            {
+                await using Stream stream = await context.Message.Stream.Value;
+                return new TransportSnapshot(
+                    context.Message.Text.Address,
+                    context.Message.Bytes.Address,
+                    context.Message.Stream.Address,
+                    await context.Message.Text.Value,
+                    await context.Message.Bytes.Value,
+                    await ReadBytes(stream, context.CancellationToken));
+            }));
         string text = $"secret-{NewId.NextGuid():N}";
         byte[] textBytes = Encoding.UTF8.GetBytes(text);
         byte[] bytes = Enumerable.Range(0, 131).Select(index => (byte)(index % 113)).ToArray();
@@ -191,19 +194,20 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<ReferenceSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-references", timeout, repository);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ReferenceEnvelope>(async context =>
-        {
-            await using Stream stream = await context.Message.Stream.Value;
-            observed.TrySetResult(new ReferenceSnapshot(
-                await context.Message.Text.Value,
-                await context.Message.Bytes.Value,
-                await ReadBytes(stream, context.CancellationToken),
-                await context.Message.Document.Body.Value,
-                await context.Message.Documents[0].Body.Value,
-                await context.Message.DocumentList[0].Body.Value,
-                await context.Message.DocumentIndex["first"].Body.Value,
-                await context.Message.DocumentIndex["second"].Body.Value));
-        });
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ReferenceEnvelope>(context =>
+            Observe(observed, async () =>
+            {
+                await using Stream stream = await context.Message.Stream.Value;
+                return new ReferenceSnapshot(
+                    await context.Message.Text.Value,
+                    await context.Message.Bytes.Value,
+                    await ReadBytes(stream, context.CancellationToken),
+                    await context.Message.Document.Body.Value,
+                    await context.Message.Documents[0].Body.Value,
+                    await context.Message.DocumentList[0].Body.Value,
+                    await context.Message.DocumentIndex["first"].Body.Value,
+                    await context.Message.DocumentIndex["second"].Body.Value);
+            }));
         Guid identity = Guid.Parse("82d15d34-acde-4d71-9cf0-6155c3a534d2");
         byte[] identityBytes = identity.ToByteArray();
         MessageData<string> text = await repository.PutString(identity.ToString(), cancellationToken);
@@ -274,6 +278,19 @@ public sealed class MessageDataTransportIntegrationTests
         using var copy = new MemoryStream();
         await stream.CopyToAsync(copy, cancellationToken);
         return copy.ToArray();
+    }
+
+    private static async Task Observe<T>(TaskCompletionSource<T> observed, Func<Task<T>> createSnapshot)
+    {
+        try
+        {
+            observed.TrySetResult(await createSnapshot());
+        }
+        catch (Exception exception)
+        {
+            observed.TrySetException(exception);
+            throw;
+        }
     }
 
     private static DirectoryInfo RunDirectory(string suffix) =>
