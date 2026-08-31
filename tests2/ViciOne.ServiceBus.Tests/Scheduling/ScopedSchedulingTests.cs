@@ -42,6 +42,13 @@ public sealed class ScopedSchedulingTests
         {
             Guid correlationId = NewId.NextGuid();
             await harness.Bus.Publish(new ScheduleCommand(correlationId), cancellationToken);
+            IReceivedMessage<ScheduleCommand> command = await harness.Consumed
+                .SelectAsync<ScheduleCommand>(cancellationToken)
+                .First();
+
+            Assert.Equal(correlationId, command.Context.Message.CorrelationId);
+            Assert.Null(command.Exception);
+
             ScheduleScopeResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(correlationId, result.CorrelationId);
