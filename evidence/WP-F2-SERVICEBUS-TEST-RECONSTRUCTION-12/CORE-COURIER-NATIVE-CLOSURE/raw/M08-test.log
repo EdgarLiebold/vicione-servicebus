@@ -1,0 +1,19 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Courier.RoutingSlipHostConfigurationTests.SharedPartitioner_UsesTheActivityArgumentsAndCompensationLogSelectors (638ms)
+  Assert.Equal() Failure: Collections differ
+                                     ↓ (pos 0)
+  Expected: <generated>             ["partition-key"]
+  Actual:   ConcurrentQueue<string> []
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipHostConfigurationTests.SharedPartitioner_UsesTheActivityArgumentsAndCompensationLogSelectors() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs:125
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipHostConfigurationTests.SharedPartitioner_UsesTheActivityArgumentsAndCompensationLogSelectors() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs:132
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-courier-evidence.a1g1lJ/mutations/M08.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 358ms
+EXIT_CODE=2

@@ -2304,3 +2304,26 @@ future cohorts as complete.
   identity baseline is intentionally unchanged. No cloud fixture was required and no remote push was
   performed. Independent read-only acceptance, architecture binding and any future publication remain
   pending and are not self-approved.
+
+## Core Courier obligations — large-package local Evidence freeze (2026-08-31)
+
+- Technical `369f776e1fe53911062151e718efe11e6dae3cd0`, tree
+  `766ce3e9f1b99ac2725fe8fc7886005638e3b243`, closes 81 Courier obligations, exactly
+  `OBL-R0-CORE-C-0018..0098`, as `REPLACED_EXECUTING` in UnitArchitecture. Thirty-six native cases
+  cover routing-slip construction, arguments, payloads, lifecycle, requests, retry, revision,
+  subscriptions, hosts, partitioning and fault behavior.
+- Twenty-three fully replaced inherited Courier files and 2,937 legacy test lines are removed
+  atomically. The complete Technical package adds 2,436 lines and deletes 2,942, reducing the
+  repository by 506 lines while the executable floor rises from 2,523 to 2,559.
+- Focused execution is 36/36. Complete UnitArchitecture is 2,564/2,564 across 21 CTRFs with zero
+  failed, skipped, pending or other cases; requirement projection is 1/1. Locked restore, Technical
+  build, post-mutation Engineering build and scoped format verification are green with zero build
+  warnings and errors.
+- M01–M12 independently bind twelve product-code axes. Every counted mutant builds, its intended
+  carrier turns red, and every product file is restored byte-exactly. D01/D02 transparently record
+  two green wrong-owner explorations that were replaced by executed-owner mutations and are not
+  counted as kills.
+- The physical inherited Courier directory is absent and the historical frozen identity baseline
+  remains unchanged. This section accompanies the local Evidence-child content; independent
+  read-only acceptance, architecture binding and any future remote publication remain pending and
+  are not self-approved.

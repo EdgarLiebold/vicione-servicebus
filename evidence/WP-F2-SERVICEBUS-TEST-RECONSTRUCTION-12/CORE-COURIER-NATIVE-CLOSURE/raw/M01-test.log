@@ -1,0 +1,32 @@
+fehlerhaft ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(shape: Default, expectedValue: "variable") (476ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: "variable"
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:49
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:59
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(shape: Missing, expectedValue: "variable") (11ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: "variable"
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:49
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:59
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(shape: Null, expectedValue: "variable") (3ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: "variable"
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:49
+    um ViciOne.ServiceBus.Tests.Courier.RoutingSlipArgumentIntegrationTests.ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(ArgumentShape shape, String expectedValue) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs:59
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/vsb-courier-evidence.a1g1lJ/mutations/M01.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 4
+  fehlerhaft: 3
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 1s 190ms
+EXIT_CODE=2

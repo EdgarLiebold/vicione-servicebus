@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_COURIER_NATIVE_CLOSURE_RESULTS",
+  "technicalParent": "d2608691fa27139702684652dd0e889fe12b175e",
+  "technicalCommit": "369f776e1fe53911062151e718efe11e6dae3cd0",
+  "technicalTree": "766ce3e9f1b99ac2725fe8fc7886005638e3b243",
+  "obligations": {
+    "count": 81,
+    "replacedExecuting": 81,
+    "profile": "UnitArchitecture",
+    "map": ".testagent/core-courier-native-obligation-map.tsv"
+  },
+  "nativeCarrier": {
+    "executableCases": 36,
+    "focusedTests": 36,
+    "focusedPassed": 36,
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "ctrfRoot": "positive/focused"
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2564,
+    "passed": 2564,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2559,
+    "ctrfRoot": "positive/full",
+    "binlog": "binlogs/unit-test-dotnet-test.binlog"
+  },
+  "requirementProjection": {
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "ctrfRoot": "positive/projection"
+  },
+  "build": {
+    "lockedRestoreExitCode": 0,
+    "technicalBuildExitCode": 0,
+    "postRestoreBuildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "restoreBinlog": "binlogs/technical-engineering-restore.binlog",
+    "technicalBuildBinlog": "binlogs/technical-engineering-build.binlog",
+    "postRestoreBuildBinlog": "binlogs/postrestore-engineering-build.binlog",
+    "finalRestoreBinlog": "binlogs/final-locked-restore.binlog"
+  },
+  "formatVerification": {
+    "exitCode": 0,
+    "binlog": "binlogs/format-verify.binlog"
+  },
+  "repositoryGates": {
+    "ciSelfTests": {
+      "tests": 257,
+      "passed": 257,
+      "failed": 0
+    },
+    "identitySelfTests": {
+      "tests": 148,
+      "passed": 148,
+      "failed": 0
+    },
+    "verificationModel": "PASS",
+    "changeList": "PASS",
+    "changeListEntries": 10310
+  },
+  "retirement": {
+    "trackedLegacyFilesRemoved": 23,
+    "legacyLinesDeleted": 2937,
+    "technicalLinesAdded": 2436,
+    "technicalLinesDeleted": 2942,
+    "technicalNetLines": -506,
+    "emptyLegacyTestDirectories": 0
+  },
+  "mutations": {
+    "count": 12,
+    "built": 12,
+    "killed": 12,
+    "mutatedTests": 20,
+    "mutatedPassedControls": 3,
+    "mutatedFailed": 17,
+    "restored": 12,
+    "discardedCandidates": 2
+  },
+  "evidence": {
+    "filesIncludingManifest": 99,
+    "sha256Entries": 98
+  },
+  "cloudFixtureRequired": false,
+  "remotePushPerformed": false
+}

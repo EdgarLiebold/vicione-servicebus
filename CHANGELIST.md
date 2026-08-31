@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 4550 |
-| Modified | 4154 |
-| Deleted | 1494 |
+| Added | 4660 |
+| Modified | 4131 |
+| Deleted | 1517 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-batch-messaging-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-courier-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-fault-publication-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
@@ -2119,6 +2120,105 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-selftests.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/final-locked-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/postrestore-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/technical-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/technical-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/discarded/D02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/focused/courier.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_11.392289.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_12.838992.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_22.603836.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_24.315756.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_43.863662.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_45.219173.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_48.187487.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_49.783907.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_55.269476.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_31_59.782777.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_32_01.395356.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_33_42.079199.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_33_43.673402.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_02.966142.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_05.895791.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_07.321082.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_09.019781.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_10.934626.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_12.400155.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_13.847019.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_01_34_15.662349.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/positive/projection/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M06-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M07-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M08-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M09-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M09-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M10-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M10-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M11-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M11-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M12-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/M12-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/final-locked-restore.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/focused-courier.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/postrestore-engineering-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/requirement-projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/SHA256SUMS` | Added |  |
@@ -8829,6 +8929,29 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
 | `tests/MassTransit.Tests/ConversationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
 | `tests/MassTransit.Tests/CorrelationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/ArgumentOverload_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ArgumentOverload_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/Builder_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/Builder_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/Configuration_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/Configuration_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/DoubleActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/DoubleActivity_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/FaultActivityEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/FaultActivityEvent_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/Fault_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/Fault_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/FaultyRedeliveredActivityWithVariable_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/FaultyRedeliveredActivityWithVariable_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/FaultyRetriedActivityWithVariable_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/FaultyRetriedActivityWithVariable_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/ItinerarySubscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ItinerarySubscription_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/MessageDataArguments_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/MessageDataArguments_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/ObjectGraph_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ObjectGraph_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/PartitionActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/PartitionActivity_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/RanToCompletion_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/RanToCompletion_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/RequestRoutingSlip_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/RequestRoutingSlip_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/RetryActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/RetryActivity_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/ReviseItinerary_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ReviseItinerary_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/RoutingSlip_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/RoutingSlip_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/SendEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/SendEvent_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/SingleActivityEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/SingleActivityEvent_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/Subscription_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/Subscription_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
+| `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/MassTransit.Tests/CronExpressionTests.cs` | Deleted | `tests/MassTransit.Tests/CronExpressionTests.cs` |
 | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
 | `tests/MassTransit.Tests/DelayProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
@@ -9268,29 +9391,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerMessageConvention.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerMessageConvention.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/IHandler.cs` | Modified | `tests/MassTransit.Tests/Conventional/IHandler.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/ActivityRedelivery_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/ArgumentOverload_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ArgumentOverload_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/Builder_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Builder_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/Configuration_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Configuration_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/DoubleActivity_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/DoubleActivity_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/FaultActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/FaultActivityEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/Fault_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Fault_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/FaultyRedeliveredActivityWithVariable_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/FaultyRedeliveredActivityWithVariable_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/FaultyRetriedActivityWithVariable_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/FaultyRetriedActivityWithVariable_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/ItinerarySubscription_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ItinerarySubscription_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/MessageDataArguments_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/MessageDataArguments_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/ObjectGraph_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ObjectGraph_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/PartitionActivity_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/PartitionActivity_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/RanToCompletion_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/RanToCompletion_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/RequestRoutingSlip_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/RequestRoutingSlip_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/RetryActivity_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/RetryActivity_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/ReviseItinerary_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/ReviseItinerary_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlip_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/RoutingSlip_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/SendEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/SendEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/SingleActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/SingleActivityEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/Subscription_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/Subscription_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/TwoActivityEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Courier/UriArgument_Specs.cs` | Modified | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
 | `tests/ViciOne.ServiceBus.Tests/MessageData/DataBus_Specs.cs` | Modified | `tests/MassTransit.Tests/MessageData/DataBus_Specs.cs` |
@@ -9973,6 +10073,16 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/TransactionContextExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipFaultIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipLifecycleIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipPayloadIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs` | Added |  |
