@@ -1,0 +1,30 @@
+^Dfehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DuringInitialAndInitially_BothExecuteAndTransitionExactly(style: Dynamic) (152ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: ViciOne.ServiceBus.UnhandledEventException : The Initialized event is not handled during the Initial state for the BuilderStateMachine state machine
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.DefaultUnhandledEventCallback(UnhandledEventContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:222
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.UnhandledEvent(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:1266
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.<.ctor>b__41_1(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:53
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.StateMachineState.ViciOne.ServiceBus.State<TInstance>.Raise(BehaviorContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/StateMachineState.cs:125
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.ViciOne.ServiceBus.StateMachine<TInstance>.RaiseEvent(BehaviorContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:125
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Raise(StateMachine`1 machine, ActivityInstance instance, Event event) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:298
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DuringInitialAndInitially_BothExecuteAndTransitionExactly(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:56
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DuringInitialAndInitially_BothExecuteAndTransitionExactly(style: Declarative) (5ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: ViciOne.ServiceBus.UnhandledEventException : The Initialized event is not handled during the Initial state for the DeclarativeInitiallyMachine state machine
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.DefaultUnhandledEventCallback(UnhandledEventContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:222
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.UnhandledEvent(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:1266
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.<.ctor>b__41_1(BehaviorContext`1 context, State state) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:53
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.StateMachineState.ViciOne.ServiceBus.State<TInstance>.Raise(BehaviorContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine/StateMachineState.cs:125
+    um ViciOne.ServiceBus.ViciOneServiceBusStateMachine`1.ViciOne.ServiceBus.StateMachine<TInstance>.RaiseEvent(BehaviorContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/SagaStateMachine/ViciOneServiceBusStateMachine.cs:125
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Raise(StateMachine`1 machine, ActivityInstance instance, Event event) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:298
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DuringInitialAndInitially_BothExecuteAndTransitionExactly(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:56
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/mutations/M05.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 988ms

@@ -1,0 +1,10 @@
+^D
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/positive/projection/projection.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 0
+  erfolgreich: 1
+  übersprungen: 0
+  Dauer: 861ms

@@ -1,0 +1,22 @@
+^Dfehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DataEventAction_CopiesThePayloadAndContinuesToTheTransition(style: Declarative) (153ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: "Hello"
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DataEventAction_CopiesThePayloadAndContinuesToTheTransition(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:111
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DataEventAction_CopiesThePayloadAndContinuesToTheTransition(style: Dynamic) (5ms)
+  Assert.Equal() Failure: Strings differ
+  Expected: "Hello"
+  Actual:   null
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.DataEventAction_CopiesThePayloadAndContinuesToTheTransition(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:111
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/mutations/M07.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 850ms

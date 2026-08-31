@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_STATE_MACHINE_ACTIVITY_CONDITION_NATIVE_CLOSURE_RESULTS",
+  "technicalParent": "b1f70e2fb09b846a986eb83305bc5dae577bb03d",
+  "technicalCommit": "9b96f8d35c97bf68d10f1b508baaa2c38d8d30b4",
+  "technicalTree": "fda755dd4e4bf4acfa2d49668ba1fabac64d7421",
+  "obligations": {
+    "count": 40,
+    "replacedExecuting": 40,
+    "profile": "UnitArchitecture",
+    "map": ".testagent/core-state-machine-activity-condition-native-obligation-map.tsv"
+  },
+  "nativeCarrier": {
+    "ownerMethods": 7,
+    "newExecutableCases": 16,
+    "focusedTests": 16,
+    "focusedPassed": 16,
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "ctrf": "positive/focused/focused.json"
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2618,
+    "passed": 2618,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2613,
+    "ctrfRoot": "positive/full",
+    "binlog": "binlogs/unit-test-dotnet-test-dotnet-test.binlog"
+  },
+  "requirementProjection": {
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "ctrf": "positive/projection/projection.json"
+  },
+  "build": {
+    "technicalLockedRestoreSucceeded": true,
+    "technicalBuildSucceeded": true,
+    "postRestoreFocusedBuildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "technicalRestoreBinlog": "binlogs/technical-engineering-restore.binlog",
+    "technicalBuildBinlog": "binlogs/technical-engineering-build.binlog",
+    "postRestoreFocusedBuildBinlog": "binlogs/postrestore-build.binlog"
+  },
+  "formatVerification": {
+    "exitCode": 0,
+    "binlog": "binlogs/format-verify.binlog"
+  },
+  "repositoryGates": {
+    "ciSelfTests": { "tests": 257, "passed": 257, "failed": 0 },
+    "identitySelfTests": { "tests": 148, "passed": 148, "failed": 0 },
+    "verificationModel": "PASS",
+    "changeList": "PASS",
+    "changeListEntries": 10668
+  },
+  "retirement": {
+    "trackedLegacyFilesRemoved": 10,
+    "legacyLinesDeleted": 1330,
+    "technicalLinesAdded": 964,
+    "technicalLinesDeleted": 1335,
+    "technicalNetLines": -371,
+    "remainingAutomatonymousFiles": 30,
+    "remainingDynamicModifyFiles": 21,
+    "emptyLegacyTestDirectories": 0,
+    "historicalExpectedListChanged": false
+  },
+  "mutations": {
+    "count": 11,
+    "built": 11,
+    "killed": 11,
+    "mutatedTests": 28,
+    "mutatedPassed": 0,
+    "mutatedFailed": 28,
+    "mutatedSkipped": 0,
+    "postRestoreTests": 16,
+    "postRestorePassed": 16
+  },
+  "evidence": {
+    "filesIncludingManifest": 102,
+    "sha256Entries": 101
+  },
+  "sandboxDiagnostic": {
+    "symptom": "The locked restore and Roslyn format operation stalled or lost process access inside the macOS sandbox.",
+    "canonicalResolution": "The exact same bounded commands completed outside that sandbox boundary; no source or project change was required."
+  },
+  "cloudFixtureRequired": false,
+  "remotePushPerformed": false
+}

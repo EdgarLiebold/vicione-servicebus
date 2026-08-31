@@ -1,0 +1,24 @@
+^Dfehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Finalize_EntersFinalAndRunsFinallyExactlyOnce(style: Dynamic) (159ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 1)
+  Expected: ["before-finalize", "finally"]
+  Actual:   ["before-finalize"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Finalize_EntersFinalAndRunsFinallyExactlyOnce(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:75
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Finalize_EntersFinalAndRunsFinallyExactlyOnce(style: Declarative) (3ms)
+  Assert.Equal() Failure: Collections differ
+                                ↓ (pos 1)
+  Expected: ["before-finalize", "finally"]
+  Actual:   ["before-finalize"]
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineActivityTests.Finalize_EntersFinalAndRunsFinallyExactlyOnce(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs:75
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/mutations/M03.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 136ms

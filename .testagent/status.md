@@ -2375,3 +2375,25 @@ future cohorts as complete.
   restore byte-exactly and the post-restore control is 16/16.
 - This local Evidence content does not self-approve independent review, architecture binding or a
   remote publication. No cloud fixture was required and no remote push was performed.
+
+## Core state-machine activity and condition closure — large-package local Evidence freeze (2026-08-31)
+
+- Technical `9b96f8d35c97bf68d10f1b508baaa2c38d8d30b4`, tree
+  `fda755dd4e4bf4acfa2d49668ba1fabac64d7421`, closes 40 inherited activity and condition
+  obligations as `REPLACED_EXECUTING` in UnitArchitecture. Seven native owner methods materialize
+  16 executable cases across declarative and dynamic state-machine construction styles.
+- Ten fully replaced inherited files and 1,330 legacy lines are removed atomically. The Technical
+  delta is +964/-1,335, reducing the repository by 371 lines while the executable floor rises from
+  2,597 to 2,613. Both containing legacy directories remain because they still contain 30 and 21
+  tracked test files; no empty directory remains and the historical expected list is unchanged.
+- Focused execution is 16/16; complete UnitArchitecture is 2,618/2,618 across 21 CTRFs with zero
+  failure/skip/pending/other; requirement projection is 1/1. Locked restore, Engineering build,
+  post-mutation build and scoped format verification are green with zero build warnings/errors.
+- Eleven independently reconstructed product mutations all build and produce 28/28 causal red
+  cases with no pass or skip. Product hashes restore byte-exactly and the post-restore control is
+  16/16.
+- The locked restore and Roslyn format operation stalled or lost process access only inside the
+  macOS sandbox; their identical bounded commands completed outside that boundary. No source or
+  project workaround was required.
+- This local Evidence content does not self-approve independent review, architecture binding or a
+  remote publication. No cloud fixture was required and no remote push was performed.

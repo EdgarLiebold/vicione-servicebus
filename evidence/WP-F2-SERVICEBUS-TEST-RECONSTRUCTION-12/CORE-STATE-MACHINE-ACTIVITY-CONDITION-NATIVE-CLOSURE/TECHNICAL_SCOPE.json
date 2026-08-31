@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_STATE_MACHINE_ACTIVITY_CONDITION_NATIVE_CLOSURE_TECHNICAL_SCOPE",
+  "technicalParent": "b1f70e2fb09b846a986eb83305bc5dae577bb03d",
+  "technicalCommit": "9b96f8d35c97bf68d10f1b508baaa2c38d8d30b4",
+  "technicalTree": "fda755dd4e4bf4acfa2d49668ba1fabac64d7421",
+  "paths": [
+    ".github/workflows/native-tests.yml",
+    ".testagent/core-state-machine-activity-condition-native-obligation-map.tsv",
+    ".testagent/plan.md",
+    ".testagent/research.md",
+    "README.md",
+    "docs/build.md",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Activity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/AsyncActivity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Condition_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/DataActivity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Activity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/AsyncActivity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Condition_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/DataActivity_Specs.cs",
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs",
+    "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs",
+    "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs"
+  ]
+}
