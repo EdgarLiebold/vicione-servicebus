@@ -2449,3 +2449,29 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only review, architecture binding and any future remote publication remain pending and are not
   self-approved; no remote push is authorized or performed by this package.
+
+## Core state-machine integration and policy closure — large-package local Evidence freeze (2026-08-31)
+
+- Technical `008975a80c759d9ad0bcbaf9e5a9553ea5a217fb`, tree
+  `d15899e4458505dcb76dbc4dd0c9fd371de226d1`, closes 74 selected `OBL-R0-CORE-A`
+  integration, policy, request, lifecycle, scheduling, concurrency, transport and response/fault
+  obligations. The committed map contains 69 `REPLACED_EXECUTING` records and five explicitly invalid
+  inherited placeholders; 35 native owner methods bind the executable set.
+- Forty-five fully replaced inherited files and 6,473 inherited test lines are removed atomically.
+  The 64-path Technical delta is +3,817/-6,531, reducing the repository by 2,714 lines while the
+  executable floor rises from 2,661 to 2,698. The empty `Dynamic Modify` directory is removed; the
+  remaining `Automatonymous` directory contains two tracked tests. The frozen expected list is unchanged.
+- Focused execution is 73/73 and requirement/floor projection is 2/2. Complete UnitArchitecture is
+  2,703/2,703 across 21 CTRFs with zero failed, skipped, pending or other cases. Locked restore,
+  Engineering and post-restore Release builds and scoped format verification are green; the builds
+  contain zero warnings and errors.
+- Fifteen exact product mutations build and are killed by 18/18 causal red owner cases with no skip.
+  Baseline, mutant and restored bytes are bound per mutation. A wrong ActionActivity overload and an
+  equivalent scheduler-subcontext exploration are documented but excluded from the kill count. All
+  14 distinct touched product files restore byte-exactly before the final build.
+- The scheduling deadline and repository-removal tests were strengthened during mutation analysis to
+  eliminate timing-only and stale-harness false greens. CI self-tests pass 257/257 outside the known
+  restricted macOS process boundary; identity self-tests pass 148/148 and the verification model passes.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only acceptance, architecture binding and any future remote publication remain pending and are
+  not self-approved; no remote push is authorized or performed by this package.
