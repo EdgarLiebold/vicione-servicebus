@@ -23,16 +23,24 @@ public sealed class MessageDataEndpointIntegrationTests
         harness.OnConfigureInMemoryBus += configurator => configurator.UseJsonSerializer();
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<LargePayloadEvent>(async context =>
         {
-            LargePayload body = await context.Message.Body.Value;
-            deliveryCounts.AddOrUpdate(context.Message.CorrelationId, 1, (_, count) => count + 1);
             if (!observations.TryGetValue(context.Message.CorrelationId, out TaskCompletionSource<LargePayloadSnapshot>? completion))
                 throw new InvalidOperationException($"Unexpected payload correlation: {context.Message.CorrelationId}");
 
-            completion.TrySetResult(new LargePayloadSnapshot(
-                context.Message.Body.Address,
-                body.CorrelationId,
-                body.Values,
-                body.IsComplete));
+            try
+            {
+                LargePayload body = await context.Message.Body.Value;
+                deliveryCounts.AddOrUpdate(context.Message.CorrelationId, 1, (_, count) => count + 1);
+                completion.TrySetResult(new LargePayloadSnapshot(
+                    context.Message.Body.Address,
+                    body.CorrelationId,
+                    body.Values,
+                    body.IsComplete));
+            }
+            catch (Exception exception)
+            {
+                completion.TrySetException(exception);
+                throw;
+            }
         });
 
         await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -87,11 +95,19 @@ public sealed class MessageDataEndpointIntegrationTests
         using var harness = CreateHarness("message-data-publish", timeout, repository);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DocumentPublished>(async context =>
         {
-            Interlocked.Increment(ref deliveryCount);
-            observed.TrySetResult(new PublishedSnapshot(
-                context.Message.CorrelationId,
-                context.Message.StringData.Address,
-                await context.Message.StringData.Value));
+            try
+            {
+                Interlocked.Increment(ref deliveryCount);
+                observed.TrySetResult(new PublishedSnapshot(
+                    context.Message.CorrelationId,
+                    context.Message.StringData.Address,
+                    await context.Message.StringData.Value));
+            }
+            catch (Exception exception)
+            {
+                observed.TrySetException(exception);
+                throw;
+            }
         });
         Guid correlationId = NewId.NextGuid();
         const string expected = "published message data must survive the transport exactly";
