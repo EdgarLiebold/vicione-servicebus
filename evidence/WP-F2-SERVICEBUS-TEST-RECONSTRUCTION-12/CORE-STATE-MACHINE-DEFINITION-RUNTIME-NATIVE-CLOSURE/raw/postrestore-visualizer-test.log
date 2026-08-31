@@ -1,0 +1,10 @@
+^D
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/state-machine-definition-runtime-mutations/results/postrestore-visualizer/edgar.liebold_Edgars-iMac-2_2026-08-31_11_47_19.449117.ctrf
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 0
+  erfolgreich: 3
+  übersprungen: 0
+  Dauer: 542ms

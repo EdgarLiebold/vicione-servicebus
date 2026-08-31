@@ -1,0 +1,26 @@
+^Dfehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTable(style: Dynamic, storageKind: Raw) (14ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.AssertPredicateTruthTable[TInstance](ViciOneServiceBusStateMachine`1 machine, TInstance instance, State running) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:109
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.VerifyRawStorage(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:74
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTable(StateMachineConstructionStyle style, StateStorageKind storageKind) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:26
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTable(style: Declarative, storageKind: Raw) (4ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.AssertPredicateTruthTable[TInstance](ViciOneServiceBusStateMachine`1 machine, TInstance instance, State running) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:109
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.VerifyRawStorage(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:74
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineStateStorageTests.StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTable(StateMachineConstructionStyle style, StateStorageKind storageKind) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs:26
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/state-machine-definition-runtime-mutations/results/M13/edgar.liebold_Edgars-iMac-2_2026-08-31_11_41_42.749836.ctrf
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 6
+  fehlerhaft: 2
+  erfolgreich: 4
+  übersprungen: 0
+  Dauer: 1s 166ms

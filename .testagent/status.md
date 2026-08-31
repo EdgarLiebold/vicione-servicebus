@@ -2397,3 +2397,28 @@ future cohorts as complete.
   project workaround was required.
 - This local Evidence content does not self-approve independent review, architecture binding or a
   remote publication. No cloud fixture was required and no remote push was performed.
+
+## Core state-machine definition/runtime closure — large-package local Evidence freeze (2026-08-31)
+
+- Technical `dce359526505bb386c93d121daaf7a933723f23b`, tree
+  `c2f60f87ad2e98e59c5a29d3374286ec85942cc7`, closes 120 selected `OBL-R0-CORE-A`
+  definition, state-storage, runtime and visualization obligations as `REPLACED_EXECUTING` in
+  UnitArchitecture. Seventeen native owner methods bind the set; 22 definition/storage/runtime cases
+  are newly executable and three real-machine visualizer cases are strengthened.
+- Twenty-seven completely replaced inherited spec files and two private serializer helpers are removed
+  atomically. The complete Technical delta is +1,446/-3,756, reducing the repository by 2,310 lines
+  while the executable floor rises from 2,613 to 2,635. The remaining Automatonymous and Dynamic
+  Modify areas contain 14 and 8 tracked files respectively; no empty inherited test directory remains.
+- Focused post-restore execution is 25/25; complete UnitArchitecture is 2,640/2,640 across 21 CTRFs
+  with zero failure/skip/pending/other; requirement projection is 1/1. Locked Engineering restore and
+  Release build, scoped format verification, verification model and 257 CI self-tests are green; the
+  Engineering build reports zero warnings and errors.
+- Fifteen independently reconstructed product mutations all build and are killed. Their 55 executions
+  contain 25 passing independent controls and 30 causal failures with no skip. All eight touched product
+  files restore byte-exactly before the final builds and positive tests.
+- The scoped format command initially encountered only the known macOS sandbox denial for MSBuild
+  named-pipe/process access; the identical command passed outside that sandbox with no source workaround.
+  No provider, broker or LocalIntegration runtime was required.
+- The Evidence package committed together with this section is a local immutable review subject. It
+  does not self-approve independent read-only review, architecture binding or remote publication; no
+  push is authorized or performed by this package.

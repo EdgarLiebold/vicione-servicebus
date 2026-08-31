@@ -1,0 +1,24 @@
+^Dfehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface(style: Dynamic) (181ms)
+  Assert.Equal() Failure: Collections differ
+             ↓ (pos 0)
+  Expected: ["Finish", "Handshake", "Ignored"]
+  Actual:   []
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs:27
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface(style: Declarative) (7ms)
+  Assert.Equal() Failure: Collections differ
+             ↓ (pos 0)
+  Expected: ["Finish", "Handshake", "Ignored"]
+  Actual:   []
+    um ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineDefinitionTests.Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface(StateMachineConstructionStyle style) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs:27
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/state-machine-definition-runtime-mutations/results/M02/edgar.liebold_Edgars-iMac-2_2026-08-31_11_26_22.555985.ctrf
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 2
+  fehlerhaft: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 015ms

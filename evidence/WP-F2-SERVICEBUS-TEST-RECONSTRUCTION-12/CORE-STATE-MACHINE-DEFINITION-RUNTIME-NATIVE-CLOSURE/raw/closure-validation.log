@@ -1,0 +1,7 @@
+^DPASS obligations=120 unique=120 disposition=REPLACED_EXECUTING profile=UnitArchitecture
+PASS targetMethods=17 targetProjects=2
+PASS retiredFiles=29 retiredSpecs=27 retiredHelpers=2 absentAtTechnical=true
+PASS remainingAutomatonymousFiles=14 remainingDynamicModifyFiles=8
+PASS unitCtrfs=21 tests=2640 passed=2640 failed=0 skipped=0
+PASS focused definition=4 storage=8 runtime=10 visualizer=3 total=25
+PASS requirementProjection=1/1

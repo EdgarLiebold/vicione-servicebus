@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 5018 |
-| Modified | 4107 |
-| Deleted | 1541 |
+| Added | 5150 |
+| Modified | 4078 |
+| Deleted | 1570 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -39,6 +39,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-runtime-scheduling-lifecycle-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-serialization-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-state-machine-activity-condition-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-state-machine-definition-runtime-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-state-machine-exception-observation-native-obligation-map.tsv` | Added |  |
 | `.testagent/diagnostics-native-obligation-map.tsv` | Added |  |
 | `.testagent/in-memory-duo-native-obligation-map.tsv` | Added |  |
@@ -2914,6 +2915,133 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/raw/requirement-projection.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/raw/unit-test-final.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M13-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M14-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/M15-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/format-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/postrestore-core-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/postrestore-visualizer-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/technical-engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/technical-engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M13.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/mutations/M15.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M06.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M07.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M08.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M09.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M10.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M11.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M12.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M13.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M14.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/patches/M15.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/focused/definition.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/focused/runtime.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/focused/storage.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/focused/visualizer.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_15_51.990886.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_15_53.966794.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_05.035009.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_06.929718.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_27.774998.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_29.807479.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_32.909746.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_53.207343.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_16_59.133992.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_17_00.562206.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_17_04.008102.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_17_05.711169.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_17_27.448178.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_15.500425.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_18.750601.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_23.983593.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_26.121340.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_28.155159.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_30.372561.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_32.223143.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/full/edgar.liebold_Edgars-iMac-2_2026-08-31_11_19_34.432411.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/positive/projection/projection.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M01-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M01-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M02-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M02-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M03-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M03-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M04-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M04-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M05-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M05-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M06-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M06-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M07-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M07-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M08-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M08-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M09-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M09-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M10-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M10-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M11-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M11-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M12-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M12-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M13-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M13-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M14-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M14-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M15-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/M15-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/closure-validation.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/mutation-reconstruction.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/patch-validation.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-core-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-definition-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-runtime-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-storage-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-visualizer-build.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/postrestore-visualizer-test.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/requirement-projection.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/FULL_TECHNICAL.patch.gz` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/JOB_ORACLE_CORRECTION.json` | Added |  |
@@ -9433,19 +9561,48 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` | Deleted | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
 | `tests/MassTransit.Tests/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Retry_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Activity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Activity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AsyncActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AsyncActivity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Condition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Condition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/DataActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/DataActivity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/FilterExpression_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Observable_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Activity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Activity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AnyStateTransition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AnyStateTransition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AsyncActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AsyncActivity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Condition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Condition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/DataActivity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/DataActivity_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Exception_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/FilterExpression_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Observable_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` |
 | `tests/MassTransit.Tests/SendByConvention_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendByConvention_Specs.cs` |
 | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendContextMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/SendEndpointCache_Specs.cs` |
@@ -9814,36 +9971,20 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Saga/SagaTestContext.cs` | Modified | `tests/MassTransit.Tests/Saga/SagaTestContext.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/SimpleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/SimpleSaga.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Saga/saga.nhibernate.cfg.xml` | Modified | `tests/MassTransit.Tests/Saga/saga.nhibernate.cfg.xml` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AutomatonymousStateMachine_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Assigned_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Combine_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeCondition_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeEventMultipleStates_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/CompositeOrder_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Group_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Introspection_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/JsonStateSerializer.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/SubStateOnEnter_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SubStateOnEnter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Telephone_Sample.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Transition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/UnobservedEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer2_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/Visualizer_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Visualizer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/BaseClass_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/BaseClass_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CatchFault_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CatchFault_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CatchInitial_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CatchInitial_Specs.cs` |
@@ -9857,27 +9998,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelateUsingTopology_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelateUsingTopology_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelationExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelationExpression_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/CorrelationUnknown_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/CorrelationUnknown_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/AnyStateTransition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AnyStateTransition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Anytime_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/AutomatonymousStateMachine_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Combine_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeCondition_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/CompositeOrder_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Declarative_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Dependency_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/EventObservable_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Event_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Faulted_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Group_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Introspection_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/RaiseEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/SerializeState_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/StateExpression_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/State_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Telephone_Sample.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Transition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/UnobservedEvent_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Dynamic Modify/Visualizer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/DynamicEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/DynamicEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/EnterEvent_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/EnterEvent_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/FaultRescue_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/FaultRescue_Specs.cs` |
@@ -10546,8 +10674,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
