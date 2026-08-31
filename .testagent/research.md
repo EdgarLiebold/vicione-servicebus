@@ -2875,3 +2875,41 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
   cannot bind its named pipe (`SocketException (13): Permission denied`). Repeating the identical
   command outside only that sandbox boundary succeeds with exit zero. Build/test failures continue
   to be diagnosed from binlogs before any product conclusion is drawn.
+
+## Core state-machine exception and observation closure — bounded research (2026-08-31)
+
+### Package boundary
+
+- The next open, coherent high-yield set is exactly four inherited files: declarative and dynamic
+  `Exception_Specs.cs` plus declarative and dynamic `Observable_Specs.cs`. Together they contain
+  1,861 legacy lines and own exactly 102 still-unmapped `OBL-R0-CORE-A` obligations.
+- The forty observation obligations describe only three complete flows per construction API; the
+  sixty-two exception obligations describe four shared complete flows plus two declarative-only
+  flows. Sixteen native cases therefore preserve every distinct execution path without retaining
+  one assertion per inherited NUnit method.
+- The already completed fault/publication map was explicitly excluded. It is not reimplemented or
+  rerun merely because its identifiers resemble this package.
+
+### A+ oracle design
+
+- State recorders retain every `(previous,current,instance)` callback in order. Event recorders retain
+  the selected event name, instance and pre/post phase. The assertions compare the complete sequence,
+  not isolated indexes or only a final count.
+- Exception scenarios record an ordered marker list around the throwing action, every catch branch
+  and every following activity. Exact exception object type/message and state are asserted together,
+  so deleting a branch, executing a false branch, running the post-throw activity or invoking a
+  broader second catch cannot remain green.
+- Declarative property binding and the dynamic builder are executed independently; neither is treated
+  as evidence for the other. Data and non-data event catch paths remain separate because the product
+  has separate generic behavior overloads.
+- Direct `RaiseEvent` completion is the positive terminal barrier. No broker, wall clock, polling,
+  timeout-based absence or shared mutable fixture is needed.
+
+### Product seams selected for mutation
+
+- `CatchFaultActivity` typed selection and its continuation into the remaining behavior.
+- The distinct non-data and data-event `Faulted` overloads.
+- Raw state accessor notification after committing the new state.
+- Selected-event observer filtering and substate BeforeEnter/AfterLeave traversal.
+- Each mutation is accepted only when the exact intended carrier turns red after a successful build
+  and the changed source returns to its frozen SHA-256 value.

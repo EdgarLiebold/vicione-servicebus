@@ -2417,3 +2417,33 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 8. Freeze one Technical commit and one direct Evidence child. Independent read-only acceptance,
    architecture binding and remote publication remain separate; no push without fresh explicit PO
    authorization and never force-push.
+
+## Core state-machine exception and observation native closure — 102-obligation cohort (2026-08-31)
+
+1. Close exactly the 102 R0 obligations owned by the declarative and dynamic-builder
+   `Exception_Specs.cs` and `Observable_Specs.cs` files. Freeze them in one terminal map before any
+   inherited file is removed; every obligation must occur exactly once and target an executing
+   xUnit 4 / MTP v2 carrier.
+2. Replace the forty state-observation facts with six complete source-mirrored flows: simple
+   Initial/Running/Final transitions, substate entry/finalization and substate return with
+   BeforeEnter/AfterLeave events, each independently executed through both declarative and dynamic
+   machine construction. Assert the complete ordered transition and selected-event sequences, raw
+   instance identity and terminal state in one method per flow.
+3. Replace the sixty-two exception facts with ten complete flows: typed catch pipelines, base-type
+   catch, empty catch continuation and data-event catch for both construction APIs, plus the two
+   declarative nested-else/finalize contracts. Bind exact exception type/message, ordered activity
+   markers, true/false synchronous and asynchronous branches, exclusivity of the first matching
+   catch, skipped post-fault activities and final state.
+4. Use direct awaited state-machine execution only. No sleep, timeout-as-success, shared fixture or
+   absence-only terminal verdict is permitted. Recorders retain ordered raw callbacks and compare
+   complete immutable snapshots after each RaiseEvent returns.
+5. Add passive requirement projections for every native method and raise the UnitArchitecture floor
+   by the exact sixteen materialized cases, from 2,581 to 2,597. Delete the four inherited fixture
+   files only after focused execution, requirement projection and the 102-row map are green. Retain
+   shared legacy observer helpers while any other inherited fixture still references them.
+6. Bind independent one-cause mutations across typed catch selection, catch continuation,
+   data-event catch, state notification, selected-event filtering and substate transition ordering.
+   Every mutant must build, turn the intended carrier red and restore the product file byte-exactly.
+7. Run focused development loops, then exactly one locked Engineering restore/build, one complete
+   UnitArchitecture profile, scoped format and repository gates. Freeze one Technical commit and one
+   direct Evidence child. Remote publication remains separately authorized and never uses force-push.
