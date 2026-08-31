@@ -2356,3 +2356,39 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    scoped format and repository gates. Bind a compact independent mutation set across the actual
    serializer/transport seams, restore every byte, then freeze one Technical commit, one direct
    Evidence child and one architecture binding. Remote publication remains separately authorized.
+
+## Core Courier native closure — large-package execution plan (2026-08-30)
+
+1. Freeze exactly `OBL-R0-CORE-C-0018..0098` in one TSV map; reject missing, duplicate, unknown or
+   non-`REPLACED_EXECUTING` rows.
+2. Add source-mirrored Courier xUnit carriers, consolidated by observable lifecycle rather than by
+   old fixture class:
+   - `RoutingSlipBuilderContractTests` — builder, cycle rejection and serialization/subscription shape.
+   - `RoutingSlipArgumentIntegrationTests` — precedence/fallback matrix, MessageData, object graph,
+     nullable default, Uri and custom converter paths.
+   - `RoutingSlipLifecycleIntegrationTests` — empty/single/two activity success, exact event data and
+     terminal cardinality.
+   - `RoutingSlipFaultIntegrationTests` — fault, reverse compensation and compensation-failure paths.
+   - `RoutingSlipRetryIntegrationTests` — delayed redelivery and immediate retry with exact attempts,
+     variables and compensation recovery.
+   - `RoutingSlipRevisionAndSubscriptionTests` — append/discard, activity-added subscriptions,
+     content filtering and custom envelope/raw events.
+   - `RoutingSlipRequestIntegrationTests` — success, request fault and declared fault response.
+   - `RoutingSlipHostConfigurationTests` — complete execute/compensate callback and partition surface.
+3. Give every native method one unique `RequirementCoverage` key, bind all 81 obligations to those
+   methods, and add the exact method projection to `CoreRequirements.json`.
+4. Run the narrow Core project build and only the new Courier carriers while fixing compilation or
+   contract errors. Review assertions against the complete event state; never weaken a carrier to
+   match a failure.
+5. Perform assertion-quality, anti-pattern and pseudo-mutation review. Execute the selected
+   single-cause mutations, restore each product file immediately, then run one post-restore control.
+6. Delete all 23 fully replaced inherited Courier files in the same Technical commit; verify the
+   physical Courier directory is absent and no empty directory remains.
+7. Raise the UnitArchitecture floor by the exact 36 materialized cases, from 2,523 to 2,559, in
+   workflow, architecture guard, README, `docs/build.md` and this plan.
+8. Run once for the complete package: locked Engineering restore, Release build with binlog, focused
+   Courier tests, full UnitArchitecture, CI self-tests, identity self-tests, verification model,
+   format verification and generated CHANGELIST.
+9. Freeze one direct Evidence child containing byte-exact Technical patch, CTRFs, binlogs, raw logs,
+   mutation recipes/results and complete SHA-256 inventory; then bind Technical and Evidence hashes
+   once in the architecture repository. No remote push without fresh explicit PO authorization.

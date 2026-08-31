@@ -2754,3 +2754,77 @@ the inherited Serialization directory empty, so the directory disappears natural
 are deleted. `build/verification/expected/core.txt` remains the immutable historical inventory. The
 nine executable cases raise the fail-closed UnitArchitecture floor from 2,514 to 2,523; the complete
 restore/build/test and compact mutation/evidence cost is paid once for the whole package.
+
+## Core Courier native closure — 81-obligation large cohort (2026-08-30)
+
+### Bounded inventory
+
+- Frozen obligations: `OBL-R0-CORE-C-0018..0098`, exactly 81 `UnitArchitecture` obligations.
+- Inherited scope: exactly 23 tracked files below `tests/ViciOne.ServiceBus.Tests/Courier`, 2,937 lines total.
+- Current source owners: `src/ViciOne.ServiceBus/Courier/**` and
+  `src/ViciOne.ServiceBus.Abstractions/Courier/**`.
+- Native owner: `tests2/ViciOne.ServiceBus.Tests/Courier/**`; the Core xUnit 4 / MTP v2 project
+  already references both product assemblies transitively and needs no new package or project.
+- Existing stronger carrier: `Testing/ActivityTestHarnessTests` proves exact execute/compensate
+  endpoint identity and one complete fault/compensation lifecycle. It is retained and strengthened
+  only where an inherited Courier guarantee is genuinely missing.
+- The one mandatory Roslyn `find-untested-sources` execution remains the frozen R0 artifact
+  `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-11/R0/FIND_UNTESTED_SOURCES.md`; it is a static
+  pairing heuristic and closes no Courier obligation by itself.
+
+### Contract groups and required native carriers
+
+1. Builder and serialization: interface-valued arguments, cyclic graph rejection, ordinary
+   `RoutingSlip` transport serialization and subscription/event-content round trip.
+2. Argument resolution: explicit non-default argument wins; missing, null and default-valued
+   arguments fall back to the same-named routing-slip variable, with exact completed-event values.
+3. Success lifecycle: empty and one-/two-activity itineraries, exact tracking number, activity log,
+   variables, removed variables, timestamps and terminal cardinality.
+4. Fault and compensation lifecycle: activity exception, two completed activities, reverse-order
+   compensation, activity/slip fault events, failed compensation through publish and subscription,
+   exact variables and no hidden duplicate terminal event.
+5. Retry/redelivery: exact attempt counts, variables carried on every redelivery/fault boundary,
+   eventual success and compensation retry; no wall-clock sleep or absence-only success oracle.
+6. Itinerary revision and subscriptions: appended/discarded itinerary entries, activity-added
+   subscriptions, content filtering and custom completion messages under envelope and raw JSON.
+7. Payload shapes: MessageData, nested object graph, nullable default enum, Uri arguments/variables,
+   and a custom double converter all survive the provider-owned execution path.
+8. Request proxy: successful response, ordinary request fault and declared fault response are three
+   distinct terminal outcomes.
+9. Host configuration: execute/compensate configuration callbacks and argument/log partitioners are
+   accepted by a built in-memory bus and the resulting activity completes.
+
+### Quality and mutation checklist
+
+- Every asynchronous test has a positive event/attempt/barrier and uses the configured operation
+  timeout only as a failure budget; no `Task.Delay`, `Thread.Sleep`, skip or retry-until-green oracle.
+- Event recorders retain raw events and assert terminal counts after stop/drain, so duplicates cannot
+  be hidden by dictionaries or first-message task completion sources.
+- At least one independent product mutation is executed for each high-risk group: argument fallback,
+  fault/compensation order, retry variables/attempt count, revision/discard, subscription contents,
+  request outcome and payload conversion. Mutants must build, turn the intended carrier red and be
+  restored byte-identically.
+- Full Engineering restore/build and UnitArchitecture run once after the entire 81-obligation
+  technical package, not once per inherited file or mutant.
+- The 23 inherited files are deleted atomically only after every obligation maps exactly once to an
+  executing native carrier and no outside source reference depends on their test-local types.
+
+### Executed Courier closure checkpoint
+
+- The terminal map contains exactly 81 unique rows for `OBL-R0-CORE-C-0018..0098`; every row is
+  `REPLACED_EXECUTING` in `UnitArchitecture` and targets an existing native test method.
+- The native Courier cohort materializes 36 xUnit cases. After the final assertion strengthening it
+  builds with zero warnings/errors and executes 36/36 with no failure or skip.
+- Twelve independent product mutations were executed across activity argument fallback, event
+  argument fallback, compensation-log selection, revision source preservation, subscription
+  contents, standard request-fault projection, configured JSON conversion, execute retry attempts,
+  compensate retry attempts, execute partition wiring, compensate partition wiring and explicit
+  subscription suppression. Every mutation built and produced the intended causal red result.
+- The initial compensation-log mutation survived the order-only oracle. The tests were therefore
+  strengthened to bind each compensation event and activity to its own original log; the same
+  mutation then failed both fault carriers. This discovered false-green path is closed rather than
+  waived.
+- Product files were restored to their exact pre-mutation SHA-256 values before the post-mutation
+  control. Only after that control passed were all 23 inherited Courier files deleted; the resulting
+  empty directory was removed. The UnitArchitecture floor therefore rises by the actual 36 cases,
+  from 2,523 to 2,559.
