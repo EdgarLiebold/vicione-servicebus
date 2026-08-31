@@ -2913,3 +2913,46 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
 - Selected-event observer filtering and substate BeforeEnter/AfterLeave traversal.
 - Each mutation is accepted only when the exact intended carrier turns red after a successful build
   and the changed source returns to its frozen SHA-256 value.
+
+## Core state-machine activities and conditions — bounded research (2026-08-31)
+
+### Frozen package boundary
+
+- The package is exactly forty `OBL-R0-CORE-A` obligations from ten complete inherited files:
+  declarative and dynamic `Activity_Specs.cs`, `AsyncActivity_Specs.cs`, `DataActivity_Specs.cs`,
+  `Condition_Specs.cs` and `FilterExpression_Specs.cs`. The files contain 1,330 legacy lines.
+- The paired `Group_Specs.cs` files are deliberately excluded. Each still owns an empty
+  `RunParallel` placeholder that needs an explicit disposition instead of being mislabeled as an
+  executing replacement.
+- All ten selected files are self-contained in the glob-based inherited project. No test-local type
+  is referenced outside its own file, and `build/verification/expected/core.txt` remains the frozen
+  historical inventory.
+
+### Native carrier design
+
+- Sixteen materialized xUnit cases preserve both construction APIs independently: lifecycle-event
+  chaining, `During(Initial)`/`Initially` equivalence, `Finalize` plus `Finally`, custom data
+  activity execution, data-event payload continuation, synchronous/asynchronous condition matrices
+  and mutually exclusive event filters.
+- Lifecycle assertions bind the complete ordered transition-event trace together with the state
+  carried by `BeforeEnter`/`AfterLeave` and the state still visible before Final is committed. This
+  is stronger than the four isolated inherited fixture assertions.
+- Condition cases execute four independent saga instances per construction/evaluator row: normal
+  enter-transition, initialize-only retention, false `IfElse` exclusivity and the positive control.
+  They retain exact branch counters so swapping then/else or accidentally executing both branches
+  cannot remain green.
+- Filter cases use two independent instances rather than manually resetting state. Both predicates
+  are evaluated and exactly one route is selected for each message value.
+- Direct awaited `RaiseEvent` completion is the positive terminal barrier. There is no shared
+  fixture, wall clock, sleep, polling or absence-only success oracle.
+
+### Static pairing and mutation scope
+
+- The mandatory Roslyn source-pairing scan completed over 3,899 source files and 1,137 test files
+  (1,059 paired, 2,840 reported unpaired). It found the custom `IStateMachineActivity` carriers but
+  did not materially pair the extension-method-driven activity implementations; this is a known
+  limitation of the static heuristic and is not treated as coverage evidence.
+- Independent product mutations will target transition lifecycle ordering/state payload, Final
+  projection, custom activity delegation, data-action continuation, synchronous/asynchronous
+  branch selection and event-filter application. A mutation is accepted only after a successful
+  build, a causal red owner and byte-exact restoration.

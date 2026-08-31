@@ -2447,3 +2447,30 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 7. Run focused development loops, then exactly one locked Engineering restore/build, one complete
    UnitArchitecture profile, scoped format and repository gates. Freeze one Technical commit and one
    direct Evidence child. Remote publication remains separately authorized and never uses force-push.
+
+## Core state-machine activities and conditions native closure — 40-obligation cohort (2026-08-31)
+
+1. Close exactly the forty obligations owned by the declarative/dynamic pairs of
+   `Activity_Specs.cs`, `AsyncActivity_Specs.cs`, `DataActivity_Specs.cs`, `Condition_Specs.cs` and
+   `FilterExpression_Specs.cs`. Freeze one 40-row map; every row must be unique,
+   `REPLACED_EXECUTING`, `UnitArchitecture` and point to an existing native method.
+2. Add two source-mirrored owners under `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine`: one for
+   activities/transitions and one for conditions/filtering. Execute declarative property discovery
+   and the dynamic builder as separate Theory rows.
+3. Materialize exactly sixteen cases: two each for lifecycle trace, initial-binding equivalence,
+   finalization/finally, custom activity, data-event continuation and filter routing, plus four for
+   synchronous/asynchronous condition behavior across both construction APIs.
+4. Bind exact ordered markers, raw state identities, payload values, branch counters and negative
+   branch exclusion after awaited `RaiseEvent` completion. Do not use delays, timeouts as a success
+   oracle, manually reset a previously exercised saga or share mutable fixture state.
+5. Add passive requirement rows for the seven native methods and raise the UnitArchitecture floor
+   by the sixteen materialized cases from 2,597 to 2,613. Delete the ten inherited files atomically
+   only after the focused carrier and requirement projection are green; leave the adjacent Group
+   package untouched.
+6. Run assertion-quality, anti-pattern and pseudo-mutation review, then bind independent one-cause
+   product mutations for lifecycle ordering, finalization, activity delegation, data continuation,
+   sync/async conditions and filter application. Restore every product byte exactly and rerun the
+   focused post-restore control.
+7. Pay the broad validation cost once: locked Engineering restore/build, full UnitArchitecture,
+   scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical commit and one
+   direct Evidence child. No remote push occurs without a new explicit authorization.
