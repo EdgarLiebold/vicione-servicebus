@@ -2956,3 +2956,43 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
   projection, custom activity delegation, data-action continuation, synchronous/asynchronous
   branch selection and event-filter application. A mutation is accepted only after a successful
   build, a causal red owner and byte-exact restoration.
+
+## Core state-machine definition/runtime native closure — 120-obligation research freeze (2026-08-31)
+
+- The frozen source set is the declarative/dynamic pair of `AnyStateTransition_Specs.cs`,
+  `Anytime_Specs.cs`, `AutomatonymousStateMachine_Specs.cs`, `Declarative_Specs.cs`,
+  `EventObservable_Specs.cs`, `Introspection_Specs.cs`, `RaiseEvent_Specs.cs`,
+  `SerializeState_Specs.cs`, `StateExpression_Specs.cs`, `State_Specs.cs`,
+  `Transition_Specs.cs`, `UnobservedEvent_Specs.cs` and `Visualizer_Specs.cs`, plus declarative
+  `Visualizer2_Specs.cs`. The semantic ledger contains exactly 120 R0-CORE-A obligations for these
+  27 files. Group, dynamic-event and substate-on-enter questions remain outside this package.
+- Existing native owners are already strictly stronger for event-driven complete transition
+  sequences, selected event observation and all Graphviz/Mermaid/composite visualizer outputs.
+  Those obligations are bound to the existing executing methods rather than duplicated.
+- Missing carriers reduce to nine independent axes: exact state/event metadata plus reachable-event
+  enumeration; two independent state properties on one saga; raw/string/int storage and compiled
+  state predicates; State JSON round-trip; `DuringAny` including Initial rejection; all-state
+  transition hooks; nested event raise; ignored/filtered/unhandled/global-ignore behavior; and the
+  direct `TransitionToState` path.
+- The native matrix materializes 22 cases: two construction styles for each non-storage axis and a
+  six-row style x raw/string/int storage matrix. Every case uses awaited product completion as its
+  positive barrier and asserts complete state, payload, event-set or callback snapshots. There is no
+  shared fixture, sleep, polling, quiet-window or absence-only success oracle.
+- The legacy JSON converter helpers are referenced only by the two selected serialization fixtures;
+  after a source-mirrored nested converter is green they can be retired in the same atomic delete.
+  No selected fixture exports a test type used by another retained source file.
+- Independent mutation scope targets registration/enumeration, each storage accessor, nested raise,
+  `DuringAny` Initial exclusion, ignore predicate/global unhandled handling, transition hook payload
+  and direct transition execution. Every mutation must build, kill its intended carrier and restore
+  the frozen product blob exactly.
+- The inherited visualizer claims are not discharged by renderer-only fixtures. The two existing
+  `StateMachineInputTests` owners now parse real declarative and dynamic machines containing typed
+  filtered transitions, ignore edges and catch/fault branches, and compare the complete Graphviz and
+  Mermaid documents byte-for-byte. Canonical renderer fixtures remain the independent formatting
+  oracle; the strengthened input owners prove actual machine-to-graph extraction without adding a
+  redundant test case or inflating the floor.
+- Focused development execution is green at 22/22 core cases and 2/2 strengthened visualizer input
+  cases. The passive requirement projection is 1/1, the post-retirement core project builds with
+  zero warnings/errors, and scoped Roslyn verification is clean. The first format attempt reproduced
+  the known macOS sandbox NamedPipe denial; the identical bounded command completed outside that
+  sandbox without changing source or project files.

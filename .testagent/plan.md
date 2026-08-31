@@ -2474,3 +2474,29 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 7. Pay the broad validation cost once: locked Engineering restore/build, full UnitArchitecture,
    scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical commit and one
    direct Evidence child. No remote push occurs without a new explicit authorization.
+
+## Core state-machine definition/runtime native closure — 120-obligation large package (2026-08-31)
+
+1. Close exactly the 120 R0-CORE-A obligations owned by the 27 frozen definition, state-storage,
+   transition, runtime, serialization, observation and visualizer fixtures. Record every obligation
+   exactly once in a terminal `REPLACED_EXECUTING` UnitArchitecture map.
+2. Add source-mirrored native owners for exact definition/introspection, independent saga state
+   properties, raw/string/int state storage and expressions, JSON state round-trip, DuringAny,
+   all-state hooks, nested raise, unhandled-event policy and direct transition execution. Exercise
+   declarative discovery and the dynamic builder independently.
+3. Reuse the accepted complete transition sequence, selected event-observer and canonical visualizer
+   owners. Do not create renamed fixtures or new cases for behavior those owners already prove more
+   strongly.
+4. Materialize exactly 22 cases and raise the independent UnitArchitecture floor from 2,613 to
+   2,635. Assertions bind exact state/event sets, runtime types, three reachable events, storage
+   values, compiled predicate truth table, serialized state identity, callback order/payload,
+   exception type and unchanged negative-path state.
+5. After focused build/test and requirement projection are green, delete the 27 fully replaced
+   inherited fixtures plus the two now-unreferenced JSON state helpers atomically. Remove only
+   directories that become physically empty; never alter the frozen historical expected-core list.
+6. Perform assertion-quality, anti-pattern and pseudo-mutation review, then execute independent
+   single-cause product mutations across the actual metadata/storage/runtime seams. Restore every
+   product byte exactly and rerun one focused post-restore control.
+7. Pay broad validation once for the whole package: locked Engineering restore/build, complete
+   UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one
+   Technical commit and one direct Evidence child. No remote push without new explicit approval.

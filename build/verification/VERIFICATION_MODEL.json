@@ -297,30 +297,15 @@
     },
     {
       "id": "state-machine-visualizer",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/ViciOne.ServiceBus.StateMachineVisualizer"
       ],
       "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "The visualizer has no test project of its own; the cases that exercise it live in the core suite. The anchor used to be the whole Automatonymous namespace, which holds many tests that have nothing to do with it, so the link proved only that the namespace existed. It names the three fixtures that really render a state machine, and the run binds each of them to a case that executed.",
-      "runs": [],
-      "verifiedThroughCapability": "core",
-      "testAnchors": [
-        {
-          "category": "core",
-          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine"
-        },
-        {
-          "category": "core",
-          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Automatonymous.When_visualizing_a_state_machine_again"
-        },
-        {
-          "category": "core",
-          "fixture": "ViciOne.ServiceBus.Tests.SagaStateMachineTests.Dynamic_Modify.When_visualizing_a_state_machine"
-        }
-      ]
+      "rationale": "The native xUnit 4/MTP v2 visualizer project owns renderer and real state-machine graph-extraction contracts. The inherited visualizer obligations are terminally bound to those executing owners by the state-machine definition/runtime closure evidence; the native tests2 estate is intentionally outside this inherited verification model.",
+      "runs": []
     },
     {
       "id": "test-framework",
