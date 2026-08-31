@@ -121,7 +121,8 @@ public sealed class MessageDataRepositoryTests
         Assert.NotEqual(bytes, inner.StoredBytes(byteData.Address));
         Assert.NotEqual(streamBytes, inner.StoredBytes(streamData.Address));
 
-        Assert.Equal(text, await (await repository.GetString(stringData.Address, cancellationToken)).Value);
+        string restoredText = await (await repository.GetString(stringData.Address, cancellationToken)).Value;
+        Assert.Equal(text.Select(static character => (int)character), restoredText.Select(static character => (int)character));
         Assert.Equal(bytes, await (await repository.GetBytes(byteData.Address, cancellationToken)).Value);
         await using Stream restored = await repository.Get(streamData.Address, cancellationToken);
         using var copy = new MemoryStream();
