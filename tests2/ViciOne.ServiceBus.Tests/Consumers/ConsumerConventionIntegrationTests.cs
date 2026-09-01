@@ -21,7 +21,7 @@ public sealed class ConsumerConventionIntegrationTests
         using var harness = CreateHarness("custom", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
-            ConsumerConvention.Register<MessageOnlyConsumerConvention>();
+            Assert.True(ConsumerConvention.Register<MessageOnlyConsumerConvention>());
             endpoint.Consumer(typeof(MessageOnlyHandler), _ => new MessageOnlyHandler(first, second));
         };
 

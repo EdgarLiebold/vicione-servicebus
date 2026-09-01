@@ -24,10 +24,10 @@ public sealed class StateMachineConcurrencyIntegrationTests
         ISagaStateMachineTestHarness<AwaitedFinalizeMachine, AwaitedFinalizeState> sagaHarness =
             harness.StateMachineSaga<AwaitedFinalizeState, AwaitedFinalizeMachine>(machine, repository);
 
+        Guid correlationId = NewId.NextGuid();
         await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            Guid correlationId = NewId.NextGuid();
             Task<IReceivedMessage<AwaitedFinalizeStart>> consumed = sagaHarness.Consumed
                 .SelectAsync<AwaitedFinalizeStart>(cancellationToken)
                 .First();
@@ -43,7 +43,6 @@ public sealed class StateMachineConcurrencyIntegrationTests
 
             decision.TrySetResult(true);
             Assert.Null((await consumed.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Null(await repository.Load(correlationId));
         }
         finally
         {
@@ -51,6 +50,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
             await harness.Stop().WaitAsync(timeout, CancellationToken.None);
         }
 
+        Assert.Null(await repository.Load(correlationId));
         Assert.Single(sagaHarness.Consumed.Select<AwaitedFinalizeStart>(SnapshotOnlyToken()));
     }
 

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -52,15 +51,9 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
         Assert.Equal(1, observation.CommandExecutions);
         Assert.Equal(1, observation.InjectedDeliveryFailures);
-        Assert.Equal(
-            new[] { $"first:{commandId}", $"second:{commandId}" },
-            observation.SideEffects.Order(StringComparer.Ordinal));
-        Assert.All(observation.SideEffectCounts.Values, count => Assert.Equal(1, count));
-        Assert.Single(harness.Consumed.Select<FirstSideEffect>(SnapshotOnlyToken()));
-        Assert.Single(harness.Consumed.Select<SecondSideEffect>(SnapshotOnlyToken()));
+        Assert.Equal(1, observation.FirstSuccessfulSends);
+        Assert.Equal(1, observation.SecondSuccessfulSends);
     }
-
-    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record DeliveryCommand(Guid Id);
 
@@ -69,9 +62,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
     public sealed record SecondSideEffect(Guid Id);
 
     private sealed class DeliveryConsumer(DeliveryObservation observation) :
-        IConsumer<DeliveryCommand>,
-        IConsumer<FirstSideEffect>,
-        IConsumer<SecondSideEffect>
+        IConsumer<DeliveryCommand>
     {
         public async Task Consume(ConsumeContext<DeliveryCommand> context)
         {
@@ -80,17 +71,6 @@ public sealed class InMemoryOutboxAttemptIsolationTests
             await context.Send(context.ReceiveContext.InputAddress, new SecondSideEffect(context.Message.Id));
         }
 
-        public Task Consume(ConsumeContext<FirstSideEffect> context)
-        {
-            observation.RecordSideEffect($"first:{context.Message.Id}");
-            return Task.CompletedTask;
-        }
-
-        public Task Consume(ConsumeContext<SecondSideEffect> context)
-        {
-            observation.RecordSideEffect($"second:{context.Message.Id}");
-            return Task.CompletedTask;
-        }
     }
 
     private sealed class DeliveryConsumerDefinition : ConsumerDefinition<DeliveryConsumer>
@@ -120,7 +100,11 @@ public sealed class InMemoryOutboxAttemptIsolationTests
         }
 
         public Task PostSend<T>(SendContext<T> context)
-            where T : class => Task.CompletedTask;
+            where T : class
+        {
+            observation.RecordSuccessfulSend(context.SupportedMessageTypes);
+            return Task.CompletedTask;
+        }
 
         public Task SendFault<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
@@ -160,23 +144,27 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
     private sealed class DeliveryObservation
     {
-        private readonly ConcurrentDictionary<string, int> _sideEffectCounts = new(StringComparer.Ordinal);
         private int _commandExecutions;
         private int _deliveryFailureInjected;
+        private int _firstSuccessfulSends;
+        private int _secondSuccessfulSends;
 
         public int CommandExecutions => Volatile.Read(ref _commandExecutions);
 
         public int InjectedDeliveryFailures => Volatile.Read(ref _deliveryFailureInjected);
 
-        public IReadOnlyDictionary<string, int> SideEffectCounts => _sideEffectCounts;
+        public int FirstSuccessfulSends => Volatile.Read(ref _firstSuccessfulSends);
 
-        public string[] SideEffects => _sideEffectCounts.Keys.ToArray();
+        public int SecondSuccessfulSends => Volatile.Read(ref _secondSuccessfulSends);
 
         public void RecordCommandExecution() => Interlocked.Increment(ref _commandExecutions);
 
-        public void RecordSideEffect(string identity)
+        public void RecordSuccessfulSend(string[] messageTypes)
         {
-            _sideEffectCounts.AddOrUpdate(identity, 1, static (_, count) => count + 1);
+            if (messageTypes.Contains(MessageUrn.ForTypeString<FirstSideEffect>(), StringComparer.Ordinal))
+                Interlocked.Increment(ref _firstSuccessfulSends);
+            if (messageTypes.Contains(MessageUrn.ForTypeString<SecondSideEffect>(), StringComparer.Ordinal))
+                Interlocked.Increment(ref _secondSuccessfulSends);
         }
 
         public bool TryInjectDeliveryFailure() =>
