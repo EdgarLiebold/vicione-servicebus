@@ -155,6 +155,7 @@ public sealed class TimeoutCancellationIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var timeProvider = new FakeTimeProvider(StartTime);
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var canceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration =>
             {
@@ -163,12 +164,20 @@ public sealed class TimeoutCancellationIntegrationTests
                     .Configure(options =>
                     {
                         options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);
-                        options.StopTimeout = TimeSpan.FromSeconds(5);
+                        options.StopTimeout = null;
                     });
                 configuration.AddHandler<ShutdownMessage>(async context =>
                 {
                     entered.TrySetResult();
-                    await Task.Delay(System.Threading.Timeout.InfiniteTimeSpan, context.CancellationToken);
+                    try
+                    {
+                        await Task.Delay(System.Threading.Timeout.InfiniteTimeSpan, context.CancellationToken);
+                    }
+                    catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+                    {
+                        canceled.TrySetResult();
+                        throw;
+                    }
                 });
                 configuration.UsingInMemory((context, endpoint) =>
                 {
@@ -195,6 +204,7 @@ public sealed class TimeoutCancellationIntegrationTests
 
             await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
             stopped = true;
+            await canceled.Task.WaitAsync(operationTimeout, cancellationToken);
 
             Assert.Empty(harness.Published.Select<Fault<ShutdownMessage>>(SnapshotOnlyToken()));
         }
@@ -221,7 +231,7 @@ public sealed class TimeoutCancellationIntegrationTests
                     .Configure(options =>
                     {
                         options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);
-                        options.StopTimeout = TimeSpan.FromSeconds(5);
+                        options.StopTimeout = null;
                     });
                 configuration.AddConsumer<RetryStopConsumer>();
                 configuration.AddConfigureEndpointsCallback((_, endpoint) =>
