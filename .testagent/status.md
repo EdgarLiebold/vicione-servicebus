@@ -2551,3 +2551,24 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only review and architecture binding remain mandatory; no remote push is authorized or
   performed by this package.
+
+## Event Hubs native closure — final technical and Evidence content (2026-09-01)
+
+- Technical `b6d7e930337cbc0b4db3a0259246bda524288736`, tree
+  `f8465a78f404ece92ade53d179992609bf5960b5`, closes the complete inherited Event Hubs test root.
+  Twenty-two selected obligations are `REPLACED_EXECUTING`; the three real-Azure-only obligations
+  `0258`, `0261` and `0262` remain explicitly `EXTERNAL_PENDING` and are not counted as green.
+- The native replacement contributes 23 executable Event Hubs cases plus one UnitArchitecture
+  immutable-convention-snapshot owner. The active floors are consistently 2,838 UnitArchitecture and
+  398 LocalIntegration. The inherited project root is absent and no empty retired directory remains.
+- Frozen positive runs are 2,858/2,858 UnitArchitecture across 21 modules, 398/398 LocalIntegration
+  across ten modules and 23/23 focused Event Hubs, all with zero failed or skipped cases. Engineering
+  Release builds with zero warnings/errors, and CI tooling is 262/262 outside the documented macOS
+  sandbox process boundary.
+- Fourteen independently reconstructed one-cause mutations are killed and every target restores to
+  its complete Technical-file SHA. The final M14 owner proves immutable convention-enumeration
+  snapshots without timing, sleep or absence-as-success oracles.
+- The Evidence root binds the exact Technical diff, raw CTRFs, build log/binlog, run-scoped seven-
+  provider fixture output, mutation logs, dispositions, independent verifier and complete SHA-256
+  inventory. Independent read-only acceptance and architecture binding remain separate actions and
+  are not self-approved by this status carrier.

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "ce1f03c94a343505c1c97bbbb7eda2700f8182fa",
+  "technicalCommit": "b6d7e930337cbc0b4db3a0259246bda524288736",
+  "technicalTree": "f8465a78f404ece92ade53d179992609bf5960b5",
+  "technicalParent": "a49283789ddbd43964954da8dded6ec9dd42a2b5",
+  "retirement": {
+    "oldProjectRoot": "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests",
+    "oldPathsRemovedFromRoot": 22,
+    "oldRootExists": false,
+    "replacementProject": "tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.csproj"
+  },
+  "r0": {
+    "total": 25,
+    "replacedExecuting": 22,
+    "externalPending": 3,
+    "externalPendingIds": ["OBL-R0-CLOUD-0258", "OBL-R0-CLOUD-0261", "OBL-R0-CLOUD-0262"]
+  },
+  "positive": {
+    "engineeringBuild": { "exitCode": 0, "warnings": 0, "errors": 0, "binlog": "positive/engineering-build.binlog" },
+    "unitArchitecture": { "modules": 21, "tests": 2858, "passed": 2858, "failed": 0, "skipped": 0, "pending": 0, "other": 0, "directory": "positive/unit" },
+    "localIntegration": { "modules": 10, "tests": 398, "passed": 398, "failed": 0, "skipped": 0, "pending": 0, "other": 0, "runId": "vicione-5b171e100f31", "directory": "positive/local" },
+    "eventHubFocused": { "tests": 23, "passed": 23, "failed": 0, "skipped": 0, "result": "positive/eventhub-focused.json" },
+    "ciToolTests": { "tests": 262, "passed": 262, "failed": 0, "log": "positive/ci-tool-tests.log" }
+  },
+  "fixture": {
+    "brokers": ["postgres", "mssql", "azurite", "localstack", "activemq", "artemis", "eventhubs"],
+    "loopbackOnly": true,
+    "sequentialReadiness": true,
+    "simultaneouslyActiveDuringTests": true,
+    "findings": 0,
+    "eventHubImage": "mcr.microsoft.com/azure-messaging/eventhubs-emulator:2.2.1"
+  },
+  "mutations": { "count": 14, "buildableProductMutants": 13, "fixtureMutants": 1, "killed": 14, "survived": 0 },
+  "floors": { "unitArchitecture": 2838, "localIntegration": 398 }
+}
