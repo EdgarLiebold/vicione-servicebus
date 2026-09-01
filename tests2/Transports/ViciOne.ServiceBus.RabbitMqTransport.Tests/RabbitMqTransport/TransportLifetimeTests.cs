@@ -20,6 +20,7 @@ public sealed class TransportLifetimeTests
         var secondLeaseReleased = 0;
         var disposedBeforeLastRelease = 0;
         var disposeCount = 0;
+        var scheduled = new TaskCompletionSource<Func<Task>>(TaskCreationOptions.RunContinuationsAsynchronously);
         var lifetime = new TransportLifetime(subject, () =>
         {
             if (Volatile.Read(ref secondLeaseReleased) == 0)
@@ -28,7 +29,7 @@ public sealed class TransportLifetimeTests
             Interlocked.Increment(ref disposeCount);
             disposed.TrySetResult();
             return Task.CompletedTask;
-        });
+        }, dispose => Assert.True(scheduled.TrySetResult(dispose), "Disposal was scheduled more than once."));
 
         Assert.True(lifetime.TryLease(out TransportLifetime.Lease? first));
         Assert.True(lifetime.TryLease(out TransportLifetime.Lease? second));
@@ -43,8 +44,11 @@ public sealed class TransportLifetimeTests
 
         first!.Dispose();
         first.Dispose();
+        Assert.False(scheduled.Task.IsCompleted);
         Interlocked.Exchange(ref secondLeaseReleased, 1);
         second!.Dispose();
+        Func<Task> dispose = await scheduled.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+        await dispose().WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
         await disposed.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         await lifetime.DisposeAsync();

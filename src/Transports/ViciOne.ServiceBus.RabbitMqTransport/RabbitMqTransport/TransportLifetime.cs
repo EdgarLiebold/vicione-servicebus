@@ -35,6 +35,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
     {
         readonly Func<Task> _disposeSubject;
         readonly object _lock = new object();
+        readonly Action<Func<Task>> _scheduleSubjectDisposal;
         readonly string _subject;
 
         /// <summary>
@@ -64,9 +65,15 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
         /// <param name="subject">What is owned — used only to say honestly what is no longer available.</param>
         /// <param name="disposeSubject">Disposes the owned subject, exactly once, once nothing holds it.</param>
         public TransportLifetime(string subject, Func<Task> disposeSubject)
+            : this(subject, disposeSubject, QueueSubjectDisposal)
+        {
+        }
+
+        internal TransportLifetime(string subject, Func<Task> disposeSubject, Action<Func<Task>> scheduleSubjectDisposal)
         {
             _subject = subject;
-            _disposeSubject = disposeSubject;
+            _disposeSubject = disposeSubject ?? throw new ArgumentNullException(nameof(disposeSubject));
+            _scheduleSubjectDisposal = scheduleSubjectDisposal ?? throw new ArgumentNullException(nameof(scheduleSubjectDisposal));
         }
 
         /// <summary>The broker's own reason for closing, or null while the subject is open.</summary>
@@ -180,8 +187,11 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             // The task is discarded explicitly rather than by accident. DisposeSubject catches every
             // exception and reports the outcome through _disposed, which DisposeAsync awaits and
             // rethrows from, so the discarded task carries no outcome that awaiting could recover.
-            ThreadPool.QueueUserWorkItem(state => { _ = DisposeSubject(); });
+            _scheduleSubjectDisposal(DisposeSubject);
         }
+
+        static void QueueSubjectDisposal(Func<Task> disposeSubject) =>
+            ThreadPool.QueueUserWorkItem(state => { _ = disposeSubject(); });
 
         /// <summary>
         /// Disposes the subject once and reports the outcome through <see cref="_disposed" />. It catches
