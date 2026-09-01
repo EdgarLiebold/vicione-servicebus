@@ -43,8 +43,16 @@ public sealed class ContainerRequestClientRegistrationTests
                 new InitialRequest(correlationId, "World"),
                 cancellationToken);
             NestedRequestSnapshot nested = await observation.Seen.Task.WaitAsync(timeout, cancellationToken);
+            ISentMessage<InitialRequest> initialRequest =
+                Assert.Single(harness.Sent.Select<InitialRequest>(SnapshotOnlyToken()));
+            ISentMessage<SubsequentRequest> subsequentRequest =
+                Assert.Single(harness.Sent.Select<SubsequentRequest>(SnapshotOnlyToken()));
 
             Assert.Equal(new InitialResponse(correlationId, "Hello, World"), response.Message);
+            Assert.Equal("container-initial-request", initialRequest.Context.DestinationAddress!.AbsolutePath.Trim('/'));
+            Assert.Equal("container-subsequent-request", subsequentRequest.Context.DestinationAddress!.AbsolutePath.Trim('/'));
+            Assert.Empty(harness.Published.Select<InitialRequest>(SnapshotOnlyToken()));
+            Assert.Empty(harness.Published.Select<SubsequentRequest>(SnapshotOnlyToken()));
             Assert.Equal("container-initial-request", response.SourceAddress!.AbsolutePath.Trim('/'));
             Assert.Equal("container-subsequent-request", nested.InputAddress.AbsolutePath.Trim('/'));
             Assert.Equal(correlationId, nested.CorrelationId);
@@ -148,6 +156,8 @@ public sealed class ContainerRequestClientRegistrationTests
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
+
+    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public sealed record InitialRequest(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
     public sealed record InitialResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
