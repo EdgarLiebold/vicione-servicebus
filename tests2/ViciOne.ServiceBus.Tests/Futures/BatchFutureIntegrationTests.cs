@@ -63,6 +63,58 @@ public sealed class BatchFutureIntegrationTests
         Assert.Single(fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "completed-result-is-durable-without-reexecuting-fanout")]
+    public async Task CompletedFuture_ReplaysTheDurableResultWithoutRepeatingAnyChildRequest()
+    {
+        var observation = new BatchWorkObservation();
+        await using BatchFutureFixture fixture = await BatchFutureFixture.Start(observation);
+        Guid correlationId = NewId.NextGuid();
+        string[] jobs = ["First", "Second", "Third"];
+        var command = new BatchRequestMessage(correlationId, null, jobs);
+
+        Response<BatchCompleted> first = await fixture.Client.GetResponse<BatchCompleted>(
+            command,
+            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+        Response<BatchCompleted> replay = await fixture.Client.GetResponse<BatchCompleted>(
+            command,
+            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+
+        Assert.Equal(jobs, first.Message.ProcessedJobsNumbers);
+        Assert.Equal(jobs, replay.Message.ProcessedJobsNumbers);
+        Assert.Equal(2, fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()).Count());
+        Assert.Equal(jobs, observation.JobAttempts.Keys.Order());
+        Assert.All(observation.JobAttempts.Values, count => Assert.Equal(1, count));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "faulted-result-is-durable-without-reexecuting-fanout")]
+    public async Task FaultedFuture_ReplaysTheDurableFaultWithoutRepeatingAnyChildRequest()
+    {
+        var observation = new BatchWorkObservation();
+        await using BatchFutureFixture fixture = await BatchFutureFixture.Start(observation);
+        Guid correlationId = NewId.NextGuid();
+        string[] jobs = ["First", "Error", "Third"];
+        var command = new BatchRequestMessage(correlationId, null, jobs);
+
+        Response<BatchCompleted, BatchFaulted> first = await fixture.Client.GetResponse<BatchCompleted, BatchFaulted>(
+            command,
+            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+        Response<BatchCompleted, BatchFaulted> replay = await fixture.Client.GetResponse<BatchCompleted, BatchFaulted>(
+            command,
+            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+
+        Assert.True(first.Is(out Response<BatchFaulted>? firstFault));
+        Assert.True(replay.Is(out Response<BatchFaulted>? replayFault));
+        Assert.NotNull(firstFault);
+        Assert.NotNull(replayFault);
+        Assert.Equal(["First", "Third"], firstFault.Message.ProcessedJobsNumbers);
+        Assert.Equal(firstFault.Message.ProcessedJobsNumbers, replayFault.Message.ProcessedJobsNumbers);
+        Assert.Equal(2, fixture.Harness.Sent.Select<BatchFaulted>(SnapshotOnlyToken()).Count());
+        Assert.Equal(jobs.Order(), observation.JobAttempts.Keys.Order());
+        Assert.All(observation.JobAttempts.Values, count => Assert.Equal(1, count));
+    }
+
     private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     public interface BatchRequest : CorrelatedBy<Guid>
@@ -148,17 +200,25 @@ public sealed class BatchFutureIntegrationTests
         public TaskCompletionSource ReleaseDelayed { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+        public System.Collections.Concurrent.ConcurrentDictionary<string, int> JobAttempts { get; } =
+            new(StringComparer.Ordinal);
+
         public void EnterDelayed()
         {
             Interlocked.Increment(ref _delayedCount);
             DelayedEntered.TrySetResult();
         }
+
+        public void Record(string jobNumber) =>
+            JobAttempts.AddOrUpdate(jobNumber, 1, static (_, count) => count + 1);
+
     }
 
     public sealed class ProcessBatchItemConsumer(BatchWorkObservation observation) : IConsumer<ProcessBatchItem>
     {
         public async Task Consume(ConsumeContext<ProcessBatchItem> context)
         {
+            observation.Record(context.Message.JobNumber);
             if (context.Message.JobNumber == "Error")
                 throw new ExpectedBatchFailure();
             if (context.Message.JobNumber == "Delay")
@@ -181,7 +241,10 @@ public sealed class BatchFutureIntegrationTests
     {
         private readonly ServiceProvider _provider;
 
-        private BatchFutureFixture(ServiceProvider provider, ITestHarness harness, TimeSpan timeout)
+        private BatchFutureFixture(
+            ServiceProvider provider,
+            ITestHarness harness,
+            TimeSpan timeout)
         {
             _provider = provider;
             Harness = harness;

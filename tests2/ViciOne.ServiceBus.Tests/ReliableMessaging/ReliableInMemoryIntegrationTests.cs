@@ -1,0 +1,397 @@
+using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports.Fabric;
+using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.ReliableMessaging;
+
+public sealed class ReliableInMemoryIntegrationTests
+{
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "concurrent-duplicate-message-id-executes-body-once")]
+    public async Task InboxLock_AllowsExactlyOneOfThreeConcurrentDeliveriesToPublishTheHundredEvents()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new InboxObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddInMemoryInboxOutbox()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<InboxConsumer, InboxConsumerDefinition>();
+                configuration.AddConsumer<InboxEventConsumer>();
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        Guid messageId = NewId.NextGuid();
+
+        try
+        {
+            Task[] deliveries = Enumerable.Range(0, 3)
+                .Select(_ => harness.Bus.Publish(
+                    new InboxCommand(),
+                    context => context.MessageId = messageId,
+                    cancellationToken))
+                .ToArray();
+            await Task.WhenAll(deliveries).WaitAsync(timeout, cancellationToken);
+            await observation.AllEvents.Task.WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(1, observation.ConsumerExecutions);
+        Assert.Equal(100, observation.Events.Count);
+        Assert.Equal(Enumerable.Range(0, 100).Select(index => $"{index:0000}"), observation.Events.Keys.Order());
+        Assert.All(observation.Events.Values, count => Assert.Equal(1, count));
+        Assert.Equal(100, harness.Consumed.Select<InboxEvent>(SnapshotOnlyToken()).Count());
+    }
+
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(true, 2)]
+    [RequirementCoverage("REQ-VSB-RELIABLE-CONSUMER", "outbox-exactly-once-across-success-and-first-attempt-retry")]
+    public async Task ConsumerOutbox_PublishesBothScopedEventsExactlyOnceWithTheirRoutingKeys(
+        bool failFirstAttempt,
+        int expectedAttempts)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ReliableObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddScoped<IReliablePublisher, ReliablePublisher>()
+            .AddInMemoryInboxOutbox()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<ReliableConsumer, ReliableConsumerDefinition>();
+                configuration.AddConsumer<ReliableEventConsumer>();
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        Guid messageId = NewId.NextGuid();
+
+        try
+        {
+            await harness.Bus.Publish(
+                new ReliableCommand(messageId, failFirstAttempt),
+                context => context.MessageId = messageId,
+                cancellationToken);
+            await observation.BothEvents.Task.WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(expectedAttempts, observation.ConsumerAttempts);
+        Assert.Equal(new[] { "First", "Second" }, observation.Events.Keys.Order());
+        Assert.All(observation.Events.Values, count => Assert.Equal(1, count));
+        Assert.Equal(new[] { "alpha", "beta" }, observation.RoutingKeys.Order());
+        ReliableEvent[] events = harness.Consumed.Select<ReliableEvent>(SnapshotOnlyToken())
+            .Select(message => message.Context.Message)
+            .Where(message => message.MessageId == messageId)
+            .ToArray();
+        Assert.Equal(2, events.Length);
+        Assert.Single(events, message => message.Text == "First");
+        Assert.Single(events, message => message.Text == "Second");
+    }
+
+    [Theory]
+    [InlineData(ReliableSagaFailure.None, 1)]
+    [InlineData(ReliableSagaFailure.FirstConsumeAttempt, 2)]
+    [InlineData(ReliableSagaFailure.FirstDeliveryAttempt, 1)]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SAGA", "success-consume-retry-and-delivery-redelivery-reach-verified")]
+    public async Task SagaOutbox_ReachesVerifiedWithOneCommittedStateMessage(
+        ReliableSagaFailure failure,
+        int expectedCreateAttempts)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ReliableObservation();
+        var services = new ServiceCollection();
+        services.AddSingleton(observation);
+        services.AddInMemoryInboxOutbox();
+        services.AddViciOneServiceBusTestHarness(configuration =>
+        {
+            configuration.SetTestTimeouts(timeout, timeout);
+            configuration.AddSagaStateMachine<ReliableMachine, ReliableState, ReliableStateDefinition>()
+                .InMemoryRepository();
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(
+            new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ISagaStateMachineTestHarness<ReliableMachine, ReliableState> sagaHarness =
+            harness.GetSagaStateMachineHarness<ReliableMachine, ReliableState>();
+        Guid correlationId = NewId.NextGuid();
+        Guid messageId = NewId.NextGuid();
+        using ConnectHandle? deliveryFailure = failure == ReliableSagaFailure.FirstDeliveryAttempt
+            ? harness.Bus.ConnectSendObserver(new FailFirstReliableStateVerifiedSendObserver(observation))
+            : null;
+
+        try
+        {
+            await harness.Bus.Publish(
+                new CreateReliableState(correlationId, failure),
+                context => context.MessageId = messageId,
+                cancellationToken);
+            Assert.Equal(correlationId, await sagaHarness.Exists(
+                correlationId,
+                state => state.Verified,
+                timeout));
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(expectedCreateAttempts, observation.SagaCreateAttempts);
+        Assert.Equal(failure == ReliableSagaFailure.FirstDeliveryAttempt ? 1 : 0, observation.SagaDeliveryFailures);
+        Assert.Single(harness.Consumed.Select<ReliableStateVerified>(SnapshotOnlyToken()));
+        Assert.Empty(harness.Published.Select<Fault<CreateReliableState>>(SnapshotOnlyToken()));
+    }
+
+    private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
+        .GetValidatedOptions().OperationTimeout!.Value;
+
+    private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
+
+    public sealed class InboxObservation
+    {
+        int _consumerExecutions;
+
+        public int ConsumerExecutions => Volatile.Read(ref _consumerExecutions);
+
+        public ConcurrentDictionary<string, int> Events { get; } = new(StringComparer.Ordinal);
+
+        public TaskCompletionSource AllEvents { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public void ConsumerExecuted() => Interlocked.Increment(ref _consumerExecutions);
+
+        public void EventReceived(string text)
+        {
+            Events.AddOrUpdate(text, 1, static (_, count) => count + 1);
+            if (Events.Count == 100)
+                AllEvents.TrySetResult();
+        }
+    }
+
+    public sealed class ReliableObservation
+    {
+        int _consumerAttempts;
+        int _sagaCreateAttempts;
+        int _sagaDeliveryFailures;
+
+        public int ConsumerAttempts => Volatile.Read(ref _consumerAttempts);
+
+        public int SagaCreateAttempts => Volatile.Read(ref _sagaCreateAttempts);
+
+        public int SagaDeliveryFailures => Volatile.Read(ref _sagaDeliveryFailures);
+
+        public ConcurrentDictionary<string, int> Events { get; } = new(StringComparer.Ordinal);
+
+        public ConcurrentBag<string> RoutingKeys { get; } = [];
+
+        public TaskCompletionSource BothEvents { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int ConsumerAttempt() => Interlocked.Increment(ref _consumerAttempts);
+
+        public int SagaCreateAttempt() => Interlocked.Increment(ref _sagaCreateAttempts);
+
+        public bool TryInjectSagaDeliveryFailure() =>
+            Interlocked.CompareExchange(ref _sagaDeliveryFailures, 1, 0) == 0;
+
+        public void EventReceived(string text, string routingKey)
+        {
+            Events.AddOrUpdate(text, 1, static (_, count) => count + 1);
+            RoutingKeys.Add(routingKey);
+            if (Events.Count == 2)
+                BothEvents.TrySetResult();
+        }
+    }
+
+    public sealed record InboxCommand;
+
+    public sealed record InboxEvent(Guid MessageId, string Text);
+
+    public sealed class InboxConsumer(InboxObservation observation) : IConsumer<InboxCommand>
+    {
+        public Task Consume(ConsumeContext<InboxCommand> context)
+        {
+            observation.ConsumerExecuted();
+            return Task.WhenAll(Enumerable.Range(0, 100).Select(index => context.Publish(
+                new InboxEvent(context.MessageId!.Value, $"{index:0000}"),
+                context.CancellationToken)));
+        }
+    }
+
+    public sealed class InboxEventConsumer(InboxObservation observation) : IConsumer<InboxEvent>
+    {
+        public Task Consume(ConsumeContext<InboxEvent> context)
+        {
+            observation.EventReceived(context.Message.Text);
+            return Task.CompletedTask;
+        }
+    }
+
+    public sealed class InboxConsumerDefinition : ConsumerDefinition<InboxConsumer>
+    {
+        protected override void ConfigureConsumer(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            IConsumerConfigurator<InboxConsumer> consumerConfigurator,
+            IRegistrationContext context)
+        {
+            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(2));
+            endpointConfigurator.UseInMemoryInboxOutbox(context);
+        }
+    }
+
+    public sealed record ReliableCommand(Guid MessageId, bool FailFirstAttempt);
+
+    public sealed record ReliableEvent(Guid MessageId, string Text);
+
+    public interface IReliablePublisher
+    {
+        Task PublishSecond(Guid messageId, CancellationToken cancellationToken);
+    }
+
+    public sealed class ReliablePublisher(IPublishEndpoint publishEndpoint) : IReliablePublisher
+    {
+        public Task PublishSecond(Guid messageId, CancellationToken cancellationToken) => publishEndpoint.Publish(
+            new ReliableEvent(messageId, "Second"),
+            context => context.SetRoutingKey("beta"),
+            cancellationToken);
+    }
+
+    public sealed class ReliableConsumer(
+        ReliableObservation observation,
+        IReliablePublisher publisher) : IConsumer<ReliableCommand>
+    {
+        public async Task Consume(ConsumeContext<ReliableCommand> context)
+        {
+            int attempt = observation.ConsumerAttempt();
+            await context.Publish(
+                new ReliableEvent(context.Message.MessageId, "First"),
+                publish => publish.SetRoutingKey("alpha"));
+            await publisher.PublishSecond(context.Message.MessageId, context.CancellationToken);
+            if (context.Message.FailFirstAttempt && attempt == 1)
+                throw new ExpectedReliableException("first consumer attempt");
+        }
+    }
+
+    public sealed class ReliableEventConsumer(ReliableObservation observation) : IConsumer<ReliableEvent>
+    {
+        public Task Consume(ConsumeContext<ReliableEvent> context)
+        {
+            observation.EventReceived(context.Message.Text, context.RoutingKey() ?? string.Empty);
+            return Task.CompletedTask;
+        }
+    }
+
+    public sealed class ReliableConsumerDefinition : ConsumerDefinition<ReliableConsumer>
+    {
+        protected override void ConfigureConsumer(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            IConsumerConfigurator<ReliableConsumer> consumerConfigurator,
+            IRegistrationContext context)
+        {
+            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(1));
+            endpointConfigurator.UseInMemoryInboxOutbox(context);
+        }
+    }
+
+    public enum ReliableSagaFailure
+    {
+        None,
+        FirstConsumeAttempt,
+        FirstDeliveryAttempt,
+    }
+
+    public sealed record CreateReliableState(Guid CorrelationId, ReliableSagaFailure Failure) : CorrelatedBy<Guid>;
+
+    public sealed record ReliableStateVerified(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed class ReliableState : SagaStateMachineInstance
+    {
+        public Guid CorrelationId { get; set; }
+
+        public string CurrentState { get; set; } = string.Empty;
+    }
+
+    public sealed class ReliableMachine : ViciOneServiceBusStateMachine<ReliableState>
+    {
+        public ReliableMachine(ReliableObservation observation)
+        {
+            InstanceState(instance => instance.CurrentState);
+            Event(() => Create, configuration =>
+            {
+                configuration.CorrelateById(context => context.Message.CorrelationId);
+                configuration.SelectId(context => context.Message.CorrelationId);
+                configuration.InsertOnInitial = true;
+            });
+            Initially(When(Create)
+                .Then(context =>
+                {
+                    int attempt = observation.SagaCreateAttempt();
+                    if (context.Message.Failure == ReliableSagaFailure.FirstConsumeAttempt && attempt == 1)
+                        throw new ExpectedReliableException("first saga consume attempt");
+                })
+                .TransitionTo(Created)
+                .Send(
+                    context => context.ReceiveContext.InputAddress,
+                    context => new ReliableStateVerified(context.Saga.CorrelationId)));
+            During(Created, When(VerifiedEvent).TransitionTo(Verified));
+        }
+
+        public State Created { get; private set; } = null!;
+
+        public State Verified { get; private set; } = null!;
+
+        public Event<CreateReliableState> Create { get; private set; } = null!;
+
+        public Event<ReliableStateVerified> VerifiedEvent { get; private set; } = null!;
+    }
+
+    public sealed class ReliableStateDefinition : SagaDefinition<ReliableState>
+    {
+        protected override void ConfigureSaga(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            ISagaConfigurator<ReliableState> sagaConfigurator,
+            IRegistrationContext context)
+        {
+            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(1));
+            endpointConfigurator.UseMessageScope(context);
+            endpointConfigurator.UseInMemoryInboxOutbox(context);
+        }
+    }
+
+    private sealed class FailFirstReliableStateVerifiedSendObserver(ReliableObservation observation) : ISendObserver
+    {
+        public Task PreSend<T>(SendContext<T> context)
+            where T : class
+        {
+            if (context.SupportedMessageTypes.Contains(
+                    MessageUrn.ForTypeString<ReliableStateVerified>(),
+                    StringComparer.Ordinal)
+                && observation.TryInjectSagaDeliveryFailure())
+                return Task.FromException(new ExpectedReliableException("first saga delivery attempt"));
+
+            return Task.CompletedTask;
+        }
+
+        public Task PostSend<T>(SendContext<T> context)
+            where T : class => Task.CompletedTask;
+
+        public Task SendFault<T>(SendContext<T> context, Exception exception)
+            where T : class => Task.CompletedTask;
+    }
+
+    public sealed class ExpectedReliableException(string message) : Exception(message);
+}

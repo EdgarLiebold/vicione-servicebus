@@ -70,6 +70,14 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
                 LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", messages.Count, InboxMessageId);
         }
 
+        internal Task DiscardPendingConsumerMessages()
+        {
+            _inboxMessage.RemoveOutboxMessages();
+            _inboxMessage.LastSequenceNumber = null;
+
+            return Task.CompletedTask;
+        }
+
         public override async Task AddSend<T>(SendContext<T> context)
             where T : class
         {

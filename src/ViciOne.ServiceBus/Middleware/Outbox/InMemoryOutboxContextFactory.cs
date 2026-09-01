@@ -47,7 +47,30 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
 
                     var outboxContext = new InMemoryOutboxConsumeContext<T>(context, options, _provider, inboxMessage);
 
-                    await next.Send(outboxContext).ConfigureAwait(false);
+                    try
+                    {
+                        await next.Send(outboxContext).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        if (!outboxContext.IsMessageConsumed)
+                            await outboxContext.DiscardPendingConsumerMessages().ConfigureAwait(false);
+                        else
+                        {
+                            try
+                            {
+                                await outboxContext.ConsumeCompleted.ConfigureAwait(false);
+                            }
+                            catch
+                            {
+                                // The awaited delivery already exposed this failure. Drain the attempt-local
+                                // pending task so that it cannot poison the retry, while the outer throw keeps
+                                // the original delivery exception and stack.
+                            }
+                        }
+
+                        throw;
+                    }
 
                     continueProcessing = outboxContext.ContinueProcessing;
                 }

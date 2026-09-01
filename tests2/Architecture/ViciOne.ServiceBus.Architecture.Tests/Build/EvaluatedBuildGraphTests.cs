@@ -122,26 +122,25 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void SameNamedInheritedAndNativeCoreTests_UseDistinctIntermediateArtifactDirectories()
+    public void NativeCoreTests_AreTheOnlyCoreTestProjectAndUseTheDedicatedArtifactIdentity()
     {
-        var inheritedProject = RepositoryLayout.InheritedCoreTestProject;
+        string inheritedProject = RepositoryLayout.InheritedCoreTestProject;
         var nativeProject = RepositoryLayout.NativeCoreTestProject;
 
-        Assert.Equal(
-            Path.GetFileNameWithoutExtension(inheritedProject),
-            Path.GetFileNameWithoutExtension(nativeProject));
+        Assert.False(File.Exists(inheritedProject));
+        Assert.False(Directory.Exists(Path.GetDirectoryName(inheritedProject)));
+        Assert.True(File.Exists(nativeProject));
         Assert.Equal(
             "ViciOne.ServiceBus.Tests.Unit",
             MsBuildEvaluation.PropertyOf(nativeProject, "ArtifactsProjectName"));
 
-        var inheritedIntermediate = Path.GetFullPath(
-            MsBuildEvaluation.PropertyOf(inheritedProject, "MSBuildProjectExtensionsPath"));
         var nativeIntermediate = Path.GetFullPath(
             MsBuildEvaluation.PropertyOf(nativeProject, "MSBuildProjectExtensionsPath"));
 
-        Assert.False(
-            RepositoryLayout.PathComparer.Equals(inheritedIntermediate, nativeIntermediate),
-            $"Both projects resolve MSBuildProjectExtensionsPath to {nativeIntermediate}.");
+        Assert.Contains(
+            $"{Path.DirectorySeparatorChar}ViciOne.ServiceBus.Tests.Unit{Path.DirectorySeparatorChar}",
+            nativeIntermediate,
+            RepositoryLayout.PathComparison);
     }
 
     [Fact]

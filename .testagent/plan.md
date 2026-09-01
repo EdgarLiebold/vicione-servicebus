@@ -2620,3 +2620,31 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
    commit and one direct Evidence child. Remote publication requires a fresh explicit authorization and
    never uses force-push.
+
+## Core final inherited-project native closure — 65-obligation terminal package (2026-09-01)
+
+1. Close the final 65 R0 rows owned by `tests/ViciOne.ServiceBus.Tests`: 55 executable Saga,
+   state-machine request, convention, Future, reliable-messaging and removal/network obligations plus
+   ten R0 support rows that possess no executable anchor. Bind the executable rows as
+   `REPLACED_EXECUTING`; retire the support rows explicitly without inventing test behavior.
+2. Materialize 33 deterministic cases in source-mirrored native owners. Reuse the stronger accepted
+   partitioned saga and container-saga carriers. Consolidate the inherited Future scenarios only at
+   their shared observable fork/join, success/fault, durable replay and registration-helper boundaries.
+3. Require positive transport or consumer completion before every terminal count. Bind exact saga
+   instance, response/fault, routing-key, retry-attempt and durable-replay identities. No sleep,
+   polling, quiet-window or timeout-as-success assertion is permitted.
+4. Correct the in-memory outbox attempt boundary so a failed consumer attempt discards its pending
+   messages before retry. Prove exactly-once committed output across the retry and kill a one-cause
+   mutation that removes only this discard operation.
+5. Raise the independent UnitArchitecture floor from 2,802 to 2,835. Delete all 65 tracked inherited
+   project paths only after the 65-row map, passive requirement projection, Release build and focused
+   native carrier set are green. Verify that `tests/ViciOne.ServiceBus.Tests` is physically absent and
+   leave `build/verification/expected/core.txt` unchanged.
+6. Perform assertion-quality, anti-pattern and source-derived mutation review over the complete new
+   owner set. Bind independent buildable one-cause mutations for the high-value saga, convention,
+   Future, reliable/outbox and architecture boundaries; restore every byte exactly and rerun the
+   focused post-restore control.
+7. Pay broad validation once after mutations: locked Engineering restore/build with binlogs, complete
+   UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
+   commit and one direct Evidence child. Remote publication remains separately authorized and never
+   uses force-push.
