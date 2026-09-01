@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 EXPECTED_SUPPORT_JOB_SHA256 = {
     "legacy-tooling": "0726813a612a984604aac4753cdc3322c2e71fd11ff98477e001d9f5a07770a6",
     "build": "d6e5bda334b170811d4d1049c6913a48d58651e149adf1e710dade8f5d8ab2d6",
-    "pack": "bfc867b843e658927b579b8453dc56066fbb22e47ecd3e8b7b047efa723e20a3",
+    "pack": "66a426b84a6846fef6277b0a3e80101e7e7066a597d6d647d640b64244b7ed90",
 }
 
 
@@ -444,7 +444,6 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
         required_needs = (
             "legacy-tooling",
             "build",
-            "core-unit",
             "benchmarks",
             "rabbitmq",
         )
@@ -486,6 +485,21 @@ class VerificationWorkflowBoundaryTests(unittest.TestCase):
 
     def test_repository_model_and_required_workflow_are_consistent(self) -> None:
         self.assertEqual([], model.findings(REPO_ROOT))
+
+    def test_retired_core_project_has_no_inherited_run_or_workflow_job(self) -> None:
+        repository_model = model.load(REPO_ROOT)
+        core = next(
+            capability
+            for capability in repository_model["capabilities"]
+            if capability["id"] == "core"
+        )
+
+        self.assertEqual("NATIVE_TEST_ESTATE", core["class"])
+        self.assertEqual([], core["testProjects"])
+        self.assertEqual([], core["runs"])
+        self.assertNotIn("core", repository_model["selections"])
+        self.assertNotIn("core-unit", repository_model["jobs"])
+        self.assertNotIn("core-unit", model.workflow_jobs(REPO_ROOT))
 
 
 if __name__ == "__main__":

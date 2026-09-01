@@ -70,24 +70,6 @@ jobs:
         run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
       - name: Build the engineering solution
         run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
-  core-unit:
-    name: "Required: Core/Unit"
-    runs-on: ubuntu-24.04
-    timeout-minutes: 40
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Verify
-        run: python3 tools/ci/verify.py --selection core
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: required-core-unit
-          path: |
-            artifacts/verification
-            artifacts/run-output
   benchmarks:
     name: "Required: Engineering"
     runs-on: ubuntu-24.04
@@ -133,7 +115,6 @@ jobs:
     needs:
       - legacy-tooling
       - build
-      - core-unit
       - benchmarks
       - rabbitmq
     steps:

@@ -13,7 +13,6 @@
     },
     "local": {
       "members": [
-        "core",
         "benchmarks"
       ],
       "note": "everything that needs no container"
@@ -23,11 +22,6 @@
         "rabbitmq"
       ],
       "note": "everything that runs against the pinned Compose fixture"
-    },
-    "core": {
-      "members": [
-        "core"
-      ]
     },
     "benchmarks": {
       "members": [
@@ -47,7 +41,6 @@
     }
   },
   "jobs": {
-    "core-unit": "core",
     "rabbitmq": "rabbitmq",
     "benchmarks": "engineering"
   },
@@ -134,32 +127,15 @@
     },
     {
       "id": "core",
-      "class": "LOCAL_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/ViciOne.ServiceBus"
       ],
-      "testProjects": [
-        "tests/ViciOne.ServiceBus.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "core-unit",
-          "category": "core",
-          "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
-          "minimumExecutedCases": 1869,
-          "notExecuted": [],
-          "testProjectDirectory": "tests/ViciOne.ServiceBus.Tests",
-          "explicitAttributeCount": 0,
-          "budgetSeconds": 1200,
-          "brokers": [],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": null,
-          "expectedIdentities": "build/verification/expected/core.txt"
-        }
-      ]
+      "rationale": "All inherited core obligations are terminally bound in .testagent/core-final-legacy-project-native-obligation-map.tsv. The inherited project is retired; the native UnitArchitecture estate and .github/workflows/native-tests.yml own the executable behavior contract.",
+      "runs": []
     },
     {
       "id": "diagnostics",

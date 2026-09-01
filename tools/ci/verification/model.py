@@ -91,7 +91,6 @@ REQUIRED_SUPPORT_JOB_CONTRACTS = {
         "    needs:",
         "      - legacy-tooling",
         "      - build",
-        "      - core-unit",
         "      - benchmarks",
         "      - rabbitmq",
         "    steps:",
