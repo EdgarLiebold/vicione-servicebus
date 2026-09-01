@@ -22,6 +22,7 @@ public sealed class AzureServiceBusMessageFlowTests
         Guid correlationId = NewId.NextGuid();
         Guid conversationId = NewId.NextGuid();
         Guid requestId = NewId.NextGuid();
+        DateTime sentAtUtc = new(2042, 3, 14, 15, 9, 26, DateTimeKind.Utc);
         Uri sourceAddress = new("sb://localhost/source");
         Uri responseAddress = new("sb://localhost/response");
         Uri faultAddress = new("sb://localhost/fault");
@@ -51,7 +52,7 @@ public sealed class AzureServiceBusMessageFlowTests
             ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await endpoint.Send(
-                    new FlowMessage("exact-payload"),
+                    new FlowMessage("exact-payload", sentAtUtc),
                     context =>
                     {
                         context.MessageId = messageId;
@@ -75,6 +76,8 @@ public sealed class AzureServiceBusMessageFlowTests
             ServiceBusMessageContext provider = actual.GetPayload<ServiceBusMessageContext>();
 
             Assert.Equal("exact-payload", actual.Message.Value);
+            Assert.Equal(sentAtUtc, actual.Message.SentAtUtc);
+            Assert.Equal(DateTimeKind.Utc, actual.Message.SentAtUtc.Kind);
             Assert.Equal(messageId, actual.MessageId);
             Assert.Equal(correlationId, actual.CorrelationId);
             Assert.Equal(conversationId, actual.ConversationId);
@@ -90,6 +93,71 @@ public sealed class AzureServiceBusMessageFlowTests
             Assert.Equal(TimeSpan.FromMinutes(4), provider.TimeToLive);
             Assert.Equal(DateTimeKind.Utc, provider.EnqueuedTime.Kind);
             Assert.Equal(1, provider.DeliveryCount);
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            started = false;
+            QueueRuntimeProperties runtime = await admin.GetQueueRuntimePropertiesAsync(queue, cancellationToken);
+            Assert.Equal(1, entries);
+            Assert.Equal(0, runtime.ActiveMessageCount);
+            Assert.Equal(0, runtime.DeadLetterMessageCount);
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await fixture.CleanupAsync(admin);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-REQUEST-RESPONSE", "queue-request-response-preserves-request-correlation-and-terminal-count")]
+    public async Task RequestResponse_PreservesTheRequestCorrelationExactlyOnce()
+    {
+        AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("request");
+        ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
+        await using ServiceBusClient client = fixture.CreateClient();
+        string queue = fixture.Name("service");
+        Guid correlationId = NewId.NextGuid();
+        var consumed = Observation<ConsumeContext<RequestMessage>>();
+        int entries = 0;
+        IBusControl bus = CreateBus(fixture, client, admin, busConfiguration =>
+        {
+            busConfiguration.ReceiveEndpoint(queue, endpoint =>
+            {
+                endpoint.ConfigureConsumeTopology = false;
+                endpoint.DefaultMessageTimeToLive = EmulatorEntityTimeToLive;
+                endpoint.Handler<RequestMessage>(async context =>
+                {
+                    Interlocked.Increment(ref entries);
+                    consumed.TrySetResult(context);
+                    await context.RespondAsync(new ResponseMessage(context.Message.CorrelationId, "exact-response"));
+                });
+            });
+        });
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        bool started = false;
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            IRequestClient<RequestMessage> requestClient = bus.CreateRequestClient<RequestMessage>(
+                new Uri($"queue:{queue}"),
+                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+
+            Response<ResponseMessage> response = await requestClient.GetResponse<ResponseMessage>(
+                    new RequestMessage(correlationId),
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ConsumeContext<RequestMessage> request = await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            Assert.Equal(correlationId, request.Message.CorrelationId);
+            Assert.NotNull(request.RequestId);
+            Assert.Equal(correlationId, request.CorrelationId);
+            Assert.Equal(request.RequestId, response.RequestId);
+            Assert.Equal(correlationId, response.CorrelationId);
+            Assert.Equal(correlationId, response.Message.CorrelationId);
+            Assert.Equal("exact-response", response.Message.Value);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
@@ -237,7 +305,11 @@ public sealed class AzureServiceBusMessageFlowTests
 
     static readonly TimeSpan EmulatorEntityTimeToLive = TimeSpan.FromHours(1);
 
-    public sealed record FlowMessage(string Value);
+    public sealed record FlowMessage(string Value, DateTime SentAtUtc);
+
+    public sealed record RequestMessage(Guid CorrelationId);
+
+    public sealed record ResponseMessage(Guid CorrelationId, string Value);
 
     public sealed record ErrorMessage(string Value);
 }

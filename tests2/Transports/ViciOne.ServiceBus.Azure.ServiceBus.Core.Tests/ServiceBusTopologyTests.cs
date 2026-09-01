@@ -1,6 +1,9 @@
+using System.Collections.Concurrent;
+using System.Reflection;
 using ViciOne.ServiceBus.AzureServiceBusTransport;
 using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
 using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -8,6 +11,47 @@ namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests;
 
 public sealed class ServiceBusTopologyTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "custom-reflective-formatter-is-evaluated-once-without-recursion")]
+    public void CustomReflectiveFormatter_IsEvaluatedOnceAndKeepsTheCompleteTypeGraph()
+    {
+        IMessageTopologyConfigurator messageTopology = AzureBusFactory.CreateMessageTopology();
+        var formatter = new ReflectiveEntityNameFormatter(messageTopology.EntityNameFormatter);
+        messageTopology.SetEntityNameFormatter(formatter);
+        IServiceBusPublishTopologyConfigurator topology = new ServiceBusPublishTopology(messageTopology);
+
+        ServiceBusMessagePublishTopology<CustomNamedEvent> first = Assert.IsType<ServiceBusMessagePublishTopology<CustomNamedEvent>>(
+            topology.GetMessageTopology<CustomNamedEvent>());
+        ServiceBusMessagePublishTopology<CustomNamedEvent> second = Assert.IsType<ServiceBusMessagePublishTopology<CustomNamedEvent>>(
+            topology.GetMessageTopology<CustomNamedEvent>());
+        BrokerTopology brokerTopology = topology.GetPublishBrokerTopology();
+
+        Assert.Same(first, second);
+        Assert.Equal("custom.named-event", first.CreateTopicOptions.Name);
+        Assert.Equal(1, formatter.CallCount<CustomNamedEvent>());
+        Assert.Contains(
+            brokerTopology.Topics,
+            topic => topic.CreateTopicOptions.Name == "custom.named-event");
+        Assert.Contains(
+            brokerTopology.Topics,
+            topic => topic.CreateTopicOptions.Name == formatter.FallbackName<IReflectiveEvent>());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "anonymous-publish-type-is-rejected-at-provider-topology-boundary")]
+    public void AnonymousPublishType_IsRejectedWithTheExactDomainReason()
+    {
+        object anonymousMessage = new { Value = "invalid" };
+        IServiceBusPublishTopologyConfigurator topology =
+            new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => topology.GetMessageTopology(anonymousMessage.GetType()));
+
+        Assert.Equal("messageType", exception.ParamName);
+        Assert.Contains("must not be anonymous types", exception.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "consume-subscription-is-exact-and-not-expanded-to-base-interface")]
     public void ConsumeSubscription_BindsOnlyTheExplicitInterfaceToTheQueue()
@@ -84,4 +128,30 @@ public sealed class ServiceBusTopologyTests
     public interface ISecond : IFirst;
 
     public interface IThird : ISecond;
+
+    public interface IReflectiveEvent;
+
+    public sealed record CustomNamedEvent : IReflectiveEvent
+    {
+        public static string EventName() => "custom.named-event";
+    }
+
+    private sealed class ReflectiveEntityNameFormatter(IEntityNameFormatter fallback) : IEntityNameFormatter
+    {
+        readonly ConcurrentDictionary<Type, int> _calls = new();
+
+        public string FormatEntityName<T>()
+        {
+            _calls.AddOrUpdate(typeof(T), 1, static (_, count) => count + 1);
+
+            return typeof(IReflectiveEvent).IsAssignableFrom(typeof(T))
+                ? typeof(T).GetMethod(nameof(CustomNamedEvent.EventName), BindingFlags.Public | BindingFlags.Static)
+                    ?.Invoke(null, null) as string ?? fallback.FormatEntityName<T>()
+                : fallback.FormatEntityName<T>();
+        }
+
+        public int CallCount<T>() => _calls.GetValueOrDefault(typeof(T));
+
+        public string FallbackName<T>() => fallback.FormatEntityName<T>();
+    }
 }

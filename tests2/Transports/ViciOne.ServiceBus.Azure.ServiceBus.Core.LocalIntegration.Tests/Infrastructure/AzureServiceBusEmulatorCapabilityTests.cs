@@ -111,6 +111,8 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
             Assert.Equal("state-42", state?.ToString());
             Assert.Equal("session-payload", received.Body.ToString());
             await receiver.CompleteMessageAsync(received, timeout.Token);
+            await receiver.SetSessionStateAsync(null, timeout.Token);
+            Assert.Null(await receiver.GetSessionStateAsync(timeout.Token));
         }
         finally
         {
@@ -201,16 +203,17 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
             await admin.CreateQueueAsync(queue, timeout.Token);
             await using ServiceBusSender sender = client.CreateSender(queue);
             await using ServiceBusReceiver receiver = client.CreateReceiver(queue);
-            await sender.SendMessageAsync(new ServiceBusMessage("failed") { MessageId = messageId }, timeout.Token);
-            ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
-                ?? throw new InvalidOperationException("The message to dead-letter was not delivered.");
-            await receiver.DeadLetterMessageAsync(received, "capability-reason", "exact-description", timeout.Token);
-
             await using ServiceBusReceiver deadLetter = client.CreateReceiver(queue, new ServiceBusReceiverOptions
             {
                 SubQueue = SubQueue.DeadLetter,
             });
-            ServiceBusReceivedMessage failed = await deadLetter.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
+            await sender.SendMessageAsync(new ServiceBusMessage("failed") { MessageId = messageId }, timeout.Token);
+            ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token)
+                ?? throw new InvalidOperationException("The message to dead-letter was not delivered.");
+            Task<ServiceBusReceivedMessage?> deadLettered = deadLetter.ReceiveMessageAsync(fixture.OperationTimeout, timeout.Token);
+            await receiver.DeadLetterMessageAsync(received, "capability-reason", "exact-description", timeout.Token);
+
+            ServiceBusReceivedMessage failed = await deadLettered
                 ?? throw new InvalidOperationException("The dead-letter subqueue received no message.");
 
             Assert.Equal(messageId, failed.MessageId);
