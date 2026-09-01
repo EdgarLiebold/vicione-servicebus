@@ -125,7 +125,7 @@ public sealed class StateMachineLifecycleIntegrationTests
             Assert.Equal(runningId, await sagaHarness.Exists(runningId, machine.Running, timeout));
             Assert.Equal(1, sagaHarness.Sagas.Contains(runningId).StartCount);
 
-            Task<IReceivedMessage<RemovalStop>> stop = sagaHarness.Consumed
+            Task<IReceivedMessage<RemovalStop>> stop = harness.Consumed
                 .SelectAsync<RemovalStop>(cancellationToken)
                 .First();
             await harness.InputQueueSendEndpoint.Send(new RemovalStop(runningId), cancellationToken);
@@ -133,7 +133,7 @@ public sealed class StateMachineLifecycleIntegrationTests
             Assert.Null(await repository.Load(runningId));
 
             Guid immediateId = NewId.NextGuid();
-            Task<IReceivedMessage<ImmediateRemovalRequest>> immediate = sagaHarness.Consumed
+            Task<IReceivedMessage<ImmediateRemovalRequest>> immediate = harness.Consumed
                 .SelectAsync<ImmediateRemovalRequest>(cancellationToken)
                 .First();
             IRequestClient<ImmediateRemovalRequest> client = harness.CreateRequestClient<ImmediateRemovalRequest>();

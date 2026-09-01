@@ -2592,3 +2592,31 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
    commit and one direct Evidence child. Do not push remotely without a new explicit authorization and
    never force-push.
+
+## Core container common/scenarios native closure — 102-obligation large package (2026-09-01)
+
+1. Close exactly the 102 R0-CORE-B obligations `0040..0133` and `0204..0211` owned by the inherited
+   ContainerTests Common_Tests and Scenarios directories. Bind all rows exactly once: 97 to executing
+   UnitArchitecture carriers and five abstract, nonexecuting source identities to explicit invalid-source
+   retirement. Never invent execution semantics for abstract fixtures with no concrete cohort owner.
+2. Materialize 50 new deterministic cases across consume/outbox context, consumer lifetime and filters,
+   endpoint precedence, Courier, discovery, JobService, Mediator, saga/state-machine scope, scoped
+   endpoints, request clients, MultiBus and batch futures. Reuse stronger existing native carriers only
+   where they assert the complete inherited contract.
+3. Raise the independent UnitArchitecture floor from 2,752 to 2,802. The focused package consists of
+   the 50 new cases plus existing shared carriers; every async absence claim must be bounded by a positive
+   product-owned barrier, never sleep, polling or timeout-as-success.
+4. Preserve exact ownership boundaries: one consume/outbox object identity, exact scope disposal and
+   filter layers, exact endpoint/source addresses, request causation, three distinct MultiBus owners and
+   clients, terminal saga/future events, and no side-effect flush after fault.
+5. Delete exactly the forty fully disposed inherited files only after the 102-row map, requirement
+   projection, Release build and complete focused package are green. Remove both physically empty legacy
+   directories and never edit `build/verification/expected/core.txt`.
+6. Perform assertion-quality, anti-pattern and source-derived pseudo-mutation review across every new
+   owner. Execute independent buildable one-cause mutations for the high-value DI, outbox, routing,
+   MultiBus, state-machine, Courier and future seams; restore every byte exactly and rerun the focused
+   post-restore cohort.
+7. Pay broad validation once after mutations: locked Engineering restore/build with binlogs, complete
+   UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
+   commit and one direct Evidence child. Remote publication requires a fresh explicit authorization and
+   never uses force-push.

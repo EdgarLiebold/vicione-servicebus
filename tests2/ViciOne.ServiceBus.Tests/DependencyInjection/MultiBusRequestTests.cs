@@ -3,6 +3,7 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.DependencyInjection;
@@ -11,6 +12,60 @@ public sealed class MultiBusRequestTests
 {
     private const string HeaderName = "Cross-Bus-Trace";
     private const string HeaderValue = "trace-4e15";
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MULTIBUS", "same-consumer-names-and-endpoint-callbacks-are-bus-owned")]
+    public async Task SameConsumerOnTwoBuses_KeepsNamesAndPerBusCallbacksIsolated()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var counts = new EndpointConfigurationCounts();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(counts)
+            .AddSingleton<IConfigureReceiveEndpoint>(new CountingGlobalEndpointConfiguration(counts))
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<SharedConsumer>()
+                    .Endpoint(endpoint => endpoint.Name = "first-bus-queue-name");
+                configuration.AddConfigureEndpointsCallback((_, _, _) =>
+                    Interlocked.Increment(ref counts.DefaultBus));
+            })
+            .AddViciOneServiceBus<IBusB>(configuration =>
+            {
+                configuration.AddConsumer<SharedConsumer>()
+                    .Endpoint(endpoint => endpoint.Name = "other-bus-queue-name");
+                configuration.AddConfigureEndpointsCallback((_, _, _) =>
+                    Interlocked.Increment(ref counts.SecondaryBus));
+                configuration.UsingInMemory((context, bus) =>
+                {
+                    bus.Host(new Uri("loopback://localhost/other-bus"));
+                    bus.ConfigureEndpoints(context);
+                });
+            })
+            .BuildServiceProvider(validateScopes: true);
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            var message = new SharedMessage(NewId.NextGuid());
+            await harness.Bus.Publish(message, cancellationToken);
+            IReceivedMessage<SharedMessage> received = await harness.Consumed
+                .SelectAsync<SharedMessage>(cancellationToken)
+                .First()
+                .WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal(message, received.Context.Message);
+            Assert.Equal("first-bus-queue-name", received.Context.ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
+            Assert.Equal(1, Volatile.Read(ref counts.DefaultBus));
+            Assert.Equal(1, Volatile.Read(ref counts.SecondaryBus));
+            Assert.Equal(2, Volatile.Read(ref counts.Global));
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS", "validated-definitions-start-distinct-buses")]
@@ -120,6 +175,94 @@ public sealed class MultiBusRequestTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MULTIBUS", "default-custom-and-dynamic-buses-own-clients-instances-and-cross-bus-delivery")]
+    public async Task ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ThreeBusObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<DefaultOwnedRequestConsumer>();
+                configuration.AddRequestClient<DefaultOwnedRequest>();
+            })
+            .AddViciOneServiceBus<IBusB, CustomBusB>(configuration =>
+            {
+                configuration.AddConsumer<BusBOwnedRequestConsumer>();
+                configuration.AddConsumer<CrossBusOriginConsumer>();
+                configuration.AddRequestClient<BusBOwnedRequest>();
+                configuration.UsingInMemory((context, bus) =>
+                {
+                    bus.Host(new Uri("loopback://localhost/three-bus-b"));
+                    bus.ConfigureEndpoints(context);
+                });
+            })
+            .AddViciOneServiceBus<IBusC>(configuration =>
+            {
+                configuration.AddConsumer<BusCOwnedRequestConsumer>();
+                configuration.AddConsumer<CrossBusDeliveredConsumer>();
+                configuration.AddRequestClient<BusCOwnedRequest>();
+                configuration.UsingInMemory((context, bus) =>
+                {
+                    bus.Host(new Uri("loopback://localhost/three-bus-c"));
+                    bus.ConfigureEndpoints(context);
+                });
+            })
+            .BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            });
+        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            IBus defaultBus = provider.GetRequiredService<IBus>();
+            IBusB busB = provider.GetRequiredService<IBusB>();
+            IBusC busC = provider.GetRequiredService<IBusC>();
+            IBusInstance<IBusB> instanceB = provider.GetRequiredService<IBusInstance<IBusB>>();
+            IBusInstance<IBusC> instanceC = provider.GetRequiredService<IBusInstance<IBusC>>();
+            var defaultRequest = new DefaultOwnedRequest(NewId.NextGuid());
+            var requestB = new BusBOwnedRequest(NewId.NextGuid());
+            var requestC = new BusCOwnedRequest(NewId.NextGuid());
+            var crossBus = new CrossBusOrigin(NewId.NextGuid());
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+
+            Response<OwnedResponse> defaultResponse = await scope.ServiceProvider
+                .GetRequiredService<IRequestClient<DefaultOwnedRequest>>()
+                .GetResponse<OwnedResponse>(defaultRequest, cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            Response<OwnedResponse> responseB = await scope.ServiceProvider
+                .GetRequiredService<IRequestClient<BusBOwnedRequest>>()
+                .GetResponse<OwnedResponse>(requestB, cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            Response<OwnedResponse> responseC = await scope.ServiceProvider
+                .GetRequiredService<IRequestClient<BusCOwnedRequest>>()
+                .GetResponse<OwnedResponse>(requestC, cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+            await busB.Publish(crossBus, cancellationToken);
+            CrossBusDelivered delivered = await observation.Delivered.Task.WaitAsync(timeout, cancellationToken);
+
+            Assert.NotSame(defaultBus, busB);
+            Assert.NotSame(defaultBus, busC);
+            Assert.NotSame(busB, busC);
+            Assert.Same(busB, instanceB.Bus);
+            Assert.Same(busC, instanceC.Bus);
+            Assert.Equal(new OwnedResponse(defaultRequest.CorrelationId, "default"), defaultResponse.Message);
+            Assert.Equal(new OwnedResponse(requestB.CorrelationId, "bus-b"), responseB.Message);
+            Assert.Equal(new OwnedResponse(requestC.CorrelationId, "bus-c"), responseC.Message);
+            Assert.Equal(new CrossBusDelivered(crossBus.CorrelationId, busB.Address, busC.Address), delivered);
+        }
+        finally
+        {
+            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -127,6 +270,12 @@ public sealed class MultiBusRequestTests
     public interface IBusB : IBus
     {
     }
+
+    public interface IBusC : IBus
+    {
+    }
+
+    public sealed class CustomBusB(IBusControl busControl) : BusInstance<IBusB>(busControl), IBusB;
 
     public sealed record DefaultRequest(Guid CorrelationId, string Key) : CorrelatedBy<Guid>;
 
@@ -137,6 +286,79 @@ public sealed class MultiBusRequestTests
     public sealed record SecondaryResponse(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     public sealed record DefinitionMessage(string Value);
+
+    public sealed record DefaultOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record BusBOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record BusCOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record OwnedResponse(Guid CorrelationId, string Owner) : CorrelatedBy<Guid>;
+
+    public sealed record CrossBusOrigin(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record CrossBusDelivered(Guid CorrelationId, Uri SourceBus, Uri DestinationBus) : CorrelatedBy<Guid>;
+
+    public sealed record SharedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed class SharedConsumer : IConsumer<SharedMessage>
+    {
+        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+    }
+
+    public sealed class EndpointConfigurationCounts
+    {
+        public int DefaultBus;
+        public int SecondaryBus;
+        public int Global;
+    }
+
+    public sealed class ThreeBusObservation
+    {
+        public TaskCompletionSource<CrossBusDelivered> Delivered { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    public sealed class DefaultOwnedRequestConsumer : IConsumer<DefaultOwnedRequest>
+    {
+        public Task Consume(ConsumeContext<DefaultOwnedRequest> context) =>
+            context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "default"));
+    }
+
+    public sealed class BusBOwnedRequestConsumer : IConsumer<BusBOwnedRequest>
+    {
+        public Task Consume(ConsumeContext<BusBOwnedRequest> context) =>
+            context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "bus-b"));
+    }
+
+    public sealed class BusCOwnedRequestConsumer : IConsumer<BusCOwnedRequest>
+    {
+        public Task Consume(ConsumeContext<BusCOwnedRequest> context) =>
+            context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "bus-c"));
+    }
+
+    public sealed class CrossBusOriginConsumer(IBusB sourceBus, IBusC destinationBus) : IConsumer<CrossBusOrigin>
+    {
+        public Task Consume(ConsumeContext<CrossBusOrigin> context) => destinationBus.Publish(
+            new CrossBusDelivered(context.Message.CorrelationId, sourceBus.Address, destinationBus.Address),
+            context.CancellationToken);
+    }
+
+    public sealed class CrossBusDeliveredConsumer(ThreeBusObservation observation) : IConsumer<CrossBusDelivered>
+    {
+        public Task Consume(ConsumeContext<CrossBusDelivered> context)
+        {
+            observation.Delivered.TrySetResult(context.Message);
+            return Task.CompletedTask;
+        }
+    }
+
+    public sealed class CountingGlobalEndpointConfiguration(EndpointConfigurationCounts counts) :
+        IConfigureReceiveEndpoint
+    {
+        public void Configure(string name, IReceiveEndpointConfigurator configurator) =>
+            Interlocked.Increment(ref counts.Global);
+    }
 
     public sealed record CrossBusRequestObservation(
         Guid CorrelationId,
